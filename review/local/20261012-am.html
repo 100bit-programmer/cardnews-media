@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.12 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.12 오전 검수 <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-6ab31be20fa6" data-jump="6ab31be20fa6">1</a><a href="#post-f58281014b3c" data-jump="f58281014b3c">2</a><a href="#post-41eac253c9b5" data-jump="41eac253c9b5">3</a>
+      
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-6ab31be20fa6" data-id="6ab31be20fa6">
+    <div class="head">
+      <h2>1. 뚱뚱한 치보 즉석 카레</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 4 · 애매 3
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-01.jpg" alt="1장: 뚱뚱한 치보가 카레로 나옴???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-02.jpg" alt="2장: FF14 속 통통한 탈것 치보가 모델" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-03.jpg" alt="3장: 조리법은 간단 전자레인지나 끓는 물에 데우면 끝" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-04.jpg" alt="4장: 카레 색깔이 노란색이래 치보 깃털색 느낌" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-05.jpg" alt="5장: 안에 닭고기 들어 있음 근데 치보 고기는 아님" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-06.jpg" alt="6장: 가격은 1,080엔 10월 16일부터 온라인 판매" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-07.jpg" alt="7장: 한국에도 이런 카레 나오려나?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/6ab31be20fa6/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">뚱뚱한 치보가 카레로 나왔다는 소식이야. 파이널 판타지14에 나오는 통통한 버전의 치보가 이번 즉석 카레의 모델이래. 정식 이름은 &#39;FFXIV 뚱뚱한 치보 카레&#39;고, 스퀘어 에닉스에서 내놓는 제품이야.
+
+일본에는 파우치에 담긴 즉석 카레가 있어. 전자레인지나 끓는 물에 데운 다음 밥 위에 부어 먹는 방식이라, 보통 카레를 만드는 것보다 훨씬 짧은 시간에 한 끼가 완성돼. 이번 제품도 이런 파우치 카레야.
+
+맛은 진하면서 맵기는 순한 카레로, &#39;뚱뚱한 치보의 이미지&#39;를 담았다고 해. 눈에 띄는 건 노란 루인데, 치보의 카나리아색 깃털을 떠올리게 하려는 설정이래. 안에는 닭고기 조각이 들어 있어. 다만 스퀘어 에닉스는 현실에서 치보 고기를 맛보는 상품으로 밀고 있진 않대.
+
+판매는 두 갈래야. 10월 31일과 11월 1일 열리는 FFXIV 팬 페스티벌 도쿄 현장에서 살 수 있고, 스퀘어 에닉스 온라인 숍에서도 1,080엔(약 6.8달러)에 살 수 있어. 온라인 판매는 10월 16일부터 시작이야.
+
+게임 캐릭터가 이렇게 집에서 먹는 카레가 되는 거, 한국에도 들어올 수 있을까? 너라면 사 먹어볼래?
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#파이널판타지 #치보 #즉석카레 #일본편의점 #게임굿즈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>파이널 판타지 즉석 카레가 이번 달 나왔고, 뚱뚱한 치보가 보증(모델) 역할을 한다 <small>애매 · 원문은 &#39;As of this month&#39;로 이번 달 출시를 말하고 &#39;보증(endorsed)&#39;은 모델 역할을 뜻한다. &#39;이번 달&#39;은 원문 기준 시점이며 &#39;모델&#39;이라는 번역은 대체로 맞지만 &#39;보증&#39; 표현은 약간 과장될 수 있다. &#39;이번 달 나왔고&#39;는 원문의 &#39;as of this month&#39;와 대체로 일치하나 발매 시점 확정은 아니다.</small></li><li>뚱뚱한 치보의 이미지를 담은 진하고 순한 맵기의 카레이며, 노란 루는 치보의 카나리아색 깃털을 떠올리게 하려는 것이다 <small>애매 · 원문은 &#39;진하고 맵기가 순한 카레&#39;이며 &#39;뚱뚱한 치보의 이미지&#39;를 담았고 노란 루는 카나리아색 깃털을 떠올리게 하려는 것이라고 되어 있어 대체로 맞다. 다만 &#39;설정&#39;이라는 뉘앙스가 원문에 없으므로 의도 표현을 그대로 옮기는 것이 정확하다.</small></li><li>10월 31일과 11월 1일 FFXIV 팬 페스티벌 도쿄 현장에서 판매되고, 스퀘어 에닉스 온라인 숍에서도 1,080엔(약 6.8달러)에 살 수 있다 <small>애매 · 원문은 10월 31일과 11월 1일 팬 페스티벌 도쿄 현장 판매와 온라인 숍에서 1,080엔(US$6.80)에 구매 가능하다고 되어 있다. 다만 &#39;약 6.8달러&#39;는 원문 표기 그대로이며 온라인 숍 판매가 현장과 동일 조건인지는 명시되지 않았다. 원문의 &#39;purchasable&#39; 표현은 맞다.</small></li>
+          <li>근거 등록 안 된 주장: 정식 이름이 &#39;FFXIV 뚱뚱한 치보 카레&#39;이며 스퀘어 에닉스가 내놓는 제품이라는 주장(원문은 &#39;Final Fantasy XIV Fat Chocobo Curry&#39;이며 publisher는 Square Enix)</li><li>근거 등록 안 된 주장: 일본에 파우치 즉석 카레가 있다는 설명(원문에 있으나 claims 목록에 별도 항목 없음)</li><li>근거 등록 안 된 주장: 카레 제품이 &#39;이번 즉석 카레&#39;라는 표현 및 &#39;한국에도 나오려나&#39;라는 질문은 의견·질문이라 제외</li>
+          <li>파이널 판타지·치보 캐릭터는 스퀘어 에닉스 IP라 공식 이미지나 로고를 카드에 쓰면 안 됨</li><li>판매일과 가격은 원문 기준이라 변동 가능성이 있음</li><li>한국 발매 여부와 국내 팬덤 반응은 확인되지 않아 질문형으로만 다룸</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-6ab31be20fa6-0">1장</label>
+          <textarea id="s-6ab31be20fa6-0" rows="2" data-slide="0">뚱뚱한 치보가
+**카레로** 나옴???</textarea>
+          
+          <label class="f" for="s-6ab31be20fa6-1">2장</label>
+          <textarea id="s-6ab31be20fa6-1" rows="3" data-slide="1">FF14 속
+**통통한 탈것**
+치보가 모델</textarea>
+          
+          <label class="f" for="s-6ab31be20fa6-2">3장</label>
+          <textarea id="s-6ab31be20fa6-2" rows="3" data-slide="2">조리법은 간단
+전자레인지나
+끓는 물에 **데우면 끝**</textarea>
+          
+          <label class="f" for="s-6ab31be20fa6-3">4장</label>
+          <textarea id="s-6ab31be20fa6-3" rows="3" data-slide="3">카레 색깔이
+**노란**색이래
+치보 깃털색 느낌</textarea>
+          
+          <label class="f" for="s-6ab31be20fa6-4">5장</label>
+          <textarea id="s-6ab31be20fa6-4" rows="3" data-slide="4">안에 **닭고기**
+들어 있음
+근데 치보 고기는 아님</textarea>
+          
+          <label class="f" for="s-6ab31be20fa6-5">6장</label>
+          <textarea id="s-6ab31be20fa6-5" rows="3" data-slide="5">가격은 **1,080엔**
+10월 16일부터
+온라인 판매</textarea>
+          
+          <label class="f" for="s-6ab31be20fa6-6">7장</label>
+          <textarea id="s-6ab31be20fa6-6" rows="3" data-slide="6">**한국에도**
+이런 카레
+나오려나?</textarea>
+          
+          <label class="f" for="c-6ab31be20fa6">본문 (캡션)</label>
+          <textarea id="c-6ab31be20fa6" class="caption">뚱뚱한 치보가 카레로 나왔다는 소식이야. 파이널 판타지14에 나오는 통통한 버전의 치보가 이번 즉석 카레의 모델이래. 정식 이름은 &#39;FFXIV 뚱뚱한 치보 카레&#39;고, 스퀘어 에닉스에서 내놓는 제품이야.
+
+일본에는 파우치에 담긴 즉석 카레가 있어. 전자레인지나 끓는 물에 데운 다음 밥 위에 부어 먹는 방식이라, 보통 카레를 만드는 것보다 훨씬 짧은 시간에 한 끼가 완성돼. 이번 제품도 이런 파우치 카레야.
+
+맛은 진하면서 맵기는 순한 카레로, &#39;뚱뚱한 치보의 이미지&#39;를 담았다고 해. 눈에 띄는 건 노란 루인데, 치보의 카나리아색 깃털을 떠올리게 하려는 설정이래. 안에는 닭고기 조각이 들어 있어. 다만 스퀘어 에닉스는 현실에서 치보 고기를 맛보는 상품으로 밀고 있진 않대.
+
+판매는 두 갈래야. 10월 31일과 11월 1일 열리는 FFXIV 팬 페스티벌 도쿄 현장에서 살 수 있고, 스퀘어 에닉스 온라인 숍에서도 1,080엔(약 6.8달러)에 살 수 있어. 온라인 판매는 10월 16일부터 시작이야.
+
+게임 캐릭터가 이렇게 집에서 먹는 카레가 되는 거, 한국에도 들어올 수 있을까? 너라면 사 먹어볼래?
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-6ab31be20fa6">해시태그</label>
+          <input id="t-6ab31be20fa6" type="text" class="tagsin" value="#파이널판타지 #치보 #즉석카레 #일본편의점 #게임굿즈" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>파이널 판타지 즉석 카레가 이번 달 나왔고, 뚱뚱한 치보가 보증(모델) 역할을 한다</b>
+            <q>“As of this month, there’s even Final Fantasy instant curry, personally endorsed by none other than that most gastronomically motivated of recurring creatures, the Fat Chocobo!”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>뚱뚱한 치보의 이미지를 담은 진하고 순한 맵기의 카레이며, 노란 루는 치보의 카나리아색 깃털을 떠올리게 하려는 것이다</b>
+            <q>“So while the Final Fantasy XIV Fat Chocobo Curry (to use the product’s full name) does have pieces of chicken in it, publisher Square Enix isn’t pushing this as a chance to taste chocobo meat in the real world, but instead as a rich, mild-spiciness curry “in the image of the Fat Chocobo,” with its unique yellow roux meant to remind fans of the chocobo’s canary-colored feathers.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>10월 31일과 11월 1일 FFXIV 팬 페스티벌 도쿄 현장에서 판매되고, 스퀘어 에닉스 온라인 숍에서도 1,080엔(약 6.8달러)에 살 수 있다</b>
+            <q>“The Fat Chocobo Curry is set to be offered for sale on-site at the upcoming Final Fantasy XIV Fan Festival Tokyo event on October 31 and November 1, but it will also be purchasable through the Square Enix online shop here, priced at 1,080 yen (US$6.80)”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카레의 모델은 FF14에 나오는 통통한 버전의 치보다</b>
+            <q>“Specifically, it’s the chubby version of the franchise’s winged mount that appears in Final Fantasy XIV that’s giving this instant curry its sign of approval.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>즉석 카레 파우치는 전자레인지나 끓는 물에 데워 밥에 부어 먹으며 조리 시간이 짧다</b>
+            <q>“The country also has instant curry that comes in pouches you heat up, either in the microwave or in a pot of boiling water, and can then pour over rice for a hot meal in just a fraction of the amount of time it would take to cook curry the conventional way.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카레에는 닭고기 조각이 들어 있고, 스퀘어 에닉스는 현실에서 치보 고기를 맛보는 상품으로 내세우지 않는다</b>
+            <q>“So while the Final Fantasy XIV Fat Chocobo Curry (to use the product’s full name) does have pieces of chicken in it, publisher Square Enix isn’t pushing this as a chance to taste chocobo meat in the real world, but instead as a rich, mild-spiciness curry “in the image of the Fat Chocobo,” with its unique yellow roux meant to remind fans of the chocobo’s canary-colored feathers.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>온라인 판매는 10월 16일에 공식 시작된다</b>
+            <q>“We won’t know until after online sales officially start on October 16.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/11/final-fantasy-fat-chocobo-curry-coming-to-fill-up-fans-even-if-they-cant-attend-fan-festival/" target="_blank" rel="noopener">Final Fantasy Fat Chocobo Curry coming to fill up fans, even if they can’t attend Fan Festival</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/curry-food-dish-meal-cuisine-7249247/" target="_blank" rel="noopener">joannawielgosz / Pixabay</a> — "pouch curry over rice on sunlit table"</li><li>2장: <a href="https://pixabay.com/photos/goose-gosling-egyptian-goose-baby-7161311/" target="_blank" rel="noopener">JonPauling / Pixabay</a> — "fluffy chick"</li><li>3장: <a href="https://pixabay.com/photos/kitchen-interior-design-room-home-1940174/" target="_blank" rel="noopener">shadowfirearts / Pixabay</a> — "microwave"</li><li>4장: <a href="https://pixabay.com/photos/parrot-bird-macaw-plumage-amazon-9295172/" target="_blank" rel="noopener">DavidClode / Pixabay</a> — "yellow feathers"</li><li>5장: <a href="https://pixabay.com/photos/fried-chicken-food-fried-chicken-3949947/" target="_blank" rel="noopener">NikkkOO / Pixabay</a> — "fried chicken"</li><li>6장: <a href="https://pixabay.com/photos/women-vietnam-asia-hung-yen-5488183/" target="_blank" rel="noopener">11153496 / Pixabay</a> — "yen coins"</li><li>7장: <a href="https://pixabay.com/photos/city-building-architecture-urban-7358078/" target="_blank" rel="noopener">Alef_photograph / Pixabay</a> — "seoul city"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-f58281014b3c" data-id="f58281014b3c">
+    <div class="head">
+      <h2>2. LineageOS 24.0 릴리스 - 맥에서도 부팅</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 17
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/f58281014b3c/v1-01.jpg" alt="1장: 애플 맥에서 커스텀롬 부팅?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/f58281014b3c/v1-02.jpg" alt="2장: 라인에이지OS 안드로이드17 기반 올해는 빨랐대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/f58281014b3c/v1-03.jpg" alt="3장: 맥만이 아냐 x86 PC도 DGX Spark도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/f58281014b3c/v1-04.jpg" alt="4장: 설치도 쉬워졌어 브라우저에서 바로 플래시" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/f58281014b3c/v1-05.jpg" alt="5장: 12월 24일이면 10주년이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/f58281014b3c/v1-06.jpg" alt="6장: 한국에선? 갤럭시 S23도 살릴 수 있을까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/f58281014b3c/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">애플 맥에서 커스텀롬이 부팅됐다는 소식이야. 안드로이드 기반 커스텀 OS인 LineageOS 팀이 공식 블로그에 올린 24.0 릴리스 노트에 나온 내용인데, 아직 실험 단계라는 단서가 붙어 있어.
+
+기여자 0xCAFEBABE가 소개한 새 제네릭 타깃은 가상화나 에뮬레이터 없이 베어메탈 하드웨어에서 돌릴 수 있는 방식이야. 지금까지 부팅에 성공한 건 일반 x86_64 PC, 애플 실리콘 맥, NVIDIA DGX Spark, 퀄컴 스냅드래곤 X 시리즈 노트북이야.
+
+이번 릴리스는 안드로이드 17 기반이야. 6월에 안드로이드 17이 나온 뒤 기존 변경 사항을 다시 얹는 작업을 해왔는데, 예상보다 빨리 끝나서 올해는 일찍 나왔다고 해.
+
+설치 쪽도 달라졌어. WebUSB로 브라우저에서 호환 기기와 바로 통신하는 플래시 도구를 내놨고, ADB, Fastboot, Amlogic Burn, 삼성 Odin 방식을 지원해. 별도의 플래싱 프로그램을 찾아 깔 일을 줄여주는 거야. 다만 기존 설치 가이드를 대체하는 건 아니고, 기기·브라우저·운영체제·USB 연결에 따라 호환성이 다르대. 플래싱은 늘 위험이 따르니까 백업은 필수야.
+
+그리고 12월 24일이면 LineageOS가 10주년을 맞아. 이번 릴리스는 그 직전에 나온 거래.
+
+한국 쪽은 빌드 목록에 갤럭시 S23 같은 삼성 기기가 보이는데, 국내에서 쓰는 모델까지 해당되는지는 따로 확인이 필요해. 한국에서도 이런 흐름이 이어질까?
+
+출처: LineageOS 공식 블로그 (Changelog 32)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#LineageOS #안드로이드 #커스텀롬 #오픈소스 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: LineageOS 팀이 공식 블로그에 올린 릴리스가 24.0 버전이라는 내용</li><li>근거 등록 안 된 주장: 출처가 LineageOS 공식 블로그 Changelog 32라는 내용</li><li>근거 등록 안 된 주장: 이번 릴리스가 10주년 직전에 나왔다는 내용(claim 0의 날짜와 연결된 해석)</li>
+          <li>맥 등에서의 부팅은 원문상 실험 단계라 실제 사용 가능한 수준으로 오해하지 않도록 주의</li><li>단일 출처(LineageOS 공식 블로그)에 의존, 제3자 검증 없음</li><li>갤럭시 S23 목록은 표 기준이며 국내 판매 모델 지원 여부는 확인되지 않음</li><li>플래싱은 기기 손상·데이터 손실 위험이 있음</li><li>원문 빌드 목록 표가 중간에 잘려 있어 기기 수 등은 인용하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-f58281014b3c-0">1장</label>
+          <textarea id="s-f58281014b3c-0" rows="2" data-slide="0">애플 맥에서
+**커스텀롬** 부팅?!</textarea>
+          
+          <label class="f" for="s-f58281014b3c-1">2장</label>
+          <textarea id="s-f58281014b3c-1" rows="3" data-slide="1">라인에이지OS
+**안드로이드17 기반**
+올해는 빨랐대</textarea>
+          
+          <label class="f" for="s-f58281014b3c-2">3장</label>
+          <textarea id="s-f58281014b3c-2" rows="3" data-slide="2">맥만이 아냐
+x86 PC도
+**DGX Spark도**</textarea>
+          
+          <label class="f" for="s-f58281014b3c-3">4장</label>
+          <textarea id="s-f58281014b3c-3" rows="3" data-slide="3">설치도 쉬워졌어
+**브라우저에서**
+바로 플래시</textarea>
+          
+          <label class="f" for="s-f58281014b3c-4">5장</label>
+          <textarea id="s-f58281014b3c-4" rows="2" data-slide="4">12월 24일이면
+**10주년이래**</textarea>
+          
+          <label class="f" for="s-f58281014b3c-5">6장</label>
+          <textarea id="s-f58281014b3c-5" rows="3" data-slide="5">**한국에선?**
+갤럭시 S23도
+살릴 수 있을까?</textarea>
+          
+          <label class="f" for="c-f58281014b3c">본문 (캡션)</label>
+          <textarea id="c-f58281014b3c" class="caption">애플 맥에서 커스텀롬이 부팅됐다는 소식이야. 안드로이드 기반 커스텀 OS인 LineageOS 팀이 공식 블로그에 올린 24.0 릴리스 노트에 나온 내용인데, 아직 실험 단계라는 단서가 붙어 있어.
+
+기여자 0xCAFEBABE가 소개한 새 제네릭 타깃은 가상화나 에뮬레이터 없이 베어메탈 하드웨어에서 돌릴 수 있는 방식이야. 지금까지 부팅에 성공한 건 일반 x86_64 PC, 애플 실리콘 맥, NVIDIA DGX Spark, 퀄컴 스냅드래곤 X 시리즈 노트북이야.
+
+이번 릴리스는 안드로이드 17 기반이야. 6월에 안드로이드 17이 나온 뒤 기존 변경 사항을 다시 얹는 작업을 해왔는데, 예상보다 빨리 끝나서 올해는 일찍 나왔다고 해.
+
+설치 쪽도 달라졌어. WebUSB로 브라우저에서 호환 기기와 바로 통신하는 플래시 도구를 내놨고, ADB, Fastboot, Amlogic Burn, 삼성 Odin 방식을 지원해. 별도의 플래싱 프로그램을 찾아 깔 일을 줄여주는 거야. 다만 기존 설치 가이드를 대체하는 건 아니고, 기기·브라우저·운영체제·USB 연결에 따라 호환성이 다르대. 플래싱은 늘 위험이 따르니까 백업은 필수야.
+
+그리고 12월 24일이면 LineageOS가 10주년을 맞아. 이번 릴리스는 그 직전에 나온 거래.
+
+한국 쪽은 빌드 목록에 갤럭시 S23 같은 삼성 기기가 보이는데, 국내에서 쓰는 모델까지 해당되는지는 따로 확인이 필요해. 한국에서도 이런 흐름이 이어질까?
+
+출처: LineageOS 공식 블로그 (Changelog 32)</textarea>
+          <label class="f" for="t-f58281014b3c">해시태그</label>
+          <input id="t-f58281014b3c" type="text" class="tagsin" value="#LineageOS #안드로이드 #커스텀롬 #오픈소스 #해외이슈" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>LineageOS는 2026년 12월 24일에 10주년을 맞는다</b>
+            <q>“On December 24, 2026, LineageOS will celebrate 10 years.”</q>
+            <small>slide5, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 릴리스는 안드로이드 17 기반의 업데이트된 LineageOS다</b>
+            <q>“The last year has been crazy, but we have remained dedicated to bringing an updated LineageOS based on Android 17 to the masses!”</q>
+            <small>slide2, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해는 예상보다 빨리 나왔다</b>
+            <q>“Yes you read that right: We’re early this year!”</q>
+            <small>slide2, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>안드로이드 17은 6월에 출시됐고 그 뒤로 기존 변경 사항을 다시 얹는 작업을 했다</b>
+            <q>“We’ve been hard at work rebasing all of our changes and features since Android 17’s release in June.”</q>
+            <small>caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기여자 0xCAFEBABE가 베어메탈 하드웨어에서 돌릴 수 있는 새 제네릭 타깃을 소개했다</b>
+            <q>“Recently, Contributor 0xCAFEBABE introduced a very different kind of generic target that can be run on various types of bare-metal hardware devices.”</q>
+            <small>slide1, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 타깃은 아직 실험 단계지만 여러 기기에서 부팅에 성공했다</b>
+            <q>“While it’s still in experimental state, it has successfully booted on:”</q>
+            <small>slide1, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>애플 실리콘 맥에서 부팅에 성공했다</b>
+            <q>“Apple Silicon Macs”</q>
+            <small>slide1, slide3, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일반 x86_64 PC에서 부팅에 성공했다</b>
+            <q>“Common x86_64 PCs”</q>
+            <small>slide3, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NVIDIA DGX Spark에서 부팅에 성공했다</b>
+            <q>“NVIDIA DGX Spark”</q>
+            <small>slide3, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>퀄컴 스냅드래곤 X 시리즈 노트북에서 부팅에 성공했다</b>
+            <q>“Qualcomm Snapdragon X Series Laptops”</q>
+            <small>caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 타깃들은 가상화나 에뮬레이션 스택이 필요 없는 방식이다(기존 제네릭 타깃은 필요)</b>
+            <q>“The generic targets mentioned above all require either an existing Android device, or some sort of virtualization/emulation software stack to run.”</q>
+            <small>caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>WebUSB로 브라우저에서 호환 기기와 직접 통신해 별도 플래싱 프로그램 필요를 줄인다</b>
+            <q>“These tools use WebUSB to communicate directly with compatible devices from your browser, reducing the need to find, install, and run separate flashing utilities.”</q>
+            <small>slide4, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>ADB, Fastboot, Amlogic Burn, 삼성 Odin 방식용 브라우저 기반 플래시 도구를 내놨다</b>
+            <q>“We’re launching new browser-based flash tools for several common device-installation methods:”</q>
+            <small>caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>WebUSB 도구는 기존 설치 가이드를 대체하지 않는다</b>
+            <q>“This does not replace our existing installation guides.”</q>
+            <small>caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>호환성은 기기, 브라우저, 운영체제, USB 연결에 따라 다르다</b>
+            <q>“Availability and compatibility will vary by device, browser, operating system, and USB connection, so please read the tool’s guidance carefully before proceeding.”</q>
+            <small>caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>플래싱은 위험이 있으므로 백업이 필요하다</b>
+            <q>“As always, flashing custom software carries risk. Back up anything important, confirm that you have selected the correct files and device, and follow the instructions presented by the tool.”</q>
+            <small>caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빌드 목록 표에 삼성 갤럭시 S23이 들어 있다</b>
+            <q>“| Samsung Galaxy S23 | dm1q | DaemonMCR, josip-k, krazey | 23.2 | ”</q>
+            <small>slide6, caption · <a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://lineageos.org/Changelog-32/" target="_blank" rel="noopener">Changelog 32 - Slick Seventeen, Awesome Applications, Universal USB Tools</a> (기사)</li><li><a href="https://github.com/LineageOS/android_kernel_amlogic_linux-4.9" target="_blank" rel="noopener">GitHub - LineageOS/android_kernel_amlogic_linux-4.9</a> (1차 출처)</li><li><a href="https://github.com/LineageOS/android_kernel_amlogic_kernel-5.15" target="_blank" rel="noopener">GitHub - LineageOS/android_kernel_amlogic_kernel-5.15</a> (1차 출처)</li>
+            <li><a href="https://news.ycombinator.com/item?id=50040276" target="_blank" rel="noopener">해외 반응 (Hacker News)</a></li>
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/macbook-laptop-google-display-459196/" target="_blank" rel="noopener">377053 / Pixabay</a> — "laptop and smartphone on bright sunlit desk"</li><li>2장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li><li>3장: <a href="https://pixabay.com/photos/keyboard-computer-keys-white-886462/" target="_blank" rel="noopener">Simon / Pixabay</a> — "computer hardware"</li><li>4장: <a href="https://pixabay.com/photos/phone-connector-usb-connector-6920458/" target="_blank" rel="noopener">8618939 / Pixabay</a> — "usb cable"</li><li>5장: <a href="https://pixabay.com/photos/color-firework-night-city-colorful-7957849/" target="_blank" rel="noopener">VietFotos / Pixabay</a> — "fireworks"</li><li>6장: <a href="https://pixabay.com/photos/hands-phone-smartphone-electronics-1851218/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "mobile phones"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-41eac253c9b5" data-id="41eac253c9b5">
+    <div class="head">
+      <h2>3. 스타틴과 녹내장 연구</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>인스타에 올라감 · 10/13</b>
+      <p>이미 올라간 게시물이라 여기서는 더 고칠 수 없어요.</p>
+      
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>콜레스테롤 약이 눈에도 영향을 줄 수 있다는 연구가 나왔어. 미국 캘리포니아대 샌디에이고 연구팀이, 스타틴을 복용하는 녹내장 환자들이 수술이나 안약 추가 같은 더 센 치료를 덜 필요로 하는 경향이 있다고 밝혔대.
+
+녹내장은 시력이 아주 천천히 떨어져서 &#39;소리 없는 시력 도둑&#39;이라고 불려. 치료하지 않으면 시신경이 손상돼서 실명까지 갈 수 있어.
+
+연구팀은 1억 6,500만 명 규모의 글로벌 데이터베이스에서 스타틴 사용 기록이 있는 환자 21만 명 이상과, 사용 기록이 없는 비슷한 조건의 21만 명을 비교했어.
+
+5년 시점 결과는 이래.
+- 절개 녹내장 수술 위험 36% 낮음
+- 최소침습 녹내장 수술(MIGS) 위험 55% 낮음
+- 레이저 시술(SLT) 위험 60% 낮음
+- 안압 낮추는 안약 필요 위험 12% 낮음
+10년 뒤에도 이런 경향은 이어졌다고 해.
+
+별도 분석에서는 스타틴을 쓰는 녹내장 환자 3만 명 이상을, 쓰지 않는 약 25만 명과 비교했어. 연구를 이끈 와인라이브 박사는 스타틴이 신경세포 사멸을 막거나 늦출 수 있다는 연구들이 있었다고 말했어.
+
+다만 관찰 연구라서 스타틴이 원인이라고 단정할 수는 없어. 지금 말할 수 있는 건 &#39;연관성&#39;까지야. 약 복용 여부는 꼭 의사와 상의해야 해.
+
+출처: Good News Network, British Journal of Ophthalmology
+
+배경 사진: LhcCoutinho, 12019, Pexels, newarta, vitalworks / Pixabay
+표지 이미지: AI 생성
+
+#스타틴 #녹내장 #눈건강 #콜레스테롤 #해외이슈</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-41eac253c9b5">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 콜레스테롤 약이 눈 수술 위험과 연결돼 있더라는 의외성에, 부모님 세대가 많이 먹는 약이라는 생활 접점을 얹고 &#39;연관성일 뿐&#39;이라는 선을 지켜서 푼다</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 한국에선 관련 연구가 있을지 던지는 마지막 질문 (카드 7장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">콜레스테롤 약(스타틴) 먹는 녹내장 환자는 수술을 덜 받는 경향이 있었대
+5년 뒤 최소침습 수술 위험이 55%나 낮았음
+근데 이걸 &#39;약 덕분&#39;이라고 단정하면 안 되는 이유가 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">1/ 스타틴 쓴 녹내장 환자는 5년 뒤 최소침습 녹내장 수술(MIGS)을 받을 위험이 55%, 절개 수술은 36% 낮았어.
+콜레스테롤 약인데 눈 수술 위험이 갈렸다는 거야. 대체 몇 명을 비교한 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">154/500자</span></div>
+      <p class="tp-text">2/ 녹내장은 시력이 아주 천천히 떨어져서 &#39;소리 없는 시력 도둑&#39;이라 불려.
+미국 캘리포니아대 샌디에이고 연구팀은 1억 6,500만 명 규모 글로벌 데이터베이스에서 스타틴 기록이 있는 환자 21만 명 이상과, 기록 없는 비슷한 조건의 21만 명을 비교했어. 수술만 줄었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">3/ 5년 시점 결과 정리
+- 절개 녹내장 수술 위험 36% 낮음
+- 최소침습 수술(MIGS) 위험 55% 낮음
+- 레이저 시술(SLT) 위험 60% 낮음
+- 안압 낮추는 안약 필요 위험 12% 낮음
+10년 뒤에도 이런 경향은 이어졌대. 다른 분석에서도 같았을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">4/ 별도 분석에서는 스타틴 쓰는 녹내장 환자 3만 명 이상을, 안 쓰는 약 25만 명과 비교했어.
+연구를 이끈 와인라이브 박사는 스타틴이 신경세포 사멸을 막거나 늦출 수 있다는 연구들이 있었다고 말했대. 그럼 이제 약 먹으면 되는 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">5/ 아직 거기까진 못 가. 관찰 연구라서 스타틴이 원인이라고 단정할 수는 없어.
+지금 말할 수 있는 건 &#39;연관성&#39;까지야. 약을 먹을지 말지는 꼭 의사랑 상의해야 해.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">188/500자</span></div>
+      <p class="tp-text">6/ 주변에 콜레스테롤 약을 오래 드시는 분이 있다면, 눈 검진은 얼마나 챙기고 있어? 아는 만큼 얘기해줘.
+다음 배송: 일본 원숭이 고양이 연못 투척 사건 얘기. 팔로우해두면 피드에 뜸
+카드엔 한국 쪽 연구는 어떤지 던진 질문까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 카드 보너스가 스레드에 드러남 <small>6/ 글의 &#39;카드엔 한국 쪽 연구는 어떤지 던진 질문까지 정리해 둠&#39;이 보너스의 주제(한국 관련 연구 질문)를 미리 밝혀 버렸다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>콜레스테롤 약 먹는 녹내장 환자는 수술을 덜 받는 경향이 있대</li><li>녹내장 수술 위험이 55% 낮았던 사람들, 공통점이 콜레스테롤 약이었음</li><li>콜레스테롤 약은 심장만 챙기는 약이 아니라 눈이랑도 연결돼 있을 수 있대</li><li>21만 명을 5년 동안 비교했더니 녹내장 수술 위험이 갈렸어</li><li>&#39;소리 없는 시력 도둑&#39; 녹내장, 의외의 약과 연관이 나왔대</li><li>같은 녹내장 환자인데 스타틴 먹은 쪽만 안약 추가가 덜 필요했대</li><li>스타틴이 눈에도 영향을 줄 수 있다는 연구, 1억 6,500만 명 데이터에서 나옴</li><li>녹내장은 안약이나 수술 얘기만 하는 병이 아니라 먹는 약과의 연관도 보는 병이래</li><li>부모님이 콜레스테롤 약 드신다면 눈 얘기도 한번 알아둘 만한 연구가 나옴</li><li>스타틴 쓴 녹내장 환자, 10년 뒤에도 같은 경향이 이어졌대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>주변에 콜레스테롤 약을 오래 드시는 분이 있다면, 눈 검진은 얼마나 챙기고 있어?</li><li>건강검진 항목 중에 &#39;이건 왜 하지?&#39; 싶었는데 알고 보니 중요했던 거 있어?</li><li>약 먹을 때 &#39;이 약이 다른 데도 영향 줄까&#39; 궁금해서 찾아본 적 있어?</li><li>눈 건강 챙기려고 따로 하는 습관 있으면 뭐야?</li><li>부모님 건강 관련해서 가장 먼저 챙기게 되는 검사가 뭐야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>일본 원숭이 고양이 연못 투척 사건</li><li>지브리 스탬프 랠리 사가시</li><li>세계 최대 호박 2,856파운드 기록</li><li>맥킨지 AI 고객 면접</li><li>관찰 연구와 인과 확인 연구는 뭐가 다른지</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>의료 정보라 약 복용을 권하는 것으로 읽히지 않게 &#39;연관성까지, 복용은 의사와 상담&#39; 문구가 유지되는지 확인</li><li>퍼센트 수치는 모두 5년 시점 기준이고, 본글의 &#39;55%&#39;는 최소침습 수술(MIGS) 한정이라는 점 확인</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-01.jpg" alt="1장: 녹내장에도 콜레스테롤 약이 좋다??" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-02.jpg" alt="2장: 녹내장은 소리 없는 시력 도둑" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-03.jpg" alt="3장: 녹내장 환자 중 스타틴 복용자는 치료를 적게 요구" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-04.jpg" alt="4장: 글로벌 데이터베이스에서 스타틴 사용 기록 유무로 환자 21만 명 이상 비교했어." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-05.jpg" alt="5장: 5년 뒤 수술 위험 최소침습 55% 감소 절개 수술 36% 감소" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-06.jpg" alt="6장: 단, 관찰 연구 인과는 아직 확정 못 해" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-07.jpg" alt="7장: 한국에선 관련 연구 있을까? 궁금하다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261012-am-f45c57417b9c/41eac253c9b5/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">콜레스테롤 약이 눈에도 영향을 줄 수 있다는 연구가 나왔어. 미국 캘리포니아대 샌디에이고 연구팀이, 스타틴을 복용하는 녹내장 환자들이 수술이나 안약 추가 같은 더 센 치료를 덜 필요로 하는 경향이 있다고 밝혔대.
+
+녹내장은 시력이 아주 천천히 떨어져서 &#39;소리 없는 시력 도둑&#39;이라고 불려. 치료하지 않으면 시신경이 손상돼서 실명까지 갈 수 있어.
+
+연구팀은 1억 6,500만 명 규모의 글로벌 데이터베이스에서 스타틴 사용 기록이 있는 환자 21만 명 이상과, 사용 기록이 없는 비슷한 조건의 21만 명을 비교했어.
+
+5년 시점 결과는 이래.
+- 절개 녹내장 수술 위험 36% 낮음
+- 최소침습 녹내장 수술(MIGS) 위험 55% 낮음
+- 레이저 시술(SLT) 위험 60% 낮음
+- 안압 낮추는 안약 필요 위험 12% 낮음
+10년 뒤에도 이런 경향은 이어졌다고 해.
+
+별도 분석에서는 스타틴을 쓰는 녹내장 환자 3만 명 이상을, 쓰지 않는 약 25만 명과 비교했어. 연구를 이끈 와인라이브 박사는 스타틴이 신경세포 사멸을 막거나 늦출 수 있다는 연구들이 있었다고 말했어.
+
+다만 관찰 연구라서 스타틴이 원인이라고 단정할 수는 없어. 지금 말할 수 있는 건 &#39;연관성&#39;까지야. 약 복용 여부는 꼭 의사와 상의해야 해.
+
+출처: Good News Network, British Journal of Ophthalmology</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#스타틴 #녹내장 #눈건강 #콜레스테롤 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 와인라이브(Weinreb) 박사가 이 연구를 이끌었다는 주장</li><li>근거 등록 안 된 주장: 연구 데이터 기간이 2006년부터 2026년까지였다는 주장</li><li>근거 등록 안 된 주장: 두 비교 집단 모두 안과 추적관찰 기록이 필요했다는 주장</li><li>근거 등록 안 된 주장: 스타틴 사용과 녹내장 진행 위험(가장 흔한 형태) 15% 감소 주장</li><li>근거 등록 안 된 주장: 출처가 Good News Network와 British Journal of Ophthalmology라는 주장</li>
+          <li>의료 정보: 관찰 연구라 인과관계 단정 불가, 스타틴 복용 권유로 읽히지 않도록 주의</li><li>원문 기간 표기(2006~2026)와 발행일이 미래 시점으로 되어 있어 날짜 정확성 확인 필요</li><li>한국 내 스타틴·녹내장 관련 정보는 확인되지 않아 질문형으로만 처리</li>
+        </ul>
+      </div>
+      
+
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>캘리포니아대 샌디에이고의 새 연구가 스타틴이 콜레스테롤 외의 효과도 있을 수 있음을 시사했다</b>
+            <q>“Statins may be protecting people from more than just cholesterol, suggests new research from the University of California in San Diego.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스타틴을 복용하는 녹내장 환자는 수술이 필요할 가능성이 낮고 악화 가능성도 낮아 보인다</b>
+            <q>“Patients with glaucoma who take the cholesterol-busting pills appear less likely to need surgery—and have a reduced chance of the condition worsening, according to the findings.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>녹내장은 시력이 서서히 떨어져 &#39;소리 없는 시력 도둑&#39;으로 불리며, 치료하지 않으면 시신경을 손상시켜 실명할 수 있다</b>
+            <q>“Called the “silent thief of sight” because the vision loss usually occurs slowly over a long period of time, glaucoma may cause blindness if left untreated, damaging the optic nerve, which transmits visual information from the eye to the brain.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 British Journal of Ophthalmology에 온라인 게재되었고, 스타틴을 복용하는 녹내장 환자가 안약 추가나 수술 같은 더 강한 치료를 덜 필요로 하는 것으로 나타났다</b>
+            <q>“The new study, published online in the British Journal of Ophthalmology, found that people who already have glaucoma who are taking statins appear less likely to need stronger treatments, such as extra eye drops or surgery to keep it under control.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1억 6,500만 명 규모의 글로벌 데이터베이스에서 스타틴 사용 기록이 있는 21만 명 이상을 사용 기록이 없는 21만 명과 비교했다</b>
+            <q>“Dr. Weinreb and his team searched a large global database covering 165 million people and compared more than 210,000 patients who had a record of statin use between 2006 and 2026 with a matched control group of 210,000 people who had no record of using statins.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>5년 시점에 스타틴 사용은 절개 녹내장 수술 위험 36% 감소, 최소침습 녹내장 수술(MIGS) 위험 55% 감소와 연관되었다</b>
+            <q>“At five years, statin use was associated with a 36% lower risk of incisional glaucoma surgery and a 55% reduced risk of minimally invasive glaucoma surgery (MIGS), a keyhole procedure to lower the intraocular pressure in the eye.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스타틴 사용은 선택적 레이저 섬유주성형술(SLT) 위험 60% 감소와 연관되었다</b>
+            <q>“Statins were also associated with a 60% lower risk of ‘selective laser trabeculoplasty’ (SLT), a procedure that lowers the pressure in the eye by using laser pulses.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스타틴 사용과 연관되어 안압을 낮추는 안약이 필요할 위험이 12% 낮았다</b>
+            <q>“There was also a 12% reduced risk of (needing) eye drops to reduce the pressure in the eye—linked to statin use.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10년 뒤에도 스타틴 사용은 절개 수술, MIGS, SLT, 안약 사용의 낮은 위험과 계속 연관되었다</b>
+            <q>“And after 10 years, statin use continued to be associated with a lower risk of incision glaucoma surgery, MIGS, SLT, and use of eye drops.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>별도 분석에서 스타틴을 복용하는 녹내장 환자 3만 명 이상을 복용하지 않는 약 25만 명과 비교했다</b>
+            <q>“In a separate analysis, more than 30,000 people with glaucoma who were taking statins were compared with almost 250,000 with glaucoma who weren’t taking the drug.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>와인라이브 박사는 스타틴이 신경세포 사멸을 막거나 늦출 수 있다는 연구가 있었다고 말했다</b>
+            <q>““Statins are prescribed to lower cholesterol levels but studies have indicated that they may also prevent or slow nerve cell death,” said study author Dr. Robert Weinreb.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>관찰 연구라서 원인과 결과에 대해 확정적 결론을 내릴 수 없다</b>
+            <q>“Although these were observational studies, so no firm conclusions can be drawn about cause and effect, the findings add to the growing literature about the neuro-protective effect of statin drugs.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/statin-drugs-may-protect-people-from-glaucoma/" target="_blank" rel="noopener">Statins May Protect People From Glaucoma or Blindness By Preventing or Slowing Nerve Cell Death</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "pills and eyeglasses on sunlit white table"</li><li>2장: <a href="https://pixabay.com/photos/eye-girl-human-sight-vision-macro-4559763/" target="_blank" rel="noopener">LhcCoutinho / Pixabay</a> — "human eye"</li><li>3장: <a href="https://pixabay.com/photos/optometrist-doctor-patient-eye-91750/" target="_blank" rel="noopener">12019 / Pixabay</a> — "eye exam"</li><li>4장: <a href="https://pixabay.com/photos/record-player-vinyl-1851576/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "medical database records"</li><li>5장: <a href="https://pixabay.com/photos/laser-operation-eye-operation-5091179/" target="_blank" rel="noopener">newarta / Pixabay</a> — "eye surgery microscope"</li><li>6장: <a href="https://pixabay.com/photos/blur-chart-computer-data-finance-1853262/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "data chart"</li><li>7장: <a href="https://pixabay.com/photos/hospital-ward-hospital-1338585/" target="_blank" rel="noopener">vitalworks / Pixabay</a> — "hospital"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261012-am";
+  const ORIGINAL = {"41eac253c9b5": {"caption": "\ucf5c\ub808\uc2a4\ud14c\ub864 \uc57d\uc774 \ub208\uc5d0\ub3c4 \uc601\ud5a5\uc744 \uc904 \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\uc5b4. \ubbf8\uad6d \uce98\ub9ac\ud3ec\ub2c8\uc544\ub300 \uc0cc\ub514\uc5d0\uc774\uace0 \uc5f0\uad6c\ud300\uc774, \uc2a4\ud0c0\ud2f4\uc744 \ubcf5\uc6a9\ud558\ub294 \ub179\ub0b4\uc7a5 \ud658\uc790\ub4e4\uc774 \uc218\uc220\uc774\ub098 \uc548\uc57d \ucd94\uac00 \uac19\uc740 \ub354 \uc13c \uce58\ub8cc\ub97c \ub35c \ud544\uc694\ub85c \ud558\ub294 \uacbd\ud5a5\uc774 \uc788\ub2e4\uace0 \ubc1d\ud614\ub300.\n\n\ub179\ub0b4\uc7a5\uc740 \uc2dc\ub825\uc774 \uc544\uc8fc \ucc9c\ucc9c\ud788 \ub5a8\uc5b4\uc838\uc11c \u0027\uc18c\ub9ac \uc5c6\ub294 \uc2dc\ub825 \ub3c4\ub451\u0027\uc774\ub77c\uace0 \ubd88\ub824. \uce58\ub8cc\ud558\uc9c0 \uc54a\uc73c\uba74 \uc2dc\uc2e0\uacbd\uc774 \uc190\uc0c1\ub3fc\uc11c \uc2e4\uba85\uae4c\uc9c0 \uac08 \uc218 \uc788\uc5b4.\n\n\uc5f0\uad6c\ud300\uc740 1\uc5b5 6,500\ub9cc \uba85 \uaddc\ubaa8\uc758 \uae00\ub85c\ubc8c \ub370\uc774\ud130\ubca0\uc774\uc2a4\uc5d0\uc11c \uc2a4\ud0c0\ud2f4 \uc0ac\uc6a9 \uae30\ub85d\uc774 \uc788\ub294 \ud658\uc790 21\ub9cc \uba85 \uc774\uc0c1\uacfc, \uc0ac\uc6a9 \uae30\ub85d\uc774 \uc5c6\ub294 \ube44\uc2b7\ud55c \uc870\uac74\uc758 21\ub9cc \uba85\uc744 \ube44\uad50\ud588\uc5b4.\n\n5\ub144 \uc2dc\uc810 \uacb0\uacfc\ub294 \uc774\ub798.\n- \uc808\uac1c \ub179\ub0b4\uc7a5 \uc218\uc220 \uc704\ud5d8 36% \ub0ae\uc74c\n- \ucd5c\uc18c\uce68\uc2b5 \ub179\ub0b4\uc7a5 \uc218\uc220(MIGS) \uc704\ud5d8 55% \ub0ae\uc74c\n- \ub808\uc774\uc800 \uc2dc\uc220(SLT) \uc704\ud5d8 60% \ub0ae\uc74c\n- \uc548\uc555 \ub0ae\ucd94\ub294 \uc548\uc57d \ud544\uc694 \uc704\ud5d8 12% \ub0ae\uc74c\n10\ub144 \ub4a4\uc5d0\ub3c4 \uc774\ub7f0 \uacbd\ud5a5\uc740 \uc774\uc5b4\uc84c\ub2e4\uace0 \ud574.\n\n\ubcc4\ub3c4 \ubd84\uc11d\uc5d0\uc11c\ub294 \uc2a4\ud0c0\ud2f4\uc744 \uc4f0\ub294 \ub179\ub0b4\uc7a5 \ud658\uc790 3\ub9cc \uba85 \uc774\uc0c1\uc744, \uc4f0\uc9c0 \uc54a\ub294 \uc57d 25\ub9cc \uba85\uacfc \ube44\uad50\ud588\uc5b4. \uc5f0\uad6c\ub97c \uc774\ub048 \uc640\uc778\ub77c\uc774\ube0c \ubc15\uc0ac\ub294 \uc2a4\ud0c0\ud2f4\uc774 \uc2e0\uacbd\uc138\ud3ec \uc0ac\uba78\uc744 \ub9c9\uac70\ub098 \ub2a6\ucd9c \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c\ub4e4\uc774 \uc788\uc5c8\ub2e4\uace0 \ub9d0\ud588\uc5b4.\n\n\ub2e4\ub9cc \uad00\ucc30 \uc5f0\uad6c\ub77c\uc11c \uc2a4\ud0c0\ud2f4\uc774 \uc6d0\uc778\uc774\ub77c\uace0 \ub2e8\uc815\ud560 \uc218\ub294 \uc5c6\uc5b4. \uc9c0\uae08 \ub9d0\ud560 \uc218 \uc788\ub294 \uac74 \u0027\uc5f0\uad00\uc131\u0027\uae4c\uc9c0\uc57c. \uc57d \ubcf5\uc6a9 \uc5ec\ubd80\ub294 \uaf2d \uc758\uc0ac\uc640 \uc0c1\uc758\ud574\uc57c \ud574.\n\n\ucd9c\ucc98: Good News Network, British Journal of Ophthalmology", "hashtags": ["#\uc2a4\ud0c0\ud2f4", "#\ub179\ub0b4\uc7a5", "#\ub208\uac74\uac15", "#\ucf5c\ub808\uc2a4\ud14c\ub864", "#\ud574\uc678\uc774\uc288"], "slides": [["\ub179\ub0b4\uc7a5\uc5d0\ub3c4", "**\ucf5c\ub808\uc2a4\ud14c\ub864** \uc57d\uc774", "\uc88b\ub2e4??"], ["\ub179\ub0b4\uc7a5\uc740", "\uc18c\ub9ac \uc5c6\ub294 **\uc2dc\ub825 \ub3c4\ub451**"], ["\ub179\ub0b4\uc7a5 \ud658\uc790 \uc911", "**\uc2a4\ud0c0\ud2f4** \ubcf5\uc6a9\uc790\ub294", "\uce58\ub8cc\ub97c \uc801\uac8c \uc694\uad6c"], ["\uae00\ub85c\ubc8c \ub370\uc774\ud130\ubca0\uc774\uc2a4\uc5d0\uc11c", "**\uc2a4\ud0c0\ud2f4 \uc0ac\uc6a9 \uae30\ub85d** \uc720\ubb34\ub85c", "\ud658\uc790 21\ub9cc \uba85 \uc774\uc0c1 \ube44\uad50\ud588\uc5b4."], ["5\ub144 \ub4a4 \uc218\uc220 \uc704\ud5d8", "\ucd5c\uc18c\uce68\uc2b5 **55%** \uac10\uc18c", "\uc808\uac1c \uc218\uc220 **36%** \uac10\uc18c"], ["\ub2e8, **\uad00\ucc30 \uc5f0\uad6c**", "\uc778\uacfc\ub294 \uc544\uc9c1", "\ud655\uc815 \ubabb \ud574"], ["**\ud55c\uad6d\uc5d0\uc120**", "\uad00\ub828 \uc5f0\uad6c \uc788\uc744\uae4c?", "\uad81\uae08\ud558\ub2e4"]]}, "6ab31be20fa6": {"caption": "\ub6b1\ub6b1\ud55c \uce58\ubcf4\uac00 \uce74\ub808\ub85c \ub098\uc654\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \ud30c\uc774\ub110 \ud310\ud0c0\uc9c014\uc5d0 \ub098\uc624\ub294 \ud1b5\ud1b5\ud55c \ubc84\uc804\uc758 \uce58\ubcf4\uac00 \uc774\ubc88 \uc989\uc11d \uce74\ub808\uc758 \ubaa8\ub378\uc774\ub798. \uc815\uc2dd \uc774\ub984\uc740 \u0027FFXIV \ub6b1\ub6b1\ud55c \uce58\ubcf4 \uce74\ub808\u0027\uace0, \uc2a4\ud018\uc5b4 \uc5d0\ub2c9\uc2a4\uc5d0\uc11c \ub0b4\ub193\ub294 \uc81c\ud488\uc774\uc57c.\n\n\uc77c\ubcf8\uc5d0\ub294 \ud30c\uc6b0\uce58\uc5d0 \ub2f4\uae34 \uc989\uc11d \uce74\ub808\uac00 \uc788\uc5b4. \uc804\uc790\ub808\uc778\uc9c0\ub098 \ub053\ub294 \ubb3c\uc5d0 \ub370\uc6b4 \ub2e4\uc74c \ubc25 \uc704\uc5d0 \ubd80\uc5b4 \uba39\ub294 \ubc29\uc2dd\uc774\ub77c, \ubcf4\ud1b5 \uce74\ub808\ub97c \ub9cc\ub4dc\ub294 \uac83\ubcf4\ub2e4 \ud6e8\uc52c \uc9e7\uc740 \uc2dc\uac04\uc5d0 \ud55c \ub07c\uac00 \uc644\uc131\ub3fc. \uc774\ubc88 \uc81c\ud488\ub3c4 \uc774\ub7f0 \ud30c\uc6b0\uce58 \uce74\ub808\uc57c.\n\n\ub9db\uc740 \uc9c4\ud558\uba74\uc11c \ub9f5\uae30\ub294 \uc21c\ud55c \uce74\ub808\ub85c, \u0027\ub6b1\ub6b1\ud55c \uce58\ubcf4\uc758 \uc774\ubbf8\uc9c0\u0027\ub97c \ub2f4\uc558\ub2e4\uace0 \ud574. \ub208\uc5d0 \ub744\ub294 \uac74 \ub178\ub780 \ub8e8\uc778\ub370, \uce58\ubcf4\uc758 \uce74\ub098\ub9ac\uc544\uc0c9 \uae43\ud138\uc744 \ub5a0\uc62c\ub9ac\uac8c \ud558\ub824\ub294 \uc124\uc815\uc774\ub798. \uc548\uc5d0\ub294 \ub2ed\uace0\uae30 \uc870\uac01\uc774 \ub4e4\uc5b4 \uc788\uc5b4. \ub2e4\ub9cc \uc2a4\ud018\uc5b4 \uc5d0\ub2c9\uc2a4\ub294 \ud604\uc2e4\uc5d0\uc11c \uce58\ubcf4 \uace0\uae30\ub97c \ub9db\ubcf4\ub294 \uc0c1\ud488\uc73c\ub85c \ubc00\uace0 \uc788\uc9c4 \uc54a\ub300.\n\n\ud310\ub9e4\ub294 \ub450 \uac08\ub798\uc57c. 10\uc6d4 31\uc77c\uacfc 11\uc6d4 1\uc77c \uc5f4\ub9ac\ub294 FFXIV \ud32c \ud398\uc2a4\ud2f0\ubc8c \ub3c4\ucfc4 \ud604\uc7a5\uc5d0\uc11c \uc0b4 \uc218 \uc788\uace0, \uc2a4\ud018\uc5b4 \uc5d0\ub2c9\uc2a4 \uc628\ub77c\uc778 \uc20d\uc5d0\uc11c\ub3c4 1,080\uc5d4(\uc57d 6.8\ub2ec\ub7ec)\uc5d0 \uc0b4 \uc218 \uc788\uc5b4. \uc628\ub77c\uc778 \ud310\ub9e4\ub294 10\uc6d4 16\uc77c\ubd80\ud130 \uc2dc\uc791\uc774\uc57c.\n\n\uac8c\uc784 \uce90\ub9ad\ud130\uac00 \uc774\ub807\uac8c \uc9d1\uc5d0\uc11c \uba39\ub294 \uce74\ub808\uac00 \ub418\ub294 \uac70, \ud55c\uad6d\uc5d0\ub3c4 \ub4e4\uc5b4\uc62c \uc218 \uc788\uc744\uae4c? \ub108\ub77c\uba74 \uc0ac \uba39\uc5b4\ubcfc\ub798?\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\ud30c\uc774\ub110\ud310\ud0c0\uc9c0", "#\uce58\ubcf4", "#\uc989\uc11d\uce74\ub808", "#\uc77c\ubcf8\ud3b8\uc758\uc810", "#\uac8c\uc784\uad7f\uc988"], "slides": [["\ub6b1\ub6b1\ud55c \uce58\ubcf4\uac00", "**\uce74\ub808\ub85c** \ub098\uc634???"], ["FF14 \uc18d", "**\ud1b5\ud1b5\ud55c \ud0c8\uac83**", "\uce58\ubcf4\uac00 \ubaa8\ub378"], ["\uc870\ub9ac\ubc95\uc740 \uac04\ub2e8", "\uc804\uc790\ub808\uc778\uc9c0\ub098", "\ub053\ub294 \ubb3c\uc5d0 **\ub370\uc6b0\uba74 \ub05d**"], ["\uce74\ub808 \uc0c9\uae54\uc774", "**\ub178\ub780**\uc0c9\uc774\ub798", "\uce58\ubcf4 \uae43\ud138\uc0c9 \ub290\ub08c"], ["\uc548\uc5d0 **\ub2ed\uace0\uae30**", "\ub4e4\uc5b4 \uc788\uc74c", "\uadfc\ub370 \uce58\ubcf4 \uace0\uae30\ub294 \uc544\ub2d8"], ["\uac00\uaca9\uc740 **1,080\uc5d4**", "10\uc6d4 16\uc77c\ubd80\ud130", "\uc628\ub77c\uc778 \ud310\ub9e4"], ["**\ud55c\uad6d\uc5d0\ub3c4**", "\uc774\ub7f0 \uce74\ub808", "\ub098\uc624\ub824\ub098?"]]}, "f58281014b3c": {"caption": "\uc560\ud50c \ub9e5\uc5d0\uc11c \ucee4\uc2a4\ud140\ub86c\uc774 \ubd80\ud305\ub410\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc548\ub4dc\ub85c\uc774\ub4dc \uae30\ubc18 \ucee4\uc2a4\ud140 OS\uc778 LineageOS \ud300\uc774 \uacf5\uc2dd \ube14\ub85c\uadf8\uc5d0 \uc62c\ub9b0 24.0 \ub9b4\ub9ac\uc2a4 \ub178\ud2b8\uc5d0 \ub098\uc628 \ub0b4\uc6a9\uc778\ub370, \uc544\uc9c1 \uc2e4\ud5d8 \ub2e8\uacc4\ub77c\ub294 \ub2e8\uc11c\uac00 \ubd99\uc5b4 \uc788\uc5b4.\n\n\uae30\uc5ec\uc790 0xCAFEBABE\uac00 \uc18c\uac1c\ud55c \uc0c8 \uc81c\ub124\ub9ad \ud0c0\uae43\uc740 \uac00\uc0c1\ud654\ub098 \uc5d0\ubbac\ub808\uc774\ud130 \uc5c6\uc774 \ubca0\uc5b4\uba54\ud0c8 \ud558\ub4dc\uc6e8\uc5b4\uc5d0\uc11c \ub3cc\ub9b4 \uc218 \uc788\ub294 \ubc29\uc2dd\uc774\uc57c. \uc9c0\uae08\uae4c\uc9c0 \ubd80\ud305\uc5d0 \uc131\uacf5\ud55c \uac74 \uc77c\ubc18 x86_64 PC, \uc560\ud50c \uc2e4\ub9ac\ucf58 \ub9e5, NVIDIA DGX Spark, \ud004\ucef4 \uc2a4\ub0c5\ub4dc\ub798\uace4 X \uc2dc\ub9ac\uc988 \ub178\ud2b8\ubd81\uc774\uc57c.\n\n\uc774\ubc88 \ub9b4\ub9ac\uc2a4\ub294 \uc548\ub4dc\ub85c\uc774\ub4dc 17 \uae30\ubc18\uc774\uc57c. 6\uc6d4\uc5d0 \uc548\ub4dc\ub85c\uc774\ub4dc 17\uc774 \ub098\uc628 \ub4a4 \uae30\uc874 \ubcc0\uacbd \uc0ac\ud56d\uc744 \ub2e4\uc2dc \uc5b9\ub294 \uc791\uc5c5\uc744 \ud574\uc654\ub294\ub370, \uc608\uc0c1\ubcf4\ub2e4 \ube68\ub9ac \ub05d\ub098\uc11c \uc62c\ud574\ub294 \uc77c\ucc0d \ub098\uc654\ub2e4\uace0 \ud574.\n\n\uc124\uce58 \ucabd\ub3c4 \ub2ec\ub77c\uc84c\uc5b4. WebUSB\ub85c \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ud638\ud658 \uae30\uae30\uc640 \ubc14\ub85c \ud1b5\uc2e0\ud558\ub294 \ud50c\ub798\uc2dc \ub3c4\uad6c\ub97c \ub0b4\ub1a8\uace0, ADB, Fastboot, Amlogic Burn, \uc0bc\uc131 Odin \ubc29\uc2dd\uc744 \uc9c0\uc6d0\ud574. \ubcc4\ub3c4\uc758 \ud50c\ub798\uc2f1 \ud504\ub85c\uadf8\ub7a8\uc744 \ucc3e\uc544 \uae54 \uc77c\uc744 \uc904\uc5ec\uc8fc\ub294 \uac70\uc57c. \ub2e4\ub9cc \uae30\uc874 \uc124\uce58 \uac00\uc774\ub4dc\ub97c \ub300\uccb4\ud558\ub294 \uac74 \uc544\ub2c8\uace0, \uae30\uae30\u00b7\ube0c\ub77c\uc6b0\uc800\u00b7\uc6b4\uc601\uccb4\uc81c\u00b7USB \uc5f0\uacb0\uc5d0 \ub530\ub77c \ud638\ud658\uc131\uc774 \ub2e4\ub974\ub300. \ud50c\ub798\uc2f1\uc740 \ub298 \uc704\ud5d8\uc774 \ub530\ub974\ub2c8\uae4c \ubc31\uc5c5\uc740 \ud544\uc218\uc57c.\n\n\uadf8\ub9ac\uace0 12\uc6d4 24\uc77c\uc774\uba74 LineageOS\uac00 10\uc8fc\ub144\uc744 \ub9de\uc544. \uc774\ubc88 \ub9b4\ub9ac\uc2a4\ub294 \uadf8 \uc9c1\uc804\uc5d0 \ub098\uc628 \uac70\ub798.\n\n\ud55c\uad6d \ucabd\uc740 \ube4c\ub4dc \ubaa9\ub85d\uc5d0 \uac24\ub7ed\uc2dc S23 \uac19\uc740 \uc0bc\uc131 \uae30\uae30\uac00 \ubcf4\uc774\ub294\ub370, \uad6d\ub0b4\uc5d0\uc11c \uc4f0\ub294 \ubaa8\ub378\uae4c\uc9c0 \ud574\ub2f9\ub418\ub294\uc9c0\ub294 \ub530\ub85c \ud655\uc778\uc774 \ud544\uc694\ud574. \ud55c\uad6d\uc5d0\uc11c\ub3c4 \uc774\ub7f0 \ud750\ub984\uc774 \uc774\uc5b4\uc9c8\uae4c?\n\n\ucd9c\ucc98: LineageOS \uacf5\uc2dd \ube14\ub85c\uadf8 (Changelog 32)", "hashtags": ["#LineageOS", "#\uc548\ub4dc\ub85c\uc774\ub4dc", "#\ucee4\uc2a4\ud140\ub86c", "#\uc624\ud508\uc18c\uc2a4", "#\ud574\uc678\uc774\uc288"], "slides": [["\uc560\ud50c \ub9e5\uc5d0\uc11c", "**\ucee4\uc2a4\ud140\ub86c** \ubd80\ud305?!"], ["\ub77c\uc778\uc5d0\uc774\uc9c0OS", "**\uc548\ub4dc\ub85c\uc774\ub4dc17 \uae30\ubc18**", "\uc62c\ud574\ub294 \ube68\ub790\ub300"], ["\ub9e5\ub9cc\uc774 \uc544\ub0d0", "x86 PC\ub3c4", "**DGX Spark\ub3c4**"], ["\uc124\uce58\ub3c4 \uc26c\uc6cc\uc84c\uc5b4", "**\ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c**", "\ubc14\ub85c \ud50c\ub798\uc2dc"], ["12\uc6d4 24\uc77c\uc774\uba74", "**10\uc8fc\ub144\uc774\ub798**"], ["**\ud55c\uad6d\uc5d0\uc120?**", "\uac24\ub7ed\uc2dc S23\ub3c4", "\uc0b4\ub9b4 \uc218 \uc788\uc744\uae4c?"]]}};
+  const TOTAL = 3;
+  const SERVER = {"41eac253c9b5": "approve", "6ab31be20fa6": "reject", "f58281014b3c": "reject"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set(["41eac253c9b5"]);   // 이미 인스타에 올라간 게시물
+  const REV = 10;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

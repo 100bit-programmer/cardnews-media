@@ -1,0 +1,1256 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.11 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.11 오전 검수 <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-f34536c255b8" data-jump="f34536c255b8">1</a><a href="#post-32e0498cc565" data-jump="32e0498cc565">2</a><a href="#post-3aba3f2d9e72" data-jump="3aba3f2d9e72">3</a>
+      
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-f34536c255b8" data-id="f34536c255b8">
+    <div class="head">
+      <h2>1. AI 가짜 피해자 봇으로 사기범 붙잡기</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9 · 애매 1
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>인스타에 올라감 · 10/12</b>
+      <p>이미 올라간 게시물이라 여기서는 더 고칠 수 없어요.</p>
+      
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>사기범 전화를 AI가 대신 받는다는 소식이야. 호주 회사 Apate가 지난 2년간 만들어온 시스템인데, 걸려 온 사기 전화를 AI 봇과의 통화로 돌려버린대. 봇은 사기에 절대 넘어가지 않으면서도 대화를 최대한 오래 끌도록 훈련됐다고 해.
+
+창업자 겸 CEO 달리 카파르는 사기범에게 &#39;완벽한 피해자&#39;를 만들어주고 있다고 설명했어. 사기범이 봇과 떠드는 1분마다, 같은 사기범에게 연락받을 수백~수천 명이 그만큼 보호되는 셈이라는 논리야.
+
+규모도 커. 카파르에 따르면 은행들이 쓰고 통신사가 지원하는 이 플랫폼에는 봇이 약 35만 개 있어. 전화만 받는 게 아니라 온라인 사기 채팅방에 들어가거나 문자에 답하기도 한대. 봇마다 성격, 언어 능력, 프로필이 달라서 AI라는 걸 들키지 않게 설계했다고 해. 통화가 2시간 넘게 이어지는 일도 흔하다는 게 카파르의 말이야.
+
+그 사이 사기 URL, 사기 자금을 받는 계좌, 은행 정보 같은 사기범 관련 정보를 실시간으로 25만 건 넘게 모았다는 게 회사 측 설명이야. WIRED 기자들이 데모를 직접 써봤는데, 6분 동안 암호화폐 투자를 권해도 AI는 넘어오지 않았대.
+
+한국에서 이런 방식이 도입될지는 확인된 게 없어. 보이스피싱 얘기가 끊이지 않는 만큼, 우리도 궁금하지 않아?
+
+출처: WIRED
+
+배경 사진: coyot, PIRO4D, WikiImages, Pexels, AS_Photography, soultrain / Pixabay
+표지 이미지: AI 생성
+
+#보이스피싱 #AI #사기 #사이버보안 #해외이슈</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-f34536c255b8">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: AI이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 사기 전화를 끊는 게 아니라 AI가 대신 받아 사기범 시간을 잡아먹는다는 반전, 그리고 &#39;한국엔 언제 오나&#39;라는 내 일상과 닿는 궁금증</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 봇과의 통화가 2시간 넘게 이어지기도 한다는 것 (카드 5장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">사기 전화, 끊는 게 아니라 AI한테 넘겨버리는 회사가 나왔대
+사기범 시간을 잡아먹는 게 목표라는데, 그게 왜 다른 사람을 지키는 건지는 아래에 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">1/ 호주 회사 Apate의 시스템은 걸려 온 사기 전화를 AI 봇과의 통화로 돌려버려. 봇은 사기에 절대 안 넘어가면서 대화를 최대한 오래 끌도록 훈련됐대. 근데 이게 왜 다른 사람을 지키는 거냐면 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">2/ 창업자 겸 CEO 달리 카파르는 사기범에게 &#39;완벽한 피해자&#39;를 만들어주는 거라고 설명했어. 사기범이 봇과 떠드는 1분마다, 같은 사기범에게 연락받을 수백~수천 명이 그만큼 보호되는 셈이라는 논리야. 그럼 봇이 몇 개나 있을까 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">3/ 카파르에 따르면 은행들이 쓰고 통신사가 지원하는 이 플랫폼에는 봇이 약 35만 개 있대. 전화만 받는 게 아니라 온라인 사기 채팅방에 들어가거나 문자에 답하기도 한대. 사기범이 AI인 걸 눈치 못 채게 만든 방법은 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">4/ 봇이 하는 일 정리
+- 사기 전화를 받아 가짜 피해자 행세
+- 온라인 사기 채팅방에 참여
+- 문자에 답장
+- 봇마다 성격, 언어 능력, 프로필이 달라서 AI라는 걸 들키지 않게 설계했다고 해
+
+그 사이 봇이 사기범한테서 모으는 것도 있음 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">5/ 그 사이 사기 URL, 사기 자금을 받는 계좌, 은행 정보 같은 사기범 관련 정보를 실시간으로 25만 건 넘게 모았다는 게 회사 측 설명이야. WIRED 기자들이 데모를 써봤는데, 6분 동안 암호화폐 투자를 권해도 AI는 안 넘어왔대. 그럼 한국은? ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">227/500자</span></div>
+      <p class="tp-text">6/ 한국에 이런 방식이 들어올지는 확인된 게 없어. 보이스피싱 얘기가 끊이지 않으니 궁금하긴 함.
+
+다음 배송: 맥킨지 AI 고객 면접 얘기. 팔로우해두면 피드에 뜸
+
+사기 전화 왔을 때 AI가 대신 받아준다면 너는 맡길래, 직접 끊을래? 이유도 궁금해
+카드엔 봇 통화가 얼마나 길어지기도 하는지까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>사기 전화, 끊는 게 아니라 AI한테 넘겨버리는 회사가 나왔대</li><li>사기범한테 전화가 걸렸는데 받은 건 AI였대</li><li>사기범이 떠드는 1분마다 수백~수천 명이 보호된대. 그 방법이 AI 봇임</li><li>&#39;사기범에게 완벽한 피해자를 만들어준다&#39;는 회사가 있대</li><li>사기범을 막는 게 아니라 붙잡아두는 AI 봇이 35만 개래</li><li>보이스피싱 얘기 끊이질 않는데, 해외에선 AI가 사기 전화를 대신 받는대</li><li>사기범이 6분 동안 투자를 권해도 AI는 안 넘어갔대</li><li>사기 전화를 AI가 받으면 사기범은 누구랑 얘기하는 걸까</li><li>사기 전화는 피하는 게 아니라 길게 끌어야 한다는 회사가 나옴</li><li>호주 회사가 2년 동안 만든 건 사기범용 가짜 피해자였대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>사기 전화 왔을 때 AI가 대신 받아준다면 너는 맡길래, 직접 끊을래?</li><li>사기 전화나 문자 받아본 적 있어? 어떤 수법이었는지 궁금해</li><li>AI 봇이 사기범이랑 통화하는 걸 들어볼 수 있다면 어떤 상황이 제일 궁금해?</li><li>이런 서비스가 한국 통신사나 은행에 들어온다면 제일 먼저 뭘 맡기고 싶어?</li><li>사기 전화 받았을 때 너만의 대처법이 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>맥킨지 AI 고객 면접</li><li>세계 최대 호박 2,856파운드 기록</li><li>일본 원숭이 고양이 연못 투척 사건</li><li>지브리 스탬프 랠리 사가시</li><li>2편: Apate 봇이 모은 사기 계좌·URL 정보는 어디에 쓰일까</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>봇 35만 개, 정보 25만 건 이상, 통화가 길어진다는 내용은 모두 카파르(회사) 측 주장이라 &#39;~대&#39;, &#39;~라는 설명&#39; 표현을 유지해야 함</li><li>&#39;수백~수천 명이 보호된다&#39;는 카파르의 논리이지 검증된 수치가 아님</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-01.jpg" alt="1장: 사기범 전화를 AI가 받는다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-02.jpg" alt="2장: Ai가 전화를 받아 가짜 피해자 행세를 함." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-03.jpg" alt="3장: 목표는 하나 최대한 오래 통화 끌기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-04.jpg" alt="4장: 봇이 무려 35만 개" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-05.jpg" alt="5장: 통화가 2시간 넘기도 한대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-06.jpg" alt="6장: 사기범이 봇과 떠드는 1분마다, 같은 사기범에게 연락받을 수백~수천 명이 그만큼 보호되는 셈" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-07.jpg" alt="7장: 한국엔 언제 들어올까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/f34536c255b8/v3-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">사기범 전화를 AI가 대신 받는다는 소식이야. 호주 회사 Apate가 지난 2년간 만들어온 시스템인데, 걸려 온 사기 전화를 AI 봇과의 통화로 돌려버린대. 봇은 사기에 절대 넘어가지 않으면서도 대화를 최대한 오래 끌도록 훈련됐다고 해.
+
+창업자 겸 CEO 달리 카파르는 사기범에게 &#39;완벽한 피해자&#39;를 만들어주고 있다고 설명했어. 사기범이 봇과 떠드는 1분마다, 같은 사기범에게 연락받을 수백~수천 명이 그만큼 보호되는 셈이라는 논리야.
+
+규모도 커. 카파르에 따르면 은행들이 쓰고 통신사가 지원하는 이 플랫폼에는 봇이 약 35만 개 있어. 전화만 받는 게 아니라 온라인 사기 채팅방에 들어가거나 문자에 답하기도 한대. 봇마다 성격, 언어 능력, 프로필이 달라서 AI라는 걸 들키지 않게 설계했다고 해. 통화가 2시간 넘게 이어지는 일도 흔하다는 게 카파르의 말이야.
+
+그 사이 사기 URL, 사기 자금을 받는 계좌, 은행 정보 같은 사기범 관련 정보를 실시간으로 25만 건 넘게 모았다는 게 회사 측 설명이야. WIRED 기자들이 데모를 직접 써봤는데, 6분 동안 암호화폐 투자를 권해도 AI는 넘어오지 않았대.
+
+한국에서 이런 방식이 도입될지는 확인된 게 없어. 보이스피싱 얘기가 끊이지 않는 만큼, 우리도 궁금하지 않아?
+
+출처: WIRED</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#보이스피싱 #AI #사기 #사이버보안 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>봇은 성격, 언어 능력, 프로필이 제각각이라 사기범이 AI임을 눈치채지 못하도록 설계되었다 <small>애매 · 원문은 봇의 성격·언어·프로필이 달라서 사기범이 AI임을 &#39;눈치채지 않기를 바란다(hopefully)&#39;는 것이다. &#39;눈치채지 못하도록 설계되었다&#39;는 확정적 표현은 과장이다. &#39;들키지 않기를 바라며 설계했다&#39;처럼 바꾸는 것이 좋다.</small></li>
+          <li>근거 등록 안 된 주장: 한국에서 이런 방식이 도입될지 확인된 것이 없다는 주장은 제공된 근거에 없다.</li><li>근거 등록 안 된 주장: 보이스피싱 얘기가 끊이지 않는다는 주장은 제공된 근거에 없다.</li>
+          <li>한국 도입 가능성은 편집자 아이디어일 뿐 확인된 사실이 아님</li><li>봇 35만 개, 25만 건 수집, 2시간 통화 등 수치는 Apate CEO의 주장이며 독립 검증되지 않음</li><li>특정 회사(Apate) 홍보로 비칠 수 있어 중립적 표현 유지 필요</li>
+        </ul>
+      </div>
+      
+
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>봇은 성격, 언어 능력, 프로필이 제각각이라 사기범이 AI임을 눈치채지 못하도록 설계되었다</b>
+            <q>“The bots have different personalities, language skills, and profiles, Kaafar says, so scammers hopefully don’t detect that they’re conversing with an AI.”</q>
+            <small>caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>호주 회사 Apate가 2년간 사기 전화를 AI 봇과의 통화로 돌리는 시스템을 만들어 왔다</b>
+            <q>“For the last two years, the Australian company Apate, named after the Greek goddess of deception, has been building a system that diverts phone scammers onto calls with AI bots that are trained to keep conversations going as long as possible without, of course, ever actually falling for the scam.”</q>
+            <small>slide1, caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Apate CEO는 사기범을 위한 완벽한 피해자를 만들고 있다고 말했다</b>
+            <q>““What we really like to think is that we’re building the perfect victims for scammers,” Dali Kaafar, the founder and CEO of Apate, tells us.”</q>
+            <small>slide2, caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>봇은 사기에 넘어가지 않으면서 대화를 최대한 오래 끌도록 훈련되었다</b>
+            <q>“For the last two years, the Australian company Apate, named after the Greek goddess of deception, has been building a system that diverts phone scammers onto calls with AI bots that are trained to keep conversations going as long as possible without, of course, ever actually falling for the scam.”</q>
+            <small>slide3, caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>은행이 사용하고 통신사가 지원하는 Apate 플랫폼에는 약 35만 개의 봇이 있다</b>
+            <q>“Kaafar says Apate’s platform, which is used by banks and supported by telecom companies, has around 350,000 bots.”</q>
+            <small>slide4, caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Apate 통화가 2시간 넘게 이어지는 일이 자주 있다고 CEO가 말했다</b>
+            <q>“Scammers are likely familiar with this type of skeptical interaction, and Kaafar says that Apate calls regularly go on for more than two hours.”</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>회사는 사기 URL, 자금 전달 계좌, 은행 정보 등 25만 건 넘는 사기범 정보를 실시간으로 수집했다고 밝혔다</b>
+            <q>“He says the company has collected more than 250,000 pieces of information about fraudsters in real-time, from scam URLs to money mule accounts and bank details.”</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>봇은 전화뿐 아니라 온라인 사기 채팅방에 침투하고 문자에도 응답한다</b>
+            <q>“They not only pick up calls, but also infiltrate scam chat groups online and respond to text messages with similar goals of frustrating scammers while collecting intelligence from them.”</q>
+            <small>caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사기범이 봇과 통화하는 1분마다 같은 사기범에게 연락받을 수백~수천 명이 보호되는 셈이라고 CEO가 말했다</b>
+            <q>““A minute that a scammer is talking to a bot or an agent is a minute where you’re probably saving hundreds, if not thousands of possible people being reached out to by that exact same scammer,” he says, referencing the ability for scammers to use automated dialing tools.”</q>
+            <small>caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>WIRED 기자들이 데모를 6분간 시도했지만 AI에게 암호화폐 투자를 시키지 못했다</b>
+            <q>“We did not succeed at getting the Apate AI system to invest in our cryptocurrency opportunity even after six minutes of diligent effort.”</q>
+            <small>caption · <a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.wired.com/story/ai-is-getting-really-good-at-messing-with-cybercriminals/" target="_blank" rel="noopener">AI Is Getting Really Good at Messing With Cybercriminals</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "vintage telephone with glowing digital network on bright desk"</li><li>2장: <a href="https://pixabay.com/photos/mask-surgical-mask-virus-protection-4898571/" target="_blank" rel="noopener">coyot / Pixabay</a> — "mask"</li><li>3장: <a href="https://pixabay.com/photos/alarm-clock-2175382/" target="_blank" rel="noopener">PIRO4D / Pixabay</a> — "clock"</li><li>4장: <a href="https://pixabay.com/photos/mars-mars-rover-space-travel-rover-67522/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "robot"</li><li>5장: <a href="https://pixabay.com/photos/augmented-reality-bicycle-girl-bike-1853592/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "headset"</li><li>6장: <a href="https://pixabay.com/photos/digital-marketing-technology-1433427/" target="_blank" rel="noopener">AS_Photography / Pixabay</a> — "data"</li><li>7장: <a href="https://pixabay.com/photos/sunset-skyscrapers-buildings-city-8214498/" target="_blank" rel="noopener">soultrain / Pixabay</a> — "city skyline"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-32e0498cc565" data-id="32e0498cc565">
+    <div class="head">
+      <h2>2. Pa 30 초신성 잔해 고해상도 이미지</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-01.jpg" alt="1장: 800년 전 폭발이 이제 보인다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-02.jpg" alt="2장: 1181년 중국·일본 하늘의 새 별 기록" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-03.jpg" alt="3장: 구조가 이전보다 10배 더 보여" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-04.jpg" alt="4장: 선인 줄 알았지? 알고 보니 구슬 줄" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-05.jpg" alt="5장: 구슬 하나가 약 4광일 크기 행성 영역 10개분" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-06.jpg" alt="6장: 가운데 별은 죽은 게 아님 좀비 별이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-07.jpg" alt="7장: 한국 하늘엔 어떤 기록이 있을까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/32e0498cc565/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">800년 전 폭발이 이제 또렷하게 보인대. 천문학자들이 Pa 30 성운의 지금까지 가장 자세한 이미지를 얻었는데, 이 성운은 중세 시대 지구에서 관측되고 기록됐을 가능성이 큰 초신성의 잔해야. 새 사진엔 오랫동안 눈에 안 띄던 구조가 드러났어.
+
+하와이의 제미니 노스 망원경으로 관측했고, 예전 어떤 관측보다 약 10배 많은 구조가 보였대. 예전엔 길게 뻗은 가닥들이 민들레나 불꽃놀이처럼 이어진 모습이었는데, 해상도가 올라가니 끊김 없는 선이 아니라 진주 같은 가스 덩어리가 줄지어 있는 모양이었어. 덩어리 하나의 지름은 약 4광일. 공동 저자 일라리아 카이아초는 보도자료에서 우리 태양계의 행성 영역이 덩어리 하나에 10번쯤 들어가고도 남는다고 설명했어.
+
+신기한 건 크기가 꽤 균일하다는 점이야. 초신성 뒤에는 훨씬 제각각인 모양이 나올 거라 예상했는데, 덩어리들이 비슷한 크기로 가닥을 따라 정렬돼 있대. 어떻게 생겼는지는 아직 완전히 밝혀지지 않았고, 폭발 때 뿜어진 물질이 뭉친 거라고 추정하는 정도야.
+
+중심에 있는 별도 특이해. 완전히 죽지 않은 &#39;좀비 별&#39;로 여겨지거든. 보통 열핵 초신성에선 별이 폭발로 완전히 파괴되는데, 드물게 일부가 살아남고 그 이유는 과학자들도 아직 잘 몰라.
+
+기록도 남아 있어. 1181년 중국과 일본 천문학자들이 몇 달 동안 보인 새로운 별을 적어 뒀는데, 이 성운이 그 기록과 맞는대. 그렇다면 한국 하늘엔 어떤 기록이 있을까?
+
+출처: WIRED, The Astrophysical Journal</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#초신성 #우주 #천문학 #제미니망원경 #좀비별</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 새 사진에서 오랫동안 눈에 띄지 않던 구조가 드러났다는 주장</li><li>근거 등록 안 된 주장: 이전 관측 이미지에서 긴 가닥들이 민들레나 불꽃놀이처럼 보였다는 주장</li><li>근거 등록 안 된 주장: 기사 출처가 WIRED이며 원문은 스페인어판에서 번역되었다는 주장</li>
+          <li>한국(고려) 천문 기록은 원문에 없어 사실 확인이 안 됨 - 마지막 장은 질문형으로만 처리</li><li>원문은 스페인어 기사를 번역한 것이라 수치와 표현은 원문 기준임</li><li>원문 기사 사진이나 연구팀 이미지는 저작권 때문에 사용하지 말 것</li><li>Pa 30과 1181년 기록의 연결은 원문에서 과학자들이 연결지은 것으로 서술됨</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-32e0498cc565-0">1장</label>
+          <textarea id="s-32e0498cc565-0" rows="2" data-slide="0">**800년 전** 폭발이
+이제 보인다고???</textarea>
+          
+          <label class="f" for="s-32e0498cc565-1">2장</label>
+          <textarea id="s-32e0498cc565-1" rows="2" data-slide="1">1181년 중국·일본
+하늘의 **새 별** 기록</textarea>
+          
+          <label class="f" for="s-32e0498cc565-2">3장</label>
+          <textarea id="s-32e0498cc565-2" rows="2" data-slide="2">구조가 이전보다
+**10배** 더 보여</textarea>
+          
+          <label class="f" for="s-32e0498cc565-3">4장</label>
+          <textarea id="s-32e0498cc565-3" rows="2" data-slide="3">선인 줄 알았지?
+알고 보니 **구슬 줄**</textarea>
+          
+          <label class="f" for="s-32e0498cc565-4">5장</label>
+          <textarea id="s-32e0498cc565-4" rows="3" data-slide="4">구슬 하나가
+약 **4광일** 크기
+행성 영역 10개분</textarea>
+          
+          <label class="f" for="s-32e0498cc565-5">6장</label>
+          <textarea id="s-32e0498cc565-5" rows="3" data-slide="5">가운데 별은
+죽은 게 아님
+**좀비 별**이래</textarea>
+          
+          <label class="f" for="s-32e0498cc565-6">7장</label>
+          <textarea id="s-32e0498cc565-6" rows="2" data-slide="6">**한국 하늘엔**
+어떤 기록이 있을까?</textarea>
+          
+          <label class="f" for="c-32e0498cc565">본문 (캡션)</label>
+          <textarea id="c-32e0498cc565" class="caption">800년 전 폭발이 이제 또렷하게 보인대. 천문학자들이 Pa 30 성운의 지금까지 가장 자세한 이미지를 얻었는데, 이 성운은 중세 시대 지구에서 관측되고 기록됐을 가능성이 큰 초신성의 잔해야. 새 사진엔 오랫동안 눈에 안 띄던 구조가 드러났어.
+
+하와이의 제미니 노스 망원경으로 관측했고, 예전 어떤 관측보다 약 10배 많은 구조가 보였대. 예전엔 길게 뻗은 가닥들이 민들레나 불꽃놀이처럼 이어진 모습이었는데, 해상도가 올라가니 끊김 없는 선이 아니라 진주 같은 가스 덩어리가 줄지어 있는 모양이었어. 덩어리 하나의 지름은 약 4광일. 공동 저자 일라리아 카이아초는 보도자료에서 우리 태양계의 행성 영역이 덩어리 하나에 10번쯤 들어가고도 남는다고 설명했어.
+
+신기한 건 크기가 꽤 균일하다는 점이야. 초신성 뒤에는 훨씬 제각각인 모양이 나올 거라 예상했는데, 덩어리들이 비슷한 크기로 가닥을 따라 정렬돼 있대. 어떻게 생겼는지는 아직 완전히 밝혀지지 않았고, 폭발 때 뿜어진 물질이 뭉친 거라고 추정하는 정도야.
+
+중심에 있는 별도 특이해. 완전히 죽지 않은 &#39;좀비 별&#39;로 여겨지거든. 보통 열핵 초신성에선 별이 폭발로 완전히 파괴되는데, 드물게 일부가 살아남고 그 이유는 과학자들도 아직 잘 몰라.
+
+기록도 남아 있어. 1181년 중국과 일본 천문학자들이 몇 달 동안 보인 새로운 별을 적어 뒀는데, 이 성운이 그 기록과 맞는대. 그렇다면 한국 하늘엔 어떤 기록이 있을까?
+
+출처: WIRED, The Astrophysical Journal</textarea>
+          <label class="f" for="t-32e0498cc565">해시태그</label>
+          <input id="t-32e0498cc565" type="text" class="tagsin" value="#초신성 #우주 #천문학 #제미니망원경 #좀비별" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>천문학자들이 Pa 30 성운의 지금까지 가장 자세한 이미지를 얻었고, 이 성운은 중세에 관측·기록됐을 가능성이 큰 초신성의 잔해다</b>
+            <q>“Astronomers have obtained the most detailed image to date of the Pa 30 nebula, the remnants of a supernova famous for having likely been observed and documented from Earth during the Middle Ages.”</q>
+            <small>slide1, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Pa 30은 800년이 넘는 인간의 기록과 현대 관측을 직접 연결하는 드문 천체다</b>
+            <q>“Few astronomical structures connect modern observation so directly with human accounts from more than eight centuries ago.”</q>
+            <small>slide1 · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1181년 중국과 일본 천문학자들이 몇 달간 보인 새로운 별을 기록했고 이 성운이 그 기록과 일치한다</b>
+            <q>“The nebula matches the records left by Chinese and Japanese astronomers in 1181, who described the appearance of a new star in the sky that remained visible for several months.”</q>
+            <small>slide2, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하와이 제미니 노스 망원경 관측으로 이전보다 약 10배 많은 구조가 보였다</b>
+            <q>“The new observations, made with the Gemini North telescope in Hawaii, revealed about 10 times more structures than any previous glimpses of the supernova remnant.”</q>
+            <small>slide3, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가닥은 끊김 없는 선이 아니라 크기가 비교적 균일한 진주 같은 가스 덩어리가 줄지은 모양이다</b>
+            <q>“With this resolution, researchers can now see that these filaments are not continuous as they had previously appeared. Instead, they’re shaped more like beads on a string, made up of pearl-like knots of gas of relatively uniform size.”</q>
+            <small>slide4, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>덩어리 하나의 지름은 약 4광일이며 연구는 The Astrophysical Journal에 실렸다</b>
+            <q>“According to the study published in The Astrophysical Journal, each bead measures about four light-days in diameter.”</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공저자 일라리아 카이아초는 태양계의 행성 영역이 덩어리 하나에 약 10번 들어간다고 말했다</b>
+            <q>““The planetary region of our solar system could fit in each knot about 10 times with room to spare,” Ilaria Caiazzo, a coauthor of the study, said in a press release.”</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>덩어리 형성 과정은 아직 완전히 명확하지 않고 폭발 때 방출된 물질이 모인 것으로 추정된다</b>
+            <q>“How exactly the pearls formed is not yet entirely clear, though it’s assumed they are concentrations of material ejected during the explosion.”</q>
+            <small>caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>초신성 뒤에는 훨씬 제각각인 모양을 예상했지만 덩어리들은 비슷한 크기로 가닥을 따라 정렬돼 있다</b>
+            <q>“In the aftermath of a supernova, astronomers expected to find much more oddly shaped accumulations, but the knots are similar in size and appear aligned along the filaments.”</q>
+            <small>caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Pa 30의 중심별은 완전히 죽지 않은 좀비 별로 여겨진다</b>
+            <q>“The Pa 30 nebula is also particularly unusual because the central star isn’t exactly dead. Instead, it’s considered a “zombie star.””</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보통 열핵 초신성에서는 별이 폭발로 완전히 파괴된다</b>
+            <q>“Typically, a thermonuclear supernova is the violent death of a star, which is completely destroyed in the explosion.”</q>
+            <small>caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>드물게 별의 일부가 살아남을 수 있고 그 이유는 과학자들도 아직 완전히 모른다</b>
+            <q>“But in rare cases, part of the star may survive, and scientists do not yet fully understand how or why this happens.”</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.wired.com/story/humans-watched-this-supernova-explode-nearly-a-millennium-ago-now-you-can-see-it-in-high-definition/" target="_blank" rel="noopener">Humans Watched This Supernova Explode Nearly a Millennium Ago. Now You Can See It in High Definition</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/astronomy-bright-constellation-dark-1867616/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "glowing nebula pearls in bright sky"</li><li>2장: <a href="https://pixabay.com/photos/s%C3%BCtterlin-handwriting-typography-1362879/" target="_blank" rel="noopener">cocoparisienne / Pixabay</a> — "old manuscript"</li><li>3장: <a href="https://pixabay.com/photos/tourists-father-and-son-burj-khalifa-6887737/" target="_blank" rel="noopener">katetrysh / Pixabay</a> — "telescope"</li><li>4장: <a href="https://pixabay.com/photos/sew-hobby-work-craft-pearl-fabric-7086689/" target="_blank" rel="noopener">mariya_m / Pixabay</a> — "pearls"</li><li>5장: <a href="https://pixabay.com/photos/space-astronomy-galaxy-universe-9250868/" target="_blank" rel="noopener">mattiaverga / Pixabay</a> — "galaxy"</li><li>6장: <a href="https://pixabay.com/photos/trees-forest-fog-foggy-5746604/" target="_blank" rel="noopener">suju-foto / Pixabay</a> — "foggy forest"</li><li>7장: <a href="https://pixabay.com/photos/house-building-roof-tradition-6934544/" target="_blank" rel="noopener">rmsep4 / Pixabay</a> — "traditional roof"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-3aba3f2d9e72" data-id="3aba3f2d9e72">
+    <div class="head">
+      <h2>3. 맥미니 30대로 재현한 Cray-1 슈퍼컴퓨터</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>인스타에 올라감 · 10/12</b>
+      <p>이미 올라간 게시물이라 여기서는 더 고칠 수 없어요.</p>
+      
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>맥미니 30대로 슈퍼컴퓨터를 재현했대. 스페인의 Museo de Historia de la Computación이 1976년 Cray-1을 1:1 크기로 본뜬 복제품을 공개했어. 겉모습은 원조를 닮았고, 안에서 돌아가는 건 2012년형 맥미니 30대야. 18개월에 걸쳐 만들었고, Cray-1 50주년과 애플 창립을 기념하는 작업이라고 해.
+
+성능도 꽤 놀라워. 활성 코어 64개를 묶은 최근 테스트에서 합산 1.3테라플롭스가 나왔대. 예전에는 코어 70개를 다 써서 1.5테라플롭스를 찍은 적도 있는데, 그 뒤 노드 하나가 오프라인이 됐다고 해. 원조 Cray-1의 이론상 최고 성능은 약 160메가플롭스였으니까, 소비자용 하드웨어가 훨씬 앞선 셈이야.
+
+구성은 쿼드코어 i7 5대, 듀얼코어 i5 25대고, 2014년형 2대를 빼면 전부 2012년 모델이래. 리눅스 대신 macOS Mojave를 골랐는데, macOS에 내장된 MPI 지원으로 노드끼리 작업을 주고받게 했다고 해.
+
+원조는 벡터 처리 방식이고 복제품은 독립 프로세서에 일을 나눠 맡기는 병렬 클러스터야. 그래서 관람객이 컴퓨터 구조가 어떻게 달라졌는지 직접 볼 수 있대. 냉각은 강철 랙과 알루미늄 트레이를 이용한 자연 대류 방식이라 거의 소리가 안 난다고 해.
+
+한국에서도 오래된 중고 PC로 이런 시도를 해볼 수 있을까?
+
+출처: Ars Technica
+
+배경 사진: PublicCo, Darkmoon_Art, geralt, blickpixel, kropekk_pl / Pixabay
+표지 이미지: AI 생성
+
+#맥미니 #슈퍼컴퓨터 #Cray1 #IT뉴스 #해외뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-3aba3f2d9e72">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;낡은 중고 컴퓨터 30대가 1976년 슈퍼컴 성능을 넘어섰다&#39;는 대비와, 내 오래된 PC로도 될까 하는 상상을 건드리는 각도</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 복제품 구성은 쿼드코어 i7 5대, 듀얼코어 i5 25대이고 2014년형 2대를 빼면 전부 2012년 모델 (본문 3번째 문단(구성 설명))</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">89/500자</span></div>
+      <p class="tp-text">2012년산 맥미니는 고물이 아니라 슈퍼컴 재료였대
+스페인 박물관이 맥미니 30대로 1976년 슈퍼컴퓨터를 재현했거든
+근데 성능이 원조랑 비교하면 좀 황당해 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면 성능은 맥미니 쪽이 훨씬 앞섰어. 최근 테스트에서 합산 1.3테라플롭스가 나왔고, 원조 Cray-1의 이론상 최고는 약 160메가플롭스였대. 그럼 이걸 누가, 왜 만들었냐면 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">2/ 만든 곳은 스페인의 Museo de Historia de la Computación이야. 1976년 Cray-1을 1:1 크기로 본뜬 복제품인데, 겉은 원조고 안은 맥미니 30대래. 18개월 걸렸고 Cray-1 50주년과 애플 창립을 기념하는 작업이라고 해. 근데 안쪽 작동 방식은 원조랑 완전 다르대 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">3/ 원조는 벡터 처리 방식이고, 복제품은 독립 프로세서들에 일을 나눠 맡기는 병렬 클러스터야. 그래서 관람객이 컴퓨터 구조가 어떻게 달라졌는지 직접 볼 수 있대. 한눈에 보이게 비교로 정리해 봄 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">159/500자</span></div>
+      <p class="tp-text">4/ 원조 vs 복제품
+- 시기: 1976년 Cray-1 / 2012년산 맥미니 중심
+- 방식: 벡터 처리 / 병렬 클러스터
+- 성능: 이론상 최고 약 160메가플롭스 / 테스트 1.3테라플롭스
+- 제작: 원조 / 18개월 걸린 1:1 복제품
+- 목적: 컴퓨터 구조 변화를 눈으로 보기</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">204/500자</span></div>
+      <p class="tp-text">5/ 손본 디테일도 있어. 리눅스 대신 macOS Mojave를 골랐고, macOS에 내장된 MPI 지원으로 노드끼리 작업을 주고받게 했대. 1.3테라플롭스는 활성 코어 64개로 낸 수치고, 예전엔 코어 70개를 다 써서 1.5테라플롭스도 나왔는데 그 뒤 노드 하나가 오프라인이 됐다고 해. 냉각은 강철 랙과 알루미늄 트레이로 한 자연 대류라 거의 소리가 안 난대.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">180/500자</span></div>
+      <p class="tp-text">6/ 집에 굴러다니는 옛날 컴퓨터가 있다면 뭘 만들어보고 싶어? 해외에선 이런 재현까지 하는데 한국에선 어떨지도 궁금해.
+
+다음 배송: 세계 최대 호박 기록 얘기. 팔로우해두면 피드에 뜸
+
+카드엔 맥미니 구성 내역까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 겉은 원조고 안은 맥미니 30대래 <small>참고 원고는 겉모습이 원조를 닮은 복제품이라고 했다. &#39;겉은 원조&#39;라고 쓰면 원조 기계의 외관을 그대로 쓴 것처럼 읽혀 사실과 다르다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>2012년산 맥미니는 고물이 아니라 슈퍼컴 재료였대</li><li>2012년산 맥미니 30대를 묶었더니 1976년 슈퍼컴 성능을 넘어섰대</li><li>&#39;슈퍼컴&#39;이라고 하면 최첨단 장비부터 떠올리는데, 이번엔 2012년산 중고 맥미니로 만들었대</li><li>1976년 슈퍼컴은 약 160메가플롭스, 2012년산 맥미니 30대는 1.3테라플롭스</li><li>슈퍼컴 한 대 재현하는 데 18개월 걸렸다는 박물관 얘기</li><li>원조는 벡터 처리, 복제품은 맥미니 30대가 일을 나눠 맡는대</li><li>Cray-1 50주년 기념으로 맥미니 30대를 슈퍼컴으로 바꿔놓은 박물관이 있대</li><li>겉은 1976년 슈퍼컴, 안은 2012년산 맥미니야. 이게 진짜 돌아간대</li><li>맥미니 30대로 슈퍼컴이 된다는데, 우리 집 옛날 PC는 뭐가 될까</li><li>옛날 컴퓨터 버리기 전에 볼 얘기, 2012년산 맥미니가 슈퍼컴이 됐대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>집에 굴러다니는 옛날 컴퓨터가 있다면 뭘 만들어보고 싶어?</li><li>오래된 기기를 버리지 못하고 갖고 있는 게 있어? 있다면 뭐야?</li><li>옛날 슈퍼컴 vs 지금 내 노트북, 하나만 박물관에 전시한다면 뭘 골라?</li><li>한국에서 중고 PC로 이런 재현을 한다면 어떤 컴퓨터를 재현해보고 싶어?</li><li>컴퓨터 역사에서 박물관에 꼭 복제품으로 남기고 싶은 기계가 있다면 뭐야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>세계 최대 호박 2,856파운드 기록</li><li>일본 원숭이 고양이 연못 투척 사건</li><li>지브리 스탬프 랠리 사가시</li><li>맥킨지 AI 고객 면접</li><li>2편: 오래된 중고 PC로 이런 시도, 한국에서도 가능할까</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원조 Cray-1의 160메가플롭스는 &#39;이론상 최고&#39;, 복제품 1.3테라플롭스는 실제 테스트 수치라 측정 방식이 달라 직접 비교로 읽힐 수 있음. 본문에서 &#39;압승&#39; 같은 단정 대신 수치만 병기했는지 확인</li><li>박물관 이름(Museo de Historia de la Computación)과 Cray-1, macOS Mojave 등 고유명사 표기 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/3aba3f2d9e72/v3-01.jpg" alt="1장: 12년도 컴퓨터 30대로 슈퍼컴 재현???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/3aba3f2d9e72/v3-02.jpg" alt="2장: 스페인 박물관이 1976년 슈퍼컴을 1:1로 재현했대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/3aba3f2d9e72/v3-03.jpg" alt="3장: 재료는 대부분 2012년산 맥미니 18개월 걸렸대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/3aba3f2d9e72/v3-04.jpg" alt="4장: Cray-1 50주년과 애플 창립을 기념하는 작업이라고 해." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/3aba3f2d9e72/v3-05.jpg" alt="5장: 성능은 1.3테라플롭스 슈퍼컴 원조는 약 160메가플롭스" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/3aba3f2d9e72/v3-06.jpg" alt="6장: 한국 중고 PC로 이런 재현 가능할까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261011-am-419375475c10/3aba3f2d9e72/v3-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">맥미니 30대로 슈퍼컴퓨터를 재현했대. 스페인의 Museo de Historia de la Computación이 1976년 Cray-1을 1:1 크기로 본뜬 복제품을 공개했어. 겉모습은 원조를 닮았고, 안에서 돌아가는 건 2012년형 맥미니 30대야. 18개월에 걸쳐 만들었고, Cray-1 50주년과 애플 창립을 기념하는 작업이라고 해.
+
+성능도 꽤 놀라워. 활성 코어 64개를 묶은 최근 테스트에서 합산 1.3테라플롭스가 나왔대. 예전에는 코어 70개를 다 써서 1.5테라플롭스를 찍은 적도 있는데, 그 뒤 노드 하나가 오프라인이 됐다고 해. 원조 Cray-1의 이론상 최고 성능은 약 160메가플롭스였으니까, 소비자용 하드웨어가 훨씬 앞선 셈이야.
+
+구성은 쿼드코어 i7 5대, 듀얼코어 i5 25대고, 2014년형 2대를 빼면 전부 2012년 모델이래. 리눅스 대신 macOS Mojave를 골랐는데, macOS에 내장된 MPI 지원으로 노드끼리 작업을 주고받게 했다고 해.
+
+원조는 벡터 처리 방식이고 복제품은 독립 프로세서에 일을 나눠 맡기는 병렬 클러스터야. 그래서 관람객이 컴퓨터 구조가 어떻게 달라졌는지 직접 볼 수 있대. 냉각은 강철 랙과 알루미늄 트레이를 이용한 자연 대류 방식이라 거의 소리가 안 난다고 해.
+
+한국에서도 오래된 중고 PC로 이런 시도를 해볼 수 있을까?
+
+출처: Ars Technica</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#맥미니 #슈퍼컴퓨터 #Cray1 #IT뉴스 #해외뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 관람객이 실시간으로 행렬 연산이 돌아가는 모습을 보며 단일 코어에서 전체 병렬 실행까지의 성능 규모를 볼 수 있다는 내용(원문 근거 있음, claims 목록에 없음)</li><li>근거 등록 안 된 주장: 출처를 Ars Technica로 밝힌 부분(원문 기사의 출처 표기에 해당, claims 목록에 없음)</li>
+          <li>성능 수치는 박물관 테스트 결과를 전한 매체 보도(reportedly 포함) 기준이라 변동 가능</li><li>편집자 메모의 &#39;폐기 예정&#39; 표현은 원문에 근거가 없어 사용하지 않음</li><li>한국 관련 내용은 확인된 정보가 없어 질문형으로만 처리</li><li>맥미니는 애플 제품명이라 상표 언급 주의, 배경 이미지에는 로고·제품명 제외</li>
+        </ul>
+      </div>
+      
+
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스페인 Museo de Historia de la Computación이 1976년 Cray-1 슈퍼컴퓨터의 1:1 크기 복제품을 공개했다</b>
+            <q>“The Museo de Historia de la Computación in Spain has unveiled a 1:1 scale visual replica of the famous Cray-1 supercomputer from 1976.”</q>
+            <small>slide1, slide2, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>복제품은 2012년형 맥미니 30대로 구동된다</b>
+            <q>“Instead of sourcing expensive, cutting-edge tech to run the system, the creative team powered the project with 30 2012-era Mac Minis.”</q>
+            <small>slide1, slide3, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>프로젝트는 18개월에 걸쳐 개발됐고 Cray-1 50주년과 애플 창립을 기념한다</b>
+            <q>“Developed over 18 months, the project serves as a 50th-anniversary tribute to the Cray-1 and Apple’s founding.”</q>
+            <small>slide3, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>활성 코어 64개를 묶은 최근 테스트에서 합산 1.3테라플롭스가 나왔다</b>
+            <q>“Mac Minis from over a decade ago might not seem like the obvious first choice for building a cluster supercomputer, but when networked together, the developers can orchestrate the 64 active processing cores into a combined 1.3 teraflops of performance in their most recent tests.”</q>
+            <small>slide4, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이전에 코어 70개를 모두 사용해 1.5테라플롭스를 달성했으나 이후 노드 하나가 오프라인이 됐다</b>
+            <q>“The museum reportedly achieved 1.5 teraflops previously using all 70 available cores, prior to one node going offline.”</q>
+            <small>caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>원조 Cray-1의 이론상 최고 성능은 약 160메가플롭스였다</b>
+            <q>“The peak theoretical performance of the original Cray-1 was approximately 160 megaflops.”</q>
+            <small>slide4, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>쿼드코어 i7이 5대, 듀얼코어 i5가 25대다</b>
+            <q>“Five PCs are quad-core i7s, and the remaining 25 are dual-core i5 models.”</q>
+            <small>caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2014년형 2대를 제외하면 나머지는 모두 2012년 모델이다</b>
+            <q>“Except for two units from 2014, the rest of the array dates to 2012.”</q>
+            <small>slide3, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>리눅스 대신 macOS Mojave를 택했고 macOS 내장 MPI 지원을 활용해 노드끼리 작업을 주고받는다</b>
+            <q>“Rather than opting for a more standard Linux distribution, the team found that macOS Mojave (10.14) met their project needs by harnessing macOS’s built-in support for MPI (Message Passing Interface), the software layer that allows all the nodes in the cluster to pass tasks to one another.”</q>
+            <small>caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>원조는 벡터 처리를 썼고 복제품은 독립 프로세서에 일을 나누는 병렬 클러스터 방식이다</b>
+            <q>“The original Cray-1 used vector processing, applying a single instruction to multiple data elements simultaneously, whereas the replica distributes work across independent processors in a parallel cluster.”</q>
+            <small>caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>강철 랙과 알루미늄 트레이를 이용한 자연 대류 냉각을 사용했다</b>
+            <q>“The museum team used passive convection cooling via a steel rack chassis and aluminum tray mounts for each Mac Mini.”</q>
+            <small>slide5, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>클러스터는 거의 소리가 들리지 않는다</b>
+            <q>“Compared to the roaring thunder of a modern data center, this cluster is nearly inaudible.”</q>
+            <small>slide5, caption · <a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://arstechnica.com/gadgets/2026/10/a-cray-1-supercomputer-replica-from-30-obsolete-mac-minis/" target="_blank" rel="noopener">A Cray-1 supercomputer replica from 30 &#34;obsolete&#34; Mac Minis</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "retro supercomputer cabinet in bright museum hall"</li><li>2장: <a href="https://pixabay.com/photos/natural-history-museum-london-2203648/" target="_blank" rel="noopener">PublicCo / Pixabay</a> — "museum hall"</li><li>3장: <a href="https://pixabay.com/photos/fantasy-computer-statue-3208206/" target="_blank" rel="noopener">Darkmoon_Art / Pixabay</a> — "old computers"</li><li>4장: <a href="https://pixabay.com/photos/photographer-girl-camera-digital-430619/" target="_blank" rel="noopener">geralt / Pixabay</a> — "circuit board"</li><li>5장: <a href="https://pixabay.com/photos/cooler-cpu-fan-fan-metal-iron-alu-447488/" target="_blank" rel="noopener">blickpixel / Pixabay</a> — "aluminum heatsink"</li><li>6장: <a href="https://pixabay.com/photos/computer-computers-keyboard-313840/" target="_blank" rel="noopener">kropekk_pl / Pixabay</a> — "used electronics"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261011-am";
+  const ORIGINAL = {"32e0498cc565": {"caption": "800\ub144 \uc804 \ud3ed\ubc1c\uc774 \uc774\uc81c \ub610\ub837\ud558\uac8c \ubcf4\uc778\ub300. \ucc9c\ubb38\ud559\uc790\ub4e4\uc774 Pa 30 \uc131\uc6b4\uc758 \uc9c0\uae08\uae4c\uc9c0 \uac00\uc7a5 \uc790\uc138\ud55c \uc774\ubbf8\uc9c0\ub97c \uc5bb\uc5c8\ub294\ub370, \uc774 \uc131\uc6b4\uc740 \uc911\uc138 \uc2dc\ub300 \uc9c0\uad6c\uc5d0\uc11c \uad00\uce21\ub418\uace0 \uae30\ub85d\ub410\uc744 \uac00\ub2a5\uc131\uc774 \ud070 \ucd08\uc2e0\uc131\uc758 \uc794\ud574\uc57c. \uc0c8 \uc0ac\uc9c4\uc5d4 \uc624\ub7ab\ub3d9\uc548 \ub208\uc5d0 \uc548 \ub744\ub358 \uad6c\uc870\uac00 \ub4dc\ub7ec\ub0ac\uc5b4.\n\n\ud558\uc640\uc774\uc758 \uc81c\ubbf8\ub2c8 \ub178\uc2a4 \ub9dd\uc6d0\uacbd\uc73c\ub85c \uad00\uce21\ud588\uace0, \uc608\uc804 \uc5b4\ub5a4 \uad00\uce21\ubcf4\ub2e4 \uc57d 10\ubc30 \ub9ce\uc740 \uad6c\uc870\uac00 \ubcf4\uc600\ub300. \uc608\uc804\uc5d4 \uae38\uac8c \ubed7\uc740 \uac00\ub2e5\ub4e4\uc774 \ubbfc\ub4e4\ub808\ub098 \ubd88\uaf43\ub180\uc774\ucc98\ub7fc \uc774\uc5b4\uc9c4 \ubaa8\uc2b5\uc774\uc5c8\ub294\ub370, \ud574\uc0c1\ub3c4\uac00 \uc62c\ub77c\uac00\ub2c8 \ub04a\uae40 \uc5c6\ub294 \uc120\uc774 \uc544\ub2c8\ub77c \uc9c4\uc8fc \uac19\uc740 \uac00\uc2a4 \ub369\uc5b4\ub9ac\uac00 \uc904\uc9c0\uc5b4 \uc788\ub294 \ubaa8\uc591\uc774\uc5c8\uc5b4. \ub369\uc5b4\ub9ac \ud558\ub098\uc758 \uc9c0\ub984\uc740 \uc57d 4\uad11\uc77c. \uacf5\ub3d9 \uc800\uc790 \uc77c\ub77c\ub9ac\uc544 \uce74\uc774\uc544\ucd08\ub294 \ubcf4\ub3c4\uc790\ub8cc\uc5d0\uc11c \uc6b0\ub9ac \ud0dc\uc591\uacc4\uc758 \ud589\uc131 \uc601\uc5ed\uc774 \ub369\uc5b4\ub9ac \ud558\ub098\uc5d0 10\ubc88\ucbe4 \ub4e4\uc5b4\uac00\uace0\ub3c4 \ub0a8\ub294\ub2e4\uace0 \uc124\uba85\ud588\uc5b4.\n\n\uc2e0\uae30\ud55c \uac74 \ud06c\uae30\uac00 \uaf64 \uade0\uc77c\ud558\ub2e4\ub294 \uc810\uc774\uc57c. \ucd08\uc2e0\uc131 \ub4a4\uc5d0\ub294 \ud6e8\uc52c \uc81c\uac01\uac01\uc778 \ubaa8\uc591\uc774 \ub098\uc62c \uac70\ub77c \uc608\uc0c1\ud588\ub294\ub370, \ub369\uc5b4\ub9ac\ub4e4\uc774 \ube44\uc2b7\ud55c \ud06c\uae30\ub85c \uac00\ub2e5\uc744 \ub530\ub77c \uc815\ub82c\ub3fc \uc788\ub300. \uc5b4\ub5bb\uac8c \uc0dd\uacbc\ub294\uc9c0\ub294 \uc544\uc9c1 \uc644\uc804\ud788 \ubc1d\ud600\uc9c0\uc9c0 \uc54a\uc558\uace0, \ud3ed\ubc1c \ub54c \ubfdc\uc5b4\uc9c4 \ubb3c\uc9c8\uc774 \ubb49\uce5c \uac70\ub77c\uace0 \ucd94\uc815\ud558\ub294 \uc815\ub3c4\uc57c.\n\n\uc911\uc2ec\uc5d0 \uc788\ub294 \ubcc4\ub3c4 \ud2b9\uc774\ud574. \uc644\uc804\ud788 \uc8fd\uc9c0 \uc54a\uc740 \u0027\uc880\ube44 \ubcc4\u0027\ub85c \uc5ec\uaca8\uc9c0\uac70\ub4e0. \ubcf4\ud1b5 \uc5f4\ud575 \ucd08\uc2e0\uc131\uc5d0\uc120 \ubcc4\uc774 \ud3ed\ubc1c\ub85c \uc644\uc804\ud788 \ud30c\uad34\ub418\ub294\ub370, \ub4dc\ubb3c\uac8c \uc77c\ubd80\uac00 \uc0b4\uc544\ub0a8\uace0 \uadf8 \uc774\uc720\ub294 \uacfc\ud559\uc790\ub4e4\ub3c4 \uc544\uc9c1 \uc798 \ubab0\ub77c.\n\n\uae30\ub85d\ub3c4 \ub0a8\uc544 \uc788\uc5b4. 1181\ub144 \uc911\uad6d\uacfc \uc77c\ubcf8 \ucc9c\ubb38\ud559\uc790\ub4e4\uc774 \uba87 \ub2ec \ub3d9\uc548 \ubcf4\uc778 \uc0c8\ub85c\uc6b4 \ubcc4\uc744 \uc801\uc5b4 \ub480\ub294\ub370, \uc774 \uc131\uc6b4\uc774 \uadf8 \uae30\ub85d\uacfc \ub9de\ub294\ub300. \uadf8\ub807\ub2e4\uba74 \ud55c\uad6d \ud558\ub298\uc5d4 \uc5b4\ub5a4 \uae30\ub85d\uc774 \uc788\uc744\uae4c?\n\n\ucd9c\ucc98: WIRED, The Astrophysical Journal", "hashtags": ["#\ucd08\uc2e0\uc131", "#\uc6b0\uc8fc", "#\ucc9c\ubb38\ud559", "#\uc81c\ubbf8\ub2c8\ub9dd\uc6d0\uacbd", "#\uc880\ube44\ubcc4"], "slides": [["**800\ub144 \uc804** \ud3ed\ubc1c\uc774", "\uc774\uc81c \ubcf4\uc778\ub2e4\uace0???"], ["1181\ub144 \uc911\uad6d\u00b7\uc77c\ubcf8", "\ud558\ub298\uc758 **\uc0c8 \ubcc4** \uae30\ub85d"], ["\uad6c\uc870\uac00 \uc774\uc804\ubcf4\ub2e4", "**10\ubc30** \ub354 \ubcf4\uc5ec"], ["\uc120\uc778 \uc904 \uc54c\uc558\uc9c0?", "\uc54c\uace0 \ubcf4\ub2c8 **\uad6c\uc2ac \uc904**"], ["\uad6c\uc2ac \ud558\ub098\uac00", "\uc57d **4\uad11\uc77c** \ud06c\uae30", "\ud589\uc131 \uc601\uc5ed 10\uac1c\ubd84"], ["\uac00\uc6b4\ub370 \ubcc4\uc740", "\uc8fd\uc740 \uac8c \uc544\ub2d8", "**\uc880\ube44 \ubcc4**\uc774\ub798"], ["**\ud55c\uad6d \ud558\ub298\uc5d4**", "\uc5b4\ub5a4 \uae30\ub85d\uc774 \uc788\uc744\uae4c?"]]}, "3aba3f2d9e72": {"caption": "\ub9e5\ubbf8\ub2c8 30\ub300\ub85c \uc288\ud37c\ucef4\ud4e8\ud130\ub97c \uc7ac\ud604\ud588\ub300. \uc2a4\ud398\uc778\uc758 Museo de Historia de la Computaci\u00f3n\uc774 1976\ub144 Cray-1\uc744 1:1 \ud06c\uae30\ub85c \ubcf8\ub72c \ubcf5\uc81c\ud488\uc744 \uacf5\uac1c\ud588\uc5b4. \uac89\ubaa8\uc2b5\uc740 \uc6d0\uc870\ub97c \ub2ee\uc558\uace0, \uc548\uc5d0\uc11c \ub3cc\uc544\uac00\ub294 \uac74 2012\ub144\ud615 \ub9e5\ubbf8\ub2c8 30\ub300\uc57c. 18\uac1c\uc6d4\uc5d0 \uac78\uccd0 \ub9cc\ub4e4\uc5c8\uace0, Cray-1 50\uc8fc\ub144\uacfc \uc560\ud50c \ucc3d\ub9bd\uc744 \uae30\ub150\ud558\ub294 \uc791\uc5c5\uc774\ub77c\uace0 \ud574.\n\n\uc131\ub2a5\ub3c4 \uaf64 \ub180\ub77c\uc6cc. \ud65c\uc131 \ucf54\uc5b4 64\uac1c\ub97c \ubb36\uc740 \ucd5c\uadfc \ud14c\uc2a4\ud2b8\uc5d0\uc11c \ud569\uc0b0 1.3\ud14c\ub77c\ud50c\ub86d\uc2a4\uac00 \ub098\uc654\ub300. \uc608\uc804\uc5d0\ub294 \ucf54\uc5b4 70\uac1c\ub97c \ub2e4 \uc368\uc11c 1.5\ud14c\ub77c\ud50c\ub86d\uc2a4\ub97c \ucc0d\uc740 \uc801\ub3c4 \uc788\ub294\ub370, \uadf8 \ub4a4 \ub178\ub4dc \ud558\ub098\uac00 \uc624\ud504\ub77c\uc778\uc774 \ub410\ub2e4\uace0 \ud574. \uc6d0\uc870 Cray-1\uc758 \uc774\ub860\uc0c1 \ucd5c\uace0 \uc131\ub2a5\uc740 \uc57d 160\uba54\uac00\ud50c\ub86d\uc2a4\uc600\uc73c\ub2c8\uae4c, \uc18c\ube44\uc790\uc6a9 \ud558\ub4dc\uc6e8\uc5b4\uac00 \ud6e8\uc52c \uc55e\uc120 \uc148\uc774\uc57c.\n\n\uad6c\uc131\uc740 \ucffc\ub4dc\ucf54\uc5b4 i7 5\ub300, \ub4c0\uc5bc\ucf54\uc5b4 i5 25\ub300\uace0, 2014\ub144\ud615 2\ub300\ub97c \ube7c\uba74 \uc804\ubd80 2012\ub144 \ubaa8\ub378\uc774\ub798. \ub9ac\ub205\uc2a4 \ub300\uc2e0 macOS Mojave\ub97c \uace8\ub790\ub294\ub370, macOS\uc5d0 \ub0b4\uc7a5\ub41c MPI \uc9c0\uc6d0\uc73c\ub85c \ub178\ub4dc\ub07c\ub9ac \uc791\uc5c5\uc744 \uc8fc\uace0\ubc1b\uac8c \ud588\ub2e4\uace0 \ud574.\n\n\uc6d0\uc870\ub294 \ubca1\ud130 \ucc98\ub9ac \ubc29\uc2dd\uc774\uace0 \ubcf5\uc81c\ud488\uc740 \ub3c5\ub9bd \ud504\ub85c\uc138\uc11c\uc5d0 \uc77c\uc744 \ub098\ub220 \ub9e1\uae30\ub294 \ubcd1\ub82c \ud074\ub7ec\uc2a4\ud130\uc57c. \uadf8\ub798\uc11c \uad00\ub78c\uac1d\uc774 \ucef4\ud4e8\ud130 \uad6c\uc870\uac00 \uc5b4\ub5bb\uac8c \ub2ec\ub77c\uc84c\ub294\uc9c0 \uc9c1\uc811 \ubcfc \uc218 \uc788\ub300. \ub0c9\uac01\uc740 \uac15\ucca0 \ub799\uacfc \uc54c\ub8e8\ubbf8\ub284 \ud2b8\ub808\uc774\ub97c \uc774\uc6a9\ud55c \uc790\uc5f0 \ub300\ub958 \ubc29\uc2dd\uc774\ub77c \uac70\uc758 \uc18c\ub9ac\uac00 \uc548 \ub09c\ub2e4\uace0 \ud574.\n\n\ud55c\uad6d\uc5d0\uc11c\ub3c4 \uc624\ub798\ub41c \uc911\uace0 PC\ub85c \uc774\ub7f0 \uc2dc\ub3c4\ub97c \ud574\ubcfc \uc218 \uc788\uc744\uae4c?\n\n\ucd9c\ucc98: Ars Technica", "hashtags": ["#\ub9e5\ubbf8\ub2c8", "#\uc288\ud37c\ucef4\ud4e8\ud130", "#Cray1", "#IT\ub274\uc2a4", "#\ud574\uc678\ub274\uc2a4"], "slides": [["12\ub144\ub3c4 \ucef4\ud4e8\ud130", "**30\ub300\ub85c**", "\uc288\ud37c\ucef4 \uc7ac\ud604???"], ["\uc2a4\ud398\uc778 \ubc15\ubb3c\uad00\uc774", "**1976\ub144** \uc288\ud37c\ucef4\uc744", "1:1\ub85c \uc7ac\ud604\ud588\ub300"], ["\uc7ac\ub8cc\ub294 \ub300\ubd80\ubd84", "**2012\ub144\uc0b0** \ub9e5\ubbf8\ub2c8", "18\uac1c\uc6d4 \uac78\ub838\ub300"], ["**Cray-1 50\uc8fc\ub144**\uacfc", "**\uc560\ud50c \ucc3d\ub9bd**\uc744", "\uae30\ub150\ud558\ub294 \uc791\uc5c5\uc774\ub77c\uace0 \ud574."], ["\uc131\ub2a5\uc740 **1.3\ud14c\ub77c\ud50c\ub86d\uc2a4**", "\uc288\ud37c\ucef4 \uc6d0\uc870\ub294", "\uc57d **160\uba54\uac00\ud50c\ub86d\uc2a4**"], ["\ud55c\uad6d **\uc911\uace0 PC**\ub85c", "\uc774\ub7f0 \uc7ac\ud604", "\uac00\ub2a5\ud560\uae4c?"]]}, "f34536c255b8": {"caption": "\uc0ac\uae30\ubc94 \uc804\ud654\ub97c AI\uac00 \ub300\uc2e0 \ubc1b\ub294\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \ud638\uc8fc \ud68c\uc0ac Apate\uac00 \uc9c0\ub09c 2\ub144\uac04 \ub9cc\ub4e4\uc5b4\uc628 \uc2dc\uc2a4\ud15c\uc778\ub370, \uac78\ub824 \uc628 \uc0ac\uae30 \uc804\ud654\ub97c AI \ubd07\uacfc\uc758 \ud1b5\ud654\ub85c \ub3cc\ub824\ubc84\ub9b0\ub300. \ubd07\uc740 \uc0ac\uae30\uc5d0 \uc808\ub300 \ub118\uc5b4\uac00\uc9c0 \uc54a\uc73c\uba74\uc11c\ub3c4 \ub300\ud654\ub97c \ucd5c\ub300\ud55c \uc624\ub798 \ub04c\ub3c4\ub85d \ud6c8\ub828\ub410\ub2e4\uace0 \ud574.\n\n\ucc3d\uc5c5\uc790 \uacb8 CEO \ub2ec\ub9ac \uce74\ud30c\ub974\ub294 \uc0ac\uae30\ubc94\uc5d0\uac8c \u0027\uc644\ubcbd\ud55c \ud53c\ud574\uc790\u0027\ub97c \ub9cc\ub4e4\uc5b4\uc8fc\uace0 \uc788\ub2e4\uace0 \uc124\uba85\ud588\uc5b4. \uc0ac\uae30\ubc94\uc774 \ubd07\uacfc \ub5a0\ub4dc\ub294 1\ubd84\ub9c8\ub2e4, \uac19\uc740 \uc0ac\uae30\ubc94\uc5d0\uac8c \uc5f0\ub77d\ubc1b\uc744 \uc218\ubc31~\uc218\ucc9c \uba85\uc774 \uadf8\ub9cc\ud07c \ubcf4\ud638\ub418\ub294 \uc148\uc774\ub77c\ub294 \ub17c\ub9ac\uc57c.\n\n\uaddc\ubaa8\ub3c4 \ucee4. \uce74\ud30c\ub974\uc5d0 \ub530\ub974\uba74 \uc740\ud589\ub4e4\uc774 \uc4f0\uace0 \ud1b5\uc2e0\uc0ac\uac00 \uc9c0\uc6d0\ud558\ub294 \uc774 \ud50c\ub7ab\ud3fc\uc5d0\ub294 \ubd07\uc774 \uc57d 35\ub9cc \uac1c \uc788\uc5b4. \uc804\ud654\ub9cc \ubc1b\ub294 \uac8c \uc544\ub2c8\ub77c \uc628\ub77c\uc778 \uc0ac\uae30 \ucc44\ud305\ubc29\uc5d0 \ub4e4\uc5b4\uac00\uac70\ub098 \ubb38\uc790\uc5d0 \ub2f5\ud558\uae30\ub3c4 \ud55c\ub300. \ubd07\ub9c8\ub2e4 \uc131\uaca9, \uc5b8\uc5b4 \ub2a5\ub825, \ud504\ub85c\ud544\uc774 \ub2ec\ub77c\uc11c AI\ub77c\ub294 \uac78 \ub4e4\ud0a4\uc9c0 \uc54a\uac8c \uc124\uacc4\ud588\ub2e4\uace0 \ud574. \ud1b5\ud654\uac00 2\uc2dc\uac04 \ub118\uac8c \uc774\uc5b4\uc9c0\ub294 \uc77c\ub3c4 \ud754\ud558\ub2e4\ub294 \uac8c \uce74\ud30c\ub974\uc758 \ub9d0\uc774\uc57c.\n\n\uadf8 \uc0ac\uc774 \uc0ac\uae30 URL, \uc0ac\uae30 \uc790\uae08\uc744 \ubc1b\ub294 \uacc4\uc88c, \uc740\ud589 \uc815\ubcf4 \uac19\uc740 \uc0ac\uae30\ubc94 \uad00\ub828 \uc815\ubcf4\ub97c \uc2e4\uc2dc\uac04\uc73c\ub85c 25\ub9cc \uac74 \ub118\uac8c \ubaa8\uc558\ub2e4\ub294 \uac8c \ud68c\uc0ac \uce21 \uc124\uba85\uc774\uc57c. WIRED \uae30\uc790\ub4e4\uc774 \ub370\ubaa8\ub97c \uc9c1\uc811 \uc368\ubd24\ub294\ub370, 6\ubd84 \ub3d9\uc548 \uc554\ud638\ud654\ud3d0 \ud22c\uc790\ub97c \uad8c\ud574\ub3c4 AI\ub294 \ub118\uc5b4\uc624\uc9c0 \uc54a\uc558\ub300.\n\n\ud55c\uad6d\uc5d0\uc11c \uc774\ub7f0 \ubc29\uc2dd\uc774 \ub3c4\uc785\ub420\uc9c0\ub294 \ud655\uc778\ub41c \uac8c \uc5c6\uc5b4. \ubcf4\uc774\uc2a4\ud53c\uc2f1 \uc598\uae30\uac00 \ub04a\uc774\uc9c0 \uc54a\ub294 \ub9cc\ud07c, \uc6b0\ub9ac\ub3c4 \uad81\uae08\ud558\uc9c0 \uc54a\uc544?\n\n\ucd9c\ucc98: WIRED", "hashtags": ["#\ubcf4\uc774\uc2a4\ud53c\uc2f1", "#AI", "#\uc0ac\uae30", "#\uc0ac\uc774\ubc84\ubcf4\uc548", "#\ud574\uc678\uc774\uc288"], "slides": [["\uc0ac\uae30\ubc94 \uc804\ud654\ub97c", "**AI\uac00** \ubc1b\ub294\ub2e4???"], ["Ai\uac00 \uc804\ud654\ub97c \ubc1b\uc544", "**\uac00\uc9dc \ud53c\ud574\uc790**", "\ud589\uc138\ub97c \ud568."], ["\ubaa9\ud45c\ub294 \ud558\ub098", "**\ucd5c\ub300\ud55c \uc624\ub798**", "\ud1b5\ud654 \ub04c\uae30"], ["\ubd07\uc774 \ubb34\ub824", "**35\ub9cc \uac1c**"], ["\ud1b5\ud654\uac00 **2\uc2dc\uac04**", "\ub118\uae30\ub3c4 \ud55c\ub300"], ["\uc0ac\uae30\ubc94\uc774 \ubd07\uacfc \ub5a0\ub4dc\ub294 **1\ubd84\ub9c8\ub2e4**,", "\uac19\uc740 \uc0ac\uae30\ubc94\uc5d0\uac8c", "\uc5f0\ub77d\ubc1b\uc744 \uc218\ubc31~\uc218\ucc9c \uba85\uc774 \uadf8\ub9cc\ud07c \ubcf4\ud638\ub418\ub294 \uc148"], ["**\ud55c\uad6d\uc5d4** \uc5b8\uc81c", "\ub4e4\uc5b4\uc62c\uae4c?"]]}};
+  const TOTAL = 3;
+  const SERVER = {"32e0498cc565": "reject", "3aba3f2d9e72": "approve", "f34536c255b8": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set(["f34536c255b8", "3aba3f2d9e72"]);   // 이미 인스타에 올라간 게시물
+  const REV = 11;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

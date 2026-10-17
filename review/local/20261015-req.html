@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.15 요청 소재</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.15 요청 소재 검수 <span id="progress">0 / 1 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-78bcc61da372" data-jump="78bcc61da372">1</a>
+      
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-78bcc61da372" data-id="78bcc61da372">
+    <div class="head">
+      <h2>1. 치이카와 극장판 1200억 흥행</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13 · 애매 1
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/18 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>귀여운 캐릭터 영화가 1,230억 원어치를 벌었다고? 일본에서 먼저 터진 &#39;극장판 치이카와: 인어 섬의 비밀&#39; 얘기야.
+
+일본 개봉은 7월 24일. 첫날에만 흥행 수입 9억 9천만 엔을 올렸고, 사흘 만에 22억 엔을 넘겼대. 개봉 45일 시점엔 누적 139억 엔(한화 약 1,230억 원), 관객 960만 명을 돌파했고. 10월 6일 일본 현지 집계로는 개봉 75일 차에 흥행 수입 172억 엔, 관객 1178만 명까지 갔어. 올해 일본 개봉작 가운데 흥행 1위라고 해. (1,230억 원은 45일 시점 금액을 환산한 거라 최신 수치는 아니야.)
+
+반전은 내용이야. 이름은 &#39;뭔가 작고 귀여운 녀석&#39;인데, 이번 극장판은 원작에서 가장 긴 에피소드로 꼽히는 &#39;세이렌 편&#39;을 옮겼어. 위키트리는 외지인이 낯선 공동체에 들어가는 구조가 나홍진 감독의 &#39;곡성&#39;을 떠올리게 한다고 짚었어.
+
+한국에선 9월 30일에 개봉했고, 10일 만에 누적 관객 100만 명을 넘겼어. 영화진흥위원회 집계로 10월 11일 하루 11만 9961명을 모아 일일 박스오피스 1위를 했고, 그날까지 누적 관객은 128만 1485명이야.
+
+굿즈 열기도 만만치 않아. 일간스포츠에 따르면 10월 7일 용산 치이카와샵에 신상품이 입고된다는 소식이 퍼지자 자정부터 약 300명이 몰렸고, 당일 최대 대기 인원은 1200명 이상으로 늘어난 것으로 전해졌어. 일부 상품은 중고·리셀 플랫폼에서 정가의 2~4배에 거래되고 있대.
+
+이 열풍, 한국에선 어디까지 갈까?
+
+출처: TV리포트, 위키트리, 일간스포츠
+
+배경 사진: onkelglocke, dbreen, Michael_Pointner, suju-foto, anncapictures, sofi5t / Pixabay
+표지 이미지: ©nagano / 2026 Chiikawa the Movie Film Partners
+
+#치이카와 #먼작귀 #극장판치이카와 #박스오피스 #일본애니</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-78bcc61da372">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 치이카와</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 귀여운 캐릭터 영화가 일본 흥행 1위에 한국 박스오피스 1위까지 갔는데, 정작 내용은 &#39;곡성&#39; 닮았다는 평이 나온 반전 대비</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 용산 치이카와샵 신상품 입고 소식에 자정부터 약 300명이 몰렸고, 당일 최대 대기 1200명 이상, 일부 상품은 리셀가가 정가의 2~4배 (카드 7장, 본문)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">귀여운 캐릭터 영화가 일본에서 45일 만에 약 1,230억 원을 벌었대.
+근데 이 극장판, 귀엽기만 한 게 아니라 &#39;곡성&#39; 닮았다는 평이 나와.
+왜 그런 말이 나왔는지는 아래에 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">1/ 일본 현지 집계로 개봉 75일 차에 흥행 수입 172억 엔, 관객 1178만 명이야. 올해 일본 개봉작 가운데 흥행 1위래.
+
+근데 이 영화, 내용은 귀여운 것만은 아니라고 해.</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">2/ 이번 극장판은 원작에서 가장 긴 에피소드로 꼽히는 &#39;세이렌 편&#39;을 옮겼대.
+
+위키트리는 외지인이 낯선 공동체에 들어가는 구조가 나홍진 감독의 &#39;곡성&#39;을 떠올리게 한다고 짚었어.
+
+그럼 시작부터 이 정도 성적이었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">158/500자</span></div>
+      <p class="tp-text">3/ 일본 흥행 흐름 정리
+- 첫날: 흥행 수입 9억 9천만 엔
+- 사흘 만에: 22억 엔 돌파
+- 45일: 139억 엔(약 1,230억 원), 관객 960만 명
+- 75일: 172억 엔, 관객 1178만 명
+
+(1,230억 원은 45일 시점 금액을 환산한 거라 최신 수치는 아니야)</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">4/ 한국에선 9월 30일에 개봉해서 10일 만에 누적 관객 100만 명을 넘겼어.
+
+영화진흥위원회 집계로 10월 11일 하루 11만 9961명을 모아 일일 박스오피스 1위, 그날까지 누적 관객은 128만 1485명이야.
+
+일본 기록을 보면 한국은 어디까지 갈까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">236/500자</span></div>
+      <p class="tp-text">5/ 결국 귀여운 캐릭터 영화가 일본에선 1178만 명을 모았고, 한국에서도 10일 만에 100만 명을 넘겼다는 얘기야. 내용은 &#39;곡성&#39; 닮았다는 평까지 나오고.
+
+치이카와 극장판, 볼 거야 말 거야?
+
+이런 해외에서 화제 된 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 한국 굿즈 열기 얘기까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>귀여운 캐릭터 영화가 일본에서 45일 만에 약 1,230억 원을 벌었대. 근데 사람들은 &#39;곡성&#39; 얘기를 해</li><li>치이카와 극장판은 &#39;귀여운 영화&#39;가 아니라 &#39;곡성&#39; 닮은 영화라는 평을 듣는 중</li><li>개봉 75일 만에 관객 1178만 명. 올해 일본 개봉작 흥행 1위래</li><li>첫날 9억 9천만 엔으로 시작한 귀염둥이 영화가 한국까지 넘어왔어</li><li>한국 개봉 10일 만에 100만 명. 이 귀여운 영화, 왜 이렇게 난리야?</li><li>치이카와를 귀여운 애니로만 알았으면 이번 극장판은 좀 놀랄지도 몰라</li><li>&#39;뭔가 작고 귀여운 녀석&#39;이 일본 극장가 1위를 찍었대</li><li>45일에 960만 명, 75일엔 1178만 명. 귀여운 영화 하나가 이 정도라고?</li><li>귀여운 캐릭터 영화에서 &#39;곡성&#39;을 떠올렸다는 평이 나온 이유</li><li>한국 박스오피스 1위 찍은 치이카와, 일본에선 이미 172억 엔을 벌었어</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>치이카와 극장판, 볼 거야 말 거야?</li><li>치이카와 극장판 본 사람? 아직 안 본 사람?</li><li>귀여운 캐릭터가 무서운 분위기 나오면 끌려 vs 싫어?</li><li>귀엽기만 한 영화 vs 반전 있는 영화, 어느 쪽이야?</li><li>이 열풍, 한국 최종 관객 몇 만 명까지 갈 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>치이카와 극장판 한국 박스오피스, 이후 관객 흐름</li><li>용산 치이카와샵 굿즈 열기와 리셀 가격 얘기</li><li>원작에서 가장 긴 &#39;세이렌 편&#39;은 어떤 에피소드?</li><li>일본 극장가를 흔든 캐릭터 영화 흥행 얘기</li><li>언어 천재 뇌는 외국어를 소음으로 듣는다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>1,230억 원은 개봉 45일 시점 환산 금액이라 75일 기준 172억 엔과 혼동되지 않게 확인</li><li>&#39;곡성&#39; 닮았다는 평은 위키트리의 지적이므로 출처가 드러나는 표현 유지</li><li>한국 박스오피스 수치는 영화진흥위원회 10월 11일 집계 기준이라 게시 시점에 최신 수치가 아닐 수 있음</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-01.jpg" alt="1장: 귀염둥이가 1,230억???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-02.jpg" alt="2장: 첫날에만 9억 9천만 엔 사흘엔 22억 엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-03.jpg" alt="3장: 45일 만에 관객 960만 명 139억 엔 돌파" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-04.jpg" alt="4장: 75일째엔 172억 엔 기록 관객 1178만 명" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-05.jpg" alt="5장: 귀여운 줄 알았지? 극장판 에피소드가 &#39;곡성&#39; 닮았다는 평" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-06.jpg" alt="6장: 한국 개봉 후 박스오피스 1위 10일 만에 100만" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-07.jpg" alt="7장: 한국은 지금 자정부터 300명 줄 열풍 어디까지?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261015-req-e66e97f89c7c/78bcc61da372/v6-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">귀여운 캐릭터 영화가 1,230억 원어치를 벌었다고? 일본에서 먼저 터진 &#39;극장판 치이카와: 인어 섬의 비밀&#39; 얘기야.
+
+일본 개봉은 7월 24일. 첫날에만 흥행 수입 9억 9천만 엔을 올렸고, 사흘 만에 22억 엔을 넘겼대. 개봉 45일 시점엔 누적 139억 엔(한화 약 1,230억 원), 관객 960만 명을 돌파했고. 10월 6일 일본 현지 집계로는 개봉 75일 차에 흥행 수입 172억 엔, 관객 1178만 명까지 갔어. 올해 일본 개봉작 가운데 흥행 1위라고 해. (1,230억 원은 45일 시점 금액을 환산한 거라 최신 수치는 아니야.)
+
+반전은 내용이야. 이름은 &#39;뭔가 작고 귀여운 녀석&#39;인데, 이번 극장판은 원작에서 가장 긴 에피소드로 꼽히는 &#39;세이렌 편&#39;을 옮겼어. 위키트리는 외지인이 낯선 공동체에 들어가는 구조가 나홍진 감독의 &#39;곡성&#39;을 떠올리게 한다고 짚었어.
+
+한국에선 9월 30일에 개봉했고, 10일 만에 누적 관객 100만 명을 넘겼어. 영화진흥위원회 집계로 10월 11일 하루 11만 9961명을 모아 일일 박스오피스 1위를 했고, 그날까지 누적 관객은 128만 1485명이야.
+
+굿즈 열기도 만만치 않아. 일간스포츠에 따르면 10월 7일 용산 치이카와샵에 신상품이 입고된다는 소식이 퍼지자 자정부터 약 300명이 몰렸고, 당일 최대 대기 인원은 1200명 이상으로 늘어난 것으로 전해졌어. 일부 상품은 중고·리셀 플랫폼에서 정가의 2~4배에 거래되고 있대.
+
+이 열풍, 한국에선 어디까지 갈까?
+
+출처: TV리포트, 위키트리, 일간스포츠</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#치이카와 #먼작귀 #극장판치이카와 #박스오피스 #일본애니</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>위키트리는 외지인이 낯선 공동체에 들어가는 구조가 곡성을 떠올리게 한다고 평했다 <small>애매 · &#39;곡성&#39;을 떠올리게 하는 구조라는 내용은 근거와 일치하지만, 근거 텍스트는 TV리포트 기사이며 위키트리가 평했다는 출처 표기는 근거에서 확인되지 않는다. 출처를 TV리포트 기사 기준으로 정정하거나 위키트리 인용 근거를 확인해야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 영화진흥위원회 집계라는 출처 표기 (11만9961명 일일 1위 수치에 대한 출처 주장)</li><li>근거 등록 안 된 주장: 일간스포츠 보도에 따른다는 출처 표기 (용산 치이카와샵 대기 300명 및 1200명 수치에 대한 출처 주장)</li><li>근거 등록 안 된 주장: 위키트리를 출처로 한 곡성 비교 평가 (claim 6과 연결되는 출처 귀속 주장)</li>
+          <li>1,230억 원은 개봉 45일 시점 기준 환산액이며 이후 수치(172억 엔)와 기준 시점이 다름</li><li>&#39;곡성&#39; 닮았다는 평은 위키트리의 해석이므로 매체 의견임을 본문에 밝힘</li><li>캐릭터 IP(치이카와) 관련 이미지 사용 시 저작권 주의, 카드 배경은 일반 스톡/AI 이미지로만 사용</li><li>일간스포츠 원문에 관객 수 표기 오류(11만 9961만 명)가 있어 영진위 수치는 위키트리 기준으로 사용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-78bcc61da372-0">1장</label>
+          <textarea id="s-78bcc61da372-0" rows="2" data-slide="0">귀염둥이가
+**1,230억**???</textarea>
+          
+          <label class="f" for="s-78bcc61da372-1">2장</label>
+          <textarea id="s-78bcc61da372-1" rows="3" data-slide="1">첫날에만
+**9억 9천만 엔**
+사흘엔 22억 엔</textarea>
+          
+          <label class="f" for="s-78bcc61da372-2">3장</label>
+          <textarea id="s-78bcc61da372-2" rows="3" data-slide="2">45일 만에
+관객 **960만 명**
+139억 엔 돌파</textarea>
+          
+          <label class="f" for="s-78bcc61da372-3">4장</label>
+          <textarea id="s-78bcc61da372-3" rows="3" data-slide="3">75일째엔
+**172억 엔** 기록
+관객 1178만 명</textarea>
+          
+          <label class="f" for="s-78bcc61da372-4">5장</label>
+          <textarea id="s-78bcc61da372-4" rows="3" data-slide="4">귀여운 줄 알았지?
+극장판 에피소드가
+&#39;**곡성**&#39; 닮았다는 평</textarea>
+          
+          <label class="f" for="s-78bcc61da372-5">6장</label>
+          <textarea id="s-78bcc61da372-5" rows="3" data-slide="5">한국 개봉 후
+**박스오피스 1위**
+10일 만에 100만</textarea>
+          
+          <label class="f" for="s-78bcc61da372-6">7장</label>
+          <textarea id="s-78bcc61da372-6" rows="3" data-slide="6">한국은 지금
+자정부터 **300명** 줄
+열풍 어디까지?</textarea>
+          
+          <label class="f" for="c-78bcc61da372">본문 (캡션)</label>
+          <textarea id="c-78bcc61da372" class="caption">귀여운 캐릭터 영화가 1,230억 원어치를 벌었다고? 일본에서 먼저 터진 &#39;극장판 치이카와: 인어 섬의 비밀&#39; 얘기야.
+
+일본 개봉은 7월 24일. 첫날에만 흥행 수입 9억 9천만 엔을 올렸고, 사흘 만에 22억 엔을 넘겼대. 개봉 45일 시점엔 누적 139억 엔(한화 약 1,230억 원), 관객 960만 명을 돌파했고. 10월 6일 일본 현지 집계로는 개봉 75일 차에 흥행 수입 172억 엔, 관객 1178만 명까지 갔어. 올해 일본 개봉작 가운데 흥행 1위라고 해. (1,230억 원은 45일 시점 금액을 환산한 거라 최신 수치는 아니야.)
+
+반전은 내용이야. 이름은 &#39;뭔가 작고 귀여운 녀석&#39;인데, 이번 극장판은 원작에서 가장 긴 에피소드로 꼽히는 &#39;세이렌 편&#39;을 옮겼어. 위키트리는 외지인이 낯선 공동체에 들어가는 구조가 나홍진 감독의 &#39;곡성&#39;을 떠올리게 한다고 짚었어.
+
+한국에선 9월 30일에 개봉했고, 10일 만에 누적 관객 100만 명을 넘겼어. 영화진흥위원회 집계로 10월 11일 하루 11만 9961명을 모아 일일 박스오피스 1위를 했고, 그날까지 누적 관객은 128만 1485명이야.
+
+굿즈 열기도 만만치 않아. 일간스포츠에 따르면 10월 7일 용산 치이카와샵에 신상품이 입고된다는 소식이 퍼지자 자정부터 약 300명이 몰렸고, 당일 최대 대기 인원은 1200명 이상으로 늘어난 것으로 전해졌어. 일부 상품은 중고·리셀 플랫폼에서 정가의 2~4배에 거래되고 있대.
+
+이 열풍, 한국에선 어디까지 갈까?
+
+출처: TV리포트, 위키트리, 일간스포츠</textarea>
+          <label class="f" for="t-78bcc61da372">해시태그</label>
+          <input id="t-78bcc61da372" type="text" class="tagsin" value="#치이카와 #먼작귀 #극장판치이카와 #박스오피스 #일본애니" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>위키트리는 외지인이 낯선 공동체에 들어가는 구조가 곡성을 떠올리게 한다고 평했다</b>
+            <q>“나홍진 감독의 2016년 영화 ‘곡성’을 떠올리게 하는 구조다.”</q>
+            <small>slide5, caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 개봉 45일 만에 누적 흥행 수입 139억 엔(약 1,230억 원), 누적 관객 960만 명을 돌파했다</b>
+            <q>“지난 7월 일본 개봉 당시, 개봉 45일 만에 누적 흥행 수입 139억 엔(한화 약 1,230억 원), 누적 관객 960만 명을 돌파했다.”</q>
+            <small>slide1, slide3, caption · <a href="https://tvreport.co.kr/breaking/article/1076911/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 개봉 첫날 흥행 수입 9억 9천만 엔, 사흘 만에 22억 엔을 넘겼다</b>
+            <q>“개봉 첫날에만 흥행 수입 9억9000만엔을 올렸다. 개봉 사흘 만에 흥행 수입은 22억엔을 넘어섰다.”</q>
+            <small>slide2, caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영화는 7월 24일 일본에서 먼저 개봉했다</b>
+            <q>“영화는 7월 24일 일본에서 먼저 개봉했다.”</q>
+            <small>caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개봉 75일 차인 10월 6일까지 흥행 수입 172억 엔, 관객 1178만 명을 기록했다</b>
+            <q>“일본 현지 집계에 따르면 영화는 개봉 75일 차인 지난 6일까지 흥행 수입 172억엔, 관객 1178만명을 기록했다.”</q>
+            <small>slide4, caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 일본 개봉작 가운데 흥행 1위다</b>
+            <q>“올해 일본 개봉작 가운데 흥행 1위다.”</q>
+            <small>caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>극장판은 원작에서 가장 긴 에피소드로 꼽히는 세이렌 편을 옮겼다</b>
+            <q>“이번 극장판은 원작에서 가장 긴 에피소드로 꼽히는 ‘세이렌 편’을 옮겼다.”</q>
+            <small>slide5, caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한국에서는 9월 30일에 개봉했다</b>
+            <q>“‘극장판 치이카와: 인어 섬의 비밀’은 대원미디어 배급으로 지난달 30일 국내 개봉했다.”</q>
+            <small>caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한국 개봉 10일 만에 누적 관객 100만 명을 넘겼다</b>
+            <q>“개봉 10일 만에 누적 관객 100만명을 넘겼다.”</q>
+            <small>slide6, caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 11일 하루 관객 11만 9961명으로 일일 박스오피스 1위를 차지했다</b>
+            <q>“영화진흥위원회 영화관입장권 통합전산망에 따르면 ‘극장판 치이카와: 인어 섬의 비밀’은 지난 11일 하루 관객 11만9961명을 모아 일일 박스오피스 1위를 차지했다.”</q>
+            <small>slide6, caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한국 누적 관객은 128만 1485명이다</b>
+            <q>“누적 관객은 128만1485명이다.”</q>
+            <small>caption · <a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 7일 신상품 입고 소식에 용산 치이카와샵에 자정부터 긴 대기 행렬이 이어졌다</b>
+            <q>“특히 지난 7일 할로윈 코스프레를 한 치이카와 캐릭터 상품인 ‘다 함께 가상 마스코트’ 등 일본 현지에서도 구하기 어려운 신상품이 입고된다는 소식이 전해지자, 자정부터 긴 대기 행렬이 이어졌다.”</q>
+            <small>slide7, caption · <a href="https://isplus.com/article/view/isp202610120049" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자정부터 약 300명이 몰렸고 당일 최대 대기 인원은 1200명 이상이었다</b>
+            <q>“자정부터 약 300명이 몰렸으며, 당일 최대 대기 인원은 1200명 이상까지 늘어난 것으로 전해졌다.”</q>
+            <small>slide7, caption · <a href="https://isplus.com/article/view/isp202610120049" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일부 상품이 중고·리셀 플랫폼에서 정가의 2~4배에 거래된다</b>
+            <q>“각종 중고 거래 및 리셀 플랫폼에서는 일부 상품이 정가의 2~4배에 거래되고 있다.”</q>
+            <small>caption · <a href="https://isplus.com/article/view/isp202610120049" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://tvreport.co.kr/breaking/article/1076911/" target="_blank" rel="noopener">누적 흥행 수익 &#39;1,200억&#39; 돌파…일본서 먼저 신드롬 일으킨 매운맛 &#39;판타지 애니메이션&#39;</a> (기사)</li><li><a href="https://www.wikitree.co.kr/articles/1165468" target="_blank" rel="noopener">알고 보니 &#39;곡성&#39;만큼 섬뜩... &#39;암살자(들)&#39; 꺾고 박스오피스 1위 오른 영화</a> (기사)</li><li><a href="https://isplus.com/article/view/isp202610120049" target="_blank" rel="noopener">밤새 줄 서고 웃돈까지…귀여우면 다야? ‘치이카와’ 굿즈 대란 [IS포커스] - 일간스포츠</a> (기사)</li><li><a href="https://animeanime.jp/article/2026/09/11/102837.html" target="_blank" rel="noopener">「ちいかわ」ハチワレ、うさぎがおばけに♪ ハロウィーンがやってきた！季節限定グリやグッズが盛りだくさん「ちいかわパーク」 | アニメ！アニメ！</a> (기사)</li><li><a href="https://www.haveagood-holiday.com/es/articles/magical-chiikawa-fuwamochi-gororin-hug-plush-preorder" target="_blank" rel="noopener">Peluches gigantes y mágicos de Chiikawa ya disponibles para reserva en Chiikawa Market - Holiday Travel</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="" target="_blank" rel="noopener">©nagano / 2026 Chiikawa the Movie Film Partners / </a> — "chiikawa-movie.jpg"</li><li>2장: <a href="https://pixabay.com/photos/movie-theater-curtain-theatre-movie-4609877/" target="_blank" rel="noopener">onkelglocke / Pixabay</a> — "cinema seats"</li><li>3장: <a href="https://pixabay.com/photos/new-years-eve-popcorn-food-carton-1085072/" target="_blank" rel="noopener">dbreen / Pixabay</a> — "popcorn"</li><li>4장: <a href="https://pixabay.com/photos/bridge-city-night-architecture-9456745/" target="_blank" rel="noopener">Michael_Pointner / Pixabay</a> — "tokyo skyline"</li><li>5장: <a href="https://pixabay.com/photos/trees-forest-fog-foggy-5746604/" target="_blank" rel="noopener">suju-foto / Pixabay</a> — "foggy forest"</li><li>6장: <a href="https://pixabay.com/photos/popcorn-movie-theater-theatre-food-1433327/" target="_blank" rel="noopener">anncapictures / Pixabay</a> — "movie theater"</li><li>7장: <a href="https://pixabay.com/photos/japan-travel-nature-asia-plant-4141578/" target="_blank" rel="noopener">sofi5t / Pixabay</a> — "crowd"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261015-req";
+  const ORIGINAL = {"78bcc61da372": {"caption": "\uadc0\uc5ec\uc6b4 \uce90\ub9ad\ud130 \uc601\ud654\uac00 1,230\uc5b5 \uc6d0\uc5b4\uce58\ub97c \ubc8c\uc5c8\ub2e4\uace0? \uc77c\ubcf8\uc5d0\uc11c \uba3c\uc800 \ud130\uc9c4 \u0027\uadf9\uc7a5\ud310 \uce58\uc774\uce74\uc640: \uc778\uc5b4 \uc12c\uc758 \ube44\ubc00\u0027 \uc598\uae30\uc57c.\n\n\uc77c\ubcf8 \uac1c\ubd09\uc740 7\uc6d4 24\uc77c. \uccab\ub0a0\uc5d0\ub9cc \ud765\ud589 \uc218\uc785 9\uc5b5 9\ucc9c\ub9cc \uc5d4\uc744 \uc62c\ub838\uace0, \uc0ac\ud758 \ub9cc\uc5d0 22\uc5b5 \uc5d4\uc744 \ub118\uacbc\ub300. \uac1c\ubd09 45\uc77c \uc2dc\uc810\uc5d4 \ub204\uc801 139\uc5b5 \uc5d4(\ud55c\ud654 \uc57d 1,230\uc5b5 \uc6d0), \uad00\uac1d 960\ub9cc \uba85\uc744 \ub3cc\ud30c\ud588\uace0. 10\uc6d4 6\uc77c \uc77c\ubcf8 \ud604\uc9c0 \uc9d1\uacc4\ub85c\ub294 \uac1c\ubd09 75\uc77c \ucc28\uc5d0 \ud765\ud589 \uc218\uc785 172\uc5b5 \uc5d4, \uad00\uac1d 1178\ub9cc \uba85\uae4c\uc9c0 \uac14\uc5b4. \uc62c\ud574 \uc77c\ubcf8 \uac1c\ubd09\uc791 \uac00\uc6b4\ub370 \ud765\ud589 1\uc704\ub77c\uace0 \ud574. (1,230\uc5b5 \uc6d0\uc740 45\uc77c \uc2dc\uc810 \uae08\uc561\uc744 \ud658\uc0b0\ud55c \uac70\ub77c \ucd5c\uc2e0 \uc218\uce58\ub294 \uc544\ub2c8\uc57c.)\n\n\ubc18\uc804\uc740 \ub0b4\uc6a9\uc774\uc57c. \uc774\ub984\uc740 \u0027\ubb54\uac00 \uc791\uace0 \uadc0\uc5ec\uc6b4 \ub140\uc11d\u0027\uc778\ub370, \uc774\ubc88 \uadf9\uc7a5\ud310\uc740 \uc6d0\uc791\uc5d0\uc11c \uac00\uc7a5 \uae34 \uc5d0\ud53c\uc18c\ub4dc\ub85c \uaf3d\ud788\ub294 \u0027\uc138\uc774\ub80c \ud3b8\u0027\uc744 \uc62e\uacbc\uc5b4. \uc704\ud0a4\ud2b8\ub9ac\ub294 \uc678\uc9c0\uc778\uc774 \ub0af\uc120 \uacf5\ub3d9\uccb4\uc5d0 \ub4e4\uc5b4\uac00\ub294 \uad6c\uc870\uac00 \ub098\ud64d\uc9c4 \uac10\ub3c5\uc758 \u0027\uace1\uc131\u0027\uc744 \ub5a0\uc62c\ub9ac\uac8c \ud55c\ub2e4\uace0 \uc9da\uc5c8\uc5b4.\n\n\ud55c\uad6d\uc5d0\uc120 9\uc6d4 30\uc77c\uc5d0 \uac1c\ubd09\ud588\uace0, 10\uc77c \ub9cc\uc5d0 \ub204\uc801 \uad00\uac1d 100\ub9cc \uba85\uc744 \ub118\uacbc\uc5b4. \uc601\ud654\uc9c4\ud765\uc704\uc6d0\ud68c \uc9d1\uacc4\ub85c 10\uc6d4 11\uc77c \ud558\ub8e8 11\ub9cc 9961\uba85\uc744 \ubaa8\uc544 \uc77c\uc77c \ubc15\uc2a4\uc624\ud53c\uc2a4 1\uc704\ub97c \ud588\uace0, \uadf8\ub0a0\uae4c\uc9c0 \ub204\uc801 \uad00\uac1d\uc740 128\ub9cc 1485\uba85\uc774\uc57c.\n\n\uad7f\uc988 \uc5f4\uae30\ub3c4 \ub9cc\ub9cc\uce58 \uc54a\uc544. \uc77c\uac04\uc2a4\ud3ec\uce20\uc5d0 \ub530\ub974\uba74 10\uc6d4 7\uc77c \uc6a9\uc0b0 \uce58\uc774\uce74\uc640\uc0f5\uc5d0 \uc2e0\uc0c1\ud488\uc774 \uc785\uace0\ub41c\ub2e4\ub294 \uc18c\uc2dd\uc774 \ud37c\uc9c0\uc790 \uc790\uc815\ubd80\ud130 \uc57d 300\uba85\uc774 \ubab0\ub838\uace0, \ub2f9\uc77c \ucd5c\ub300 \ub300\uae30 \uc778\uc6d0\uc740 1200\uba85 \uc774\uc0c1\uc73c\ub85c \ub298\uc5b4\ub09c \uac83\uc73c\ub85c \uc804\ud574\uc84c\uc5b4. \uc77c\ubd80 \uc0c1\ud488\uc740 \uc911\uace0\u00b7\ub9ac\uc140 \ud50c\ub7ab\ud3fc\uc5d0\uc11c \uc815\uac00\uc758 2~4\ubc30\uc5d0 \uac70\ub798\ub418\uace0 \uc788\ub300.\n\n\uc774 \uc5f4\ud48d, \ud55c\uad6d\uc5d0\uc120 \uc5b4\ub514\uae4c\uc9c0 \uac08\uae4c?\n\n\ucd9c\ucc98: TV\ub9ac\ud3ec\ud2b8, \uc704\ud0a4\ud2b8\ub9ac, \uc77c\uac04\uc2a4\ud3ec\uce20", "hashtags": ["#\uce58\uc774\uce74\uc640", "#\uba3c\uc791\uadc0", "#\uadf9\uc7a5\ud310\uce58\uc774\uce74\uc640", "#\ubc15\uc2a4\uc624\ud53c\uc2a4", "#\uc77c\ubcf8\uc560\ub2c8"], "slides": [["\uadc0\uc5fc\ub465\uc774\uac00", "**1,230\uc5b5**???"], ["\uccab\ub0a0\uc5d0\ub9cc", "**9\uc5b5 9\ucc9c\ub9cc \uc5d4**", "\uc0ac\ud758\uc5d4 22\uc5b5 \uc5d4"], ["45\uc77c \ub9cc\uc5d0", "\uad00\uac1d **960\ub9cc \uba85**", "139\uc5b5 \uc5d4 \ub3cc\ud30c"], ["75\uc77c\uc9f8\uc5d4", "**172\uc5b5 \uc5d4** \uae30\ub85d", "\uad00\uac1d 1178\ub9cc \uba85"], ["\uadc0\uc5ec\uc6b4 \uc904 \uc54c\uc558\uc9c0?", "\uadf9\uc7a5\ud310 \uc5d0\ud53c\uc18c\ub4dc\uac00", "\u0027**\uace1\uc131**\u0027 \ub2ee\uc558\ub2e4\ub294 \ud3c9"], ["\ud55c\uad6d \uac1c\ubd09 \ud6c4", "**\ubc15\uc2a4\uc624\ud53c\uc2a4 1\uc704**", "10\uc77c \ub9cc\uc5d0 100\ub9cc"], ["\ud55c\uad6d\uc740 \uc9c0\uae08", "\uc790\uc815\ubd80\ud130 **300\uba85** \uc904", "\uc5f4\ud48d \uc5b4\ub514\uae4c\uc9c0?"]]}};
+  const TOTAL = 1;
+  const SERVER = {"78bcc61da372": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 10;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

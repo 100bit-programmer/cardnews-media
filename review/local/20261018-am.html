@@ -1,0 +1,1553 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.18 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.18 오전 검수 <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-bc14f6b09280" data-jump="bc14f6b09280">1</a><a href="#post-1c45c9e84f04" data-jump="1c45c9e84f04">2</a><a href="#post-15f2644b6c4f" data-jump="15f2644b6c4f">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-bc14f6b09280" data-id="bc14f6b09280">
+    <div class="head">
+      <h2>1. 일본 택시 기사, 무례한 승객 중도 하차 권한</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 7
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-01.jpg" alt="1장: 택시 기사가 무례한 손님을 중간에 내리게?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-02.jpg" alt="2장: 지금까지는 폭력·위험물·만취 이럴 때만 가능" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-03.jpg" alt="3장: 이제는 폭언·억지 요구도 하차 요청 가능" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-04.jpg" alt="4장: 버스 기사도 똑같은 권한 받는다고…ㄷㄷ" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-05.jpg" alt="5장: 이달 초부터 괴롭힘 방지 절차 의무화됐대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-06.jpg" alt="6장: 올해 안에 시행될 예정" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-07.jpg" alt="7장: 일본 여행 갈 친구 택시 타기 전에 매너 팁으로 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/bc14f6b09280/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">택시 기사가 무례한 손님을 목적지 전에 내리게 할 수 있게 된다는 소식이야. 일본 국토교통성이 택시업계의 기본 규칙인 &#39;표준 운송 약관&#39;을 고치겠다고 밝혔대.
+
+지금까지 일본 택시 기사가 차를 세우고 내리라고 말할 수 있는 경우는 꽤 한정돼 있었어. 손님이 물리적 폭력을 쓰거나, 불법·위험 물품을 갖고 있거나, 너무 취해서 목적지를 제대로 말하지 못할 때 같은 경우야.
+
+이번 개정안은 여기에 폭언, 부당한 요구, 그 밖의 업무 방해 행위를 명시적으로 추가해서, 이런 경우에도 기사가 승객에게 하차를 요구할 수 있게 해. 같은 권한이 버스 기사에게도 주어져.
+
+배경에는 이달 초 시행된 다른 규제 변화가 있어. 택시·버스 사업자가 고객의 괴롭힘으로부터 기사를 보호하기 위한 절차를 마련하도록 의무화됐는데, 문제 승객을 계속 태우게 하는 건 기사를 괴롭힘에 노출시키는 일이라 하차 권한을 주는 게 논리적인 해법이라는 게 SoraNews24의 설명이야.
+
+내리라고 했는데 승객이 버티면 어떻게 할지는 각 사업자가 절차를 정해야 할 것으로 보이고, 경찰에 연락하는 방법도 선택지가 될 수 있다고 해. 새 규정은 올해가 끝나기 전에 시행될 예정이야.
+
+일본에서 택시 탈 일이 있다면 매너부터 챙기는 게 좋겠지?
+
+출처: SoraNews24, FNN Prime Online, 47News</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본택시 #일본여행 #해외뉴스 #일본문화 #택시기사</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 이 규제가 문제 승객을 계속 태우게 하는 것이 기사를 괴롭힘에 노출시키므로 하차 권한을 주는 것이 논리적 해법이라는 설명을 SoraNews24의 설명으로 귀속시킨 부분</li><li>근거 등록 안 된 주장: 출처 목록(SoraNews24, FNN Prime Online, 47News)</li>
+          <li>새 규정은 시행 예정 단계이며 시행 시점이 변경될 수 있음</li><li>원문에 이달 초 시행이라고만 되어 있어 정확한 날짜는 불확실함</li><li>승객이 하차를 거부할 때의 대응은 사업자별 절차에 달려 있어 확정되지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-bc14f6b09280-0">1장</label>
+          <textarea id="s-bc14f6b09280-0" rows="3" data-slide="0">택시 기사가
+무례한 손님을
+**중간에** 내리게?!</textarea>
+          
+          <label class="f" for="s-bc14f6b09280-1">2장</label>
+          <textarea id="s-bc14f6b09280-1" rows="3" data-slide="1">지금까지는
+폭력·위험물·**만취**
+이럴 때만 가능</textarea>
+          
+          <label class="f" for="s-bc14f6b09280-2">3장</label>
+          <textarea id="s-bc14f6b09280-2" rows="3" data-slide="2">이제는
+**폭언**·억지 요구도
+하차 요청 가능</textarea>
+          
+          <label class="f" for="s-bc14f6b09280-3">4장</label>
+          <textarea id="s-bc14f6b09280-3" rows="3" data-slide="3">**버스 기사도**
+똑같은 권한
+받는다고…ㄷㄷ</textarea>
+          
+          <label class="f" for="s-bc14f6b09280-4">5장</label>
+          <textarea id="s-bc14f6b09280-4" rows="3" data-slide="4">이달 초부터
+**괴롭힘** 방지 절차
+의무화됐대</textarea>
+          
+          <label class="f" for="s-bc14f6b09280-5">6장</label>
+          <textarea id="s-bc14f6b09280-5" rows="2" data-slide="5">**올해 안에**
+시행될 예정</textarea>
+          
+          <label class="f" for="s-bc14f6b09280-6">7장</label>
+          <textarea id="s-bc14f6b09280-6" rows="3" data-slide="6">**일본 여행 갈 친구**
+택시 타기 전에
+매너 팁으로 보내기</textarea>
+          
+          <label class="f" for="c-bc14f6b09280">본문 (캡션)</label>
+          <textarea id="c-bc14f6b09280" class="caption">택시 기사가 무례한 손님을 목적지 전에 내리게 할 수 있게 된다는 소식이야. 일본 국토교통성이 택시업계의 기본 규칙인 &#39;표준 운송 약관&#39;을 고치겠다고 밝혔대.
+
+지금까지 일본 택시 기사가 차를 세우고 내리라고 말할 수 있는 경우는 꽤 한정돼 있었어. 손님이 물리적 폭력을 쓰거나, 불법·위험 물품을 갖고 있거나, 너무 취해서 목적지를 제대로 말하지 못할 때 같은 경우야.
+
+이번 개정안은 여기에 폭언, 부당한 요구, 그 밖의 업무 방해 행위를 명시적으로 추가해서, 이런 경우에도 기사가 승객에게 하차를 요구할 수 있게 해. 같은 권한이 버스 기사에게도 주어져.
+
+배경에는 이달 초 시행된 다른 규제 변화가 있어. 택시·버스 사업자가 고객의 괴롭힘으로부터 기사를 보호하기 위한 절차를 마련하도록 의무화됐는데, 문제 승객을 계속 태우게 하는 건 기사를 괴롭힘에 노출시키는 일이라 하차 권한을 주는 게 논리적인 해법이라는 게 SoraNews24의 설명이야.
+
+내리라고 했는데 승객이 버티면 어떻게 할지는 각 사업자가 절차를 정해야 할 것으로 보이고, 경찰에 연락하는 방법도 선택지가 될 수 있다고 해. 새 규정은 올해가 끝나기 전에 시행될 예정이야.
+
+일본에서 택시 탈 일이 있다면 매너부터 챙기는 게 좋겠지?
+
+출처: SoraNews24, FNN Prime Online, 47News</textarea>
+          <label class="f" for="t-bc14f6b09280">해시태그</label>
+          <input id="t-bc14f6b09280" type="text" class="tagsin" value="#일본택시 #일본여행 #해외뉴스 #일본문화 #택시기사" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 국토교통성이 택시업계의 기본 규칙인 표준 운송 약관을 개정한다고 밝혔다.</b>
+            <q>“The Ministry of Land, Infrastructure, Transport and Tourism has now disclosed that it is making amendments to the Standard Terms and Conditions of Carriage, the underlying rules of the taxi industry, which will explicitly give drivers the right to order passengers out of their cab for being verbally abusive, making unreasonable demands, or engaging in otherwise disruptive behavior.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지금까지 기사가 승객을 내리게 할 수 있는 경우는 폭력, 위험물 소지, 만취 등 특정 조건으로 한정돼 있었다.</b>
+            <q>“Up until now, taxi drivers in Japan have only been allowed to pull over and tell a passenger to get out of the vehicle under pretty specific conditions, such as the customer becoming physically violent, being in possession of illegal or dangerous items, or being too intoxicated to intelligently verbalize their desired destination.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개정으로 폭언, 부당한 요구, 기타 업무 방해 행위를 한 승객에게도 기사가 하차를 명시적으로 요구할 수 있게 된다.</b>
+            <q>“The Ministry of Land, Infrastructure, Transport and Tourism has now disclosed that it is making amendments to the Standard Terms and Conditions of Carriage, the underlying rules of the taxi industry, which will explicitly give drivers the right to order passengers out of their cab for being verbally abusive, making unreasonable demands, or engaging in otherwise disruptive behavior.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>같은 권한이 버스 기사에게도 주어진다.</b>
+            <q>“The same rights will also be granted to bus drivers.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이달 초 택시·버스 사업자가 고객의 괴롭힘으로부터 기사를 보호할 절차를 마련하도록 하는 규제가 시행됐다.</b>
+            <q>“This expansion of drivers’ authority comes in the wake of another regulatory change which went into effect at the star of this month, requiring taxi and bus operators to put in place protocols by which to protect drivers from harassment by customers.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>승객이 하차를 거부할 때의 대응 절차는 각 사업자가 정해야 할 것으로 보이며, 경찰에 연락하는 방법도 선택지가 될 수 있다.</b>
+            <q>“The question of what to do if a belligerent passenger then becomes defiant too and refuses to vacate the vehicle appears to be something that individual operators will need to establish protocols for, but ostensibly contacting the police are having them remove the passenger, in the same way that trespassers within private property are dealt with, would be an option.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새 규정은 올해가 끝나기 전에 시행될 것으로 예상된다.</b>
+            <q>“The new regulation is expected to go into effect before the end of the year, so anyone who’s gotten into the habit of throwing their weight around when they hop in a taxi would be advised to polish their manners sooner rather than later.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/17/japanese-taxi-drivers-granted-right-to-kick-rude-passengers-out-of-their-cabs-before-destination/" target="_blank" rel="noopener">Japanese taxi drivers granted right to kick rude passengers out of their cabs before destination</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/taxi-road-traffic-cab-vehicles-238478/" target="_blank" rel="noopener">RyanMcGuire / Pixabay</a> — "empty taxi waiting on a sunlit city street"</li><li>2장: <a href="https://pixabay.com/photos/vintage-car-classic-car-car-vehicle-7300881/" target="_blank" rel="noopener">yunusemrelca / Pixabay</a> — "car door"</li><li>3장: <a href="https://pixabay.com/photos/architecture-avenue-buildings-city-1846023/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "city street"</li><li>4장: <a href="https://pixabay.com/photos/school-bus-school-bus-child-boy-10428798/" target="_blank" rel="noopener">AlisaDyson / Pixabay</a> — "bus"</li><li>5장: <a href="https://pixabay.com/photos/lotus-sports-car-quickly-automobile-5407670/" target="_blank" rel="noopener">emkanicepic / Pixabay</a> — "steering wheel"</li><li>6장: <a href="https://pixabay.com/photos/calendar-meeting-planning-10045176/" target="_blank" rel="noopener">Ralf1403 / Pixabay</a> — "calendar"</li><li>7장: <a href="https://pixabay.com/photos/car-road-tire-asphalt-vehicle-932455/" target="_blank" rel="noopener">tookapic / Pixabay</a> — "road trip"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-1c45c9e84f04" data-id="1c45c9e84f04">
+    <div class="head">
+      <h2>2. 호주 카페 결제창에 뜨는 팁 요청</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/1c45c9e84f04/v1-01.jpg" alt="1장: 호주 결제창에 팁 뜬다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/1c45c9e84f04/v1-02.jpg" alt="2장: 손님들 반응은 대체로 싫다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/1c45c9e84f04/v1-03.jpg" alt="3장: 호주 사람들은 미국 수입품 이라고 봐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/1c45c9e84f04/v1-04.jpg" alt="4장: 팁을 못 받았다는 바텐더 글에 댓글 30개 넘게" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/1c45c9e84f04/v1-05.jpg" alt="5장: 근데 팁 나눠주는 법은 호주에 없대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/1c45c9e84f04/v1-06.jpg" alt="6장: 호주 여행 갈 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/1c45c9e84f04/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">호주 결제 화면에도 팁 버튼이 뜬다는 소식이야. 가디언 뉴스레터에 따르면 요즘 호주에서는 거의 모든 곳에서 팁을 내라고 권하는 분위기라고 해.
+
+계기는 바텐더들이 모인 페이스북 그룹의 글 하나였어. 팁을 받지 못한 게 흔한 일이냐고 묻는 글이었고, 30개 넘는 답글 중 대부분이 자기도 팁을 못 받은 가게를 꼽았대. 기자가 Fair Work에 직원에게 팁을 어떻게 지급해야 하는지 정한 법이 있는지 물었더니 없다는 답이 돌아왔어. 그래서 글쓴이가 겪은 일도 고용주가 규칙을 어긴 건 아니었다는 거야.
+
+하나 더, 캐시리스 결제 시스템은 거래마다 일정 비율을 가져간대. 팁을 요청하게 해 주는 시스템이 수수료도 챙기는 게 꽤 뻔뻔하다는 게 기자의 말이야.
+
+손님들 반응은? 기자가 레딧을 살펴보니 서로 반박하기보다 동의하는 댓글이 더 많았대. 호주 사람들은 팁을 미국에서 들어온 관행이라고 생각해서, 그런 방식과 엮이고 싶어 하지 않는 편이라고 해. 팁을 받는 직종에서 일하는 사람들은 받으면 좋긴 한데, 분배 과정이 번거롭고 누가 실제로 받는지 불확실해서 선뜻 찬성하기 어렵다고 말한대.
+
+기자 본인은 팁을 거의 안 내는 편이고, 만약 낸다면 현금으로 낼 것 같다고 했어.
+
+출처: The Guardian</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#호주 #팁문화 #문화차이 #해외문화 #호주여행</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>호주에서는 거의 모든 곳에서 팁을 내라고 권하는 분위기가 되었다 <small>애매 · 원문은 &#39;seemingly everywhere&#39;로 &#39;~처럼 보인다&#39;는 추정 표현인데, 카드는 단정하고 있어 hedge를 살려 &#39;거의 모든 곳에서 팁을 권하는 분위기처럼 보인다&#39;로 고치는 게 맞다.</small></li>
+          <li>근거 등록 안 된 주장: 호주 결제 화면에 팁 버튼이 뜬다는 주장 (원문 근거 없음)</li><li>근거 등록 안 된 주장: 가디언 뉴스레터에 따른 정보라는 출처 주장 (원문은 Guardian 기사 발췌 형식이며 뉴스레터 명시는 확인 어려움)</li>
+          <li>원문은 가디언 뉴스레터 대화체 글이라 기자 개인 의견이 섞여 있음 (캡션에서 기자의 말로 표기)</li><li>미국식 팁 문화가 호주에 유입된 구체적 과정은 원문에 없음. 호주인들이 &#39;미국에서 들어온 것&#39;이라 생각한다는 인식만 다룸</li><li>호주 소비자 반응은 기자가 레딧을 살펴본 서술에 근거하며 공식 조사 결과가 아님</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-1c45c9e84f04-0">1장</label>
+          <textarea id="s-1c45c9e84f04-0" rows="2" data-slide="0">호주 결제창에
+**팁** 뜬다고???</textarea>
+          
+          <label class="f" for="s-1c45c9e84f04-1">2장</label>
+          <textarea id="s-1c45c9e84f04-1" rows="2" data-slide="1">손님들 반응은
+대체로 **싫다**</textarea>
+          
+          <label class="f" for="s-1c45c9e84f04-2">3장</label>
+          <textarea id="s-1c45c9e84f04-2" rows="3" data-slide="2">호주 사람들은
+**미국 수입품**
+이라고 봐</textarea>
+          
+          <label class="f" for="s-1c45c9e84f04-3">4장</label>
+          <textarea id="s-1c45c9e84f04-3" rows="3" data-slide="3">팁을 못 받았다는
+바텐더 글에
+댓글 **30개** 넘게</textarea>
+          
+          <label class="f" for="s-1c45c9e84f04-4">5장</label>
+          <textarea id="s-1c45c9e84f04-4" rows="3" data-slide="4">근데 팁 나눠주는
+법은 호주에
+**없대**</textarea>
+          
+          <label class="f" for="s-1c45c9e84f04-5">6장</label>
+          <textarea id="s-1c45c9e84f04-5" rows="2" data-slide="5">**호주 여행** 갈 친구
+태그해서 알려줘</textarea>
+          
+          <label class="f" for="c-1c45c9e84f04">본문 (캡션)</label>
+          <textarea id="c-1c45c9e84f04" class="caption">호주 결제 화면에도 팁 버튼이 뜬다는 소식이야. 가디언 뉴스레터에 따르면 요즘 호주에서는 거의 모든 곳에서 팁을 내라고 권하는 분위기라고 해.
+
+계기는 바텐더들이 모인 페이스북 그룹의 글 하나였어. 팁을 받지 못한 게 흔한 일이냐고 묻는 글이었고, 30개 넘는 답글 중 대부분이 자기도 팁을 못 받은 가게를 꼽았대. 기자가 Fair Work에 직원에게 팁을 어떻게 지급해야 하는지 정한 법이 있는지 물었더니 없다는 답이 돌아왔어. 그래서 글쓴이가 겪은 일도 고용주가 규칙을 어긴 건 아니었다는 거야.
+
+하나 더, 캐시리스 결제 시스템은 거래마다 일정 비율을 가져간대. 팁을 요청하게 해 주는 시스템이 수수료도 챙기는 게 꽤 뻔뻔하다는 게 기자의 말이야.
+
+손님들 반응은? 기자가 레딧을 살펴보니 서로 반박하기보다 동의하는 댓글이 더 많았대. 호주 사람들은 팁을 미국에서 들어온 관행이라고 생각해서, 그런 방식과 엮이고 싶어 하지 않는 편이라고 해. 팁을 받는 직종에서 일하는 사람들은 받으면 좋긴 한데, 분배 과정이 번거롭고 누가 실제로 받는지 불확실해서 선뜻 찬성하기 어렵다고 말한대.
+
+기자 본인은 팁을 거의 안 내는 편이고, 만약 낸다면 현금으로 낼 것 같다고 했어.
+
+출처: The Guardian</textarea>
+          <label class="f" for="t-1c45c9e84f04">해시태그</label>
+          <input id="t-1c45c9e84f04" type="text" class="tagsin" value="#호주 #팁문화 #문화차이 #해외문화 #호주여행" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>호주에서는 거의 모든 곳에서 팁을 내라고 권하는 분위기가 되었다</b>
+            <q>“Now we’re being encouraged to tip seemingly everywhere. How do people feel about it?”</q>
+            <small>slide1, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>손님들은 팁 요구를 대체로 싫어하는 것으로 보인다</b>
+            <q>“Patrons seem to hate it.”</q>
+            <small>slide2, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>호주 사람들은 팁을 미국에서 들어온 관행이라고 생각한다</b>
+            <q>“One of the biggest reasons for this is that Australians think tipping is a US import and not many people want to be associated with those practices.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>레딧에서는 반박보다 동의하는 댓글이 더 많았다</b>
+            <q>“It was one of the few subjects where more people were agreeing with each rather than arguing in the comments.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>바텐더 페이스북 그룹에 팁을 받지 못한 경험을 묻는 글이 올라왔다</b>
+            <q>“I came across a post in a bartenders’ Facebook group from someone asking if their experience of having tips withheld was normal.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그 글에 답글이 30개 넘게 달렸고 대부분이 자기도 팁을 받지 못한 가게를 지적했다</b>
+            <q>“There were more than 30 responses, with the majority of them calling out venues where they’d also been denied their tips.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Fair Work는 직원에게 팁을 지급하는 것에 관한 법이 없다고 답했다</b>
+            <q>“They told me there is none.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>글쓴이는 임금 도둑질을 당한 게 아니었다. 고용주가 규칙을 어기지 않았기 때문이다</b>
+            <q>“So the original poster hadn’t experienced wage theft because the employers weren’t actually breaking any rules.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>캐시리스 결제 시스템은 모든 거래에서 일정 비율을 가져간다</b>
+            <q>“Cashless payment systems take a percentage from every transaction made too.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 팁 요청을 가능하게 하는 시스템이 수수료도 챙기는 것이 뻔뻔하다고 봤다</b>
+            <q>“It’s pretty cheeky that the systems that allow a business to ask for tips – which changes customers’ decision-making behaviour – also get a cut.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>팁을 받는 직종 사람들은 받으면 좋지만 분배 절차와 수령자의 불확실성 때문에 선뜻 지지하기 어렵다고 한다</b>
+            <q>“While they say it is nice when they do receive tips, the logistics around paying it out and uncertainty about who will actually receive it make tipping difficult to fully get behind.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 팁을 거의 내지 않으며, 내고 싶다면 현금으로 낼 것 같다고 했다</b>
+            <q>“The main thing that has changed though is that if I want to tip, I would probably tip cash.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/lifeandstyle/2026/oct/18/how-australias-tipping-culture-got-awkward-and-what-to-do-about-it" target="_blank" rel="noopener">How Australia’s tipping culture got awkward – and what to do about it</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/ec-cash-card-payment-money-cashless-1750490/" target="_blank" rel="noopener">flyerwerk / Pixabay</a> — "cafe counter with card payment terminal in sunlight"</li><li>2장: <a href="https://pixabay.com/photos/credit-cards-denim-jeans-blue-jeans-1583534/" target="_blank" rel="noopener">TheDigitalWay / Pixabay</a> — "credit card"</li><li>3장: <a href="https://pixabay.com/photos/earth-planet-space-world-universe-11009/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "globe"</li><li>4장: <a href="https://pixabay.com/photos/cocktail-mocktail-bar-drink-glass-8076619/" target="_blank" rel="noopener">Anilsharma26 / Pixabay</a> — "bartender"</li><li>5장: <a href="https://pixabay.com/photos/laptop-office-hand-writing-3196481/" target="_blank" rel="noopener">AymaneJed / Pixabay</a> — "documents"</li><li>6장: <a href="https://pixabay.com/photos/airplane-travel-adventure-6867678/" target="_blank" rel="noopener">Javaistan / Pixabay</a> — "airplane window"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-15f2644b6c4f" data-id="15f2644b6c4f">
+    <div class="head">
+      <h2>3. 병마용 지문 분석 - 만든 사람은 남자만이 아니었다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11 · 애매 3
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/15f2644b6c4f/v1-01.jpg" alt="1장: 병마용 만든 사람 남자만이 아니라고?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/15f2644b6c4f/v1-02.jpg" alt="2장: 2,200년 전 젖은 점토에 남은 지문을 조사했대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/15f2644b6c4f/v1-03.jpg" alt="3장: 그동안 정설은 어른 남자들이 만들었다는 것" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/15f2644b6c4f/v1-04.jpg" alt="4장: 성인 남성 45% 성인 여성 32.7% 15세 미만 22.3%" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/15f2644b6c4f/v1-05.jpg" alt="5장: 36개 병사상의 지문 79개 기준 아직 일부일 뿐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/15f2644b6c4f/v1-06.jpg" alt="6장: 역사 덕후 친구 태그해서 같이 놀라기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-am-e5f840b1606d/15f2644b6c4f/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">병마용을 만든 사람이 어른 남자만은 아니었을지도 모른대.
+
+2,200년 전 진시황의 무덤을 지키려고 만든 병마용을 두고, 그동안은 성인 남성이 전부 만들었을 거라고 여겨져 왔어. 그런데 새 연구는 장인들이 마르기 전 젖은 점토에 남긴 지문에서 단서를 찾았어.
+
+진시황릉박물관의 Xiaoxi Li가 이끄는 연구팀은 한 발굴 구덩이의 병사상 36점을 조사했어. 처음에 지문 91개를 기록했고, 같은 사람이 여러 번 남긴 것으로 보이는 12개를 빼서 79개를 분석했지. 지문 융선 사이의 평균 간격은 나이와 성별의 단서가 되는데, 연구팀은 지문을 하나씩 판정하지 않고 알고리즘으로 집단별 비율을 추정했어.
+
+결과는 성인 남성 45%, 성인 여성 32.7%, 15세 미만 어린이 22.3%. 진나라에 숙련 장인 밑에서 배우는 도제 제도가 있었다는 기록이 있고, 어린 사람들은 갑옷 장식 붙이기 같은 비교적 단순한 작업을 맡았을 수 있다고 연구팀은 보고 있어.
+
+다만 한계도 분명해. 지문 79개는 넓은 유적의 한 구역, 병사상 36점에서 나온 거고, 지문 비율이 곧 일한 사람의 비율은 아닐 수 있어. 현대 유럽인 기준 자료를 쓴 점도 불확실성으로 짚혔어.
+
+출처: ScienceAlert, Journal of Cultural Heritage</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#병마용 #진시황 #고고학 #지문 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>장인들이 젖은 점토에 지문을 남겼고, 그 지문은 남성·여성·어린이가 함께 작업했음을 시사한다 <small>애매 · 원문은 지문이 남성·여성·어린이가 함께 작업했음을 시사한다고 말하며 &#39;작업했을 것&#39;이라는 가능성 표현. 카드의 &#39;남자만이 아니라&#39; 수준은 가능, 다만 단정 어조는 피할 것.</small></li><li>진나라 기록에는 젊은이가 숙련 장인 밑에서 기술을 배우는 도제 제도가 나온다 <small>애매 · 원문은 진나라 기록에 도제 제도가 있었다고 하나 &#39;숙련 장인 밑에서 배우는&#39;은 맞음. 다만 이 기록이 연구의 직접 근거가 아닌 배경임을 구분할 것.</small></li><li>어린 도제들은 갑옷 장식 붙이기처럼 비교적 단순한 작업을 맡았을 수 있다고 연구팀은 본다 <small>애매 · 원문은 &#39;~일 수 있다&#39;, &#39;연구팀은 보고 있다&#39;로 가능성 제시. 카드의 &#39;보고 있어&#39;는 확정적으로 읽힐 수 있어 가능성 표현을 유지해야 함.</small></li>
+          <li>근거 등록 안 된 주장: 카드 slide1·caption의 &#39;새 연구&#39;라는 표현과 slide3의 &#39;그동안 정설&#39;은 원문 근거가 있으나 claims 목록에 없음</li><li>근거 등록 안 된 주장: slide5의 &#39;아직 일부일 뿐&#39;은 연구 한계 요약으로 claims 11과 겹치지만 별도 명시되지 않음</li><li>근거 등록 안 된 주장: caption의 &#39;병마용을 만든 사람이 어른 남자만은 아니었을지도 모른대&#39;는 원문의 시사 내용을 요약한 것으로 claims에 직접 대응 항목 없음</li><li>근거 등록 안 된 주장: 출처 ScienceAlert 표기는 원문 출처로 claims 목록에 없음</li><li>근거 등록 안 된 주장: 1974년 발견, 우물 파던 농부, 발굴 위치 1.5km 등 원문 배경 사실은 카드·본문에 쓰이지 않았으나 claims에 없음</li>
+          <li>표본 한계: 병사상 36점, 한 구역의 지문 79개 기준이라 전체로 일반화하기 어려움</li><li>현대 유럽인 기준 자료 사용으로 추정에 불확실성이 있음</li><li>지문 비율이 곧 작업자 비율은 아닐 수 있음</li><li>1장 real_subject(Terracotta Army) 위키미디어 실제 사진 사용 시 라이선스 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-15f2644b6c4f-0">1장</label>
+          <textarea id="s-15f2644b6c4f-0" rows="2" data-slide="0">병마용 만든 사람
+**남자만이** 아니라고?!</textarea>
+          
+          <label class="f" for="s-15f2644b6c4f-1">2장</label>
+          <textarea id="s-15f2644b6c4f-1" rows="3" data-slide="1">2,200년 전
+젖은 점토에 남은
+**지문**을 조사했대</textarea>
+          
+          <label class="f" for="s-15f2644b6c4f-2">3장</label>
+          <textarea id="s-15f2644b6c4f-2" rows="3" data-slide="2">그동안 정설은
+**어른 남자들이**
+만들었다는 것</textarea>
+          
+          <label class="f" for="s-15f2644b6c4f-3">4장</label>
+          <textarea id="s-15f2644b6c4f-3" rows="3" data-slide="3">성인 남성 45%
+성인 여성 32.7%
+15세 미만 **22.3%**</textarea>
+          
+          <label class="f" for="s-15f2644b6c4f-4">5장</label>
+          <textarea id="s-15f2644b6c4f-4" rows="3" data-slide="4">36개 병사상의
+지문 **79개** 기준
+아직 일부일 뿐</textarea>
+          
+          <label class="f" for="s-15f2644b6c4f-5">6장</label>
+          <textarea id="s-15f2644b6c4f-5" rows="3" data-slide="5">**역사 덕후** 친구
+태그해서
+같이 놀라기</textarea>
+          
+          <label class="f" for="c-15f2644b6c4f">본문 (캡션)</label>
+          <textarea id="c-15f2644b6c4f" class="caption">병마용을 만든 사람이 어른 남자만은 아니었을지도 모른대.
+
+2,200년 전 진시황의 무덤을 지키려고 만든 병마용을 두고, 그동안은 성인 남성이 전부 만들었을 거라고 여겨져 왔어. 그런데 새 연구는 장인들이 마르기 전 젖은 점토에 남긴 지문에서 단서를 찾았어.
+
+진시황릉박물관의 Xiaoxi Li가 이끄는 연구팀은 한 발굴 구덩이의 병사상 36점을 조사했어. 처음에 지문 91개를 기록했고, 같은 사람이 여러 번 남긴 것으로 보이는 12개를 빼서 79개를 분석했지. 지문 융선 사이의 평균 간격은 나이와 성별의 단서가 되는데, 연구팀은 지문을 하나씩 판정하지 않고 알고리즘으로 집단별 비율을 추정했어.
+
+결과는 성인 남성 45%, 성인 여성 32.7%, 15세 미만 어린이 22.3%. 진나라에 숙련 장인 밑에서 배우는 도제 제도가 있었다는 기록이 있고, 어린 사람들은 갑옷 장식 붙이기 같은 비교적 단순한 작업을 맡았을 수 있다고 연구팀은 보고 있어.
+
+다만 한계도 분명해. 지문 79개는 넓은 유적의 한 구역, 병사상 36점에서 나온 거고, 지문 비율이 곧 일한 사람의 비율은 아닐 수 있어. 현대 유럽인 기준 자료를 쓴 점도 불확실성으로 짚혔어.
+
+출처: ScienceAlert, Journal of Cultural Heritage</textarea>
+          <label class="f" for="t-15f2644b6c4f">해시태그</label>
+          <input id="t-15f2644b6c4f" type="text" class="tagsin" value="#병마용 #진시황 #고고학 #지문 #과학뉴스" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>장인들이 젖은 점토에 지문을 남겼고, 그 지문은 남성·여성·어린이가 함께 작업했음을 시사한다</b>
+            <q>“The sculptors – whose work endures long after the emperor they served – left their fingerprints in the still-wet clay, and it&#39;s those fingerprints that suggest men, women, and children likely all collaborated in the epic undertaking of the Terracotta Army.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>진나라 기록에는 젊은이가 숙련 장인 밑에서 기술을 배우는 도제 제도가 나온다</b>
+            <q>“Historical records from the Qin dynasty describe a formal system of apprenticeships, in which young people learned their crafts under the supervision of experienced artisans.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>어린 도제들은 갑옷 장식 붙이기처럼 비교적 단순한 작업을 맡았을 수 있다고 연구팀은 본다</b>
+            <q>“It&#39;s possible, the researchers suggest, that younger apprentices were assigned relatively simple tasks, such as attaching decorative details to the warriors&#39; armor, while more experienced artisans undertook the more technically demanding work.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>병마용은 2,200년 전 중국에서 진시황의 무덤을 지키려고 만들어졌다</b>
+            <q>“They are the warriors of the Terracotta Army, carefully crafted 2,200 years ago in China to guard the tomb of Emperor Qin Shihuang.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고고학자들은 전통적으로 병마용 전체를 성인 남성이 만들었다고 가정해 왔다</b>
+            <q>“Traditionally, archaeologists have assumed that the entire army was built by adult men.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 진시황릉박물관의 Xiaoxi Li가 이끌었다</b>
+            <q>“&#34;These findings challenge the long-held assumption that Terracotta Army production relied exclusively on adult male labor,&#34; write researchers led by archaeologist Xiaoxi Li of Emperor Qinshihuang&#39;s Mausoleum Site Museum, &#34;providing the first quantitative biological evidence for a diverse workforce including women and children.&#34;”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 발굴 구덩이의 병사상 36점을 조사했고, 지문 91개를 기록한 뒤 12개를 제외해 79개를 분석했다</b>
+            <q>“The study is based on 36 of the warriors from a single excavation pit. An initial survey documented 91 fingerprints – 12 of which were later excluded because they seemed to be from individuals who left multiple prints.”</q>
+            <small>caption, slide5 · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지문 융선 사이의 평균 간격은 나이와 성별에 대한 단서를 줄 수 있다</b>
+            <q>“That means the average distance between the ridges – a measurement called mean ridge breadth – can offer clues about a person&#39;s age and sex.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 개별 지문을 판정하는 대신 알고리즘으로 79개 지문 전체의 집단별 비율을 추정했다</b>
+            <q>“Rather than attempting to analyze each individual fingerprint and assign it an age and a sex, the researchers used an algorithm to estimate the proportions of different demographic groups represented across all 79 prints.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>모델에 따르면 지문의 45%가 성인 남성, 32.7%가 성인 여성의 것으로 추정됐다</b>
+            <q>“Only 45 percent of the fingerprints, according to the model, were likely made by adult men. Another 32.7 percent were attributed to adult women.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>나머지 22.3%는 15세 미만 어린이의 것으로 추정됐다</b>
+            <q>“And the remaining 22.3 percent were attributed to children under the age of 15.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지문 79개는 넓은 유적의 한 구역 병사상 36점에서 나왔고, 지문 비율이 곧 만든 사람의 비율은 아닐 수 있다</b>
+            <q>“There are, however, some important limitations to the findings. The 79 fingerprints came from just 36 warriors in one section of the vast archaeological site, and the proportions of fingerprints don&#39;t necessarily reflect the proportions of people who made them.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>현대 유럽인 기준 자료에 의존한 점이 불확실성을 만든다</b>
+            <q>“The researchers also adjusted their measurements to account for differences in fingerprint size between populations and for clay shrinkage during drying and firing, although it&#39;s important to note that their reliance on modern European reference data introduces uncertainty.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 Journal of Cultural Heritage에 게재됐다</b>
+            <q>“The research was published in the Journal of Cultural Heritage.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/2200-year-old-fingerprints-reveal-who-really-built-chinas-mysterious-terracotta-army" target="_blank" rel="noopener">2,200-Year-Old Fingerprints Reveal Who Really Built China&#39;s Mysterious Terracotta Army</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Terracotta_Army,_View_of_Pit_1.jpg" target="_blank" rel="noopener">Jmhullot / Wikimedia Commons · CC BY 3.0</a> — "Terracotta Army"</li><li>2장: <a href="https://pixabay.com/photos/pottery-hands-spinning-workshop-1283146/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "wet clay"</li><li>3장: <a href="https://pixabay.com/photos/pottery-handcraft-ceramic-vessel-10258355/" target="_blank" rel="noopener">MrHà / Pixabay</a> — "pottery workshop"</li><li>4장: <a href="https://pixabay.com/photos/computer-summary-chart-business-767776/" target="_blank" rel="noopener">Lalmch / Pixabay</a> — "data chart"</li><li>5장: <a href="https://pixabay.com/photos/terracotta-army-china-xian-soldier-1864972/" target="_blank" rel="noopener">christels / Pixabay</a> — "archaeological excavation"</li><li>6장: <a href="https://pixabay.com/photos/girls-friend-casual-relaxing-8314170/" target="_blank" rel="noopener">Surprising_Media / Pixabay</a> — "friends talking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-2d3330da035b">
+    <div class="head">
+      <h2>S1. 깊은 잠과 성장호르몬 양방향 회로 (UC 버클리, 쥐 연구)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-2d3330da035b">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 잠은 뇌가 꺼지는 시간이 아니라 성장호르몬과 뇌가 서로 신호를 주고받는 시간이라는 반전. 잠을 줄이는 내 생활과 바로 이어진다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">잠은 뇌가 꺼지는 시간이 아니라 호르몬 회로가 바쁘게 도는 시간이래
+깊은 잠 동안 성장호르몬이 뇌로 되돌려 보내는 신호가 새로 발견됨
+근데 이 신호가 &#39;언제 깰지&#39;에도 관여한다는 게 반전이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">152/500자</span></div>
+      <p class="tp-text">1/ UC 버클리 연구팀이 쥐 뇌 활동을 직접 기록해서, 잠자는 동안 성장호르몬 분비를 조절하는 회로를 찾았대. 근데 일방통행이 아니었음. 잠이 성장호르몬을 내보내게 하고, 그 호르몬이 다시 뇌로 신호를 보내서 언제 깰지에도 영향을 준대. 그 신호는 뇌 어디로 가는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">2/ 신호가 가는 곳은 뇌간의 &#39;청반(locus coeruleus)&#39;이래. 각성·주의력에 관여하는 영역이야. 자는 동안 성장호르몬이 서서히 쌓이면 여기 뉴런을 자극해서 깨는 쪽으로 넘어가게 돕는다고 함. 그럼 성장호르몬은 원래 몸에서 뭘 하는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">3/ 성장호르몬이 하는 일 정리
+- 근육·뼈 유지를 도움
+- 저장된 지방을 쓰는 방식을 조절
+- 혈당에도 영향
+잠이 계속 흐트러지면 이 조절이 흔들려서 비만·당뇨·심혈관질환 위험이 커질 수 있다고 함
+그럼 뇌는 잠 단계마다 이걸 어떻게 내보낼까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">158/500자</span></div>
+      <p class="tp-text">4/ 렘수면 땐 GHRH와 소마토스타틴 둘 다 활동이 늘고, 비렘수면 땐 소마토스타틴 활동이 줄면서 GHRH가 적당히 올라간대. GHRH는 분비를 밀어주고 소마토스타틴은 억제하는 물질인데, 패턴은 달라도 성장호르몬이 나오는 쪽으로 간다고. 그럼 호르몬이 많으면 무조건 잘 깨는 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">153/500자</span></div>
+      <p class="tp-text">5/ 청반이 활발하면 보통 각성에 도움 되는데, 과하게 흥분하면 오히려 졸음을 부를 수 있다는 앞선 연구도 있대. 그래서 연구진 말은 &#39;잠이 모자라면 성장호르몬 분비가 줄고, 호르몬이 너무 많으면 뇌가 깨는 쪽으로 밀린다&#39;는 균형 시스템이라는 거. 이게 사람한테도 똑같을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">270/500자</span></div>
+      <p class="tp-text">6/ 아직 몰라. 실험이 쥐에서 한 거라 사람에서 어떻게 작동하는지는 더 연구가 필요하대. 챙겨갈 한 줄: 잠은 뇌가 꺼진 시간이 아니라 성장·회복·대사·각성을 위해 호르몬과 회로가 계속 소통하는 시간이라는 거.
+
+잠 줄여서 야근하기 vs 푹 자고 아침에 하기, 너는 어느 파야?
+
+이런 해외 수면·뇌 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>깊은 잠 중 성장호르몬 분비를 조절하는 회로를 UC 버클리 연구팀이 찾아냈고 Cell에 실렸다 <small>애매 · UC 버클리 연구팀이 Cell에 발표했고 수면 중 성장호르몬 분비를 조절하는 뉴런을 찾았다는 핵심은 맞다. 다만 원문은 &#39;깊은 잠&#39;이 아니라 &#39;수면 중&#39;이라고 했으므로 &#39;깊은 잠 동안&#39;은 &#39;수면 중&#39;으로 고치는 것이 맞다.</small></li>
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>잠은 뇌가 꺼지는 시간이 아니라 호르몬 회로가 바쁘게 도는 시간이래</li><li>깊은 잠 동안 몸에서 나오는 호르몬이 뇌한테 &#39;이제 슬슬 깨&#39;라고 신호를 보낸대</li><li>자는 동안 근육·지방·혈당에 관여하는 호르몬이 나온다는데, 그 스위치가 뇌에서 발견됨</li><li>&#39;잠 줄이면 피곤하다&#39; 정도가 아니라 호르몬 조절이 흔들릴 수 있다는 연구가 나옴</li><li>성장호르몬은 어른한테도 일한다는데, 그 호르몬이 잠을 깨우기까지 한대</li><li>수면과 성장호르몬 관계를 피 뽑아서만 봤는데, 이번엔 쥐 뇌 신호를 직접 기록했대</li><li>잠이 호르몬을 내보내고, 그 호르몬이 다시 잠을 조절하는 되먹임 회로가 처음 나옴</li><li>휴식은 &#39;뇌가 꺼지는 시간&#39;이 아니라 &#39;가장 바쁘게 조율하는 시간&#39;이라는 연구</li><li>호르몬이 너무 많아도 뇌가 깨어난다는데, 그럼 잠이 모자라면 어떻게 되는 걸까</li><li>깊은 잠 중 성장호르몬이 나오는 뇌 회로를 처음 찾았다는데, 반전은 그다음이었음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>잠 줄여서 야근하기 vs 푹 자고 아침에 하기, 너는 어느 파야?</li><li>알람 없이 저절로 눈 떠본 사람?</li><li>주말에 몰아서 자기 vs 평일에 조금씩 더 자기, 어느 쪽이 맞는 것 같아?</li><li>잠이 부족하면 몸이 먼저 티 난다고 느끼는 편이야, 머리가 먼저 티 난다고 느끼는 편이야?</li><li>너라면 잠 1시간 더 자기 vs 운동 1시간 더 하기, 뭐 고를 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>렘수면과 비렘수면, 각각 몸에서 무슨 일을 하나</li><li>잠 부족과 혈당·대사 건강, 해외 연구는 뭐라고 하나</li><li>잠 중에 깨는 타이밍을 정하는 뇌 부위 이야기</li><li>수면 장애와 알츠하이머·파킨슨 연구가 이어지는 지점</li><li>쥐 수면 연구가 사람 연구로 넘어가려면 뭐가 필요한가</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>쥐 실험 결과라 사람에게 그대로 적용되는 것처럼 읽히지 않는지 확인 필요</li><li>원문 게시일(2026)과 논문 표기(Cell 2025)가 달라 연도는 본문에 쓰지 않았음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>깊은 잠 중 성장호르몬 분비를 조절하는 회로를 UC 버클리 연구팀이 찾아냈고 Cell에 실렸다</b>
+          <q>“In a study published in the journal Cell, the team identified the neurons that regulate growth hormone release during sleep and discovered a previously unknown feedback system that helps maintain a delicate balance between hormone levels and wakefulness.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐의 신경 활동을 직접 기록했다</b>
+          <q>“We&#39;re actually directly recording neural activity in mice to see what&#39;s going on.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>잠이 성장호르몬 분비를 자극하고 호르몬은 뇌로 신호를 보내 깨는 시점에 영향을 준다</b>
+          <q>“Sleep stimulates growth hormone production, but growth hormone also sends signals back to the brain that influence when we wake up.”</q>
+          <small>post0, post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>휴식은 단순히 뇌가 꺼지는 시간이 아니다</b>
+          <q>“Rest is not simply a period when the brain switches off. It is an active, carefully coordinated process in which hormones and neural circuits constantly communicate to support growth, repair, metabolism, and wakefulness.”</q>
+          <small>post0, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>청반은 각성·주의력에 관여하는 뇌간 영역이다</b>
+          <q>“The scientists also investigated how growth hormone influences the locus coeruleus, a region in the brainstem involved in alertness, attention, thinking, and the drive to explore new or unfamiliar experiences.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>성장호르몬이 서서히 쌓이면 청반 뉴런을 자극해 깨어나는 쪽으로 전환을 돕는다</b>
+          <q>“As growth hormone gradually builds up during sleep, it stimulates neurons in the locus coeruleus, increasing their activity and helping promote the transition toward waking.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>성장호르몬은 근육·뼈 유지를 돕고 저장 지방 사용 조절과 혈당에 영향을 준다</b>
+          <q>“It supports the maintenance of muscle and bone, helps the body regulate how it uses stored fat, and influences blood sugar levels.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수면이 지속적으로 방해되면 성장호르몬 조절이 흔들리고 비만·당뇨·심혈관질환 위험이 커질 수 있다</b>
+          <q>“Because this hormone helps control glucose and fat metabolism, inadequate sleep may contribute to an increased risk of obesity, diabetes, and cardiovascular disease.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>GHRH는 성장호르몬 분비를 촉진하고 소마토스타틴은 억제한다</b>
+          <q>“GHRH encourages growth hormone secretion, while somatostatin suppresses it.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>렘수면 중에는 GHRH와 소마토스타틴 활동이 모두 증가한다</b>
+          <q>“During rapid eye movement (REM) sleep, the stage commonly associated with vivid dreaming, activity involving both GHRH and somatostatin increases.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>비렘수면 중에는 소마토스타틴 활동이 줄고 GHRH 활동이 적당히 오른다</b>
+          <q>“During non-REM sleep, the pattern changes. Somatostatin activity decreases, reducing its inhibitory influence, while GHRH activity rises moderately.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>청반 뉴런이 과하게 흥분하면 오히려 졸음을 부를 수 있다는 앞선 연구가 있다</b>
+          <q>“In an earlier study published the same year, Silverman demonstrated that when neurons in this region become overexcited, they can paradoxically promote sleepiness rather than wakefulness.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>잠이 부족하면 성장호르몬 분비가 줄고, 호르몬이 너무 많으면 뇌가 각성 쪽으로 밀릴 수 있다</b>
+          <q>“&#34;This suggests that sleep and growth hormone form a tightly balanced system: Too little sleep reduces growth hormone release, and too much growth hormone can in turn push the brain toward wakefulness,&#34; Silverman said.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>실험은 쥐에서 이뤄졌고 사람에서의 작동 방식은 추가 연구가 필요하다</b>
+          <q>“However, the experiments were conducted in mice, and additional research will be needed to determine how these mechanisms operate in humans and whether they can be safely targeted with treatments.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="2d3330da035b">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261016081140.htm" target="_blank" rel="noopener">Scientists discover how deep sleep builds muscle, burns fat, and boosts the brain</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-a9a1e01f140d">
+    <div class="head">
+      <h2>S2. 뜨거운 음료 온도와 식도편평상피세포암 - 영국 97만 명 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 12 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-a9a1e01f140d">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 뭘 마시느냐가 아니라 &#39;얼마나 뜨겁게&#39;가 변수일 수 있다는, 매일 마시는 커피·차 습관을 건드리는 97만 명 규모 연구</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">커피냐 차냐가 아니라 &#39;얼마나 뜨겁게&#39;가 문제일 수 있대
+97만 명 넘게 본 영국 연구에서 나온 얘기
+&#39;아주 뜨겁게&#39; 좋아하는 사람은 위험이 몇 배였는지는 아래에 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">1/ 결과부터. &#39;아주 뜨겁게&#39; 마시는 걸 좋아한다고 답한 사람은 &#39;따뜻하게&#39; 마시는 사람보다 식도편평상피세포암(SCC) 위험이 3.17배였음. 이게 어떤 연구에서 나온 숫자인지부터 보자 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">171/500자</span></div>
+      <p class="tp-text">2/ 영국의 두 대규모 집단 연구(Million Women Study, UK Biobank) 데이터를 합쳐 977,282명을 분석함. 이 주제로는 지금까지 가장 큰 규모라고 연구진이 주장함. 참가자들한테 음료를 얼마나 뜨겁게 좋아하는지, 하루에 몇 잔 마시는지 물었음. 그럼 &#39;그냥 뜨겁게&#39;는 괜찮을까? ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">3/ &#39;뜨겁게&#39; 정도만 좋아해도 &#39;따뜻하게&#39;보다 SCC 위험이 69% 높게 나왔음. 마시는 양도 연관이 있었음. 하루 6잔 이상이면 6잔 미만보다 71% 높았음(온도 보정 후). 근데 커피냐 차냐는 별 차이가 없었음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">166/500자</span></div>
+      <p class="tp-text">4/ 연구진은 음료에 뭐가 들었냐보다 온도가 핵심일 수 있다고 봄. 커피든 차든, 우유를 넣든 말든 비슷했다는 게 근거. 동물 실험에서도 70도 물은 식도 손상과 전암성 병변을 만들었고 낮은 온도 음료는 안 그랬대. 가장 유력한 설명은 열 손상이라는데, 이 연구 자체는 원리를 직접 본 건 아님 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">169/500자</span></div>
+      <p class="tp-text">5/ 읽기 전에 알아둘 3가지
+- 관찰 연구라 뜨거운 음료가 암을 일으킨다고 확정한 건 아님
+- 실제 온도를 잰 게 아니라 본인이 답한 &#39;아주 뜨겁게/뜨겁게/따뜻하게&#39; 선호 기준
+- 인과라고 가정하면, 아주 뜨겁게 마시던 사람이 뜨겁게로만 낮춰도 SCC의 14%를 막을 수 있다는 추정
+그럼 결론은? ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">206/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 음료 종류보다 온도가 핵심일 수 있고, 조금만 식혀 마셔도 도움이 될 수 있다는 거. 자기한테 맞는지는 의사와 상의.
+
+너는 뜨아파 vs 아아파?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>관찰 연구라 뜨거운 음료가 암을 일으킨다고 확정하지 않지만, 연구진은 음료 온도를 조금만 낮춰도 많은 SCC 사례를 예방할 수 있을 것이라고 본다 <small>애매 · 관찰 연구라 인과 확정 불가라는 점은 맞음. 다만 원문은 &#39;could potentially prevent&#39;로 가능성 표현인데 &#39;예방할 수 있을 것이라고 본다&#39;로 쓰면서 잠재성 단서가 약해짐. &#39;SCC 사례를 조금 식히면 예방될 수 있을 가능성이 있다&#39;로 고치는 게 좋음.</small></li>
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>매일 마시는 커피, 문제는 &#39;뭘&#39; 마시냐가 아니라 &#39;얼마나 뜨겁냐&#39;일 수 있대</li><li>커피 성분 걱정하지 말고 온도부터 보라는 연구가 나옴</li><li>97만 명 분석했더니 &#39;아주 뜨겁게&#39; 마시는 사람만 위험이 3.17배였대</li><li>뜨아 좋아하는 사람은 이 연구 한번 보고 가</li><li>차든 커피든, 우유를 넣든 말든 위험은 비슷했대. 갈린 건 딱 하나</li><li>&#39;뜨겁게&#39;만 마셔도 &#39;따뜻하게&#39;보다 위험이 69% 높게 나왔다는데</li><li>하루 6잔 이상 마시는 사람들, 이 연구 보고 가</li><li>10년 전 경고 기준(65도)보다 낮은 온도에서도 문제일 수 있다는 연구가 나옴</li><li>인과라고 가정하면 &#39;아주 뜨겁게&#39;에서 &#39;뜨겁게&#39;로만 낮춰도 14%라는 추정이 나옴</li><li>아침 커피 한 잔, 식혀 마셔야 할까? 영국 97만 명 연구가 던진 질문</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너는 뜨아파 vs 아아파?</li><li>커피 식을 때까지 기다리는 편 vs 바로 마시는 편?</li><li>이 연구 보고 나면 너는 식혀 마실 것 같아?</li><li>아침 첫 잔은 커피파 vs 차파?</li><li>&#39;따뜻하게&#39;파 vs &#39;아주 뜨겁게&#39;파, 어디야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>영국에서 매년 막을 수 있다는 440건, 그 계산 뜯어보기</li><li>마테차와 식도암, 10년 전 국제암연구소가 뜨거운 음료를 분류한 이야기</li><li>동물 실험으로 본 70도 물이 식도에 하는 일</li><li>65도 기준은 뭐고, 그보다 낮은 온도는 어떻게 봐야 할까</li><li>하루 6잔 이상 마시는 사람 위험이 높게 나온 이유</li><li>차와 커피 연구에서 자주 나오는 &#39;관찰 연구&#39;의 한계</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>식도암 전체가 아니라 식도편평상피세포암(SCC)에 대한 결과라 &#39;식도암 위험 3배&#39;로 뭉뚱그려 쓰면 과장이 됨</li><li>14% 예방 추정은 인과를 가정했을 때의 수치이고 온도를 직접 재지 않은 자기보고 기반이라, 조건 없이 인용하면 오해 소지가 있음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>관찰 연구라 뜨거운 음료가 암을 일으킨다고 확정하지 않지만, 연구진은 음료 온도를 조금만 낮춰도 많은 SCC 사례를 예방할 수 있을 것이라고 본다</b>
+          <q>“While the observational findings don&#39;t establish that hot drinks cause cancer, the researchers suggest that reducing the temperature of hot beverages even slightly could potentially prevent a substantial number of SCC cases.”</q>
+          <small>post5, post6 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>&#39;아주 뜨겁게&#39; 마시는 걸 좋아한다고 답한 사람은 &#39;따뜻하게&#39; 마시는 사람보다 SCC 위험이 3.17배였다</b>
+          <q>“The researchers found that participants who preferred &#39;very hot&#39; drinks had a 3.17-fold higher relative risk of developing esophageal squamous cell carcinoma (SCC) during the study period compared to people who took their drinks &#39;warm&#39;, after accounting for drinking frequency.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>977,282명 데이터를 분석했고 연구진이 이 주제로 가장 큰 규모라고 주장한다</b>
+          <q>“In total, the researchers incorporated data from 977,282 participants, in what they claim is the largest study to date examining the associations between hot drinks and esophageal cancer.”</q>
+          <small>post0, post2 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국의 두 대규모 집단 연구인 Million Women Study와 UK Biobank 데이터를 분석했다</b>
+          <q>“To examine the issue, Papier and fellow researchers analyzed data from two large UK cohorts, the Million Women Study and UK Biobank.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들에게 음료를 얼마나 뜨겁게 좋아하는지와 하루에 마시는 커피·차 잔 수를 물었다</b>
+          <q>“In both studies, participants were asked similar questions about hot drink consumption, including how hot they liked their beverages to be (&#39;very hot&#39;, &#39;hot&#39;, &#39;warm&#39;, etc.), and how many cups of tea and coffee they consumed each day.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>&#39;뜨겁게&#39; 마시는 걸 선호한 사람은 &#39;따뜻하게&#39; 마시는 사람보다 SCC 위험이 69% 높았다</b>
+          <q>“People who indicated they preferred &#39;hot&#39; drinks had a 69 percent higher SCC risk than those who drank &#39;warm&#39; beverages, the researchers found.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 6잔 이상 마시는 사람은 6잔 미만보다 SCC 위험이 71% 높았다(온도 보정 후)</b>
+          <q>“Further, the data showed that the amount of hot drinks participants consumed was also associated with cancer risk, with those consuming six or more hot drinks a day having a 71 percent increase in SCC risk compared to people who drank fewer than six hot beverages daily, after accounting for drink temperature.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주로 차를 마시든 커피를 마시든, 우유를 넣든 말든 연관성은 비슷했다</b>
+          <q>“The association was similar regardless of whether participants primarily drank tea or coffee, and adding milk (which was recorded in the Million Women Study) didn&#39;t appear to significantly alter the temperature-associated risks identified.”</q>
+          <small>post3, post4 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 음료에 든 것보다 음료 온도가 핵심 위험 요인이라고 본다</b>
+          <q>“While their own study did not examine the biological mechanisms involved, the researchers say their findings – with similar risks seen across tea and coffee, and with milk or without – suggest that beverage temperature is the key risk factor, rather than what&#39;s in the drink.”</q>
+          <small>post0, post4 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>동물 연구에서 70도의 매우 뜨거운 물은 전암성 병변과 식도 괴사를 촉진했고 낮은 온도 음료는 그렇지 않았다</b>
+          <q>“Animal studies support this, showing that very hot water (70° C) promotes premalignant lesions and esophageal necrosis, whereas lower-temperature beverages do not,”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가장 유력한 기전은 열 손상이다</b>
+          <q>“The most likely mechanism is thermal injury, which may impair mucosal integrity and promote carcinogenic processes.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>음료의 실제 온도를 측정하지 않고 참가자가 답한 선호도만 사용했다</b>
+          <q>“A significant limitation with the study, however, is that the researchers didn&#39;t collect absolute temperature measurements of the beverages the participants were drinking – only their self-reported preferences of &#39;very hot&#39;, &#39;hot&#39;, &#39;warm&#39;, etc.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인과 연관을 가정하면 아주 뜨겁게 마시던 사람이 뜨겁게 마시는 정도로 바꿀 때 예방되는 식도 SCC 비율은 14%로 추정된다</b>
+          <q>“Assuming a causal association between preferred drink temperature and the risk of esophageal SCC, the estimated proportion of esophageal SCC cancers that would be prevented if individuals who consumed drinks at a very hot temperature instead consumed their drinks at a hot temperature is 14 percent,”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="a9a1e01f140d">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/drinking-very-hot-tea-or-coffee-could-triple-your-risk-of-this-cancer-huge-study-finds" target="_blank" rel="noopener">It&#39;s Not What&#39;s in Your Cup That Matters For This Cancer. It&#39;s How Hot It Is.</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261018-am";
+  const ORIGINAL = {"15f2644b6c4f": {"caption": "\ubcd1\ub9c8\uc6a9\uc744 \ub9cc\ub4e0 \uc0ac\ub78c\uc774 \uc5b4\ub978 \ub0a8\uc790\ub9cc\uc740 \uc544\ub2c8\uc5c8\uc744\uc9c0\ub3c4 \ubaa8\ub978\ub300.\n\n2,200\ub144 \uc804 \uc9c4\uc2dc\ud669\uc758 \ubb34\ub364\uc744 \uc9c0\ud0a4\ub824\uace0 \ub9cc\ub4e0 \ubcd1\ub9c8\uc6a9\uc744 \ub450\uace0, \uadf8\ub3d9\uc548\uc740 \uc131\uc778 \ub0a8\uc131\uc774 \uc804\ubd80 \ub9cc\ub4e4\uc5c8\uc744 \uac70\ub77c\uace0 \uc5ec\uaca8\uc838 \uc654\uc5b4. \uadf8\ub7f0\ub370 \uc0c8 \uc5f0\uad6c\ub294 \uc7a5\uc778\ub4e4\uc774 \ub9c8\ub974\uae30 \uc804 \uc816\uc740 \uc810\ud1a0\uc5d0 \ub0a8\uae34 \uc9c0\ubb38\uc5d0\uc11c \ub2e8\uc11c\ub97c \ucc3e\uc558\uc5b4.\n\n\uc9c4\uc2dc\ud669\ub989\ubc15\ubb3c\uad00\uc758 Xiaoxi Li\uac00 \uc774\ub044\ub294 \uc5f0\uad6c\ud300\uc740 \ud55c \ubc1c\uad74 \uad6c\ub369\uc774\uc758 \ubcd1\uc0ac\uc0c1 36\uc810\uc744 \uc870\uc0ac\ud588\uc5b4. \ucc98\uc74c\uc5d0 \uc9c0\ubb38 91\uac1c\ub97c \uae30\ub85d\ud588\uace0, \uac19\uc740 \uc0ac\ub78c\uc774 \uc5ec\ub7ec \ubc88 \ub0a8\uae34 \uac83\uc73c\ub85c \ubcf4\uc774\ub294 12\uac1c\ub97c \ube7c\uc11c 79\uac1c\ub97c \ubd84\uc11d\ud588\uc9c0. \uc9c0\ubb38 \uc735\uc120 \uc0ac\uc774\uc758 \ud3c9\uade0 \uac04\uaca9\uc740 \ub098\uc774\uc640 \uc131\ubcc4\uc758 \ub2e8\uc11c\uac00 \ub418\ub294\ub370, \uc5f0\uad6c\ud300\uc740 \uc9c0\ubb38\uc744 \ud558\ub098\uc529 \ud310\uc815\ud558\uc9c0 \uc54a\uace0 \uc54c\uace0\ub9ac\uc998\uc73c\ub85c \uc9d1\ub2e8\ubcc4 \ube44\uc728\uc744 \ucd94\uc815\ud588\uc5b4.\n\n\uacb0\uacfc\ub294 \uc131\uc778 \ub0a8\uc131 45%, \uc131\uc778 \uc5ec\uc131 32.7%, 15\uc138 \ubbf8\ub9cc \uc5b4\ub9b0\uc774 22.3%. \uc9c4\ub098\ub77c\uc5d0 \uc219\ub828 \uc7a5\uc778 \ubc11\uc5d0\uc11c \ubc30\uc6b0\ub294 \ub3c4\uc81c \uc81c\ub3c4\uac00 \uc788\uc5c8\ub2e4\ub294 \uae30\ub85d\uc774 \uc788\uace0, \uc5b4\ub9b0 \uc0ac\ub78c\ub4e4\uc740 \uac11\uc637 \uc7a5\uc2dd \ubd99\uc774\uae30 \uac19\uc740 \ube44\uad50\uc801 \ub2e8\uc21c\ud55c \uc791\uc5c5\uc744 \ub9e1\uc558\uc744 \uc218 \uc788\ub2e4\uace0 \uc5f0\uad6c\ud300\uc740 \ubcf4\uace0 \uc788\uc5b4.\n\n\ub2e4\ub9cc \ud55c\uacc4\ub3c4 \ubd84\uba85\ud574. \uc9c0\ubb38 79\uac1c\ub294 \ub113\uc740 \uc720\uc801\uc758 \ud55c \uad6c\uc5ed, \ubcd1\uc0ac\uc0c1 36\uc810\uc5d0\uc11c \ub098\uc628 \uac70\uace0, \uc9c0\ubb38 \ube44\uc728\uc774 \uace7 \uc77c\ud55c \uc0ac\ub78c\uc758 \ube44\uc728\uc740 \uc544\ub2d0 \uc218 \uc788\uc5b4. \ud604\ub300 \uc720\ub7fd\uc778 \uae30\uc900 \uc790\ub8cc\ub97c \uc4f4 \uc810\ub3c4 \ubd88\ud655\uc2e4\uc131\uc73c\ub85c \uc9da\ud614\uc5b4.\n\n\ucd9c\ucc98: ScienceAlert, Journal of Cultural Heritage", "hashtags": ["#\ubcd1\ub9c8\uc6a9", "#\uc9c4\uc2dc\ud669", "#\uace0\uace0\ud559", "#\uc9c0\ubb38", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\ubcd1\ub9c8\uc6a9 \ub9cc\ub4e0 \uc0ac\ub78c", "**\ub0a8\uc790\ub9cc\uc774** \uc544\ub2c8\ub77c\uace0?!"], ["2,200\ub144 \uc804", "\uc816\uc740 \uc810\ud1a0\uc5d0 \ub0a8\uc740", "**\uc9c0\ubb38**\uc744 \uc870\uc0ac\ud588\ub300"], ["\uadf8\ub3d9\uc548 \uc815\uc124\uc740", "**\uc5b4\ub978 \ub0a8\uc790\ub4e4\uc774**", "\ub9cc\ub4e4\uc5c8\ub2e4\ub294 \uac83"], ["\uc131\uc778 \ub0a8\uc131 45%", "\uc131\uc778 \uc5ec\uc131 32.7%", "15\uc138 \ubbf8\ub9cc **22.3%**"], ["36\uac1c \ubcd1\uc0ac\uc0c1\uc758", "\uc9c0\ubb38 **79\uac1c** \uae30\uc900", "\uc544\uc9c1 \uc77c\ubd80\uc77c \ubfd0"], ["**\uc5ed\uc0ac \ub355\ud6c4** \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c", "\uac19\uc774 \ub180\ub77c\uae30"]]}, "1c45c9e84f04": {"caption": "\ud638\uc8fc \uacb0\uc81c \ud654\uba74\uc5d0\ub3c4 \ud301 \ubc84\ud2bc\uc774 \ub72c\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uac00\ub514\uc5b8 \ub274\uc2a4\ub808\ud130\uc5d0 \ub530\ub974\uba74 \uc694\uc998 \ud638\uc8fc\uc5d0\uc11c\ub294 \uac70\uc758 \ubaa8\ub4e0 \uacf3\uc5d0\uc11c \ud301\uc744 \ub0b4\ub77c\uace0 \uad8c\ud558\ub294 \ubd84\uc704\uae30\ub77c\uace0 \ud574.\n\n\uacc4\uae30\ub294 \ubc14\ud150\ub354\ub4e4\uc774 \ubaa8\uc778 \ud398\uc774\uc2a4\ubd81 \uadf8\ub8f9\uc758 \uae00 \ud558\ub098\uc600\uc5b4. \ud301\uc744 \ubc1b\uc9c0 \ubabb\ud55c \uac8c \ud754\ud55c \uc77c\uc774\ub0d0\uace0 \ubb3b\ub294 \uae00\uc774\uc5c8\uace0, 30\uac1c \ub118\ub294 \ub2f5\uae00 \uc911 \ub300\ubd80\ubd84\uc774 \uc790\uae30\ub3c4 \ud301\uc744 \ubabb \ubc1b\uc740 \uac00\uac8c\ub97c \uaf3d\uc558\ub300. \uae30\uc790\uac00 Fair Work\uc5d0 \uc9c1\uc6d0\uc5d0\uac8c \ud301\uc744 \uc5b4\ub5bb\uac8c \uc9c0\uae09\ud574\uc57c \ud558\ub294\uc9c0 \uc815\ud55c \ubc95\uc774 \uc788\ub294\uc9c0 \ubb3c\uc5c8\ub354\ub2c8 \uc5c6\ub2e4\ub294 \ub2f5\uc774 \ub3cc\uc544\uc654\uc5b4. \uadf8\ub798\uc11c \uae00\uc4f4\uc774\uac00 \uacaa\uc740 \uc77c\ub3c4 \uace0\uc6a9\uc8fc\uac00 \uaddc\uce59\uc744 \uc5b4\uae34 \uac74 \uc544\ub2c8\uc5c8\ub2e4\ub294 \uac70\uc57c.\n\n\ud558\ub098 \ub354, \uce90\uc2dc\ub9ac\uc2a4 \uacb0\uc81c \uc2dc\uc2a4\ud15c\uc740 \uac70\ub798\ub9c8\ub2e4 \uc77c\uc815 \ube44\uc728\uc744 \uac00\uc838\uac04\ub300. \ud301\uc744 \uc694\uccad\ud558\uac8c \ud574 \uc8fc\ub294 \uc2dc\uc2a4\ud15c\uc774 \uc218\uc218\ub8cc\ub3c4 \ucc59\uae30\ub294 \uac8c \uaf64 \ubed4\ubed4\ud558\ub2e4\ub294 \uac8c \uae30\uc790\uc758 \ub9d0\uc774\uc57c.\n\n\uc190\ub2d8\ub4e4 \ubc18\uc751\uc740? \uae30\uc790\uac00 \ub808\ub527\uc744 \uc0b4\ud3b4\ubcf4\ub2c8 \uc11c\ub85c \ubc18\ubc15\ud558\uae30\ubcf4\ub2e4 \ub3d9\uc758\ud558\ub294 \ub313\uae00\uc774 \ub354 \ub9ce\uc558\ub300. \ud638\uc8fc \uc0ac\ub78c\ub4e4\uc740 \ud301\uc744 \ubbf8\uad6d\uc5d0\uc11c \ub4e4\uc5b4\uc628 \uad00\ud589\uc774\ub77c\uace0 \uc0dd\uac01\ud574\uc11c, \uadf8\ub7f0 \ubc29\uc2dd\uacfc \uc5ee\uc774\uace0 \uc2f6\uc5b4 \ud558\uc9c0 \uc54a\ub294 \ud3b8\uc774\ub77c\uace0 \ud574. \ud301\uc744 \ubc1b\ub294 \uc9c1\uc885\uc5d0\uc11c \uc77c\ud558\ub294 \uc0ac\ub78c\ub4e4\uc740 \ubc1b\uc73c\uba74 \uc88b\uae34 \ud55c\ub370, \ubd84\ubc30 \uacfc\uc815\uc774 \ubc88\uac70\ub86d\uace0 \ub204\uac00 \uc2e4\uc81c\ub85c \ubc1b\ub294\uc9c0 \ubd88\ud655\uc2e4\ud574\uc11c \uc120\ub73b \ucc2c\uc131\ud558\uae30 \uc5b4\ub835\ub2e4\uace0 \ub9d0\ud55c\ub300.\n\n\uae30\uc790 \ubcf8\uc778\uc740 \ud301\uc744 \uac70\uc758 \uc548 \ub0b4\ub294 \ud3b8\uc774\uace0, \ub9cc\uc57d \ub0b8\ub2e4\uba74 \ud604\uae08\uc73c\ub85c \ub0bc \uac83 \uac19\ub2e4\uace0 \ud588\uc5b4.\n\n\ucd9c\ucc98: The Guardian", "hashtags": ["#\ud638\uc8fc", "#\ud301\ubb38\ud654", "#\ubb38\ud654\ucc28\uc774", "#\ud574\uc678\ubb38\ud654", "#\ud638\uc8fc\uc5ec\ud589"], "slides": [["\ud638\uc8fc \uacb0\uc81c\ucc3d\uc5d0", "**\ud301** \ub72c\ub2e4\uace0???"], ["\uc190\ub2d8\ub4e4 \ubc18\uc751\uc740", "\ub300\uccb4\ub85c **\uc2eb\ub2e4**"], ["\ud638\uc8fc \uc0ac\ub78c\ub4e4\uc740", "**\ubbf8\uad6d \uc218\uc785\ud488**", "\uc774\ub77c\uace0 \ubd10"], ["\ud301\uc744 \ubabb \ubc1b\uc558\ub2e4\ub294", "\ubc14\ud150\ub354 \uae00\uc5d0", "\ub313\uae00 **30\uac1c** \ub118\uac8c"], ["\uadfc\ub370 \ud301 \ub098\ub220\uc8fc\ub294", "\ubc95\uc740 \ud638\uc8fc\uc5d0", "**\uc5c6\ub300**"], ["**\ud638\uc8fc \uc5ec\ud589** \uac08 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \uc54c\ub824\uc918"]]}, "bc14f6b09280": {"caption": "\ud0dd\uc2dc \uae30\uc0ac\uac00 \ubb34\ub840\ud55c \uc190\ub2d8\uc744 \ubaa9\uc801\uc9c0 \uc804\uc5d0 \ub0b4\ub9ac\uac8c \ud560 \uc218 \uc788\uac8c \ub41c\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc77c\ubcf8 \uad6d\ud1a0\uad50\ud1b5\uc131\uc774 \ud0dd\uc2dc\uc5c5\uacc4\uc758 \uae30\ubcf8 \uaddc\uce59\uc778 \u0027\ud45c\uc900 \uc6b4\uc1a1 \uc57d\uad00\u0027\uc744 \uace0\uce58\uaca0\ub2e4\uace0 \ubc1d\ud614\ub300.\n\n\uc9c0\uae08\uae4c\uc9c0 \uc77c\ubcf8 \ud0dd\uc2dc \uae30\uc0ac\uac00 \ucc28\ub97c \uc138\uc6b0\uace0 \ub0b4\ub9ac\ub77c\uace0 \ub9d0\ud560 \uc218 \uc788\ub294 \uacbd\uc6b0\ub294 \uaf64 \ud55c\uc815\ub3fc \uc788\uc5c8\uc5b4. \uc190\ub2d8\uc774 \ubb3c\ub9ac\uc801 \ud3ed\ub825\uc744 \uc4f0\uac70\ub098, \ubd88\ubc95\u00b7\uc704\ud5d8 \ubb3c\ud488\uc744 \uac16\uace0 \uc788\uac70\ub098, \ub108\ubb34 \ucde8\ud574\uc11c \ubaa9\uc801\uc9c0\ub97c \uc81c\ub300\ub85c \ub9d0\ud558\uc9c0 \ubabb\ud560 \ub54c \uac19\uc740 \uacbd\uc6b0\uc57c.\n\n\uc774\ubc88 \uac1c\uc815\uc548\uc740 \uc5ec\uae30\uc5d0 \ud3ed\uc5b8, \ubd80\ub2f9\ud55c \uc694\uad6c, \uadf8 \ubc16\uc758 \uc5c5\ubb34 \ubc29\ud574 \ud589\uc704\ub97c \uba85\uc2dc\uc801\uc73c\ub85c \ucd94\uac00\ud574\uc11c, \uc774\ub7f0 \uacbd\uc6b0\uc5d0\ub3c4 \uae30\uc0ac\uac00 \uc2b9\uac1d\uc5d0\uac8c \ud558\ucc28\ub97c \uc694\uad6c\ud560 \uc218 \uc788\uac8c \ud574. \uac19\uc740 \uad8c\ud55c\uc774 \ubc84\uc2a4 \uae30\uc0ac\uc5d0\uac8c\ub3c4 \uc8fc\uc5b4\uc838.\n\n\ubc30\uacbd\uc5d0\ub294 \uc774\ub2ec \ucd08 \uc2dc\ud589\ub41c \ub2e4\ub978 \uaddc\uc81c \ubcc0\ud654\uac00 \uc788\uc5b4. \ud0dd\uc2dc\u00b7\ubc84\uc2a4 \uc0ac\uc5c5\uc790\uac00 \uace0\uac1d\uc758 \uad34\ub86d\ud798\uc73c\ub85c\ubd80\ud130 \uae30\uc0ac\ub97c \ubcf4\ud638\ud558\uae30 \uc704\ud55c \uc808\ucc28\ub97c \ub9c8\ub828\ud558\ub3c4\ub85d \uc758\ubb34\ud654\ub410\ub294\ub370, \ubb38\uc81c \uc2b9\uac1d\uc744 \uacc4\uc18d \ud0dc\uc6b0\uac8c \ud558\ub294 \uac74 \uae30\uc0ac\ub97c \uad34\ub86d\ud798\uc5d0 \ub178\ucd9c\uc2dc\ud0a4\ub294 \uc77c\uc774\ub77c \ud558\ucc28 \uad8c\ud55c\uc744 \uc8fc\ub294 \uac8c \ub17c\ub9ac\uc801\uc778 \ud574\ubc95\uc774\ub77c\ub294 \uac8c SoraNews24\uc758 \uc124\uba85\uc774\uc57c.\n\n\ub0b4\ub9ac\ub77c\uace0 \ud588\ub294\ub370 \uc2b9\uac1d\uc774 \ubc84\ud2f0\uba74 \uc5b4\ub5bb\uac8c \ud560\uc9c0\ub294 \uac01 \uc0ac\uc5c5\uc790\uac00 \uc808\ucc28\ub97c \uc815\ud574\uc57c \ud560 \uac83\uc73c\ub85c \ubcf4\uc774\uace0, \uacbd\ucc30\uc5d0 \uc5f0\ub77d\ud558\ub294 \ubc29\ubc95\ub3c4 \uc120\ud0dd\uc9c0\uac00 \ub420 \uc218 \uc788\ub2e4\uace0 \ud574. \uc0c8 \uaddc\uc815\uc740 \uc62c\ud574\uac00 \ub05d\ub098\uae30 \uc804\uc5d0 \uc2dc\ud589\ub420 \uc608\uc815\uc774\uc57c.\n\n\uc77c\ubcf8\uc5d0\uc11c \ud0dd\uc2dc \ud0c8 \uc77c\uc774 \uc788\ub2e4\uba74 \ub9e4\ub108\ubd80\ud130 \ucc59\uae30\ub294 \uac8c \uc88b\uaca0\uc9c0?\n\n\ucd9c\ucc98: SoraNews24, FNN Prime Online, 47News", "hashtags": ["#\uc77c\ubcf8\ud0dd\uc2dc", "#\uc77c\ubcf8\uc5ec\ud589", "#\ud574\uc678\ub274\uc2a4", "#\uc77c\ubcf8\ubb38\ud654", "#\ud0dd\uc2dc\uae30\uc0ac"], "slides": [["\ud0dd\uc2dc \uae30\uc0ac\uac00", "\ubb34\ub840\ud55c \uc190\ub2d8\uc744", "**\uc911\uac04\uc5d0** \ub0b4\ub9ac\uac8c?!"], ["\uc9c0\uae08\uae4c\uc9c0\ub294", "\ud3ed\ub825\u00b7\uc704\ud5d8\ubb3c\u00b7**\ub9cc\ucde8**", "\uc774\ub7f4 \ub54c\ub9cc \uac00\ub2a5"], ["\uc774\uc81c\ub294", "**\ud3ed\uc5b8**\u00b7\uc5b5\uc9c0 \uc694\uad6c\ub3c4", "\ud558\ucc28 \uc694\uccad \uac00\ub2a5"], ["**\ubc84\uc2a4 \uae30\uc0ac\ub3c4**", "\ub611\uac19\uc740 \uad8c\ud55c", "\ubc1b\ub294\ub2e4\uace0\u2026\u3137\u3137"], ["\uc774\ub2ec \ucd08\ubd80\ud130", "**\uad34\ub86d\ud798** \ubc29\uc9c0 \uc808\ucc28", "\uc758\ubb34\ud654\ub410\ub300"], ["**\uc62c\ud574 \uc548\uc5d0**", "\uc2dc\ud589\ub420 \uc608\uc815"], ["**\uc77c\ubcf8 \uc5ec\ud589 \uac08 \uce5c\uad6c**", "\ud0dd\uc2dc \ud0c0\uae30 \uc804\uc5d0", "\ub9e4\ub108 \ud301\uc73c\ub85c \ubcf4\ub0b4\uae30"]]}};
+  const TOTAL = 3;
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

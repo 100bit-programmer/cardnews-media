@@ -1,0 +1,1775 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.16 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.16 오전 검수 <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-e3adce30ba24" data-jump="e3adce30ba24">1</a><a href="#post-813e399755dd" data-jump="813e399755dd">2</a><a href="#post-182ed35e32c3" data-jump="182ed35e32c3">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-e3adce30ba24" data-id="e3adce30ba24">
+    <div class="head">
+      <h2>1. 윈난 거대 버섯 D. rex, 6500만 년 전 족보</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10 · 애매 2
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-01.jpg" alt="1장: 버섯 족보가 6500만 년?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-02.jpg" alt="2장: 중국 윈난에서 새로 나온 버섯 이름은 D. rex" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-03.jpg" alt="3장: 키가 최대 50cm 교통 콘 높이 무게 2.2kg짜리도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-04.jpg" alt="4장: 자낭균 중에선 기록상 제일 큼" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-05.jpg" alt="5장: DNA 비교해 보니 약 6500만 년 전 가문이 갈라짐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-06.jpg" alt="6장: 소행성 충돌 후 100만 년 만에 등장한 가문" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-07.jpg" alt="7장: 공룡 좋아하는 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/e3adce30ba24/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">버섯 하나의 족보가 6500만 년 전까지 거슬러 올라간대. 중국 윈난에서 발견된 새로운 버섯 Dianjunus rex(D. rex) 이야기야.
+
+이름 그대로 덩치가 왕급이야. 곤봉처럼 생긴 자실체(포자를 퍼뜨리는 부분)가 최대 50cm까지 자라는데, 교통 콘 높이와 비슷하대. 연구진이 채집한 표본 중에는 무게가 2.2kg인 것도 있었어. 같은 자낭균류 중에서는 기록된 것 가운데 가장 큰 크기라고 해.
+
+더 흥미로운 건 유전자야. 연구진이 수백 종의 다른 균류 DNA와 비교해 보니, D. rex가 속한 Dianjunaceae 과는 가까운 친척에게서 약 6500만 년 전에 갈라져 나온 것으로 나왔어. 칙술루브 소행성 충돌 불과 100만 년 뒤라는 계산이야. 그 충돌의 여파로 지구 식물과 동물 종의 4분의 3이 사라졌다고 해.
+
+연구를 이끈 인두닐 세나나야케 박사는, 대멸종 뒤 숲에 죽은 식물 재료가 갑자기 많아졌고 나무를 분해하는 균류에게는 새로운 기회가 됐을 수 있다고 설명했어. 다만 이건 어디까지나 가능성으로 제시된 해석이야.
+
+D. rex는 윈난 숲의 참나무 밑동에서 자주 발견되고, 지금까지 기록된 표본은 썩어가는 뿌리나 그루터기에서 자라고 있었대. 왜 이렇게까지 커졌는지는 아직 분명하지 않아.
+
+출처: ScienceAlert, Frontiers in Fungal Biology</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#버섯 #균류 #공룡멸종 #과학뉴스 #윈난</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>연구진이 채집한 일부 표본은 무게가 2.2kg이었다 <small>애매 · 원문은 &#39;일부 표본&#39;이 2.2kg이었다고 하며 카드의 &#39;무게 2.2kg짜리도&#39;는 이를 대체로 옮김. 다만 자실체 무게인지 명확하지 않으므로 &#39;자실체 중 일부 무게 2.2kg&#39;로 명시하는 것이 정확함.</small></li><li>세나나야케는 환경 교란이 나무를 분해하는 균류에게 새로운 생태적 기회를 만들었을 수 있다고 말했다 <small>애매 · 원문은 가능성으로 제시되었다고 하며 카드는 &#39;기회가 됐을 수 있다&#39;로 적어 가능성 표현은 유지됨. 다만 카드는 &#39;됐을 수 있다&#39;로 과거형이라 원문 취지와 대체로 맞지만 &#39;가능성으로 제시된 해석&#39;이라는 단서를 본문에 명확히 해야 함.</small></li>
+          <li>근거 등록 안 된 주장: 카드 slide4·본문의 &#39;가장 큰 자낭균&#39; 외에 &#39;버섯 족보가 6500만 년 전까지 거슬러 올라간다&#39;는 표현은 DNA 분석 결과의 요약으로 claim 3·4에 준하나 별도 검증 항목이 없음</li><li>근거 등록 안 된 주장: &#39;D. rex는 윈난 숲의 참나무 밑동에서 자주 발견된다&#39;의 구체적 수종(Chinese cork oak, Quercus variabilis)은 claims에 포함되지 않음</li><li>근거 등록 안 된 주장: &#39;D. rex가 속한 Dianjunaceae 과는 D. rex가 유일한 구성원&#39;이라는 사실은 claims에 없음</li><li>근거 등록 안 된 주장: &#39;칙술루브 소행성 충돌&#39;이 대멸종을 일으켰다는 사실과 비조류 공룡이 멸종했다는 내용은 claims에 없음</li><li>근거 등록 안 된 주장: &#39;지구 식물·동물 종 4분의 3 소멸&#39;의 원인으로 소행성 충돌을 지목한 부분은 claim 6에 일부만 포함됨</li><li>근거 등록 안 된 주장: &#39;D. rex 자실체는 포자를 바람에 퍼뜨리는 기관&#39;이라는 기능 설명은 claims에 없음</li><li>근거 등록 안 된 주장: &#39;표본은 썩어가는 뿌리나 그루터기에서 자라고 있었다&#39;의 &#39;기록된 표본&#39;의 범위는 claim 9에 포함되었으나 카드 본문에는 명시되지 않음</li>
+          <li>&#39;자낭균류 중 기록상 최대&#39;는 ScienceAlert 기사와 논문 초록 기준 표현이며, 논문 서론에는 케냐의 Engleromyces goetzei 표본(약 3.2kg)이 가장 부피가 큰 사례 중 하나로 언급되어 있어 &#39;최대&#39;의 기준(키/자실체 크기)이 불확실할 수 있음</li><li>소행성 충돌 직후 등장했다는 연관성은 연구진의 가능성 제시(가설)이며 인과관계가 확정된 것은 아님</li><li>6500만 년 전은 DNA 기반 추정치(약 65 million years ago)이지 화석 증거가 아님</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-e3adce30ba24-0">1장</label>
+          <textarea id="s-e3adce30ba24-0" rows="2" data-slide="0">버섯 족보가
+**6500만 년**?!</textarea>
+          
+          <label class="f" for="s-e3adce30ba24-1">2장</label>
+          <textarea id="s-e3adce30ba24-1" rows="3" data-slide="1">중국 윈난에서
+새로 나온 버섯
+이름은 **D. rex**</textarea>
+          
+          <label class="f" for="s-e3adce30ba24-2">3장</label>
+          <textarea id="s-e3adce30ba24-2" rows="3" data-slide="2">키가 최대 **50cm**
+교통 콘 높이
+무게 2.2kg짜리도</textarea>
+          
+          <label class="f" for="s-e3adce30ba24-3">4장</label>
+          <textarea id="s-e3adce30ba24-3" rows="2" data-slide="3">자낭균 중에선
+기록상 **제일 큼**</textarea>
+          
+          <label class="f" for="s-e3adce30ba24-4">5장</label>
+          <textarea id="s-e3adce30ba24-4" rows="3" data-slide="4">DNA 비교해 보니
+약 **6500만 년 전**
+가문이 갈라짐</textarea>
+          
+          <label class="f" for="s-e3adce30ba24-5">6장</label>
+          <textarea id="s-e3adce30ba24-5" rows="3" data-slide="5">소행성 충돌 후
+**100만 년** 만에
+등장한 가문</textarea>
+          
+          <label class="f" for="s-e3adce30ba24-6">7장</label>
+          <textarea id="s-e3adce30ba24-6" rows="2" data-slide="6">**공룡** 좋아하는 친구
+태그해서 알려줘</textarea>
+          
+          <label class="f" for="c-e3adce30ba24">본문 (캡션)</label>
+          <textarea id="c-e3adce30ba24" class="caption">버섯 하나의 족보가 6500만 년 전까지 거슬러 올라간대. 중국 윈난에서 발견된 새로운 버섯 Dianjunus rex(D. rex) 이야기야.
+
+이름 그대로 덩치가 왕급이야. 곤봉처럼 생긴 자실체(포자를 퍼뜨리는 부분)가 최대 50cm까지 자라는데, 교통 콘 높이와 비슷하대. 연구진이 채집한 표본 중에는 무게가 2.2kg인 것도 있었어. 같은 자낭균류 중에서는 기록된 것 가운데 가장 큰 크기라고 해.
+
+더 흥미로운 건 유전자야. 연구진이 수백 종의 다른 균류 DNA와 비교해 보니, D. rex가 속한 Dianjunaceae 과는 가까운 친척에게서 약 6500만 년 전에 갈라져 나온 것으로 나왔어. 칙술루브 소행성 충돌 불과 100만 년 뒤라는 계산이야. 그 충돌의 여파로 지구 식물과 동물 종의 4분의 3이 사라졌다고 해.
+
+연구를 이끈 인두닐 세나나야케 박사는, 대멸종 뒤 숲에 죽은 식물 재료가 갑자기 많아졌고 나무를 분해하는 균류에게는 새로운 기회가 됐을 수 있다고 설명했어. 다만 이건 어디까지나 가능성으로 제시된 해석이야.
+
+D. rex는 윈난 숲의 참나무 밑동에서 자주 발견되고, 지금까지 기록된 표본은 썩어가는 뿌리나 그루터기에서 자라고 있었대. 왜 이렇게까지 커졌는지는 아직 분명하지 않아.
+
+출처: ScienceAlert, Frontiers in Fungal Biology</textarea>
+          <label class="f" for="t-e3adce30ba24">해시태그</label>
+          <input id="t-e3adce30ba24" type="text" class="tagsin" value="#버섯 #균류 #공룡멸종 #과학뉴스 #윈난" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>연구진이 채집한 일부 표본은 무게가 2.2kg이었다</b>
+            <q>“Some specimens the researchers collected weighed a whopping 2.2 kilograms.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>세나나야케는 환경 교란이 나무를 분해하는 균류에게 새로운 생태적 기회를 만들었을 수 있다고 말했다</b>
+            <q>“For wood-associated decomposing fungi, such environmental disruption may have created new ecological opportunities.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>중국 윈난에서 새로운 종의 버섯이 발견되었다</b>
+            <q>“Yunnan Province in China is famous for its mushrooms and fungi, but somehow, scientists have only just come across a new species that has rightly earned the name &#39;king&#39;.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이름은 Dianjunus rex(D. rex)이며 자실체가 최대 50cm까지 자라 교통 콘 높이와 비슷하다</b>
+            <q>“Named Dianjunus rex (or D. rex for short), its gigantic, club-like fruiting bodies can grow up to 50 centimeters tall, which is about one and a half feet, or the height of a traffic cone.”</q>
+            <small>slide2, slide3, caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>D. rex의 자실체는 기록된 자낭균류 중 가장 크다</b>
+            <q>“But it&#39;s unclear why D. rex&#39;s stromata are quite so gargantuan – the largest of any Ascomycete on record.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>DNA를 수백 종의 다른 균류와 비교한 결과 Dianjunaceae 과가 약 6500만 년 전 가까운 친척에게서 갈라졌다</b>
+            <q>“The researchers found the Dianjunaceae family split off from its closest known relatives about 65 million years ago, by comparing its DNA to hundreds of other fungi whose evolutionary history is well-known.”</q>
+            <small>slide1, slide5, caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 과는 칙술루브 소행성 충돌 불과 100만 년 뒤에 등장했다</b>
+            <q>“The family emerged just 1 million years after the Chicxulub asteroid impact, which triggered a mass extinction event.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소행성 충돌 여파로 지구 식물과 동물 종의 4분의 3이 사라졌다</b>
+            <q>“The dramatic changes to Earth&#39;s climate that resulted from the asteroid wiped out three-quarters of plant and animal species on Earth, including, famously, all non-avian dinosaurs.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세나나야케는 대멸종 뒤 숲에 죽은 식물 재료가 갑자기 많아졌다고 설명했다</b>
+            <q>“After the mass extinction, forests experienced dramatic changes, including the sudden availability of large amounts of dead plant material,”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>D. rex는 윈난 숲의 참나무 밑동에서 자주 발견되며 기록된 표본은 썩어가는 뿌리나 그루터기에서 자라고 있었다</b>
+            <q>“D. rex is often found at the base of oak trees, including the Chinese cork oak (Quercus variabilis) in the forests of the Yunnan Province in south-western China. The specimens on record so far were growing on the decaying roots or stumps of these trees.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>D. rex의 자실체가 왜 이렇게 큰지는 분명하지 않다</b>
+            <q>“But it&#39;s unclear why D. rex&#39;s stromata are quite so gargantuan – the largest of any Ascomycete on record.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세나나야케 박사는 중국과학원 소속 균류학자이며 연구는 Frontiers in Fungal Biology에 실렸다</b>
+            <q>“Mycologist Indunil Senanayake of the Chinese Academy of Sciences and her colleagues describe the new species in a paper published in Frontiers in Fungal Biology.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/scientists-uncover-d-rex-gigantic-new-king-fungus-from-china-traces-its-roots-to-65-million-years" target="_blank" rel="noopener">Scientists Uncover D. Rex: Gigantic New &#39;King&#39; Fungus From China Traces Its Roots to 65 Million Years</a> (기사)</li><li><a href="https://www.frontiersin.org/journals/fungal-biology/articles/10.3389/ffunb.2026.1940464/full" target="_blank" rel="noopener">Frontiers | Unearthing a fungal giant: Dianjunaceae fam. nov., a novel Paleocene lineage of Xylariales harboring Dianjunus rex gen. et sp. nov</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/weave-tree-bark-vegetation-7753742/" target="_blank" rel="noopener">Nennieinszweidrei / Pixabay</a> — "giant pale club-shaped mushroom in sunlit green forest"</li><li>2장: <a href="https://pixabay.com/photos/ant-insect-leaves-green-forest-7114721/" target="_blank" rel="noopener">aijouphotography / Pixabay</a> — "green forest"</li><li>3장: <a href="https://pixabay.com/photos/baukegel-sign-cone-pilone-2694487/" target="_blank" rel="noopener">kalhh / Pixabay</a> — "traffic cone"</li><li>4장: <a href="https://pixabay.com/photos/tree-mushroom-sponge-8489847/" target="_blank" rel="noopener">fotoblend / Pixabay</a> — "fungus closeup"</li><li>5장: <a href="https://pixabay.com/photos/dna-biology-science-dna-helix-163710/" target="_blank" rel="noopener">PublicDomainPictures / Pixabay</a> — "dna helix"</li><li>6장: <a href="https://pixabay.com/photos/astronomy-constellation-dark-1866822/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "meteor sky"</li><li>7장: <a href="https://pixabay.com/photos/museum-dinosaur-dino-fossil-5082786/" target="_blank" rel="noopener">adventurous_blondine / Pixabay</a> — "dinosaur skeleton"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-813e399755dd" data-id="813e399755dd">
+    <div class="head">
+      <h2>2. 일본 KFC 43년 만의 넓적다리살 치킨버거</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 10
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/813e399755dd/v1-01.jpg" alt="1장: 넓적다리살 버거가 43년 만에???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/813e399755dd/v1-02.jpg" alt="2장: 마지막 판매가 1983년이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/813e399755dd/v1-03.jpg" alt="3장: 그 뒤로는 가슴살로 갈아탐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/813e399755dd/v1-04.jpg" alt="4장: 10월 14일 신제품 6종 출시" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/813e399755dd/v1-05.jpg" alt="5장: 소라뉴스 기자는 기본 버거 픽" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/813e399755dd/v1-06.jpg" alt="6장: 치킨 덕후 친구한테 43년 만이라고 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/813e399755dd/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">넓적다리살 버거가 43년 만에 돌아왔다는 소식이야. 일본 KFC가 10월 14일에 오리지널 치킨 버거 시리즈를 새로 내놨는데, 1983년 이후 처음 나온 넓적다리살 샌드위치래. 1983년이 마지막이었고, 그 뒤로는 가슴살로 바꿨다고 해.
+
+라인업은 총 6종이야. 기본 오리지널 치킨 버거에 치즈, 데리야키, 매운 레드핫 버전이 있고, 좀 더 호화로운 쪽으로는 두툼한 베이컨이 들어간 프리미어 버거, 베이컨과 치즈가 둘 다 들어간 프리미어 치즈 버거가 있어.
+
+KFC 재팬은 이 복귀를 꽤 큰 일로 여겼는지, 도쿄 에비스 지점을 임시로 KFB(Kentucky Fried Burgers)로 바꿔 달았대.
+
+소라뉴스24 기자가 두 가지를 직접 먹어봤어. 오리지널 치킨 버거는 490엔, 프리미어 버거는 750엔이야. 기자는 오리지널이 육즙 많고 특유의 탄력이 살아 있어서 만족했대. 프리미어는 맛은 좋지만 마늘후추 마요와 베이컨이 너무 강해서 닭고기의 여운을 지운다고 느꼈다는 반응이야. 그래서 이 기자는 담백한 오리지널을 추천했고, 아낀 260엔으로 오리지널을 하나 더 먹겠다는 입장이야.
+
+치킨 좋아하는 친구가 떠오르면 이 소식 보내줘.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본KFC #치킨버거 #KFC #일본음식 #해외반응</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>기자 개인의 맛 평가는 의견이므로 출처를 밝혀 서술함</li><li>원문 기사 이미지 사용 금지</li><li>가격은 원문 기자가 주문한 두 제품 기준이며 나머지 제품 가격은 확인되지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-813e399755dd-0">1장</label>
+          <textarea id="s-813e399755dd-0" rows="2" data-slide="0">넓적다리살 버거가
+**43년** 만에???</textarea>
+          
+          <label class="f" for="s-813e399755dd-1">2장</label>
+          <textarea id="s-813e399755dd-1" rows="2" data-slide="1">마지막 판매가
+**1983년**이래</textarea>
+          
+          <label class="f" for="s-813e399755dd-2">3장</label>
+          <textarea id="s-813e399755dd-2" rows="2" data-slide="2">그 뒤로는
+**가슴살로** 갈아탐</textarea>
+          
+          <label class="f" for="s-813e399755dd-3">4장</label>
+          <textarea id="s-813e399755dd-3" rows="2" data-slide="3">10월 14일
+신제품 **6종** 출시</textarea>
+          
+          <label class="f" for="s-813e399755dd-4">5장</label>
+          <textarea id="s-813e399755dd-4" rows="2" data-slide="4">소라뉴스 기자는
+**기본 버거** 픽</textarea>
+          
+          <label class="f" for="s-813e399755dd-5">6장</label>
+          <textarea id="s-813e399755dd-5" rows="3" data-slide="5">치킨 덕후 친구한테
+**43년** 만이라고
+조용히 보내기</textarea>
+          
+          <label class="f" for="c-813e399755dd">본문 (캡션)</label>
+          <textarea id="c-813e399755dd" class="caption">넓적다리살 버거가 43년 만에 돌아왔다는 소식이야. 일본 KFC가 10월 14일에 오리지널 치킨 버거 시리즈를 새로 내놨는데, 1983년 이후 처음 나온 넓적다리살 샌드위치래. 1983년이 마지막이었고, 그 뒤로는 가슴살로 바꿨다고 해.
+
+라인업은 총 6종이야. 기본 오리지널 치킨 버거에 치즈, 데리야키, 매운 레드핫 버전이 있고, 좀 더 호화로운 쪽으로는 두툼한 베이컨이 들어간 프리미어 버거, 베이컨과 치즈가 둘 다 들어간 프리미어 치즈 버거가 있어.
+
+KFC 재팬은 이 복귀를 꽤 큰 일로 여겼는지, 도쿄 에비스 지점을 임시로 KFB(Kentucky Fried Burgers)로 바꿔 달았대.
+
+소라뉴스24 기자가 두 가지를 직접 먹어봤어. 오리지널 치킨 버거는 490엔, 프리미어 버거는 750엔이야. 기자는 오리지널이 육즙 많고 특유의 탄력이 살아 있어서 만족했대. 프리미어는 맛은 좋지만 마늘후추 마요와 베이컨이 너무 강해서 닭고기의 여운을 지운다고 느꼈다는 반응이야. 그래서 이 기자는 담백한 오리지널을 추천했고, 아낀 260엔으로 오리지널을 하나 더 먹겠다는 입장이야.
+
+치킨 좋아하는 친구가 떠오르면 이 소식 보내줘.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-813e399755dd">해시태그</label>
+          <input id="t-813e399755dd" type="text" class="tagsin" value="#일본KFC #치킨버거 #KFC #일본음식 #해외반응" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 KFC가 10월 14일에 43년 만에 넓적다리살 샌드위치를 출시했다</b>
+            <q>“On October 14, though, KFC Japan released its first thigh-meat sandwiches in 43 years, with the debut of the brand-new Original Chicken Burger series.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1983년이 일본 KFC에 넓적다리살 샌드위치가 있었던 마지막 해였고, 그 뒤 가슴살로 바꿨다</b>
+            <q>“Because 1983 was the last time KFC Japan had thigh-meat sandwiches, after which they switched to breast meat.”</q>
+            <small>slide2, slide3, caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>신제품 라인업은 총 6종이다</b>
+            <q>“There’s a total of six sandwiches in the two-tiered lineup.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기본 오리지널 외에 치즈, 데리야키, 매운 레드핫 버전이 있다</b>
+            <q>“In addition to the standard Original Chicken Burger, there’s also a Cheese, Teriyaki, and spicy Red-hot version.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>프리미어 버거는 두툼한 베이컨을, 프리미어 치즈 버거는 베이컨과 치즈를 더한다</b>
+            <q>“Those in a more luxurious mood can opt for the Premier Burger, which adds a slice of thick-cut bacon, or the Premier Cheese Burger, providing both bacon and cheese.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>KFC 재팬이 도쿄 에비스 지점을 임시로 KFB로 바꿨다</b>
+            <q>“This return of thigh-meat chicken sandwiches is such a big deal for the chain that KFC Japan has temporarily rebranded its branch in Tokyo’s Ebisu neighborhood as KFB (“Kentucky Fried Burgers”).”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 오리지널 치킨 버거(490엔)와 프리미어 버거(750엔) 두 가지를 주문했다</b>
+            <q>“so he ordered two to try, the Original Chicken Burger (490 yen [US$3.19]) and the Premier Burger (750 yen).”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 오리지널 치킨 버거의 고기가 육즙 많고 특유의 탄력이 있다고 느꼈다</b>
+            <q>“The meat was juicy and flavorful, and the characteristic touch of springiness to the texture made him very glad that thigh meat was finally back.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 프리미어 버거에서 베이컨이 맛의 끝을 지배해 닭고기의 여운을 지운다고 느꼈다</b>
+            <q>“As a matter of fact, the bacon dominates the end of the flavor profile, more or less erasing the pleasurable lingering taste of the chicken that P.K. enjoyed with the Original Chicken Burger.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 오리지널을 추천했고 아낀 260엔으로 오리지널을 하나 더 먹을 수 있다고 했다</b>
+            <q>“Even though they’re both tasty sandwiches, though, for P.K.’s money, the more straightforward Original Chicken Burger is the way to go, especially since it lets him save 260 yen that he can put towards another Original Chicken Burger the next time he gets hungry.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/16/kfc-japan-releases-its-first-thigh-meat-fried-chicken-burger-in-43-years-but-was-it-worth-the-wait/" target="_blank" rel="noopener">KFC Japan releases its first thigh-meat fried chicken burger in 43 years, but was it worth the wait?</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/club-sandwich-fast-food-snack-fries-3538455/" target="_blank" rel="noopener">DanielaElenaTentis / Pixabay</a> — "crispy fried chicken sandwich on a bright table"</li><li>2장: <a href="https://pixabay.com/photos/pocket-leather-goods-purse-notebook-1565402/" target="_blank" rel="noopener">LUM3N / Pixabay</a> — "vintage calendar"</li><li>3장: <a href="https://pixabay.com/photos/meat-barbecue-grill-bbq-barbeque-123668/" target="_blank" rel="noopener">LoboStudioHamburg / Pixabay</a> — "chicken breast"</li><li>4장: <a href="https://pixabay.com/photos/hamburger-sandwich-chicken-healthy-8026582/" target="_blank" rel="noopener">SylwesterL / Pixabay</a> — "burger"</li><li>5장: <a href="https://pixabay.com/photos/hamburger-sandwich-chicken-healthy-8026581/" target="_blank" rel="noopener">SylwesterL / Pixabay</a> — "chicken sandwich"</li><li>6장: <a href="https://pixabay.com/photos/girls-casual-eating-sitting-stairs-8408369/" target="_blank" rel="noopener">Surprising_Media / Pixabay</a> — "friends eating"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-182ed35e32c3" data-id="182ed35e32c3">
+    <div class="head">
+      <h2>3. 배달앱 죄책감, Z세대의 고백</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/19 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>주문 버튼 누르자마자 찾아오는 죄책감, 미국에선 &#39;딜리버리 길트(delivery guilt)&#39;라는 이름까지 붙었어.
+
+노스캐롤라이나 롤리에 사는 24살 보모 캐롤라인 볼드리는 대학 때부터 거의 매일 배달을 시켰대. 일주일에 75달러쯤 쓴다고 스스로 추산해. 시킬 땐 꿈 같은데, 열에 아홉은 시키고 나면 스스로가 별로라고 느낀다고 해.
+
+숫자도 있어. 퍼듀대 연구에서는 2024년에 소비자의 3분의 2가 배달앱을 한 번 이상 썼고, 파이낸스버즈와 뱅크오브아메리카가 함께한 설문에서는 미국인의 57%가 매주 이상 포장이나 배달을 시킨다고 답했어. Z세대는 한 달 평균 5번 주문하는데, 베이비붐 세대의 대략 두 배야.
+
+그런데 같은 설문에서 Z세대 응답자의 절반은 배달에 쓴 돈이 창피하다고 했고, 가족이나 친구에게 금액을 속이기도 한대. 카네기멜런대 마케팅 교수 조이 루는 배달을 크게 무리하지 않고 스스로에게 주는 &#39;부담 적은 사치&#39;라고 불러. 다만 수수료가 쌓이면 결제할 때 깜짝 놀라게 되고, 그 돈이 앱 회사 이익에 보태진다는 걸 인정하기가 찜찜해서 다들 말을 아끼는 것 같다는 거야.
+
+한편 경제학자 마이크 콘잘은 2024년 노동통계국 자료상 미국인 식비 중 외식·배달보다 장보기 비중이 더 크다며, 배달 때문에 Z세대가 못 산다는 식의 손가락질은 빗나갔다고 주장했어.
+
+출처: 가디언(The Guardian)
+
+배경 사진: Pexels, Olichel, euphoricpaper, kaboompics, jarmoluk, zhuwei06191973 / Pixabay
+표지 이미지: AI 생성
+
+#배달앱 #Z세대 #배달죄책감 #배달비 #해외반응</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-182ed35e32c3">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 나도 찔리는 배달 죄책감을 미국 Z세대 절반이 고백했고, 교수가 그 찜찜함의 이유를 짚었다는 공감형 각도</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> Z세대는 한 달 평균 5번 주문하고, 이는 부모 세대(베이비붐)의 약 2배 (카드 4장, 본문 세 번째 문단)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">Z세대 절반이 배달에 쓴 돈을 창피해하고, 친구한테 금액을 속이기도 한대
+주문하자마자 오는 죄책감, 미국에선 &#39;딜리버리 길트&#39;라는 이름까지 붙었어
+근데 교수가 이 찜찜함의 이유를 짚은 게 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">1/ 카네기멜런대 마케팅 교수 조이 루는 배달을 &#39;부담 적은 사치&#39;라고 불러. 크게 무리하지 않고 스스로에게 주는 사치라는 거야.
+그럼 사치가 부담 없는데 왜 창피할까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">2/ 교수 설명은 이래. 수수료가 쌓이면 결제할 때 깜짝 놀라게 되고, 그 돈이 앱 회사 이익에 보태진다는 걸 인정하기가 찜찜하다는 거야.
+그래서 다들 말을 아끼는 것 같대. 실제로 이런 사람이 있어.</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">3/ 노스캐롤라이나 롤리의 24살 보모 캐롤라인 볼드리는 대학 때부터 거의 매일 배달을 시켰대. 일주일에 75달러쯤 쓴다고 스스로 추산해.
+시킬 땐 꿈 같은데, 열에 아홉은 시키고 나면 스스로가 별로라고 느낀대.
+이게 한 사람만의 얘기일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">164/500자</span></div>
+      <p class="tp-text">4/ 숫자로 보면 이래
+- 2024년 소비자의 3분의 2가 배달앱을 한 번 이상 씀 (퍼듀대 연구)
+- 미국인 57%가 매주 이상 포장이나 배달을 시킴 (파이낸스버즈·뱅크오브아메리카 설문)
+- 같은 설문에서 Z세대 응답자의 절반이 배달비를 창피해함
+근데 이 손가락질에 반박하는 경제학자도 있어.</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">5/ 경제학자 마이크 콘잘은 2024년 노동통계국 자료상 미국인 식비 중 외식·배달보다 장보기 비중이 더 크다고 짚었어.
+그러면서 배달 때문에 Z세대가 못 산다는 식의 손가락질은 빗나갔다고 주장했대.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">230/500자</span></div>
+      <p class="tp-text">6/ 결국 교수 말은 배달 자체보다 수수료가 쌓이고 앱 회사 이익에 보태진다는 게 찜찜하다는 거고, 경제학자 말은 Z세대만 탓하는 건 빗나갔다는 거야.
+배달 시키고 찔려본 적 있는 사람 손?
+이런 해외 소비·문화 얘기 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 Z세대 주문 횟수를 윗세대와 비교한 숫자까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>Z세대 절반이 배달비 쓴 걸 창피해한대. 친구한테 금액을 속이기도 한다고</li><li>주문 버튼 누르자마자 찾아오는 그 죄책감, 미국에선 이름까지 붙었대</li><li>배달 시킬 땐 꿈 같은데 열에 아홉은 시키고 나서 스스로가 별로라고 느낀다는 24살</li><li>배달이 &#39;낭비&#39;가 아니라 &#39;부담 적은 사치&#39;라고 부르는 교수가 있어</li><li>배달 시키는 게 창피한 게 아니라 그 돈이 앱 회사 이익에 보태지는 게 찜찜한 거래, 교수 말로는</li><li>미국인 57%가 매주 이상 포장이나 배달을 시키는데 다들 말은 아낀대</li><li>일주일에 75달러를 배달에 쓴다고 추산하는 24살 보모의 고백</li><li>&#39;Z세대가 배달 때문에 못 산다&#39;는 손가락질은 빗나갔다는 경제학자 주장</li><li>배달 죄책감, 혼자만 그런 거 아니라는 설문이 나옴</li><li>배달을 시켜놓고 왜 다들 말을 아낄까, 교수가 짚은 이유</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>배달 시키고 찔려본 적 있는 사람 손?</li><li>너라면 친구한테 배달비 솔직히 말할 수 있어? 가능 vs 불가능</li><li>배달앱 파 vs 직접 포장해 오는 파, 어디야?</li><li>배달 시킬 때 제일 먼저 보는 건 가격 vs 리뷰?</li><li>배달은 &#39;부담 적은 사치&#39;다, 동의해 안 해?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>배달 수수료가 쌓이면 결제금액이 얼마나 달라지는지 해외 사례</li><li>해외 Z세대의 소비 습관과 돈 고백 이야기</li><li>오사카 글리코 러닝맨 간판 교체</li><li>윤초 공식 폐지, 2027년 5월부터</li><li>테슬라 로드스터 날았다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;열에 아홉은 스스로가 별로라고 느낀다&#39;는 캐롤라인 본인의 말이라 Z세대 전체로 일반화하면 안 됨</li><li>&#39;앱 이익 때문에 찜찜하다&#39;는 교수의 해석(&#39;~같다&#39;)이라 사실처럼 단정하면 안 됨</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-01.jpg" alt="1장: 주문하고 바로 죄책감???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-02.jpg" alt="2장: Z세대 절반이 배달비 쓴 걸 창피해한대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-03.jpg" alt="3장: 심지어 친구한테 금액을 거짓말하기도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-04.jpg" alt="4장: Z세대는 한 달에 평균 5번 주문 부모 세대의 약 2배" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-05.jpg" alt="5장: 교수가 말한 배달은 부담 적은 사치" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-06.jpg" alt="6장: 교수 말로는 앱 이익 보태는 기분이 별로래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-07.jpg" alt="7장: 혼자 찔리는 줄 아는 친구한테 슬쩍 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-am-04c98680edba/182ed35e32c3/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">주문 버튼 누르자마자 찾아오는 죄책감, 미국에선 &#39;딜리버리 길트(delivery guilt)&#39;라는 이름까지 붙었어.
+
+노스캐롤라이나 롤리에 사는 24살 보모 캐롤라인 볼드리는 대학 때부터 거의 매일 배달을 시켰대. 일주일에 75달러쯤 쓴다고 스스로 추산해. 시킬 땐 꿈 같은데, 열에 아홉은 시키고 나면 스스로가 별로라고 느낀다고 해.
+
+숫자도 있어. 퍼듀대 연구에서는 2024년에 소비자의 3분의 2가 배달앱을 한 번 이상 썼고, 파이낸스버즈와 뱅크오브아메리카가 함께한 설문에서는 미국인의 57%가 매주 이상 포장이나 배달을 시킨다고 답했어. Z세대는 한 달 평균 5번 주문하는데, 베이비붐 세대의 대략 두 배야.
+
+그런데 같은 설문에서 Z세대 응답자의 절반은 배달에 쓴 돈이 창피하다고 했고, 가족이나 친구에게 금액을 속이기도 한대. 카네기멜런대 마케팅 교수 조이 루는 배달을 크게 무리하지 않고 스스로에게 주는 &#39;부담 적은 사치&#39;라고 불러. 다만 수수료가 쌓이면 결제할 때 깜짝 놀라게 되고, 그 돈이 앱 회사 이익에 보태진다는 걸 인정하기가 찜찜해서 다들 말을 아끼는 것 같다는 거야.
+
+한편 경제학자 마이크 콘잘은 2024년 노동통계국 자료상 미국인 식비 중 외식·배달보다 장보기 비중이 더 크다며, 배달 때문에 Z세대가 못 산다는 식의 손가락질은 빗나갔다고 주장했어.
+
+출처: 가디언(The Guardian)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#배달앱 #Z세대 #배달죄책감 #배달비 #해외반응</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처: 가디언(The Guardian)이라는 기사 출처 표기</li>
+          <li>미국 설문·연구 기반이라 한국 상황에 그대로 적용할 수 없음</li><li>설문 수치는 가디언이 인용한 2차 자료이며 원 설문은 직접 확인하지 않음</li><li>배달 업체 측 입장(숨은 수수료 없음 등)은 본문에 담지 않음</li><li>마지막 장 공유 문구는 특정 대상을 놀리는 느낌이 들지 않게 톤 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-182ed35e32c3-0">1장</label>
+          <textarea id="s-182ed35e32c3-0" rows="2" data-slide="0">주문하고
+바로 **죄책감**???</textarea>
+          
+          <label class="f" for="s-182ed35e32c3-1">2장</label>
+          <textarea id="s-182ed35e32c3-1" rows="3" data-slide="1">Z세대 **절반**이
+배달비 쓴 걸
+창피해한대</textarea>
+          
+          <label class="f" for="s-182ed35e32c3-2">3장</label>
+          <textarea id="s-182ed35e32c3-2" rows="3" data-slide="2">심지어 친구한테
+금액을
+**거짓말하기도**</textarea>
+          
+          <label class="f" for="s-182ed35e32c3-3">4장</label>
+          <textarea id="s-182ed35e32c3-3" rows="3" data-slide="3">Z세대는 한 달에
+평균 **5번** 주문
+부모 세대의 약 2배</textarea>
+          
+          <label class="f" for="s-182ed35e32c3-4">5장</label>
+          <textarea id="s-182ed35e32c3-4" rows="3" data-slide="4">교수가 말한
+배달은
+부담 적은 **사치**</textarea>
+          
+          <label class="f" for="s-182ed35e32c3-5">6장</label>
+          <textarea id="s-182ed35e32c3-5" rows="3" data-slide="5">교수 말로는
+**앱 이익** 보태는
+기분이 별로래</textarea>
+          
+          <label class="f" for="s-182ed35e32c3-6">7장</label>
+          <textarea id="s-182ed35e32c3-6" rows="3" data-slide="6">혼자 찔리는 줄
+아는 **친구**한테
+슬쩍 보내기</textarea>
+          
+          <label class="f" for="c-182ed35e32c3">본문 (캡션)</label>
+          <textarea id="c-182ed35e32c3" class="caption">주문 버튼 누르자마자 찾아오는 죄책감, 미국에선 &#39;딜리버리 길트(delivery guilt)&#39;라는 이름까지 붙었어.
+
+노스캐롤라이나 롤리에 사는 24살 보모 캐롤라인 볼드리는 대학 때부터 거의 매일 배달을 시켰대. 일주일에 75달러쯤 쓴다고 스스로 추산해. 시킬 땐 꿈 같은데, 열에 아홉은 시키고 나면 스스로가 별로라고 느낀다고 해.
+
+숫자도 있어. 퍼듀대 연구에서는 2024년에 소비자의 3분의 2가 배달앱을 한 번 이상 썼고, 파이낸스버즈와 뱅크오브아메리카가 함께한 설문에서는 미국인의 57%가 매주 이상 포장이나 배달을 시킨다고 답했어. Z세대는 한 달 평균 5번 주문하는데, 베이비붐 세대의 대략 두 배야.
+
+그런데 같은 설문에서 Z세대 응답자의 절반은 배달에 쓴 돈이 창피하다고 했고, 가족이나 친구에게 금액을 속이기도 한대. 카네기멜런대 마케팅 교수 조이 루는 배달을 크게 무리하지 않고 스스로에게 주는 &#39;부담 적은 사치&#39;라고 불러. 다만 수수료가 쌓이면 결제할 때 깜짝 놀라게 되고, 그 돈이 앱 회사 이익에 보태진다는 걸 인정하기가 찜찜해서 다들 말을 아끼는 것 같다는 거야.
+
+한편 경제학자 마이크 콘잘은 2024년 노동통계국 자료상 미국인 식비 중 외식·배달보다 장보기 비중이 더 크다며, 배달 때문에 Z세대가 못 산다는 식의 손가락질은 빗나갔다고 주장했어.
+
+출처: 가디언(The Guardian)</textarea>
+          <label class="f" for="t-182ed35e32c3">해시태그</label>
+          <input id="t-182ed35e32c3" type="text" class="tagsin" value="#배달앱 #Z세대 #배달죄책감 #배달비 #해외반응" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주문 후 찾아오는 죄책감을 가리키는 &#39;딜리버리 길트&#39;라는 용어가 있다</b>
+            <q>“There is a term for that post-order clarity: delivery guilt.”</q>
+            <small>slide1, caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>24살 보모 캐롤라인 볼드리는 노스캐롤라이나 롤리에 산다</b>
+            <q>““If I want sushi, I’m getting sushi,” said the 24-year-old nanny, who lives in Raleigh, North Carolina.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>볼드리는 대학 때부터 거의 매일 배달을 시켰다</b>
+            <q>“Bauldree got into the habit of near-daily DoorDashing back in college.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>볼드리는 일주일에 약 75달러를 쓴다고 추산한다</b>
+            <q>“Considering the price of food and those ever-pesky delivery fees, it’s an expensive habit; Bauldree estimates spending about $75 a week.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>볼드리는 열에 아홉은 시키고 나서 스스로에 대해 기분이 나쁘다고 말한다</b>
+            <q>“Nine times out of 10, I feel bad about myself.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>퍼듀대 연구에서 2024년 소비자의 3분의 2가 배달앱을 한 번 이상 썼고, 설문에서 미국인의 57%가 매주 이상 포장·배달을 한다</b>
+            <q>“One Purdue study found that two-thirds of consumers used a food-ordering app at least once in 2024; another recent survey from the marketing company FinanceBuzz in partnership with Bank of America found that 57% of Americans get takeout or delivery weekly or more.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Z세대는 한 달 평균 5번 주문하며 이는 베이비붐 세대의 약 두 배다</b>
+            <q>“Gen Z is more likely to feed the habit, clocking in an average of five orders a month – roughly double the monthly orders made by Boomers.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Z세대 응답자의 절반이 배달에 쓴 금액이 창피하다고 답했고, 때로는 가족·친구에게 금액을 속인다</b>
+            <q>“According to the Finance Buzz survey, half of its gen Z respondents said they felt embarrassed about how much they spend on food delivery, sometimes so much that they lie about the amount to friends and family.”</q>
+            <small>slide2, slide3, caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>조이 루는 카네기멜런대 마케팅 조교수다</b>
+            <q>“Joy Lu is an assistant professor of marketing at Carnegie Mellon University who studies delivery app pricing.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루 교수는 배달을 크게 무리하지 않고 스스로에게 주는 &#39;부담 적은 사치&#39;라고 부른다</b>
+            <q>“She calls food delivery an “affordable luxury”: a way for people to treat themselves without majorly splurging.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>배달앱 수수료가 쌓이면 결제 때 깜짝 놀랄 수 있다</b>
+            <q>“But the fees on delivery apps can add up, resulting in sticker shock at checkout.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루 교수는 추가 금액을 내고 회사 이익에 보태는 걸 인정하기 기분 좋지 않다고 말한다</b>
+            <q>““It doesn’t feel great to admit that we’re paying this extra money and contributing to these companies’ profits.””</q>
+            <small>slide6, caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>경제학자 마이크 콘잘은 2024년 노동통계국 자료상 식비 중 장보기 비중이 외식·배달보다 크다고 주장했다</b>
+            <q>“But, as economist Mike Konczal argued on his Substack in February, it is also misguided: 2024 data from the Bureau of Labor Statistics shows that more of Americans’ food budgets are going to groceries than eating out and delivery.”</q>
+            <small>caption · <a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/food/2026/oct/15/food-delivery-apps-cost-economy" target="_blank" rel="noopener">Gen Z wrestle with shame from ordering delivery food: ‘This economy is not for the weak’</a> (기사)</li><li><a href="https://www.nyc.gov/mayors-office/news/2026/09/mayor-mamdani-wins-record--131-5-million-from-doordash-for-deliv" target="_blank" rel="noopener">Mayor Mamdani Wins Record $131.5 Million From DoorDash for Delivery Workers</a> (1차 출처)</li><li><a href="https://www.ers.usda.gov/data-products/food-price-outlook/summary-findings" target="_blank" rel="noopener">Food Price Outlook - Summary Findings</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "takeout boxes on a sunlit apartment table"</li><li>2장: <a href="https://pixabay.com/photos/hands-phone-smartphone-electronics-1851218/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "smartphone"</li><li>3장: <a href="https://pixabay.com/photos/girls-friends-young-children-914823/" target="_blank" rel="noopener">Olichel / Pixabay</a> — "whispering friends"</li><li>4장: <a href="https://pixabay.com/photos/seed-paper-bags-container-packaging-7484582/" target="_blank" rel="noopener">euphoricpaper / Pixabay</a> — "paper bag"</li><li>5장: <a href="https://pixabay.com/photos/christmas-background-table-setting-791110/" target="_blank" rel="noopener">kaboompics / Pixabay</a> — "dinner table"</li><li>6장: <a href="https://pixabay.com/photos/money-card-pocket-concept-idea-256281/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "credit card"</li><li>7장: <a href="https://pixabay.com/photos/men-friends-chatting-afternoon-8364267/" target="_blank" rel="noopener">zhuwei06191973 / Pixabay</a> — "friends chatting"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-728923fd60ab">
+    <div class="head">
+      <h2>S1. 야식 먹는 사람 간질환 위험 20~30% 높게 나온 20만 명 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-728923fd60ab">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 뭘 먹느냐가 아니라 언제 먹느냐가 간에 영향을 줄 수 있다는 대규모 연구로, 식단은 그대로 두고 먹는 시간만 바꿔볼 수 있다는 점이 &#39;나도 해당되나?&#39; 반응을 끌어낸다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">야식은 &#39;뭘 먹느냐&#39;가 아니라 &#39;언제 먹느냐&#39;가 문제일 수 있대
+20만 명 가까운 데이터에서 야식 먹는 사람은 간질환 위험이 20~30% 높게 나왔다는 연구
+근데 이 숫자엔 꼭 같이 봐야 할 단서가 붙어 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">1/ 미국 OHSU 연구팀이 20만 명 가까운 사람의 데이터를 분석했어. 저녁 먹고 나서나 잠자리에 든 뒤에도 꾸준히 먹는 사람은 간질환 위험이 20~30% 높게 나왔대. 그럼 여기서 말하는 간질환이 정확히 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">74/500자</span></div>
+      <p class="tp-text">2/ 지방간이랑 간경변이야. 간경변은 간에 흉터 같은 조직이 넓게 생기는 심각한 상태래. 그럼 왜 하필 먹는 시간이 간이랑 엮였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">3/ 연구진이 꼽은 가능성 하나는 생체리듬이야. 간은 영양소 처리, 혈당 조절, 에너지 저장을 맡는데 이 리듬에 특히 민감하대. 몸이 잠잘 준비를 하는 시간에 먹으면 이 과정이 방해받을 수도 있다는 설명이야. 근데 이게 증명된 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">163/500자</span></div>
+      <p class="tp-text">4/ 캡처해둘 연구 요약
+- 대상: 미국 대규모 조사 3개 자료, 20만 명 가까이
+- 결과: 야식 먹는 쪽이 간질환 위험 20~30% 높게 나옴
+- 한계: 관찰 연구라 원인과 결과는 증명 못 함
+- 한계: 식사 시간은 참가자가 직접 보고한 자료
+그럼 연구한 의사는 이 결과를 어떻게 봤을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">5/ 제1저자인 간 전문의는 지방간이 생긴 사람 중 간경변 같은 심각한 단계까지 가는 건 일부라고 짚었어. 그래도 칼로리 섭취를 잠들기 몇 시간 전까지로 한정하는 게 도움될 수 있다는 게 핵심 메시지래. 그럼 진짜 일찍 먹으면 좋아지는지는?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">6/ 그건 아직 몰라. 연구팀은 식사 시간을 직접 지켜보면서, 지방간이 있는 사람이 일찍 먹으면 실제로 좋아지는지 보는 임상연구 참가자를 모집 중이래. 한국 야식 문화에도 그대로 해당할지는 확인된 게 없어. 자기한테 맞는지는 의사랑 상의해봐.</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">172/500자</span></div>
+      <p class="tp-text">7/ 너라면 야식을 아예 끊을래, 아니면 먹는 시간만 당겨볼래? 댓글로 알려줘.
+
+2편: 이 연구자가 야간 근무자 얘기에서 힌트를 얻은 사연, 내일 새벽 배달. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 한국 야식 문화에도 이 결과가 그대로 적용되는지는 확인된 것이 없다는 주장</li><li>근거 등록 안 된 주장: 연구를 수행한 OHSU가 미국 기관이며 연구 자료가 미국 대규모 조사에서 나왔다는 점(국가 명시)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>야식은 &#39;뭘 먹느냐&#39;가 아니라 &#39;언제 먹느냐&#39;가 문제일 수 있대</li><li>야식 먹는 사람은 간질환 위험이 20~30% 높게 나왔다는 20만 명 가까운 데이터</li><li>야식이 살만 찌우는 줄 알았는데 간까지 건드릴 수 있다는 연구가 나옴</li><li>메뉴 바꾸지 말고 먹는 시간부터 보라는 간 전문의의 말</li><li>간은 밤에 먹는 걸 싫어할 수도 있대, 생체시계 얘기</li><li>야식 끊기 힘든 사람은 일단 이것부터 읽고 가</li><li>&#39;잠들기 몇 시간 전까지만 먹는 게 도움될 수 있다&#39;는 간 전문의 말이 나옴</li><li>야식 20~30%라는 숫자, 무서운데 한 가지 단서가 붙어 있었음</li><li>야간 근무자 연구를 보다가 간 얘기까지 번진 연구가 나옴</li><li>저녁 먹고 또 먹는 습관, 간 입장에선 어떨까라는 연구</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너라면 야식을 아예 끊을래, 아니면 먹는 시간만 당겨볼래?</li><li>야식 마지막으로 먹은 게 언제고 뭐였어?</li><li>평소 저녁은 몇 시에 먹고 잠은 몇 시에 자?</li><li>야식 끊어본 적 있으면 뭐가 제일 힘들었어?</li><li>야식이 땡길 때 너만의 참는 방법 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>이 연구자가 야간 근무자 얘기에서 힌트를 얻은 사연</li><li>윈난 거대 버섯 D. rex, 6500만 년 전 족보</li><li>일본 KFC 43년 만의 넓적다리살 치킨버거</li><li>배달앱 죄책감, Z세대의 고백</li><li>지방간과 간경변, 뭐가 다른지 정리</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>관찰 연구라 &#39;야식 때문에 간질환 생긴다&#39;는 인과 표현으로 읽히지 않는지 확인 (원문은 연관성만 제시, 연구진도 인과 입증 불가라고 명시)</li><li>&#39;20~30%&#39;는 상대 위험 수치이고 원문에 절대 발생률이 없어 과하게 무섭게 읽히지 않는지 확인</li><li>한국 야식 문화에 적용되는지는 확인된 정보가 없어 단정하지 않았음, 한국 연결 문장이 단정으로 바뀌지 않게 주의</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>20만 명 가까운 데이터를 분석해 저녁 후나 잠자리 무렵에 꾸준히 먹는 사람의 간질환 위험이 20~30% 높게 나왔다</b>
+          <q>“Researchers analyzed data from nearly 200,000 people and found that those who regularly ate after dinner or around bedtime had a 20% to 30% higher risk of liver disease, including fatty liver disease and cirrhosis.”</q>
+          <small>post0, post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>OHSU가 이끈 대규모 연구다</b>
+          <q>“Eating late at night could be putting your liver at risk, according to a large study led by Oregon Health &amp; Science University.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>여기서 말하는 간질환은 지방간(MASLD)과 간경변이며 간경변은 간에 흉터가 넓게 생기는 심각한 상태다</b>
+          <q>“The conditions included metabolic dysfunction-associated steatotic liver disease, commonly known as fatty liver disease, and cirrhosis, a serious condition involving extensive scarring of the liver.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 꼽은 한 가지 가능성은 생체리듬이다</b>
+          <q>“One possible explanation involves the body&#39;s circadian rhythms, the internal biological processes that help regulate sleep, metabolism, and other functions throughout the approximately 24-hour daily cycle.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>간은 생체리듬에 특히 민감하다</b>
+          <q>“The liver is particularly sensitive to these rhythms.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>간은 영양소 처리, 혈당 조절, 에너지 저장과 사용을 관리한다</b>
+          <q>“It helps process nutrients, regulate blood sugar, and manage how the body stores and uses energy.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>몸이 잠잘 준비를 하는 시간에 먹으면 이 과정 일부가 방해받을 수 있다</b>
+          <q>“Eating at times when the body is biologically preparing for sleep may interfere with some of these processes.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세 개의 대규모 전국 조사 자료를 사용했다</b>
+          <q>“To investigate the connection, researchers examined information from three major nationwide studies: the Nurses&#39; Health Study, the Nurses&#39; Health Study II, and the Health Professionals Follow-up Study.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰 연구라 식사 시간을 바꾸면 예방되는지는 직접 검증하지 못했다</b>
+          <q>“The analysis was observational, meaning it identified relationships between eating habits and health outcomes without directly testing whether changing meal times prevents liver disease.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식사 시간 정보는 참가자가 직접 보고한 자료다</b>
+          <q>“It also relied on participants&#39; self-reported information, including relatively broad descriptions of when they ate.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제1저자는 간 전문의다</b>
+          <q>“&#34;A few studies have hinted at this idea, but this is among the first long-term analyses to explicitly draw the connection to fatty liver disease,&#34; said lead author Robert Wilechansky, M.D., a hepatologist at OHSU who specializes in liver transplantation.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지방간이 생긴 사람 중 간경변 같은 심각한 단계로 가는 건 일부다</b>
+          <q>“&#34;It&#39;s important to remember, of the people who developed fatty liver disease, only a small fraction develop serious forms of the condition like liver cirrhosis,&#34; Wilechansky said.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>칼로리 섭취를 잠들기 몇 시간 전까지로 한정하는 게 도움될 수 있다는 것이 핵심 메시지다</b>
+          <q>“&#34;Even so, the big take-away here is that confining your calorie intake to several hours before bedtime might be beneficial.&#34;”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>OHSU가 참가자를 모집 중인 임상연구를 진행하고 있다</b>
+          <q>“Wilechansky is now involved in an OHSU clinical study that is recruiting participants to investigate that question.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식사 시간을 직접 모니터링해 일찍 먹으면 지방간이 있는 사람이 개선되는지 평가할 계획이다</b>
+          <q>“Rather than relying solely on past reports of eating habits, the team plans to monitor meal timing directly and evaluate whether shifting food consumption earlier leads to measurable improvements in people with underlying fatty liver disease.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구자가 야간 근무자 관련 근거 때문에 이 연관성에 관심을 갖게 됐다</b>
+          <q>“Wilechansky became interested in the connection partly because of evidence involving night shift workers.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <p class="thr-note">📸 인스타 카드로 만들었어요 → <a href="20261016-req-2.html">20261016-req-2 검수 페이지</a></p>
+      
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">Eating late at night linked to up to 30% higher risk of liver disease</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-6704e8e49c34">
+    <div class="head">
+      <h2>S2. 35세 체력 정점 47년 추적 연구(스웨덴 SPAF)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 18 · 애매 3
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-6704e8e49c34">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;30대 되면 몸이 달라진다&#39;는 흔한 체감을 47년 추적 데이터로 확인하고, 그래도 운동이 의미 있는 이유까지 이어주는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">&#39;30대 되면 몸이 달라진다&#39;는 말, 운동하는 사람도 35세쯤부터 진짜 시작된대
+47년 동안 같은 사람들을 따라간 스웨덴 연구 결과
+근데 연구진이 말한 핵심은 &#39;그래서 포기하라&#39;가 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 유산소 체력과 근지구력은 대체로 26~36세 사이에 최고였고, 30대 중반쯤부터 내려가기 시작했대. 폭발적으로 힘을 내는 순발력은 그보다 더 일찍 정점이었고. 그럼 63세엔 얼마나 줄어 있었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">141/500자</span></div>
+      <p class="tp-text">2/ 63세엔 측정 평균이 정점 대비 대략 30~48% 줄어 있었음. 처음엔 완만하다가 나이 들수록 속도가 붙었고, 남녀 패턴도 비슷했대. 스웨덴 427명을 16세부터 63세까지 계속 따라가며 쟀다는 게 포인트. 이게 단순히 덜 움직여서 그런 걸까? ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">3/ 연구진 해석은 &#39;덜 움직인 탓만은 아니다&#39;. 나이에 따른 생물학적 변화도 영향을 주는 것 같다는 거야. 근육 세포, 신경계, 에너지 만드는 능력의 변화가 거론되는데 정확한 이유는 아직 조사 중. 그럼 운동은 해도 의미 없는 걸까? ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">151/500자</span></div>
+      <p class="tp-text">4/ 의미 있음. 성인이 된 뒤 활동적으로 바뀐 사람은 체력이 약 5~10% 좋아졌고, 10대 때부터 활동적이던 사람은 성인기 내내 체력이 더 잘 유지되는 경향이 있었대. 연구 책임저자도 &#39;움직이기 시작하기에 너무 늦은 때는 없다&#39;고 했음. 혈관 쪽 후속 연구도 있음 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">5/ 같은 스웨덴 집단의 후속 연구야. 34세와 52세 때 유산소 체력이 좋았던 사람은 63세에 혈관이 덜 뻣뻣한 경향이 있었대. 비만·흡연·혈압을 감안해도 그 연관은 남았고. 다만 체력이 직접 막아줬다고 입증한 건 아님. 한 장으로 정리하면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 저장각</span>
+        <span class="len">175/500자</span></div>
+      <p class="tp-text">6/ 캡처해둘 정리
+- 유산소 체력·근지구력 정점: 대체로 26~36세
+- 순발력은 그보다 더 일찍 정점
+- 63세 평균: 정점 대비 약 30~48% 감소
+- 운동해도 감소를 완전히 막진 못하고 늦추는 쪽
+- 성인기에 활동적으로 바뀐 사람: 체력 약 5~10% 향상
+- 혈관 연구는 관찰 연구라 인과는 단정 못 함</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">209/500자</span></div>
+      <p class="tp-text">7/ 너희는 30대 들어서 &#39;어, 몸이 예전 같지 않네&#39; 싶었던 순간이 언제였어? 어떤 상황이었는지 댓글로 알려줘
+2편: 운동 경험 없던 60~82세 남성 49명이 4년 동안 매주 근력운동을 했더니 어땠는지, 내일 새벽 배달. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>운동하는 사람도 35세 무렵부터 체력이 내려가기 시작한다 <small>애매 · 근거는 35세 무렵부터 체력이 전반적으로 떨어지기 시작한다고 함. 원문은 &#39;운동하는 사람도&#39;를 명시하지만 &#39;진짜 시작&#39;이라는 표현은 과장 소지. &#39;대체로 35세 무렵&#39;으로 완화 필요.</small></li><li>63세엔 평균 수행 능력이 정점 대비 약 30~48% 줄었다 <small>애매 · 원문은 측정 항목 평균이 정점 대비 약 30~48% 하락했다고 함. &#39;63세 평균 수행 능력&#39;으로 측정 항목 평균임을 명시하는 것이 정확함.</small></li><li>성인기에 활동적이 된 사람은 체력이 약 5~10% 향상됐다 <small>애매 · 원문은 성인기에 활동적이 된 사람의 체력 향상이 약 5~10%라고 함. 비교 기준이 불명확하며 &#39;체력&#39;을 &#39;신체 능력&#39;으로 한정하는 편이 정확.</small></li>
+        <li>근거 등록 안 된 주장: ‘30대 되면 몸이 달라진다’는 말이 운동하는 사람에게도 35세쯤부터 진짜 시작된다는 주장 (claim 0과 중복되나 &#39;진짜 시작&#39; 뉘앙스는 과장 가능)</li><li>근거 등록 안 된 주장: 연구가 2025년 Journal of Cachexia, Sarcopenia and Muscle에 발표되었다는 시점 정보</li><li>근거 등록 안 된 주장: 2026년 혈관 후속 연구가 Scientific Reports에 발표되었다는 시점·게재지 정보</li><li>근거 등록 안 된 주장: 2026년 American Journal of Medicine 연구라는 시점·게재지 정보</li><li>근거 등록 안 된 주장: 연구진이 카롤린스카 연구소 소속이라는 정보</li><li>근거 등록 안 된 주장: 저자 소속 및 책임저자 이름(Maria Westerståhl) 관련 정보</li><li>근거 등록 안 된 주장: 미토콘드리아가 근육 에너지 생산 효율에 영향을 줄 수 있다는 구체적 생물학적 설명</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;30대 되면 몸이 달라진다&#39;는 말, 운동하는 사람도 35세쯤부터 진짜 시작된대</li><li>30대 체력 고민, 게을러져서만은 아니래. 47년 추적 연구가 나옴</li><li>&#39;이미 늦었다&#39;고 접지 말고 일단 움직이라는 연구가 나옴. 35세 이후에도 소용 있대</li><li>스웨덴 사람 427명을 쫓아가 보니 체력 정점은 생각보다 훨씬 이른 20대 후반~30대 중반이었음</li><li>63세엔 체력이 정점 대비 30~48% 줄었다는데, 그 내리막 시작이 35세 무렵이래</li><li>&#39;예전엔 안 이랬는데&#39; 싶은 30대, 실제로 체력 정점이 그 무렵이었대</li><li>열심히 운동하는 사람도 35세 무렵부터는 내려가기 시작한다는 연구</li><li>운동해도 내려간다는 연구인데, 연구진은 오히려 &#39;움직이기에 늦은 때는 없다&#39;고 했음</li><li>34세 때의 유산소 체력이 63세 혈관 상태와 이어졌다는 연구가 나옴</li><li>47년 동안 같은 사람들을 따라간 연구가 말하는 &#39;몸이 달라지는 나이&#39;</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>30대 들어서 &#39;어, 몸이 예전 같지 않네&#39; 싶었던 순간이 언제였어?</li><li>체력 떨어졌다고 느꼈을 때 제일 먼저 바꾼 습관이 뭐야?</li><li>20대 때 체력이 제일 좋았다고 느꼈던 순간은 언제야?</li><li>35세 이후에 운동을 새로 시작한다면 뭐부터 해볼 거야?</li><li>나이 들면서 체력 말고 달라졌다고 느낀 게 또 뭐야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>운동 경험 없던 60~82세 남성 49명이 4년간 매주 근력운동 했더니</li><li>9년간 자전거를 탄 노년 82명, 체력은 얼마나 떨어졌나</li><li>윈난 거대 버섯 D. rex, 6500만 년 전 족보</li><li>일본 KFC 43년 만의 넓적다리살 치킨버거</li><li>배달앱 죄책감, Z세대의 고백</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>운동하는 사람도 35세 무렵부터 체력이 내려가기 시작한다</b>
+          <q>“A remarkable 47-year Swedish study found that fitness, muscle endurance, and physical performance generally begin declining around age 35, even among people who remain active.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>63세엔 평균 수행 능력이 정점 대비 약 30~48% 줄었다</b>
+          <q>“By age 63, average performance across the measurements had fallen by roughly 30 to 48 percent from peak levels.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>성인기에 활동적이 된 사람은 체력이 약 5~10% 향상됐다</b>
+          <q>“Participants who became physically active during adulthood experienced improvements in physical capacity of approximately 5 to 10 percent.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 사람들을 반복 측정하며 따라간 연구다</b>
+          <q>“Unlike most earlier research on physical aging, which compared people of different ages at a single point in time, this project repeatedly examined the same individuals as they grew older.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>유산소 체력과 근지구력은 대체로 26~36세에 정점이었고 30대 중반쯤 내려가기 시작했다</b>
+          <q>“Aerobic fitness and muscular endurance generally reached their highest levels between ages 26 and 36, with physical performance beginning to decline around the mid-30s.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폭발적인 근력(순발력)은 더 일찍 정점이었다</b>
+          <q>“Some abilities, particularly explosive muscle power, peaked even earlier.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>감소는 처음엔 완만하다가 나이 들수록 빨라졌다</b>
+          <q>“The decline was initially modest but became progressively faster with age.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>남녀 모두에서 같은 패턴이 나타났다</b>
+          <q>“Importantly, the pattern appeared in both men and women.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스웨덴 427명을 16세부터 63세까지 따라가며 측정했다</b>
+          <q>“The research was part of the Swedish Physical Activity and Fitness study (SPAF), which followed 427 randomly selected men and women born in 1958.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들은 16세부터 63세까지 47년간 신체 평가를 받았다</b>
+          <q>“Participants underwent physical assessments over 47 years, beginning at age 16 and continuing through age 63.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>신체 능력 저하는 단순히 덜 움직여서만이 아니며 생물학적 변화도 기여하는 것으로 보인다</b>
+          <q>“These findings suggest that physical decline is not simply the result of becoming less active with age. Biological changes also appear to contribute, although exercise can help reduce their impact.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근육 세포, 신경계, 에너지 생산 능력의 변화가 신체 수행 능력을 서서히 떨어뜨릴 수 있다</b>
+          <q>“As people age, changes in muscle cells, the nervous system, and the body&#39;s ability to produce energy can gradually reduce physical performance.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정확한 이유는 아직 연구 중이다</b>
+          <q>“Scientists are still investigating exactly why physical performance begins deteriorating relatively early in adulthood.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>10대 때 활동적이던 사람은 성인기 내내 체력·지구력·근력이 더 잘 유지되는 경향이 있었다</b>
+          <q>“Those who were already active during adolescence also tended to maintain better fitness, endurance, and muscle power throughout adulthood.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책임저자가 움직이기 시작하기에 너무 늦은 때는 없다고 말했다</b>
+          <q>“It is never too late to start moving.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>34세와 52세 때 유산소 체력이 좋았던 사람은 63세에 동맥 경직도가 낮은 경향이 있었다</b>
+          <q>“They found that people with better aerobic fitness at ages 34 and 52 tended to have less arterial stiffness at age 63.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>비만·흡연·혈압 등을 감안해도 연관성이 유지됐다</b>
+          <q>“Notably, the relationship between earlier fitness and later artery health remained significant even after accounting for several established cardiovascular risk factors, including obesity, smoking, and blood pressure.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체력이 동맥 경직을 직접 막았다고 입증한 것은 아니다</b>
+          <q>“The results do not establish that better fitness directly prevented arterial stiffening.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>운동 감소를 완전히 막지는 못하지만 늦출 수 있다</b>
+          <q>“Our study shows that physical activity can slow the decline in performance, even if it cannot completely stop it.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>구조화된 운동 경험이 없던 60~82세 남성 49명을 추적한 연구가 있다</b>
+          <q>“Another 2026 study in The American Journal of Medicine followed 49 men ages 60 to 82 who had not previously participated in structured exercise training.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>4년간 매주 근력운동을 한 참가자는 상하체 근력이 향상됐다</b>
+          <q>“Over four years, participants who performed weekly resistance exercises improved their upper and lower body strength.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="6704e8e49c34">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261014000912.htm" target="_blank" rel="noopener">A 47-year study reveals the age when your body starts losing strength</a></li><li><a href="https://www.nature.com/articles/s41598-026-52389-8" target="_blank" rel="noopener">Aerobic capacity at age 34 predicts arterial stiffness in age 63, independent of classical and advanced lipid-related cardiovascular risk factors: a longitudinal cohort study - Scientific Reports</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261016-am";
+  const ORIGINAL = {"182ed35e32c3": {"caption": "\uc8fc\ubb38 \ubc84\ud2bc \ub204\ub974\uc790\ub9c8\uc790 \ucc3e\uc544\uc624\ub294 \uc8c4\ucc45\uac10, \ubbf8\uad6d\uc5d0\uc120 \u0027\ub51c\ub9ac\ubc84\ub9ac \uae38\ud2b8(delivery guilt)\u0027\ub77c\ub294 \uc774\ub984\uae4c\uc9c0 \ubd99\uc5c8\uc5b4.\n\n\ub178\uc2a4\uce90\ub864\ub77c\uc774\ub098 \ub864\ub9ac\uc5d0 \uc0ac\ub294 24\uc0b4 \ubcf4\ubaa8 \uce90\ub864\ub77c\uc778 \ubcfc\ub4dc\ub9ac\ub294 \ub300\ud559 \ub54c\ubd80\ud130 \uac70\uc758 \ub9e4\uc77c \ubc30\ub2ec\uc744 \uc2dc\ucf30\ub300. \uc77c\uc8fc\uc77c\uc5d0 75\ub2ec\ub7ec\ucbe4 \uc4f4\ub2e4\uace0 \uc2a4\uc2a4\ub85c \ucd94\uc0b0\ud574. \uc2dc\ud0ac \ub550 \uafc8 \uac19\uc740\ub370, \uc5f4\uc5d0 \uc544\ud649\uc740 \uc2dc\ud0a4\uace0 \ub098\uba74 \uc2a4\uc2a4\ub85c\uac00 \ubcc4\ub85c\ub77c\uace0 \ub290\ub080\ub2e4\uace0 \ud574.\n\n\uc22b\uc790\ub3c4 \uc788\uc5b4. \ud37c\ub4c0\ub300 \uc5f0\uad6c\uc5d0\uc11c\ub294 2024\ub144\uc5d0 \uc18c\ube44\uc790\uc758 3\ubd84\uc758 2\uac00 \ubc30\ub2ec\uc571\uc744 \ud55c \ubc88 \uc774\uc0c1 \uc37c\uace0, \ud30c\uc774\ub0b8\uc2a4\ubc84\uc988\uc640 \ubc45\ud06c\uc624\ube0c\uc544\uba54\ub9ac\uce74\uac00 \ud568\uaed8\ud55c \uc124\ubb38\uc5d0\uc11c\ub294 \ubbf8\uad6d\uc778\uc758 57%\uac00 \ub9e4\uc8fc \uc774\uc0c1 \ud3ec\uc7a5\uc774\ub098 \ubc30\ub2ec\uc744 \uc2dc\ud0a8\ub2e4\uace0 \ub2f5\ud588\uc5b4. Z\uc138\ub300\ub294 \ud55c \ub2ec \ud3c9\uade0 5\ubc88 \uc8fc\ubb38\ud558\ub294\ub370, \ubca0\uc774\ube44\ubd90 \uc138\ub300\uc758 \ub300\ub7b5 \ub450 \ubc30\uc57c.\n\n\uadf8\ub7f0\ub370 \uac19\uc740 \uc124\ubb38\uc5d0\uc11c Z\uc138\ub300 \uc751\ub2f5\uc790\uc758 \uc808\ubc18\uc740 \ubc30\ub2ec\uc5d0 \uc4f4 \ub3c8\uc774 \ucc3d\ud53c\ud558\ub2e4\uace0 \ud588\uace0, \uac00\uc871\uc774\ub098 \uce5c\uad6c\uc5d0\uac8c \uae08\uc561\uc744 \uc18d\uc774\uae30\ub3c4 \ud55c\ub300. \uce74\ub124\uae30\uba5c\ub7f0\ub300 \ub9c8\ucf00\ud305 \uad50\uc218 \uc870\uc774 \ub8e8\ub294 \ubc30\ub2ec\uc744 \ud06c\uac8c \ubb34\ub9ac\ud558\uc9c0 \uc54a\uace0 \uc2a4\uc2a4\ub85c\uc5d0\uac8c \uc8fc\ub294 \u0027\ubd80\ub2f4 \uc801\uc740 \uc0ac\uce58\u0027\ub77c\uace0 \ubd88\ub7ec. \ub2e4\ub9cc \uc218\uc218\ub8cc\uac00 \uc313\uc774\uba74 \uacb0\uc81c\ud560 \ub54c \uae5c\uc9dd \ub180\ub77c\uac8c \ub418\uace0, \uadf8 \ub3c8\uc774 \uc571 \ud68c\uc0ac \uc774\uc775\uc5d0 \ubcf4\ud0dc\uc9c4\ub2e4\ub294 \uac78 \uc778\uc815\ud558\uae30\uac00 \ucc1c\ucc1c\ud574\uc11c \ub2e4\ub4e4 \ub9d0\uc744 \uc544\ub07c\ub294 \uac83 \uac19\ub2e4\ub294 \uac70\uc57c.\n\n\ud55c\ud3b8 \uacbd\uc81c\ud559\uc790 \ub9c8\uc774\ud06c \ucf58\uc798\uc740 2024\ub144 \ub178\ub3d9\ud1b5\uacc4\uad6d \uc790\ub8cc\uc0c1 \ubbf8\uad6d\uc778 \uc2dd\ube44 \uc911 \uc678\uc2dd\u00b7\ubc30\ub2ec\ubcf4\ub2e4 \uc7a5\ubcf4\uae30 \ube44\uc911\uc774 \ub354 \ud06c\ub2e4\uba70, \ubc30\ub2ec \ub54c\ubb38\uc5d0 Z\uc138\ub300\uac00 \ubabb \uc0b0\ub2e4\ub294 \uc2dd\uc758 \uc190\uac00\ub77d\uc9c8\uc740 \ube57\ub098\uac14\ub2e4\uace0 \uc8fc\uc7a5\ud588\uc5b4.\n\n\ucd9c\ucc98: \uac00\ub514\uc5b8(The Guardian)", "hashtags": ["#\ubc30\ub2ec\uc571", "#Z\uc138\ub300", "#\ubc30\ub2ec\uc8c4\ucc45\uac10", "#\ubc30\ub2ec\ube44", "#\ud574\uc678\ubc18\uc751"], "slides": [["\uc8fc\ubb38\ud558\uace0", "\ubc14\ub85c **\uc8c4\ucc45\uac10**???"], ["Z\uc138\ub300 **\uc808\ubc18**\uc774", "\ubc30\ub2ec\ube44 \uc4f4 \uac78", "\ucc3d\ud53c\ud574\ud55c\ub300"], ["\uc2ec\uc9c0\uc5b4 \uce5c\uad6c\ud55c\ud14c", "\uae08\uc561\uc744", "**\uac70\uc9d3\ub9d0\ud558\uae30\ub3c4**"], ["Z\uc138\ub300\ub294 \ud55c \ub2ec\uc5d0", "\ud3c9\uade0 **5\ubc88** \uc8fc\ubb38", "\ubd80\ubaa8 \uc138\ub300\uc758 \uc57d 2\ubc30"], ["\uad50\uc218\uac00 \ub9d0\ud55c", "\ubc30\ub2ec\uc740", "\ubd80\ub2f4 \uc801\uc740 **\uc0ac\uce58**"], ["\uad50\uc218 \ub9d0\ub85c\ub294", "**\uc571 \uc774\uc775** \ubcf4\ud0dc\ub294", "\uae30\ubd84\uc774 \ubcc4\ub85c\ub798"], ["\ud63c\uc790 \ucc14\ub9ac\ub294 \uc904", "\uc544\ub294 **\uce5c\uad6c**\ud55c\ud14c", "\uc2ac\uca4d \ubcf4\ub0b4\uae30"]]}, "813e399755dd": {"caption": "\ub113\uc801\ub2e4\ub9ac\uc0b4 \ubc84\uac70\uac00 43\ub144 \ub9cc\uc5d0 \ub3cc\uc544\uc654\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc77c\ubcf8 KFC\uac00 10\uc6d4 14\uc77c\uc5d0 \uc624\ub9ac\uc9c0\ub110 \uce58\ud0a8 \ubc84\uac70 \uc2dc\ub9ac\uc988\ub97c \uc0c8\ub85c \ub0b4\ub1a8\ub294\ub370, 1983\ub144 \uc774\ud6c4 \ucc98\uc74c \ub098\uc628 \ub113\uc801\ub2e4\ub9ac\uc0b4 \uc0cc\ub4dc\uc704\uce58\ub798. 1983\ub144\uc774 \ub9c8\uc9c0\ub9c9\uc774\uc5c8\uace0, \uadf8 \ub4a4\ub85c\ub294 \uac00\uc2b4\uc0b4\ub85c \ubc14\uafe8\ub2e4\uace0 \ud574.\n\n\ub77c\uc778\uc5c5\uc740 \ucd1d 6\uc885\uc774\uc57c. \uae30\ubcf8 \uc624\ub9ac\uc9c0\ub110 \uce58\ud0a8 \ubc84\uac70\uc5d0 \uce58\uc988, \ub370\ub9ac\uc57c\ud0a4, \ub9e4\uc6b4 \ub808\ub4dc\ud56b \ubc84\uc804\uc774 \uc788\uace0, \uc880 \ub354 \ud638\ud654\ub85c\uc6b4 \ucabd\uc73c\ub85c\ub294 \ub450\ud23c\ud55c \ubca0\uc774\ucee8\uc774 \ub4e4\uc5b4\uac04 \ud504\ub9ac\ubbf8\uc5b4 \ubc84\uac70, \ubca0\uc774\ucee8\uacfc \uce58\uc988\uac00 \ub458 \ub2e4 \ub4e4\uc5b4\uac04 \ud504\ub9ac\ubbf8\uc5b4 \uce58\uc988 \ubc84\uac70\uac00 \uc788\uc5b4.\n\nKFC \uc7ac\ud32c\uc740 \uc774 \ubcf5\uadc0\ub97c \uaf64 \ud070 \uc77c\ub85c \uc5ec\uacbc\ub294\uc9c0, \ub3c4\ucfc4 \uc5d0\ube44\uc2a4 \uc9c0\uc810\uc744 \uc784\uc2dc\ub85c KFB(Kentucky Fried Burgers)\ub85c \ubc14\uafd4 \ub2ec\uc558\ub300.\n\n\uc18c\ub77c\ub274\uc2a424 \uae30\uc790\uac00 \ub450 \uac00\uc9c0\ub97c \uc9c1\uc811 \uba39\uc5b4\ubd24\uc5b4. \uc624\ub9ac\uc9c0\ub110 \uce58\ud0a8 \ubc84\uac70\ub294 490\uc5d4, \ud504\ub9ac\ubbf8\uc5b4 \ubc84\uac70\ub294 750\uc5d4\uc774\uc57c. \uae30\uc790\ub294 \uc624\ub9ac\uc9c0\ub110\uc774 \uc721\uc999 \ub9ce\uace0 \ud2b9\uc720\uc758 \ud0c4\ub825\uc774 \uc0b4\uc544 \uc788\uc5b4\uc11c \ub9cc\uc871\ud588\ub300. \ud504\ub9ac\ubbf8\uc5b4\ub294 \ub9db\uc740 \uc88b\uc9c0\ub9cc \ub9c8\ub298\ud6c4\ucd94 \ub9c8\uc694\uc640 \ubca0\uc774\ucee8\uc774 \ub108\ubb34 \uac15\ud574\uc11c \ub2ed\uace0\uae30\uc758 \uc5ec\uc6b4\uc744 \uc9c0\uc6b4\ub2e4\uace0 \ub290\uaf08\ub2e4\ub294 \ubc18\uc751\uc774\uc57c. \uadf8\ub798\uc11c \uc774 \uae30\uc790\ub294 \ub2f4\ubc31\ud55c \uc624\ub9ac\uc9c0\ub110\uc744 \ucd94\ucc9c\ud588\uace0, \uc544\ub080 260\uc5d4\uc73c\ub85c \uc624\ub9ac\uc9c0\ub110\uc744 \ud558\ub098 \ub354 \uba39\uaca0\ub2e4\ub294 \uc785\uc7a5\uc774\uc57c.\n\n\uce58\ud0a8 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \ub5a0\uc624\ub974\uba74 \uc774 \uc18c\uc2dd \ubcf4\ub0b4\uc918.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\uc77c\ubcf8KFC", "#\uce58\ud0a8\ubc84\uac70", "#KFC", "#\uc77c\ubcf8\uc74c\uc2dd", "#\ud574\uc678\ubc18\uc751"], "slides": [["\ub113\uc801\ub2e4\ub9ac\uc0b4 \ubc84\uac70\uac00", "**43\ub144** \ub9cc\uc5d0???"], ["\ub9c8\uc9c0\ub9c9 \ud310\ub9e4\uac00", "**1983\ub144**\uc774\ub798"], ["\uadf8 \ub4a4\ub85c\ub294", "**\uac00\uc2b4\uc0b4\ub85c** \uac08\uc544\ud0d0"], ["10\uc6d4 14\uc77c", "\uc2e0\uc81c\ud488 **6\uc885** \ucd9c\uc2dc"], ["\uc18c\ub77c\ub274\uc2a4 \uae30\uc790\ub294", "**\uae30\ubcf8 \ubc84\uac70** \ud53d"], ["\uce58\ud0a8 \ub355\ud6c4 \uce5c\uad6c\ud55c\ud14c", "**43\ub144** \ub9cc\uc774\ub77c\uace0", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30"]]}, "e3adce30ba24": {"caption": "\ubc84\uc12f \ud558\ub098\uc758 \uc871\ubcf4\uac00 6500\ub9cc \ub144 \uc804\uae4c\uc9c0 \uac70\uc2ac\ub7ec \uc62c\ub77c\uac04\ub300. \uc911\uad6d \uc708\ub09c\uc5d0\uc11c \ubc1c\uacac\ub41c \uc0c8\ub85c\uc6b4 \ubc84\uc12f Dianjunus rex(D. rex) \uc774\uc57c\uae30\uc57c.\n\n\uc774\ub984 \uadf8\ub300\ub85c \ub369\uce58\uac00 \uc655\uae09\uc774\uc57c. \uace4\ubd09\ucc98\ub7fc \uc0dd\uae34 \uc790\uc2e4\uccb4(\ud3ec\uc790\ub97c \ud37c\ub728\ub9ac\ub294 \ubd80\ubd84)\uac00 \ucd5c\ub300 50cm\uae4c\uc9c0 \uc790\ub77c\ub294\ub370, \uad50\ud1b5 \ucf58 \ub192\uc774\uc640 \ube44\uc2b7\ud558\ub300. \uc5f0\uad6c\uc9c4\uc774 \ucc44\uc9d1\ud55c \ud45c\ubcf8 \uc911\uc5d0\ub294 \ubb34\uac8c\uac00 2.2kg\uc778 \uac83\ub3c4 \uc788\uc5c8\uc5b4. \uac19\uc740 \uc790\ub0ad\uade0\ub958 \uc911\uc5d0\uc11c\ub294 \uae30\ub85d\ub41c \uac83 \uac00\uc6b4\ub370 \uac00\uc7a5 \ud070 \ud06c\uae30\ub77c\uace0 \ud574.\n\n\ub354 \ud765\ubbf8\ub85c\uc6b4 \uac74 \uc720\uc804\uc790\uc57c. \uc5f0\uad6c\uc9c4\uc774 \uc218\ubc31 \uc885\uc758 \ub2e4\ub978 \uade0\ub958 DNA\uc640 \ube44\uad50\ud574 \ubcf4\ub2c8, D. rex\uac00 \uc18d\ud55c Dianjunaceae \uacfc\ub294 \uac00\uae4c\uc6b4 \uce5c\ucc99\uc5d0\uac8c\uc11c \uc57d 6500\ub9cc \ub144 \uc804\uc5d0 \uac08\ub77c\uc838 \ub098\uc628 \uac83\uc73c\ub85c \ub098\uc654\uc5b4. \uce59\uc220\ub8e8\ube0c \uc18c\ud589\uc131 \ucda9\ub3cc \ubd88\uacfc 100\ub9cc \ub144 \ub4a4\ub77c\ub294 \uacc4\uc0b0\uc774\uc57c. \uadf8 \ucda9\ub3cc\uc758 \uc5ec\ud30c\ub85c \uc9c0\uad6c \uc2dd\ubb3c\uacfc \ub3d9\ubb3c \uc885\uc758 4\ubd84\uc758 3\uc774 \uc0ac\ub77c\uc84c\ub2e4\uace0 \ud574.\n\n\uc5f0\uad6c\ub97c \uc774\ub048 \uc778\ub450\ub2d0 \uc138\ub098\ub098\uc57c\ucf00 \ubc15\uc0ac\ub294, \ub300\uba78\uc885 \ub4a4 \uc232\uc5d0 \uc8fd\uc740 \uc2dd\ubb3c \uc7ac\ub8cc\uac00 \uac11\uc790\uae30 \ub9ce\uc544\uc84c\uace0 \ub098\ubb34\ub97c \ubd84\ud574\ud558\ub294 \uade0\ub958\uc5d0\uac8c\ub294 \uc0c8\ub85c\uc6b4 \uae30\ud68c\uac00 \ub410\uc744 \uc218 \uc788\ub2e4\uace0 \uc124\uba85\ud588\uc5b4. \ub2e4\ub9cc \uc774\uac74 \uc5b4\ub514\uae4c\uc9c0\ub098 \uac00\ub2a5\uc131\uc73c\ub85c \uc81c\uc2dc\ub41c \ud574\uc11d\uc774\uc57c.\n\nD. rex\ub294 \uc708\ub09c \uc232\uc758 \ucc38\ub098\ubb34 \ubc11\ub3d9\uc5d0\uc11c \uc790\uc8fc \ubc1c\uacac\ub418\uace0, \uc9c0\uae08\uae4c\uc9c0 \uae30\ub85d\ub41c \ud45c\ubcf8\uc740 \uc369\uc5b4\uac00\ub294 \ubfcc\ub9ac\ub098 \uadf8\ub8e8\ud130\uae30\uc5d0\uc11c \uc790\ub77c\uace0 \uc788\uc5c8\ub300. \uc65c \uc774\ub807\uac8c\uae4c\uc9c0 \ucee4\uc84c\ub294\uc9c0\ub294 \uc544\uc9c1 \ubd84\uba85\ud558\uc9c0 \uc54a\uc544.\n\n\ucd9c\ucc98: ScienceAlert, Frontiers in Fungal Biology", "hashtags": ["#\ubc84\uc12f", "#\uade0\ub958", "#\uacf5\ub8e1\uba78\uc885", "#\uacfc\ud559\ub274\uc2a4", "#\uc708\ub09c"], "slides": [["\ubc84\uc12f \uc871\ubcf4\uac00", "**6500\ub9cc \ub144**?!"], ["\uc911\uad6d \uc708\ub09c\uc5d0\uc11c", "\uc0c8\ub85c \ub098\uc628 \ubc84\uc12f", "\uc774\ub984\uc740 **D. rex**"], ["\ud0a4\uac00 \ucd5c\ub300 **50cm**", "\uad50\ud1b5 \ucf58 \ub192\uc774", "\ubb34\uac8c 2.2kg\uc9dc\ub9ac\ub3c4"], ["\uc790\ub0ad\uade0 \uc911\uc5d0\uc120", "\uae30\ub85d\uc0c1 **\uc81c\uc77c \ud07c**"], ["DNA \ube44\uad50\ud574 \ubcf4\ub2c8", "\uc57d **6500\ub9cc \ub144 \uc804**", "\uac00\ubb38\uc774 \uac08\ub77c\uc9d0"], ["\uc18c\ud589\uc131 \ucda9\ub3cc \ud6c4", "**100\ub9cc \ub144** \ub9cc\uc5d0", "\ub4f1\uc7a5\ud55c \uac00\ubb38"], ["**\uacf5\ub8e1** \uc88b\uc544\ud558\ub294 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \uc54c\ub824\uc918"]]}};
+  const TOTAL = 3;
+  const SERVER = {"182ed35e32c3": "approve", "813e399755dd": "reject", "e3adce30ba24": "reject"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 6;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>
