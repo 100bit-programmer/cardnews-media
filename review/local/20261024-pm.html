@@ -1,0 +1,1530 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.24 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.24 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-3f06e2d1f2f4" data-jump="3f06e2d1f2f4">1</a><a href="#post-e7ff18024527" data-jump="e7ff18024527">2</a><a href="#post-30077ea64932" data-jump="30077ea64932">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-3f06e2d1f2f4" data-id="3f06e2d1f2f4">
+    <div class="head">
+      <h2>1. 실험실에서 만든 미니 볼 라이트닝</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/3f06e2d1f2f4/v1-01.jpg" alt="1장: 공 모양 번개를 실험실에서???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/3f06e2d1f2f4/v1-02.jpg" alt="2장: 수백 년째 목격담만 수천 건" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/3f06e2d1f2f4/v1-03.jpg" alt="3장: 크기도 색도 행동도 제각각 설명이 다 달라" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/3f06e2d1f2f4/v1-04.jpg" alt="4장: 끝이 100nm인 텅스텐 바늘에 레이저 발사" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/3f06e2d1f2f4/v1-05.jpg" alt="5장: 작은 빛 공이 팽창하는 동안 모양을 유지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/3f06e2d1f2f4/v1-06.jpg" alt="6장: 천둥 치는 날 과학 덕후 친구한테 보내보기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/3f06e2d1f2f4/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">공 모양 번개를 실험실에서 만들었다는 소식이야. 구형 번개는 수백 년 동안 목격담이 이어졌어. 수천 건의 기록과 증언이 있는데도 직접 연구하기는 거의 불가능한 현상이래. 게다가 보고마다 크기, 색, 움직임 설명이 제각각이라 대기과학에서 손꼽히는 수수께끼로 불려.
+
+그래서 중국과학원의 저우추량 연구팀은 들판에서 기다리는 대신 실험실에서 비슷한 걸 재현해 보기로 했어. 쓴 건 끝이 100나노미터인 텅스텐 바늘이야. 사람 머리카락 굵기가 8만~10만 나노미터니까 엄청 뾰족한 거지. 여기에 초단 레이저 펄스를 쏘면 전자기파가 바늘을 따라 이동하고, 끝에서 아주 센 전기장이 모여서 주변 아르곤 가스의 전자를 떼어내. 그렇게 플라스마 공이 생겼어.
+
+이 빛 공은 처음 지름이 약 80마이크로미터였는데 100나노초 동안 수백 마이크로미터까지 커졌어. 보통 플라스마처럼 흩어지지 않고 구조를 유지했고, 팽창 양상이 전자기 솔리톤의 이론 예측과 맞았대.
+
+연구팀 계산으로는 마이크로파로 구동하면 이론상 수 미터 크기로 커지고 몇 초 동안 이어질 수도 있대. 다만 구형 번개를 확정적으로 설명하는 단계는 한참 멀었어. 에너지 저장 기술 같은 응용 가능성도 언급됐고, 연구는 Nature Photonics에 실렸어.
+
+출처: ScienceAlert, Nature Photonics</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#볼라이트닝 #구형번개 #과학뉴스 #플라스마 #해외토픽</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 슬라이드1·캡션: &#39;공 모양 번개를 실험실에서 만들었다&#39;는 주장. 원문은 번개와 비슷한 플라스마 솔리톤을 재현했다고 하므로 과장이다. &#39;재현&#39;이나 &#39;유사체&#39;로 고쳐야 한다.</li><li>근거 등록 안 된 주장: 출처 표기 &#39;ScienceAlert&#39;는 원문에서 확인되지 않은 매체 귀속 주장이다.</li><li>근거 등록 안 된 주장: &#39;수백 년 동안 목격담이 이어졌다&#39;는 표현은 원문의 &#39;for centuries&#39;에 근거하지만 claims 목록에 별도 항목이 없어 확인 필요하다.</li>
+          <li>실험실 결과는 구형 번개의 확정적 설명이 아님 (원문도 한계를 명시)</li><li>마이크로파 기반 대형화는 이론 계산일 뿐 실험으로 확인된 것이 아님</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-3f06e2d1f2f4-0">1장</label>
+          <textarea id="s-3f06e2d1f2f4-0" rows="2" data-slide="0">공 모양 번개를
+**실험실에서???**</textarea>
+          
+          <label class="f" for="s-3f06e2d1f2f4-1">2장</label>
+          <textarea id="s-3f06e2d1f2f4-1" rows="2" data-slide="1">수백 년째
+목격담만 **수천 건**</textarea>
+          
+          <label class="f" for="s-3f06e2d1f2f4-2">3장</label>
+          <textarea id="s-3f06e2d1f2f4-2" rows="3" data-slide="2">크기도 색도
+행동도 **제각각**
+설명이 다 달라</textarea>
+          
+          <label class="f" for="s-3f06e2d1f2f4-3">4장</label>
+          <textarea id="s-3f06e2d1f2f4-3" rows="3" data-slide="3">끝이 100nm인
+**텅스텐 바늘에**
+레이저 발사</textarea>
+          
+          <label class="f" for="s-3f06e2d1f2f4-4">5장</label>
+          <textarea id="s-3f06e2d1f2f4-4" rows="3" data-slide="4">작은 빛 공이
+팽창하는 동안
+**모양을 유지**</textarea>
+          
+          <label class="f" for="s-3f06e2d1f2f4-5">6장</label>
+          <textarea id="s-3f06e2d1f2f4-5" rows="3" data-slide="5">천둥 치는 날
+**과학 덕후 친구한테**
+보내보기</textarea>
+          
+          <label class="f" for="c-3f06e2d1f2f4">본문 (캡션)</label>
+          <textarea id="c-3f06e2d1f2f4" class="caption">공 모양 번개를 실험실에서 만들었다는 소식이야. 구형 번개는 수백 년 동안 목격담이 이어졌어. 수천 건의 기록과 증언이 있는데도 직접 연구하기는 거의 불가능한 현상이래. 게다가 보고마다 크기, 색, 움직임 설명이 제각각이라 대기과학에서 손꼽히는 수수께끼로 불려.
+
+그래서 중국과학원의 저우추량 연구팀은 들판에서 기다리는 대신 실험실에서 비슷한 걸 재현해 보기로 했어. 쓴 건 끝이 100나노미터인 텅스텐 바늘이야. 사람 머리카락 굵기가 8만~10만 나노미터니까 엄청 뾰족한 거지. 여기에 초단 레이저 펄스를 쏘면 전자기파가 바늘을 따라 이동하고, 끝에서 아주 센 전기장이 모여서 주변 아르곤 가스의 전자를 떼어내. 그렇게 플라스마 공이 생겼어.
+
+이 빛 공은 처음 지름이 약 80마이크로미터였는데 100나노초 동안 수백 마이크로미터까지 커졌어. 보통 플라스마처럼 흩어지지 않고 구조를 유지했고, 팽창 양상이 전자기 솔리톤의 이론 예측과 맞았대.
+
+연구팀 계산으로는 마이크로파로 구동하면 이론상 수 미터 크기로 커지고 몇 초 동안 이어질 수도 있대. 다만 구형 번개를 확정적으로 설명하는 단계는 한참 멀었어. 에너지 저장 기술 같은 응용 가능성도 언급됐고, 연구는 Nature Photonics에 실렸어.
+
+출처: ScienceAlert, Nature Photonics</textarea>
+          <label class="f" for="t-3f06e2d1f2f4">해시태그</label>
+          <input id="t-3f06e2d1f2f4" type="text" class="tagsin" value="#볼라이트닝 #구형번개 #과학뉴스 #플라스마 #해외토픽" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>중국과학원 연구팀이 구형 번개와 비슷한 것을 실험실에서 재현해 보기로 했다</b>
+            <q>“But if you can&#39;t catch ball lightning in a field, physicist Chuliang Zhou and colleagues at the Chinese Academy of Sciences have reasoned, maybe we can learn more by reproducing something like it in a lab.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구형 번개에 대한 기록과 목격담이 수천 건 있다</b>
+            <q>“Thousands of records and eyewitness accounts have told of balls of lightning hovering above the ground before disappearing in a pop like soap bubbles.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구형 번개는 연구하기 거의 불가능하고 보고마다 크기·색·행동 설명이 제각각이다</b>
+            <q>“This fleeting phenomenon is all but impossible to study – and reports vary wildly in descriptions of its size, its hue, and even its behavior, making it one of the most peculiar mysteries in atmospheric science.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>텅스텐 바늘 끝은 100나노미터이고 사람 머리카락은 8만~10만 나노미터다</b>
+            <q>“OK, it was a little more complicated than that – but the tungsten needle, with a tip just 100 nanometers across, was instrumental. A human hair, for context, measures between 80,000 and 100,000 nanometers across.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀이 바늘에 초단 레이저 펄스를 쏴 바늘을 따라 이동하는 전자기파를 만들었다</b>
+            <q>“The researchers fired an ultrashort laser pulse at the needle, generating a powerful electromagnetic wave that traveled along its length.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>바늘 끝에 집중된 강한 전기장이 아르곤 가스에서 전자를 떼어내 플라스마 공이 생겼다</b>
+            <q>“When the wave reached the tip, its energy became concentrated into an extraordinarily intense electric field that stripped electrons from atoms in a waiting cloud of argon gas, creating a superheated bubble of ionized argon – plasma.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빛 공은 약 80마이크로미터에서 100나노초 동안 수백 마이크로미터로 커졌다</b>
+            <q>“The fragile, luminous sphere started as a pinprick around 80 micrometers across, then expanded to a larger pinprick several hundred micrometers over the next 100 nanoseconds.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빛 공은 흩어지지 않고 팽창하는 동안 구조를 유지했다</b>
+            <q>“And rather than simply dissipating like an ordinary cloud of hot plasma, the sphere maintained its structure as it expanded.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>팽창 양상이 전자기 솔리톤의 이론 예측과 일치했다</b>
+            <q>“This expansion, the researchers found, matched the theoretical predictions for an electromagnetic soliton.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>계산상 마이크로파로 구동하면 솔리톤이 수 미터 크기로 커지고 몇 초 지속될 수 있다</b>
+            <q>“Their calculations suggested that electromagnetic solitons driven by microwaves, rather than terahertz radiation, could theoretically grow to meters across and persist for seconds.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구형 번개에 대한 확정적 설명과는 거리가 멀다</b>
+            <q>“It&#39;s far from a definitive explanation for ball lightning – but solving meteorological mysteries isn&#39;t the only potential application for these tiny fireballs.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전자기 에너지를 안정적으로 가두는 능력은 에너지 저장 기술 등에 새 길을 열 수 있다</b>
+            <q>“The ability to trap electromagnetic energy in a stable, localized structure could also open new avenues for energy-storage technologies and studying how light interacts with matter under extreme conditions.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 Nature Photonics에 실렸다</b>
+            <q>“The research has been published in Nature Photonics.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/miniature-ball-lightning-created-in-a-lab-could-help-solve-a-centuries-old-mystery" target="_blank" rel="noopener">Miniature Ball Lightning Created in a Lab Could Help Solve a Centuries-Old Mystery</a> (기사)</li><li><a href="https://hgss.copernicus.org/articles/12/43/2021/" target="_blank" rel="noopener">A brief history of ball lightning observations by scientists and trained professionals</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/full-moon-night-sky-luna-moon-1869760/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "glowing orb of light in a bright science laboratory"</li><li>2장: <a href="https://pixabay.com/photos/tree-poppy-field-clouds-cloudy-sky-838666/" target="_blank" rel="noopener">Bessi / Pixabay</a> — "stormy sky"</li><li>3장: <a href="https://pixabay.com/photos/thunderstorm-lightning-night-greece-7558323/" target="_blank" rel="noopener">fietzfotos / Pixabay</a> — "thunderstorm"</li><li>4장: <a href="https://pixabay.com/photos/maidens-tower-night-landscape-7989254/" target="_blank" rel="noopener">umutizgi / Pixabay</a> — "laser beam"</li><li>5장: <a href="https://pixabay.com/photos/sun-solar-flare-space-outer-space-11582/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "glowing plasma"</li><li>6장: <a href="https://pixabay.com/photos/laboratory-test-tubes-563423/" target="_blank" rel="noopener">DarkoStojanovic / Pixabay</a> — "science laboratory"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-e7ff18024527" data-id="e7ff18024527">
+    <div class="head">
+      <h2>2. 피카츄 쇼트케이크 샌드위치 (포켓몬 30주년)</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-01.jpg" alt="1장: 포켓몬 30살 피카츄 케이크?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-02.jpg" alt="2장: 포켓몬 30주년 기념 케이크래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-03.jpg" alt="3장: 피카츄 모양 케이크 두 장 사이에 생크림이랑 딸기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-04.jpg" alt="4장: 손에 안 묻게 종이 홀더에 담김" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-05.jpg" alt="5장: 11월 5일부터 12월 31일까지 1,200엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-06.jpg" alt="6장: 생크림 때문에 오래 못 둬서 바로 먹으래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-07.jpg" alt="7장: 포켓몬 좋아하는 친구 태그해서 알려주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/e7ff18024527/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">포켓몬 30주년 기념으로 피카츄 케이크 샌드위치가 나온대. 도쿄 이케부쿠로의 선샤인시티 안에 있는 디저트 스탠드 &#39;피카츄 스위츠 by 포켓몬카페&#39;에서 내놓는 신메뉴야. 도쿄역 근처의 앉아서 먹는 포켓몬카페와는 다른 곳이라고 해.
+
+피카츄 모양으로 만든 촉촉하고 폭신한 쇼트케이크 두 장 사이에 생크림이랑 슬라이스 딸기를 끼운 구성이야. 달고 새콤하고 우유 맛 나는 조합이래. 작은 축하용 종이 홀더에 담겨 나와서 손에 크림 묻히지 않고 먹을 수 있다고 해.
+
+같은 날 이브이 초콜릿 프라페도 메뉴에 올라와. 케이크 샌드위치와 이브이 초콜릿 프라페(또는 캐치 엠 라테)를 같이 주문하면 피카츄가 카페 유니폼을 입은 30주년 스티커 3종 중 하나도 받을 수 있대.
+
+판매 기간은 11월 5일부터 12월 31일까지고, 피카츄 케이크와 이브이 프라페 모두 1,200엔(약 7.60달러)이야.
+
+주의할 점도 있어. 이 가게는 앉아서 먹을 자리가 없어서 보통 포장해 가거나 선샤인시티 안 벤치, 옆 야외 광장에서 먹는대. 생크림 때문에 냉장 쇼케이스에서 꺼내면 오래 두기 어려워서, 집에 가서 먹는 것보다 받자마자 바로 먹으라고 안내한대. 보냉팩도 따로 안 준다고 해.
+
+위치: 도쿄도 도시마구 히가시이케부쿠로 3-1-2, 선샤인시티 알파 2층 / 영업시간 오전 10시~오후 8시
+
+출처: SoraNews24, Pikachu Sweets</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#포켓몬 #피카츄 #도쿄여행 #일본디저트 #포켓몬30주년</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 1,200엔을 약 7.60달러로 환산한 내용은 claims 목록에 없다</li><li>근거 등록 안 된 주장: 출처가 SoraNews24와 Pikachu Sweets라는 내용은 claims 목록에 없다</li>
+          <li>포켓몬·피카츄는 상표·저작권이 있는 캐릭터라 공식 이미지 사용 불가, AI 배경에 캐릭터를 직접 그리지 않도록 주의</li><li>가격 환율(US$7.60)과 판매 기간은 기사 기준이며 변동될 수 있음</li><li>수익화 시 캐릭터 IP 사용 제한 가능성</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-e7ff18024527-0">1장</label>
+          <textarea id="s-e7ff18024527-0" rows="2" data-slide="0">포켓몬 30살
+**피카츄** 케이크?!</textarea>
+          
+          <label class="f" for="s-e7ff18024527-1">2장</label>
+          <textarea id="s-e7ff18024527-1" rows="2" data-slide="1">포켓몬 **30주년**
+기념 케이크래</textarea>
+          
+          <label class="f" for="s-e7ff18024527-2">3장</label>
+          <textarea id="s-e7ff18024527-2" rows="3" data-slide="2">피카츄 모양
+케이크 두 장 사이에
+생크림이랑 **딸기**</textarea>
+          
+          <label class="f" for="s-e7ff18024527-3">4장</label>
+          <textarea id="s-e7ff18024527-3" rows="2" data-slide="3">손에 안 묻게
+종이 **홀더**에 담김</textarea>
+          
+          <label class="f" for="s-e7ff18024527-4">5장</label>
+          <textarea id="s-e7ff18024527-4" rows="3" data-slide="4">11월 5일부터
+12월 31일까지
+**1,200엔**</textarea>
+          
+          <label class="f" for="s-e7ff18024527-5">6장</label>
+          <textarea id="s-e7ff18024527-5" rows="3" data-slide="5">생크림 때문에
+오래 못 둬서
+**바로** 먹으래</textarea>
+          
+          <label class="f" for="s-e7ff18024527-6">7장</label>
+          <textarea id="s-e7ff18024527-6" rows="3" data-slide="6">포켓몬 좋아하는
+**친구** 태그해서
+알려주기</textarea>
+          
+          <label class="f" for="c-e7ff18024527">본문 (캡션)</label>
+          <textarea id="c-e7ff18024527" class="caption">포켓몬 30주년 기념으로 피카츄 케이크 샌드위치가 나온대. 도쿄 이케부쿠로의 선샤인시티 안에 있는 디저트 스탠드 &#39;피카츄 스위츠 by 포켓몬카페&#39;에서 내놓는 신메뉴야. 도쿄역 근처의 앉아서 먹는 포켓몬카페와는 다른 곳이라고 해.
+
+피카츄 모양으로 만든 촉촉하고 폭신한 쇼트케이크 두 장 사이에 생크림이랑 슬라이스 딸기를 끼운 구성이야. 달고 새콤하고 우유 맛 나는 조합이래. 작은 축하용 종이 홀더에 담겨 나와서 손에 크림 묻히지 않고 먹을 수 있다고 해.
+
+같은 날 이브이 초콜릿 프라페도 메뉴에 올라와. 케이크 샌드위치와 이브이 초콜릿 프라페(또는 캐치 엠 라테)를 같이 주문하면 피카츄가 카페 유니폼을 입은 30주년 스티커 3종 중 하나도 받을 수 있대.
+
+판매 기간은 11월 5일부터 12월 31일까지고, 피카츄 케이크와 이브이 프라페 모두 1,200엔(약 7.60달러)이야.
+
+주의할 점도 있어. 이 가게는 앉아서 먹을 자리가 없어서 보통 포장해 가거나 선샤인시티 안 벤치, 옆 야외 광장에서 먹는대. 생크림 때문에 냉장 쇼케이스에서 꺼내면 오래 두기 어려워서, 집에 가서 먹는 것보다 받자마자 바로 먹으라고 안내한대. 보냉팩도 따로 안 준다고 해.
+
+위치: 도쿄도 도시마구 히가시이케부쿠로 3-1-2, 선샤인시티 알파 2층 / 영업시간 오전 10시~오후 8시
+
+출처: SoraNews24, Pikachu Sweets</textarea>
+          <label class="f" for="t-e7ff18024527">해시태그</label>
+          <input id="t-e7ff18024527" type="text" class="tagsin" value="#포켓몬 #피카츄 #도쿄여행 #일본디저트 #포켓몬30주년" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포켓몬 30주년을 기념해 피카츄 스위츠에서 새 디저트를 내놓는다</b>
+            <q>“Pikachu Sweets bakes up new treats to celebrate Pokémon’s 30th birthday.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>피카츄 스위츠는 도쿄 이케부쿠로 선샤인시티 안의 디저트 스탠드이고, 도쿄역 근처 앉아서 먹는 포켓몬카페와 다른 곳이다</b>
+            <q>“Not to be confused with the full-scale, sit-down Pokémon Cafe near Tokyo Station, Pikachu Sweets is a dessert stand located inside the Sunshine City shopping/entertainment complex in Tokyo’s Ikebukuro neighborhood.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>피카츄 모양 쇼트케이크 두 장 사이에 생크림과 딸기 슬라이스가 들어가고 단맛·새콤함·우유 맛이 난다</b>
+            <q>“Seen in these photos is the Poké-patissiers’ newest creation, the Pikachu Shortcake Sandwich, made of two Pikachu-shaped slices of moist, fluffy shortcake with whipped cream and sliced strawberries between them, giving you a mix of sweet, tart, and milky flavors.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>축하용 종이 홀더에 담겨 나와 손에 묻히지 않고 먹을 수 있다</b>
+            <q>“Served in a little celebratory paper holder, this is a shortcake you can eat without your hands without getting your fingers messy, and the raised corners of the holder should keep the cake securely in place as you raise it up to snap a photo before your first bite, maybe with the Pikachu Sweets storefront in the background.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>같은 날 이브이 초콜릿 프라페가 메뉴에 추가된다</b>
+            <q>“Coming to the menu on the same day as the Pikachu Shortcake Sandwich is a new dessert drink, the Eevee Chocolate Frappe, with an adorable Eevee Pokémon 30th anniversary cookie and a swirl of whipped cream sitting atop the slushy chocolate drink, creating a color pattern evocative of Eevee’s coat.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>케이크 샌드위치와 이브이 프라페 또는 캐치 엠 라테를 같이 주문하면 30주년 스티커 3종 중 하나를 받는다</b>
+            <q>“If you order a Pikachu Shortcake Sandwich plus an Eevee Chocolate Frappe or a Catch ‘Em Latte (“Get Latte” in Japanese) also gets you one of three 30th anniversary stickers with an illustration of a Pikachu wearing a cafe uniform.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>11월 5일부터 12월 31일까지 판매하고 케이크와 프라페는 각각 1,200엔이다</b>
+            <q>“The lineup goes on sale November 5 and will be available until December 31, with both the Pikachu cake and Eevee frappe priced at 1,200 yen (US$7.60).”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>앉아서 먹는 공간이 없어 포장하거나 선샤인시티 벤치·야외 광장에서 먹는다</b>
+            <q>“Pikachu Sweets has no actual eat-in space, so customers generally either take their treats home or enjoy them on one of the benches within Sunshine City or in the adjacent outdoor plaza.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>생크림 때문에 쇼케이스에서 꺼내면 오래 못 두므로 바로 먹기를 권하고, 보냉팩은 제공하지 않는다</b>
+            <q>“The shop does caution, though, that because of the whipped cream, the Pikachu Shortcake Sandwich won’t keep for very long once it’s taken out of its refrigerated showcase, so they advise against waiting until you get home to eat it, especially since the store doesn’t provide cool packs to keep the cake chilled, and so this is a case where the healthiest thing to do is not resist digging into your dessert promptly after you have it in your hands.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주소는 도쿄도 도시마구 히가시이케부쿠로 3-1-2 선샤인시티 알파 2층이다</b>
+            <q>“Address: Tokyo-to, Toshima-ku, Higashi Ikebukuro 3-1-2, Sunshine City Alpa area 2nd floor”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영업시간은 오전 10시부터 오후 8시까지다</b>
+            <q>“Open 10 a.m.-8 p.m.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/24/pikachu-shortcake-sandwich-set-to-be-tokyos-newest-photogenic-treat-for-pokemon-trainers/" target="_blank" rel="noopener">Pikachu Shortcake Sandwich set to be Tokyo’s newest photogenic treat for Pokémon Trainers</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/strawberries-bowl-summer-fruits-783351/" target="_blank" rel="noopener">JillWellington / Pixabay</a> — "strawberry shortcake sandwich on sunlit pastel table"</li><li>2장: <a href="https://pixabay.com/photos/birthday-cake-candles-birthday-cake-1835443/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "birthday cake"</li><li>3장: <a href="https://pixabay.com/photos/eclair-strawberrycake-strawberries-3366430/" target="_blank" rel="noopener">RitaE / Pixabay</a> — "whipped cream"</li><li>4장: <a href="https://pixabay.com/photos/food-menu-a-restaurant-1685942/" target="_blank" rel="noopener">spasibokras / Pixabay</a> — "takeaway dessert"</li><li>5장: <a href="https://pixabay.com/photos/calendar-meeting-planning-10045176/" target="_blank" rel="noopener">Ralf1403 / Pixabay</a> — "calendar"</li><li>6장: <a href="https://pixabay.com/photos/doughnuts-desserts-pastries-treats-1868573/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "bakery display"</li><li>7장: <a href="https://pixabay.com/photos/ice-cream-store-shop-dessert-girls-2605060/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "friends dessert"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-30077ea64932" data-id="30077ea64932">
+    <div class="head">
+      <h2>3. 퍼서비어런스 화성 주행거리 신기록</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/30077ea64932/v1-01.jpg" alt="1장: 화성 탐사차가 기록 깼다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/30077ea64932/v1-02.jpg" alt="2장: 기존 기록은 오퍼튜니티의 45.16km" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/30077ea64932/v1-03.jpg" alt="3장: 10월 11일에 45.22km 돌파" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/30077ea64932/v1-04.jpg" alt="4장: 근데 이거 90% 넘게 알아서 운전" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/30077ea64932/v1-05.jpg" alt="5장: 걸린 시간 비교 퍼서비어런스 5년 반 오퍼튜니티 거의 15년" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/30077ea64932/v1-06.jpg" alt="6장: 자율주행 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261024-pm-25ddbda206dc/30077ea64932/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">화성 탐사차가 또 기록을 깼어. NASA의 퍼서비어런스가 10월 11일 주행거리 45.22km를 찍으면서, 다른 천체 표면에서 가장 멀리 달린 탐사차가 됐대. 종전 기록은 2004년부터 2018년까지 화성을 누빈 오퍼튜니티의 45.16km였어.
+
+더 놀라운 건 운전 방식이야. 퍼서비어런스는 전체 거리의 90% 넘게 AutoNav라는 자율 항법 시스템으로 달렸어. 달리면서 지형을 촬영하고, 위험 구간 3D 지도를 만들고, 지구의 운영팀이 정해준 경유 지점 사이 경로를 스스로 짠대. 팀은 이걸 &#39;달리면서 생각하기&#39;라고 부른다고 해. 오퍼튜니티와 쌍둥이 탐사차 스피릿의 첫 AutoNav는 전체 거리의 약 5% 정도였고.
+
+속도도 만만치 않아. 화성의 하루(1솔)에 최대 412m까지 갈 수 있어. 같은 거리를 가는 데 퍼서비어런스는 5년 반, 오퍼튜니티는 거의 15년이 걸렸고.
+
+달에서 세워진 기록도 이미 넘어섰대. 1972년 아폴로 17호 우주비행사들이 달린 35.7km, 1973년 소련 루노호트 2호의 39km를 차례로 지나쳤어.
+
+지금은 제제로 크레이터 서쪽 가장자리의 &#39;락 드 샤름&#39; 지역을 지나 &#39;이두비&#39;로 가는 중이야. 태양계에서 탐사된 가장 오래된 지형 중 일부일 수 있는 곳이라고 해. 임무의 첫 연장도 승인돼서 2028년 말쯤까지 크레이터 가장자리를 탐사할 예정이래.
+
+출처: NASA JPL, ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#화성 #NASA #퍼서비어런스 #우주탐사 #자율주행</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 퍼서비어런스가 다른 천체 표면에서 가장 멀리 달린 탐사차라는 주장</li><li>근거 등록 안 된 주장: 오퍼튜니티의 임무 기간이 2004년부터 2018년까지였다는 주장</li><li>근거 등록 안 된 주장: 퍼서비어런스가 NASA의 탐사차라는 주장</li>
+          <li>원문 기사(ScienceAlert)는 한 번에 처리하는 측정 지점을 20만 개로, NASA JPL은 60만 개로 적어 서로 달라 수치를 사용하지 않음</li><li>실제 탐사차 사진은 NASA 자료 사용 조건을 별도 확인해야 함</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-30077ea64932-0">1장</label>
+          <textarea id="s-30077ea64932-0" rows="2" data-slide="0">화성 탐사차가
+**기록 깼다???**</textarea>
+          
+          <label class="f" for="s-30077ea64932-1">2장</label>
+          <textarea id="s-30077ea64932-1" rows="3" data-slide="1">기존 기록은
+오퍼튜니티의
+**45.16km**</textarea>
+          
+          <label class="f" for="s-30077ea64932-2">3장</label>
+          <textarea id="s-30077ea64932-2" rows="2" data-slide="2">10월 11일에
+**45.22km** 돌파</textarea>
+          
+          <label class="f" for="s-30077ea64932-3">4장</label>
+          <textarea id="s-30077ea64932-3" rows="3" data-slide="3">근데 이거
+**90%** 넘게
+알아서 운전</textarea>
+          
+          <label class="f" for="s-30077ea64932-4">5장</label>
+          <textarea id="s-30077ea64932-4" rows="3" data-slide="4">걸린 시간 비교
+퍼서비어런스 **5년 반**
+오퍼튜니티 거의 15년</textarea>
+          
+          <label class="f" for="s-30077ea64932-5">6장</label>
+          <textarea id="s-30077ea64932-5" rows="2" data-slide="5">자율주행 좋아하는
+**친구**한테 보내기</textarea>
+          
+          <label class="f" for="c-30077ea64932">본문 (캡션)</label>
+          <textarea id="c-30077ea64932" class="caption">화성 탐사차가 또 기록을 깼어. NASA의 퍼서비어런스가 10월 11일 주행거리 45.22km를 찍으면서, 다른 천체 표면에서 가장 멀리 달린 탐사차가 됐대. 종전 기록은 2004년부터 2018년까지 화성을 누빈 오퍼튜니티의 45.16km였어.
+
+더 놀라운 건 운전 방식이야. 퍼서비어런스는 전체 거리의 90% 넘게 AutoNav라는 자율 항법 시스템으로 달렸어. 달리면서 지형을 촬영하고, 위험 구간 3D 지도를 만들고, 지구의 운영팀이 정해준 경유 지점 사이 경로를 스스로 짠대. 팀은 이걸 &#39;달리면서 생각하기&#39;라고 부른다고 해. 오퍼튜니티와 쌍둥이 탐사차 스피릿의 첫 AutoNav는 전체 거리의 약 5% 정도였고.
+
+속도도 만만치 않아. 화성의 하루(1솔)에 최대 412m까지 갈 수 있어. 같은 거리를 가는 데 퍼서비어런스는 5년 반, 오퍼튜니티는 거의 15년이 걸렸고.
+
+달에서 세워진 기록도 이미 넘어섰대. 1972년 아폴로 17호 우주비행사들이 달린 35.7km, 1973년 소련 루노호트 2호의 39km를 차례로 지나쳤어.
+
+지금은 제제로 크레이터 서쪽 가장자리의 &#39;락 드 샤름&#39; 지역을 지나 &#39;이두비&#39;로 가는 중이야. 태양계에서 탐사된 가장 오래된 지형 중 일부일 수 있는 곳이라고 해. 임무의 첫 연장도 승인돼서 2028년 말쯤까지 크레이터 가장자리를 탐사할 예정이래.
+
+출처: NASA JPL, ScienceAlert</textarea>
+          <label class="f" for="t-30077ea64932">해시태그</label>
+          <input id="t-30077ea64932" type="text" class="tagsin" value="#화성 #NASA #퍼서비어런스 #우주탐사 #자율주행" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>퍼서비어런스가 10월 11일 주행거리 45.22km에 도달해 오퍼튜니티의 기록을 넘어섰다</b>
+            <q>“On Oct. 11, the rover’s odometer reached 28.10 miles (45.22 kilometers), eclipsing the record of 28.06 miles (45.16 kilometers) set by NASA’s Opportunity rover, which explored Mars from 2004 to 2018.”</q>
+            <small>slide3, caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>종전 기록은 오퍼튜니티의 45.16km였다</b>
+            <q>“On Oct. 11, the rover’s odometer reached 28.10 miles (45.22 kilometers), eclipsing the record of 28.06 miles (45.16 kilometers) set by NASA’s Opportunity rover, which explored Mars from 2004 to 2018.”</q>
+            <small>slide2, caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>퍼서비어런스는 전체 거리의 90% 넘게 AutoNav로 달렸고, 오퍼튜니티와 스피릿의 첫 AutoNav는 약 5%였다</b>
+            <q>“The six-wheeled scientist has driven more than 90% of its total distance using AutoNav to evaluate the terrain, compared with about 5% for the first Martian AutoNav system on Opportunity and its twin, Spirit.”</q>
+            <small>slide4, caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>AutoNav는 달리면서 지형을 촬영하고 위험 3D 지도를 만들어 지구에서 정한 경유 지점 사이 경로를 짜며, 팀은 이를 &#39;달리면서 생각하기&#39;라 부른다</b>
+            <q>“Using an autonomous navigation system known as AutoNav, the rover images the terrain while rolling, builds a 3D map of hazards, and plots its course between waypoints selected by rover planners on Earth — a capability the team calls “thinking while driving.””</q>
+            <small>caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하루(1솔)에 최대 412m까지 달릴 수 있다</b>
+            <q>“Perseverance can do all that at or near its top speed, covering as much as 1,351 feet (412 meters) in a single sol.”</q>
+            <small>caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>퍼서비어런스는 5년 반, 오퍼튜니티는 거의 15년 걸렸다</b>
+            <q>“Perseverance reached the mark on the 2,006th Martian day, or sol, of its mission, covering in five and a half years a distance that took Opportunity almost 15.”</q>
+            <small>slide5, caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아폴로 17호의 35.7km와 루노호트 2호의 39km 기록도 넘어섰다</b>
+            <q>“Perseverance rolled past both the 22.2 miles (35.7 kilometers) covered by Apollo 17 astronauts Gene Cernan and Harrison Schmitt in 1972 and the 24.2 miles (39 kilometers) driven by the Soviet Union’s Lunokhod 2 rover in 1973.”</q>
+            <small>caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제제로 크레이터 서쪽 가장자리 락 드 샤름을 지나 이두비로 향하는 중이며, 태양계에서 탐사된 가장 오래된 지형 중 일부일 수 있다</b>
+            <q>“The milestone came as Perseverance traveled toward an area called “Idubi” through the region off the western rim of Jezero Crater nicknamed “Lac de Charmes,” where the rover is investigating what may be some of the oldest terrain ever explored in the solar system.”</q>
+            <small>caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>임무 첫 연장이 승인되어 2028년 말쯤까지 크레이터 가장자리를 탐사한다</b>
+            <q>“NASA recently approved the mission’s first extension, which began in October and will carry Perseverance’s exploration of the crater rim through roughly the end of 2028.”</q>
+            <small>caption · <a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/nasas-perseverance-just-drove-farther-than-any-vehicle-on-another-world-mostly-steering-itself" target="_blank" rel="noopener">NASA&#39;s Perseverance Just Broke The Off-World Driving Record, While Mostly Steering Itself</a> (기사)</li><li><a href="https://www.jpl.nasa.gov/images/pia26758-nasas-perseverance-captures-phobos-and-earth/" target="_blank" rel="noopener">NASA’s Perseverance Captures Phobos and Earth | NASA Jet Propulsion Laboratory (JPL)</a> (1차 출처)</li><li><a href="https://www.jpl.nasa.gov/news/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noopener">NASA’s Perseverance Sets Off-World Record for Total Distance Driven | NASA Jet Propulsion Laboratory (JPL)</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Mars_Valles_Marineris.jpeg" target="_blank" rel="noopener">NASA / USGS (see PIA04304 catalog page) / Wikimedia Commons · Public domain</a> — "Mars"</li><li>2장: <a href="https://pixabay.com/photos/desert-sand-dunes-landscape-1654439/" target="_blank" rel="noopener">Falkenpost / Pixabay</a> — "desert track"</li><li>3장: <a href="https://pixabay.com/photos/speedometer-dashboard-car-speed-1249610/" target="_blank" rel="noopener">qimono / Pixabay</a> — "odometer"</li><li>4장: <a href="https://pixabay.com/photos/automobile-vehicle-future-2651594/" target="_blank" rel="noopener">Mysticsartdesign / Pixabay</a> — "autonomous car"</li><li>5장: <a href="https://pixabay.com/photos/time-chronometer-chronograph-7683809/" target="_blank" rel="noopener">Bru-nO / Pixabay</a> — "stopwatch"</li><li>6장: <a href="https://pixabay.com/photos/astronomy-astrophotgraphy-9937087/" target="_blank" rel="noopener">akbarnemati / Pixabay</a> — "night sky stars"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-ed45c149375d">
+    <div class="head">
+      <h2>S1. 직장 &#39;다 좋아요&#39; 얼굴 87% 설문</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ed45c149375d">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 직장생활</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 회사가 싫은 사람은 27%뿐인데 &#39;다 좋아요&#39; 얼굴을 꾸미는 사람은 87%라는 대비. 불행한 사람만의 얘기가 아니라 회사를 좋아하는 사람도 연기한다는 점이 자기 얘기를 하고 싶게 만든다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">회사 싫어하는 사람은 27%뿐인데, &#39;다 좋아요&#39; 얼굴을 꾸민다는 사람은 87%래
+전 세계 직장인 응답자 1,002명 설문 결과야
+싫지도 않은 회사에서 다들 왜 연기를 하는 걸까? 답은 아래 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">1/ 일주일 안에 실제 기분보다 더 열정적인 척한 적이 있다는 사람이 86%, 11%는 늘 그랬대.
+&#39;다 좋아요&#39; 얼굴을 아무한테도 안 한다는 사람은 13%뿐이었고. 근데 이게 불행한 사람만의 얘기가 아니었음</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">2/ 직장에 5점 만점을 준 사람들 중에서도 80%가 그 주에 열정 있는 척을 한 번은 했대.
+좋아하는 회사여도 연기는 한다는 거지. 그럼 그 연기는 누구 보라고 하는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">3/ 연기하는 상대는 누구? (설문 응답)
+- 모두에게 똑같이: 28%
+- 고객: 18%
+- 상사: 16%
+- 동료: 13%
+- 나 자신: 13%
+
+그럼 진짜 속마음은 누구한테 털어놓을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">87/500자</span></div>
+      <p class="tp-text">4/ 회사가 싫다는 사람 중에서 동료한테 말한 사람은 36%, 상사한테 말한 사람은 9%뿐이었대.
+겉으론 멀쩡해 보이는데 속은 다를 수 있다는 숫자가 이어짐</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">138/500자</span></div>
+      <p class="tp-text">5/ 회사를 좋아한다는 사람 중에서도 42%가 최근 6개월 안에 이직을 진지하게 고민했대. 전체로는 66%.
+다만 이력서 서비스 회사가 자기 DB로 돌린 설문이라 구직 관련 수치는 일반 직장인보다 높을 수 있대. 그래서 결론이 뭐냐면, 마지막 글에</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">207/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 이 설문 숫자로 보면 분위기 밝은 사무실이 누가 계속 다닐지 알려주는 지표는 못 된다는 거야.
+&#39;요즘 어때요?&#39; 하면 일단 &#39;좋아요&#39;부터 나오는 사람?
+이런 해외 직장 조사, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>회사 싫어하는 사람은 27%뿐인데, &#39;다 좋아요&#39; 얼굴을 꾸민다는 사람은 87%래</li><li>직장 스트레스의 정체는 &#39;싫음&#39;이 아니라 &#39;연기&#39;일 수 있다는 설문이 나옴</li><li>회사가 싫은 게 아니라 &#39;괜찮은 척&#39;이 일이었다는 조사</li><li>&#39;요즘 어때요?&#39;에 반사적으로 &#39;좋아요&#39;가 나왔다면, 이 설문에선 대다수가 그랬대</li><li>직장에 5점 만점을 준 사람도 80%가 그 주에 열정 있는 척을 했대</li><li>직장인 대부분은 회사를 싫어하는 게 아니라 연기를 하고 있다는 설문이 나옴</li><li>회사에서 괜찮은 척하는 게 나만 그런 줄 알았지? 설문에선 안 그런 사람이 13%뿐이었대</li><li>회사 좋아한다는 사람 중에서도 42%가 최근 6개월 이직을 진지하게 고민했대</li><li>회사 싫은 사람 중에 상사한테 속마음 말한 사람은 9%뿐이라는 설문</li><li>팀 분위기 밝아 보인다고 다 남는 건 아니라는 조사가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>&#39;요즘 어때요?&#39; 하면 일단 &#39;좋아요&#39;부터 나오는 사람?</li><li>&#39;괜찮은 척&#39;이 제일 많이 나오는 순간은? 아침 인사파 vs 회의파 vs 회식파</li><li>속마음은 상사한테 말하는 편 vs 동료한테만 말하는 편, 어느 쪽이야?</li><li>연기 상대로는 상사가 제일 힘들어 vs 고객이 제일 힘들어?</li><li>평생 안 벌어도 될 만큼 돈이 생기면 지금 일 그대로 다닐 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>평생 쓸 돈이 생기면 회사 계속 다닐까? 그만둔다는 사람 45%</li><li>회사 떠나고 싶은 이유 1위는 월급, 싫어하는 사람 기준으로는 나쁜 상사</li><li>직장 불만이 가장 높은 업종 vs 가장 낮은 업종</li><li>세대별로 보면 가장 지쳐 보인 건 X세대</li><li>직장인 6가지 유형: 연기하는 사람, 몰래 구직하는 사람, 버티는 사람</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>87%·66% 수치는 이력서 서비스 업체가 자사 DB로 돌린 비무작위 설문(1,002명)이라 &#39;직장인 87%&#39;처럼 전체로 일반화하면 안 됨</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전 세계 1,002명 설문에서 87%가 직장에서 &#39;다 좋아요&#39; 얼굴을 한다고 답했다</b>
+          <q>“In a Kickresume survey of 1,002 workers worldwide, 87% said they put on an “everything’s great!” face for someone at work, and 86% acted more enthusiastic than they felt at least once in the past week.”</q>
+          <small>post0 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>회사를 싫어하는 응답자는 27%</b>
+          <q>“Hatred was rare (27% dislike their job, 38% feel neutral), yet 43% dread a workday at least a few times a week, 66% seriously considered leaving in the past six months, and only 9% of unhappy workers have told their boss.”</q>
+          <small>post0 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지난 일주일 사이 실제보다 열정적인 척한 적이 있다는 응답이 86%, 늘 그랬다는 응답이 11%</b>
+          <q>“In the week before they took the survey, 86% of respondents said they had acted more enthusiastic about their work than they actually felt at least once, and 11% said they did it constantly.”</q>
+          <small>post1 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>&#39;다 좋아요&#39; 얼굴을 아무한테도 안 한다는 응답은 13%</b>
+          <q>“Asked who they put on an “everything’s great!” face for, only 13% said no one, because they’re genuinely happy at work.”</q>
+          <small>post1 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>직장에 5점 만점을 준 사람 중 80%도 그 주에 열정 있는 척을 했다</b>
+          <q>“Among people who gave their job a perfect 5 out of 5, 80% still faked enthusiasm at least once that week.”</q>
+          <small>post2 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연기의 주된 대상은 모두에게 똑같이 28%, 고객 18%, 상사 16%, 동료 13%</b>
+          <q>“When asked who the act is mainly for, the most common answer was “everyone equally” (28%). Clients or customers came next at 18%, followed by the boss at 16% and coworkers at 13%.”</q>
+          <small>post3 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주된 대상이 자기 자신이라는 응답은 13%</b>
+          <q>“Another 13% said the main audience is themselves.”</q>
+          <small>post3 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>회사를 싫어하는 사람 중 동료에게 말한 사람은 36%, 상사에게 말한 사람은 9%</b>
+          <q>“Among those who dislike their job, 36% have told coworkers and 15% have told multiple people, while only 9% have told their boss.”</q>
+          <small>post4 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>응답자의 66%가 지난 6개월 안에 이직을 진지하게 고민했고, 직장을 좋아하는 사람 중에서도 42%가 그랬다</b>
+          <q>“Two-thirds of respondents (66%) had seriously considered leaving their job in the past six months, including 42% of those who like it.”</q>
+          <small>post5 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이력서 업체 모집이라 구직 관련 수치가 일반 직장인보다 높을 수 있다</b>
+          <q>“Since the pool was recruited by a resume company, these job-search numbers may run higher than they would in the general workforce.”</q>
+          <small>post5 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>설문은 업체가 자체 데이터베이스를 통해 응답자에게 접근해 진행했다</b>
+          <q>“All 1,002 respondents were reached through the company’s internal database.”</q>
+          <small>post5 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>설문 숫자로 보면 분위기 밝은 사무실은 누가 계속 다닐지를 가늠하는 좋은 지표가 아니다</b>
+          <q>“By this survey’s numbers, an upbeat office is a poor gauge of who plans to stay.”</q>
+          <small>post6 · <a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ed45c149375d">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/faking-enthusiasm-at-work/" target="_blank" rel="noopener">Faking Enthusiasm At Work? Why 87% Of Employees Put On An &#39;Everything&#39;s Great!&#39; Face</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-ba71374c5c28">
+    <div class="head">
+      <h2>S2. 억양 따라 하기는 반사가 아니었다 - 호주 억양 따라 말하기 실험</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ba71374c5c28">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 억양은 뇌가 알아서 옮기는 거라는 통념과 달리, 지시 한 줄에 거의 멈췄는데 R 발음 하나만 새어 들어왔다는 반전</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">억양은 뇌가 알아서 옮기는 게 아니라 &#39;네 식대로 말해&#39; 한마디에 거의 멈췄대
+미국인 136명이 호주 억양을 듣고 단어를 따라 말한 실험이야
+근데 딱 한 소리는 못 막았음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">149/500자</span></div>
+      <p class="tp-text">1/ 호주 여성 목소리를 듣고 단어를 따라 말하게 했더니, &#39;최대한 똑같이 따라 해&#39;라고 들은 사람들은 측정한 5가지 소리 전부에서 호주 쪽으로 움직였어. 반대로 &#39;네 식대로 말해&#39;라고 들은 사람들은 뚜렷한 변화가 없었고. 그럼 아무 말도 안 들은 사람들은 어땠을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>2번 글 · 저장각</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">2/ 실험 조건 비교 (단어 하나씩 따라 말하기)
+- 최대한 따라 해 (42명): 5가지 소리 전부 호주 쪽으로
+- 네 식대로 말해 (51명): 뚜렷한 변화 없음
+- 아무 지시 없음 (43명): near 같은 단어의 R만 호주식으로 변함
+지시 없던 쪽은 모음은 그대로였대. 근데 R만 왜 샜을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">3/ 연구진이 든 이유는 두 가지야. 하나는 R이 미국 사람 귀에 다른 방언을 알아채게 하는 잘 알려진 표지라서 더 잘 따라 하게 된다는 거. 다른 하나는 대화 상대가 없으니 재미로 일부러 R만 따라 했을 수도 있다는 거. 이 실험으론 둘을 가르지 못했대. 근데 이 결과, 어디까지 믿어도 될까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">4/ 한계도 있어. 단어를 하나씩 읽게 한 실험이라 실제 대화는 안 본 거고, 참가자는 미국 과학박물관 방문객이었어. 거기다 &#39;따라 하지 마&#39;라고 해도 따라 했다는 이전 연구도 있는데, 이유는 연구진도 못 찾았대. 그럼 우리가 가져갈 건 뭘까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">260/500자</span></div>
+      <p class="tp-text">5/ 챙겨갈 한 줄: 이 실험에선 억양 따라 하기가 반사만은 아니고 지시 한 줄로 꽤 달라졌다는 거. 다만 단어 하나씩 읽는 실험이라 실제 대화나 영어 공부에 그대로 적용된다는 얘기는 아니야.
+영어 말할 때 억양 일부러 따라 해보는 파야, 내 식대로 말하는 파야?
+이런 해외 언어·학습 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>억양은 저절로 옮는 게 아니라 &#39;네 식대로 말해&#39; 한마디에 거의 멈췄대</li><li>억양 따라 하기, 의지랑 상관없는 반사인 줄 알았지? 미국인 136명 실험 결과가 달라</li><li>&#39;네 식대로 말해&#39;라는 말 하나에 호주 억양이 뚜렷하게 옮지 않았어. 근데 딱 한 소리는 못 막았대</li><li>아무 말 안 했더니 5가지 소리 중 딱 하나만 억양이 옮았대</li><li>억양이 옮는 건 뇌가 알아서 하는 일이라더니, 지시 한 줄로 달라졌다는 연구가 나옴</li><li>&#39;최대한 똑같이 따라 해&#39;라고 하면 측정한 5가지 소리가 전부 바뀐대</li><li>&#39;따라 하지 마&#39;가 통했다는 이번 실험, 이전 연구에선 안 통했대. 왜 결과가 갈렸을까</li><li>다들 억양은 저절로 옮는다고 하잖아. 연구진이 직접 시험해봤어</li><li>136명한테 호주 억양을 들려줬더니 생긴 일</li><li>본인도 모르게 따라 한 소리가 딱 하나 있었대. near 같은 단어의 R이야</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>영어 말할 때 억양 일부러 따라 해보는 파야, 내 식대로 말하는 파야?</li><li>영화 보다가 배우 말투 따라 해본 적 있는 사람?</li><li>&#39;따라 해&#39;랑 &#39;네 식대로 해&#39; 중에 영어 발음 연습엔 어느 쪽이 더 편할 것 같아?</li><li>여행 다녀와서 말투가 살짝 옮은 적 있는 사람?</li><li>너라면 호주 억양 실험에 참가해서 일부러 따라 해볼 거야, 그냥 말할 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>여행 갔다 오면 말투가 옮는 이유, 눈에 띄는 소리가 먼저 옮는다는 얘기</li><li>외국어 공부, 소리부터 보라는 연구</li><li>원어민 발음 따라 하기 연구 더 보기</li><li>다음 배송: 실험실에서 만든 미니 볼 라이트닝 얘기</li><li>다음 배송: 퍼서비어런스 화성 주행거리 신기록 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>편집자 메모(&#39;억양 따라 하기는 거의 반사적&#39;)는 원문 결론과 정반대임. 원문은 지시로 상당히 조절됐다는 내용이라 글은 원문대로 씀. 메모 내용을 그대로 올리면 안 됨</li><li>원문 실험은 미국 성인이 호주 억양 화자를 듣고 단어를 하나씩 따라 말한 것이라 한국 영어 학습자나 발음 학원 효과로 확대 해석하면 안 됨</li><li>&#39;따라 하지 마&#39; 조건이 통했다는 결과는 같은 녹음을 쓴 이전 연구(따라 하지 말라고 해도 따라 함)와 상충하고 이유가 불명확함</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>억양 따라 하기를 뇌가 알아서 하는 일로 보는 경우가 많았다</b>
+          <q>“Speech science often treats that as something the brain does on its own, whether anyone wants it to or not.”</q>
+          <small>post0 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 성인 136명 연구에서 자기 방식대로 말하라고 들은 사람들은 호주 억양 쪽으로 뚜렷한 변화가 없었다</b>
+          <q>“A new study of 136 American adults found that a simple instruction can stop it. People who heard an Australian woman and were then told to say words their own way showed no clear shift toward her accent.”</q>
+          <small>post0 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그래도 한 소리는 옮았다</b>
+          <q>“One sound still came through.”</q>
+          <small>post0 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>따라 하라는 지시를 받은 사람들은 5가지 소리 모두에서 호주 발음 쪽으로 이동했다</b>
+          <q>“When asked to imitate, participants shifted toward the Australian pronunciation on all five features, most sharply on the R and the “bath” vowel.”</q>
+          <small>post1 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>따라 하지 말라는 지시를 받은 사람들은 어떤 소리에서도 뚜렷한 이동이 없었다</b>
+          <q>“Those told to avoid copying her showed no clear shift toward her on any feature.”</q>
+          <small>post1 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>따라 하라는 지시는 42명, 평소처럼 말하라는 지시는 51명에게 주어졌다</b>
+          <q>“Forty-two people were told to “try to imitate the speaker as closely as possible.” Fifty-one were told to say each word the way they normally would, not the way she did.”</q>
+          <small>post2 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지시가 없던 사람은 43명이었다</b>
+          <q>“Forty-three got no guidance.”</q>
+          <small>post2 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지시가 없던 43명 중에서는 R 탈락만 뚜렷이 변했고 모음은 유지됐다</b>
+          <q>“Among the 43 people given no instructions, only one feature clearly changed: the dropped R. The vowels held steady.”</q>
+          <small>post2 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>R을 안 읽는 호주식 습관이 near 같은 단어에서 나타났다</b>
+          <q>“Participants given no instructions at all drifted toward the Australian habit of dropping R’s in words like “near.””</q>
+          <small>post2 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>R과 bath 모음은 미국 청자가 다른 방언을 인식하는 잘 알려진 표지라고 연구진이 언급했다</b>
+          <q>“Both the R and the “bath” vowel are well-known markers of how American listeners hear other dialects, the authors note.”</q>
+          <small>post3 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대화 상대가 없어서 일부러 R을 따라 했을 가능성도 있으며 두 설명은 구분되지 않았다</b>
+          <q>“Because shadowing involves no conversation partner, some participants may have copied the R on purpose, for their own amusement, in what the authors describe as a deliberate but unrequested choice to play with language. The study could not tell the two explanations apart.”</q>
+          <small>post3 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>실험은 대화가 아니라 소리 내어 읽은 단어 하나씩을 대상으로 했다</b>
+          <q>“The study tested single words read aloud, not conversations.”</q>
+          <small>post4 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 미국 과학박물관 방문객이었다</b>
+          <q>“Volunteers were visitors to an American science museum.”</q>
+          <small>post4 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 녹음을 쓴 이전 연구에서는 따라 하지 말라고 해도 따라 했고 연구진은 이유를 특정하지 못했다</b>
+          <q>“That outcome conflicts with an earlier study that used the same recording, in which volunteers still copied the speaker when asked not to. The authors could not pin down why.”</q>
+          <small>post4 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 실험실 과제에서 사람들은 억양 따라 하기를 음성과학자들이 흔히 가정하는 것보다 더 통제했다</b>
+          <q>“In this lab task, people held more control over accent copying than speech scientists often assume.”</q>
+          <small>post5 · <a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ba71374c5c28">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/picking-up-accent-not-automatic/" target="_blank" rel="noopener">Picking Up An Accent Is Less Automatic Than Many Assume</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261024-pm";
+  const ORIGINAL = {"30077ea64932": {"caption": "\ud654\uc131 \ud0d0\uc0ac\ucc28\uac00 \ub610 \uae30\ub85d\uc744 \uae7c\uc5b4. NASA\uc758 \ud37c\uc11c\ube44\uc5b4\ub7f0\uc2a4\uac00 10\uc6d4 11\uc77c \uc8fc\ud589\uac70\ub9ac 45.22km\ub97c \ucc0d\uc73c\uba74\uc11c, \ub2e4\ub978 \ucc9c\uccb4 \ud45c\uba74\uc5d0\uc11c \uac00\uc7a5 \uba40\ub9ac \ub2ec\ub9b0 \ud0d0\uc0ac\ucc28\uac00 \ub410\ub300. \uc885\uc804 \uae30\ub85d\uc740 2004\ub144\ubd80\ud130 2018\ub144\uae4c\uc9c0 \ud654\uc131\uc744 \ub204\ube48 \uc624\ud37c\ud29c\ub2c8\ud2f0\uc758 45.16km\uc600\uc5b4.\n\n\ub354 \ub180\ub77c\uc6b4 \uac74 \uc6b4\uc804 \ubc29\uc2dd\uc774\uc57c. \ud37c\uc11c\ube44\uc5b4\ub7f0\uc2a4\ub294 \uc804\uccb4 \uac70\ub9ac\uc758 90% \ub118\uac8c AutoNav\ub77c\ub294 \uc790\uc728 \ud56d\ubc95 \uc2dc\uc2a4\ud15c\uc73c\ub85c \ub2ec\ub838\uc5b4. \ub2ec\ub9ac\uba74\uc11c \uc9c0\ud615\uc744 \ucd2c\uc601\ud558\uace0, \uc704\ud5d8 \uad6c\uac04 3D \uc9c0\ub3c4\ub97c \ub9cc\ub4e4\uace0, \uc9c0\uad6c\uc758 \uc6b4\uc601\ud300\uc774 \uc815\ud574\uc900 \uacbd\uc720 \uc9c0\uc810 \uc0ac\uc774 \uacbd\ub85c\ub97c \uc2a4\uc2a4\ub85c \uc9e0\ub300. \ud300\uc740 \uc774\uac78 \u0027\ub2ec\ub9ac\uba74\uc11c \uc0dd\uac01\ud558\uae30\u0027\ub77c\uace0 \ubd80\ub978\ub2e4\uace0 \ud574. \uc624\ud37c\ud29c\ub2c8\ud2f0\uc640 \uc30d\ub465\uc774 \ud0d0\uc0ac\ucc28 \uc2a4\ud53c\ub9bf\uc758 \uccab AutoNav\ub294 \uc804\uccb4 \uac70\ub9ac\uc758 \uc57d 5% \uc815\ub3c4\uc600\uace0.\n\n\uc18d\ub3c4\ub3c4 \ub9cc\ub9cc\uce58 \uc54a\uc544. \ud654\uc131\uc758 \ud558\ub8e8(1\uc194)\uc5d0 \ucd5c\ub300 412m\uae4c\uc9c0 \uac08 \uc218 \uc788\uc5b4. \uac19\uc740 \uac70\ub9ac\ub97c \uac00\ub294 \ub370 \ud37c\uc11c\ube44\uc5b4\ub7f0\uc2a4\ub294 5\ub144 \ubc18, \uc624\ud37c\ud29c\ub2c8\ud2f0\ub294 \uac70\uc758 15\ub144\uc774 \uac78\ub838\uace0.\n\n\ub2ec\uc5d0\uc11c \uc138\uc6cc\uc9c4 \uae30\ub85d\ub3c4 \uc774\ubbf8 \ub118\uc5b4\uc130\ub300. 1972\ub144 \uc544\ud3f4\ub85c 17\ud638 \uc6b0\uc8fc\ube44\ud589\uc0ac\ub4e4\uc774 \ub2ec\ub9b0 35.7km, 1973\ub144 \uc18c\ub828 \ub8e8\ub178\ud638\ud2b8 2\ud638\uc758 39km\ub97c \ucc28\ub840\ub85c \uc9c0\ub098\ucce4\uc5b4.\n\n\uc9c0\uae08\uc740 \uc81c\uc81c\ub85c \ud06c\ub808\uc774\ud130 \uc11c\ucabd \uac00\uc7a5\uc790\ub9ac\uc758 \u0027\ub77d \ub4dc \uc0e4\ub984\u0027 \uc9c0\uc5ed\uc744 \uc9c0\ub098 \u0027\uc774\ub450\ube44\u0027\ub85c \uac00\ub294 \uc911\uc774\uc57c. \ud0dc\uc591\uacc4\uc5d0\uc11c \ud0d0\uc0ac\ub41c \uac00\uc7a5 \uc624\ub798\ub41c \uc9c0\ud615 \uc911 \uc77c\ubd80\uc77c \uc218 \uc788\ub294 \uacf3\uc774\ub77c\uace0 \ud574. \uc784\ubb34\uc758 \uccab \uc5f0\uc7a5\ub3c4 \uc2b9\uc778\ub3fc\uc11c 2028\ub144 \ub9d0\ucbe4\uae4c\uc9c0 \ud06c\ub808\uc774\ud130 \uac00\uc7a5\uc790\ub9ac\ub97c \ud0d0\uc0ac\ud560 \uc608\uc815\uc774\ub798.\n\n\ucd9c\ucc98: NASA JPL, ScienceAlert", "hashtags": ["#\ud654\uc131", "#NASA", "#\ud37c\uc11c\ube44\uc5b4\ub7f0\uc2a4", "#\uc6b0\uc8fc\ud0d0\uc0ac", "#\uc790\uc728\uc8fc\ud589"], "slides": [["\ud654\uc131 \ud0d0\uc0ac\ucc28\uac00", "**\uae30\ub85d \uae7c\ub2e4???**"], ["\uae30\uc874 \uae30\ub85d\uc740", "\uc624\ud37c\ud29c\ub2c8\ud2f0\uc758", "**45.16km**"], ["10\uc6d4 11\uc77c\uc5d0", "**45.22km** \ub3cc\ud30c"], ["\uadfc\ub370 \uc774\uac70", "**90%** \ub118\uac8c", "\uc54c\uc544\uc11c \uc6b4\uc804"], ["\uac78\ub9b0 \uc2dc\uac04 \ube44\uad50", "\ud37c\uc11c\ube44\uc5b4\ub7f0\uc2a4 **5\ub144 \ubc18**", "\uc624\ud37c\ud29c\ub2c8\ud2f0 \uac70\uc758 15\ub144"], ["\uc790\uc728\uc8fc\ud589 \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c**\ud55c\ud14c \ubcf4\ub0b4\uae30"]]}, "3f06e2d1f2f4": {"caption": "\uacf5 \ubaa8\uc591 \ubc88\uac1c\ub97c \uc2e4\ud5d8\uc2e4\uc5d0\uc11c \ub9cc\ub4e4\uc5c8\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uad6c\ud615 \ubc88\uac1c\ub294 \uc218\ubc31 \ub144 \ub3d9\uc548 \ubaa9\uaca9\ub2f4\uc774 \uc774\uc5b4\uc84c\uc5b4. \uc218\ucc9c \uac74\uc758 \uae30\ub85d\uacfc \uc99d\uc5b8\uc774 \uc788\ub294\ub370\ub3c4 \uc9c1\uc811 \uc5f0\uad6c\ud558\uae30\ub294 \uac70\uc758 \ubd88\uac00\ub2a5\ud55c \ud604\uc0c1\uc774\ub798. \uac8c\ub2e4\uac00 \ubcf4\uace0\ub9c8\ub2e4 \ud06c\uae30, \uc0c9, \uc6c0\uc9c1\uc784 \uc124\uba85\uc774 \uc81c\uac01\uac01\uc774\ub77c \ub300\uae30\uacfc\ud559\uc5d0\uc11c \uc190\uaf3d\ud788\ub294 \uc218\uc218\uaed8\ub07c\ub85c \ubd88\ub824.\n\n\uadf8\ub798\uc11c \uc911\uad6d\uacfc\ud559\uc6d0\uc758 \uc800\uc6b0\ucd94\ub7c9 \uc5f0\uad6c\ud300\uc740 \ub4e4\ud310\uc5d0\uc11c \uae30\ub2e4\ub9ac\ub294 \ub300\uc2e0 \uc2e4\ud5d8\uc2e4\uc5d0\uc11c \ube44\uc2b7\ud55c \uac78 \uc7ac\ud604\ud574 \ubcf4\uae30\ub85c \ud588\uc5b4. \uc4f4 \uac74 \ub05d\uc774 100\ub098\ub178\ubbf8\ud130\uc778 \ud145\uc2a4\ud150 \ubc14\ub298\uc774\uc57c. \uc0ac\ub78c \uba38\ub9ac\uce74\ub77d \uad75\uae30\uac00 8\ub9cc~10\ub9cc \ub098\ub178\ubbf8\ud130\ub2c8\uae4c \uc5c4\uccad \ubfb0\uc871\ud55c \uac70\uc9c0. \uc5ec\uae30\uc5d0 \ucd08\ub2e8 \ub808\uc774\uc800 \ud384\uc2a4\ub97c \uc3d8\uba74 \uc804\uc790\uae30\ud30c\uac00 \ubc14\ub298\uc744 \ub530\ub77c \uc774\ub3d9\ud558\uace0, \ub05d\uc5d0\uc11c \uc544\uc8fc \uc13c \uc804\uae30\uc7a5\uc774 \ubaa8\uc5ec\uc11c \uc8fc\ubcc0 \uc544\ub974\uace4 \uac00\uc2a4\uc758 \uc804\uc790\ub97c \ub5bc\uc5b4\ub0b4. \uadf8\ub807\uac8c \ud50c\ub77c\uc2a4\ub9c8 \uacf5\uc774 \uc0dd\uacbc\uc5b4.\n\n\uc774 \ube5b \uacf5\uc740 \ucc98\uc74c \uc9c0\ub984\uc774 \uc57d 80\ub9c8\uc774\ud06c\ub85c\ubbf8\ud130\uc600\ub294\ub370 100\ub098\ub178\ucd08 \ub3d9\uc548 \uc218\ubc31 \ub9c8\uc774\ud06c\ub85c\ubbf8\ud130\uae4c\uc9c0 \ucee4\uc84c\uc5b4. \ubcf4\ud1b5 \ud50c\ub77c\uc2a4\ub9c8\ucc98\ub7fc \ud769\uc5b4\uc9c0\uc9c0 \uc54a\uace0 \uad6c\uc870\ub97c \uc720\uc9c0\ud588\uace0, \ud33d\ucc3d \uc591\uc0c1\uc774 \uc804\uc790\uae30 \uc194\ub9ac\ud1a4\uc758 \uc774\ub860 \uc608\uce21\uacfc \ub9de\uc558\ub300.\n\n\uc5f0\uad6c\ud300 \uacc4\uc0b0\uc73c\ub85c\ub294 \ub9c8\uc774\ud06c\ub85c\ud30c\ub85c \uad6c\ub3d9\ud558\uba74 \uc774\ub860\uc0c1 \uc218 \ubbf8\ud130 \ud06c\uae30\ub85c \ucee4\uc9c0\uace0 \uba87 \ucd08 \ub3d9\uc548 \uc774\uc5b4\uc9c8 \uc218\ub3c4 \uc788\ub300. \ub2e4\ub9cc \uad6c\ud615 \ubc88\uac1c\ub97c \ud655\uc815\uc801\uc73c\ub85c \uc124\uba85\ud558\ub294 \ub2e8\uacc4\ub294 \ud55c\ucc38 \uba40\uc5c8\uc5b4. \uc5d0\ub108\uc9c0 \uc800\uc7a5 \uae30\uc220 \uac19\uc740 \uc751\uc6a9 \uac00\ub2a5\uc131\ub3c4 \uc5b8\uae09\ub410\uace0, \uc5f0\uad6c\ub294 Nature Photonics\uc5d0 \uc2e4\ub838\uc5b4.\n\n\ucd9c\ucc98: ScienceAlert, Nature Photonics", "hashtags": ["#\ubcfc\ub77c\uc774\ud2b8\ub2dd", "#\uad6c\ud615\ubc88\uac1c", "#\uacfc\ud559\ub274\uc2a4", "#\ud50c\ub77c\uc2a4\ub9c8", "#\ud574\uc678\ud1a0\ud53d"], "slides": [["\uacf5 \ubaa8\uc591 \ubc88\uac1c\ub97c", "**\uc2e4\ud5d8\uc2e4\uc5d0\uc11c???**"], ["\uc218\ubc31 \ub144\uc9f8", "\ubaa9\uaca9\ub2f4\ub9cc **\uc218\ucc9c \uac74**"], ["\ud06c\uae30\ub3c4 \uc0c9\ub3c4", "\ud589\ub3d9\ub3c4 **\uc81c\uac01\uac01**", "\uc124\uba85\uc774 \ub2e4 \ub2ec\ub77c"], ["\ub05d\uc774 100nm\uc778", "**\ud145\uc2a4\ud150 \ubc14\ub298\uc5d0**", "\ub808\uc774\uc800 \ubc1c\uc0ac"], ["\uc791\uc740 \ube5b \uacf5\uc774", "\ud33d\ucc3d\ud558\ub294 \ub3d9\uc548", "**\ubaa8\uc591\uc744 \uc720\uc9c0**"], ["\ucc9c\ub465 \uce58\ub294 \ub0a0", "**\uacfc\ud559 \ub355\ud6c4 \uce5c\uad6c\ud55c\ud14c**", "\ubcf4\ub0b4\ubcf4\uae30"]]}, "e7ff18024527": {"caption": "\ud3ec\ucf13\ubaac 30\uc8fc\ub144 \uae30\ub150\uc73c\ub85c \ud53c\uce74\uce04 \ucf00\uc774\ud06c \uc0cc\ub4dc\uc704\uce58\uac00 \ub098\uc628\ub300. \ub3c4\ucfc4 \uc774\ucf00\ubd80\ucfe0\ub85c\uc758 \uc120\uc0e4\uc778\uc2dc\ud2f0 \uc548\uc5d0 \uc788\ub294 \ub514\uc800\ud2b8 \uc2a4\ud0e0\ub4dc \u0027\ud53c\uce74\uce04 \uc2a4\uc704\uce20 by \ud3ec\ucf13\ubaac\uce74\ud398\u0027\uc5d0\uc11c \ub0b4\ub193\ub294 \uc2e0\uba54\ub274\uc57c. \ub3c4\ucfc4\uc5ed \uadfc\ucc98\uc758 \uc549\uc544\uc11c \uba39\ub294 \ud3ec\ucf13\ubaac\uce74\ud398\uc640\ub294 \ub2e4\ub978 \uacf3\uc774\ub77c\uace0 \ud574.\n\n\ud53c\uce74\uce04 \ubaa8\uc591\uc73c\ub85c \ub9cc\ub4e0 \ucd09\ucd09\ud558\uace0 \ud3ed\uc2e0\ud55c \uc1fc\ud2b8\ucf00\uc774\ud06c \ub450 \uc7a5 \uc0ac\uc774\uc5d0 \uc0dd\ud06c\ub9bc\uc774\ub791 \uc2ac\ub77c\uc774\uc2a4 \ub538\uae30\ub97c \ub07c\uc6b4 \uad6c\uc131\uc774\uc57c. \ub2ec\uace0 \uc0c8\ucf64\ud558\uace0 \uc6b0\uc720 \ub9db \ub098\ub294 \uc870\ud569\uc774\ub798. \uc791\uc740 \ucd95\ud558\uc6a9 \uc885\uc774 \ud640\ub354\uc5d0 \ub2f4\uaca8 \ub098\uc640\uc11c \uc190\uc5d0 \ud06c\ub9bc \ubb3b\ud788\uc9c0 \uc54a\uace0 \uba39\uc744 \uc218 \uc788\ub2e4\uace0 \ud574.\n\n\uac19\uc740 \ub0a0 \uc774\ube0c\uc774 \ucd08\ucf5c\ub9bf \ud504\ub77c\ud398\ub3c4 \uba54\ub274\uc5d0 \uc62c\ub77c\uc640. \ucf00\uc774\ud06c \uc0cc\ub4dc\uc704\uce58\uc640 \uc774\ube0c\uc774 \ucd08\ucf5c\ub9bf \ud504\ub77c\ud398(\ub610\ub294 \uce90\uce58 \uc5e0 \ub77c\ud14c)\ub97c \uac19\uc774 \uc8fc\ubb38\ud558\uba74 \ud53c\uce74\uce04\uac00 \uce74\ud398 \uc720\ub2c8\ud3fc\uc744 \uc785\uc740 30\uc8fc\ub144 \uc2a4\ud2f0\ucee4 3\uc885 \uc911 \ud558\ub098\ub3c4 \ubc1b\uc744 \uc218 \uc788\ub300.\n\n\ud310\ub9e4 \uae30\uac04\uc740 11\uc6d4 5\uc77c\ubd80\ud130 12\uc6d4 31\uc77c\uae4c\uc9c0\uace0, \ud53c\uce74\uce04 \ucf00\uc774\ud06c\uc640 \uc774\ube0c\uc774 \ud504\ub77c\ud398 \ubaa8\ub450 1,200\uc5d4(\uc57d 7.60\ub2ec\ub7ec)\uc774\uc57c.\n\n\uc8fc\uc758\ud560 \uc810\ub3c4 \uc788\uc5b4. \uc774 \uac00\uac8c\ub294 \uc549\uc544\uc11c \uba39\uc744 \uc790\ub9ac\uac00 \uc5c6\uc5b4\uc11c \ubcf4\ud1b5 \ud3ec\uc7a5\ud574 \uac00\uac70\ub098 \uc120\uc0e4\uc778\uc2dc\ud2f0 \uc548 \ubca4\uce58, \uc606 \uc57c\uc678 \uad11\uc7a5\uc5d0\uc11c \uba39\ub294\ub300. \uc0dd\ud06c\ub9bc \ub54c\ubb38\uc5d0 \ub0c9\uc7a5 \uc1fc\ucf00\uc774\uc2a4\uc5d0\uc11c \uaebc\ub0b4\uba74 \uc624\ub798 \ub450\uae30 \uc5b4\ub824\uc6cc\uc11c, \uc9d1\uc5d0 \uac00\uc11c \uba39\ub294 \uac83\ubcf4\ub2e4 \ubc1b\uc790\ub9c8\uc790 \ubc14\ub85c \uba39\uc73c\ub77c\uace0 \uc548\ub0b4\ud55c\ub300. \ubcf4\ub0c9\ud329\ub3c4 \ub530\ub85c \uc548 \uc900\ub2e4\uace0 \ud574.\n\n\uc704\uce58: \ub3c4\ucfc4\ub3c4 \ub3c4\uc2dc\ub9c8\uad6c \ud788\uac00\uc2dc\uc774\ucf00\ubd80\ucfe0\ub85c 3-1-2, \uc120\uc0e4\uc778\uc2dc\ud2f0 \uc54c\ud30c 2\uce35 / \uc601\uc5c5\uc2dc\uac04 \uc624\uc804 10\uc2dc~\uc624\ud6c4 8\uc2dc\n\n\ucd9c\ucc98: SoraNews24, Pikachu Sweets", "hashtags": ["#\ud3ec\ucf13\ubaac", "#\ud53c\uce74\uce04", "#\ub3c4\ucfc4\uc5ec\ud589", "#\uc77c\ubcf8\ub514\uc800\ud2b8", "#\ud3ec\ucf13\ubaac30\uc8fc\ub144"], "slides": [["\ud3ec\ucf13\ubaac 30\uc0b4", "**\ud53c\uce74\uce04** \ucf00\uc774\ud06c?!"], ["\ud3ec\ucf13\ubaac **30\uc8fc\ub144**", "\uae30\ub150 \ucf00\uc774\ud06c\ub798"], ["\ud53c\uce74\uce04 \ubaa8\uc591", "\ucf00\uc774\ud06c \ub450 \uc7a5 \uc0ac\uc774\uc5d0", "\uc0dd\ud06c\ub9bc\uc774\ub791 **\ub538\uae30**"], ["\uc190\uc5d0 \uc548 \ubb3b\uac8c", "\uc885\uc774 **\ud640\ub354**\uc5d0 \ub2f4\uae40"], ["11\uc6d4 5\uc77c\ubd80\ud130", "12\uc6d4 31\uc77c\uae4c\uc9c0", "**1,200\uc5d4**"], ["\uc0dd\ud06c\ub9bc \ub54c\ubb38\uc5d0", "\uc624\ub798 \ubabb \ub46c\uc11c", "**\ubc14\ub85c** \uba39\uc73c\ub798"], ["\ud3ec\ucf13\ubaac \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c** \ud0dc\uadf8\ud574\uc11c", "\uc54c\ub824\uc8fc\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

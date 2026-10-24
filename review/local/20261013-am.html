@@ -1,0 +1,1342 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.13 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.13 오전 검수 <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-9ec71b76d6de" data-jump="9ec71b76d6de">1</a><a href="#post-83ceae107e61" data-jump="83ceae107e61">2</a><a href="#post-b88013b430ec" data-jump="b88013b430ec">3</a>
+      
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-9ec71b76d6de" data-id="9ec71b76d6de">
+    <div class="head">
+      <h2>1. 일본 컨테이너 호텔 체험기</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>인스타에 올라감 · 10/13</b>
+      <p>이미 올라간 게시물이라 여기서는 더 고칠 수 없어요.</p>
+      
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>컨테이너에서 하룻밤 자본다고? 일본에서 요즘 인기를 끌고 있다는 컨테이너 호텔 이야기야. 소라뉴스24 기자가 치바현 다테야마시에 있는 &#39;크레이들 캐빈&#39;에서 직접 하룻밤 묵어봤대.
+
+캡슐호텔처럼 칸막이 한 칸을 빌리는 방식이 아니라, 개조한 선박용 컨테이너 안에 진짜 개인실이 있는 구조야. 컨테이너 폭은 주차 한 칸에 들어갈 만큼 좁아서 문을 열 땐 살짝 걱정했지만, 안에 들어가 보니 필요한 공간은 다 있었다고 해. 입구 쪽이 좁은 건 방마다 전용 욕실과 샤워실이 들어 있어서래.
+
+매트리스는 푹신하면서도 받쳐주는 느낌이고, 베개도 단단함이 다른 두 종류가 놓여 있었대. 전자레인지와 냉동실 달린 냉장고까지 있었는데, 일본 호텔 객실에선 흔치 않은 구성이라고 해. 샤워용품은 일본 브랜드 폴라 제품이야.
+
+가격은 하룻밤 8,080엔(약 51달러). 기자는 이 가격대에서 보통 기대하는 것보다 시설이 좋았다고 전했어. 폐소공포가 올까 걱정했지만 그렇지 않았고, 창문 없는 게 처음엔 어색해도 누워서 TV를 보다 보니 신경 쓰이지 않았대. 빛이 새어 들지 않고 옆 방과 벽이 닿지 않아서 소리도 안 들려 푹 잤다고 해. 다만 낮에 방에서 오래 쉬는 여행 스타일이면 바깥 풍경이 없는 게 답답할 수 있다는 얘기도 있어.
+
+크레이들 캐빈은 도쿄 서쪽 니시도쿄에도 새 지점을 열 계획이래.
+
+한국에도 이런 컨테이너 숙소가 있을까?
+
+출처: SoraNews24
+
+배경 사진: Engin_Akyurt, Pexels, mowbraycourthotel, shadowfirearts, nattanan23, dendoktoor / Pixabay
+표지 이미지: AI 생성
+
+#일본여행 #컨테이너호텔 #일본호텔 #해외핫이슈 #도쿄여행</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-9ec71b76d6de">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;컨테이너에서 잔다&#39;는 낯선 설정과 8,080엔이라는 가격, 폐소공포 걱정이 어떻게 풀렸는지를 후기로 보여주는 각도</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 방 안에 전자레인지와 냉동실 달린 냉장고까지 갖춰져 있음 (카드 5장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">하룻밤 8,080엔인데 시설이 기대보다 좋았다는 후기가 나온 호텔이 있대
+화물용 컨테이너를 개조한 일본 숙소인데
+폐소공포 걱정하고 들어간 기자가 어땠는지는 아래에 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">1/ 결론부터 말하면 기자는 푹 잤대. 폐소공포가 올까 걱정했는데 오지 않았고, 창문 없는 것도 처음엔 어색해도 누워서 TV 보다 보니 신경 안 쓰였대. 근데 대체 어떤 구조의 방이길래?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">2/ 캡슐호텔처럼 칸막이 한 칸 빌리는 방식이 아니래. 개조한 선박용 컨테이너 안에 진짜 개인실이 있는 구조야. 폭은 주차장 한 칸에 들어갈 만큼 좁아서 문 열 땐 기자도 살짝 걱정했대. 그럼 안에선 어땠을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">3/ 빛이 새어 들지 않고 옆 방과 벽이 닿지 않아서 소리도 안 들렸대. 매트리스는 푹신하면서 받쳐주는 느낌이고, 베개도 단단함이 다른 두 종류였고. 방마다 전용 화장실과 샤워실도 따로 있대. 그럼 단점은 없었을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">176/500자</span></div>
+      <p class="tp-text">4/ 컨테이너 호텔 알아둘 것
+- 위치: 치바현 다테야마시 &#39;크레이들 캐빈&#39;
+- 가격: 하룻밤 8,080엔 (약 51달러)
+- 구조: 개인실, 방마다 전용 화장실·샤워실
+- 후기: 기대한 것보다 시설이 좋았다고 전함
+- 주의: 낮에 방에서 오래 쉬는 여행 스타일이면 바깥 풍경이 없어서 답답할 수 있다는 얘기도 있음</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">237/500자</span></div>
+      <p class="tp-text">5/ 크레이들 캐빈은 도쿄 서쪽 니시도쿄에도 새 지점을 열 계획이래.
+
+너라면 창문 없는 컨테이너 개인실에서 하룻밤 8,080엔, 어디까지 괜찮아? 한국에서 비슷한 숙소 가본 사람 있으면 후기도 알려줘.
+
+다음 배송: 일본 원숭이 고양이 연못 투척 사건 얘기. 팔로우해두면 피드에 뜸.
+
+카드엔 방 안에 갖춰진 가전까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>일본 숙소 싼 데 찾는 사람들, 캡슐호텔이 아니라 컨테이너 안 진짜 개인실이 있대</li><li>화물용 컨테이너에서 하룻밤 자는 데 8,080엔이래</li><li>폐소공포 올까 봐 걱정하고 컨테이너 호텔에 들어간 기자, 결과가 의외였대</li><li>창문 없는 방에서 푹 잤다는 후기가 나온 일본 호텔이 있어</li><li>일본 숙소비 고민이면, 컨테이너 방에서 온 건 폐소공포가 아니라 꿀잠이었다는 후기</li><li>하룻밤 8,080엔인데 시설이 기대보다 좋았다는 후기가 나온 호텔이 있대</li><li>캡슐호텔 말고 컨테이너라니, 일본에서 요즘 인기라는 숙소</li><li>방 폭이 주차장 한 칸인데 방마다 샤워실이 따로 있대</li><li>선박용 컨테이너를 개조한 방, 하룻밤 약 51달러</li><li>컨테이너에서 잘 수 있냐고? 직접 자본 기자는 푹 잤다고 했대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>하룻밤 8,080엔 숙소라면 너는 창문, 바깥 풍경, 방 크기 중에 뭘 제일 포기할 수 있어?</li><li>여행 가서 숙소에 제일 돈 쓰는 편이야, 아끼는 편이야? 그 이유는?</li><li>한국에서 특이한 숙소에서 자본 경험 있으면 어땠는지 알려줘</li><li>낮에 숙소에서 오래 쉬는 여행 vs 밤에만 자는 여행, 너는 어느 쪽이야?</li><li>너라면 컨테이너 숙소에서 하룻밤 자는 걸 어떤 사람한테 제일 추천할래?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>세계 최대 호박 2,856파운드 기록</li><li>일본 원숭이 고양이 연못 투척 사건</li><li>지브리 스탬프 랠리 사가시</li><li>맥킨지 AI 고객 면접</li><li>한국에도 컨테이너 숙소가 있는지 댓글 모아보기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>소음·빛·폐소공포 관련 내용은 기자 한 명의 체험 후기라서 일반적인 사실처럼 읽히지 않게 확인</li><li>8,080엔(약 51달러) 환산은 원문 기준이라 환율에 따라 달라질 수 있음</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-01.jpg" alt="1장: 화물용 컨테이너에서 자본다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-02.jpg" alt="2장: 캡슐호텔 아님 진짜 개인실이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-03.jpg" alt="3장: 객실 폭이 딱 주차장 한 칸" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-04.jpg" alt="4장: 전용 화장실·샤워실 방마다 따로 배치" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-05.jpg" alt="5장: 전자레인지에 냉동실 냉장고까지 구비완료" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-06.jpg" alt="6장: 하룻밤 8,080엔 약 51달러" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-07.jpg" alt="7장: 너라면 컨테이너 숙소에서 잘수 있어?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/9ec71b76d6de/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">컨테이너에서 하룻밤 자본다고? 일본에서 요즘 인기를 끌고 있다는 컨테이너 호텔 이야기야. 소라뉴스24 기자가 치바현 다테야마시에 있는 &#39;크레이들 캐빈&#39;에서 직접 하룻밤 묵어봤대.
+
+캡슐호텔처럼 칸막이 한 칸을 빌리는 방식이 아니라, 개조한 선박용 컨테이너 안에 진짜 개인실이 있는 구조야. 컨테이너 폭은 주차 한 칸에 들어갈 만큼 좁아서 문을 열 땐 살짝 걱정했지만, 안에 들어가 보니 필요한 공간은 다 있었다고 해. 입구 쪽이 좁은 건 방마다 전용 욕실과 샤워실이 들어 있어서래.
+
+매트리스는 푹신하면서도 받쳐주는 느낌이고, 베개도 단단함이 다른 두 종류가 놓여 있었대. 전자레인지와 냉동실 달린 냉장고까지 있었는데, 일본 호텔 객실에선 흔치 않은 구성이라고 해. 샤워용품은 일본 브랜드 폴라 제품이야.
+
+가격은 하룻밤 8,080엔(약 51달러). 기자는 이 가격대에서 보통 기대하는 것보다 시설이 좋았다고 전했어. 폐소공포가 올까 걱정했지만 그렇지 않았고, 창문 없는 게 처음엔 어색해도 누워서 TV를 보다 보니 신경 쓰이지 않았대. 빛이 새어 들지 않고 옆 방과 벽이 닿지 않아서 소리도 안 들려 푹 잤다고 해. 다만 낮에 방에서 오래 쉬는 여행 스타일이면 바깥 풍경이 없는 게 답답할 수 있다는 얘기도 있어.
+
+크레이들 캐빈은 도쿄 서쪽 니시도쿄에도 새 지점을 열 계획이래.
+
+한국에도 이런 컨테이너 숙소가 있을까?
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본여행 #컨테이너호텔 #일본호텔 #해외핫이슈 #도쿄여행</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 문을 열었을 때 방이 좁아 보여 살짝 걱정했다는 기자 반응</li><li>근거 등록 안 된 주장: 폐소공포가 올까 걱정했지만 실제로는 그렇지 않았다는 내용</li><li>근거 등록 안 된 주장: 필요한 공간은 다 갖춰져 있었다는 평가</li><li>근거 등록 안 된 주장: 기자가 푹 잤다는 내용</li>
+          <li>한국 컨테이너 숙소 현황은 원문에 없어 질문형으로만 처리함</li><li>기사 사진은 사용하지 말고 스톡 또는 AI 이미지만 사용할 것</li><li>가격과 환율은 기사 작성 시점 기준이라 변동될 수 있음</li><li>체험기는 기자 1인의 경험이라 개인차가 있을 수 있음</li>
+        </ul>
+      </div>
+      
+
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에서 컨테이너 호텔이 최근 인기를 얻고 있다</b>
+            <q>“There’s a new class of travel accommodation that’s been rising in popularity in Japan recently: the container hotel.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자가 치바현 다테야마시의 크레이들 캐빈에서 하룻밤 묵었다</b>
+            <q>“To find out, we sent our Japanese-language reporter Takashi Harada to container hotel Cradle Cabin, located in the city of Tateyama in Chiba Prefecture, to spend the night.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>캡슐호텔과 달리 컨테이너 호텔은 개조한 선박 컨테이너 안에 진짜 개인실을 제공한다</b>
+            <q>“Not to be confused with capsule hotels, in which you rent a slot in a wall of sleeping compartments for the night, container hotels give you an actual private room…but that room in enclosed within what’s essentially a converted shipping container.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>컨테이너 폭이 주차 한 칸에 들어갈 만큼 좁다</b>
+            <q>“As you can see, each container is narrow enough to fit inside a parking space.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>컨테이너 안에 전용 욕실과 샤워실이 있어 입구 쪽이 좁아 보인다</b>
+            <q>“As for why the area just inside the door seems so narrow, that’s because the container has its own self-contained bathroom and shower.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매트리스는 푹신하면서 받쳐주고 베개는 단단함이 다른 두 종류가 놓여 있었다</b>
+            <q>“The mattress was soft but supportive, and the housekeeping staff had laid out two pillows of differing firmness for him to pick from.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>방에 전자레인지와 냉동실 있는 냉장고가 있고, 전자레인지는 일본 호텔 객실에서 드물다</b>
+            <q>“…and next to the desk was a microwave, a rarity in Japanese hotel rooms, and a nicely sized refrigerator with a freezer compartment too.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>샤워용품은 일본 브랜드 폴라 제품이다</b>
+            <q>“Peeking into the shower again, Takashi confirmed that even the provided soap and shampoo are up to scratch, as they’re made by Pola, a well-respected Japanese brand…”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하룻밤 요금은 8,080엔(51달러)이었고 이 가격대 평균보다 시설이 좋았다</b>
+            <q>“In short, this container hotel isn’t missing anything that you’d expect from a regular hotel, and considering the 8,080 yen (US$51) that Takashi was paying for the night, the quality of those amenities were actually above what you usually get in that price range.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>창문이 없는 게 처음엔 어색했지만 누워서 TV를 보다 보니 네 벽을 의식하지 않게 됐다</b>
+            <q>“Yes, the lack of windows can feel a little strange at first, but once he was settled in for the night, lying down in bed and relaxing while watching TV, he stopped being really conscious of being surrounded by four solid walls.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빛이 새어 들지 않고 옆 방과 벽이 닿지 않아 소리도 들리지 않았다</b>
+            <q>“There was no unwanted ambient light seeping into the room to wake him up in the early morning, and since none of his container’s walls were in contact with those of any other guests, there wasn’t any sound coming through them either.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>낮에 방에서 오래 쉬는 여행 스타일이면 바깥 풍경이 없는 게 답답할 수 있다</b>
+            <q>“if your travel style involves spending a couple hours in the afternoon just relaxing in your room, the lack of exterior views might start to feel a little oppressive.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>크레이들 캐빈이 도쿄 서쪽 니시도쿄에 새 지점을 열 계획이다</b>
+            <q>“he’d have no worries about staying in another, like maybe Cradle Cabin’s new location it’s planning to open soon in Nishitokyo, west of downtown Tokyo.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/13/whats-it-like-to-stay-in-a-japanese-container-hotel/" target="_blank" rel="noopener">What’s it like to stay in a Japanese container hotel?</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "stacked shipping containers on a sunny coastal lot"</li><li>2장: <a href="https://pixabay.com/photos/bed-hotel-luxurious-bedroom-4416515/" target="_blank" rel="noopener">Engin_Akyurt / Pixabay</a> — "hotel room"</li><li>3장: <a href="https://pixabay.com/photos/brick-wall-empty-lighted-night-1834446/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "parking lot"</li><li>4장: <a href="https://pixabay.com/photos/bathroom-faucet-sink-tap-water-8688132/" target="_blank" rel="noopener">mowbraycourthotel / Pixabay</a> — "bathroom"</li><li>5장: <a href="https://pixabay.com/photos/kitchen-interior-design-room-home-1940174/" target="_blank" rel="noopener">shadowfirearts / Pixabay</a> — "refrigerator"</li><li>6장: <a href="https://pixabay.com/photos/money-coin-investment-business-2724241/" target="_blank" rel="noopener">nattanan23 / Pixabay</a> — "coins"</li><li>7장: <a href="https://pixabay.com/photos/container-ship-container-transport-6631117/" target="_blank" rel="noopener">dendoktoor / Pixabay</a> — "shipping container"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-83ceae107e61" data-id="83ceae107e61">
+    <div class="head">
+      <h2>2. 도쿄 자궁 사우나 &#39;사우나 마더&#39;</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9 · 애매 2
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>인스타에 올라감 · 10/14</b>
+      <p>이미 올라간 게시물이라 여기서는 더 고칠 수 없어요.</p>
+      
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>도쿄에 자궁 속 느낌을 내세운 사우나가 생긴대. 이름은 사우나 마더(Sauna Mother)고, 도쿄 롯폰기에 곧 문을 열 예정이야. 스스로를 &#39;두 시간 동안 어른이기를 그만두는 곳&#39;이라고 소개하고 있어.
+
+핵심은 &#39;다시 태어나는 코스&#39;야. 먼저 자궁 사우나. 붉은 살색 조명, 먹먹하게 들리는 소리, 설계한 쪽이 엄마 피부 냄새를 떠올리게 한다고 말하는 향으로 뱃속 감각을 재현했대. 여기서 나오면 신생아를 씻기는 것에 빗댄 냉탕, 신생아 목욕에 들어가. 그다음엔 여성의 상반신과 허벅지 모양 의자에 앉아 몸을 다시 데우는 엄마 무릎 샤워가 이어져.
+
+마지막은 엄마 소파. 몸의 한 곳에 압력이 몰리지 않게 굴곡을 계산한 소파가 세 가지 속도 중 하나로 앞뒤로 흔들려서, 엄마가 아기를 재우는 느낌을 준다는 설명이야. 위쪽에는 이자나미, 2차원 엄마, 인상주의풍 아트 마더, 신화 속 엄마 중 하나의 얼굴이 비춰진대. 체험 중에 사진을 찍으면 &#39;재탄생 증명서&#39;에 넣어주는 것도 있어.
+
+운영 측은 신생아 때 느꼈던 안정감을 주는 게 목표라고 해. 정식 오픈은 이달 말 예정이고, 예약은 10월 중순부터 웹사이트에서 받는대. 1인 2시간 이용료는 8,500엔(약 54달러)이고, 2~4명 그룹 할인도 있어.
+
+한국엔 찜질방과 사우나 문화가 있는데, 이런 콘셉트가 들어오면 어떨까? 너라면 가볼래?
+
+출처: SoraNews24, PR Times
+
+배경 사진: Pexels, Hans, Zerocool, ErikaWittlieb, nattanan23, pen_ash / Pixabay
+표지 이미지: AI 생성
+
+#사우나 #도쿄 #일본 #해외이슈 #신기한뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-83ceae107e61">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;어른 그만두기&#39;라는 콘셉트와 자궁 사우나→신생아 목욕→엄마 소파로 이어지는 코스 순서가 웃기고 낯설어서 팔리고, 찜질방 문화가 있는 한국에 들어오면 어떨지 묻는 각도로 가면 댓글이 붙는다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 1인 2시간 이용료 8,500엔 (카드 6장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">74/500자</span></div>
+      <p class="tp-text">도쿄에 &#39;자궁 속&#39;을 재현한 사우나가 생긴대
+콘셉트는 두 시간 동안 어른 그만두기
+근데 코스 마지막에 뭐가 기다리는지가 더 이상함 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">1/ 이름은 사우나 마더(Sauna Mother)고, 도쿄 롯폰기에 곧 문을 열 예정이야. 핵심은 &#39;다시 태어나는 코스&#39;인데, 자궁 사우나에서 시작해서 엄마 소파에서 끝난대. 그 사이에는 뭐가 있을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">2/ 시작은 자궁 사우나야. 붉은 살색 조명에, 먹먹하게 들리는 소리, 설계한 쪽이 엄마 피부 냄새를 떠올리게 한다고 말하는 향으로 뱃속 감각을 재현했대. 여기서 나오면 바로 이어지는 냉탕 이름이 좀 웃겨 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">160/500자</span></div>
+      <p class="tp-text">3/ 코스 순서 정리
+- 자궁 사우나: 붉은 조명 + 먹먹한 소리 + 향
+- 신생아 목욕: 신생아 씻기는 것에 빗댄 냉탕
+- 엄마 무릎 샤워: 여성 상반신과 허벅지 모양 의자에 앉아 몸을 다시 데움
+- 엄마 소파: 앞뒤로 흔들려서 아기 재우는 느낌
+마지막 소파는 굴곡까지 계산했다는데 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">4/ 엄마 소파는 몸 한 곳에 압력이 몰리지 않게 굴곡을 계산했고, 세 가지 속도 중 하나로 앞뒤로 흔들려. 위쪽에는 이자나미, 2차원 엄마, 인상주의풍 아트 마더, 신화 속 엄마 중 하나의 얼굴이 비춰진대. 체험 중 사진도 찍을 수 있나 봤더니 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">75/500자</span></div>
+      <p class="tp-text">5/ 체험 중에 사진을 찍으면 &#39;재탄생 증명서&#39;에 넣어주는 것도 있대. 운영 측이 말하는 목표는 신생아 때 느꼈던 안정감을 주는 거래.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">184/500자</span></div>
+      <p class="tp-text">6/ 정식 오픈은 이달 말 예정이고, 예약은 10월 중순부터 웹사이트에서 받는대.
+
+코스 중에 하나만 고른다면 너는 어디야?
+
+다음 배송: 일본 원숭이 고양이 연못 투척 사건 얘기. 팔로우해두면 피드에 뜸
+
+카드엔 이용료까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>도쿄에 &#39;자궁 속&#39;을 재현한 사우나가 생긴대
+콘셉트는 두 시간 동안 어른 그만두기</li><li>사우나가 땀 빼는 곳이 아니라 &#39;다시 태어나는 곳&#39;이래</li><li>피곤한 어른한테 두 시간짜리 &#39;신생아 체험&#39;을 코스로 내놓은 곳이 도쿄에 생김</li><li>붉은 조명, 먹먹한 소리, 엄마 냄새를 떠올리게 한다는 향까지. 뱃속을 사우나로 만든 사람들이 있대</li><li>찜질방 나라에서 이런 건 못 봤는데 도쿄엔 &#39;자궁 사우나&#39;가 생긴대</li><li>냉탕 이름이 &#39;신생아 목욕&#39;이고 마지막 코스가 &#39;엄마 소파&#39;인 사우나가 있대</li><li>&#39;어른 그만두고 싶다&#39;는 말을 도쿄에선 진짜 코스로 만들었음</li><li>&#39;재탄생 증명서&#39;까지 나오는 사우나가 도쿄 롯폰기에 생긴대</li><li>사우나 갔다 나오면 다시 태어난 기분이라고들 하잖아. 여기는 그게 코스 이름임</li><li>두 시간 동안 아기가 되는 사우나, 너라면 들어가볼래?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>코스 중에 하나만 고른다면 너는 어디야?</li><li>두 시간 동안 어른을 그만둔다면 제일 먼저 뭐 하고 싶어?</li><li>한국 찜질방에 이런 콘셉트가 들어온다면 어떤 코스가 있으면 좋겠어?</li><li>어른이 되고 나서 &#39;그냥 아기로 돌아가고 싶다&#39; 싶었던 순간 있어?</li><li>사우나나 찜질방에서 제일 오래 버텨본 기록 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>일본 원숭이 고양이 연못 투척 사건</li><li>세계 최대 호박 2,856파운드 기록</li><li>지브리 스탬프 랠리 사가시</li><li>맥킨지 AI 고객 면접</li><li>일본 사우나·찜질 문화와 한국 찜질방 비교</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>오픈 시기(이달 말)와 예약 시작(10월 중순)은 원문 기사 기준 시점이라, 올리는 날짜에 따라 어긋날 수 있으니 업로드 전에 확인 필요</li><li>&#39;엄마 피부 냄새를 떠올리게 하는 향&#39;은 운영 측 설명이라 귀속 표현을 유지해야 함</li><li>여성 상반신·허벅지 모양 의자 등 몸 관련 표현이 선정적으로 읽힐 수 있어 노출 제한 여부 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-01.jpg" alt="1장: 자궁 사우나가 도쿄에 생긴대?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-02.jpg" alt="2장: 콘셉트가 2시간 동안 어른 그만두기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-03.jpg" alt="3장: 이름부터 자궁 사우나 붉은 조명에 먹먹한 소리" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-04.jpg" alt="4장: 핵심은 &#39;다시 태어나는 코스&#39; 엄마 피부 냄새를 떠올리게 한다고 말하는 향 뱃속 감각을 재현" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-05.jpg" alt="5장: 엄마 소파에서 흔들흔들 엄마가 아기를 재우는 느낌 체험" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-06.jpg" alt="6장: 이 체험이 2시간에 8,500엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-07.jpg" alt="7장: 아기 콘셉트 사우나 너는 해볼 의향있어?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/83ceae107e61/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">도쿄에 자궁 속 느낌을 내세운 사우나가 생긴대. 이름은 사우나 마더(Sauna Mother)고, 도쿄 롯폰기에 곧 문을 열 예정이야. 스스로를 &#39;두 시간 동안 어른이기를 그만두는 곳&#39;이라고 소개하고 있어.
+
+핵심은 &#39;다시 태어나는 코스&#39;야. 먼저 자궁 사우나. 붉은 살색 조명, 먹먹하게 들리는 소리, 설계한 쪽이 엄마 피부 냄새를 떠올리게 한다고 말하는 향으로 뱃속 감각을 재현했대. 여기서 나오면 신생아를 씻기는 것에 빗댄 냉탕, 신생아 목욕에 들어가. 그다음엔 여성의 상반신과 허벅지 모양 의자에 앉아 몸을 다시 데우는 엄마 무릎 샤워가 이어져.
+
+마지막은 엄마 소파. 몸의 한 곳에 압력이 몰리지 않게 굴곡을 계산한 소파가 세 가지 속도 중 하나로 앞뒤로 흔들려서, 엄마가 아기를 재우는 느낌을 준다는 설명이야. 위쪽에는 이자나미, 2차원 엄마, 인상주의풍 아트 마더, 신화 속 엄마 중 하나의 얼굴이 비춰진대. 체험 중에 사진을 찍으면 &#39;재탄생 증명서&#39;에 넣어주는 것도 있어.
+
+운영 측은 신생아 때 느꼈던 안정감을 주는 게 목표라고 해. 정식 오픈은 이달 말 예정이고, 예약은 10월 중순부터 웹사이트에서 받는대. 1인 2시간 이용료는 8,500엔(약 54달러)이고, 2~4명 그룹 할인도 있어.
+
+한국엔 찜질방과 사우나 문화가 있는데, 이런 콘셉트가 들어오면 어떨까? 너라면 가볼래?
+
+출처: SoraNews24, PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#사우나 #도쿄 #일본 #해외이슈 #신기한뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>위쪽에는 네 가지 엄마 모습 중 하나가 비춰진다 <small>애매 · 원문은 네 가지 엄마 중 하나(이자나미, 2차원 엄마, 인상주의풍 아트 마더, 신화 속 엄마)라고 했고 본문도 이를 따르지만, &#39;재탄생 증명서&#39;가 아닌 얼굴이 &#39;위쪽에 비춰진다&#39;는 점은 맞다. 다만 카드의 &#39;위엔 엄마 얼굴&#39;은 일반화로 보임. 원문 목록을 명시하는 것이 정확.</small></li><li>1인 2시간 이용료는 8,500엔(약 54달러)이고 2~4명 그룹 할인이 있다 <small>애매 · 1인 2시간 8,500엔(US$54)과 그룹 할인은 맞으나, 원문은 2~4명 그룹 할인이며 &#39;약 54달러&#39;는 원문의 US$54 표기 그대로이므로 정확. 다만 &#39;2~4명 그룹 할인&#39;은 원문 표현과 일치하므로 실제로는 supported에 가까움.</small></li>
+          <li>근거 등록 안 된 주장: &#39;한국 찜질방도 엄마 콘셉트 나올까?&#39;라는 질문은 주장이 아니지만, 한국 찜질방·사우나 문화가 존재한다는 설명은 원문에 없는 외부 사실이다</li><li>근거 등록 안 된 주장: 카드뉴스의 &#39;출처: SoraNews24, PR Times&#39; 표기 외에 사우나 마더 운영 주체나 공식 웹사이트 존재 여부는 원문 근거로만 확인 가능하다</li>
+          <li>기사 발행일 기준 개장 예정 시설이라 실제 오픈 여부와 예약·가격은 게시 전 확인 필요</li><li>이자나미 등 종교·신화 소재와 신체 연상 표현이 있어 민감하게 보일 수 있음</li><li>기사 사진과 PR Times 이미지는 사용하지 말 것 (저작권)</li><li>한국 찜질방 비교는 편집자 아이디어로 사실 확인되지 않아 질문형으로만 처리</li>
+        </ul>
+      </div>
+      
+
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>위쪽에는 네 가지 엄마 모습 중 하나가 비춰진다</b>
+            <q>“…projected above you is the countenance of one of four motherly figures, either Izanami, the Shinto mother goddess, the Two-Dimensional Mother (who looks sort of like a Ghilbi-version of classic anime character Sazae-san), the Impressionism-inspired Art Mother, or the Mythology Mother.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>1인 2시간 이용료는 8,500엔(약 54달러)이고 2~4명 그룹 할인이 있다</b>
+            <q>“The price for a one-person, two-hour session is listed at 8,500 yen (US$54), but there are discounts for group sessions of two, three, or four people, or maybe they should be reffered to as twins, triplets, and quadruplets.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사우나 마더는 도쿄 롯폰기에 곧 문을 열 예정이며 &#39;두 시간 동안 어른이기를 그만두는 곳&#39;이라고 스스로 소개한다</b>
+            <q>“Opening soon in the downtown Roppongi neighborhood is Sauna Mother, which touts itself as a place where you can “stop being an adult for two hours.””</q>
+            <small>slide1, slide2, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자궁 사우나는 붉은 조명, 먹먹한 소리, 엄마 피부 냄새를 떠올리게 한다는 향으로 뱃속 감각을 재현한다</b>
+            <q>“For example, instead of a regular old sauna, the facility has a Uterus Sauna, which reproduces the sensations of being in the womb through fleshy red lighting, muffled sounds, and a scent its designers say is evocative of the smell of a mother’s skin.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사진을 찍어 &#39;재탄생 증명서&#39;에 넣어준다</b>
+            <q>“You can even have your photo taken to be placed on your “rebirth certificate” that Sauna Mother provides.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자궁 사우나 다음에는 신생아를 씻기는 것에 빗댄 냉탕인 신생아 목욕이 이어진다</b>
+            <q>“Sauna Mother mercifully passes on reenacting the dramatic intensity of the birthing procedure itself, so after emerging from the Uterus Sauna you’ll proceed to the Newborn Bath, a cold-water bath meant as an allegory to the initial rinsing of birthing fluids off of a newborn child.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>엄마 무릎 샤워에서는 여성의 상반신과 허벅지 모양 의자에 앉아 몸을 다시 데운다</b>
+            <q>“Subsequently, you’ll be warmed back up again in the Mother’s Lap Shower, for which guests are propped on a seat shaped like a woman’s torso and thighs.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>엄마 소파는 손님을 안아 주고 흔들어 주고 지켜봐 주는 체험이다</b>
+            <q>“Finally, there’s perhaps the most visually impactful part of the experience, the Mother Sofa, where guests are cradled, rocked, and watched over.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소파는 압력을 줄이는 굴곡으로 설계됐고 세 가지 속도 중 하나로 앞뒤로 흔들린다</b>
+            <q>“The first two parts of that come from a reclining sofa with carefully calculated contours meant to eliminate excess pressure on any point of the body while you lie there and the surface sways back and forth, at one of three selectable speeds, like a mother rocking her baby to sleep.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>운영 측은 신생아 때 느꼈던 안정감을 주는 것이 목표라고 말한다</b>
+            <q>“The goal of all this, Sauna Mother says, is to provide guests with “the sense of security they felt as newborns,” which will have them feeling invigorated when their session ends.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>정식 오픈은 이달 말 예정이고 예약은 10월 중순부터 웹사이트에서 받는다</b>
+            <q>“Sauna Mother says it’s on track for its grand opening at the end of this month, with reservations set to open through its website in mid-October.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/12/new-tokyo-facility-promises-to-make-you-feel-reborn-time-in-the-womb-and-all-photos/" target="_blank" rel="noopener">New Tokyo facility promises to make you feel reborn, time in the womb and all [Photos]</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "warm pink glowing sauna room with soft cushions"</li><li>2장: <a href="https://pixabay.com/photos/man-grass-lying-resting-relaxing-1867800/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "relaxation"</li><li>3장: <a href="https://pixabay.com/photos/traffic-light-red-light-red-light-6010/" target="_blank" rel="noopener">Hans / Pixabay</a> — "red light"</li><li>4장: <a href="https://pixabay.com/photos/woman-sauna-spa-wellness-beauty-936549/" target="_blank" rel="noopener">Zerocool / Pixabay</a> — "sauna steam relaxation"</li><li>5장: <a href="https://pixabay.com/photos/nursery-crib-chair-bedroom-room-1078923/" target="_blank" rel="noopener">ErikaWittlieb / Pixabay</a> — "rocking chair"</li><li>6장: <a href="https://pixabay.com/photos/money-coin-investment-business-2724241/" target="_blank" rel="noopener">nattanan23 / Pixabay</a> — "coins"</li><li>7장: <a href="https://pixabay.com/photos/snow-monkey-japanese-macaque-japan-3971836/" target="_blank" rel="noopener">pen_ash / Pixabay</a> — "japanese onsen spa"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b88013b430ec" data-id="b88013b430ec">
+    <div class="head">
+      <h2>3. 몬태나 소프트볼 대회에서 상대 팀 선수가 친자매였던 이야기</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>인스타에 올라감 · 10/14</b>
+      <p>이미 올라간 게시물이라 여기서는 더 고칠 수 없어요.</p>
+      
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>상대 팀에 친자매가 있었다니, 영화 같은 일이 진짜로 벌어졌어.
+
+2025년 8월 1일, 미국 몬태나에서 열린 소프트볼 대회에서 생긴 일이야. 주인공 Samantha Rensvold는 영아 때 입양됐고, 미국 어딘가에 친자매가 있다는 것도 오래전부터 알고 있었대.
+
+경기 중에 팀 동료가 와서, 상대 팀의 18세 선수 Kyann Dean이 Rensvold랑 똑같이 생겼다고 알려줬어. 그 자리에선 말을 걸지 않기로 했는데, 입양한 어머니에게 이야기하자 어머니가 선수 명단을 같이 보자고 했대. 거기서 Kyann이라는 이름을 본 어머니는 친엄마가 지어준 이름이라는 걸 알아챘어.
+
+이후 다른 경기에서 Rensvold가 우익수로 뛰는 동안, 어머니가 Dean 가족에게 다가가 상황을 설명했어. 두 엄마가 확인해 보니 친엄마의 이름도, 두 사람이 태어난 병원도 똑같았대.
+
+알고 보니 둘 다 고교 때 배구를 했고, 같은 포지션에 같은 번호까지 달았대. 지금은 각자 다른 주에서 대학에 다니고 있고, 앞으로 함께 시간을 보낼 계획이래.
+
+Rensvold는 이제 의심이나 궁금증이 남지 않는다고 말했어.
+
+출처: Good News Network, PEOPLE
+
+배경 사진: KeithJJ, cherylholt, sasint, Peggy_Marco, nhuhang9261 / Pixabay
+표지 이미지: AI 생성
+
+#입양 #가족재회 #소프트볼 #해외이슈 #감동실화</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-b88013b430ec">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 친자매 재회 자체보다 &#39;쟤 너랑 똑같이 생겼다&#39;는 팀 동료의 한마디와 이름 하나로 확인된 과정이 팔린다</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 두 사람은 둘 다 고교 때 배구 선수였고, 포지션도 등번호도 같았다 (카드 5장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">경기 중에 팀 동료가 &#39;쟤 너랑 똑같이 생겼어&#39;라고 했는데, 진짜 친자매였대
+미국 몬태나 소프트볼 대회에서 벌어진 일이야
+근데 결정적 단서는 얼굴이 아니라 이름이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">76/500자</span></div>
+      <p class="tp-text">1/ 결론부터, 둘은 진짜 친자매였어. 두 엄마가 확인해 보니 친엄마 이름도, 태어난 병원도 똑같았대.
+근데 시작은 팀 동료의 한마디였음</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">163/500자</span></div>
+      <p class="tp-text">2/ 2025년 8월 1일, 몬태나 소프트볼 대회. 주인공 Samantha Rensvold는 영아 때 입양됐고, 미국 어딘가에 친자매가 있다는 건 오래전부터 알고 있었대.
+그런데 경기 중 팀 동료가 상대 팀 18세 선수 Kyann Dean이 똑같이 생겼다고 알려줬어. 그 뒤엔 어떻게 했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">3/ 그 자리에선 말을 걸지 않기로 했대. 대신 입양한 어머니에게 이야기했더니, 어머니가 선수 명단을 같이 보자고 했어.
+거기서 &#39;Kyann&#39;이라는 이름을 본 어머니가 알아챈 게 있었는데</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">4/ 그 이름은 친엄마가 지어준 이름이었어. 이후 다른 경기에서 Rensvold가 우익수로 뛰는 동안, 어머니가 Dean 가족에게 다가가 상황을 설명했대.
+그리고 두 엄마가 맞춰본 건 두 가지였어</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">138/500자</span></div>
+      <p class="tp-text">5/ 저장해둘 만한 흐름 정리
+- 팀 동료가 닮았다고 알려줌
+- 입양한 어머니와 선수 명단을 같이 봄
+- &#39;Kyann&#39;이 친엄마가 지어준 이름이라는 걸 알아챔
+- 두 엄마가 확인: 친엄마 이름, 태어난 병원 일치
+
+그래서 지금 둘은 어떻게 지낼까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">266/500자</span></div>
+      <p class="tp-text">6/ 지금 둘은 각자 다른 주에서 대학에 다니고 있고, 앞으로 함께 시간을 보낼 계획이래. Rensvold는 이제 의심이나 궁금증이 남지 않는다고 말했어.
+
+너라면 상대 팀에서 나랑 똑같이 생긴 사람을 봤을 때 먼저 말을 걸 것 같아, 일단 지켜볼 것 같아?
+
+다음 배송: 지브리 스탬프 랠리 사가시 얘기. 팔로우해두면 피드에 뜸
+
+카드엔 두 사람의 운동 이력 공통점까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>경기 중에 팀 동료가 &#39;쟤 너랑 똑같이 생겼어&#39;라고 했는데, 진짜 친자매였대</li><li>입양된 사람이 친자매를 만난 곳이 하필 소프트볼 상대 팀이었대</li><li>친엄마가 지어준 이름 하나가 친자매를 찾아줬대</li><li>미국 어딘가에 있다던 친자매가 소프트볼 상대 팀에 있었대</li><li>이름도 태어난 병원도 똑같았대. 소프트볼 대회에서 만난 두 사람 얘기</li><li>&#39;영화 같다&#39;는 말이 딱 맞는 일이 몬태나 소프트볼 대회에서 벌어졌어</li><li>상대 팀 선수 얼굴 보고 팀원이 한 말이 헤어진 가족을 다시 이어줬대</li><li>같은 대회, 다른 팀. 그리고 같은 친엄마</li><li>확인해 준 건 DNA 얘기가 아니라 선수 명단에 적힌 이름이었대</li><li>소프트볼 경기하다 나랑 똑같이 생긴 상대 선수를 보면 어떨 것 같아? 몬태나에서 진짜 있었던 일</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너라면 상대 팀에서 나랑 똑같이 생긴 사람을 봤을 때 먼저 말을 걸 것 같아, 일단 지켜볼 것 같아?</li><li>닮았다는 말을 듣고 뜻밖의 인연이 이어진 적 있으면 얘기해줘</li><li>친척이나 가족 중에 &#39;완전 똑같다&#39;는 소리 듣는 사람 있어? 어디가 제일 닮았어?</li><li>오랫동안 연락 끊긴 가족이나 친구를 우연히 만난다면 첫마디로 뭐라고 할래?</li><li>이름 하나로 누군가를 알아챈 경험, 있으면 들려줘</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>다음 배송: 지브리 스탬프 랠리 사가시 얘기</li><li>다음 배송: 일본 원숭이 고양이 연못 투척 사건</li><li>다음 배송: 세계 최대 호박 2,856파운드 기록</li><li>다음 배송: 맥킨지 AI 고객 면접</li><li>한국에서도 이런 재회 스토리가 있었을까? 독자 사연 받아보기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>카드 1장은 &#39;친동생&#39;, 본문은 &#39;친자매&#39;로 표기되어 있고 둘의 나이 순서가 확인되지 않음 - 스레드는 &#39;친자매&#39;로 통일했으니 원문 확인 후 올릴 것</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/b88013b430ec/v2-01.jpg" alt="1장: 상대 팀에 잃어버린 친동생이???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/b88013b430ec/v2-02.jpg" alt="2장: 대회중 팀원이 와서 한마디 쟤 너랑 똑같이 생겼다고" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/b88013b430ec/v2-03.jpg" alt="3장: 주인공 Samantha Rensvold는 영아 때 입양된 입양가정에서 자라왔어." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/b88013b430ec/v2-04.jpg" alt="4장: 서로 가족을 확인 친모 이름도 병원도 똑같았대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/b88013b430ec/v2-05.jpg" alt="5장: 둘 다 배구 선수 포지션도 같고 등번호도 같았대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/b88013b430ec/v2-06.jpg" alt="6장: 한국에서도 이런 재회스토리 있었을까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261013-am-7bfdfd15832f/b88013b430ec/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">상대 팀에 친자매가 있었다니, 영화 같은 일이 진짜로 벌어졌어.
+
+2025년 8월 1일, 미국 몬태나에서 열린 소프트볼 대회에서 생긴 일이야. 주인공 Samantha Rensvold는 영아 때 입양됐고, 미국 어딘가에 친자매가 있다는 것도 오래전부터 알고 있었대.
+
+경기 중에 팀 동료가 와서, 상대 팀의 18세 선수 Kyann Dean이 Rensvold랑 똑같이 생겼다고 알려줬어. 그 자리에선 말을 걸지 않기로 했는데, 입양한 어머니에게 이야기하자 어머니가 선수 명단을 같이 보자고 했대. 거기서 Kyann이라는 이름을 본 어머니는 친엄마가 지어준 이름이라는 걸 알아챘어.
+
+이후 다른 경기에서 Rensvold가 우익수로 뛰는 동안, 어머니가 Dean 가족에게 다가가 상황을 설명했어. 두 엄마가 확인해 보니 친엄마의 이름도, 두 사람이 태어난 병원도 똑같았대.
+
+알고 보니 둘 다 고교 때 배구를 했고, 같은 포지션에 같은 번호까지 달았대. 지금은 각자 다른 주에서 대학에 다니고 있고, 앞으로 함께 시간을 보낼 계획이래.
+
+Rensvold는 이제 의심이나 궁금증이 남지 않는다고 말했어.
+
+출처: Good News Network, PEOPLE</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#입양 #가족재회 #소프트볼 #해외이슈 #감동실화</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처 표기로 Good News Network가 함께 적혀 있으나 근거에서 확인되지 않는다</li><li>근거 등록 안 된 주장: &#39;영화 같은 일이 진짜로 벌어졌다&#39;는 평가 문장(의견성 표현이므로 검증 대상 아님, 참고용)</li>
+          <li>원문이 PEOPLE 인터뷰를 인용한 단일 출처 기사라 교차 검증되지 않음</li><li>실명 개인(18세 포함 청소년) 이야기라 개인정보·프라이버시 주의</li><li>기사 게시일(2026-10-12)과 사건 날짜(2025년 8월)가 맞지 않아 날짜 확인 필요</li><li>원문은 sister로만 표기해 언니/동생 구분이 불명확함(카드의 &#39;동생&#39; 표현은 편집자 메모 기반)</li><li>한국 입양·재회 사례는 사실 확인 안 된 참고 아이디어라 질문형으로만 처리</li>
+        </ul>
+      </div>
+      
+
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2025년 8월 1일 몬태나에서 열린 소프트볼 대회에서 일어난 일이다</b>
+            <q>“These things were far in the back of her mind though, on August 1st, 2025, during a softball tournament in Montana.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Samantha Rensvold는 영아 때 입양됐다</b>
+            <q>“Samantha Rensvold was adopted as an infant.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Rensvold는 미국 어딘가에 친자매가 있다는 걸 오래전부터 알고 있었다</b>
+            <q>“It’s something she’s long known of, and that she has a biological sister, somewhere in the US.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>팀 동료가 상대 팀 18세 선수 Kyann Dean이 Rensvold와 똑같이 생겼다고 알려줬다</b>
+            <q>“Rensvold had not seen the opposing player—18-year-old Kyann Dean—whom a teammate came over to explain looked exactly like her.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Rensvold는 경기 후 Dean에게 말을 걸지 않기로 했고, 입양한 어머니가 선수 명단을 보자고 제안했다</b>
+            <q>“She decided not to speak with Dean after the match, but, upon telling her adopted mother about the situation, she suggested the pair look at the roster.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>입양한 어머니는 Kyann이 친엄마가 지어준 이름이라는 걸 알고 있었다</b>
+            <q>““My mom knew that that’s what my birth mom named her,” Rensvold said.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이후 경기에서 Rensvold가 우익수로 뛰는 동안 어머니가 Dean 가족에게 다가가 상황을 설명했다</b>
+            <q>“In a later match, Rensvold was playing right field while Dean was watching from the stands with her family just behind her.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 엄마가 확인한 결과 친모 이름과 태어난 병원이 똑같았다</b>
+            <q>“During that conversation, the two moms confirmed the name of the girls’ birth mother and the hospital they were born at, with both facts coming up identical.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>둘 다 고교 때 같은 포지션, 같은 번호로 배구를 했다</b>
+            <q>“They both played volleyball in high school, in the same position, wearing the same number.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>둘은 서로 다른 두 주에서 대학에 다니고 있고 앞으로 함께 시간을 보낼 계획이다</b>
+            <q>“Despite their familial revelation, the pair are attending college diligently in two separate states, and plan to spend time together in the future.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Rensvold는 만난 뒤 의심이나 궁금증이 남지 않는다고 말했다</b>
+            <q>“It doesn’t leave any doubt or wonder in my mind.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 이야기는 PEOPLE 매거진이 처음 보도했다</b>
+            <q>““I was like, ‘There’s no way that this would happen to me right now,’” Rensvold told PEOPLE Magazine, which broke the story.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/montana-high-school-softball-player-discovered-long-lost-sister-on-opposing-team/" target="_blank" rel="noopener">Montana High School Softball Player Discovered Long-Lost Sister on Opposing Team</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "empty softball field on a sunny afternoon"</li><li>2장: <a href="https://pixabay.com/photos/softball-batter-female-swinging-1610651/" target="_blank" rel="noopener">KeithJJ / Pixabay</a> — "softball players"</li><li>3장: <a href="https://pixabay.com/photos/softball-baseball-ball-sport-game-372979/" target="_blank" rel="noopener">cherylholt / Pixabay</a> — "softball field"</li><li>4장: <a href="https://pixabay.com/photos/operation-operating-room-surgery-1807543/" target="_blank" rel="noopener">sasint / Pixabay</a> — "hospital"</li><li>5장: <a href="https://pixabay.com/photos/sunset-volleyball-beach-silhouette-5560658/" target="_blank" rel="noopener">Peggy_Marco / Pixabay</a> — "volleyball"</li><li>6장: <a href="https://pixabay.com/photos/couple-holding-hands-together-date-6976409/" target="_blank" rel="noopener">nhuhang9261 / Pixabay</a> — "holding hands"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261013-am";
+  const ORIGINAL = {"83ceae107e61": {"caption": "\ub3c4\ucfc4\uc5d0 \uc790\uad81 \uc18d \ub290\ub08c\uc744 \ub0b4\uc138\uc6b4 \uc0ac\uc6b0\ub098\uac00 \uc0dd\uae34\ub300. \uc774\ub984\uc740 \uc0ac\uc6b0\ub098 \ub9c8\ub354(Sauna Mother)\uace0, \ub3c4\ucfc4 \ub86f\ud3f0\uae30\uc5d0 \uace7 \ubb38\uc744 \uc5f4 \uc608\uc815\uc774\uc57c. \uc2a4\uc2a4\ub85c\ub97c \u0027\ub450 \uc2dc\uac04 \ub3d9\uc548 \uc5b4\ub978\uc774\uae30\ub97c \uadf8\ub9cc\ub450\ub294 \uacf3\u0027\uc774\ub77c\uace0 \uc18c\uac1c\ud558\uace0 \uc788\uc5b4.\n\n\ud575\uc2ec\uc740 \u0027\ub2e4\uc2dc \ud0dc\uc5b4\ub098\ub294 \ucf54\uc2a4\u0027\uc57c. \uba3c\uc800 \uc790\uad81 \uc0ac\uc6b0\ub098. \ubd89\uc740 \uc0b4\uc0c9 \uc870\uba85, \uba39\uba39\ud558\uac8c \ub4e4\ub9ac\ub294 \uc18c\ub9ac, \uc124\uacc4\ud55c \ucabd\uc774 \uc5c4\ub9c8 \ud53c\ubd80 \ub0c4\uc0c8\ub97c \ub5a0\uc62c\ub9ac\uac8c \ud55c\ub2e4\uace0 \ub9d0\ud558\ub294 \ud5a5\uc73c\ub85c \ubc43\uc18d \uac10\uac01\uc744 \uc7ac\ud604\ud588\ub300. \uc5ec\uae30\uc11c \ub098\uc624\uba74 \uc2e0\uc0dd\uc544\ub97c \uc53b\uae30\ub294 \uac83\uc5d0 \ube57\ub304 \ub0c9\ud0d5, \uc2e0\uc0dd\uc544 \ubaa9\uc695\uc5d0 \ub4e4\uc5b4\uac00. \uadf8\ub2e4\uc74c\uc5d4 \uc5ec\uc131\uc758 \uc0c1\ubc18\uc2e0\uacfc \ud5c8\ubc85\uc9c0 \ubaa8\uc591 \uc758\uc790\uc5d0 \uc549\uc544 \ubab8\uc744 \ub2e4\uc2dc \ub370\uc6b0\ub294 \uc5c4\ub9c8 \ubb34\ub98e \uc0e4\uc6cc\uac00 \uc774\uc5b4\uc838.\n\n\ub9c8\uc9c0\ub9c9\uc740 \uc5c4\ub9c8 \uc18c\ud30c. \ubab8\uc758 \ud55c \uacf3\uc5d0 \uc555\ub825\uc774 \ubab0\ub9ac\uc9c0 \uc54a\uac8c \uad74\uace1\uc744 \uacc4\uc0b0\ud55c \uc18c\ud30c\uac00 \uc138 \uac00\uc9c0 \uc18d\ub3c4 \uc911 \ud558\ub098\ub85c \uc55e\ub4a4\ub85c \ud754\ub4e4\ub824\uc11c, \uc5c4\ub9c8\uac00 \uc544\uae30\ub97c \uc7ac\uc6b0\ub294 \ub290\ub08c\uc744 \uc900\ub2e4\ub294 \uc124\uba85\uc774\uc57c. \uc704\ucabd\uc5d0\ub294 \uc774\uc790\ub098\ubbf8, 2\ucc28\uc6d0 \uc5c4\ub9c8, \uc778\uc0c1\uc8fc\uc758\ud48d \uc544\ud2b8 \ub9c8\ub354, \uc2e0\ud654 \uc18d \uc5c4\ub9c8 \uc911 \ud558\ub098\uc758 \uc5bc\uad74\uc774 \ube44\ucdb0\uc9c4\ub300. \uccb4\ud5d8 \uc911\uc5d0 \uc0ac\uc9c4\uc744 \ucc0d\uc73c\uba74 \u0027\uc7ac\ud0c4\uc0dd \uc99d\uba85\uc11c\u0027\uc5d0 \ub123\uc5b4\uc8fc\ub294 \uac83\ub3c4 \uc788\uc5b4.\n\n\uc6b4\uc601 \uce21\uc740 \uc2e0\uc0dd\uc544 \ub54c \ub290\uaf08\ub358 \uc548\uc815\uac10\uc744 \uc8fc\ub294 \uac8c \ubaa9\ud45c\ub77c\uace0 \ud574. \uc815\uc2dd \uc624\ud508\uc740 \uc774\ub2ec \ub9d0 \uc608\uc815\uc774\uace0, \uc608\uc57d\uc740 10\uc6d4 \uc911\uc21c\ubd80\ud130 \uc6f9\uc0ac\uc774\ud2b8\uc5d0\uc11c \ubc1b\ub294\ub300. 1\uc778 2\uc2dc\uac04 \uc774\uc6a9\ub8cc\ub294 8,500\uc5d4(\uc57d 54\ub2ec\ub7ec)\uc774\uace0, 2~4\uba85 \uadf8\ub8f9 \ud560\uc778\ub3c4 \uc788\uc5b4.\n\n\ud55c\uad6d\uc5d4 \ucc1c\uc9c8\ubc29\uacfc \uc0ac\uc6b0\ub098 \ubb38\ud654\uac00 \uc788\ub294\ub370, \uc774\ub7f0 \ucf58\uc149\ud2b8\uac00 \ub4e4\uc5b4\uc624\uba74 \uc5b4\ub5a8\uae4c? \ub108\ub77c\uba74 \uac00\ubcfc\ub798?\n\n\ucd9c\ucc98: SoraNews24, PR Times", "hashtags": ["#\uc0ac\uc6b0\ub098", "#\ub3c4\ucfc4", "#\uc77c\ubcf8", "#\ud574\uc678\uc774\uc288", "#\uc2e0\uae30\ud55c\ub274\uc2a4"], "slides": [["**\uc790\uad81 \uc0ac\uc6b0\ub098\uac00**", "\ub3c4\ucfc4\uc5d0 \uc0dd\uae34\ub300?!"], ["\ucf58\uc149\ud2b8\uac00", "2\uc2dc\uac04 \ub3d9\uc548", "**\uc5b4\ub978 \uadf8\ub9cc\ub450\uae30**"], ["\uc774\ub984\ubd80\ud130", "**\uc790\uad81 \uc0ac\uc6b0\ub098**", "\ubd89\uc740 \uc870\uba85\uc5d0 \uba39\uba39\ud55c \uc18c\ub9ac"], ["\ud575\uc2ec\uc740 **\u0027\ub2e4\uc2dc \ud0dc\uc5b4\ub098\ub294 \ucf54\uc2a4\u0027**", "\uc5c4\ub9c8 \ud53c\ubd80 \ub0c4\uc0c8\ub97c \ub5a0\uc62c\ub9ac\uac8c \ud55c\ub2e4\uace0 \ub9d0\ud558\ub294 \ud5a5", "**\ubc43\uc18d \uac10\uac01**\uc744 \uc7ac\ud604"], ["\uc5c4\ub9c8 \uc18c\ud30c\uc5d0\uc11c", "**\ud754\ub4e4\ud754\ub4e4** \uc5c4\ub9c8\uac00", "\uc544\uae30\ub97c \uc7ac\uc6b0\ub294 \ub290\ub08c \uccb4\ud5d8"], ["\uc774 \uccb4\ud5d8\uc774", "2\uc2dc\uac04\uc5d0", "**8,500\uc5d4**"], ["**\uc544\uae30 \ucf58\uc149\ud2b8**", "\uc0ac\uc6b0\ub098", "\ub108\ub294 \ud574\ubcfc \uc758\ud5a5\uc788\uc5b4?"]]}, "9ec71b76d6de": {"caption": "\ucee8\ud14c\uc774\ub108\uc5d0\uc11c \ud558\ub8fb\ubc24 \uc790\ubcf8\ub2e4\uace0? \uc77c\ubcf8\uc5d0\uc11c \uc694\uc998 \uc778\uae30\ub97c \ub04c\uace0 \uc788\ub2e4\ub294 \ucee8\ud14c\uc774\ub108 \ud638\ud154 \uc774\uc57c\uae30\uc57c. \uc18c\ub77c\ub274\uc2a424 \uae30\uc790\uac00 \uce58\ubc14\ud604 \ub2e4\ud14c\uc57c\ub9c8\uc2dc\uc5d0 \uc788\ub294 \u0027\ud06c\ub808\uc774\ub4e4 \uce90\ube48\u0027\uc5d0\uc11c \uc9c1\uc811 \ud558\ub8fb\ubc24 \ubb35\uc5b4\ubd24\ub300.\n\n\ucea1\uc290\ud638\ud154\ucc98\ub7fc \uce78\ub9c9\uc774 \ud55c \uce78\uc744 \ube4c\ub9ac\ub294 \ubc29\uc2dd\uc774 \uc544\ub2c8\ub77c, \uac1c\uc870\ud55c \uc120\ubc15\uc6a9 \ucee8\ud14c\uc774\ub108 \uc548\uc5d0 \uc9c4\uc9dc \uac1c\uc778\uc2e4\uc774 \uc788\ub294 \uad6c\uc870\uc57c. \ucee8\ud14c\uc774\ub108 \ud3ed\uc740 \uc8fc\ucc28 \ud55c \uce78\uc5d0 \ub4e4\uc5b4\uac08 \ub9cc\ud07c \uc881\uc544\uc11c \ubb38\uc744 \uc5f4 \ub550 \uc0b4\uc9dd \uac71\uc815\ud588\uc9c0\ub9cc, \uc548\uc5d0 \ub4e4\uc5b4\uac00 \ubcf4\ub2c8 \ud544\uc694\ud55c \uacf5\uac04\uc740 \ub2e4 \uc788\uc5c8\ub2e4\uace0 \ud574. \uc785\uad6c \ucabd\uc774 \uc881\uc740 \uac74 \ubc29\ub9c8\ub2e4 \uc804\uc6a9 \uc695\uc2e4\uacfc \uc0e4\uc6cc\uc2e4\uc774 \ub4e4\uc5b4 \uc788\uc5b4\uc11c\ub798.\n\n\ub9e4\ud2b8\ub9ac\uc2a4\ub294 \ud479\uc2e0\ud558\uba74\uc11c\ub3c4 \ubc1b\uccd0\uc8fc\ub294 \ub290\ub08c\uc774\uace0, \ubca0\uac1c\ub3c4 \ub2e8\ub2e8\ud568\uc774 \ub2e4\ub978 \ub450 \uc885\ub958\uac00 \ub193\uc5ec \uc788\uc5c8\ub300. \uc804\uc790\ub808\uc778\uc9c0\uc640 \ub0c9\ub3d9\uc2e4 \ub2ec\ub9b0 \ub0c9\uc7a5\uace0\uae4c\uc9c0 \uc788\uc5c8\ub294\ub370, \uc77c\ubcf8 \ud638\ud154 \uac1d\uc2e4\uc5d0\uc120 \ud754\uce58 \uc54a\uc740 \uad6c\uc131\uc774\ub77c\uace0 \ud574. \uc0e4\uc6cc\uc6a9\ud488\uc740 \uc77c\ubcf8 \ube0c\ub79c\ub4dc \ud3f4\ub77c \uc81c\ud488\uc774\uc57c.\n\n\uac00\uaca9\uc740 \ud558\ub8fb\ubc24 8,080\uc5d4(\uc57d 51\ub2ec\ub7ec). \uae30\uc790\ub294 \uc774 \uac00\uaca9\ub300\uc5d0\uc11c \ubcf4\ud1b5 \uae30\ub300\ud558\ub294 \uac83\ubcf4\ub2e4 \uc2dc\uc124\uc774 \uc88b\uc558\ub2e4\uace0 \uc804\ud588\uc5b4. \ud3d0\uc18c\uacf5\ud3ec\uac00 \uc62c\uae4c \uac71\uc815\ud588\uc9c0\ub9cc \uadf8\ub807\uc9c0 \uc54a\uc558\uace0, \ucc3d\ubb38 \uc5c6\ub294 \uac8c \ucc98\uc74c\uc5d4 \uc5b4\uc0c9\ud574\ub3c4 \ub204\uc6cc\uc11c TV\ub97c \ubcf4\ub2e4 \ubcf4\ub2c8 \uc2e0\uacbd \uc4f0\uc774\uc9c0 \uc54a\uc558\ub300. \ube5b\uc774 \uc0c8\uc5b4 \ub4e4\uc9c0 \uc54a\uace0 \uc606 \ubc29\uacfc \ubcbd\uc774 \ub2ff\uc9c0 \uc54a\uc544\uc11c \uc18c\ub9ac\ub3c4 \uc548 \ub4e4\ub824 \ud479 \uc7a4\ub2e4\uace0 \ud574. \ub2e4\ub9cc \ub0ae\uc5d0 \ubc29\uc5d0\uc11c \uc624\ub798 \uc26c\ub294 \uc5ec\ud589 \uc2a4\ud0c0\uc77c\uc774\uba74 \ubc14\uae65 \ud48d\uacbd\uc774 \uc5c6\ub294 \uac8c \ub2f5\ub2f5\ud560 \uc218 \uc788\ub2e4\ub294 \uc598\uae30\ub3c4 \uc788\uc5b4.\n\n\ud06c\ub808\uc774\ub4e4 \uce90\ube48\uc740 \ub3c4\ucfc4 \uc11c\ucabd \ub2c8\uc2dc\ub3c4\ucfc4\uc5d0\ub3c4 \uc0c8 \uc9c0\uc810\uc744 \uc5f4 \uacc4\ud68d\uc774\ub798.\n\n\ud55c\uad6d\uc5d0\ub3c4 \uc774\ub7f0 \ucee8\ud14c\uc774\ub108 \uc219\uc18c\uac00 \uc788\uc744\uae4c?\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\uc77c\ubcf8\uc5ec\ud589", "#\ucee8\ud14c\uc774\ub108\ud638\ud154", "#\uc77c\ubcf8\ud638\ud154", "#\ud574\uc678\ud56b\uc774\uc288", "#\ub3c4\ucfc4\uc5ec\ud589"], "slides": [["**\ud654\ubb3c\uc6a9**", "**\ucee8\ud14c\uc774\ub108\uc5d0\uc11c**", "\uc790\ubcf8\ub2e4\uace0???"], ["\ucea1\uc290\ud638\ud154 \uc544\ub2d8", "\uc9c4\uc9dc **\uac1c\uc778\uc2e4**\uc774\ub798"], ["\uac1d\uc2e4 \ud3ed\uc774 \ub531", "**\uc8fc\ucc28\uc7a5 \ud55c \uce78**"], ["\uc804\uc6a9 \ud654\uc7a5\uc2e4\u00b7\uc0e4\uc6cc\uc2e4", "\ubc29\ub9c8\ub2e4 **\ub530\ub85c** \ubc30\uce58"], ["**\uc804\uc790\ub808\uc778\uc9c0\uc5d0**", "\ub0c9\ub3d9\uc2e4 \ub0c9\uc7a5\uace0\uae4c\uc9c0", "\uad6c\ube44\uc644\ub8cc"], ["\ud558\ub8fb\ubc24 **8,080\uc5d4**", "\uc57d 51\ub2ec\ub7ec"], ["\ub108\ub77c\uba74", "\ucee8\ud14c\uc774\ub108 \uc219\uc18c\uc5d0\uc11c", "**\uc798\uc218 \uc788\uc5b4?**"]]}, "b88013b430ec": {"caption": "\uc0c1\ub300 \ud300\uc5d0 \uce5c\uc790\ub9e4\uac00 \uc788\uc5c8\ub2e4\ub2c8, \uc601\ud654 \uac19\uc740 \uc77c\uc774 \uc9c4\uc9dc\ub85c \ubc8c\uc5b4\uc84c\uc5b4.\n\n2025\ub144 8\uc6d4 1\uc77c, \ubbf8\uad6d \ubaac\ud0dc\ub098\uc5d0\uc11c \uc5f4\ub9b0 \uc18c\ud504\ud2b8\ubcfc \ub300\ud68c\uc5d0\uc11c \uc0dd\uae34 \uc77c\uc774\uc57c. \uc8fc\uc778\uacf5 Samantha Rensvold\ub294 \uc601\uc544 \ub54c \uc785\uc591\ub410\uace0, \ubbf8\uad6d \uc5b4\ub518\uac00\uc5d0 \uce5c\uc790\ub9e4\uac00 \uc788\ub2e4\ub294 \uac83\ub3c4 \uc624\ub798\uc804\ubd80\ud130 \uc54c\uace0 \uc788\uc5c8\ub300.\n\n\uacbd\uae30 \uc911\uc5d0 \ud300 \ub3d9\ub8cc\uac00 \uc640\uc11c, \uc0c1\ub300 \ud300\uc758 18\uc138 \uc120\uc218 Kyann Dean\uc774 Rensvold\ub791 \ub611\uac19\uc774 \uc0dd\uacbc\ub2e4\uace0 \uc54c\ub824\uc92c\uc5b4. \uadf8 \uc790\ub9ac\uc5d0\uc120 \ub9d0\uc744 \uac78\uc9c0 \uc54a\uae30\ub85c \ud588\ub294\ub370, \uc785\uc591\ud55c \uc5b4\uba38\ub2c8\uc5d0\uac8c \uc774\uc57c\uae30\ud558\uc790 \uc5b4\uba38\ub2c8\uac00 \uc120\uc218 \uba85\ub2e8\uc744 \uac19\uc774 \ubcf4\uc790\uace0 \ud588\ub300. \uac70\uae30\uc11c Kyann\uc774\ub77c\ub294 \uc774\ub984\uc744 \ubcf8 \uc5b4\uba38\ub2c8\ub294 \uce5c\uc5c4\ub9c8\uac00 \uc9c0\uc5b4\uc900 \uc774\ub984\uc774\ub77c\ub294 \uac78 \uc54c\uc544\ucc58\uc5b4.\n\n\uc774\ud6c4 \ub2e4\ub978 \uacbd\uae30\uc5d0\uc11c Rensvold\uac00 \uc6b0\uc775\uc218\ub85c \ub6f0\ub294 \ub3d9\uc548, \uc5b4\uba38\ub2c8\uac00 Dean \uac00\uc871\uc5d0\uac8c \ub2e4\uac00\uac00 \uc0c1\ud669\uc744 \uc124\uba85\ud588\uc5b4. \ub450 \uc5c4\ub9c8\uac00 \ud655\uc778\ud574 \ubcf4\ub2c8 \uce5c\uc5c4\ub9c8\uc758 \uc774\ub984\ub3c4, \ub450 \uc0ac\ub78c\uc774 \ud0dc\uc5b4\ub09c \ubcd1\uc6d0\ub3c4 \ub611\uac19\uc558\ub300.\n\n\uc54c\uace0 \ubcf4\ub2c8 \ub458 \ub2e4 \uace0\uad50 \ub54c \ubc30\uad6c\ub97c \ud588\uace0, \uac19\uc740 \ud3ec\uc9c0\uc158\uc5d0 \uac19\uc740 \ubc88\ud638\uae4c\uc9c0 \ub2ec\uc558\ub300. \uc9c0\uae08\uc740 \uac01\uc790 \ub2e4\ub978 \uc8fc\uc5d0\uc11c \ub300\ud559\uc5d0 \ub2e4\ub2c8\uace0 \uc788\uace0, \uc55e\uc73c\ub85c \ud568\uaed8 \uc2dc\uac04\uc744 \ubcf4\ub0bc \uacc4\ud68d\uc774\ub798.\n\nRensvold\ub294 \uc774\uc81c \uc758\uc2ec\uc774\ub098 \uad81\uae08\uc99d\uc774 \ub0a8\uc9c0 \uc54a\ub294\ub2e4\uace0 \ub9d0\ud588\uc5b4.\n\n\ucd9c\ucc98: Good News Network, PEOPLE", "hashtags": ["#\uc785\uc591", "#\uac00\uc871\uc7ac\ud68c", "#\uc18c\ud504\ud2b8\ubcfc", "#\ud574\uc678\uc774\uc288", "#\uac10\ub3d9\uc2e4\ud654"], "slides": [["\uc0c1\ub300 \ud300\uc5d0", "**\uc783\uc5b4\ubc84\ub9b0 \uce5c\ub3d9\uc0dd\uc774???**"], ["\ub300\ud68c\uc911", "\ud300\uc6d0\uc774 \uc640\uc11c \ud55c\ub9c8\ub514", "\uc7e4 \ub108\ub791 **\ub611\uac19\uc774** \uc0dd\uacbc\ub2e4\uace0"], ["\uc8fc\uc778\uacf5 **Samantha Rensvold**\ub294", "\uc601\uc544 \ub54c \uc785\uc591\ub41c", "\uc785\uc591\uac00\uc815\uc5d0\uc11c \uc790\ub77c\uc654\uc5b4."], ["\uc11c\ub85c \uac00\uc871\uc744 \ud655\uc778", "\uce5c\ubaa8 \uc774\ub984\ub3c4", "\ubcd1\uc6d0\ub3c4 **\ub611\uac19\uc558\ub300**"], ["\ub458 \ub2e4 \ubc30\uad6c \uc120\uc218", "\ud3ec\uc9c0\uc158\ub3c4 \uac19\uace0", "**\ub4f1\ubc88\ud638\ub3c4** \uac19\uc558\ub300"], ["\ud55c\uad6d\uc5d0\uc11c\ub3c4", "\uc774\ub7f0 **\uc7ac\ud68c\uc2a4\ud1a0\ub9ac**", "\uc788\uc5c8\uc744\uae4c?"]]}};
+  const TOTAL = 3;
+  const SERVER = {"83ceae107e61": "approve", "9ec71b76d6de": "approve", "b88013b430ec": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set(["9ec71b76d6de", "83ceae107e61", "b88013b430ec"]);   // 이미 인스타에 올라간 게시물
+  const REV = 10;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

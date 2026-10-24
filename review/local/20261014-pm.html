@@ -1,0 +1,1779 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.14 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.14 오후 검수 <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-d2208615ee18" data-jump="d2208615ee18">1</a><a href="#post-b2455dcc2e82" data-jump="b2455dcc2e82">2</a><a href="#post-cd7481ab1f04" data-jump="cd7481ab1f04">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-d2208615ee18" data-id="d2208615ee18">
+    <div class="head">
+      <h2>1. 강아지도 부바는 둥글고 키키는 뾰족?</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-01.jpg" alt="1장: 강아지도 부바는 둥글다고?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-02.jpg" alt="2장: 부바랑 키키는 사실 지어낸 말" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-03.jpg" alt="3장: 사람 대부분은 키키는 뾰족, 부바는 둥글어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-04.jpg" alt="4장: 강아지 70마리한테 소리랑 도형을 보여줬어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-05.jpg" alt="5장: 부바 소리엔 둥근 도형을 더 쳐다봤대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-06.jpg" alt="6장: 주인 힌트를 막아본 실험도 따로 했어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-07.jpg" alt="7장: 한국어 동글·뾰족도 이런 감각일까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/d2208615ee18/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">강아지도 부바는 둥글다고 반응한다는 연구가 나왔어. 정확히는 소리에 맞춰 도형을 더 오래 본다는 쪽이야.
+
+부바와 키키는 지어낸 단어인데, 어떤 언어나 문자를 쓰든 대부분의 사람은 키키는 뾰족하고 부바는 둥글다고 답한대. 이 실험은 1920년대에 처음 구상됐고, 사람이 소리와 모양을 연결하는 방식에 보편적인 뭔가가 있을 수 있다는 얘기로 이어졌어.
+
+이번엔 이탈리아 파르마대학교의 동물행동학자 엘레오노라 비피 연구팀이 가정견 70마리를 모았어. 첫 실험에는 51마리와 보호자가 참여했고, 방 왼쪽과 오른쪽에 화면과 스피커가 하나씩 있었어. 약 15분 동안 사람이 말하는 &#39;부바&#39; 또는 &#39;키키&#39; 소리와 두 도형의 좌우 위치가 번갈아 바뀌었고, 연구팀은 AI로 강아지 머리가 향하는 방향을 추적했어.
+
+두 번째 실험엔 다른 강아지 19마리가 참여했는데, 보호자가 록 음악이 나오는 헤드폰을 써서 소리를 못 듣게 했어. 보호자가 무심코 주는 신호를 없애려는 설계였지.
+
+결과는 부바 소리가 나올 때 둥근 도형을, 키키 소리가 나올 때 뾰족한 도형을 더 많이 봤다는 거야. 다만 첫 실험에선 뾰족한 도형을 전반적으로 더 보는 경향이 있었고, 헤드폰을 쓴 두 번째 실험에선 그 경향이 사라졌대.
+
+그래도 강아지가 부바를 둥근 것, 키키를 뾰족한 것과 연결한다고 단정하려면 연구가 더 필요하대. 한국어의 동글, 뾰족 같은 말은 어떨까? 그건 아직 궁금증으로만 남겨둘게.
+
+출처: ScienceAlert, Proceedings of the Royal Society B</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#강아지 #과학 #부바키키 #동물행동 #해외반응</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 실험 방에 왼쪽과 오른쪽에 화면과 스피커가 하나씩 있었다는 설정</li><li>근거 등록 안 된 주장: 연구팀이 GoPro로 각 강아지를 촬영했다는 내용</li><li>근거 등록 안 된 주장: 보호자가 강아지와 함께 앉아 가운데를 보는 절차</li><li>근거 등록 안 된 주장: 두 번째 실험의 설계 의도가 보호자가 무심코 주는 신호를 없애는 것이었다는 내용</li><li>근거 등록 안 된 주장: 저자들이 보호자 신호 영향 가설을 가능성 낮다고 본 설명</li><li>근거 등록 안 된 주장: 출처가 ScienceAlert와 Proceedings of the Royal Society B라는 내용</li>
+          <li>연구 초기 단계로 강아지가 부바를 둥근 것과 연결한다고 단정할 수 없음</li><li>첫 실험과 두 번째 실험의 편향 차이는 해석이 엇갈릴 수 있음</li><li>한국어 의성·의태어와의 연결은 원문에 없는 내용이라 질문형으로만 사용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-d2208615ee18-0">1장</label>
+          <textarea id="s-d2208615ee18-0" rows="2" data-slide="0">강아지도
+**부바**는 둥글다고?!</textarea>
+          
+          <label class="f" for="s-d2208615ee18-1">2장</label>
+          <textarea id="s-d2208615ee18-1" rows="2" data-slide="1">부바랑 키키는
+사실 **지어낸 말**</textarea>
+          
+          <label class="f" for="s-d2208615ee18-2">3장</label>
+          <textarea id="s-d2208615ee18-2" rows="3" data-slide="2">사람 대부분은
+키키는 **뾰족**,
+부바는 둥글어</textarea>
+          
+          <label class="f" for="s-d2208615ee18-3">4장</label>
+          <textarea id="s-d2208615ee18-3" rows="3" data-slide="3">강아지 **70마리**한테
+소리랑 도형을
+보여줬어</textarea>
+          
+          <label class="f" for="s-d2208615ee18-4">5장</label>
+          <textarea id="s-d2208615ee18-4" rows="3" data-slide="4">부바 소리엔
+**둥근 도형**을
+더 쳐다봤대</textarea>
+          
+          <label class="f" for="s-d2208615ee18-5">6장</label>
+          <textarea id="s-d2208615ee18-5" rows="3" data-slide="5">**주인 힌트**를
+막아본 실험도
+따로 했어</textarea>
+          
+          <label class="f" for="s-d2208615ee18-6">7장</label>
+          <textarea id="s-d2208615ee18-6" rows="2" data-slide="6">한국어 **동글·뾰족도**
+이런 감각일까?</textarea>
+          
+          <label class="f" for="c-d2208615ee18">본문 (캡션)</label>
+          <textarea id="c-d2208615ee18" class="caption">강아지도 부바는 둥글다고 반응한다는 연구가 나왔어. 정확히는 소리에 맞춰 도형을 더 오래 본다는 쪽이야.
+
+부바와 키키는 지어낸 단어인데, 어떤 언어나 문자를 쓰든 대부분의 사람은 키키는 뾰족하고 부바는 둥글다고 답한대. 이 실험은 1920년대에 처음 구상됐고, 사람이 소리와 모양을 연결하는 방식에 보편적인 뭔가가 있을 수 있다는 얘기로 이어졌어.
+
+이번엔 이탈리아 파르마대학교의 동물행동학자 엘레오노라 비피 연구팀이 가정견 70마리를 모았어. 첫 실험에는 51마리와 보호자가 참여했고, 방 왼쪽과 오른쪽에 화면과 스피커가 하나씩 있었어. 약 15분 동안 사람이 말하는 &#39;부바&#39; 또는 &#39;키키&#39; 소리와 두 도형의 좌우 위치가 번갈아 바뀌었고, 연구팀은 AI로 강아지 머리가 향하는 방향을 추적했어.
+
+두 번째 실험엔 다른 강아지 19마리가 참여했는데, 보호자가 록 음악이 나오는 헤드폰을 써서 소리를 못 듣게 했어. 보호자가 무심코 주는 신호를 없애려는 설계였지.
+
+결과는 부바 소리가 나올 때 둥근 도형을, 키키 소리가 나올 때 뾰족한 도형을 더 많이 봤다는 거야. 다만 첫 실험에선 뾰족한 도형을 전반적으로 더 보는 경향이 있었고, 헤드폰을 쓴 두 번째 실험에선 그 경향이 사라졌대.
+
+그래도 강아지가 부바를 둥근 것, 키키를 뾰족한 것과 연결한다고 단정하려면 연구가 더 필요하대. 한국어의 동글, 뾰족 같은 말은 어떨까? 그건 아직 궁금증으로만 남겨둘게.
+
+출처: ScienceAlert, Proceedings of the Royal Society B</textarea>
+          <label class="f" for="t-d2208615ee18">해시태그</label>
+          <input id="t-d2208615ee18" type="text" class="tagsin" value="#강아지 #과학 #부바키키 #동물행동 #해외반응" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>언어나 문자와 상관없이 대부분의 사람은 키키는 뾰족하고 부바는 둥글다고 답한다</b>
+            <q>“But for some strange reason, most people who are asked this question – regardless of the language or alphabet they use to speak or write – agree that Kiki is spiky, and Bouba is round.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>부바와 키키는 지어낸 단어다</b>
+            <q>“There&#39;s no correct answer to this – the words are made up.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 실험은 1920년대에 처음 구상됐고 소리와 모양을 연결하는 보편적인 무언가를 시사한다</b>
+            <q>“This fascinating psychological experiment was first conceived in the 1920s, and it suggests there may be something universal about the way we humans connect visual information, like shapes, with sounds.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>파르마대학교의 동물행동학자 엘레오노라 비피가 연구를 이끌었다</b>
+            <q>“Animal behaviorist Eleonora Biffi at the University of Parma in Italy led the research.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 가정견 70마리를 모집해 거의 동일한 두 실험을 진행했다</b>
+            <q>“She and her team recruited 70 domestic dogs to participate in two almost identical experiments.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>첫 실험에는 강아지 51마리와 보호자가 참여했다</b>
+            <q>“The first experiment involved 51 dogs and their owners.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약 15분 동안 부바 또는 키키 소리와 두 도형의 좌우 위치가 번갈아 바뀌었다</b>
+            <q>“Over roughly 15 minutes, the screens and speakers alternated through different combinations of a human saying either &#39;Bouba&#39; or &#39;Kiki&#39; over the speakers, and the two shapes above swapping between the left and right screens.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 AI로 강아지 머리가 향하는 방향을 추적했다</b>
+            <q>“The researchers later fed these videos into an AI designed to track where the dogs&#39; heads were pointing, a stand-in for where they were looking, so they could check for any statistically significant patterns that might occur above random chance.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 번째 실험은 다른 강아지 19마리가 참여했고 보호자가 록 음악이 나오는 헤드폰을 썼다</b>
+            <q>“The second experiment, which involved 19 other dogs, was identical in design except that the owners wore headphones playing rock music to stop them from hearing the &#39;Bouba&#39; and &#39;Kiki&#39; sounds.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>부바 소리가 나올 때 둥근 도형을, 키키 소리가 나올 때 뾰족한 도형을 더 많이 봤다</b>
+            <q>“Overall, &#34;dogs looked significantly more at the rounded shape while &#39;Bouba&#39; was played, and they looked at and explored the spiky shape when &#39;Kiki&#39; was played,&#34; Biffi and team report.”</q>
+            <small>slide1, slide5, caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>첫 실험에서는 뾰족한 도형을 전반적으로 더 보는 경향이 있었고 두 번째 실험에서는 사라졌다</b>
+            <q>“The main difference between the two experiments was that dogs in study 1 showed a general bias toward looking at the spiky shapes. That bias disappeared in study 2, when their owners were wearing headphones.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>강아지가 부바를 둥근 것과, 키키를 뾰족한 것과 연결한다고 단정하려면 더 많은 연구가 필요하다</b>
+            <q>“There&#39;s still a lot more research to be done before scientists can definitively say dogs associate &#39;Bouba&#39; with round shapes and &#39;Kiki&#39; with sharp ones.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/dogs-seem-to-agree-with-humans-that-bouba-is-round-and-kiki-is-spiky" target="_blank" rel="noopener">Dogs Seem to Agree With Humans That &#39;Bouba&#39; Is Round And &#39;Kiki&#39; Is Spiky</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/puppy-dog-pet-animal-doggy-poodle-3979350/" target="_blank" rel="noopener">carah_ / Pixabay</a> — "happy dog sitting beside round and spiky paper shapes"</li><li>2장: <a href="https://pixabay.com/photos/origami-paper-candle-sailboat-boat-1067673/" target="_blank" rel="noopener">padrinan / Pixabay</a> — "paper shapes"</li><li>3장: <a href="https://pixabay.com/photos/ceiling-architecture-airport-lines-8802142/" target="_blank" rel="noopener">SwidaAlba / Pixabay</a> — "geometric shapes"</li><li>4장: <a href="https://pixabay.com/photos/dog-mascot-animals-domestic-dog-5633748/" target="_blank" rel="noopener">Luis_Rosero / Pixabay</a> — "dog laboratory"</li><li>5장: <a href="https://pixabay.com/photos/puppy-dog-pet-collar-dog-collar-1903313/" target="_blank" rel="noopener">3194556 / Pixabay</a> — "dog looking"</li><li>6장: <a href="https://pixabay.com/photos/headphones-listening-music-sound-1868612/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "headphones"</li><li>7장: <a href="https://pixabay.com/photos/carousel-old-town-urban-dijon-6402074/" target="_blank" rel="noopener">Tama66 / Pixabay</a> — "city street"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b2455dcc2e82" data-id="b2455dcc2e82">
+    <div class="head">
+      <h2>2. 6500만 년 가문의 거대 버섯 D. rex</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/15 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>키가 최대 20인치까지 자란다는 버섯이 중국에서 보고됐어. 이름은 Dianjunus rex, &#39;디안의 왕&#39;이라는 뜻이야. 고대 중국의 한 왕국 이름에서 따왔대. 자실체 하나가 최대 5파운드까지 나간다고 해.
+
+연구진은 중국 윈난성 숲에서 중국 코르크참나무의 나무 뿌리에 붙어 자라는 크고 희끄무레한 자실체를 발견했어. 지금까지 자낭균류 자실체 중 기록 보유자는 키가 20~30cm 정도였는데, 이번 버섯은 그 두 배쯤 된다는 설명이야. 중국·태국·멕시코 연구진은 이 버섯을 새로운 속이자 새로운 과(Dianjunaceae)로 분류했어.
+
+유전체 분석 결과, 이 과는 약 6500만 년 전에 생겨난 걸로 추정돼. 공룡을 멸종시킨 대멸종으로부터 100만 년 뒤라는 거야. 연구진은 멸종 뒤 죽은 식물이 갑자기 많아지면서 나무를 분해하는 균류에게 새 기회가 열렸을 수 있다고 봤어. 이렇게 크게 자란 이유로는 키가 커서 숲속에서 바람에 포자가 더 잘 퍼졌을 가능성을 가설로 내놨고.
+
+연구진의 Senanayake 박사는 동아시아 숲에 아직 발견되지 않은 균류 다양성이 많다고 말했어. 그럼 한국 숲에도 우리가 모르는 버섯이 숨어 있을까?
+
+출처: Good News Network
+
+배경 사진: jplenio, beasternchen, suju-foto, Kanenori, DominikRh / Pixabay
+표지 이미지: AI 생성
+
+#버섯 #거대버섯 #과학뉴스 #균류 #공룡멸종</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-b2455dcc2e82">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 버섯은 작다는 상식을 깨는 50cm 새 버섯에, 공룡 멸종 직후 생겨난 가문이라는 반전을 붙여 한국 숲 질문으로 잇는 각도</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 지금까지 알려진 자낭균류 자실체 기록은 20~30cm였고, 이번 버섯은 그 두 배쯤이라는 크기 비교 (카드 3장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">버섯은 작고 땅에 붙어 있다는 상식이 깨졌어
+중국 숲에서 키가 50cm나 되는 새 버섯이 보고됨
+근데 이 버섯 가문이 언제 생겼는지가 더 신기함. 공룡이 사라진 직후래 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">1/ 이름은 Dianjunus rex, &#39;디안의 왕&#39;이라는 뜻이야. 키가 최대 50cm라서 지금까지 알려진 자실체 기록의 두 배쯤 된대. 그럼 이 버섯 가문은 언제부터 있었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">2/ 유전체 분석 결과, 이 버섯이 속한 과는 약 6500만 년 전에 생겨난 걸로 추정돼. 공룡을 멸종시킨 대멸종으로부터 100만 년 뒤라는 거야. 왜 하필 그때였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">86/500자</span></div>
+      <p class="tp-text">3/ 연구진은 멸종 뒤 숲에 죽은 식물이 갑자기 많아졌고, 나무를 분해하는 균류한테 새 기회가 열렸을 수 있다고 봤어. 그럼 키는 왜 이렇게까지 커졌을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">4/ 이것도 가설인데, 키가 커서 숲속에서 바람에 포자가 더 잘 퍼졌을 가능성을 연구진이 내놨어. 확정된 건 아니고 그럴 수 있다는 설명이야. 한 번에 정리하면 이래</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">196/500자</span></div>
+      <p class="tp-text">5/ 알아둘 것 정리
+- 이름: Dianjunus rex (&#39;디안의 왕&#39;, 고대 중국 왕국 이름에서 따옴)
+- 발견: 중국 숲, 나무 뿌리에 붙어 자라는 크고 희끄무레한 버섯
+- 분류: 중국·태국·멕시코 연구진이 새 속, 새 과(Dianjunaceae)로 분류
+- 기원: 약 6500만 년 전 추정
+- 큰 이유: 바람에 포자가 잘 퍼졌을 가능성(가설)</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">223/500자</span></div>
+      <p class="tp-text">6/ 연구진의 Senanayake 박사는 동아시아 숲에 아직 발견되지 않은 균류 다양성이 많다고 말했어. 너라면 한국 숲에서 정체불명의 큰 버섯을 만나면 어떻게 할래?
+다음 배송: 세계 최대 호박 2,856파운드 기록 얘기. 팔로우해두면 피드에 뜸
+카드엔 기존 기록과 이번 버섯의 크기 비교까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 버섯은 작고 땅에 붙어 있다는 상식이 깨졌어 <small>참고 원고에 없는 일반론적 주장으로, 버섯에 대한 상식이 깨졌다는 평가를 덧붙인 것이다.</small></li><li>카드에 없는 내용: 카드 보너스가 스레드에 드러남 <small>스레드 1/에서 &#39;지금까지 알려진 자실체 기록의 두 배쯤&#39;이라고 이미 말해 보너스 내용(기존 기록 20~30cm 대비 두 배 크기)이 누출됐다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>버섯은 작고 땅에 붙어 있다는 상식이 깨졌어. 중국 숲에서 키가 50cm나 되는 새 버섯이 보고됨</li><li>숲에서 버섯 보면 발밑만 보지? 이번엔 위를 봐야 할 수도 있어. 50cm짜리 버섯이 나왔거든</li><li>버섯 가문 하나가 공룡 멸종 직후에 생겼대. 그리고 지금 50cm까지 자란 게 발견됨</li><li>&#39;디안의 왕&#39;이라는 이름이 붙은 버섯이 나왔어. 기존 기록의 두 배쯤 되는 크기래</li><li>버섯이 키를 키운 이유가 포자를 멀리 날리려는 거였을 수 있대</li><li>큰 버섯은 흔하다고 생각했다면 오산. 지금까지 기록의 두 배쯤 되는 버섯이 새로 나옴</li><li>공룡이 사라진 숲은 버섯한테 기회의 땅이었대. 그래서 이런 괴물이 나왔나 봐</li><li>중국 숲 나무 뿌리에서 크고 희끄무레한 게 발견됐는데, 알고 보니 새로운 과로 분류된 버섯이었음</li><li>동아시아 숲엔 아직 발견 안 된 균류가 많다는 연구진 말, 한국 숲은 어떨까</li><li>6500만 년 된 버섯 가문의 후손이 지금 숲에서 50cm로 자라고 있었대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>한국 숲에서 정체불명의 큰 버섯을 만나면 어떻게 할래?</li><li>숲에서 제일 신기했던 버섯이나 식물 본 적 있어? 어디서였어?</li><li>50cm 버섯이 눈앞에 있다면 먹어보고 싶어, 사진만 찍고 도망갈래?</li><li>우리 동네 숲에 숨어 있을 것 같은 미발견 생물, 뭐라고 상상해?</li><li>&#39;디안의 왕&#39;처럼 새로 발견된 생물에 이름 붙일 수 있다면 뭐라고 짓고 싶어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>다음 배송: 세계 최대 호박 2,856파운드 기록 얘기</li><li>다음 배송: 일본 원숭이 고양이 연못 투척 사건 얘기</li><li>다음 배송: 지브리 스탬프 랠리 사가시 얘기</li><li>다음 배송: 맥킨지 AI 고객 면접 얘기</li><li>2편: 동아시아 숲에 아직 발견되지 않은 균류 다양성 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>본문은 20인치, 카드는 50cm로 표기되어 있어 환산이 맞는지 확인 필요</li><li>6500만 년 전과 &#39;대멸종으로부터 100만 년 뒤&#39;라는 수치가 함께 나와 표현이 어긋나 보이지 않는지 확인 필요</li><li>바람에 포자가 더 잘 퍼졌다는 설명은 확정이 아닌 가설이라 단정형으로 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-01.jpg" alt="1장: 키가 50cm 버섯이 있다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-02.jpg" alt="2장: 이름은 Dianjunus rex &#39;디안의 왕&#39;이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-03.jpg" alt="3장: 기존 기록은 20~30cm 그 두 배 크기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-04.jpg" alt="4장: 유전체 분석 결과 이 버섯 종류는 약 6500만 년 전에 생겨난 걸로 추정" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-05.jpg" alt="5장: 멸종 뒤 숲엔 죽은 식물이 가득 버섯엔 기회땅" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-06.jpg" alt="6장: 바람에 포자가 더 잘 퍼질 수 있게 키를 키운거라고 해" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-07.jpg" alt="7장: 한국 숲에도 숨은 버섯왕을 찾을수 있을까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/b2455dcc2e82/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">키가 최대 20인치까지 자란다는 버섯이 중국에서 보고됐어. 이름은 Dianjunus rex, &#39;디안의 왕&#39;이라는 뜻이야. 고대 중국의 한 왕국 이름에서 따왔대. 자실체 하나가 최대 5파운드까지 나간다고 해.
+
+연구진은 중국 윈난성 숲에서 중국 코르크참나무의 나무 뿌리에 붙어 자라는 크고 희끄무레한 자실체를 발견했어. 지금까지 자낭균류 자실체 중 기록 보유자는 키가 20~30cm 정도였는데, 이번 버섯은 그 두 배쯤 된다는 설명이야. 중국·태국·멕시코 연구진은 이 버섯을 새로운 속이자 새로운 과(Dianjunaceae)로 분류했어.
+
+유전체 분석 결과, 이 과는 약 6500만 년 전에 생겨난 걸로 추정돼. 공룡을 멸종시킨 대멸종으로부터 100만 년 뒤라는 거야. 연구진은 멸종 뒤 죽은 식물이 갑자기 많아지면서 나무를 분해하는 균류에게 새 기회가 열렸을 수 있다고 봤어. 이렇게 크게 자란 이유로는 키가 커서 숲속에서 바람에 포자가 더 잘 퍼졌을 가능성을 가설로 내놨고.
+
+연구진의 Senanayake 박사는 동아시아 숲에 아직 발견되지 않은 균류 다양성이 많다고 말했어. 그럼 한국 숲에도 우리가 모르는 버섯이 숨어 있을까?
+
+출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#버섯 #거대버섯 #과학뉴스 #균류 #공룡멸종</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 버섯이라는 표현: 원문은 이 자낭균류가 진짜 버섯을 만들지 않는다고 설명하므로, &#39;버섯&#39;이라는 호칭은 정확하지 않을 수 있음</li><li>근거 등록 안 된 주장: 출처: Good News Network (원문 출처 표기, 본문 기사 자체의 기사 출처 주장)</li>
+          <li>6500만 년은 유전체 분석(분자시계)에 따른 추정치이며 확정 연대가 아님</li><li>크게 자란 이유와 대멸종 연관성은 연구진의 가설이라 단정하지 않도록 주의</li><li>국내 버섯과의 연결은 사실 확인이 안 된 질문형 표현임</li><li>원문에 20인치만 나와 cm 환산 수치는 쓰지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-b2455dcc2e82-0">1장</label>
+          <textarea id="s-b2455dcc2e82-0" rows="2" data-slide="0">키가 **50cm**
+버섯이 있다고???</textarea>
+          
+          <label class="f" for="s-b2455dcc2e82-1">2장</label>
+          <textarea id="s-b2455dcc2e82-1" rows="2" data-slide="1">이름은 **Dianjunus rex**
+&#39;**디안의 왕**&#39;이래</textarea>
+          
+          <label class="f" for="s-b2455dcc2e82-2">3장</label>
+          <textarea id="s-b2455dcc2e82-2" rows="3" data-slide="2">기존 기록은
+20~30cm
+그 **두 배** 크기</textarea>
+          
+          <label class="f" for="s-b2455dcc2e82-3">4장</label>
+          <textarea id="s-b2455dcc2e82-3" rows="3" data-slide="3">유전체 분석 결과
+이 버섯 종류는
+**약 6500만 년 전**에 생겨난 걸로 추정</textarea>
+          
+          <label class="f" for="s-b2455dcc2e82-4">5장</label>
+          <textarea id="s-b2455dcc2e82-4" rows="3" data-slide="4">멸종 뒤 숲엔
+죽은 식물이 가득
+버섯엔 **기회땅**</textarea>
+          
+          <label class="f" for="s-b2455dcc2e82-5">6장</label>
+          <textarea id="s-b2455dcc2e82-5" rows="3" data-slide="5">바람에 **포자**가
+더 잘 퍼질 수 있게
+키를 키운거라고 해</textarea>
+          
+          <label class="f" for="s-b2455dcc2e82-6">7장</label>
+          <textarea id="s-b2455dcc2e82-6" rows="3" data-slide="6">**한국 숲**에도
+숨은 버섯왕을
+찾을수 있을까?</textarea>
+          
+          <label class="f" for="c-b2455dcc2e82">본문 (캡션)</label>
+          <textarea id="c-b2455dcc2e82" class="caption">키가 최대 20인치까지 자란다는 버섯이 중국에서 보고됐어. 이름은 Dianjunus rex, &#39;디안의 왕&#39;이라는 뜻이야. 고대 중국의 한 왕국 이름에서 따왔대. 자실체 하나가 최대 5파운드까지 나간다고 해.
+
+연구진은 중국 윈난성 숲에서 중국 코르크참나무의 나무 뿌리에 붙어 자라는 크고 희끄무레한 자실체를 발견했어. 지금까지 자낭균류 자실체 중 기록 보유자는 키가 20~30cm 정도였는데, 이번 버섯은 그 두 배쯤 된다는 설명이야. 중국·태국·멕시코 연구진은 이 버섯을 새로운 속이자 새로운 과(Dianjunaceae)로 분류했어.
+
+유전체 분석 결과, 이 과는 약 6500만 년 전에 생겨난 걸로 추정돼. 공룡을 멸종시킨 대멸종으로부터 100만 년 뒤라는 거야. 연구진은 멸종 뒤 죽은 식물이 갑자기 많아지면서 나무를 분해하는 균류에게 새 기회가 열렸을 수 있다고 봤어. 이렇게 크게 자란 이유로는 키가 커서 숲속에서 바람에 포자가 더 잘 퍼졌을 가능성을 가설로 내놨고.
+
+연구진의 Senanayake 박사는 동아시아 숲에 아직 발견되지 않은 균류 다양성이 많다고 말했어. 그럼 한국 숲에도 우리가 모르는 버섯이 숨어 있을까?
+
+출처: Good News Network</textarea>
+          <label class="f" for="t-b2455dcc2e82">해시태그</label>
+          <input id="t-b2455dcc2e82" type="text" class="tagsin" value="#버섯 #거대버섯 #과학뉴스 #균류 #공룡멸종" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새로 기재된 Dianjunus rex의 자실체는 높이 최대 20인치, 무게 최대 5파운드에 달한다</b>
+            <q>“The newly described species, Dianjunus rex, or “King of Dian,” named for an ancient Chinese kingdom, produces vertical fruiting bodies up to 20 inches high and weighing up to 5 pounds.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>학명 Dianjunus rex는 &#39;디안의 왕&#39;이라는 뜻으로 고대 중국 왕국 이름에서 따왔다</b>
+            <q>“The newly described species, Dianjunus rex, or “King of Dian,” named for an ancient Chinese kingdom, produces vertical fruiting bodies up to 20 inches high and weighing up to 5 pounds.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>윈난성 숲에서 중국 코르크참나무의 나무 뿌리에 붙어 자라는 크고 희끄무레한 자실체를 발견했다</b>
+            <q>“During fieldwork in a mix of temperate coniferous forests and tropical rainforest in the province of Yunnan, scientists from the Kunming Institute found large, whitish, fruiting bodies (called stromata) clearly belonging to an unknown ascomycete fungus growing on the woody roots of Chinese cork oak.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기존 자낭균류 자실체 기록은 키 20~30cm로, 이번 버섯의 절반 정도였다</b>
+            <q>“Until now, the record-holders among ascomycete fruiting bodies measured 20 to 30 centimeters tall, around half the size of D. rex.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>중국·태국·멕시코 과학자들이 발견했고 새로운 속이자 자낭균문 안의 새로운 과로 분류됐다</b>
+            <q>“Scientists in China, Thailand, and Mexico made the discovery, which constituted not only its own new genus, but whole new family of fungi within the Phylum of Ascomycota.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유전체 분석상 이 새로운 과는 약 6500만 년 전에 생겨난 것으로 추정된다</b>
+            <q>“Analysis of its genome suggests that the new family arose approximately 65 million years ago, strikingly soon after the Cretaceous-Paleogene mass extinction which killed off the dinosaurs, when new niches for wood-decomposing fungi, a niche which “D. rex” inhabits still to this day, may have opened up.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 과가 생긴 시점은 공룡을 멸종시킨 대멸종 사건으로부터 불과 100만 년 뒤다</b>
+            <q>“Strikingly, this is only one million years after the Cretaceous-Paleogene mass extinction event—famous for wiping out the dinosaurs besides countless other animals and plants.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Senanayake는 대멸종 뒤 죽은 식물이 갑자기 많아졌고 나무 분해 균류에게 새로운 생태적 기회가 열렸을 수 있다고 말했다</b>
+            <q>““After the mass extinction, forests experienced dramatic changes, including the sudden availability of large amounts of dead plant material,” said Senanayake.”</q>
+            <small>slide5, caption · 인용문 유사 일치(99.4) · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Senanayake는 키 큰 자실체가 빽빽한 숲에서 바람에 의한 포자 확산에 유리했을 수 있다고 가설을 세웠다</b>
+            <q>“A fruiting body which towers above surrounding vegetation and debris could have better dispersal of spores by wind in dense forests.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Senanayake는 이번 발견이 동아시아 숲에 아직 발견되지 않은 균류 다양성이 많음을 보여준다고 말했다</b>
+            <q>““The discovery illustrates how much fungus biodiversity remains to be discovered in East Asian forests.””</q>
+            <small>slide7, caption · <a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/scientists-shocked-to-discover-d-rex-a-giant-fungus-from-chinese-forests-dating-back-65-million-years/" target="_blank" rel="noopener">Scientists Shocked to Discover ‘D-rex’, a Giant Fungus from Chinese Forests Dating Back 65 Million Years</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "tall pale mushroom on sunlit forest floor"</li><li>2장: <a href="https://pixabay.com/photos/forest-woods-nature-trees-3369950/" target="_blank" rel="noopener">jplenio / Pixabay</a> — "ancient forest"</li><li>3장: <a href="https://pixabay.com/photos/jeans-sewing-supplies-sew-yarn-8314814/" target="_blank" rel="noopener">beasternchen / Pixabay</a> — "measuring tape"</li><li>4장: <a href="https://pixabay.com/photos/giant-schirmling-mushroom-3743069/" target="_blank" rel="noopener">suju-foto / Pixabay</a> — "giant mushroom forest"</li><li>5장: <a href="https://pixabay.com/photos/bird-woodpecker-kogera-scalpel-7727062/" target="_blank" rel="noopener">Kanenori / Pixabay</a> — "dead wood"</li><li>6장: <a href="https://pixabay.com/photos/leaves-fall-forest-beech-canopy-7541743/" target="_blank" rel="noopener">DominikRh / Pixabay</a> — "tree canopy"</li><li>7장: <a href="https://pixabay.com/photos/alps-mountain-austria-landscape-8368328/" target="_blank" rel="noopener">jplenio / Pixabay</a> — "mountain forest"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-cd7481ab1f04" data-id="cd7481ab1f04">
+    <div class="head">
+      <h2>3. 극장 노인 직원 14만 6천 달러 모금</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 6 · 애매 4
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/16 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>극장 청소하던 할머니한테 14만 6천 달러가 모였다는 소식이야. 미국 테네시주 메리빌에서 벌어진 일인데, 시작은 21살 브루클린 그린이 동네 AMC 극장에 영화를 보러 간 날이었어. 거기서 허리가 굽은 채 쓰레기를 치우는 할머니를 본 거지. 그린은 현지 매체에 &#39;일하는 모습이 보였고, 정말 열심히 하고 있었다&#39;는 취지로 말했대.
+
+그린은 틱톡에 영상을 올리고 고펀드미 모금도 열었어. 처음엔 가족과 친구들한테 한 달 월세 정도만 모일 거라고 생각했대. 그런데 영상이 퍼지면서 첫날에만 10만 달러가 넘게 모였고, 다음 날엔 4만 6천 달러가 더 늘었어.
+
+할머니 이름은 메리야. 그린이 다시 극장을 찾은 날 메리는 근무 중이 아니었는데, 매니저 말로는 극장에서 45년 넘게 일했대. 그리고 메리 본인은 일을 좋아한다고 해. 일을 그만두면 오히려 상황이 나빠질까 걱정한다는 이야기도 전해졌어.
+
+결국 그린은 메리를 직접 만났고, 이 자리는 기부자들에게 보여줄 영상으로 남겨졌어. 메리는 기부해 준 모든 분께 정말 감사하다고 말했대.
+
+로또같은 이야기 여러분한테 일어난다면
+뭐하고 지낼까?
+
+출처: Good News Network (WVLT 8 보도 인용)
+
+배경 사진: wernerredlich, Pexels, Alanjvm, ClickerHappy / Pixabay
+표지 이미지: AI 생성
+
+#해외반응 #훈훈한이야기 #고령노동 #은퇴 #크라우드펀딩</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-cd7481ab1f04">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 모금액 숫자보다 &#39;도와주려는 영상 vs 정작 본인은 일이 좋다&#39;는 반전을 앞세워 팔리는 훈훈한 사연</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 모금 이후 그린이 메리를 직접 만났고 그 자리가 기부자들에게 보여줄 영상으로 남겨졌으며, 메리가 모든 기부자에게 감사 인사를 전한 후일담 (본문 마지막 문단)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">81/500자</span></div>
+      <p class="tp-text">영화 보러 간 21살이 올린 영상 하나로 극장 직원 할머니한테 14만 6천 달러가 모였대
+근데 할머니가 걱정한 건 따로 있었대. 뭔지는 아래에 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면 영상이 퍼진 첫날에만 10만 달러가 넘게 모였고, 다음 날 4만 6천 달러가 더 늘었어. 그렇게 14만 6천 달러가 됐어.
+근데 모금을 연 사람이 처음 예상한 금액은 전혀 달랐대. 얼마였을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">2/ 시작은 21살 브루클린 그린이야. 미국 테네시주 메리빌의 AMC 극장에 영화 보러 갔다가 허리가 굽은 채 쓰레기를 치우는 할머니를 봤대.
+그린은 현지 매체에 일하는 모습이 보였고 정말 열심히 하고 있었다는 취지로 말했어. 그래서 그린이 뭘 했냐면 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">3/ 그린이 한 일 흐름 정리
+- 극장에서 허리 굽은 직원을 봄
+- 틱톡에 영상 올림
+- 고펀드미 모금도 개설
+- 예상은 가족·친구들한테 한 달 월세 정도
+- 첫날 10만 달러 넘게 모임
+- 다음 날 4만 6천 달러 추가
+근데 정작 할머니 본인 생각은 달랐대</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">4/ 할머니 이름은 메리야. 매니저 말로는 극장에서 45년 넘게 일했대.
+메리 본인은 일을 좋아한다고 해. 일을 그만두면 오히려 상황이 나빠질까 걱정한다는 이야기도 전해졌어.
+그래서 이 얘기 읽고 너한테 묻고 싶은 게 하나 있어.</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">5/ 다음 배송: 일본 원숭이 고양이 연못 투척 사건 얘기야. 팔로우해두면 피드에 뜸.
+
+로또 같은 일이 너한테 일어난다면 뭐 하고 지낼 것 같아? 일은 어떻게 할지도 궁금해.
+카드엔 모금 이후 이야기까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>영화 보러 간 21살이 올린 영상 하나로 극장 직원 할머니한테 14만 6천 달러가 모였대</li><li>한 달 월세만 모이면 다행이라 생각했는데 첫날에 10만 달러가 넘었대</li><li>도와주려고 올린 영상인데 정작 할머니는 일을 그만두면 상황이 나빠질까 걱정했대</li><li>극장에서 45년 넘게 일한 할머니한테 틱톡 영상 하나로 14만 6천 달러가 떨어졌대</li><li>&#39;정말 열심히 하고 있었다&#39;는 한마디에서 시작된 모금이 14만 6천 달러가 됐대</li><li>로또도 아닌데 로또 맞은 것처럼 극장 직원 할머니한테 14만 6천 달러가 생겼어</li><li>영화관에서 허리 굽은 직원을 본 21살이 한 일, 하루 만에 10만 달러가 모였대</li><li>모금의 주인공은 돈 받고 쉬는 대신 일이 좋다고 했대</li><li>틱톡 영상 하나가 모르는 사람의 한 달 월세를 넘어 14만 6천 달러가 된 이야기</li><li>영화 보러 갔다가 모금까지 열게 된 21살, 그 결과가 예상의 몇 배였대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>갑자기 14만 6천 달러가 생기면 제일 먼저 뭐 할 것 같아?</li><li>돈이 생겨도 계속하고 싶은 일이 있다면 그게 뭐야?</li><li>누가 모르는 사람을 도우려고 영상을 올렸다면 너는 어떤 마음으로 봤을 것 같아?</li><li>로또 같은 일이 너한테 일어난다면 뭐 하고 지낼 것 같아?</li><li>일하는 분을 보고 도와주고 싶었던 순간이 있다면 어땠어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>일본 원숭이 고양이 연못 투척 사건</li><li>지브리 스탬프 랠리 사가시</li><li>맥킨지 AI 고객 면접</li><li>세계 최대 호박 2,856파운드 기록</li><li>메리와 그린 이후 이야기 (원문 후속 보도 확인 후)</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>그린의 발언은 &#39;~라는 취지&#39;로 전해진 간접 인용이라 따옴표로 단정해서 쓰면 안 됨</li><li>메리가 일을 그만두면 상황이 나빠질까 걱정한다는 내용은 &#39;전해진 이야기&#39;라 단정 표현 금지</li><li>실존 인물(브루클린 그린, 메리)의 실명이 들어가므로 보도 원문과 이름 표기 재확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/cd7481ab1f04/v2-01.jpg" alt="1장: 극장 할머니한테 14만 6천 달러가 떨어졌다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/cd7481ab1f04/v2-02.jpg" alt="2장: 21살 관객이 영화 보러 갔다가 허리 굽은 직원을 봤대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/cd7481ab1f04/v2-03.jpg" alt="3장: 할머니를 도와주고 싶어서 틱톡에 영상을 올리고 고펀드미 모금도 열었어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/cd7481ab1f04/v2-04.jpg" alt="4장: 틱톡에 올렸더니 하루 만에 10만 달러 돌파" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/cd7481ab1f04/v2-05.jpg" alt="5장: 근데 할머니는 일이 좋대 쉬면 오히려 힘들다고" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/cd7481ab1f04/v2-06.jpg" alt="6장: 로또같은 이야기 여러분한테 일어난다면 뭐하고 지낼까?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261014-pm-939e021f46a9/cd7481ab1f04/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">극장 청소하던 할머니한테 14만 6천 달러가 모였다는 소식이야. 미국 테네시주 메리빌에서 벌어진 일인데, 시작은 21살 브루클린 그린이 동네 AMC 극장에 영화를 보러 간 날이었어. 거기서 허리가 굽은 채 쓰레기를 치우는 할머니를 본 거지. 그린은 현지 매체에 &#39;일하는 모습이 보였고, 정말 열심히 하고 있었다&#39;는 취지로 말했대.
+
+그린은 틱톡에 영상을 올리고 고펀드미 모금도 열었어. 처음엔 가족과 친구들한테 한 달 월세 정도만 모일 거라고 생각했대. 그런데 영상이 퍼지면서 첫날에만 10만 달러가 넘게 모였고, 다음 날엔 4만 6천 달러가 더 늘었어.
+
+할머니 이름은 메리야. 그린이 다시 극장을 찾은 날 메리는 근무 중이 아니었는데, 매니저 말로는 극장에서 45년 넘게 일했대. 그리고 메리 본인은 일을 좋아한다고 해. 일을 그만두면 오히려 상황이 나빠질까 걱정한다는 이야기도 전해졌어.
+
+결국 그린은 메리를 직접 만났고, 이 자리는 기부자들에게 보여줄 영상으로 남겨졌어. 메리는 기부해 준 모든 분께 정말 감사하다고 말했대.
+
+로또같은 이야기 여러분한테 일어난다면
+뭐하고 지낼까?
+
+출처: Good News Network (WVLT 8 보도 인용)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#해외반응 #훈훈한이야기 #고령노동 #은퇴 #크라우드펀딩</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>미국 테네시주 메리빌에서 극장 노인 직원이 14만 6천 달러를 받았다 <small>애매 · 14만 6천 달러(146,000달러)는 맞지만 &#39;극장 노인 직원&#39;의 성별·상황 묘사는 원문과 맞다. 다만 &#39;받았다&#39;는 표현은 모금 총액으로 정확히 쓰고 &#39;메리빌&#39; 지명·출처 표기를 유지하면 됨. 원문은 &#39;깜짝 받았다(surprised with)&#39;로 모금 총액을 가리키므로 &#39;받았다&#39;는 문맥상 괜찮으나 &#39;모금 총액&#39;으로 명확히 하는 것이 좋다.</small></li><li>다음 날 모금액이 4만 6천 달러 더 늘었다 <small>애매 · 원문은 다음 날 방문 시점에 모금이 4만 6천 달러 더 늘었다고 함. &#39;다음 날 엔 4만 6천 달러가 더 늘었어&#39;는 대체로 맞지만 &#39;그린이 극장을 다시 찾은 시점 사이에 늘었다&#39;는 시점 한정이 원문 그대로임. 과장은 아니므로 사실상 일치하나 엄격히 보면 시점 표현이 다소 일반화됨.</small></li><li>할머니 이름은 메리이고 그날 극장에 없었으며, 매니저는 메리가 극장에서 45년 넘게 일했다고 전했다 <small>애매 · 이름, 그날 근무 아님, 매니저 말로 45년 넘게 일함은 맞음. 다만 원문은 &#39;극장에서 45년 넘게&#39;라고 했고 &#39;매니저 말로&#39;는 정확하나 &#39;극장 청소&#39; 역할은 원문 첫 부분의 쓰레기 수거와 일치. 전반적으로 맞음.</small></li><li>메리는 일을 좋아하고 그만두면 상황이 나빠질까 걱정한다고 전해졌다 <small>애매 · &#39;그만두면 상황이 나빠질까 걱정&#39;은 원문의 &#39;might make things go downhill&#39;과 일치하나, &#39;일을 좋아한다&#39;는 &#39;She loves it&#39;을 매니저가 설명한 것이므로 메리 본인이 말한 것으로 쓰면 출처 왜곡. &#39;메리 본인은 일을 좋아한다고 해&#39;는 본인 발언으로 오해될 수 있음.</small></li>
+          <li>근거 등록 안 된 주장: 그린이 현지 매체에 말한 발언이 &#39;정말 열심히 하고 있었다&#39;는 취지 (claims 2에서 다룸)</li><li>근거 등록 안 된 주장: 그린이 메리를 다시 찾은 날이 다음 날이라는 시점 (claims 5와 관련되나 별도 명시 없음)</li><li>근거 등록 안 된 주장: 메리빌 지명 및 WVLT 8 보도 인용 출처 (출처 표기 주장)</li><li>근거 등록 안 된 주장: 그린이 틱톡 영상을 촬영한 사실 자체 (claims 3에서 일부 다룸)</li><li>근거 등록 안 된 주장: &#39;극장 청소하던 할머니&#39;라는 직업 묘사 (쓰레기 수거와 청소의 동일성)</li>
+          <li>실존 개인(그린, 메리) 실명 언급 - 개인정보 및 초상 이슈 주의</li><li>한국 고령 노동 연결은 원문에 근거 없음 - 질문형으로만 처리</li><li>모금액은 시점에 따라 변동 가능</li><li>원문 발행일(2026-10-13) 표기 확인 필요</li><li>원문 이미지·영상 사용 금지</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-cd7481ab1f04-0">1장</label>
+          <textarea id="s-cd7481ab1f04-0" rows="3" data-slide="0">극장 할머니한테
+**14만 6천 달러**가
+떨어졌다고???</textarea>
+          
+          <label class="f" for="s-cd7481ab1f04-1">2장</label>
+          <textarea id="s-cd7481ab1f04-1" rows="3" data-slide="1">**21살 관객**이
+영화 보러 갔다가
+허리 굽은 직원을 봤대</textarea>
+          
+          <label class="f" for="s-cd7481ab1f04-2">3장</label>
+          <textarea id="s-cd7481ab1f04-2" rows="3" data-slide="2">할머니를 도와주고 싶어서
+**틱톡**에 영상을 올리고
+**고펀드미 모금**도 열었어</textarea>
+          
+          <label class="f" for="s-cd7481ab1f04-3">4장</label>
+          <textarea id="s-cd7481ab1f04-3" rows="3" data-slide="3">틱톡에 올렸더니
+**하루 만에**
+10만 달러 돌파</textarea>
+          
+          <label class="f" for="s-cd7481ab1f04-4">5장</label>
+          <textarea id="s-cd7481ab1f04-4" rows="3" data-slide="4">근데 할머니는
+**일이 좋대**
+쉬면 오히려 힘들다고</textarea>
+          
+          <label class="f" for="s-cd7481ab1f04-5">6장</label>
+          <textarea id="s-cd7481ab1f04-5" rows="3" data-slide="5">**로또같은 이야기**
+여러분한테 일어난다면
+뭐하고 지낼까?</textarea>
+          
+          <label class="f" for="c-cd7481ab1f04">본문 (캡션)</label>
+          <textarea id="c-cd7481ab1f04" class="caption">극장 청소하던 할머니한테 14만 6천 달러가 모였다는 소식이야. 미국 테네시주 메리빌에서 벌어진 일인데, 시작은 21살 브루클린 그린이 동네 AMC 극장에 영화를 보러 간 날이었어. 거기서 허리가 굽은 채 쓰레기를 치우는 할머니를 본 거지. 그린은 현지 매체에 &#39;일하는 모습이 보였고, 정말 열심히 하고 있었다&#39;는 취지로 말했대.
+
+그린은 틱톡에 영상을 올리고 고펀드미 모금도 열었어. 처음엔 가족과 친구들한테 한 달 월세 정도만 모일 거라고 생각했대. 그런데 영상이 퍼지면서 첫날에만 10만 달러가 넘게 모였고, 다음 날엔 4만 6천 달러가 더 늘었어.
+
+할머니 이름은 메리야. 그린이 다시 극장을 찾은 날 메리는 근무 중이 아니었는데, 매니저 말로는 극장에서 45년 넘게 일했대. 그리고 메리 본인은 일을 좋아한다고 해. 일을 그만두면 오히려 상황이 나빠질까 걱정한다는 이야기도 전해졌어.
+
+결국 그린은 메리를 직접 만났고, 이 자리는 기부자들에게 보여줄 영상으로 남겨졌어. 메리는 기부해 준 모든 분께 정말 감사하다고 말했대.
+
+로또같은 이야기 여러분한테 일어난다면
+뭐하고 지낼까?
+
+출처: Good News Network (WVLT 8 보도 인용)</textarea>
+          <label class="f" for="t-cd7481ab1f04">해시태그</label>
+          <input id="t-cd7481ab1f04" type="text" class="tagsin" value="#해외반응 #훈훈한이야기 #고령노동 #은퇴 #크라우드펀딩" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>미국 테네시주 메리빌에서 극장 노인 직원이 14만 6천 달러를 받았다</b>
+            <q>“GNN has covered such stories on multiple occasions, and now another instance comes from Maryville, Tennessee, where an elderly theater worker was surprised with $146,000.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>다음 날 모금액이 4만 6천 달러 더 늘었다</b>
+            <q>“The next day, Green returned to the theater to surprise the her, and even in that interval the fundraiser jumped up another 46 big ones.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>할머니 이름은 메리이고 그날 극장에 없었으며, 매니저는 메리가 극장에서 45년 넘게 일했다고 전했다</b>
+            <q>“The woman, named Mary, wasn’t there that day, but the shift manager told Green she’s worked in theaters for more than 45 years.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>메리는 일을 좋아하고 그만두면 상황이 나빠질까 걱정한다고 전해졌다</b>
+            <q>““She loves it” he explained, and also relayed the woman’s concerns that stopping work at her age “might make things ‘go downhill’ for her,” WVLT 8 in Knoxville reported.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>21살 브루클린 그린이 동네 AMC에 영화를 보러 갔다가 허리가 굽은 채 쓰레기를 치우는 노인 여성을 봤다</b>
+            <q>“Raised through GoFundMe, it all started when 21-year-old Brooklyn Green settled rather spontaneously on plans to see a movie at the local AMC. There, she saw an elderly woman with a bent back collecting trash for the business.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그린은 현지 매체에 일하는 모습, 열심히 일하고 있었다고 말했다</b>
+            <q>““I just saw her work ethic. She was just working really hard,” Green told local news.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그린은 틱톡 영상을 올리고 고펀드미를 열어 가족과 친구들에게서 한 달 월세 정도를 모을 생각이었다</b>
+            <q>“Recording her pushing and pulling the trash cart around for a TikTok clip, she thought she’d start a GoFundMe and maybe raise a month’s rent or so from family and friends.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영상이 화제가 되며 첫날에만 10만 달러 넘게 모였다</b>
+            <q>“It went viral and channeled over $100,000 in just the first day for the woman.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그린은 결국 메리를 만났고 이 만남은 고펀드미 기부자들을 위해 녹화되었다</b>
+            <q>“Green did eventually surprise Mary in a meet-and-greet recorded for the GoFundMe donators.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>메리는 기부한 모든 분께 정말 감사하다고 말했다</b>
+            <q>““Thank you so very much to all the wonderful people who have donated money,” Mary said.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/elderly-theater-worker-surprised-with-146000-for-retirement-crowdfunded-by-young-moviegoer/" target="_blank" rel="noopener">Elderly Theater Worker Surprised by $146,000 for Her Retirement Crowdfunded by Young Moviegoer</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "empty cinema seats in warm daylight"</li><li>2장: <a href="https://pixabay.com/photos/theater-noordwijk-cinema-8569119/" target="_blank" rel="noopener">wernerredlich / Pixabay</a> — "cinema seats"</li><li>3장: <a href="https://pixabay.com/photos/iphone-concert-lights-stage-lights-1836071/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "smartphone video recording"</li><li>4장: <a href="https://pixabay.com/photos/hands-phone-smartphone-electronics-1851218/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "smartphone"</li><li>5장: <a href="https://pixabay.com/photos/hand-texture-love-couple-romance-7566739/" target="_blank" rel="noopener">Alanjvm / Pixabay</a> — "elderly hands"</li><li>6장: <a href="https://pixabay.com/photos/bingo-luck-game-play-fun-win-1044718/" target="_blank" rel="noopener">ClickerHappy / Pixabay</a> — "lottery ticket winning"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-1b446580bb51">
+    <div class="head">
+      <h2>S1. 긴자 길바닥에 앉은 관광객, 일본이 불편해하는 이유</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-1b446580bb51">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 일본여행</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 법 위반은 아닌데 왜 눈총을 받는지, 앉은 사람들 이유와 벤치 부족 사정까지 나라별 예절 차이로 풀기</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">67/500자</span></div>
+      <p class="tp-text">도쿄 긴자 한복판, 길바닥에 앉았을 뿐인데 논란이 됐대.
+법으로 바로 위반은 아닌데 왜 문제일까.
+이유만 정리해서 가져옴</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">1/ 일본 대표 고급 쇼핑가 긴자에서 길이나 가게 앞에 앉아 있는 관광객이 문제가 되고 있대. 앉아서 밥 먹는 외국인도 있었고.
+지나가던 일본 사람은 깨끗한 거리에 앉아 있으니 지저분해 보인다는 반응.</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">2/ 앉은 사람들한테 물어봤더니 이유가 달랐어.
+말레이시아 30대는 오사카에 갔다가 도쿄에서 1시간쯤 걸어서 발이 너무 아팠대. 코소보 20대는 차가 안 다녀서 괜찮은 줄 알았다고 했고, 일본에 있으니 일본 문화를 존중해야겠다고도 덧붙였어.</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">3/ 앉을 데가 없는 것도 한몫해. 카페랑 식당은 만석이고 벤치도 적어서 쉴 곳이 마땅치 않다는 거야.
+근데 경찰은 긴자 사정상 벤치를 늘리는 게 쉽지 않다고 해. 일본 반응 중엔 벤치를 안 놓으면 앉는 사람이 생겨서 경관이 망가진다는 말도 있었어.</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">4/ 긴자 길바닥 앉기, 경찰 설명 정리
+- 앉는 것 자체: 바로 위반은 아님
+- 가게 영업을 방해하면: 상황에 따라 위반 가능
+- 통행에 지장을 주면: 상황에 따라 위반 가능
+- 기사가 짚은 일본 분위기: 합법 여부보다 지역 주민에 대한 존중이 기준</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">151/500자</span></div>
+      <p class="tp-text">5/ 사실 일본에도 비슷한 시절이 있었대. 1990년대 후반 길바닥에 앉거나 쭈그려 앉는 사람들을 지베타리안이라고 불렀고, 주로 반항적인 10대였다고.
+2000년대 초엔 앉아도 멋져 보이지 않는다고 다들 느끼면서 사라졌대. 이번 반응에도 지베타리안 그립다는 말이 있었어.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">221/500자</span></div>
+      <p class="tp-text">6/ 일본인 반응이 다 같진 않아. 긴자의 60대 한 명은 해외에선 세계유산 계단에도 다들 앉으니 그런 문화인가 싶다고 했어.
+한국 관광지 기준은 어떨까? 여행 중 다리가 한계인데 앉을 데가 없었을 때 넌 어떻게 버텼어?
+다음 배송은 강아지도 부바는 둥글고 키키는 뾰족? 얘기. 팔로우해두면 새벽에 도착함
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 긴자가 일본을 대표하는 고급 쇼핑가이며 외국인 관광객이 많이 찾는다는 내용</li><li>근거 등록 안 된 주장: 긴자 길바닥 앉기 관련 보도가 Teleasa News 등 여러 매체를 통해 전해졌다는 출처 정보</li><li>근거 등록 안 된 주장: 부바는 둥글고 키키는 뾰족하다는 다음 배송 관련 내용</li><li>근거 등록 안 된 주장: 팔로우하면 새벽에 배송 소식이 도착한다는 홍보 문구</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>도쿄 긴자 한복판, 길바닥에 앉았을 뿐인데 논란이 됐대</li><li>법 위반은 아닌데 일본에서 욕먹는 행동이 있어</li><li>일본 최고급 쇼핑가에서 앉아서 밥 먹는 관광객이 보인대</li><li>1시간 걷고 발이 아파서 앉았을 뿐인데 문제라고?</li><li>차가 안 다니니까 앉아도 되는 줄 알았다는 관광객</li><li>긴자에 벤치가 없는 데는 이유가 있대</li><li>90년대 일본 10대들이 하던 행동을 요즘 외국인이 한대</li><li>앉는 게 문제일까, 앉을 데가 없는 게 문제일까</li><li>일본 경찰이 벤치 늘리기 쉽지 않다고 한 이유</li><li>길바닥에 앉는 문화, 나라마다 이렇게 다르다</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>여행 중 다리가 한계인데 앉을 데가 없었을 때 넌 어떻게 버텼어?</li><li>해외에서 여기선 이러면 안 되는구나 싶었던 순간 있으면 말해줘</li><li>한국에서 길바닥이나 계단에 앉아 쉬는 건 어디까지 괜찮다고 봐?</li><li>긴자에 벤치를 놓는다면 경관이랑 편의 중 넌 어느 쪽이야?</li><li>여행지에서 현지인 눈치 보였던 경험 있으면 풀어줘</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>강아지도 부바는 둥글고 키키는 뾰족?</li><li>6500만 년 가문의 거대 버섯 D. rex</li><li>극장 노인 직원 14만 6천 달러 모금</li><li>시부야 할로윈 앞두고 나온 공공장소 음주 금지 안내</li><li>도쿄 관광지 벤치 부족 논쟁</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>외국인 관광객 전체를 일반화하거나 혐오로 읽힐 수 있어 영상 속 소수 인터뷰라는 점을 유지해야 함</li><li>일본 시민 반응은 일부 의견이며 영상 댓글과 기사 반응이 섞여 있음</li><li>한국 관광지 길바닥 앉기 비교는 확인된 정보가 없어 질문으로만 처리</li><li>원문은 방송 보도를 재인용한 2차 기사라 영상 내용은 직접 확인하지 못함</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>긴자에서 길이나 가게 앞에 앉는 사람들이 문제가 되고 있다</b>
+          <q>“そんな銀座で今、問題となっているのが、路上や店舗の前に座り込む「地べた族」です。”</q>
+          <small>post1 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>앉아서 식사하는 외국인이 있었다</b>
+          <q>“外国人が座って食事をしています。”</q>
+          <small>post1 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일본 시민이 깨끗한 거리에 앉아 있어 지저분하다고 반응했다</b>
+          <q>“ちょっと嫌だな。きれいな街並みに対して座ってて汚らしい”</q>
+          <small>post1 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>앉는 것 자체가 바로 위반은 아니다</b>
+          <q>“警察によると、路上に座ること自体が直ちに違反になるわけではありません。”</q>
+          <small>post0 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>말레이시아 30대는 오사카 다음 도쿄에서 1시간쯤 걸어 발이 아팠다</b>
+          <q>“大阪に行った後、東京に来て1時間くらい歩いたので、足がとても痛いです。”</q>
+          <small>post2 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코소보 출신은 차가 안 다녀서 괜찮다고 생각했다</b>
+          <q>“知らなかった。車が走っていないので、私は大丈夫だと思った”</q>
+          <small>post2 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코소보 출신은 일본에 있으니 일본 문화를 존중해야 한다고 말했다</b>
+          <q>“日本にいるから、日本の文化を尊重しなければいけないですね”</q>
+          <small>post2 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카페와 식당이 만석이고 벤치도 적어 쉴 곳이 부족하다</b>
+          <q>“カフェやレストランが満席であることに加え、ベンチの数も少ないため、気軽に休憩できる場所が少ないのも要因です。”</q>
+          <small>post3 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>경찰은 긴자 사정상 벤치를 늘리는 게 쉽지 않다고 한다</b>
+          <q>“これに対し、警察は銀座の街ならではの事情から、ベンチを増やすことは簡単ではないといいます。”</q>
+          <small>post3 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>벤치를 안 놓으면 앉는 사람이 생겨 경관이 손상된다는 반응이 있었다</b>
+          <q>“ベンチ置かないと座る人が出てきて景観が損なわれる”</q>
+          <small>post3 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가게 영업을 방해하거나 통행에 지장을 주면 상황에 따라 위반이 될 수 있다</b>
+          <q>“ただ、店舗の営業を妨げたり、通行の支障になったりした場合には、状況によって違反となる可能性があるということです。”</q>
+          <small>post4 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일본의 공공 매너는 합법 여부보다 지역 주민 존중이 기준이라고 기사가 짚었다</b>
+          <q>“Japan’s baseline attitude about how to behave in public is built less on questions of technical legality and more on being respectful to others, especially the members of the local community”</q>
+          <small>post4 · <a href="https://soranews24.com/2026/10/14/foreign-travelers-sitting-on-sidewalks-of-tokyos-ginza-are-japans-latest-tourism-culture-clash/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1990년대 후반 길바닥에 앉거나 쭈그려 앉는 사람들을 지베타리안이라 불렀다</b>
+          <q>“It’s worth noting that there was a social phenomenon of people sitting or squatting on sidewalks in Japan during the late 1990s, who were called jibetarian”</q>
+          <small>post5 · <a href="https://soranews24.com/2026/10/14/foreign-travelers-sitting-on-sidewalks-of-tokyos-ginza-are-japans-latest-tourism-culture-clash/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지베타리안은 주로 반항적인 10대와 연관됐고 2000년대 초 앉아도 멋져 보이지 않는다고 여겨졌다</b>
+          <q>“However, the practice was primarily associated with rebellious teens, not the sort of demographic that hangs out in Ginza, and by the early 2000s even Japanese culture sort of collectively decided that sitting on the ground didn’t really make anyone look cool or tough anyway.”</q>
+          <small>post5 · <a href="https://soranews24.com/2026/10/14/foreign-travelers-sitting-on-sidewalks-of-tokyos-ginza-are-japans-latest-tourism-culture-clash/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지베타리안이 그립다는 일본 반응이 있었다</b>
+          <q>“ジベタリアン懐かしいw90年代の若者はこんな感じだったねw”</q>
+          <small>post5 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>긴자의 60대는 해외에선 세계유산 계단에도 앉으니 그런 문화인가 싶다고 했다</b>
+          <q>“文化の違いというか、海外に行けば世界遺産とか階段とかでも皆さん座ってたりするので、そういう文化なのかなと”</q>
+          <small>post6 · <a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="1b446580bb51">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://soranews24.com/2026/10/14/foreign-travelers-sitting-on-sidewalks-of-tokyos-ginza-are-japans-latest-tourism-culture-clash/" target="_blank" rel="noopener">Foreign travelers sitting on sidewalks of Tokyo’s Ginza are Japan’s latest tourism culture clash</a></li><li><a href="http://blog.esuteru.com/archives/10576287.html" target="_blank" rel="noopener">【悲報】東京・銀座に『地べた族』急増中 路上や店舗の前に座り込む外国人観光客だらけに</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-0d1df811c1eb">
+    <div class="head">
+      <h2>S2. 닌자 연구자 감수 2개국어 닌자 그림 가이드 출간</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 9
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-0d1df811c1eb">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 나루토 손동작에 실제 밀교 연결고리가 있다는 반전에, &#39;진짜 닌자 vs 상상 속 닌자&#39; 비교를 얹어서 판다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">59/500자</span></div>
+      <p class="tp-text">나루토 손동작에 진짜 불교 연결고리가 있다는데.
+닌자 연구자가 감수한 새 책 얘기, 핵심만 5개로 정리함.</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">1/ 일본에서 10월 15일에 닌자 그림 가이드북이 나와. 제목은 &#39;Ninja: An Illustrated Guide to Japan’s Secret Agents&#39;. 일본 서점이랑 아마존 재팬에서 풀린대.</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">2/ 크기는 A6, 160쪽짜리 작은 책인데 내용이 전부 2개국어야. 감수는 미에대학 야마다 유지 교수가 맡았고, 닌자 연구 쪽 요직에 있는 사람이래.</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">3/ 이 책 컨셉은 &#39;실제 닌자 vs 사람들 머릿속 닌자&#39;. 여섯 파트로 나뉘고 다루는 주제 예시는 이래
+- 정보 수집과 잠입
+- 무기
+- 도구
+- 닌술 기술
+- 역사에 맞게 그린 생활상</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">51/500자</span></div>
+      <p class="tp-text">4/ 그럼 나루토 손동작은 뭐냐면. 기사 소개로는 밀교와 실제로 이어지는 부분이 있다고 해.</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">205/500자</span></div>
+      <p class="tp-text">5/ 일본은 요즘 배트맨 닌자 무대 쇼부터 실제 닌자 자격시험까지 내놓는 중이래. 우리 사극 속 첩자 이미지는 실제 역사랑 얼마나 닮았을까? 너라면 닌자 하면 제일 먼저 떠오르는 장면이 뭐야?
+다음 배송은 강아지도 부바는 둥글고 키키는 뾰족? 얘기. 팔로우해두면 새벽에 도착함
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 팔로우하면 새벽에 배송이 도착한다는 주장은 근거 없는 홍보성 주장이다.</li><li>근거 등록 안 된 주장: 강아지 부바는 둥글고 키키는 뾰족하다는 얘기(부바·키키 효과)는 원문에 없는 일반 지식 주장이다.</li><li>근거 등록 안 된 주장: Natsume-sha가 출판사라는 사실은 카드 본문에 명시되지 않았지만 원문 근거는 있다(사실 주장 자체는 누락).</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>나루토 손동작에 진짜 불교 연결고리가 있다는데</li><li>닌자 자격시험이 실제로 있다고?</li><li>160쪽짜리 손바닥 책에 닌자의 진짜 모습이 들어감</li><li>대학에 국제닌자연구센터가 있다는 거 알았어?</li><li>우리가 아는 닌자 말고, 실제 닌자는 뭘 했을까</li><li>배트맨 닌자 무대 쇼까지 나온 나라에서 이번엔 진짜 닌자 책이 나옴</li><li>닌자 만화 속 손모양, 현실에도 뿌리가 있었음</li><li>해외 나갈 때 선물로 들고 가라고 만든 닌자 책이 있대</li><li>닌자의 무기, 도구, 생활까지 그림으로 정리한 책이 나옴</li><li>닌자 이미지 vs 진짜 닌자, 연구자가 직접 감수함</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>닌자 하면 제일 먼저 떠오르는 장면이 뭐야? 영화, 만화, 게임 뭐든 좋아</li><li>사극 속 첩자 캐릭터 중에 제일 기억에 남는 사람은 누구야?</li><li>닌자 체험이나 자격시험이 한국에 있다면 도전해볼 사람?</li><li>닌자 책에서 제일 먼저 확인하고 싶은 게 무기야, 도구야, 생활상이야?</li><li>나루토에서 제일 따라 해본 손동작이나 기술 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>강아지도 부바는 둥글고 키키는 뾰족?</li><li>6500만 년 가문의 거대 버섯 D. rex</li><li>극장 노인 직원 14만 6천 달러 모금</li><li>일본에서 실제로 열리는 닌자 자격시험 이야기</li><li>한국 사극 속 첩자 이미지와 실제 역사 비교</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>한국 사극 속 첩자와 실제 역사 비교는 사실 확인이 안 된 아이디어라 질문으로만 던졌음</li><li>원문은 SoraNews24 기사이고 책 정보는 PR Times 출처라, 출간일과 판매처는 출판사 공지로 재확인 필요</li><li>&#39;밀교와의 연결&#39;은 기사에서 한 줄로만 언급돼서 구체적 내용은 쓰지 않았음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>닌자 연구자가 감수한 새 책이 나온다</b>
+          <q>“What also sets this volume apart from other guides is that its creation was closely supervised by Yuji Yamada, a professor at Mie University who holds leadership roles in the Mie University International Ninja Research Center and International Ninja Research Association.”</q>
+          <small>post0, post2 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나루토 손동작은 밀교와 실제 연결고리가 있다</b>
+          <q>“It turns out that there’s actually a real-life connection to esoteric Buddhism.”</q>
+          <small>post0, post4 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책이 10월 15일에 출간되며 제목은 Ninja: An Illustrated Guide to Japan’s Secret Agents이다</b>
+          <q>“On October 15, Tokyo-based publisher of educational guides Natsume-sha is set to release Ninja: An Illustrated Guide to Japan’s Secret Agents.”</q>
+          <small>post1 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일본 서점과 아마존 재팬에서 판매된다</b>
+          <q>“Ninja: An Illustrated Guide to Japan’s Secret Agents releases in Japanese bookstores and on Amazon Japan on the 15th.”</q>
+          <small>post1 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>A6 크기 160쪽이며 전체가 2개국어로 되어 있다</b>
+          <q>“The compact A6-sized, 160-page book is being billed as an excellent gift for Japanese people to bring as a gift when traveling abroad due to its fully bilingual nature and helpful illustrations.”</q>
+          <small>post2 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>감수자는 미에대학 야마다 유지 교수이며 닌자 연구 관련 기관에서 요직을 맡고 있다</b>
+          <q>“What also sets this volume apart from other guides is that its creation was closely supervised by Yuji Yamada, a professor at Mie University who holds leadership roles in the Mie University International Ninja Research Center and International Ninja Research Association.”</q>
+          <small>post2 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책은 실제 역사 속 닌자와 대중이 생각하는 닌자의 대비에 초점을 맞춘다</b>
+          <q>“The new book focuses on the contrast behind real historical ninja vs. the ones in the public consciousness.”</q>
+          <small>post3 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책은 여섯 파트로 나뉘며 정보 수집과 잠입, 무기, 도구, 닌술 기술, 역사에 맞게 그린 생활상 등을 다룬다</b>
+          <q>“It’s also broken into six main parts covering a wide range of topics such as the ninja’s role in intelligence gathering and infiltration, weapons, tools, ninjutsu techniques, and even historically accurate lifestyle depictions.”</q>
+          <small>post3 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일본은 배트맨 닌자 무대 쇼부터 실제 닌자 자격시험까지 제공하고 있다</b>
+          <q>“Japan has capitalized on this collective interest in recent years by offering everything from a Batman Ninja stage show to an actual ninja certification exam.”</q>
+          <small>post5 · <a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="0d1df811c1eb">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://soranews24.com/2026/10/14/bilingual-illustrated-ninja-guide-stealthily-drops-courtesy-of-a-top-ninja-researcher-in-japan/" target="_blank" rel="noopener">Bilingual illustrated ninja guide stealthily drops courtesy of a top ninja researcher in Japan</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261014-pm";
+  const ORIGINAL = {"b2455dcc2e82": {"caption": "\ud0a4\uac00 \ucd5c\ub300 20\uc778\uce58\uae4c\uc9c0 \uc790\ub780\ub2e4\ub294 \ubc84\uc12f\uc774 \uc911\uad6d\uc5d0\uc11c \ubcf4\uace0\ub410\uc5b4. \uc774\ub984\uc740 Dianjunus rex, \u0027\ub514\uc548\uc758 \uc655\u0027\uc774\ub77c\ub294 \ub73b\uc774\uc57c. \uace0\ub300 \uc911\uad6d\uc758 \ud55c \uc655\uad6d \uc774\ub984\uc5d0\uc11c \ub530\uc654\ub300. \uc790\uc2e4\uccb4 \ud558\ub098\uac00 \ucd5c\ub300 5\ud30c\uc6b4\ub4dc\uae4c\uc9c0 \ub098\uac04\ub2e4\uace0 \ud574.\n\n\uc5f0\uad6c\uc9c4\uc740 \uc911\uad6d \uc708\ub09c\uc131 \uc232\uc5d0\uc11c \uc911\uad6d \ucf54\ub974\ud06c\ucc38\ub098\ubb34\uc758 \ub098\ubb34 \ubfcc\ub9ac\uc5d0 \ubd99\uc5b4 \uc790\ub77c\ub294 \ud06c\uace0 \ud76c\ub044\ubb34\ub808\ud55c \uc790\uc2e4\uccb4\ub97c \ubc1c\uacac\ud588\uc5b4. \uc9c0\uae08\uae4c\uc9c0 \uc790\ub0ad\uade0\ub958 \uc790\uc2e4\uccb4 \uc911 \uae30\ub85d \ubcf4\uc720\uc790\ub294 \ud0a4\uac00 20~30cm \uc815\ub3c4\uc600\ub294\ub370, \uc774\ubc88 \ubc84\uc12f\uc740 \uadf8 \ub450 \ubc30\ucbe4 \ub41c\ub2e4\ub294 \uc124\uba85\uc774\uc57c. \uc911\uad6d\u00b7\ud0dc\uad6d\u00b7\uba55\uc2dc\ucf54 \uc5f0\uad6c\uc9c4\uc740 \uc774 \ubc84\uc12f\uc744 \uc0c8\ub85c\uc6b4 \uc18d\uc774\uc790 \uc0c8\ub85c\uc6b4 \uacfc(Dianjunaceae)\ub85c \ubd84\ub958\ud588\uc5b4.\n\n\uc720\uc804\uccb4 \ubd84\uc11d \uacb0\uacfc, \uc774 \uacfc\ub294 \uc57d 6500\ub9cc \ub144 \uc804\uc5d0 \uc0dd\uaca8\ub09c \uac78\ub85c \ucd94\uc815\ub3fc. \uacf5\ub8e1\uc744 \uba78\uc885\uc2dc\ud0a8 \ub300\uba78\uc885\uc73c\ub85c\ubd80\ud130 100\ub9cc \ub144 \ub4a4\ub77c\ub294 \uac70\uc57c. \uc5f0\uad6c\uc9c4\uc740 \uba78\uc885 \ub4a4 \uc8fd\uc740 \uc2dd\ubb3c\uc774 \uac11\uc790\uae30 \ub9ce\uc544\uc9c0\uba74\uc11c \ub098\ubb34\ub97c \ubd84\ud574\ud558\ub294 \uade0\ub958\uc5d0\uac8c \uc0c8 \uae30\ud68c\uac00 \uc5f4\ub838\uc744 \uc218 \uc788\ub2e4\uace0 \ubd24\uc5b4. \uc774\ub807\uac8c \ud06c\uac8c \uc790\ub780 \uc774\uc720\ub85c\ub294 \ud0a4\uac00 \ucee4\uc11c \uc232\uc18d\uc5d0\uc11c \ubc14\ub78c\uc5d0 \ud3ec\uc790\uac00 \ub354 \uc798 \ud37c\uc84c\uc744 \uac00\ub2a5\uc131\uc744 \uac00\uc124\ub85c \ub0b4\ub1a8\uace0.\n\n\uc5f0\uad6c\uc9c4\uc758 Senanayake \ubc15\uc0ac\ub294 \ub3d9\uc544\uc2dc\uc544 \uc232\uc5d0 \uc544\uc9c1 \ubc1c\uacac\ub418\uc9c0 \uc54a\uc740 \uade0\ub958 \ub2e4\uc591\uc131\uc774 \ub9ce\ub2e4\uace0 \ub9d0\ud588\uc5b4. \uadf8\ub7fc \ud55c\uad6d \uc232\uc5d0\ub3c4 \uc6b0\ub9ac\uac00 \ubaa8\ub974\ub294 \ubc84\uc12f\uc774 \uc228\uc5b4 \uc788\uc744\uae4c?\n\n\ucd9c\ucc98: Good News Network", "hashtags": ["#\ubc84\uc12f", "#\uac70\ub300\ubc84\uc12f", "#\uacfc\ud559\ub274\uc2a4", "#\uade0\ub958", "#\uacf5\ub8e1\uba78\uc885"], "slides": [["\ud0a4\uac00 **50cm**", "\ubc84\uc12f\uc774 \uc788\ub2e4\uace0???"], ["\uc774\ub984\uc740 **Dianjunus rex**", "\u0027**\ub514\uc548\uc758 \uc655**\u0027\uc774\ub798"], ["\uae30\uc874 \uae30\ub85d\uc740", "20~30cm", "\uadf8 **\ub450 \ubc30** \ud06c\uae30"], ["\uc720\uc804\uccb4 \ubd84\uc11d \uacb0\uacfc", "\uc774 \ubc84\uc12f \uc885\ub958\ub294", "**\uc57d 6500\ub9cc \ub144 \uc804**\uc5d0 \uc0dd\uaca8\ub09c \uac78\ub85c \ucd94\uc815"], ["\uba78\uc885 \ub4a4 \uc232\uc5d4", "\uc8fd\uc740 \uc2dd\ubb3c\uc774 \uac00\ub4dd", "\ubc84\uc12f\uc5d4 **\uae30\ud68c\ub545**"], ["\ubc14\ub78c\uc5d0 **\ud3ec\uc790**\uac00", "\ub354 \uc798 \ud37c\uc9c8 \uc218 \uc788\uac8c", "\ud0a4\ub97c \ud0a4\uc6b4\uac70\ub77c\uace0 \ud574"], ["**\ud55c\uad6d \uc232**\uc5d0\ub3c4", "\uc228\uc740 \ubc84\uc12f\uc655\uc744", "\ucc3e\uc744\uc218 \uc788\uc744\uae4c?"]]}, "cd7481ab1f04": {"caption": "\uadf9\uc7a5 \uccad\uc18c\ud558\ub358 \ud560\uba38\ub2c8\ud55c\ud14c 14\ub9cc 6\ucc9c \ub2ec\ub7ec\uac00 \ubaa8\uc600\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \ubbf8\uad6d \ud14c\ub124\uc2dc\uc8fc \uba54\ub9ac\ube4c\uc5d0\uc11c \ubc8c\uc5b4\uc9c4 \uc77c\uc778\ub370, \uc2dc\uc791\uc740 21\uc0b4 \ube0c\ub8e8\ud074\ub9b0 \uadf8\ub9b0\uc774 \ub3d9\ub124 AMC \uadf9\uc7a5\uc5d0 \uc601\ud654\ub97c \ubcf4\ub7ec \uac04 \ub0a0\uc774\uc5c8\uc5b4. \uac70\uae30\uc11c \ud5c8\ub9ac\uac00 \uad7d\uc740 \ucc44 \uc4f0\ub808\uae30\ub97c \uce58\uc6b0\ub294 \ud560\uba38\ub2c8\ub97c \ubcf8 \uac70\uc9c0. \uadf8\ub9b0\uc740 \ud604\uc9c0 \ub9e4\uccb4\uc5d0 \u0027\uc77c\ud558\ub294 \ubaa8\uc2b5\uc774 \ubcf4\uc600\uace0, \uc815\ub9d0 \uc5f4\uc2ec\ud788 \ud558\uace0 \uc788\uc5c8\ub2e4\u0027\ub294 \ucde8\uc9c0\ub85c \ub9d0\ud588\ub300.\n\n\uadf8\ub9b0\uc740 \ud2f1\ud1a1\uc5d0 \uc601\uc0c1\uc744 \uc62c\ub9ac\uace0 \uace0\ud380\ub4dc\ubbf8 \ubaa8\uae08\ub3c4 \uc5f4\uc5c8\uc5b4. \ucc98\uc74c\uc5d4 \uac00\uc871\uacfc \uce5c\uad6c\ub4e4\ud55c\ud14c \ud55c \ub2ec \uc6d4\uc138 \uc815\ub3c4\ub9cc \ubaa8\uc77c \uac70\ub77c\uace0 \uc0dd\uac01\ud588\ub300. \uadf8\ub7f0\ub370 \uc601\uc0c1\uc774 \ud37c\uc9c0\uba74\uc11c \uccab\ub0a0\uc5d0\ub9cc 10\ub9cc \ub2ec\ub7ec\uac00 \ub118\uac8c \ubaa8\uc600\uace0, \ub2e4\uc74c \ub0a0\uc5d4 4\ub9cc 6\ucc9c \ub2ec\ub7ec\uac00 \ub354 \ub298\uc5c8\uc5b4.\n\n\ud560\uba38\ub2c8 \uc774\ub984\uc740 \uba54\ub9ac\uc57c. \uadf8\ub9b0\uc774 \ub2e4\uc2dc \uadf9\uc7a5\uc744 \ucc3e\uc740 \ub0a0 \uba54\ub9ac\ub294 \uadfc\ubb34 \uc911\uc774 \uc544\ub2c8\uc5c8\ub294\ub370, \ub9e4\ub2c8\uc800 \ub9d0\ub85c\ub294 \uadf9\uc7a5\uc5d0\uc11c 45\ub144 \ub118\uac8c \uc77c\ud588\ub300. \uadf8\ub9ac\uace0 \uba54\ub9ac \ubcf8\uc778\uc740 \uc77c\uc744 \uc88b\uc544\ud55c\ub2e4\uace0 \ud574. \uc77c\uc744 \uadf8\ub9cc\ub450\uba74 \uc624\ud788\ub824 \uc0c1\ud669\uc774 \ub098\ube60\uc9c8\uae4c \uac71\uc815\ud55c\ub2e4\ub294 \uc774\uc57c\uae30\ub3c4 \uc804\ud574\uc84c\uc5b4.\n\n\uacb0\uad6d \uadf8\ub9b0\uc740 \uba54\ub9ac\ub97c \uc9c1\uc811 \ub9cc\ub0ac\uace0, \uc774 \uc790\ub9ac\ub294 \uae30\ubd80\uc790\ub4e4\uc5d0\uac8c \ubcf4\uc5ec\uc904 \uc601\uc0c1\uc73c\ub85c \ub0a8\uaca8\uc84c\uc5b4. \uba54\ub9ac\ub294 \uae30\ubd80\ud574 \uc900 \ubaa8\ub4e0 \ubd84\uaed8 \uc815\ub9d0 \uac10\uc0ac\ud558\ub2e4\uace0 \ub9d0\ud588\ub300.\n\n\ub85c\ub610\uac19\uc740 \uc774\uc57c\uae30 \uc5ec\ub7ec\ubd84\ud55c\ud14c \uc77c\uc5b4\ub09c\ub2e4\uba74\n\ubb50\ud558\uace0 \uc9c0\ub0bc\uae4c?\n\n\ucd9c\ucc98: Good News Network (WVLT 8 \ubcf4\ub3c4 \uc778\uc6a9)", "hashtags": ["#\ud574\uc678\ubc18\uc751", "#\ud6c8\ud6c8\ud55c\uc774\uc57c\uae30", "#\uace0\ub839\ub178\ub3d9", "#\uc740\ud1f4", "#\ud06c\ub77c\uc6b0\ub4dc\ud380\ub529"], "slides": [["\uadf9\uc7a5 \ud560\uba38\ub2c8\ud55c\ud14c", "**14\ub9cc 6\ucc9c \ub2ec\ub7ec**\uac00", "\ub5a8\uc5b4\uc84c\ub2e4\uace0???"], ["**21\uc0b4 \uad00\uac1d**\uc774", "\uc601\ud654 \ubcf4\ub7ec \uac14\ub2e4\uac00", "\ud5c8\ub9ac \uad7d\uc740 \uc9c1\uc6d0\uc744 \ubd24\ub300"], ["\ud560\uba38\ub2c8\ub97c \ub3c4\uc640\uc8fc\uace0 \uc2f6\uc5b4\uc11c", "**\ud2f1\ud1a1**\uc5d0 \uc601\uc0c1\uc744 \uc62c\ub9ac\uace0", "**\uace0\ud380\ub4dc\ubbf8 \ubaa8\uae08**\ub3c4 \uc5f4\uc5c8\uc5b4"], ["\ud2f1\ud1a1\uc5d0 \uc62c\ub838\ub354\ub2c8", "**\ud558\ub8e8 \ub9cc\uc5d0**", "10\ub9cc \ub2ec\ub7ec \ub3cc\ud30c"], ["\uadfc\ub370 \ud560\uba38\ub2c8\ub294", "**\uc77c\uc774 \uc88b\ub300**", "\uc26c\uba74 \uc624\ud788\ub824 \ud798\ub4e4\ub2e4\uace0"], ["**\ub85c\ub610\uac19\uc740 \uc774\uc57c\uae30**", "\uc5ec\ub7ec\ubd84\ud55c\ud14c \uc77c\uc5b4\ub09c\ub2e4\uba74", "\ubb50\ud558\uace0 \uc9c0\ub0bc\uae4c?"]]}, "d2208615ee18": {"caption": "\uac15\uc544\uc9c0\ub3c4 \ubd80\ubc14\ub294 \ub465\uae00\ub2e4\uace0 \ubc18\uc751\ud55c\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\uc5b4. \uc815\ud655\ud788\ub294 \uc18c\ub9ac\uc5d0 \ub9de\ucdb0 \ub3c4\ud615\uc744 \ub354 \uc624\ub798 \ubcf8\ub2e4\ub294 \ucabd\uc774\uc57c.\n\n\ubd80\ubc14\uc640 \ud0a4\ud0a4\ub294 \uc9c0\uc5b4\ub0b8 \ub2e8\uc5b4\uc778\ub370, \uc5b4\ub5a4 \uc5b8\uc5b4\ub098 \ubb38\uc790\ub97c \uc4f0\ub4e0 \ub300\ubd80\ubd84\uc758 \uc0ac\ub78c\uc740 \ud0a4\ud0a4\ub294 \ubfb0\uc871\ud558\uace0 \ubd80\ubc14\ub294 \ub465\uae00\ub2e4\uace0 \ub2f5\ud55c\ub300. \uc774 \uc2e4\ud5d8\uc740 1920\ub144\ub300\uc5d0 \ucc98\uc74c \uad6c\uc0c1\ub410\uace0, \uc0ac\ub78c\uc774 \uc18c\ub9ac\uc640 \ubaa8\uc591\uc744 \uc5f0\uacb0\ud558\ub294 \ubc29\uc2dd\uc5d0 \ubcf4\ud3b8\uc801\uc778 \ubb54\uac00\uac00 \uc788\uc744 \uc218 \uc788\ub2e4\ub294 \uc598\uae30\ub85c \uc774\uc5b4\uc84c\uc5b4.\n\n\uc774\ubc88\uc5d4 \uc774\ud0c8\ub9ac\uc544 \ud30c\ub974\ub9c8\ub300\ud559\uad50\uc758 \ub3d9\ubb3c\ud589\ub3d9\ud559\uc790 \uc5d8\ub808\uc624\ub178\ub77c \ube44\ud53c \uc5f0\uad6c\ud300\uc774 \uac00\uc815\uacac 70\ub9c8\ub9ac\ub97c \ubaa8\uc558\uc5b4. \uccab \uc2e4\ud5d8\uc5d0\ub294 51\ub9c8\ub9ac\uc640 \ubcf4\ud638\uc790\uac00 \ucc38\uc5ec\ud588\uace0, \ubc29 \uc67c\ucabd\uacfc \uc624\ub978\ucabd\uc5d0 \ud654\uba74\uacfc \uc2a4\ud53c\ucee4\uac00 \ud558\ub098\uc529 \uc788\uc5c8\uc5b4. \uc57d 15\ubd84 \ub3d9\uc548 \uc0ac\ub78c\uc774 \ub9d0\ud558\ub294 \u0027\ubd80\ubc14\u0027 \ub610\ub294 \u0027\ud0a4\ud0a4\u0027 \uc18c\ub9ac\uc640 \ub450 \ub3c4\ud615\uc758 \uc88c\uc6b0 \uc704\uce58\uac00 \ubc88\uac08\uc544 \ubc14\ub00c\uc5c8\uace0, \uc5f0\uad6c\ud300\uc740 AI\ub85c \uac15\uc544\uc9c0 \uba38\ub9ac\uac00 \ud5a5\ud558\ub294 \ubc29\ud5a5\uc744 \ucd94\uc801\ud588\uc5b4.\n\n\ub450 \ubc88\uc9f8 \uc2e4\ud5d8\uc5d4 \ub2e4\ub978 \uac15\uc544\uc9c0 19\ub9c8\ub9ac\uac00 \ucc38\uc5ec\ud588\ub294\ub370, \ubcf4\ud638\uc790\uac00 \ub85d \uc74c\uc545\uc774 \ub098\uc624\ub294 \ud5e4\ub4dc\ud3f0\uc744 \uc368\uc11c \uc18c\ub9ac\ub97c \ubabb \ub4e3\uac8c \ud588\uc5b4. \ubcf4\ud638\uc790\uac00 \ubb34\uc2ec\ucf54 \uc8fc\ub294 \uc2e0\ud638\ub97c \uc5c6\uc560\ub824\ub294 \uc124\uacc4\uc600\uc9c0.\n\n\uacb0\uacfc\ub294 \ubd80\ubc14 \uc18c\ub9ac\uac00 \ub098\uc62c \ub54c \ub465\uadfc \ub3c4\ud615\uc744, \ud0a4\ud0a4 \uc18c\ub9ac\uac00 \ub098\uc62c \ub54c \ubfb0\uc871\ud55c \ub3c4\ud615\uc744 \ub354 \ub9ce\uc774 \ubd24\ub2e4\ub294 \uac70\uc57c. \ub2e4\ub9cc \uccab \uc2e4\ud5d8\uc5d0\uc120 \ubfb0\uc871\ud55c \ub3c4\ud615\uc744 \uc804\ubc18\uc801\uc73c\ub85c \ub354 \ubcf4\ub294 \uacbd\ud5a5\uc774 \uc788\uc5c8\uace0, \ud5e4\ub4dc\ud3f0\uc744 \uc4f4 \ub450 \ubc88\uc9f8 \uc2e4\ud5d8\uc5d0\uc120 \uadf8 \uacbd\ud5a5\uc774 \uc0ac\ub77c\uc84c\ub300.\n\n\uadf8\ub798\ub3c4 \uac15\uc544\uc9c0\uac00 \ubd80\ubc14\ub97c \ub465\uadfc \uac83, \ud0a4\ud0a4\ub97c \ubfb0\uc871\ud55c \uac83\uacfc \uc5f0\uacb0\ud55c\ub2e4\uace0 \ub2e8\uc815\ud558\ub824\uba74 \uc5f0\uad6c\uac00 \ub354 \ud544\uc694\ud558\ub300. \ud55c\uad6d\uc5b4\uc758 \ub3d9\uae00, \ubfb0\uc871 \uac19\uc740 \ub9d0\uc740 \uc5b4\ub5a8\uae4c? \uadf8\uac74 \uc544\uc9c1 \uad81\uae08\uc99d\uc73c\ub85c\ub9cc \ub0a8\uaca8\ub458\uac8c.\n\n\ucd9c\ucc98: ScienceAlert, Proceedings of the Royal Society B", "hashtags": ["#\uac15\uc544\uc9c0", "#\uacfc\ud559", "#\ubd80\ubc14\ud0a4\ud0a4", "#\ub3d9\ubb3c\ud589\ub3d9", "#\ud574\uc678\ubc18\uc751"], "slides": [["\uac15\uc544\uc9c0\ub3c4", "**\ubd80\ubc14**\ub294 \ub465\uae00\ub2e4\uace0?!"], ["\ubd80\ubc14\ub791 \ud0a4\ud0a4\ub294", "\uc0ac\uc2e4 **\uc9c0\uc5b4\ub0b8 \ub9d0**"], ["\uc0ac\ub78c \ub300\ubd80\ubd84\uc740", "\ud0a4\ud0a4\ub294 **\ubfb0\uc871**,", "\ubd80\ubc14\ub294 \ub465\uae00\uc5b4"], ["\uac15\uc544\uc9c0 **70\ub9c8\ub9ac**\ud55c\ud14c", "\uc18c\ub9ac\ub791 \ub3c4\ud615\uc744", "\ubcf4\uc5ec\uc92c\uc5b4"], ["\ubd80\ubc14 \uc18c\ub9ac\uc5d4", "**\ub465\uadfc \ub3c4\ud615**\uc744", "\ub354 \uccd0\ub2e4\ubd24\ub300"], ["**\uc8fc\uc778 \ud78c\ud2b8**\ub97c", "\ub9c9\uc544\ubcf8 \uc2e4\ud5d8\ub3c4", "\ub530\ub85c \ud588\uc5b4"], ["\ud55c\uad6d\uc5b4 **\ub3d9\uae00\u00b7\ubfb0\uc871\ub3c4**", "\uc774\ub7f0 \uac10\uac01\uc77c\uae4c?"]]}};
+  const TOTAL = 3;
+  const SERVER = {"b2455dcc2e82": "approve", "cd7481ab1f04": "approve", "d2208615ee18": "reject"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 9;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

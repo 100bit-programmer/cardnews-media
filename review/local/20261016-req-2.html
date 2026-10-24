@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.16 요청 소재 (2회차)</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.16 요청 소재 (2회차) 검수 <span id="progress">0 / 1 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-728923fd60ab" data-jump="728923fd60ab">1</a>
+      
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-728923fd60ab" data-id="728923fd60ab">
+    <div class="head">
+      <h2>1. 야식 시간과 간질환 위험 20~30% 연구 정리</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11 · 애매 1
+      </span>
+    </div>
+
+    
+    
+    <section class="thr">
+      <div class="thr-head"><b>💬 스레드 원글에 달 댓글</b><span class="chip hot">스레드에서 터진 글로 만든 카드</span></div>
+      <p class="thr-note">승인하고 인스타에 이 카드를 올린 뒤, 원래 스레드 글("야식은 &#39;뭘 먹느냐&#39;가 아니라 &#39;언제 먹느냐&#39;가 문제일 수 있대")에 내 계정으로 댓글을 달아요. 이 카드는 새 스레드 글을 따로 만들지 않아요.</p>
+      <div class="tp"><p class="tp-text">야식은 뭘 먹었냐보다 언제 먹었냐가 핵심이라는 내용을 카드 한 장에 정리해 뒀어. 밤마다 야식 먹는 친구한테 보내줄 요약 카드도 마지막 장에 있으니까 저장해 둬. 👉 instagram.com/oesin_saebyeok</p><button class="cp reply" type="button">댓글 문구 복사</button></div>
+    </section>
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-01.jpg" alt="1장: 야식은 메뉴보다 시간이 문제?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-02.jpg" alt="2장: 20만 명 가까운 데이터를 봤더니 간질환 위험 20~30%↑" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-03.jpg" alt="3장: 저녁 먹은 뒤나 잠자기 전에 꾸준히 먹은 사람들" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-04.jpg" alt="4장: 간은 생체리듬에 민감한 장기래 이게 가능한 이유 중 하나" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-05.jpg" alt="5장: 근데 단서 있음 원인이라고 확정된 건 아님" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-06.jpg" alt="6장: 캡처용 요약 관찰 연구 / 약 20만명 20~30% / 자기보고" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-07.jpg" alt="7장: 밤마다 야식 먹는 친구한테 이 요약 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261016-req-2-cc22eacc6b2e/728923fd60ab/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">야식은 뭘 먹느냐가 아니라 언제 먹느냐가 문제일 수 있다는 연구가 나왔어.
+
+미국 오리건 보건과학대(OHSU) 연구팀이 전국 규모 연구 세 곳(간호사 건강연구 I·II, 의료전문가 추적연구)의 데이터를 분석했어. 합치면 참가자가 20만 명 가까이 돼. 참가자들이 보고한 식습관과 생활 패턴을 바탕으로 언제 먹는지에 따라 그룹을 나누고, 지방간과 간경변 보고와 비교했대.
+
+결과는 저녁 식사 후나 잠자리에 든 뒤에도 꾸준히 먹는 사람이 야식을 피한 사람보다 간질환 위험이 20~30% 높았다는 거야. 간경변은 간에 흉터 같은 조직이 넓게 생기는 심각한 상태야.
+
+가능한 이유로 연구진은 생체리듬을 꼽았어. 간은 영양소 처리, 혈당 조절, 에너지 저장을 맡는데, 몸이 잘 준비를 하는 시간에 먹으면 이런 과정에 방해가 될 수 있다는 거야.
+
+다만 꼭 같이 봐야 할 단서가 있어. 이 연구는 관찰 연구라서 인과관계를 증명하진 못해. 참가자가 직접 보고한 정보에 기대고 있고, 먹은 시간 설명도 비교적 뭉뚱그려져 있어서 다른 요인이 영향을 줬을 수도 있어. 지방간이 생긴 사람 중에서도 간경변 같은 심각한 단계까지 가는 건 일부라고 연구진이 짚었어.
+
+OHSU는 식사 시간을 직접 관찰하며 더 일찍 먹으면 지방간이 있는 사람에게 실제로 도움이 되는지 보는 임상 연구도 참가자를 모집 중이야.
+
+출처: ScienceDaily(Oregon Health &amp; Science University 제공), Clinical Gastroenterology and Hepatology</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#야식 #간건강 #지방간 #생체리듬 #건강정보</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>야식을 먹는 사람은 간질환 위험이 20~30% 높게 나왔다 <small>애매 · 원문은 &#39;야식을 먹는 사람&#39;이 아니라 저녁 식사 후나 잠자리 후에 꾸준히 먹은 사람의 위험이 20~30% 높았다는 내용이다. &#39;야식&#39;을 단순 야식 섭취로 일반화하지 말고 꾸준히 늦게 먹는 습관으로 정확히 써야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 미국 오리건 보건과학대(OHSU) 연구팀이 수행했다는 주체 정보</li><li>근거 등록 안 된 주장: 연구가 Clinical Gastroenterology and Hepatology에 게재되었다는 출처 정보</li><li>근거 등록 안 된 주장: ScienceDaily 보도 출처 정보</li><li>근거 등록 안 된 주장: 지방간은 미국 인구의 최대 30%에 영향을 준다는 통계</li><li>근거 등록 안 된 주장: 야식 관련 연구가 비만·심혈관 질환과 연관된다는 선행 연구 언급</li><li>근거 등록 안 된 주장: 야간 교대근무자에게서 비만과 심장병 비율이 높다는 근거</li><li>근거 등록 안 된 주장: 연구 책임자 Robert Wilechansky 박사가 간 이식을 전문으로 하는 간전문의라는 정보</li><li>근거 등록 안 된 주장: 지방간은 염증, 간 손상, 간경변으로 진행할 수 있다는 설명</li><li>근거 등록 안 된 주장: 동물 실험에서 간이 식사와 수면 관계 교란에 특히 취약한 장기로 확인되었다는 내용</li><li>근거 등록 안 된 주장: &#39;더 일찍 먹으면 지방간 환자에게 도움이 되는지&#39; 임상 연구가 진행된다는 목적 설명</li>
+          <li>관찰 연구라 인과관계 아님 - 카드와 본문에 단서 명시</li><li>건강 정보라 의학적 조언처럼 읽히지 않게 주의</li><li>6장 요약 카드는 글자 수 제한 때문에 압축 표기 - 디자인 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-728923fd60ab-0">1장</label>
+          <textarea id="s-728923fd60ab-0" rows="2" data-slide="0">야식은 메뉴보다
+**시간**이 문제?!</textarea>
+          
+          <label class="f" for="s-728923fd60ab-1">2장</label>
+          <textarea id="s-728923fd60ab-1" rows="3" data-slide="1">20만 명 가까운
+데이터를 봤더니
+간질환 위험 **20~30%**↑</textarea>
+          
+          <label class="f" for="s-728923fd60ab-2">3장</label>
+          <textarea id="s-728923fd60ab-2" rows="3" data-slide="2">저녁 먹은 뒤나
+잠자기 전에
+**꾸준히** 먹은 사람들</textarea>
+          
+          <label class="f" for="s-728923fd60ab-3">4장</label>
+          <textarea id="s-728923fd60ab-3" rows="3" data-slide="3">간은 **생체리듬**에
+민감한 장기래
+이게 가능한 이유 중 하나</textarea>
+          
+          <label class="f" for="s-728923fd60ab-4">5장</label>
+          <textarea id="s-728923fd60ab-4" rows="3" data-slide="4">근데 단서 있음
+원인이라고
+**확정된 건 아님**</textarea>
+          
+          <label class="f" for="s-728923fd60ab-5">6장</label>
+          <textarea id="s-728923fd60ab-5" rows="3" data-slide="5">캡처용 요약
+관찰 연구 / 약 20만명
+**20~30%** / 자기보고</textarea>
+          
+          <label class="f" for="s-728923fd60ab-6">7장</label>
+          <textarea id="s-728923fd60ab-6" rows="3" data-slide="6">밤마다 **야식** 먹는
+친구한테
+이 요약 보내기</textarea>
+          
+          <label class="f" for="c-728923fd60ab">본문 (캡션)</label>
+          <textarea id="c-728923fd60ab" class="caption">야식은 뭘 먹느냐가 아니라 언제 먹느냐가 문제일 수 있다는 연구가 나왔어.
+
+미국 오리건 보건과학대(OHSU) 연구팀이 전국 규모 연구 세 곳(간호사 건강연구 I·II, 의료전문가 추적연구)의 데이터를 분석했어. 합치면 참가자가 20만 명 가까이 돼. 참가자들이 보고한 식습관과 생활 패턴을 바탕으로 언제 먹는지에 따라 그룹을 나누고, 지방간과 간경변 보고와 비교했대.
+
+결과는 저녁 식사 후나 잠자리에 든 뒤에도 꾸준히 먹는 사람이 야식을 피한 사람보다 간질환 위험이 20~30% 높았다는 거야. 간경변은 간에 흉터 같은 조직이 넓게 생기는 심각한 상태야.
+
+가능한 이유로 연구진은 생체리듬을 꼽았어. 간은 영양소 처리, 혈당 조절, 에너지 저장을 맡는데, 몸이 잘 준비를 하는 시간에 먹으면 이런 과정에 방해가 될 수 있다는 거야.
+
+다만 꼭 같이 봐야 할 단서가 있어. 이 연구는 관찰 연구라서 인과관계를 증명하진 못해. 참가자가 직접 보고한 정보에 기대고 있고, 먹은 시간 설명도 비교적 뭉뚱그려져 있어서 다른 요인이 영향을 줬을 수도 있어. 지방간이 생긴 사람 중에서도 간경변 같은 심각한 단계까지 가는 건 일부라고 연구진이 짚었어.
+
+OHSU는 식사 시간을 직접 관찰하며 더 일찍 먹으면 지방간이 있는 사람에게 실제로 도움이 되는지 보는 임상 연구도 참가자를 모집 중이야.
+
+출처: ScienceDaily(Oregon Health &amp; Science University 제공), Clinical Gastroenterology and Hepatology</textarea>
+          <label class="f" for="t-728923fd60ab">해시태그</label>
+          <input id="t-728923fd60ab" type="text" class="tagsin" value="#야식 #간건강 #지방간 #생체리듬 #건강정보" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>야식을 먹는 사람은 간질환 위험이 20~30% 높게 나왔다</b>
+            <q>“Late-night snacking is linked to a 20% to 30% higher risk of liver disease, suggesting that when you eat could be surprisingly important for liver health.”</q>
+            <small>slide2, caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀이 20만 명 가까운 사람의 데이터를 분석했다</b>
+            <q>“Researchers analyzed data from nearly 200,000 people and found that those who regularly ate after dinner or around bedtime had a 20% to 30% higher risk of liver disease, including fatty liver disease and cirrhosis.”</q>
+            <small>slide2, caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>저녁 식사 후나 잠자리에 든 뒤 꾸준히 먹은 사람이 위험이 더 높았다</b>
+            <q>“The study, published in Clinical Gastroenterology and Hepatology, found that people who regularly ate after dinner or after bedtime had a 20% to 30% higher risk of liver disease compared with those who avoided eating late.”</q>
+            <small>slide3, caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>간경변은 간에 흉터 같은 조직이 넓게 생기는 심각한 상태다</b>
+            <q>“cirrhosis, a serious condition involving extensive scarring of the liver.”</q>
+            <small>caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세 개의 전국 규모 연구 데이터를 사용했다</b>
+            <q>“To investigate the connection, researchers examined information from three major nationwide studies: the Nurses&#39; Health Study, the Nurses&#39; Health Study II, and the Health Professionals Follow-up Study.”</q>
+            <small>caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>간은 생체리듬에 민감하고 영양소 처리, 혈당 조절, 에너지 저장을 맡는다</b>
+            <q>“The liver is particularly sensitive to these rhythms. It helps process nutrients, regulate blood sugar, and manage how the body stores and uses energy.”</q>
+            <small>slide4, caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>잠자리에 들 준비를 하는 시간에 먹으면 이런 과정에 방해가 될 수 있다</b>
+            <q>“Eating at times when the body is biologically preparing for sleep may interfere with some of these processes.”</q>
+            <small>caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 연구는 인과관계를 증명할 수 없다</b>
+            <q>“Although the findings raise concerns about late-night eating, the researchers emphasize that the study cannot establish cause and effect.”</q>
+            <small>slide5, caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>관찰 연구이며 참가자의 자기보고 정보에 의존했다</b>
+            <q>“It also relied on participants&#39; self-reported information, including relatively broad descriptions of when they ate.”</q>
+            <small>slide6, caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다른 요인이 연관성을 설명할 수 있다</b>
+            <q>“These limitations mean that other factors could help explain the association.”</q>
+            <small>caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지방간이 생긴 사람 중 심각한 단계로 가는 건 일부다</b>
+            <q>“&#34;It&#39;s important to remember, of the people who developed fatty liver disease, only a small fraction develop serious forms of the condition like liver cirrhosis,&#34; Wilechansky said.”</q>
+            <small>caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>OHSU가 식사 시간을 직접 관찰하는 임상 연구 참가자를 모집 중이다</b>
+            <q>“Wilechansky is now involved in an OHSU clinical study that is recruiting participants to investigate that question.”</q>
+            <small>caption · <a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencedaily.com/releases/2026/10/261014015503.htm" target="_blank" rel="noopener">Eating late at night linked to up to 30% higher risk of liver disease</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/still-life-fruits-lemons-bowl-9813303/" target="_blank" rel="noopener">WJ_Y2017fufu / Pixabay</a> — "bright kitchen with fruit bowl by window"</li><li>2장: <a href="https://pixabay.com/photos/side-data-heap-freedom-of-the-press-3189220/" target="_blank" rel="noopener">moritz320 / Pixabay</a> — "research data"</li><li>3장: <a href="https://pixabay.com/photos/baby-child-sleeping-asleep-napping-21998/" target="_blank" rel="noopener">PublicDomainPictures / Pixabay</a> — "bedtime snack"</li><li>4장: <a href="https://pixabay.com/photos/clock-alarm-clock-window-still-life-8375477/" target="_blank" rel="noopener">RuslanSikunov / Pixabay</a> — "alarm clock"</li><li>5장: <a href="https://pixabay.com/photos/map-microscope-coffee-camera-pen-2562138/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "magnifying glass"</li><li>6장: <a href="https://pixabay.com/photos/journal-notebook-note-felt-791286/" target="_blank" rel="noopener">kaboompics / Pixabay</a> — "checklist notebook"</li><li>7장: <a href="https://pixabay.com/photos/pokemon-pokemongo-friends-school-1548194/" target="_blank" rel="noopener">natureaddict / Pixabay</a> — "friends texting"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261016-req-2";
+  const ORIGINAL = {"728923fd60ab": {"caption": "\uc57c\uc2dd\uc740 \ubb58 \uba39\ub290\ub0d0\uac00 \uc544\ub2c8\ub77c \uc5b8\uc81c \uba39\ub290\ub0d0\uac00 \ubb38\uc81c\uc77c \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\uc5b4.\n\n\ubbf8\uad6d \uc624\ub9ac\uac74 \ubcf4\uac74\uacfc\ud559\ub300(OHSU) \uc5f0\uad6c\ud300\uc774 \uc804\uad6d \uaddc\ubaa8 \uc5f0\uad6c \uc138 \uacf3(\uac04\ud638\uc0ac \uac74\uac15\uc5f0\uad6c I\u00b7II, \uc758\ub8cc\uc804\ubb38\uac00 \ucd94\uc801\uc5f0\uad6c)\uc758 \ub370\uc774\ud130\ub97c \ubd84\uc11d\ud588\uc5b4. \ud569\uce58\uba74 \ucc38\uac00\uc790\uac00 20\ub9cc \uba85 \uac00\uae4c\uc774 \ub3fc. \ucc38\uac00\uc790\ub4e4\uc774 \ubcf4\uace0\ud55c \uc2dd\uc2b5\uad00\uacfc \uc0dd\ud65c \ud328\ud134\uc744 \ubc14\ud0d5\uc73c\ub85c \uc5b8\uc81c \uba39\ub294\uc9c0\uc5d0 \ub530\ub77c \uadf8\ub8f9\uc744 \ub098\ub204\uace0, \uc9c0\ubc29\uac04\uacfc \uac04\uacbd\ubcc0 \ubcf4\uace0\uc640 \ube44\uad50\ud588\ub300.\n\n\uacb0\uacfc\ub294 \uc800\ub141 \uc2dd\uc0ac \ud6c4\ub098 \uc7a0\uc790\ub9ac\uc5d0 \ub4e0 \ub4a4\uc5d0\ub3c4 \uafb8\uc900\ud788 \uba39\ub294 \uc0ac\ub78c\uc774 \uc57c\uc2dd\uc744 \ud53c\ud55c \uc0ac\ub78c\ubcf4\ub2e4 \uac04\uc9c8\ud658 \uc704\ud5d8\uc774 20~30% \ub192\uc558\ub2e4\ub294 \uac70\uc57c. \uac04\uacbd\ubcc0\uc740 \uac04\uc5d0 \ud749\ud130 \uac19\uc740 \uc870\uc9c1\uc774 \ub113\uac8c \uc0dd\uae30\ub294 \uc2ec\uac01\ud55c \uc0c1\ud0dc\uc57c.\n\n\uac00\ub2a5\ud55c \uc774\uc720\ub85c \uc5f0\uad6c\uc9c4\uc740 \uc0dd\uccb4\ub9ac\ub4ec\uc744 \uaf3d\uc558\uc5b4. \uac04\uc740 \uc601\uc591\uc18c \ucc98\ub9ac, \ud608\ub2f9 \uc870\uc808, \uc5d0\ub108\uc9c0 \uc800\uc7a5\uc744 \ub9e1\ub294\ub370, \ubab8\uc774 \uc798 \uc900\ube44\ub97c \ud558\ub294 \uc2dc\uac04\uc5d0 \uba39\uc73c\uba74 \uc774\ub7f0 \uacfc\uc815\uc5d0 \ubc29\ud574\uac00 \ub420 \uc218 \uc788\ub2e4\ub294 \uac70\uc57c.\n\n\ub2e4\ub9cc \uaf2d \uac19\uc774 \ubd10\uc57c \ud560 \ub2e8\uc11c\uac00 \uc788\uc5b4. \uc774 \uc5f0\uad6c\ub294 \uad00\ucc30 \uc5f0\uad6c\ub77c\uc11c \uc778\uacfc\uad00\uacc4\ub97c \uc99d\uba85\ud558\uc9c4 \ubabb\ud574. \ucc38\uac00\uc790\uac00 \uc9c1\uc811 \ubcf4\uace0\ud55c \uc815\ubcf4\uc5d0 \uae30\ub300\uace0 \uc788\uace0, \uba39\uc740 \uc2dc\uac04 \uc124\uba85\ub3c4 \ube44\uad50\uc801 \ubb49\ub6b1\uadf8\ub824\uc838 \uc788\uc5b4\uc11c \ub2e4\ub978 \uc694\uc778\uc774 \uc601\ud5a5\uc744 \uc92c\uc744 \uc218\ub3c4 \uc788\uc5b4. \uc9c0\ubc29\uac04\uc774 \uc0dd\uae34 \uc0ac\ub78c \uc911\uc5d0\uc11c\ub3c4 \uac04\uacbd\ubcc0 \uac19\uc740 \uc2ec\uac01\ud55c \ub2e8\uacc4\uae4c\uc9c0 \uac00\ub294 \uac74 \uc77c\ubd80\ub77c\uace0 \uc5f0\uad6c\uc9c4\uc774 \uc9da\uc5c8\uc5b4.\n\nOHSU\ub294 \uc2dd\uc0ac \uc2dc\uac04\uc744 \uc9c1\uc811 \uad00\ucc30\ud558\uba70 \ub354 \uc77c\ucc0d \uba39\uc73c\uba74 \uc9c0\ubc29\uac04\uc774 \uc788\ub294 \uc0ac\ub78c\uc5d0\uac8c \uc2e4\uc81c\ub85c \ub3c4\uc6c0\uc774 \ub418\ub294\uc9c0 \ubcf4\ub294 \uc784\uc0c1 \uc5f0\uad6c\ub3c4 \ucc38\uac00\uc790\ub97c \ubaa8\uc9d1 \uc911\uc774\uc57c.\n\n\ucd9c\ucc98: ScienceDaily(Oregon Health \u0026 Science University \uc81c\uacf5), Clinical Gastroenterology and Hepatology", "hashtags": ["#\uc57c\uc2dd", "#\uac04\uac74\uac15", "#\uc9c0\ubc29\uac04", "#\uc0dd\uccb4\ub9ac\ub4ec", "#\uac74\uac15\uc815\ubcf4"], "slides": [["\uc57c\uc2dd\uc740 \uba54\ub274\ubcf4\ub2e4", "**\uc2dc\uac04**\uc774 \ubb38\uc81c?!"], ["20\ub9cc \uba85 \uac00\uae4c\uc6b4", "\ub370\uc774\ud130\ub97c \ubd24\ub354\ub2c8", "\uac04\uc9c8\ud658 \uc704\ud5d8 **20~30%**\u2191"], ["\uc800\ub141 \uba39\uc740 \ub4a4\ub098", "\uc7a0\uc790\uae30 \uc804\uc5d0", "**\uafb8\uc900\ud788** \uba39\uc740 \uc0ac\ub78c\ub4e4"], ["\uac04\uc740 **\uc0dd\uccb4\ub9ac\ub4ec**\uc5d0", "\ubbfc\uac10\ud55c \uc7a5\uae30\ub798", "\uc774\uac8c \uac00\ub2a5\ud55c \uc774\uc720 \uc911 \ud558\ub098"], ["\uadfc\ub370 \ub2e8\uc11c \uc788\uc74c", "\uc6d0\uc778\uc774\ub77c\uace0", "**\ud655\uc815\ub41c \uac74 \uc544\ub2d8**"], ["\ucea1\ucc98\uc6a9 \uc694\uc57d", "\uad00\ucc30 \uc5f0\uad6c / \uc57d 20\ub9cc\uba85", "**20~30%** / \uc790\uae30\ubcf4\uace0"], ["\ubc24\ub9c8\ub2e4 **\uc57c\uc2dd** \uba39\ub294", "\uce5c\uad6c\ud55c\ud14c", "\uc774 \uc694\uc57d \ubcf4\ub0b4\uae30"]]}};
+  const TOTAL = 1;
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

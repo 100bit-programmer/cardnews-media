@@ -1,0 +1,1772 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.21 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.21 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-680d8879984f" data-jump="680d8879984f">1</a><a href="#post-e6b0171c8ca2" data-jump="e6b0171c8ca2">2</a><a href="#post-8f45f86ac448" data-jump="8f45f86ac448">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-680d8879984f" data-id="680d8879984f">
+    <div class="head">
+      <h2>1. 일본 MMX 포보스 샘플 채취 탐사선 발사</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/680d8879984f/v1-01.jpg" alt="1장: 일본이 화성 달 돌 캐러 간다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/680d8879984f/v1-02.jpg" alt="2장: 화성 위성 포보스 감자처럼 생김" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/680d8879984f/v1-03.jpg" alt="3장: 여기 착륙 시도는 이번이 처음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/680d8879984f/v1-04.jpg" alt="4장: 착륙선은 딱 2시간만 머문다 파고 빨아들이고 끝" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/680d8879984f/v1-05.jpg" alt="5장: 태양계와 생명의 기원 단서가 될지도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/680d8879984f/v1-06.jpg" alt="6장: 우주 좋아하는 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/680d8879984f/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">일본이 화성 위성 포보스의 암석을 가져오겠다며 탐사선을 쐈어. 일본 우주항공연구개발기구(JAXA)의 MMX 탐사선이 주력 로켓 H3에 실려 새벽에 다네가시마에서 발사됐고, 한 시간쯤 뒤 로켓 상단에서 분리되자 JAXA가 발사 성공을 선언했대.
+
+탐사선은 내년 8월 화성 궤도에 도착해서 포보스 표면의 흙과 암석을 최소 10g 모을 예정이고, 2031년 귀환이 목표야. 포보스는 화성을 도는 작은 감자 모양 위성 둘 중 하나로, 지름이 약 22.5km야.
+
+미국 NASA는 지난 반세기 동안 화성에 탐사선 아홉 대를 내려놓았고 중국도 2021년에 착륙했지만, 포보스나 데이모스에 착륙을 시도하는 건 이번이 처음이래.
+
+임무 비용은 5억 7,800만 달러. 프랑스-독일 공동 개발 소형 로버 이데픽스가 먼저 내려 안전한 착륙·채취 지점을 살피고, 네 다리 착륙선이 포보스에 단 두 시간만 머물며 땅을 파고 물질을 빨아들인 뒤 다시 우주로 떠날 계획이야.
+
+과학자들은 샘플로 포보스와 데이모스가 어떻게 생겼는지 밝히고 생명의 기원에 대한 단서도 얻길 바라고 있어. 위성의 기원에는 거대 충돌설과 포획설 두 가설이 있는데, 어느 쪽이 맞는지 가리면 지구형 행성에 생명이 살 만한 환경이 어떻게 생겼는지 알아내는 데 도움이 된다고 JAXA는 설명했어.
+
+출처: The Guardian, NASA Science</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#화성 #우주 #JAXA #포보스 #일본</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 포보스 지름 22.5km 외 사실로서 본문에 포함된 &#39;MMX 탐사선이 주력 로켓 H3에 실려 새벽에 발사&#39; 관련 세부 시각 정보는 원문에 4:41am으로 명시되어 있으나 본문은 새벽이라고만 적음(주장 외 세부 수치 없음)</li><li>근거 등록 안 된 주장: 프랑스-독일 로버 이데픽스가 포보스 중력 1/1,000 환경에서 여러 분간 튀어 다닌다는 내용은 본문에 없음</li><li>근거 등록 안 된 주장: 데이모스 여러 차례 근접 비행 관측 및 2030년 11월 화성 궤도 이탈 계획은 본문에 없음</li><li>근거 등록 안 된 주장: 5개 우주기관 협력 및 탐사선 약 5톤 규모는 본문에 없음</li><li>근거 등록 안 된 주장: 포보스가 화성 궤도 약 6,000km 상공을 하루 3번 도는 내용은 본문에 없음</li><li>근거 등록 안 된 주장: 미국·중국의 화성 샘플 귀환 경쟁 및 NASA 퍼서비어런스 샘플 수거·귀환 중단 내용은 본문에 없음</li><li>근거 등록 안 된 주장: MMX 결과가 유인 탐사 등 향후 화성 임무에 활용된다는 NASA 발언은 본문에 없음</li>
+          <li>도착·채취·귀환 일정은 예정일 뿐이라 변동될 수 있음</li><li>착륙·채취는 아직 이루어지지 않은 계획이므로 단정적 표현 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-680d8879984f-0">1장</label>
+          <textarea id="s-680d8879984f-0" rows="2" data-slide="0">일본이 **화성 달**
+돌 캐러 간다???</textarea>
+          
+          <label class="f" for="s-680d8879984f-1">2장</label>
+          <textarea id="s-680d8879984f-1" rows="2" data-slide="1">화성 위성 포보스
+**감자**처럼 생김</textarea>
+          
+          <label class="f" for="s-680d8879984f-2">3장</label>
+          <textarea id="s-680d8879984f-2" rows="2" data-slide="2">여기 착륙 시도는
+이번이 **처음**</textarea>
+          
+          <label class="f" for="s-680d8879984f-3">4장</label>
+          <textarea id="s-680d8879984f-3" rows="3" data-slide="3">착륙선은 딱
+**2시간**만 머문다
+파고 빨아들이고 끝</textarea>
+          
+          <label class="f" for="s-680d8879984f-4">5장</label>
+          <textarea id="s-680d8879984f-4" rows="2" data-slide="4">태양계와 생명의
+**기원** 단서가 될지도</textarea>
+          
+          <label class="f" for="s-680d8879984f-5">6장</label>
+          <textarea id="s-680d8879984f-5" rows="2" data-slide="5">우주 좋아하는 **친구**
+태그해서 알려줘</textarea>
+          
+          <label class="f" for="c-680d8879984f">본문 (캡션)</label>
+          <textarea id="c-680d8879984f" class="caption">일본이 화성 위성 포보스의 암석을 가져오겠다며 탐사선을 쐈어. 일본 우주항공연구개발기구(JAXA)의 MMX 탐사선이 주력 로켓 H3에 실려 새벽에 다네가시마에서 발사됐고, 한 시간쯤 뒤 로켓 상단에서 분리되자 JAXA가 발사 성공을 선언했대.
+
+탐사선은 내년 8월 화성 궤도에 도착해서 포보스 표면의 흙과 암석을 최소 10g 모을 예정이고, 2031년 귀환이 목표야. 포보스는 화성을 도는 작은 감자 모양 위성 둘 중 하나로, 지름이 약 22.5km야.
+
+미국 NASA는 지난 반세기 동안 화성에 탐사선 아홉 대를 내려놓았고 중국도 2021년에 착륙했지만, 포보스나 데이모스에 착륙을 시도하는 건 이번이 처음이래.
+
+임무 비용은 5억 7,800만 달러. 프랑스-독일 공동 개발 소형 로버 이데픽스가 먼저 내려 안전한 착륙·채취 지점을 살피고, 네 다리 착륙선이 포보스에 단 두 시간만 머물며 땅을 파고 물질을 빨아들인 뒤 다시 우주로 떠날 계획이야.
+
+과학자들은 샘플로 포보스와 데이모스가 어떻게 생겼는지 밝히고 생명의 기원에 대한 단서도 얻길 바라고 있어. 위성의 기원에는 거대 충돌설과 포획설 두 가설이 있는데, 어느 쪽이 맞는지 가리면 지구형 행성에 생명이 살 만한 환경이 어떻게 생겼는지 알아내는 데 도움이 된다고 JAXA는 설명했어.
+
+출처: The Guardian, NASA Science</textarea>
+          <label class="f" for="t-680d8879984f">해시태그</label>
+          <input id="t-680d8879984f" type="text" class="tagsin" value="#화성 #우주 #JAXA #포보스 #일본" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본이 화성 위성의 샘플을 가져오는 탐사선을 발사했고, 과학자들은 태양계와 지구 생명의 기원을 밝히는 데 도움이 되길 기대한다</b>
+            <q>“Japan has successfully launched a spacecraft on an unprecedented mission to bring back samples from one of Mars’s moons that scientists hope will shed light on the origins of the solar system and life on Earth.”</q>
+            <small>slide1, caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>MMX 탐사선은 H3 로켓에 실려 새벽에 다네가시마에서 발사됐다</b>
+            <q>“The Martian Moons Exploration (MMX) spacecraft, propelled by Japan’s flagship H3 rocket, lifted off before dawn from Tanegashima island in the country’s far south-west, the Japan Aerospace Exploration Agency (Jaxa) said.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 시간 뒤 탐사선이 로켓 상단에서 분리되자 JAXA가 발사 성공을 선언했다</b>
+            <q>“An hour later, Jaxa scientists declared the launch a success when the spacecraft separated from the rocket’s upper stage, prompting scenes of celebration in the flight control room.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>탐사선은 내년 8월 화성 궤도에 도착해 포보스 표면에서 최소 10g의 흙과 암석을 모을 예정이며, 포보스는 감자 모양의 작은 위성 둘 중 하나다</b>
+            <q>“The spacecraft is expected to reach Mars’s orbit in August next year and collect at least 10g of soil and rock from the surface of Phobos, one of two small, potato-shaped moons orbiting the planet.”</q>
+            <small>slide2, caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>귀환은 2031년으로 예정되어 있다</b>
+            <q>“It is scheduled to return in 2031, Jaxa said.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포보스의 지름은 약 22.5km다</b>
+            <q>“The pock-marked moon, which has a diameter measuring 14 miles (22.5km), orbits Mars three times a day about 6,000km above its surface.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NASA는 반세기 동안 화성에 탐사선 아홉 대를 착륙시켰고 중국은 2021년 착륙했지만, 포보스나 데이모스 착륙 시도는 이번이 처음이다</b>
+            <q>“Nasa has landed nine spacecraft on Mars over the past half a century, while China landed on the Martian surface in 2021, but this is the first time anyone has attempted to land on Phobos or the planet’s smaller moon, Deimos.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>임무 비용은 5억 7,800만 달러이고 프랑스-독일 공동 소형 로버 이데픽스를 내려보낸다</b>
+            <q>“The $578m mission features a five-tonne spacecraft that will sync with Phobos’ tight orbit around Mars when it arrives next summer. It will then eject a small French-German rover, named Idefix after the white terrier in the Asterix comics.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>로버가 100일간 안전한 착륙·채취 지점을 조사하고, 이후 네 다리 착륙선이 샘플을 모은다</b>
+            <q>“It will spend 100 days surveying the planet’s surface to find safe landing and sampling sites ahead of the arrival of the main craft, a four-legged stationary lander that will gather the samples.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>착륙선은 포보스에 단 두 시간만 머물며 땅을 파고 물질을 빨아들인 뒤 다시 우주로 떠난다</b>
+            <q>“The lander will spend only two hours on Phobos drilling and vacuuming up material, before launching back into space.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>과학자들은 샘플이 포보스와 데이모스의 형성 과정과 생명 기원의 단서를 알려주길 바란다</b>
+            <q>“Scientists hope the samples will help them establish how Phobos and Deimos were formed and even offer clues about the origins of life.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>위성의 기원에는 거대 충돌설과 포획설 두 가설이 있다</b>
+            <q>“According to one theory – the “giant impact” hypothesis – the two moons formed after a celestial body collided with Mars. A second proposition, known as the “capture” hypothesis, suggests that the moons are asteroids pulled in by Mars’s gravity.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어느 가설이 맞는지 가리면 지구형 행성에 생명이 살 만한 환경이 어떻게 생겼는지 밝히는 데 도움이 된다고 JAXA가 밝혔다</b>
+            <q>“Determining which theory is correct will help reveal “how a habitable environment for life might have arisen on the terrestrial planets”, Jaxa said, referring to the four planets closest to the sun: Mercury, Venus, Earth and Mars.”</q>
+            <small>caption · <a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/world/2026/oct/20/japan-mars-moon-mission-phobos-collect-rocks" target="_blank" rel="noopener">‘Once-in-a-lifetime chance’: Japan launches historic mission to collect rocks from Mars’s moon Phobos</a> (기사)</li><li><a href="https://science.nasa.gov/mars/moons/facts/" target="_blank" rel="noopener">Mars Moons: Facts - NASA Science</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/earth-moon-lunar-surface-11014/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "small rocky moon orbiting a red planet"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Phobos_edit_2.jpg" target="_blank" rel="noopener">NASA/JPL-Caltech/University of Arizona / Wikimedia Commons · Public domain</a> — "Phobos (moon)"</li><li>3장: <a href="https://pixabay.com/photos/rocket-launch-rocket-take-off-67723/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "rocket launch"</li><li>4장: <a href="https://pixabay.com/photos/tools-construct-craft-repair-864983/" target="_blank" rel="noopener">picjumbo_com / Pixabay</a> — "drill"</li><li>5장: <a href="https://pixabay.com/photos/dark-milky-way-night-silhouette-1867202/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "starry sky"</li><li>6장: <a href="https://pixabay.com/photos/tourists-father-and-son-burj-khalifa-6887737/" target="_blank" rel="noopener">katetrysh / Pixabay</a> — "telescope"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-e6b0171c8ca2" data-id="e6b0171c8ca2">
+    <div class="head">
+      <h2>2. 해외 사탕·초콜릿 리스트 (가디언 Filter)</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/e6b0171c8ca2/v1-01.jpg" alt="1장: 초콜릿 속이 에스프레소?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/e6b0171c8ca2/v1-02.jpg" alt="2장: 이탈리아 초콜릿 가운데는 에스프레소" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/e6b0171c8ca2/v1-03.jpg" alt="3장: 중국 쫀득 사탕 포장지째 먹는다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/e6b0171c8ca2/v1-04.jpg" alt="4장: 일본 하이츄 중 키위·아사이 맛이 기자 추천" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/e6b0171c8ca2/v1-05.jpg" alt="5장: 영국 벌집 초코바 깨물면 바삭! 입에서 스르륵" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/e6b0171c8ca2/v1-06.jpg" alt="6장: 다음 해외여행 땐 기념품 리스트로 저장해 두기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/e6b0171c8ca2/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">초콜릿 속이 에스프레소라니, 이게 진짜 있는 간식이래.
+
+영국 가디언이 직원들에게 어린 시절 먹던 간식이나 여행 기념품 중 제일 좋아하는 해외 사탕·초콜릿을 물어봤어. 전부 온라인으로 살 수 있고, 발행 시점 기준으로 핼러윈 전에 도착하는 것까지 확인했다고 해.
+
+1. 이탈리아 페레로 포켓 커피: 가운데에 진짜 에스프레소가 든 이탈리아 초콜릿이야. 이탈리아 매장에는 겨울에 주로 들어오고, 그 시기가 지나면 구하기 어려울 수 있대.
+2. 중국 화이트 래빗 사탕: 먹을 수 있는 찹쌀 종이로 싸여 있어서, 입에 넣으면 종이가 바로 녹는다고 해.
+3. 일본 하이츄: 미국에서도 점점 눈에 띄고 맛 종류가 다양하대. 기자는 슈퍼프루트 팩의 키위와 아사이 맛이 특히 맛있다고 했어.
+4. 영국 캐드버리 크런치: 초콜릿을 입힌 벌집 과자 바로, 깨물면 바삭하게 부서지다가 입안에서 녹는다고 소개했어.
+5. 아르헨티나 알파호르: 폭신한 쿠키 가운데에 둘세 데 레체를 넣고 다크 초콜릿을 입힌 간식이야.
+6. 캐나다 커피 크리스프: 바닐라 웨이퍼 사이에 커피 맛 크림을 끼운 캐나다의 대표 간식이라고 해.
+
+나중에 해외여행 가서 기념품 고를 때 꺼내 보게 저장해 둬.
+
+출처: The Guardian</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#해외간식 #초콜릿 #사탕 #간식추천 #가디언</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 슬라이드3 &#39;포장지째 먹는다&#39;는 행동 주장 (원문은 찹쌀 종이가 식용이라고만 하며 포장지를 함께 먹으라고 하지 않음)</li>
+          <li>가디언 직원들의 개인적 취향 모음이라 맛 평가는 주관적 의견임</li><li>특정 제품명이 여러 개 언급되어 광고처럼 보일 수 있음</li><li>포켓 커피는 이탈리아에서 겨울 위주로 유통된다는 원문 내용이 있어 구입 시기 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-e6b0171c8ca2-0">1장</label>
+          <textarea id="s-e6b0171c8ca2-0" rows="2" data-slide="0">초콜릿 속이
+**에스프레소?!**</textarea>
+          
+          <label class="f" for="s-e6b0171c8ca2-1">2장</label>
+          <textarea id="s-e6b0171c8ca2-1" rows="2" data-slide="1">이탈리아 초콜릿
+가운데는 **에스프레소**</textarea>
+          
+          <label class="f" for="s-e6b0171c8ca2-2">3장</label>
+          <textarea id="s-e6b0171c8ca2-2" rows="2" data-slide="2">중국 쫀득 사탕
+**포장지째** 먹는다</textarea>
+          
+          <label class="f" for="s-e6b0171c8ca2-3">4장</label>
+          <textarea id="s-e6b0171c8ca2-3" rows="3" data-slide="3">일본 하이츄 중
+키위·**아사이** 맛이
+기자 추천</textarea>
+          
+          <label class="f" for="s-e6b0171c8ca2-4">5장</label>
+          <textarea id="s-e6b0171c8ca2-4" rows="3" data-slide="4">영국 **벌집** 초코바
+깨물면 바삭!
+입에서 스르륵</textarea>
+          
+          <label class="f" for="s-e6b0171c8ca2-5">6장</label>
+          <textarea id="s-e6b0171c8ca2-5" rows="3" data-slide="5">다음 해외여행 땐
+기념품 리스트로
+**저장**해 두기</textarea>
+          
+          <label class="f" for="c-e6b0171c8ca2">본문 (캡션)</label>
+          <textarea id="c-e6b0171c8ca2" class="caption">초콜릿 속이 에스프레소라니, 이게 진짜 있는 간식이래.
+
+영국 가디언이 직원들에게 어린 시절 먹던 간식이나 여행 기념품 중 제일 좋아하는 해외 사탕·초콜릿을 물어봤어. 전부 온라인으로 살 수 있고, 발행 시점 기준으로 핼러윈 전에 도착하는 것까지 확인했다고 해.
+
+1. 이탈리아 페레로 포켓 커피: 가운데에 진짜 에스프레소가 든 이탈리아 초콜릿이야. 이탈리아 매장에는 겨울에 주로 들어오고, 그 시기가 지나면 구하기 어려울 수 있대.
+2. 중국 화이트 래빗 사탕: 먹을 수 있는 찹쌀 종이로 싸여 있어서, 입에 넣으면 종이가 바로 녹는다고 해.
+3. 일본 하이츄: 미국에서도 점점 눈에 띄고 맛 종류가 다양하대. 기자는 슈퍼프루트 팩의 키위와 아사이 맛이 특히 맛있다고 했어.
+4. 영국 캐드버리 크런치: 초콜릿을 입힌 벌집 과자 바로, 깨물면 바삭하게 부서지다가 입안에서 녹는다고 소개했어.
+5. 아르헨티나 알파호르: 폭신한 쿠키 가운데에 둘세 데 레체를 넣고 다크 초콜릿을 입힌 간식이야.
+6. 캐나다 커피 크리스프: 바닐라 웨이퍼 사이에 커피 맛 크림을 끼운 캐나다의 대표 간식이라고 해.
+
+나중에 해외여행 가서 기념품 고를 때 꺼내 보게 저장해 둬.
+
+출처: The Guardian</textarea>
+          <label class="f" for="t-e6b0171c8ca2">해시태그</label>
+          <input id="t-e6b0171c8ca2" type="text" class="tagsin" value="#해외간식 #초콜릿 #사탕 #간식추천 #가디언" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가디언 직원들이 어린 시절 간식이나 여행 기념품 중 세계 각국에서 가장 좋아하는 사탕을 꼽았다</b>
+            <q>“We asked our Guardian colleagues for their favorite candy from around the world – be they childhood treats or souvenirs picked up through travels abroad – that we don’t need a plane ticket to try ourselves.”</q>
+            <small>caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소개된 사탕은 모두 온라인으로 살 수 있고 발행 시점 기준 핼러윈 전에 도착한다</b>
+            <q>“They’re all available online, and yes, we checked: as of publication, they will all arrive before Halloween.”</q>
+            <small>caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>페레로 포켓 커피는 가운데에 진짜 에스프레소가 든 이탈리아 초콜릿이다</b>
+            <q>“This is Italian chocolate with real espresso in the center, making it both a sweet treat and a caffeine boost.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이탈리아 매장은 주로 겨울에 포켓 커피를 들여놓고 그 외 시기에는 구하기 어려울 수 있다</b>
+            <q>“Italian markets tend to stock it during winter, and it can be hard to track down outside those months.”</q>
+            <small>caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>화이트 래빗 사탕은 먹을 수 있는 찹쌀 종이로 싸여 있고 입에 넣으면 바로 녹는다</b>
+            <q>“The candy is wrapped in edible sticky rice paper, which melts immediately in your mouth and leaves with the sweet, creamy and nostalgic aftertaste of the candy.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>화이트 래빗 사탕은 쫀득한 밀크 사탕이다</b>
+            <q>“These milky and chewy candies are a childhood staple for generations of Chinese kids, from Lunar New Year celebrations to everyday snacks shared with friends on the playground.”</q>
+            <small>slide3 · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하이츄는 일본 출신으로 미국에서 점점 눈에 띄며 맛 종류가 다양하다</b>
+            <q>“Hailing from Japan, Hi Chews are increasingly prominent in the US and boast a wide variety of flavors to keep your taste buds guessing.”</q>
+            <small>caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 하이츄 슈퍼프루트 팩의 키위와 아사이 맛이 특히 맛있다고 했다</b>
+            <q>“The Superfruit pack is a personal favorite, differing from the more traditional “tropical fruit” options in the candy aisle, with the kiwi and açai especially tasty.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>캐드버리 크런치는 영국의 초콜릿을 입힌 벌집 바로, 깨물면 부서지고 입안에서 녹는다</b>
+            <q>“This chocolate-covered honeycomb bar from the UK has a light, crispy texture that shatters as you bite into it and then melts in your mouth.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>알파호르는 폭신한 쿠키 가운데 둘세 데 레체를 넣고 다크 초콜릿을 입힌 아르헨티나 간식이다</b>
+            <q>“They are pillowy soft cookies with luscious dulce de leche in the middle and covered in dark chocolate.”</q>
+            <small>caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>커피 크리스프는 바닐라 웨이퍼 사이에 커피 맛 크림을 끼운 캐나다의 대표 간식이다</b>
+            <q>“An iconic Canadian treat, it gets its airy yet satisfying bite from coffee-flavored cream sandwiched between light vanilla wafer cookies.”</q>
+            <small>caption · <a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/thefilter-us/2026/oct/20/best-candy-chocolates-around-world" target="_blank" rel="noopener">Canadian Smarties, honeycomb bars and 12 international candies way better than Snickers</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/candies-sweetmeats-jar-glass-jar-1961536/" target="_blank" rel="noopener">Daria-Yakovleva / Pixabay</a> — "assorted colorful candies on sunlit table"</li><li>2장: <a href="https://pixabay.com/photos/cafe-coffee-shop-vintage-aesthetic-7454951/" target="_blank" rel="noopener">bbom100892 / Pixabay</a> — "espresso cup"</li><li>3장: <a href="https://pixabay.com/photos/candes-sweetmeats-colorful-1952997/" target="_blank" rel="noopener">Daria-Yakovleva / Pixabay</a> — "hard candy"</li><li>4장: <a href="https://pixabay.com/photos/gummy-bear-sweets-multicoloured-9792290/" target="_blank" rel="noopener">Alexas_Fotos / Pixabay</a> — "colorful gummies"</li><li>5장: <a href="https://pixabay.com/photos/honey-bee-insect-nature-hive-honey-10052324/" target="_blank" rel="noopener">Archimar / Pixabay</a> — "honeycomb"</li><li>6장: <a href="https://pixabay.com/photos/camera-photographs-souvenir-1130731/" target="_blank" rel="noopener">DariuszSankowski / Pixabay</a> — "travel souvenirs"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-8f45f86ac448" data-id="8f45f86ac448">
+    <div class="head">
+      <h2>3. 우마무스메 LA 콘서트 비자 문제로 취소</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/25 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>LA에서 열릴 예정이던 우마무스메 콘서트가 결국 취소됐어. 이유는 공연에 필요한 미국 입국 비자가 나오지 않았다는 거야.
+
+취소된 건 10월 22~23일 이틀간 LA 피콕 시어터에서 열릴 예정이던 &#39;Umamusume: Pretty Derby–7th Event: The Stage&#39;야. 성우진이 무대에 서는 콘서트로, 미국에서 열리는 첫 우마무스메 콘서트가 될 예정이었어. 공연장도 의상도 안무도 준비가 된 상태였는데 비자만 해결되지 않았고, 공연을 며칠 앞두고 취소가 결정됐대.
+
+주최 측은 6개월도 더 전부터 미국 현지 변호사, 프로모터와 함께 비자를 준비해 왔다고 밝혔어. 출연 예정이던 성우는 17명이고, 운영·지원 스태프도 함께 갈 예정이었다고 해. 다만 비자가 거절됐다고 명시한 건 아니라서, 아직 심사 중이었을 가능성도 있다고 소식을 전한 매체는 짚었어.
+
+티켓은 현장 관람이든 생중계든 환불해 준대. 하지만 항공권, 숙소, 렌터카 비용은 팬들이 직접 해결해야 할 거고, 촉박해서 전액 환불은 어려울 것 같다는 게 매체의 전망이야. 주최 측은 현장 관람 예정이던 트레이너들을 위한 대응도 검토 중이라고 했어.
+
+월드투어의 다음 도시는 런던, 그다음이 서울, 마지막은 일본 요코하마 피날레야. 아직 날짜와 장소는 발표 전이야. 미국 대체 공연이 열린다 해도 최소 6개월 넘게 걸릴 수 있다는 게 매체의 전망이야.
+
+출처: SoraNews24, 우마무스메 공식 웹사이트
+
+배경 사진: SookyungAn, AymaneJed, ManuelaJaeger, soultrain, Pexels / Pixabay
+사진: Haruhi8 / Wikimedia Commons, CC0 (편집)
+표지 이미지: AI 생성
+
+#우마무스메 #우마무스메콘서트 #콘서트취소 #월드투어 #애니메이션</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-8f45f86ac448">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 우마무스메</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 준비를 다 마쳤는데 비자 하나로 취소됐다는 반전에, 다음 월드투어가 서울이라는 점을 붙여 서울 투어를 기다리던 팬에게 남 일이 아니게 만드는 각도</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 티켓은 현장 관람이든 생중계든 환불되지만 항공·숙소·렌터카 비용은 팬 몫이라 전액 환불은 어려울 것 같다는 매체 전망 (카드 5장, 본문 4번째 문단)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">공연장도 의상도 안무도 다 준비됐는데 비자 하나 때문에 미국 첫 우마무스메 콘서트가 취소됐대
+서울 투어 기다리던 트레이너라면 남 일이 아닌 소식
+근데 이게 정말 &#39;거절&#39;당한 건지부터가 애매함 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">1/ 취소 이유는 공연에 필요한 미국 입국 비자가 나오지 않았다는 거야. 공연을 며칠 앞두고 취소가 결정됐대.
+근데 준비를 얼마나 일찍 시작했는지 들으면 더 황당함</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">2/ 주최 측은 6개월도 더 전부터 미국 현지 변호사, 프로모터와 함께 비자를 준비해 왔다고 밝혔어. 출연 예정 성우는 17명이고, 운영·지원 스태프도 같이 갈 예정이었대.
+그런데 소식을 전한 매체가 하나 짚은 게 있어</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">3/ 주최 측이 비자가 거절됐다고 명시한 건 아니래. 그래서 아직 심사 중이었을 가능성도 있다고 SoraNews24가 짚었어.
+그러니까 &#39;거절당했다&#39;고 단정할 수는 없는 상황이야. 지금 확실한 거랑 모르는 거 정리하면 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">161/500자</span></div>
+      <p class="tp-text">4/ 지금 확정 vs 아직 모름
+
+확정
+- 미국 입국 비자가 안 나와서 취소
+- 공연장·의상·안무는 준비 끝난 상태
+- 미국에서 열리는 첫 우마무스메 콘서트였음
+
+아직 모름
+- 비자 거절인지 심사 중이었는지
+- 서울·런던 공연 날짜와 장소
+- 미국 대체 공연 시기
+
+서울 얘기는 다음 글에</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">5/ 월드투어 다음 도시는 런던, 그다음이 서울, 마지막은 일본 요코하마 피날레야. 날짜와 장소는 아직 발표 전이고.
+미국 대체 공연이 열린다 해도 최소 6개월 넘게 걸릴 수 있다는 게 매체의 전망이야.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">190/500자</span></div>
+      <p class="tp-text">6/ 지금 확실한 건 서울이 런던 다음 순서라는 거, 그리고 날짜는 아직 발표 전이라는 거야.
+
+서울 투어 열리면 갈 사람?
+
+우마무스메 같은 해외 콘텐츠·공연 소식 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 티켓 환불 쪽 내용까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>공연장도 의상도 안무도 다 준비됐는데 비자 하나 때문에 미국 첫 우마무스메 콘서트가 취소됐대</li><li>6개월 전부터 변호사랑 준비했는데도 콘서트가 취소됐어</li><li>우마무스메 월드투어 다음이 런던, 그다음이 서울인데 미국 공연이 먼저 터졌어</li><li>비자가 거절된 건지도 아직 확실하지 않은데 콘서트는 이미 취소됐대</li><li>성우 17명이 갈 예정이던 LA 콘서트가 공연 며칠 앞두고 취소됐어</li><li>서울 투어 기다리던 트레이너라면 이 소식부터 봐야 함</li><li>준비는 끝났는데 비자만 안 나왔다는 미국 첫 우마무스메 콘서트</li><li>콘서트 취소 이유가 인기도 일정도 아니고 비자래</li><li>미국 대체 공연은 열려도 최소 6개월 넘게 걸릴 수 있다는 전망까지 나왔어</li><li>우마무스메 미국 콘서트가 취소됐는데 그럼 서울 투어는 괜찮은 거야?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>서울 투어 열리면 갈 사람?</li><li>콘서트 보려고 해외 비행기 끊어본 사람?</li><li>현장 직관파 vs 생중계 집관파, 너는 어디야?</li><li>서울 투어랑 미국 대체 공연 둘 다 열리면 너라면 어디 갈 거야?</li><li>최애 성우 콘서트라면 해외 원정도 갈 수 있다 vs 국내만 간다?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>우마무스메 월드투어 런던 공연 소식</li><li>우마무스메 서울 공연 날짜·장소 발표 소식</li><li>미국 대체 공연이 정해지는지 후속 소식</li><li>월드투어 마지막 요코하마 피날레 소식</li><li>해외 공연이 비자 문제로 흔들린 다른 소식</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>비자가 &#39;거절&#39;됐다고 단정하는 표현으로 바뀌지 않게 확인 (매체는 심사 중이었을 가능성도 언급)</li><li>서울 투어 날짜·장소는 미발표라 확정처럼 읽히는 문장 주의</li><li>미국 대체 공연 6개월 이상 소요 및 환불 전망은 매체 전망이라 주최 측 발표처럼 읽히면 안 됨</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-01.jpg" alt="1장: LA 콘서트가 비자 때문에 취소됐대???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-02.jpg" alt="2장: 미국에서 여는 첫 우마무스메 콘서트였는데" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-03.jpg" alt="3장: 공연장도 의상도 안무도 준비 끝 근데 비자를 못 받음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-04.jpg" alt="4장: 6개월 전부터 변호사랑 준비 했다는데도…ㄷㄷ" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-05.jpg" alt="5장: 티켓은 환불 항공·숙소는 별개 문제" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-06.jpg" alt="6장: 다음 월드투어 런던 다음이 서울이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-07.jpg" alt="7장: 서울 투어 기다리던 트레이너 친구한테 소식 전하기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-am-18616c357ebf/8f45f86ac448/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">LA에서 열릴 예정이던 우마무스메 콘서트가 결국 취소됐어. 이유는 공연에 필요한 미국 입국 비자가 나오지 않았다는 거야.
+
+취소된 건 10월 22~23일 이틀간 LA 피콕 시어터에서 열릴 예정이던 &#39;Umamusume: Pretty Derby–7th Event: The Stage&#39;야. 성우진이 무대에 서는 콘서트로, 미국에서 열리는 첫 우마무스메 콘서트가 될 예정이었어. 공연장도 의상도 안무도 준비가 된 상태였는데 비자만 해결되지 않았고, 공연을 며칠 앞두고 취소가 결정됐대.
+
+주최 측은 6개월도 더 전부터 미국 현지 변호사, 프로모터와 함께 비자를 준비해 왔다고 밝혔어. 출연 예정이던 성우는 17명이고, 운영·지원 스태프도 함께 갈 예정이었다고 해. 다만 비자가 거절됐다고 명시한 건 아니라서, 아직 심사 중이었을 가능성도 있다고 소식을 전한 매체는 짚었어.
+
+티켓은 현장 관람이든 생중계든 환불해 준대. 하지만 항공권, 숙소, 렌터카 비용은 팬들이 직접 해결해야 할 거고, 촉박해서 전액 환불은 어려울 것 같다는 게 매체의 전망이야. 주최 측은 현장 관람 예정이던 트레이너들을 위한 대응도 검토 중이라고 했어.
+
+월드투어의 다음 도시는 런던, 그다음이 서울, 마지막은 일본 요코하마 피날레야. 아직 날짜와 장소는 발표 전이야. 미국 대체 공연이 열린다 해도 최소 6개월 넘게 걸릴 수 있다는 게 매체의 전망이야.
+
+출처: SoraNews24, 우마무스메 공식 웹사이트</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#우마무스메 #우마무스메콘서트 #콘서트취소 #월드투어 #애니메이션</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 이번 공연이 성우진이 무대에 서는 콘서트라는 사실</li><li>근거 등록 안 된 주장: 생중계(라이브 스트림) 티켓이 함께 판매·예정되어 있었다는 사실</li><li>근거 등록 안 된 주장: 출처가 SoraNews24와 우마무스메 공식 웹사이트라는 사실</li>
+          <li>비자 미발급 사유(거절인지 심사 지연인지)가 공개되지 않아 책임 소재를 단정하면 안 됨</li><li>환불 어려움과 대체 공연 시점은 매체의 전망이므로 확정 사실처럼 쓰지 않도록 주의</li><li>우마무스메 공식 이미지와 캐릭터는 저작권 대상이라 사용 금지, 스톡·AI 배경만 사용</li><li>서울 공연 날짜와 장소는 미발표 상태라 확정 일정처럼 안내하면 안 됨</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-8f45f86ac448-0">1장</label>
+          <textarea id="s-8f45f86ac448-0" rows="3" data-slide="0">LA 콘서트가
+**비자 때문에**
+취소됐대???</textarea>
+          
+          <label class="f" for="s-8f45f86ac448-1">2장</label>
+          <textarea id="s-8f45f86ac448-1" rows="3" data-slide="1">미국에서 여는
+**첫** 우마무스메
+콘서트였는데</textarea>
+          
+          <label class="f" for="s-8f45f86ac448-2">3장</label>
+          <textarea id="s-8f45f86ac448-2" rows="3" data-slide="2">공연장도 의상도
+안무도 준비 끝
+근데 **비자를** 못 받음</textarea>
+          
+          <label class="f" for="s-8f45f86ac448-3">4장</label>
+          <textarea id="s-8f45f86ac448-3" rows="3" data-slide="3">**6개월** 전부터
+변호사랑 준비
+했다는데도…ㄷㄷ</textarea>
+          
+          <label class="f" for="s-8f45f86ac448-4">5장</label>
+          <textarea id="s-8f45f86ac448-4" rows="3" data-slide="4">티켓은 환불
+항공·숙소는
+**별개 문제**</textarea>
+          
+          <label class="f" for="s-8f45f86ac448-5">6장</label>
+          <textarea id="s-8f45f86ac448-5" rows="3" data-slide="5">다음 월드투어
+런던 다음이
+**서울**이래</textarea>
+          
+          <label class="f" for="s-8f45f86ac448-6">7장</label>
+          <textarea id="s-8f45f86ac448-6" rows="3" data-slide="6">서울 투어 기다리던
+**트레이너 친구한테**
+소식 전하기</textarea>
+          
+          <label class="f" for="c-8f45f86ac448">본문 (캡션)</label>
+          <textarea id="c-8f45f86ac448" class="caption">LA에서 열릴 예정이던 우마무스메 콘서트가 결국 취소됐어. 이유는 공연에 필요한 미국 입국 비자가 나오지 않았다는 거야.
+
+취소된 건 10월 22~23일 이틀간 LA 피콕 시어터에서 열릴 예정이던 &#39;Umamusume: Pretty Derby–7th Event: The Stage&#39;야. 성우진이 무대에 서는 콘서트로, 미국에서 열리는 첫 우마무스메 콘서트가 될 예정이었어. 공연장도 의상도 안무도 준비가 된 상태였는데 비자만 해결되지 않았고, 공연을 며칠 앞두고 취소가 결정됐대.
+
+주최 측은 6개월도 더 전부터 미국 현지 변호사, 프로모터와 함께 비자를 준비해 왔다고 밝혔어. 출연 예정이던 성우는 17명이고, 운영·지원 스태프도 함께 갈 예정이었다고 해. 다만 비자가 거절됐다고 명시한 건 아니라서, 아직 심사 중이었을 가능성도 있다고 소식을 전한 매체는 짚었어.
+
+티켓은 현장 관람이든 생중계든 환불해 준대. 하지만 항공권, 숙소, 렌터카 비용은 팬들이 직접 해결해야 할 거고, 촉박해서 전액 환불은 어려울 것 같다는 게 매체의 전망이야. 주최 측은 현장 관람 예정이던 트레이너들을 위한 대응도 검토 중이라고 했어.
+
+월드투어의 다음 도시는 런던, 그다음이 서울, 마지막은 일본 요코하마 피날레야. 아직 날짜와 장소는 발표 전이야. 미국 대체 공연이 열린다 해도 최소 6개월 넘게 걸릴 수 있다는 게 매체의 전망이야.
+
+출처: SoraNews24, 우마무스메 공식 웹사이트</textarea>
+          <label class="f" for="t-8f45f86ac448">해시태그</label>
+          <input id="t-8f45f86ac448" type="text" class="tagsin" value="#우마무스메 #우마무스메콘서트 #콘서트취소 #월드투어 #애니메이션" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 콘서트는 미국에서 열리는 첫 우마무스메 콘서트가 될 예정이었고 LA 피콕 시어터에서 이틀 연속 예정이었다</b>
+            <q>“concerts featuring the franchise’s vocal cast were planned for back-to-back days at the Peacock Theater in Los Angeles, marking the first-ever Umamusume concerts in America.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공연 일정은 10월 22일과 23일이었다</b>
+            <q>“October 22 and 23 were supposed to be big days for the Umamusume franchise.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공연 며칠 전에 두 공연 모두 취소됐고, 공연장·의상·안무는 준비됐지만 비자는 아니었다</b>
+            <q>“Unfortunately, while the venue, costuming, and choreography were all ostensibly good to go, visas to enter the U.S. were not, and both concerts have now been cancelled, just days before they were scheduled to take place.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>취소된 공연의 정식 명칭과 일정(2026년 10월 22~23일)</b>
+            <q>“It is with heavy hearts that we must announce the cancellation of the Umamusume: Pretty Derby–7th Event: The Stage in Los Angeles concerts planned for Oct 22–23, 2026.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주최 측은 6개월도 더 전부터 미국 변호사·프로모터와 비자를 준비해 왔다고 밝혔다</b>
+            <q>“working with lawyers and promoters in the U.S. to secure the visas necessary to enter the US since over six months ago.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>출연 예정 성우는 17명이고 지원 스태프도 함께 이동할 예정이었다</b>
+            <q>“17 voice actresses were slated to take the stage, and they’d be traveling with administrative and support staff too.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주최 측이 비자가 거절됐다고 명시한 것은 아니며 아직 심사 중일 가능성이 있다</b>
+            <q>“It’s also worth noting that the organizers haven’t explicitly stated that the visa applications were rejected, so it’s possible that they’re still pending, but no longer had any chance of being ready in time to travel/prepare for the concerts.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>티켓은 환불되지만 항공·숙소·렌터카 비용 회수는 팬 몫이 될 것이라는 매체의 전망</b>
+            <q>“Even though the cancellation statement says that refunds will be issued for tickets that were purchased (either to see the concerts in-person or to watch the planned live-streams), recouping the costs of things like airline, hotels, and rental car reservations is going to be something fans are going to have to do on their own, and full refunds for those are probably going to be hard to come by on such short notice.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주최 측은 현장 관람 예정이던 트레이너들을 위한 대응을 검토 중이다</b>
+            <q>“[We are] looking into possible responses to Trainers who were planning to attend the concert in person. This will take some time, so we ask for your patience.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>월드투어 다음 도시는 런던, 그다음 서울, 마지막은 요코하마 피날레</b>
+            <q>“The next scheduled city on the Umamusume world tour is London, followed by Seoul, and then a return to Japan for a finale in Yokohama.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다음 도시들의 날짜·장소는 미발표이며 미국 대체 공연은 최소 6개월 이상 뒤일 것이라는 매체의 전망</b>
+            <q>“None of those concerts have announced dates or venues yet, though, so it’s possible that replacement concerts could be organized for the U.S., but the chain of events that lead to the cancellation of the L.A. shows suggests that they wouldn’t be possible until, at the very least, more than six months from now.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/20/umamusume-anime-concerts-unable-to-obtain-visas-from-u-s-government-cancels-l-a-shows/" target="_blank" rel="noopener">Umamusume anime concerts unable to obtain visas from U.S. government, cancels L.A. shows</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "bright empty concert stage with passport and airplane"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Peacock_Theater_Exterior_February_2026.jpg" target="_blank" rel="noopener">Haruhi8 / Wikimedia Commons · CC0</a> — "Peacock Theater"</li><li>3장: <a href="https://pixabay.com/photos/travel-passport-korean-passport-2704011/" target="_blank" rel="noopener">SookyungAn / Pixabay</a> — "passport"</li><li>4장: <a href="https://pixabay.com/photos/laptop-office-hand-writing-3196481/" target="_blank" rel="noopener">AymaneJed / Pixabay</a> — "documents"</li><li>5장: <a href="https://pixabay.com/photos/hotel-hotel-rooms-home-decoration-1749602/" target="_blank" rel="noopener">ManuelaJaeger / Pixabay</a> — "hotel room"</li><li>6장: <a href="https://pixabay.com/photos/sunset-skyscrapers-buildings-city-8214498/" target="_blank" rel="noopener">soultrain / Pixabay</a> — "city skyline"</li><li>7장: <a href="https://pixabay.com/photos/camera-phone-girl-hands-1869430/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends phone"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-0a50616a5844">
+    <div class="head">
+      <h2>S1. 14년 걸음 수 기록으로 본 집중력 연구 (All of Us, 3,093명)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17 · 애매 2
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-0a50616a5844">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강과학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;많이 걷는 쪽이 집중력 점수가 높았다&#39;는 흥미로운 결과를 먼저 보여주되, 차이는 작고 인과는 아니라는 반전을 끝까지 읽게 만드는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">하루 5천 걸음 vs 1만 4천 걸음, 집중력 테스트 점수가 갈렸대
+미국 성인 3,093명 기록을 14년 모아 본 연구야
+근데 이걸 &#39;많이 걸으면 집중력 오른다&#39;로 읽으면 안 되는 이유가 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">157/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 걸음 수 기록으로 사람들이 세 그룹으로 나뉘었는데, 하루 평균이 5,108 / 8,875 / 14,161걸음이었대. 중간이랑 많이 걷는 그룹 둘 다 가장 적게 걷는 그룹보다 집중력, 방해 정보 무시, 보상 선택 테스트 점수가 높았음. 근데 그 차이, 얼마나 컸을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">2/ 차이는 작았음. 나이·학력·소득 등을 보정하고 보니 지속 집중력 점수가 가장 적게 걷는 그룹보다 중간 그룹은 약 1.76점, 가장 많이 걷는 그룹은 약 2.17점 높게 추정됐대. 기사도 인지 차이가 작았다고 짚었어. 그럼 이 데이터는 어떻게 모은 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">171/500자</span></div>
+      <p class="tp-text">3/ 대상은 미국 성인 3,093명, 18~93세에 평균 나이 58세쯤이야. 미국 국립보건원 All of Us 프로그램의 핏빗 기록을 썼고, 기록 기간은 2009~2023년. 보통은 본인이 말한 활동량이라 부정확한데, 이번엔 기기 기록이라 더 객관적이라는 게 포인트. 그럼 왜 걸음 수랑 집중력이 이어질까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">180/500자</span></div>
+      <p class="tp-text">4/ 연구진이 든 가설은 혈당 대사 개선, 염증 감소, 뇌의 적응 능력이야. 근데 이번 연구에서 확인한 건 아님. 혈압은 수축기 혈압이 높을수록 보상 선택 점수가 살짝 낮았는데, 걸음 수와 이 점수의 연관 중 혈압으로 설명되는 건 약 5%뿐이고 혈압을 낮추면 인지가 좋아진다는 얘기도 아니래. 그래서 어디까지 믿어야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">168/500자</span></div>
+      <p class="tp-text">5/ 캡처해둘 정리
+[나온 것]
+- 많이 걷는 그룹이 집중·방해 무시·보상 선택 점수 높음
+[안 나온 것]
+- 얼굴 감정 인식은 그룹 차이 없음
+- 최적 걸음 수는 못 정함
+[조심할 것]
+- 인지 검사는 한 번뿐
+- 흡연·비만은 반영 못 함
+- 참가자 대부분 백인, 여성 약 2/3
+그래서 결론은? ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">232/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 연구진 말은 오래 이어진 신체 활동과 나중 인지 성적 사이에 &#39;연관&#39;은 보이지만, 걷는 게 원인이라고 증명한 건 아니라는 거야.
+너라면 집중 안 될 때 일단 나가서 걷는 파? 자리에서 버티는 파?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>미국 NIH의 All of Us 프로그램에서 나온 핏빗 기록과 혈압 측정치를 사용함 <small>애매 · 원문은 핏빗 기록과 혈압 측정치를 사용했다고 함. 카드의 &#39;혈압&#39; 언급은 맞지만 카드 본문 2번·3번에서 혈압을 쓴 사실이 명확히 드러나지 않아 보완 필요. 주장 자체는 원문과 일치함.</small></li><li>수축기 혈압이 걸음 수와 보상 선택 점수 연관의 약 5%를 통계적으로 설명하며, 혈압을 낮추면 인지가 좋아진다는 근거는 아님 <small>애매 · 5% 설명과 인과 아님은 맞지만, 카드는 &#39;혈압으로 설명되는 건 약 5%뿐&#39;이라 했고 원문은 &#39;수축기 혈압 하락이 걸음 수-보상 선택 연관의 약 5%를 통계적으로 설명할 수 있다&#39;는 후속 분석임. 혈압이 &#39;걸음 수와 이 점수의 연관 중&#39; 5%라는 범위 표현은 대체로 맞음.</small></li>
+        <li>근거 등록 안 된 주장: 연구 결과는 Scientific Reports에 게재되었음</li><li>근거 등록 안 된 주장: 연구 대상은 All of Us 프로그램 데이터를 활용했음</li><li>근거 등록 안 된 주장: 연구에 참여한 연구자는 Baylor College of Medicine의 정신과 의사 Olaoluwa Okusaga를 포함함</li><li>근거 등록 안 된 주장: 인지 과제는 2023년 9월 이후 한 차례 실시되었음</li><li>근거 등록 안 된 주장: 연구 과제는 지속 주의, 방해 정보 무시, 즉각적·지연 보상 선호, 얼굴 감정 인식 4가지임</li><li>근거 등록 안 된 주장: 수축기 혈압은 측정치의 위쪽 숫자이고 이완기 혈압은 4개 검사와 유의한 연관이 없었음</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>하루 5천 걸음 vs 1만 4천 걸음, 집중력 테스트 점수가 갈렸대</li><li>집중 안 되는 사람들, 먼저 걸음 수 기록부터 비교해본 연구가 나옴</li><li>미국 성인 3,093명 걸음 기록을 14년 모았더니 집중력 점수가 달랐음</li><li>평균 1만 4천 걸음 걷는 그룹이 집중력 테스트에서 앞섰대. 근데 반전이 있음</li><li>&#39;걸을수록 집중력 올라간다&#39;는 말, 이 연구는 딱 잘라 그렇다고 안 했음</li><li>눈앞의 보상 vs 나중 보상 고르는 테스트에서도 걸음 많은 쪽 점수가 높았대</li><li>내 하루 걸음 수, 집중력 점수랑 상관 있을까? 14년 기록 본 연구가 나옴</li><li>5천 보 그룹과 1만 4천 보 그룹의 집중력 점수 차이, 생각보다 작았음</li><li>스마트워치 기록 14년치로 본 집중력 연구, 결론이 의외로 솔직함</li><li>집중력 고민을 &#39;의지&#39; 말고 &#39;걸음 수&#39; 기록이랑 같이 본 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너라면 집중 안 될 때 일단 나가서 걷는 파? 자리에서 버티는 파?</li><li>오늘 하루 걸음 수 5천 넘길 것 같은 사람?</li><li>스마트워치로 걸음 수 확인하는 습관 있는 사람?</li><li>출퇴근이나 등하교 때 일부러 한 정거장 걸어본 사람?</li><li>걸으면서 생각 정리하는 게 잘 되는 편이야, 안 되는 편이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>걸음 수와 혈압, 이번 연구에서 어디까지 연결됐나</li><li>스마트워치 기록으로 본 해외 건강 연구들</li><li>집중력과 충동 조절 테스트는 어떻게 하는 걸까</li><li>일본 MMX 포보스 샘플 채취 탐사선 발사</li><li>해외 사탕·초콜릿 리스트 (가디언 Filter)</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>첫 줄과 본글의 &#39;점수가 갈렸대&#39;가 큰 효과로 읽히거나 걷기가 집중력을 높인다는 인과로 읽힐 수 있음. 본문에서 차이가 작고 관찰 연구라고 밝혔는지 확인</li><li>&#39;5천 vs 1만 4천 걸음&#39;은 그룹 평균(5,108 / 14,161)을 반올림한 표현이라 기준선처럼 읽히지 않게 주의</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>미국 NIH의 All of Us 프로그램에서 나온 핏빗 기록과 혈압 측정치를 사용함</b>
+          <q>“The team used Fitbit records and blood pressure measurements from the US National Institutes of Health&#39;s All of Us Research Program.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>수축기 혈압이 걸음 수와 보상 선택 점수 연관의 약 5%를 통계적으로 설명하며, 혈압을 낮추면 인지가 좋아진다는 근거는 아님</b>
+          <q>“In a follow-up analysis, lower systolic pressure could statistically account for about 5 percent of the association between step counts and reward-choice scores. This estimate does not establish that lowering blood pressure improves cognition.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 성인 3,093명의 활동 기록과 인지 검사 결과를 14년에 걸쳐 살핀 연구</b>
+          <q>“Researchers examined activity records and cognitive test results from 3,093 US adults across 14 years to explore how everyday movement relates to thinking.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세 그룹의 하루 평균 걸음 수가 5,108 / 8,875 / 14,161걸음</b>
+          <q>“Three groups emerged from the activity records, averaging 5,108, 8,875, and 14,161 daily steps.”</q>
+          <small>post0, post1 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 활동적인 두 그룹이 가장 적게 활동한 그룹보다 주의, 방해 통제, 보상 선택 과제에서 점수가 높았다</b>
+          <q>“Both more active groups scored better than the least active group on the attention, distraction-control, and reward-choice tasks.”</q>
+          <small>post0, post1 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보정 후 지속 집중력 점수가 중간 그룹 1.76점, 가장 활동적인 그룹 2.17점 높게 추정됨</b>
+          <q>“For example, after accounting for age, education, income, marital status, and birthplace, sustained-attention scores were an estimated 1.76 points higher in the middle activity group and 2.17 points higher in the most active group, compared with the least active group.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인지 차이는 작았다</b>
+          <q>“The cognitive differences were small.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 18~93세, 평균 나이 약 58세</b>
+          <q>“Participants ranged from 18 to 93 years old, with an average age of about 58.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기록 기간은 2009년부터 2023년까지의 14년</b>
+          <q>“The records covered a 14-year window, from 2009 to 2023.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기존 연구 다수가 본인이 말한 활동량에 의존했고 이는 부정확할 수 있음</b>
+          <q>“Many earlier studies relied on people reporting their own activity levels, which can be inaccurate.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>웨어러블 기기가 객관적인 일일 활동량 측정치를 제공함</b>
+          <q>“Wearable devices gave the researchers an objective measure of daily movement.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 혈당 대사 개선, 염증 감소, 뇌의 적응 능력을 가설로 제시했으나 이번 연구에서 검증되지 않음</b>
+          <q>“The researchers suggested that improved glucose metabolism, reduced inflammation, and the brain&#39;s ability to adapt could help explain the link between activity and cognition. These mechanisms were not tested in this study.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수축기 혈압이 높을수록 보상 선택 과제 수행이 약간 낮았다</b>
+          <q>“Higher systolic pressure, the top number in a reading, was linked to slightly poorer performance on the reward-choice task.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>얼굴 감정 인식은 활동 그룹 간 유의한 차이가 없었음</b>
+          <q>“Facial emotion recognition did not differ significantly between activity groups, and changes in activity over time were not significantly associated with cognitive performance.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 최적의 하루 걸음 수를 정하도록 설계되지 않았음</b>
+          <q>“Our study was observational and was not designed to determine an optimal number of daily steps for cognitive health”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인지 검사가 한 번뿐이라 좋아졌는지 나빠졌는지 알 수 없음</b>
+          <q>“Because cognition was measured only once, the researchers could not determine whether participants&#39; thinking skills had improved or declined.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>흡연과 비만은 분석에 반영하지 못함</b>
+          <q>“The analysis could not account for smoking or obesity.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 대부분 백인, 약 3분의 2가 여성, 거의 모두 대학 경험이 있음</b>
+          <q>“The sample was largely White, about two-thirds were women, and nearly all had at least some college education, which limits how broadly the results apply.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 장기 신체 활동과 이후 인지 수행 사이의 연관을 지지하지만 인과를 증명하지는 않음</b>
+          <q>“Our findings support an association between long-term physical activity and later cognitive performance, but they do not prove that physical activity causes better cognition”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="0a50616a5844">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/how-many-steps-a-day-does-it-take-to-sharpen-your-attention-a-14-year-study-hints-at-the-range" target="_blank" rel="noopener">How Many Steps a Day Does It Take to Sharpen Your Attention? A 14-Year Study Hints at The Range</a></li><li><a href="https://www.nature.com/articles/s41598-026-74379-6" target="_blank" rel="noopener">Physical activity and blood pressure as predictors of cognitive function in the all of us research program - Scientific Reports</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-90cb852bbcf0">
+    <div class="head">
+      <h2>S2. 이중언어 화자는 언어를 잃는 게 아니라 두 문법 사이를 오간다(소·개 문장 실험)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-90cb852bbcf0">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 언어공부</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;영어 쓰다 보니 모국어가 어색해졌다&#39;는 흔한 고민을 &#39;잃은 게 아니라 두 문법을 오가는 중&#39;이라는 반전으로 풀고, 소 두 마리와 개 한 마리 문장 실험으로 눈에 보이게 보여준다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">모국어가 어색해진 건 &#39;잃어버린&#39; 게 아니라 두 문법 사이를 오가는 거라는 연구가 나옴
+스페인어-영어 이중언어 화자를 본 연구인데
+이걸 소 두 마리랑 개 한 마리 나오는 문장으로 알아냈대. 어떻게? ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">1/ 같은 틀린 문장인데 영어 화자는 &#39;소&#39;, 스페인어 화자는 &#39;개&#39;를 골랐대.
+화면엔 소 두 마리랑 개 한 마리. 문장은 일부러 틀리게 만든 &#39;The cows is kicking the dog.&#39;
+근데 왜 갈렸을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">2/ 영어 화자는 먼저 나온 명사를 따라가서 소를 골라. 스페인어 화자는 동사를 따라가는데, 동사가 단수면 단수인 개를 가리키는 걸로 들리거든.
+영어 화자도 동사를 무시한 건 아니고, 소를 고르면서도 조금 더 걸렸대. 그럼 두 언어를 다 쓰는 사람은?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">3/ 집에선 한 언어, 학교에선 다른 언어를 쓰는 &#39;계승어 화자&#39;를 봤더니, 영어 화자는 어순 쪽에 촘촘히 몰렸는데 이 사람들은 넓게 퍼졌대. 스페인어 문장에선 대부분 동사 쪽으로 기울었고.
+그럼 이 기울기는 뭐가 정할까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">4/ 가장 뚜렷한 단서는 스페인어 어휘력이었대. 스페인어로 그림 이름을 더 많이 댄 사람일수록 스페인어 문장에서 동사에 더 기댔고, 영어 문장에선 스페인어 어휘력이 아무 차이도 안 만들었음.
+그럼 &#39;언어를 잃고 있다&#39;는 말은 어디서 나온 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">5/ 다른 언어에 푹 잠기면 첫 언어가 줄어든다는 연구 흐름이 있어서, 학교에서 영어를 접하며 스페인어가 나빠져 보이는 아이들을 &#39;언어를 잃어가는 사람&#39;이라 부른 사람들도 있었대.
+근데 연구자는 이번 결과를 &#39;두 전략을 다 굴리고 있다&#39;로 읽었어. 한 장 정리 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 저장각</span>
+        <span class="len">160/500자</span></div>
+      <p class="tp-text">6/ 캡처해둘 정리
+- 영어 화자: 먼저 나온 명사(어순)를 따라감
+- 스페인어 화자: 동사를 따라감
+- 계승어 화자: 스페인어 문장에선 대부분 동사 쪽으로 이동
+- 스페인어 어휘가 강할수록 그 이동이 큼
+- 단, 영어 문장에선 스페인어 어휘 영향 없음
+마지막 한 줄 결론은 다음 글 ↓</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">211/500자</span></div>
+      <p class="tp-text">7/ 결국 이중언어 화자는 단일언어 화자 둘이 합쳐진 게 아니라, 상황에 따라 두 문법을 오가는 사람이라는 거.
+
+말하다가 한 언어가 다른 언어 어순으로 튀어나온 적 있는 사람?
+
+이런 언어·공부 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>학교에서 영어를 접하며 스페인어가 나빠져 보이는 아이들을 attriters라 부른 사람들이 있다 <small>애매 · 원문은 학교에서 영어에 노출되며 스페인어가 나빠 보이는 계승어 화자를 attriters라 불렀다고만 하며 대상을 &#39;아이들&#39;로 한정하지 않는다. &#39;아이들&#39;이라는 표현은 과잉 구체화이므로 &#39;계승어 화자&#39;로 고치는 것이 맞다.</small></li>
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>모국어가 어색해진 건 &#39;잃어버린&#39; 게 아니라 두 문법 사이를 오가는 거라는 연구가 나옴</li><li>이중언어 실력, 단어 시험만으로는 못 재는 부분이 있다는 연구가 나옴</li><li>&#39;The cows is kicking the dog.&#39; 이 틀린 문장에서 소를 고르면 영어 화자, 개를 고르면 스페인어 화자래</li><li>같은 틀린 문장인데 누구는 소를, 누구는 개를 골랐대. 모국어마다 문법 기준이 다르다는 거</li><li>집에선 한 언어, 학교에선 다른 언어로 큰 사람들, 언어를 잃고 있는 줄 알았는데 연구는 다르게 읽었대</li><li>&#39;이중언어 화자는 단일언어 화자 둘이 한 사람에 든 게 아니다&#39;라는 오래된 말이 이번 연구로 다시 나왔대</li><li>정답이 없는 문장 테스트인데 사람마다 고르는 답이 갈리면서 언어 습관이 드러난대</li><li>영어가 편해졌다고 모국어 문법이 사라지는 게 아니라 두 방식을 같이 굴리는 거라는 연구가 나옴</li><li>스페인어 단어를 더 많이 아는 사람일수록 스페인어 문장을 &#39;동사&#39;로 푼대</li><li>영어 화자는 &#39;순서&#39;, 스페인어 화자는 &#39;동사&#39;를 따른대. 그럼 둘 다 쓰는 사람의 머릿속은?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>말하다가 한 언어가 다른 언어 어순으로 튀어나온 적 있는 사람?</li><li>외국어 실력, 단어 많이 아는 쪽 vs 문장 자연스럽게 만드는 쪽, 너는 어느 파야?</li><li>&#39;The cows is kicking the dog.&#39; 너라면 소 고를 거야, 개 고를 거야?</li><li>외국어 공부할 때 단어부터 파 vs 문장부터 파?</li><li>모국어보다 외국어가 더 편하게 나오는 순간 있는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>이중언어가 머리를 좋게 하나? 연구마다 엇갈린다는 얘기</li><li>계승어 화자 청소년, 단일언어 또래와 언어 과제 점수가 비슷했다는 연구</li><li>가정 환경(SES)이 이중언어 연구 결과를 가른다는 얘기</li><li>1994년 연구: 이중언어 화자가 &#39;중간&#39; 프로필을 지키려고 치르는 비용 얘기</li><li>AI 목소리로 &#39;완벽한 이중언어 화자&#39;를 만든 실험 뒷이야기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문에 참가자 수·표본 규모가 나오지 않음. 이중언어 화자 전체로 일반화하지 않았는지 확인 필요</li><li>&#39;잃어버린 게 아니라&#39;는 연구자의 해석이지 인과 단정이 아님. 본글 표현 수위 확인</li><li>5/의 &#39;attriters(언어를 잃어가는 사람)&#39; 번역과 Grosjean 인용 의역 확인. 현재 5/에서는 직접 인용 없이 요약했음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>학교에서 영어를 접하며 스페인어가 나빠져 보이는 아이들을 attriters라 부른 사람들이 있다</b>
+          <q>“As they are exposed to English at school, their Spanish might appear to be getting worse, and people have called them attriters.”</q>
+          <small>post5 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>화면에 소 두 마리와 개 한 마리를 보여주고 일부러 틀린 문장 &#39;The cows is kicking the dog.&#39;를 들려주는 과제</b>
+          <q>“The sentence is not quite right, on purpose: “The cows is kicking the dog.””</q>
+          <small>post1 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영어 화자는 첫 명사인 소를 고르고, 스페인어로 문장을 듣는 스페인어 화자는 단수 동사 때문에 개를 고른다</b>
+          <q>“As an English speaker, you would choose the cows, because it&#39;s the first noun. A Spanish speaker hearing the sentence in Spanish would choose the dog, because the verb is singular, and in Spanish that points to a single noun.”</q>
+          <small>post1 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>문법 충돌 시 영어 화자는 어순, 스페인어 화자는 동사를 따른다</b>
+          <q>“When verb agreement causes confusion, English speakers go by word order and Spanish speakers go by the verb.”</q>
+          <small>post2 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영어 화자도 소를 고르지만 조금 더 오래 걸린다</b>
+          <q>“The grammar does matter to English speakers. Even though they choose the cows, it takes them a little longer.”</q>
+          <small>post2 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>계승어 화자는 집에서 가족을 통해 한 언어를 쓰고 학교에서 사회의 언어를 배우는 사람</b>
+          <q>“Evelyn Rodarte is a heritage speaker, someone who speaks one language at home, through her family, and learns another at school, usually the language of the wider society.”</q>
+          <small>post3 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영어 단일언어 화자는 어순 쪽에 촘촘히 모였고 이중언어 화자는 퍼졌으며 대부분 스페인어 문장에서 동사 쪽으로 이동했다</b>
+          <q>“English monolinguals clustered tightly around word order. The bilinguals were spread out, and most of them shifted toward the verb when the sentences were in Spanish.”</q>
+          <small>post3 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스페인어로 그림 이름을 더 많이 댄 사람일수록 스페인어를 들을 때 동사에 더 의존했고, 영어를 들을 때는 스페인어 어휘가 차이를 만들지 않았다</b>
+          <q>“Bilinguals who could name more pictures in Spanish relied more on the verb when they heard Spanish. When they heard English, their Spanish vocabulary made no difference.”</q>
+          <small>post4 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>다른 언어에 몰입하면 첫 언어 능력이 줄어든다는 소실 연구 흐름이 있다</b>
+          <q>“The attrition literature usually shows that people who become immersed in a second language begin to lose abilities in their first.”</q>
+          <small>post5 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구자는 결과가 이중언어 화자가 두 전략을 모두 운용하고 있음을 가리킨다고 본다</b>
+          <q>“Evelyn&#39;s results point the same way. Bilinguals are managing both strategies.”</q>
+          <small>post5 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>계승어 화자는 스페인어 문장에서 동사 쪽으로 이동하고, 스페인어 어휘가 강할수록 그 이동이 크며 스페인어에서만 나타난다</b>
+          <q>“Heritage bilinguals shift toward the verb when the sentence is in Spanish.”</q>
+          <small>post6 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스페인어 어휘가 클수록 이동이 강하지만 스페인어일 때만 그렇다</b>
+          <q>“The stronger a bilingual&#39;s Spanish vocabulary, the stronger that shift, but only in Spanish.”</q>
+          <small>post6 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이중언어 화자는 단일언어 화자 둘이 한 사람에 든 것이 아니라는 Grosjean의 말과 맞닿은 유연성을 보였다</b>
+          <q>“The bilinguals Evelyn tested showed the flexibility that psycholinguist François Grosjean described in 1989, when he wrote so eloquently, &#34;the bilingual is not two monolinguals in one person.&#34;”</q>
+          <small>post7 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 이중언어 화자가 두 언어의 전략을 모두 다루고 있다고 해석한다</b>
+          <q>“Evelyn&#39;s results point the same way. Bilinguals are managing both strategies.”</q>
+          <small>post0 · <a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="90cb852bbcf0">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.psychologytoday.com/us/blog/the-emergence-of-skill/202610/how-bilinguals-move-between-two-grammars" target="_blank" rel="noopener">How Bilinguals Move Between Two Grammars</a></li><li><a href="https://www.cambridge.org/core/journals/applied-psycholinguistics/article/abs/online-sentence-interpretation-in-spanishenglish-bilinguals-what-does-it-mean-to-be-in-between/E84B9220BEBAFADC90706F56A1D39C22" target="_blank" rel="noopener">On-line sentence interpretation in Spanish–English bilinguals: What does it mean to be “in between”? | Applied Psycholinguistics | Cambridge Core</a></li><li><a href="https://www.cambridge.org/core/journals/bilingualism-language-and-cognition/article/beyond-bilingual-and-monolingual-cognitive-language-and-demographic-profiles-of-adolescents-in-the-united-states/F2D8784868ED302D0FA50AC993F4C8F4" target="_blank" rel="noopener">Beyond bilingual and monolingual: Cognitive, language and demographic profiles of adolescents in the United States | Bilingualism: Language and Cognition | Cambridge Core</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261021-am";
+  const ORIGINAL = {"680d8879984f": {"caption": "\uc77c\ubcf8\uc774 \ud654\uc131 \uc704\uc131 \ud3ec\ubcf4\uc2a4\uc758 \uc554\uc11d\uc744 \uac00\uc838\uc624\uaca0\ub2e4\uba70 \ud0d0\uc0ac\uc120\uc744 \uc408\uc5b4. \uc77c\ubcf8 \uc6b0\uc8fc\ud56d\uacf5\uc5f0\uad6c\uac1c\ubc1c\uae30\uad6c(JAXA)\uc758 MMX \ud0d0\uc0ac\uc120\uc774 \uc8fc\ub825 \ub85c\ucf13 H3\uc5d0 \uc2e4\ub824 \uc0c8\ubcbd\uc5d0 \ub2e4\ub124\uac00\uc2dc\ub9c8\uc5d0\uc11c \ubc1c\uc0ac\ub410\uace0, \ud55c \uc2dc\uac04\ucbe4 \ub4a4 \ub85c\ucf13 \uc0c1\ub2e8\uc5d0\uc11c \ubd84\ub9ac\ub418\uc790 JAXA\uac00 \ubc1c\uc0ac \uc131\uacf5\uc744 \uc120\uc5b8\ud588\ub300.\n\n\ud0d0\uc0ac\uc120\uc740 \ub0b4\ub144 8\uc6d4 \ud654\uc131 \uada4\ub3c4\uc5d0 \ub3c4\ucc29\ud574\uc11c \ud3ec\ubcf4\uc2a4 \ud45c\uba74\uc758 \ud759\uacfc \uc554\uc11d\uc744 \ucd5c\uc18c 10g \ubaa8\uc744 \uc608\uc815\uc774\uace0, 2031\ub144 \uadc0\ud658\uc774 \ubaa9\ud45c\uc57c. \ud3ec\ubcf4\uc2a4\ub294 \ud654\uc131\uc744 \ub3c4\ub294 \uc791\uc740 \uac10\uc790 \ubaa8\uc591 \uc704\uc131 \ub458 \uc911 \ud558\ub098\ub85c, \uc9c0\ub984\uc774 \uc57d 22.5km\uc57c.\n\n\ubbf8\uad6d NASA\ub294 \uc9c0\ub09c \ubc18\uc138\uae30 \ub3d9\uc548 \ud654\uc131\uc5d0 \ud0d0\uc0ac\uc120 \uc544\ud649 \ub300\ub97c \ub0b4\ub824\ub193\uc558\uace0 \uc911\uad6d\ub3c4 2021\ub144\uc5d0 \ucc29\ub959\ud588\uc9c0\ub9cc, \ud3ec\ubcf4\uc2a4\ub098 \ub370\uc774\ubaa8\uc2a4\uc5d0 \ucc29\ub959\uc744 \uc2dc\ub3c4\ud558\ub294 \uac74 \uc774\ubc88\uc774 \ucc98\uc74c\uc774\ub798.\n\n\uc784\ubb34 \ube44\uc6a9\uc740 5\uc5b5 7,800\ub9cc \ub2ec\ub7ec. \ud504\ub791\uc2a4-\ub3c5\uc77c \uacf5\ub3d9 \uac1c\ubc1c \uc18c\ud615 \ub85c\ubc84 \uc774\ub370\ud53d\uc2a4\uac00 \uba3c\uc800 \ub0b4\ub824 \uc548\uc804\ud55c \ucc29\ub959\u00b7\ucc44\ucde8 \uc9c0\uc810\uc744 \uc0b4\ud53c\uace0, \ub124 \ub2e4\ub9ac \ucc29\ub959\uc120\uc774 \ud3ec\ubcf4\uc2a4\uc5d0 \ub2e8 \ub450 \uc2dc\uac04\ub9cc \uba38\ubb3c\uba70 \ub545\uc744 \ud30c\uace0 \ubb3c\uc9c8\uc744 \ube68\uc544\ub4e4\uc778 \ub4a4 \ub2e4\uc2dc \uc6b0\uc8fc\ub85c \ub5a0\ub0a0 \uacc4\ud68d\uc774\uc57c.\n\n\uacfc\ud559\uc790\ub4e4\uc740 \uc0d8\ud50c\ub85c \ud3ec\ubcf4\uc2a4\uc640 \ub370\uc774\ubaa8\uc2a4\uac00 \uc5b4\ub5bb\uac8c \uc0dd\uacbc\ub294\uc9c0 \ubc1d\ud788\uace0 \uc0dd\uba85\uc758 \uae30\uc6d0\uc5d0 \ub300\ud55c \ub2e8\uc11c\ub3c4 \uc5bb\uae38 \ubc14\ub77c\uace0 \uc788\uc5b4. \uc704\uc131\uc758 \uae30\uc6d0\uc5d0\ub294 \uac70\ub300 \ucda9\ub3cc\uc124\uacfc \ud3ec\ud68d\uc124 \ub450 \uac00\uc124\uc774 \uc788\ub294\ub370, \uc5b4\ub290 \ucabd\uc774 \ub9de\ub294\uc9c0 \uac00\ub9ac\uba74 \uc9c0\uad6c\ud615 \ud589\uc131\uc5d0 \uc0dd\uba85\uc774 \uc0b4 \ub9cc\ud55c \ud658\uacbd\uc774 \uc5b4\ub5bb\uac8c \uc0dd\uacbc\ub294\uc9c0 \uc54c\uc544\ub0b4\ub294 \ub370 \ub3c4\uc6c0\uc774 \ub41c\ub2e4\uace0 JAXA\ub294 \uc124\uba85\ud588\uc5b4.\n\n\ucd9c\ucc98: The Guardian, NASA Science", "hashtags": ["#\ud654\uc131", "#\uc6b0\uc8fc", "#JAXA", "#\ud3ec\ubcf4\uc2a4", "#\uc77c\ubcf8"], "slides": [["\uc77c\ubcf8\uc774 **\ud654\uc131 \ub2ec**", "\ub3cc \uce90\ub7ec \uac04\ub2e4???"], ["\ud654\uc131 \uc704\uc131 \ud3ec\ubcf4\uc2a4", "**\uac10\uc790**\ucc98\ub7fc \uc0dd\uae40"], ["\uc5ec\uae30 \ucc29\ub959 \uc2dc\ub3c4\ub294", "\uc774\ubc88\uc774 **\ucc98\uc74c**"], ["\ucc29\ub959\uc120\uc740 \ub531", "**2\uc2dc\uac04**\ub9cc \uba38\ubb38\ub2e4", "\ud30c\uace0 \ube68\uc544\ub4e4\uc774\uace0 \ub05d"], ["\ud0dc\uc591\uacc4\uc640 \uc0dd\uba85\uc758", "**\uae30\uc6d0** \ub2e8\uc11c\uac00 \ub420\uc9c0\ub3c4"], ["\uc6b0\uc8fc \uc88b\uc544\ud558\ub294 **\uce5c\uad6c**", "\ud0dc\uadf8\ud574\uc11c \uc54c\ub824\uc918"]]}, "8f45f86ac448": {"caption": "LA\uc5d0\uc11c \uc5f4\ub9b4 \uc608\uc815\uc774\ub358 \uc6b0\ub9c8\ubb34\uc2a4\uba54 \ucf58\uc11c\ud2b8\uac00 \uacb0\uad6d \ucde8\uc18c\ub410\uc5b4. \uc774\uc720\ub294 \uacf5\uc5f0\uc5d0 \ud544\uc694\ud55c \ubbf8\uad6d \uc785\uad6d \ube44\uc790\uac00 \ub098\uc624\uc9c0 \uc54a\uc558\ub2e4\ub294 \uac70\uc57c.\n\n\ucde8\uc18c\ub41c \uac74 10\uc6d4 22~23\uc77c \uc774\ud2c0\uac04 LA \ud53c\ucf55 \uc2dc\uc5b4\ud130\uc5d0\uc11c \uc5f4\ub9b4 \uc608\uc815\uc774\ub358 \u0027Umamusume: Pretty Derby\u20137th Event: The Stage\u0027\uc57c. \uc131\uc6b0\uc9c4\uc774 \ubb34\ub300\uc5d0 \uc11c\ub294 \ucf58\uc11c\ud2b8\ub85c, \ubbf8\uad6d\uc5d0\uc11c \uc5f4\ub9ac\ub294 \uccab \uc6b0\ub9c8\ubb34\uc2a4\uba54 \ucf58\uc11c\ud2b8\uac00 \ub420 \uc608\uc815\uc774\uc5c8\uc5b4. \uacf5\uc5f0\uc7a5\ub3c4 \uc758\uc0c1\ub3c4 \uc548\ubb34\ub3c4 \uc900\ube44\uac00 \ub41c \uc0c1\ud0dc\uc600\ub294\ub370 \ube44\uc790\ub9cc \ud574\uacb0\ub418\uc9c0 \uc54a\uc558\uace0, \uacf5\uc5f0\uc744 \uba70\uce60 \uc55e\ub450\uace0 \ucde8\uc18c\uac00 \uacb0\uc815\ub410\ub300.\n\n\uc8fc\ucd5c \uce21\uc740 6\uac1c\uc6d4\ub3c4 \ub354 \uc804\ubd80\ud130 \ubbf8\uad6d \ud604\uc9c0 \ubcc0\ud638\uc0ac, \ud504\ub85c\ubaa8\ud130\uc640 \ud568\uaed8 \ube44\uc790\ub97c \uc900\ube44\ud574 \uc654\ub2e4\uace0 \ubc1d\ud614\uc5b4. \ucd9c\uc5f0 \uc608\uc815\uc774\ub358 \uc131\uc6b0\ub294 17\uba85\uc774\uace0, \uc6b4\uc601\u00b7\uc9c0\uc6d0 \uc2a4\ud0dc\ud504\ub3c4 \ud568\uaed8 \uac08 \uc608\uc815\uc774\uc5c8\ub2e4\uace0 \ud574. \ub2e4\ub9cc \ube44\uc790\uac00 \uac70\uc808\ub410\ub2e4\uace0 \uba85\uc2dc\ud55c \uac74 \uc544\ub2c8\ub77c\uc11c, \uc544\uc9c1 \uc2ec\uc0ac \uc911\uc774\uc5c8\uc744 \uac00\ub2a5\uc131\ub3c4 \uc788\ub2e4\uace0 \uc18c\uc2dd\uc744 \uc804\ud55c \ub9e4\uccb4\ub294 \uc9da\uc5c8\uc5b4.\n\n\ud2f0\ucf13\uc740 \ud604\uc7a5 \uad00\ub78c\uc774\ub4e0 \uc0dd\uc911\uacc4\ub4e0 \ud658\ubd88\ud574 \uc900\ub300. \ud558\uc9c0\ub9cc \ud56d\uacf5\uad8c, \uc219\uc18c, \ub80c\ud130\uce74 \ube44\uc6a9\uc740 \ud32c\ub4e4\uc774 \uc9c1\uc811 \ud574\uacb0\ud574\uc57c \ud560 \uac70\uace0, \ucd09\ubc15\ud574\uc11c \uc804\uc561 \ud658\ubd88\uc740 \uc5b4\ub824\uc6b8 \uac83 \uac19\ub2e4\ub294 \uac8c \ub9e4\uccb4\uc758 \uc804\ub9dd\uc774\uc57c. \uc8fc\ucd5c \uce21\uc740 \ud604\uc7a5 \uad00\ub78c \uc608\uc815\uc774\ub358 \ud2b8\ub808\uc774\ub108\ub4e4\uc744 \uc704\ud55c \ub300\uc751\ub3c4 \uac80\ud1a0 \uc911\uc774\ub77c\uace0 \ud588\uc5b4.\n\n\uc6d4\ub4dc\ud22c\uc5b4\uc758 \ub2e4\uc74c \ub3c4\uc2dc\ub294 \ub7f0\ub358, \uadf8\ub2e4\uc74c\uc774 \uc11c\uc6b8, \ub9c8\uc9c0\ub9c9\uc740 \uc77c\ubcf8 \uc694\ucf54\ud558\ub9c8 \ud53c\ub0a0\ub808\uc57c. \uc544\uc9c1 \ub0a0\uc9dc\uc640 \uc7a5\uc18c\ub294 \ubc1c\ud45c \uc804\uc774\uc57c. \ubbf8\uad6d \ub300\uccb4 \uacf5\uc5f0\uc774 \uc5f4\ub9b0\ub2e4 \ud574\ub3c4 \ucd5c\uc18c 6\uac1c\uc6d4 \ub118\uac8c \uac78\ub9b4 \uc218 \uc788\ub2e4\ub294 \uac8c \ub9e4\uccb4\uc758 \uc804\ub9dd\uc774\uc57c.\n\n\ucd9c\ucc98: SoraNews24, \uc6b0\ub9c8\ubb34\uc2a4\uba54 \uacf5\uc2dd \uc6f9\uc0ac\uc774\ud2b8", "hashtags": ["#\uc6b0\ub9c8\ubb34\uc2a4\uba54", "#\uc6b0\ub9c8\ubb34\uc2a4\uba54\ucf58\uc11c\ud2b8", "#\ucf58\uc11c\ud2b8\ucde8\uc18c", "#\uc6d4\ub4dc\ud22c\uc5b4", "#\uc560\ub2c8\uba54\uc774\uc158"], "slides": [["LA \ucf58\uc11c\ud2b8\uac00", "**\ube44\uc790 \ub54c\ubb38\uc5d0**", "\ucde8\uc18c\ub410\ub300???"], ["\ubbf8\uad6d\uc5d0\uc11c \uc5ec\ub294", "**\uccab** \uc6b0\ub9c8\ubb34\uc2a4\uba54", "\ucf58\uc11c\ud2b8\uc600\ub294\ub370"], ["\uacf5\uc5f0\uc7a5\ub3c4 \uc758\uc0c1\ub3c4", "\uc548\ubb34\ub3c4 \uc900\ube44 \ub05d", "\uadfc\ub370 **\ube44\uc790\ub97c** \ubabb \ubc1b\uc74c"], ["**6\uac1c\uc6d4** \uc804\ubd80\ud130", "\ubcc0\ud638\uc0ac\ub791 \uc900\ube44", "\ud588\ub2e4\ub294\ub370\ub3c4\u2026\u3137\u3137"], ["\ud2f0\ucf13\uc740 \ud658\ubd88", "\ud56d\uacf5\u00b7\uc219\uc18c\ub294", "**\ubcc4\uac1c \ubb38\uc81c**"], ["\ub2e4\uc74c \uc6d4\ub4dc\ud22c\uc5b4", "\ub7f0\ub358 \ub2e4\uc74c\uc774", "**\uc11c\uc6b8**\uc774\ub798"], ["\uc11c\uc6b8 \ud22c\uc5b4 \uae30\ub2e4\ub9ac\ub358", "**\ud2b8\ub808\uc774\ub108 \uce5c\uad6c\ud55c\ud14c**", "\uc18c\uc2dd \uc804\ud558\uae30"]]}, "e6b0171c8ca2": {"caption": "\ucd08\ucf5c\ub9bf \uc18d\uc774 \uc5d0\uc2a4\ud504\ub808\uc18c\ub77c\ub2c8, \uc774\uac8c \uc9c4\uc9dc \uc788\ub294 \uac04\uc2dd\uc774\ub798.\n\n\uc601\uad6d \uac00\ub514\uc5b8\uc774 \uc9c1\uc6d0\ub4e4\uc5d0\uac8c \uc5b4\ub9b0 \uc2dc\uc808 \uba39\ub358 \uac04\uc2dd\uc774\ub098 \uc5ec\ud589 \uae30\ub150\ud488 \uc911 \uc81c\uc77c \uc88b\uc544\ud558\ub294 \ud574\uc678 \uc0ac\ud0d5\u00b7\ucd08\ucf5c\ub9bf\uc744 \ubb3c\uc5b4\ubd24\uc5b4. \uc804\ubd80 \uc628\ub77c\uc778\uc73c\ub85c \uc0b4 \uc218 \uc788\uace0, \ubc1c\ud589 \uc2dc\uc810 \uae30\uc900\uc73c\ub85c \ud57c\ub7ec\uc708 \uc804\uc5d0 \ub3c4\ucc29\ud558\ub294 \uac83\uae4c\uc9c0 \ud655\uc778\ud588\ub2e4\uace0 \ud574.\n\n1. \uc774\ud0c8\ub9ac\uc544 \ud398\ub808\ub85c \ud3ec\ucf13 \ucee4\ud53c: \uac00\uc6b4\ub370\uc5d0 \uc9c4\uc9dc \uc5d0\uc2a4\ud504\ub808\uc18c\uac00 \ub4e0 \uc774\ud0c8\ub9ac\uc544 \ucd08\ucf5c\ub9bf\uc774\uc57c. \uc774\ud0c8\ub9ac\uc544 \ub9e4\uc7a5\uc5d0\ub294 \uaca8\uc6b8\uc5d0 \uc8fc\ub85c \ub4e4\uc5b4\uc624\uace0, \uadf8 \uc2dc\uae30\uac00 \uc9c0\ub098\uba74 \uad6c\ud558\uae30 \uc5b4\ub824\uc6b8 \uc218 \uc788\ub300.\n2. \uc911\uad6d \ud654\uc774\ud2b8 \ub798\ube57 \uc0ac\ud0d5: \uba39\uc744 \uc218 \uc788\ub294 \ucc39\uc300 \uc885\uc774\ub85c \uc2f8\uc5ec \uc788\uc5b4\uc11c, \uc785\uc5d0 \ub123\uc73c\uba74 \uc885\uc774\uac00 \ubc14\ub85c \ub179\ub294\ub2e4\uace0 \ud574.\n3. \uc77c\ubcf8 \ud558\uc774\uce04: \ubbf8\uad6d\uc5d0\uc11c\ub3c4 \uc810\uc810 \ub208\uc5d0 \ub744\uace0 \ub9db \uc885\ub958\uac00 \ub2e4\uc591\ud558\ub300. \uae30\uc790\ub294 \uc288\ud37c\ud504\ub8e8\ud2b8 \ud329\uc758 \ud0a4\uc704\uc640 \uc544\uc0ac\uc774 \ub9db\uc774 \ud2b9\ud788 \ub9db\uc788\ub2e4\uace0 \ud588\uc5b4.\n4. \uc601\uad6d \uce90\ub4dc\ubc84\ub9ac \ud06c\ub7f0\uce58: \ucd08\ucf5c\ub9bf\uc744 \uc785\ud78c \ubc8c\uc9d1 \uacfc\uc790 \ubc14\ub85c, \uae68\ubb3c\uba74 \ubc14\uc0ad\ud558\uac8c \ubd80\uc11c\uc9c0\ub2e4\uac00 \uc785\uc548\uc5d0\uc11c \ub179\ub294\ub2e4\uace0 \uc18c\uac1c\ud588\uc5b4.\n5. \uc544\ub974\ud5e8\ud2f0\ub098 \uc54c\ud30c\ud638\ub974: \ud3ed\uc2e0\ud55c \ucfe0\ud0a4 \uac00\uc6b4\ub370\uc5d0 \ub458\uc138 \ub370 \ub808\uccb4\ub97c \ub123\uace0 \ub2e4\ud06c \ucd08\ucf5c\ub9bf\uc744 \uc785\ud78c \uac04\uc2dd\uc774\uc57c.\n6. \uce90\ub098\ub2e4 \ucee4\ud53c \ud06c\ub9ac\uc2a4\ud504: \ubc14\ub2d0\ub77c \uc6e8\uc774\ud37c \uc0ac\uc774\uc5d0 \ucee4\ud53c \ub9db \ud06c\ub9bc\uc744 \ub07c\uc6b4 \uce90\ub098\ub2e4\uc758 \ub300\ud45c \uac04\uc2dd\uc774\ub77c\uace0 \ud574.\n\n\ub098\uc911\uc5d0 \ud574\uc678\uc5ec\ud589 \uac00\uc11c \uae30\ub150\ud488 \uace0\ub97c \ub54c \uaebc\ub0b4 \ubcf4\uac8c \uc800\uc7a5\ud574 \ub46c.\n\n\ucd9c\ucc98: The Guardian", "hashtags": ["#\ud574\uc678\uac04\uc2dd", "#\ucd08\ucf5c\ub9bf", "#\uc0ac\ud0d5", "#\uac04\uc2dd\ucd94\ucc9c", "#\uac00\ub514\uc5b8"], "slides": [["\ucd08\ucf5c\ub9bf \uc18d\uc774", "**\uc5d0\uc2a4\ud504\ub808\uc18c?!**"], ["\uc774\ud0c8\ub9ac\uc544 \ucd08\ucf5c\ub9bf", "\uac00\uc6b4\ub370\ub294 **\uc5d0\uc2a4\ud504\ub808\uc18c**"], ["\uc911\uad6d \ucac0\ub4dd \uc0ac\ud0d5", "**\ud3ec\uc7a5\uc9c0\uc9f8** \uba39\ub294\ub2e4"], ["\uc77c\ubcf8 \ud558\uc774\uce04 \uc911", "\ud0a4\uc704\u00b7**\uc544\uc0ac\uc774** \ub9db\uc774", "\uae30\uc790 \ucd94\ucc9c"], ["\uc601\uad6d **\ubc8c\uc9d1** \ucd08\ucf54\ubc14", "\uae68\ubb3c\uba74 \ubc14\uc0ad!", "\uc785\uc5d0\uc11c \uc2a4\ub974\ub975"], ["\ub2e4\uc74c \ud574\uc678\uc5ec\ud589 \ub550", "\uae30\ub150\ud488 \ub9ac\uc2a4\ud2b8\ub85c", "**\uc800\uc7a5**\ud574 \ub450\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"680d8879984f": "reject", "8f45f86ac448": "approve", "e6b0171c8ca2": "reject"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 1;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

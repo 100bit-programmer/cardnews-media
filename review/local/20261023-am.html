@@ -1,0 +1,1905 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.23 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.23 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-4ee943c4e046" data-jump="4ee943c4e046">1</a><a href="#post-3cdfab5ea16e" data-jump="3cdfab5ea16e">2</a><a href="#post-9477a1b5d1a3" data-jump="9477a1b5d1a3">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-4ee943c4e046" data-id="4ee943c4e046">
+    <div class="head">
+      <h2>1. 미국 최초 원피스 상설 매장 LA 오픈</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/27 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>미국에 원피스 매장이 생긴다는 소식이야. 미국 최초의 원피스 상설 전문 매장인 &#39;원피스 무기와라 스토어&#39;가 11월 6일에 LA에서 문을 열어.
+
+위치는 LA 웨스트필드 센추리 시티 쇼핑몰 안이야. 일본에서 들여온 상품과 함께, 일본에 있는 무기와라 스토어 지점에서도 살 수 없는 한정 상품이 나온다고 해. 예를 들면 캘리포니아 번호판 모티프의 의류, 서퍼 버전 쵸파, &#39;I love LA&#39; 문구에서 하트 자리에 Op-Op Fruit이 들어간 디자인 같은 것들이야.
+
+서퍼 쵸파 디자인은 이 LA 매장을 위해 특별히 만든 거고, 방문객이 음성 메시지를 들을 수 있는 매장 안 체험 요소에도 쓰인다고 해.
+
+일본에서 건너오는 상품으로는 피규어, 후로시키 보자기, 그리고 블라인드 구매용 소품이 아주 많이 준비된다고 해.
+
+사람이 몰릴 걸 대비해서 11월 6일부터 12일까지는 입장하려면 예약이 필요하고, 예약은 매장 공식 웹사이트에서 할 수 있어. 애니메이션은 27년 전, 만화는 그보다 2년 먼저 시작됐으니 미국 팬들의 수요가 쌓여 있을 거라는 게 매체의 전망이야.
+
+출처: SoraNews24, PR Times
+
+배경 사진: Ralf1403, 12019, kirildobrev, stevepb, Pexels / Pixabay
+사진: Baron Maddock / Wikimedia Commons, CC BY 4.0 (편집)
+표지 이미지: AI 생성
+
+#원피스 #원피스굿즈 #무기와라스토어 #LA #애니메이션</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-4ee943c4e046">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 일본 지점에서도 못 사는 한정 굿즈가 LA 매장에서만 나온다는 반전과, 오픈 첫 주 예약 필수라는 실용 정보</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 일본에서 건너오는 상품은 피규어, 후로시키 보자기, 블라인드 구매용 소품이 아주 많이 준비된다 (본문 4번째 단락)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">원피스 굿즈는 일본 가야만 사는 줄 알았지?
+이번에 LA에 생기는 매장엔 일본 지점에서도 못 사는 한정 상품이 나온대
+그중엔 서핑하는 쵸파도 있는데, 이 쵸파는 굿즈로만 쓰이는 게 아니래 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">1/ 일단 결론부터. 미국 최초의 원피스 상설 전문 매장 &#39;원피스 무기와라 스토어&#39;가 11월 6일에 LA에서 문을 열어. 그럼 일본 지점에서도 못 산다는 한정 상품이 뭔지 궁금하지?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">2/ LA에서만 나오는 한정 상품은 이런 것들이야
+- 캘리포니아 번호판 모티프 의류
+- 서퍼 버전 쵸파
+- &#39;I love LA&#39;의 하트 자리에 Op-Op Fruit이 들어간 디자인
+이 중 서퍼 쵸파는 하는 일이 하나 더 있어</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">3/ 서퍼 쵸파는 이 LA 매장을 위해 특별히 만든 디자인이래. 방문객이 음성 메시지를 들을 수 있는 매장 안 체험 요소에도 쓰인다고 해. 근데 이런 매장이면 사람이 몰릴 텐데, 입장은 어떻게 할까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">4/ 가기 전에 알아둘 것
+- 오픈: 11월 6일
+- 위치: LA 웨스트필드 센추리 시티 쇼핑몰 안
+- 11월 6일~12일: 입장 예약 필수
+- 예약: 매장 공식 웹사이트
+사람이 몰릴 걸 대비한 거래. 그럼 왜 이렇게 몰릴 거라고 본 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">5/ 매체의 전망은 이래. 애니메이션은 27년 전, 만화는 그보다 2년 먼저 시작돼서 미국 팬들의 수요가 쌓여 있을 거라는 거야. 그래서 이 소식, 한 줄로 정리하면?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">233/500자</span></div>
+      <p class="tp-text">6/ 결국 LA에 가면 일본 지점에서도 못 사는 한정품이 있고, 오픈 첫 주(11월 6일~12일)엔 예약부터 해야 한다는 거야.
+
+너라면 서퍼 쵸파 vs 캘리포니아 번호판 의류, 하나만 산다면 뭐 살래?
+
+이런 해외 문화·덕질 소식 계속 배달함. 팔로우해두면 피드에 뜸.
+
+카드엔 일본에서 건너오는 상품 종류까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>원피스 굿즈는 일본 가야만 사는 줄 알았지? 일본 지점에도 없는 게 LA에서 나온대</li><li>미국에 원피스 상설 매장이 처음 생긴대. 근데 일본 지점에서도 못 사는 게 여기서 나옴</li><li>서핑하는 쵸파가 굿즈로 나온대. 이 매장에서만 파는 거라고</li><li>&#39;I love LA&#39;의 하트 자리에 Op-Op Fruit이 들어갔대</li><li>원피스 매장인데 오픈 첫 주엔 예약 안 하면 입장이 안 된대</li><li>원피스 한정 굿즈는 일본에서만 나오는 게 아니라, 이번엔 LA에서만 사는 게 생겼대</li><li>&#39;일본에도 없다&#39;는 원피스 한정 굿즈, 하필 캘리포니아에서 나온대</li><li>원피스 덕후 친구 있으면 지금 보내줘. 미국 첫 상설 매장이 열린대</li><li>애니는 27년, 만화는 그보다 2년 더 먼저인데 미국 상설 매장은 이제야 생긴대</li><li>캘리포니아 번호판 무늬 옷까지 나온 원피스 매장, 일본 지점에서도 못 사는 거래</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>서퍼 쵸파 vs 캘리포니아 번호판 의류, 하나만 산다면 뭐 살래?</li><li>원피스 굿즈 파는 매장 가본 적 있는 사람?</li><li>오픈 첫 주에 예약해서 갈래, 한 주 지나고 한산할 때 갈래?</li><li>원피스 애니 vs 만화, 먼저 접한 건 어느 쪽이야?</li><li>이 소식 제일 먼저 보내주고 싶은 원피스 덕후 친구 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>일본 캐릭터 상설 매장, 해외에선 어디에 있나</li><li>해외에서 열리는 애니·만화 팝업 소식</li><li>해외 쇼핑몰에 들어온 캐릭터 전문 매장 이야기</li><li>해외 팬들이 줄 서서 사는 한정 굿즈 이야기</li><li>애니·만화 기념 행사 해외토픽</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;애니는 27년 전, 만화는 그보다 2년 먼저&#39;는 기사 작성 시점 기준 표현이라 올릴 때 시점이 어색하지 않은지 확인</li><li>11월 6일의 연도가 원문에 없어 날짜가 지난 소식이 되지 않았는지 확인</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-01.jpg" alt="1장: 미국에 드디어 원피스 매장?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-02.jpg" alt="2장: 11월 6일 LA에서 오픈" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-03.jpg" alt="3장: LA 웨스트필드 센추리 시티 안" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-04.jpg" alt="4장: 캘리포니아 한정 굿즈가 따로 있음 일본에도 없대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-05.jpg" alt="5장: 서핑하는 쵸파가 이 매장 전용 구매 품목" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-06.jpg" alt="6장: 11/6~12일엔 예약 필수" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-07.jpg" alt="7장: 원피스 덕후 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/4ee943c4e046/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">미국에 원피스 매장이 생긴다는 소식이야. 미국 최초의 원피스 상설 전문 매장인 &#39;원피스 무기와라 스토어&#39;가 11월 6일에 LA에서 문을 열어.
+
+위치는 LA 웨스트필드 센추리 시티 쇼핑몰 안이야. 일본에서 들여온 상품과 함께, 일본에 있는 무기와라 스토어 지점에서도 살 수 없는 한정 상품이 나온다고 해. 예를 들면 캘리포니아 번호판 모티프의 의류, 서퍼 버전 쵸파, &#39;I love LA&#39; 문구에서 하트 자리에 Op-Op Fruit이 들어간 디자인 같은 것들이야.
+
+서퍼 쵸파 디자인은 이 LA 매장을 위해 특별히 만든 거고, 방문객이 음성 메시지를 들을 수 있는 매장 안 체험 요소에도 쓰인다고 해.
+
+일본에서 건너오는 상품으로는 피규어, 후로시키 보자기, 그리고 블라인드 구매용 소품이 아주 많이 준비된다고 해.
+
+사람이 몰릴 걸 대비해서 11월 6일부터 12일까지는 입장하려면 예약이 필요하고, 예약은 매장 공식 웹사이트에서 할 수 있어. 애니메이션은 27년 전, 만화는 그보다 2년 먼저 시작됐으니 미국 팬들의 수요가 쌓여 있을 거라는 게 매체의 전망이야.
+
+출처: SoraNews24, PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#원피스 #원피스굿즈 #무기와라스토어 #LA #애니메이션</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: [slide4] &#39;캘리포니아 한정&#39;은 원문에 없는 주장이다. 원문은 일본 지점에 없는 한정 상품이라고 할 뿐 캘리포니아 한정이라고 하지 않으며, 매장은 LA에 있지만 판매가 캘리포니아로 제한된다는 내용은 없다. 고칠 방향은 &#39;캘리포니아 번호판 모티프 상품 포함, 일본 지점에 없는 한정 상품&#39;처럼 바꾸는 것이다.</li><li>근거 등록 안 된 주장: [slide5] &#39;서핑하는 쵸파가 이 매장 전용&#39;은 원문상 LA 매장을 위해 특별히 만들어졌다는 내용과 대체로 맞지만, &#39;전용&#39;이라는 판매 조건까지 명시된 것은 아니므로 주의가 필요하다.</li><li>근거 등록 안 된 주장: [slide6] &#39;사람이 몰릴 걸 대비해서&#39;는 원문의 crowd control measure 설명과 일치하는 취지이나, 예약 이유를 명시한 부분으로 별도 확인이 필요하다.</li><li>근거 등록 안 된 주장: [출처] &#39;SoraNews24, PR Times&#39;를 출처로 밝힌 부분은 원문 출처 표기와 일치하지만 본문 사실 주장은 아니다.</li>
+          <li>원피스 캐릭터·로고는 저작권 보호 대상이므로 이미지 생성·사용 시 주의</li><li>예약 및 오픈 일정은 변경될 수 있어 공식 웹사이트 재확인 필요</li><li>단일 매체(SoraNews24) 기반 정보</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-4ee943c4e046-0">1장</label>
+          <textarea id="s-4ee943c4e046-0" rows="2" data-slide="0">미국에 드디어
+**원피스** 매장?!</textarea>
+          
+          <label class="f" for="s-4ee943c4e046-1">2장</label>
+          <textarea id="s-4ee943c4e046-1" rows="2" data-slide="1">**11월 6일**
+LA에서 오픈</textarea>
+          
+          <label class="f" for="s-4ee943c4e046-2">3장</label>
+          <textarea id="s-4ee943c4e046-2" rows="2" data-slide="2">LA 웨스트필드
+**센추리 시티** 안</textarea>
+          
+          <label class="f" for="s-4ee943c4e046-3">4장</label>
+          <textarea id="s-4ee943c4e046-3" rows="3" data-slide="3">캘리포니아 **한정**
+굿즈가 따로 있음
+일본에도 없대</textarea>
+          
+          <label class="f" for="s-4ee943c4e046-4">5장</label>
+          <textarea id="s-4ee943c4e046-4" rows="2" data-slide="4">서핑하는 **쵸파**가
+이 매장 전용 구매 품목</textarea>
+          
+          <label class="f" for="s-4ee943c4e046-5">6장</label>
+          <textarea id="s-4ee943c4e046-5" rows="2" data-slide="5">11/6~12일엔
+**예약 필수**</textarea>
+          
+          <label class="f" for="s-4ee943c4e046-6">7장</label>
+          <textarea id="s-4ee943c4e046-6" rows="2" data-slide="6">**원피스 덕후** 친구
+태그해서 알려줘</textarea>
+          
+          <label class="f" for="c-4ee943c4e046">본문 (캡션)</label>
+          <textarea id="c-4ee943c4e046" class="caption">미국에 원피스 매장이 생긴다는 소식이야. 미국 최초의 원피스 상설 전문 매장인 &#39;원피스 무기와라 스토어&#39;가 11월 6일에 LA에서 문을 열어.
+
+위치는 LA 웨스트필드 센추리 시티 쇼핑몰 안이야. 일본에서 들여온 상품과 함께, 일본에 있는 무기와라 스토어 지점에서도 살 수 없는 한정 상품이 나온다고 해. 예를 들면 캘리포니아 번호판 모티프의 의류, 서퍼 버전 쵸파, &#39;I love LA&#39; 문구에서 하트 자리에 Op-Op Fruit이 들어간 디자인 같은 것들이야.
+
+서퍼 쵸파 디자인은 이 LA 매장을 위해 특별히 만든 거고, 방문객이 음성 메시지를 들을 수 있는 매장 안 체험 요소에도 쓰인다고 해.
+
+일본에서 건너오는 상품으로는 피규어, 후로시키 보자기, 그리고 블라인드 구매용 소품이 아주 많이 준비된다고 해.
+
+사람이 몰릴 걸 대비해서 11월 6일부터 12일까지는 입장하려면 예약이 필요하고, 예약은 매장 공식 웹사이트에서 할 수 있어. 애니메이션은 27년 전, 만화는 그보다 2년 먼저 시작됐으니 미국 팬들의 수요가 쌓여 있을 거라는 게 매체의 전망이야.
+
+출처: SoraNews24, PR Times</textarea>
+          <label class="f" for="t-4ee943c4e046">해시태그</label>
+          <input id="t-4ee943c4e046" type="text" class="tagsin" value="#원피스 #원피스굿즈 #무기와라스토어 #LA #애니메이션" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>미국 최초의 원피스 상설 전문 매장이 열린다</b>
+            <q>“the opening date has been announced for the first-ever permanent One Piece specialty store in the U.S.!”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매장은 11월 6일에 오픈한다</b>
+            <q>“The shop will be opening on November 6, stocked with a wide variety of One Piece merch, featuring both items imported from Japan and exclusive items that aren’t available anywhere else, even at the One Piece Mugiwara Store branches in Japan,”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매장은 LA 웨스트필드 센추리 시티 쇼핑몰 안에 있다</b>
+            <q>“The One Piece Mugiwara Store will be waiting for visitors inside downtown Los Angeles’ Westfield Century City shopping mall on Santa Monica Boulevard, right down the street from Beverly Hills.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 지점에서도 살 수 없는 한정 상품이 있다</b>
+            <q>“The shop will be opening on November 6, stocked with a wide variety of One Piece merch, featuring both items imported from Japan and exclusive items that aren’t available anywhere else, even at the One Piece Mugiwara Store branches in Japan,”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>캘리포니아 번호판 모티프 의류, 서퍼 버전 쵸파, 하트 자리에 Op-Op Fruit이 들어간 &#39;I love LA&#39; 문구 상품이 있다</b>
+            <q>“such as apparel items with a California license plate motif, surfer-version Chopper, or the message “I love LA” with an Op-Op Fruit in place of a heart.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>서퍼 쵸파 디자인은 LA 매장을 위해 특별히 만들었고 음성 메시지가 있는 매장 내 체험에도 쓰인다</b>
+            <q>“The Surfer Chopper design was created specially for the L.A. store, and will also feature in some sort of interactive in-store experience that includes audio messages for visitors to hear.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>피규어, 후로시키, 블라인드 구매 소품이 일본에서 들어온다</b>
+            <q>“▼ Figure,s furoshiki wrapping cloths, and a whole lot of blind-buy trinkets will be among the items imported from Japan.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>11월 6일부터 12일까지 입장하려면 예약이 필요하고 공식 웹사이트에서 가능하다</b>
+            <q>“reservations will be necessary to enter the One Piece Mugiwara Store between November 6 and 12, and can be made through the shop’s official website here.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>애니메이션은 27년 전, 만화는 그보다 2년 앞서 시작되었고 미국 팬들의 수요가 클 것이라고 매체가 전망했다</b>
+            <q>“With the One Piece anime debuting 27 years ago, and the manga two years before that, there should be plenty of pent-up demand among American fans for an entire shop dedicated to the series,”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/22/america-is-getting-its-first-ever-one-piece-store-and-the-opening-date-has-been-revealed/" target="_blank" rel="noopener">America is getting its first-ever One Piece store, and the opening date has been revealed!</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "sunny California shopping street with palm trees"</li><li>2장: <a href="https://pixabay.com/photos/calendar-meeting-planning-10045176/" target="_blank" rel="noopener">Ralf1403 / Pixabay</a> — "calendar"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Westfield_Century_City_Interior.jpg" target="_blank" rel="noopener">Baron Maddock / Wikimedia Commons · CC BY 4.0</a> — "Westfield Century City"</li><li>4장: <a href="https://pixabay.com/photos/beach-sunset-rocks-rocky-coast-2080075/" target="_blank" rel="noopener">12019 / Pixabay</a> — "california coast"</li><li>5장: <a href="https://pixabay.com/photos/blue-beach-surf-travel-surfer-4145659/" target="_blank" rel="noopener">kirildobrev / Pixabay</a> — "surfboard"</li><li>6장: <a href="https://pixabay.com/photos/censorship-limitations-610101/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "smartphone booking"</li><li>7장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-3cdfab5ea16e" data-id="3cdfab5ea16e">
+    <div class="head">
+      <h2>2. USJ 할로윈 호러 나이트 좀비 먹거리</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/26 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>좀비가 칵테일을 서빙하는 곳이 진짜 있어. 일본 유니버설 스튜디오 재팬이 개장 25주년을 맞은 올해, 할로윈 호러 나이트가 15번째로 열리고 있대. 기간은 9월 11일부터 11월 8일까지야.
+
+올해 새로 생긴 간판 메뉴는 파크 최초의 좀비 바. 샌프란시스코 지역의 워프 카페 자리에서 매일 저녁 6시부터 운영하고, 좀비 분장을 한 크루가 음료를 내줘. 딸기우유 음료, 무알코올 리치 사워, 블러드 오렌지 레몬 사워가 대표 메뉴야.
+
+유니버설 마켓은 고등학생 좀비의 학교 축제가 테마야. 블랙커런트 와플, 마늘기름을 넣은 실험적인 타코야끼, 치즈와 양파를 곁들인 갈비 라이스 도그가 나오고, 밤 한정 바나나 아이스도 있어.
+
+콜라보도 있어. 바이오하자드 30주년에 맞춰 바질 소스 치킨 크루아상 샌드위치와 레온을 떠올리게 하는 쓴 초콜릿 츄러스가 나오고, 체인소맨 쪽은 키마 카레 번과 오렌지 바닐라 포치타 냉동 파르페가 준비돼 있어. 파르페는 포치타가 디저트를 파먹는 모습이라 엉덩이가 그대로 드러나는 디자인이래.
+
+세트 메뉴를 하나 주문할 때마다 코스터가 랜덤으로 한 장씩 따라와. 멜스 드라이브인의 검은 번 버거나 루이스 뉴욕 피자 팔러의 블랙 마요 피자로 코스터 모으기를 시작할 수 있어.
+
+출처: SoraNews24 (PR Times 보도자료 기반)
+
+배경 사진: Pexels, mxwegele, djedj / Pixabay
+사진: Terence Ong / Wikimedia Commons, CC BY 2.5 (편집)
+표지 이미지: AI 생성
+
+#유니버설스튜디오재팬 #할로윈 #일본여행 #체인소맨 #USJ</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-3cdfab5ea16e">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 일본여행</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 좀비가 칵테일을 서빙하는 파크 최초의 좀비 바와 엉덩이가 드러나는 체인소맨 파르페처럼, 일본 여행·콜라보 덕후가 바로 저장하고 공유할 황당한 먹거리 조합</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 고등학생 좀비 학교 축제 테마의 유니버설 마켓 메뉴 (블랙커런트 와플, 마늘기름 타코야끼, 갈비 라이스 도그, 밤 한정 바나나 아이스) (카드 4장, 본문)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">90/500자</span></div>
+      <p class="tp-text">USJ 할로윈에선 칵테일을 바텐더가 아니라 좀비가 서빙해준대
+올해 처음 생긴 파크 최초의 좀비 바 얘기야
+근데 같이 나온 체인소맨 파르페는 디자인이 좀 민망함 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">1/ 좀비 바는 이 파크 역사상 처음이래. 매일 저녁 6시부터 운영하고, 좀비 분장을 한 크루가 직접 음료를 내줘. 어디서 뭘 파는지는 다음 글에 있음</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">156/500자</span></div>
+      <p class="tp-text">2/ 자리는 샌프란시스코 지역의 워프 카페 자리야. 대표 메뉴는 딸기우유 음료, 무알코올 리치 사워, 블러드 오렌지 레몬 사워. 개장 25주년인 올해 15번째로 열리는 호러 나이트고, 기간은 9월 11일부터 11월 8일까지야. 근데 먹거리 중에 제일 말이 나올 만한 건 따로 있음</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">3/ 체인소맨 콜라보엔 키마 카레 번이랑 오렌지 바닐라 포치타 냉동 파르페가 있어. 파르페는 포치타가 디저트를 파먹는 모습이라 엉덩이가 그대로 드러나는 디자인이래. 이 행사, 먹는 것 말고 모으는 재미도 있음</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">192/500자</span></div>
+      <p class="tp-text">4/ 올해 호러 나이트 먹거리 저장용 정리
+- 좀비 바: 저녁 6시부터, 워프 카페 자리
+- 바이오하자드 30주년: 바질 소스 치킨 크루아상 샌드위치, 쓴 초콜릿 츄러스
+- 체인소맨: 키마 카레 번, 포치타 파르페
+- 코스터: 세트 메뉴 하나당 랜덤 1장
+- 코스터 시작은 멜스 드라이브인 검은 번 버거나 루이스 뉴욕 피자 팔러 블랙 마요 피자</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">189/500자</span></div>
+      <p class="tp-text">5/ 정리하면 올해 호러 나이트는 좀비 바부터 콜라보 메뉴까지 먹거리 라인업이 꽤 많아.
+체인소맨 파르페, 먹는다 vs 사진만 찍는다?
+이런 해외 테마파크·문화 소식 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 유니버설 마켓 메뉴까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>USJ 할로윈에선 칵테일을 바텐더가 아니라 좀비가 서빙해준대</li><li>파크 최초의 좀비 바가 생겼대. 매일 저녁 6시부터 좀비 크루가 음료를 내줘</li><li>체인소맨 파르페가 엉덩이를 그대로 드러낸 디자인으로 나왔대</li><li>일본 할로윈 가려는 사람 저장해. USJ 올해 먹거리가 좀 독특함</li><li>해외 테마파크 할로윈이 이 정도래. 좀비 서빙에 포치타 파르페까지</li><li>좀비가 칵테일 서빙하는 곳이 진짜 있어</li><li>USJ 호러 나이트 15회째인데 올해 처음 생긴 게 있대</li><li>9월 11일부터 11월 8일까지, 일본에서 좀비한테 음료 받을 수 있는 곳이 열려</li><li>체인소맨 덕후라면 이 파르페는 봐야 함. 포치타가 디저트를 파먹는 모습이래</li><li>바이오하자드 30주년 츄러스가 레온을 떠올리게 하는 쓴 초콜릿이래</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>체인소맨 파르페, 먹는다 vs 사진만 찍는다?</li><li>좀비가 주는 칵테일 vs 포치타 파르페, 먼저 시킨다면?</li><li>할로윈에 놀이공원 가서 분장해본 사람?</li><li>좀비 바에서 술 vs 무알코올, 너라면 뭐 고를래?</li><li>USJ 할로윈, 낮 파크 vs 밤 호러 나이트 어느 쪽?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>미국 최초 원피스 상설 매장 LA 오픈</li><li>미야모토 시게루 문화훈장 수상 소식</li><li>일본 테마파크 할로윈 한정 먹거리 더 보기</li><li>해외 애니·게임 콜라보 메뉴 모아보기</li><li>MIT AI 에이전트 13개 가상 섬 실험</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>체인소맨·바이오하자드 등 IP 캐릭터 이미지를 카드나 첨부에 쓸 경우 저작권 확인 필요</li><li>&#39;엉덩이가 그대로 드러나는 디자인&#39;은 원문 설명 그대로의 표현이라 수위가 민감하게 읽힐 수 있음</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/3cdfab5ea16e/v6-01.jpg" alt="1장: 좀비가 칵테일 서빙?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/3cdfab5ea16e/v6-02.jpg" alt="2장: USJ 할로윈 호러 나이트 벌써 15회째" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/3cdfab5ea16e/v6-03.jpg" alt="3장: 역대 첫 좀비 바 저녁 6시부터 좀비 크루가 서빙" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/3cdfab5ea16e/v6-04.jpg" alt="4장: 고교 좀비 컨셉 마늘기름 타코야끼 바나나 아이스도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/3cdfab5ea16e/v6-05.jpg" alt="5장: 체인소맨 포치타 오렌지 바닐라 파르페 엉덩이 노출 중" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/3cdfab5ea16e/v6-06.jpg" alt="6장: 체인소맨 덕후 친구 태그하고 파르페 보여주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/3cdfab5ea16e/v6-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">좀비가 칵테일을 서빙하는 곳이 진짜 있어. 일본 유니버설 스튜디오 재팬이 개장 25주년을 맞은 올해, 할로윈 호러 나이트가 15번째로 열리고 있대. 기간은 9월 11일부터 11월 8일까지야.
+
+올해 새로 생긴 간판 메뉴는 파크 최초의 좀비 바. 샌프란시스코 지역의 워프 카페 자리에서 매일 저녁 6시부터 운영하고, 좀비 분장을 한 크루가 음료를 내줘. 딸기우유 음료, 무알코올 리치 사워, 블러드 오렌지 레몬 사워가 대표 메뉴야.
+
+유니버설 마켓은 고등학생 좀비의 학교 축제가 테마야. 블랙커런트 와플, 마늘기름을 넣은 실험적인 타코야끼, 치즈와 양파를 곁들인 갈비 라이스 도그가 나오고, 밤 한정 바나나 아이스도 있어.
+
+콜라보도 있어. 바이오하자드 30주년에 맞춰 바질 소스 치킨 크루아상 샌드위치와 레온을 떠올리게 하는 쓴 초콜릿 츄러스가 나오고, 체인소맨 쪽은 키마 카레 번과 오렌지 바닐라 포치타 냉동 파르페가 준비돼 있어. 파르페는 포치타가 디저트를 파먹는 모습이라 엉덩이가 그대로 드러나는 디자인이래.
+
+세트 메뉴를 하나 주문할 때마다 코스터가 랜덤으로 한 장씩 따라와. 멜스 드라이브인의 검은 번 버거나 루이스 뉴욕 피자 팔러의 블랙 마요 피자로 코스터 모으기를 시작할 수 있어.
+
+출처: SoraNews24 (PR Times 보도자료 기반)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#유니버설스튜디오재팬 #할로윈 #일본여행 #체인소맨 #USJ</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처 표기: SoraNews24 및 PR Times 보도자료 기반이라는 출처 주장</li>
+          <li>편집자 메모의 &#39;포차코&#39;는 원문상 체인소맨의 &#39;포치타(Pochita)&#39;라 포치타로 표기함</li><li>체인소맨·바이오하자드 등 외부 IP 언급, 카드 배경에 캐릭터·로고 이미지 사용 금지</li><li>원문은 PR Times 보도자료 기반이라 메뉴·운영 정보는 변경될 수 있음</li><li>행사 종료일(11월 8일)이 가까워 게시 시점 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-3cdfab5ea16e-0">1장</label>
+          <textarea id="s-3cdfab5ea16e-0" rows="2" data-slide="0">좀비가
+**칵테일** 서빙?!</textarea>
+          
+          <label class="f" for="s-3cdfab5ea16e-1">2장</label>
+          <textarea id="s-3cdfab5ea16e-1" rows="3" data-slide="1">USJ 할로윈
+호러 나이트
+벌써 **15회째**</textarea>
+          
+          <label class="f" for="s-3cdfab5ea16e-2">3장</label>
+          <textarea id="s-3cdfab5ea16e-2" rows="3" data-slide="2">역대 첫 **좀비 바**
+저녁 6시부터
+좀비 크루가 서빙</textarea>
+          
+          <label class="f" for="s-3cdfab5ea16e-3">4장</label>
+          <textarea id="s-3cdfab5ea16e-3" rows="3" data-slide="3">고교 좀비 컨셉
+마늘기름 **타코야끼**
+바나나 아이스도</textarea>
+          
+          <label class="f" for="s-3cdfab5ea16e-4">5장</label>
+          <textarea id="s-3cdfab5ea16e-4" rows="3" data-slide="4">체인소맨 포치타
+오렌지 바닐라 **파르페**
+엉덩이 노출 중</textarea>
+          
+          <label class="f" for="s-3cdfab5ea16e-5">6장</label>
+          <textarea id="s-3cdfab5ea16e-5" rows="3" data-slide="5">**체인소맨 덕후**
+친구 태그하고
+파르페 보여주기</textarea>
+          
+          <label class="f" for="c-3cdfab5ea16e">본문 (캡션)</label>
+          <textarea id="c-3cdfab5ea16e" class="caption">좀비가 칵테일을 서빙하는 곳이 진짜 있어. 일본 유니버설 스튜디오 재팬이 개장 25주년을 맞은 올해, 할로윈 호러 나이트가 15번째로 열리고 있대. 기간은 9월 11일부터 11월 8일까지야.
+
+올해 새로 생긴 간판 메뉴는 파크 최초의 좀비 바. 샌프란시스코 지역의 워프 카페 자리에서 매일 저녁 6시부터 운영하고, 좀비 분장을 한 크루가 음료를 내줘. 딸기우유 음료, 무알코올 리치 사워, 블러드 오렌지 레몬 사워가 대표 메뉴야.
+
+유니버설 마켓은 고등학생 좀비의 학교 축제가 테마야. 블랙커런트 와플, 마늘기름을 넣은 실험적인 타코야끼, 치즈와 양파를 곁들인 갈비 라이스 도그가 나오고, 밤 한정 바나나 아이스도 있어.
+
+콜라보도 있어. 바이오하자드 30주년에 맞춰 바질 소스 치킨 크루아상 샌드위치와 레온을 떠올리게 하는 쓴 초콜릿 츄러스가 나오고, 체인소맨 쪽은 키마 카레 번과 오렌지 바닐라 포치타 냉동 파르페가 준비돼 있어. 파르페는 포치타가 디저트를 파먹는 모습이라 엉덩이가 그대로 드러나는 디자인이래.
+
+세트 메뉴를 하나 주문할 때마다 코스터가 랜덤으로 한 장씩 따라와. 멜스 드라이브인의 검은 번 버거나 루이스 뉴욕 피자 팔러의 블랙 마요 피자로 코스터 모으기를 시작할 수 있어.
+
+출처: SoraNews24 (PR Times 보도자료 기반)</textarea>
+          <label class="f" for="t-3cdfab5ea16e">해시태그</label>
+          <input id="t-3cdfab5ea16e" type="text" class="tagsin" value="#유니버설스튜디오재팬 #할로윈 #일본여행 #체인소맨 #USJ" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>좀비 분장을 한 크루가 시그니처 음료를 서빙한다</b>
+            <q>“Occupying Wharf Cafe in the San Francisco area of the park and operating nightly from 6:00 p.m., it features zombified crew members serving eerie signature drinks themed around past park monsters.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>USJ 개장 25주년, 할로윈 호러 나이트 15번째 개최</b>
+            <q>“As Universal Studios Japan marks its 25th anniversary, the park is bursting with thrills with its milestone 15th edition of Halloween Horror Nights.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>행사 기간은 9월 11일부터 11월 8일까지</b>
+            <q>“Running from September 11 to November 8, this year’s event pairs the classic street scares with an array of spook-filled food and drink offerings that make it well worth a visit.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>파크 최초의 좀비 바가 올해 신규 추가의 간판이다</b>
+            <q>“The headliner for 2026’s new additions is the park’s first-ever Zombie Bar.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>좀비 바는 워프 카페 자리에서 매일 저녁 6시부터 운영한다</b>
+            <q>“Occupying Wharf Cafe in the San Francisco area of the park and operating nightly from 6:00 p.m., it features zombified crew members serving eerie signature drinks themed around past park monsters.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>딸기우유 음료, 무알코올 리치 사워, 블러드 오렌지 레몬 사워가 대표 메뉴다</b>
+            <q>“Highlights include a strawberry-milk Cutie Zombie drink, a non-alcoholic lychee sour for circus zombie fans, and a blood orange and lemon sour inspired by chainsaw zombies.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유니버설 마켓은 고등학생 좀비의 학교 축제가 테마다</b>
+            <q>“Over at Universal Market, high school zombies take the center stage with a creepy school festival theme.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>블랙커런트 와플, 마늘기름 타코야끼, 갈비 라이스 도그, 밤 한정 바나나 아이스가 있다</b>
+            <q>“Visitors can enjoy blackcurrant waffles from the Zombie Cheerleading Club, garlic-oil experimental takoyaki from the Science Club, or a cheese and onion kalbi (Korean marinated beef ribs) rice dog designed by the ravenous American Football Club, with a night-exclusive banana ice cream to indulge in for dessert.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>바이오하자드 30주년에 맞춰 바질 소스 치킨 크루아상 샌드위치와 레온을 기리는 쓴 초콜릿 츄러스가 나온다</b>
+            <q>“Coinciding with the 30th anniversary of Resident Evil, known as “Biohazard” in Japan, a croissant sandwich filled with chicken, vegetables, and a green-herb basil sauce is offered to honor the new Resident Evil Requiem: The Dive maze, along with a bitter chocolate churro to pay homage to agent Leon S. Kennedy, both being sold at the food cart in front of Space Fantasy – The Ride and accompanied by some original merchandise.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>체인소맨 키마 카레 번과 오렌지 바닐라 포치타 냉동 파르페가 나오며, 파르페에서 포치타의 엉덩이가 그대로 보인다</b>
+            <q>“Chainsaw Man fans should swing by the food cart near Cinema 4-D to pick up a keema curry Chainsaw Man Bun, expressing the transformed Denji, alongside an orange-vanilla Pochita frozen parfait, with Pochita’s posterior on full display as he digs into the dessert.”</q>
+            <small>slide5, slide6, caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세트 메뉴 주문당 랜덤 코스터 한 장이 제공된다</b>
+            <q>“Original design coasters feature cover photos of songs used in past Zombie de Dance performances, as well as popular zombies that have made countless guests scream until now, but only one will be handed out at random for every single set menu order.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>멜스 드라이브인 버거와 루이스 뉴욕 피자 팔러 피자로 코스터 모으기를 시작할 수 있다</b>
+            <q>“Sink your teeth into a burger full of horror vibes with scarlet sauce dripping from pitch-black buns at Mel’s Drive-In, or a pizza drizzled with sinister black mayonnaise sauce from Louie’s N.Y. Pizza Parlor to start your zombie coaster collection.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/23/zombies-serve-cocktails-and-pochita-turns-into-parfait-at-universal-studios-japan-this-halloween/" target="_blank" rel="noopener">Zombies serve cocktails and Pochita turns into parfait at Universal Studios Japan this Halloween</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "colorful halloween pumpkins at sunny amusement park"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Universal_Studios_Japan_2.JPG" target="_blank" rel="noopener">Terence Ong / Wikimedia Commons · CC BY 2.5</a> — "Universal Studios Japan"</li><li>3장: <a href="https://pixabay.com/photos/alcohol-cocktail-cocktail-glass-1850038/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "cocktail"</li><li>4장: <a href="https://pixabay.com/photos/man-cart-street-food-culture-rain-5524488/" target="_blank" rel="noopener">mxwegele / Pixabay</a> — "street food"</li><li>5장: <a href="https://pixabay.com/photos/ice-cream-candy-food-dessert-sweet-5409069/" target="_blank" rel="noopener">djedj / Pixabay</a> — "orange vanilla parfait dessert"</li><li>6장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends laughing"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-9477a1b5d1a3" data-id="9477a1b5d1a3">
+    <div class="head">
+      <h2>3. 일본 곰 퇴치 군집 로봇개 핫챤</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 8
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/26 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>곰 쫓으려고 로봇개를 만든다는 소식, 일본에서 나왔어.
+
+가을이 되면 곰들이 겨울잠을 준비하려고 몸을 불리면서 더 대담해지고 더 넓게 돌아다닌다고 해. 곰 습격이 최근 몇 년째 큰 걱정거리인 일본에서, 곰 개체 수가 가장 많은 북부 지역의 아키타현립대학이 올해 초 &#39;베어테크 솔루션 콘테스트&#39; 아이디어를 모집했어. 교수와 학생들이 낸 아이디어는 총 41건이었고, 10월 13일 아키타시에서 유망한 아이디어들이 발표됐대.
+
+그중 하나가 로봇개 &#39;핫챤&#39;이야. 일본에서 가장 유명한 아키타견 하치코에서 이름을 따왔고, 행동은 옛날 아키타현 사냥꾼과 숲에 같이 들어가던 아키타견 사냥개에서 착안했대.
+
+핫챤은 폭력 없이 해결하는 걸 목표로 만들어졌어. 네 발 로봇이 농장이나 마을 가장자리에 배치되고, 카메라가 곰을 감지하면 내장 스피커로 개 짖는 소리를 크게 틀어서 곰이 숲으로 돌아가게 만드는 방식이야. 위치 데이터를 공유해서 다른 로봇을 현장으로 부를 수도 있어서, 여러 대가 무리를 이루면 더 위협적인 존재감을 줄 수 있대. 동시에 곰 목격과 행동 데이터베이스도 쌓아서 마을 외곽을 효율적으로, 자율적으로 순찰하게 한다는 계획이야.
+
+개발을 이끄는 지역연계·연구추진센터의 요시다 마사유키 연구원은 올해 안에 현장 테스트를 시작하고 싶다고 밝혔어.
+
+출처: SoraNews24, FNN Prime Online/Akita TV, 아키타현립대학, 요미우리신문
+
+배경 사진: ykaiavu, kudybadorota, TheDigitalArtist, shogun, Peggychoucair / Pixabay
+사진: Do1988 / Wikimedia Commons, CC BY 4.0 (편집)
+표지 이미지: AI 생성
+
+#로봇개 #일본 #곰출몰 #아키타견 #과학뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-9477a1b5d1a3">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 곰 습격이 큰 걱정인 일본에서 곰을 로봇개 짖는 소리로, 폭력 없이 쫓겠다는 반전. 여러 대가 무리로 움직인다는 점이 흥미를 끈다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 핫챤이 곰 출몰 정보를 쌓아가는 계획 (카드 5장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">77/500자</span></div>
+      <p class="tp-text">곰 습격이 몇 년째 골칫거리인 일본이 곰 쫓겠다고 로봇개를 만든대
+폭력 없이, 개 짖는 소리로
+근데 이 로봇개, 혼자 일하지 않는다는데 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">1/ 이름은 &#39;핫챤&#39;이고 네 발 로봇이야. 농장이나 마을 가장자리에 배치돼서, 카메라가 곰을 감지하면 내장 스피커로 개 짖는 소리를 크게 틀어. 곰이 숲으로 돌아가게 만드는 거래.
+
+근데 이름은 대체 어디서 따온 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">2/ 일본에서 가장 유명한 아키타견 하치코에서 이름을 따왔대.
+
+행동은 옛날 아키타현 사냥꾼과 같이 숲에 들어가던 아키타견 사냥개에서 착안했고. 그럼 이 로봇개가 혼자 짖느냐, 그게 아니래.</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">3/ 로봇끼리 위치를 공유해서 다른 로봇을 현장으로 부를 수 있대.
+
+여러 대가 무리를 이루면 곰한테 더 위협적인 존재감을 줄 수 있다는 거야. 그럼 이 아이디어는 어디서 나왔을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">166/500자</span></div>
+      <p class="tp-text">4/ 가을엔 곰들이 겨울잠 준비로 몸을 불리면서 더 대담해지고 더 넓게 돌아다닌대. 곰 개체 수가 가장 많은 북부 아키타현에서, 아키타현립대학이 올해 초 &#39;베어테크 솔루션 콘테스트&#39; 아이디어를 모았어.
+
+들어온 41건 중 유망한 아이디어가 10월 13일 아키타시에서 발표됐고, 핫챤이 그중 하나야.</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">170/500자</span></div>
+      <p class="tp-text">5/ 핫챤 한눈에 정리
+- 정체: 아키타견 모티브 네 발 로봇개
+- 배치: 농장이나 마을 가장자리
+- 방식: 카메라로 곰 감지 → 개 짖는 소리 크게 재생
+- 협동: 위치 공유로 다른 로봇 호출, 여러 대가 무리로
+- 목표: 폭력 없이 곰이 숲으로 돌아가게
+
+근데 이거, 실제로 현장에 나가긴 하는 걸까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">259/500자</span></div>
+      <p class="tp-text">6/ 개발을 이끄는 요시다 마사유키 연구원은 올해 안에 현장 테스트를 시작하고 싶다고 밝혔어. 결국 곰을 해치지 않고 개 짖는 소리로 숲에 돌려보내겠다는 게 핵심이야.
+
+곰 쫓는 로봇개, 개 짖는 소리가 진짜 통할 것 같아 안 통할 것 같아?
+
+이런 해외 동물·과학 소식 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 로봇이 곰 출몰 정보를 쌓아가는 계획까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>곰 쫓는 데 폭력 대신 &#39;로봇개 짖는 소리&#39;를 쓰겠다는 나라가 있대</li><li>곰 때문에 몇 년째 골치 아픈 일본이 꺼낸 카드가 로봇개라고?</li><li>곰 걱정하는 마을에 곰을 해치지 말고 개 짖는 소리로 돌려보내라는 아이디어가 나옴</li><li>곰은 때려서 쫓는 게 아니라 짖어서 돌려보낸다는 로봇개 소식</li><li>곰을 쫓는 로봇개가 혼자가 아니라 무리로 움직인대</li><li>일본에서 제일 유명한 개 이름을 딴 로봇이 곰 앞에 선대</li><li>가을이면 더 대담해진다는 곰 앞에 로봇개 무리가 서는 날이 올까</li><li>&#39;하치코&#39;에서 이름 딴 로봇개가 곰을 쫓는다는 소식</li><li>발표된 곰 퇴치 아이디어 중 하나가 로봇개 짖는 소리였대</li><li>곰 습격이 걱정인 사람들한테 이번엔 로봇개가 대신 짖어준다는데</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>곰 쫓는 로봇개, 개 짖는 소리가 진짜 통할 것 같아 안 통할 것 같아?</li><li>곰 나오는 동네에 로봇개 배치, 찬성이야 반대야?</li><li>로봇개 이름 붙인다면 핫챤 말고 뭐라고 짓고 싶어?</li><li>로봇개 소리로 곰 쫓기 vs 사람이 직접 순찰, 어느 쪽이 더 믿음 가?</li><li>곰이 로봇개 무리를 만나면 도망갈까 구경할까?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>곰 나오는 일본 마을 소식</li><li>해외에서 야생동물 쫓는 신기한 방법</li><li>네 발 로봇개가 현장에서 하는 일</li><li>동물 소리로 동물 쫓는 방식 이야기</li><li>USJ 할로윈 호러 나이트 좀비 먹거리</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>핫챤은 아이디어 발표·계획 단계라 개 짖는 소리로 곰이 실제 물러난다는 검증 결과는 원문에 없음. 효과를 단정한 표현이 없는지 확인</li><li>하치코 이름 유래와 사냥개 착안은 카드엔 없고 본문에만 있음. 카드 원고와 맞춰 쓸지 확인</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-01.jpg" alt="1장: 곰 쫓으려고 로봇개를 풀어놓는다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-02.jpg" alt="2장: 이름은 핫챤 아키타견 모티브" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-03.jpg" alt="3장: 카메라로 곰을 발견하면 개 짖는 소리!" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-04.jpg" alt="4장: 위치를 공유해 다른 로봇개를 불러모은다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-05.jpg" alt="5장: 곰 출몰 데이터도 쌓아간다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-06.jpg" alt="6장: 연내 현장 테스트가 목표라는데?!" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-07.jpg" alt="7장: 곰 걱정하는 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261023-am-3f93ced0a68e/9477a1b5d1a3/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">곰 쫓으려고 로봇개를 만든다는 소식, 일본에서 나왔어.
+
+가을이 되면 곰들이 겨울잠을 준비하려고 몸을 불리면서 더 대담해지고 더 넓게 돌아다닌다고 해. 곰 습격이 최근 몇 년째 큰 걱정거리인 일본에서, 곰 개체 수가 가장 많은 북부 지역의 아키타현립대학이 올해 초 &#39;베어테크 솔루션 콘테스트&#39; 아이디어를 모집했어. 교수와 학생들이 낸 아이디어는 총 41건이었고, 10월 13일 아키타시에서 유망한 아이디어들이 발표됐대.
+
+그중 하나가 로봇개 &#39;핫챤&#39;이야. 일본에서 가장 유명한 아키타견 하치코에서 이름을 따왔고, 행동은 옛날 아키타현 사냥꾼과 숲에 같이 들어가던 아키타견 사냥개에서 착안했대.
+
+핫챤은 폭력 없이 해결하는 걸 목표로 만들어졌어. 네 발 로봇이 농장이나 마을 가장자리에 배치되고, 카메라가 곰을 감지하면 내장 스피커로 개 짖는 소리를 크게 틀어서 곰이 숲으로 돌아가게 만드는 방식이야. 위치 데이터를 공유해서 다른 로봇을 현장으로 부를 수도 있어서, 여러 대가 무리를 이루면 더 위협적인 존재감을 줄 수 있대. 동시에 곰 목격과 행동 데이터베이스도 쌓아서 마을 외곽을 효율적으로, 자율적으로 순찰하게 한다는 계획이야.
+
+개발을 이끄는 지역연계·연구추진센터의 요시다 마사유키 연구원은 올해 안에 현장 테스트를 시작하고 싶다고 밝혔어.
+
+출처: SoraNews24, FNN Prime Online/Akita TV, 아키타현립대학, 요미우리신문</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#로봇개 #일본 #곰출몰 #아키타견 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 곰 습격이 최근 몇 년간 큰 걱정거리라는 주장</li><li>근거 등록 안 된 주장: 일본 북부 지역이 곰 개체 수가 가장 많다는 주장</li><li>근거 등록 안 된 주장: 핫챤이 폭력 없이 해결하는 것을 목표로 만들어졌다는 주장</li><li>근거 등록 안 된 주장: 핫챤이 마을 외곽을 자율적으로 순찰하게 한다는 계획</li><li>근거 등록 안 된 주장: 하치코가 일본에서 가장 유명한 아키타견이라는 주장</li><li>근거 등록 안 된 주장: 요시다 연구원이 지역연계·연구추진센터에서 개발을 이끈다는 주장</li><li>근거 등록 안 된 주장: 아키타현립대학이 곰 대응 아이디어를 교수와 학생에게서 모집했다는 주장</li>
+          <li>원문 날짜가 2026년으로 표기되어 있어 시점 확인 필요</li><li>연내 현장 테스트는 계획 단계이며 실제 실시 여부 불확실</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-9477a1b5d1a3-0">1장</label>
+          <textarea id="s-9477a1b5d1a3-0" rows="3" data-slide="0">곰 쫓으려고
+**로봇개를**
+풀어놓는다고???</textarea>
+          
+          <label class="f" for="s-9477a1b5d1a3-1">2장</label>
+          <textarea id="s-9477a1b5d1a3-1" rows="3" data-slide="1">이름은
+**핫챤**
+아키타견 모티브</textarea>
+          
+          <label class="f" for="s-9477a1b5d1a3-2">3장</label>
+          <textarea id="s-9477a1b5d1a3-2" rows="3" data-slide="2">카메라로
+곰을 발견하면
+**개 짖는 소리**!</textarea>
+          
+          <label class="f" for="s-9477a1b5d1a3-3">4장</label>
+          <textarea id="s-9477a1b5d1a3-3" rows="3" data-slide="3">위치를 공유해
+다른 로봇개를
+**불러모은다**</textarea>
+          
+          <label class="f" for="s-9477a1b5d1a3-4">5장</label>
+          <textarea id="s-9477a1b5d1a3-4" rows="3" data-slide="4">곰 출몰
+**데이터**도
+쌓아간다</textarea>
+          
+          <label class="f" for="s-9477a1b5d1a3-5">6장</label>
+          <textarea id="s-9477a1b5d1a3-5" rows="3" data-slide="5">**연내** 현장
+테스트가
+목표라는데?!</textarea>
+          
+          <label class="f" for="s-9477a1b5d1a3-6">7장</label>
+          <textarea id="s-9477a1b5d1a3-6" rows="3" data-slide="6">**곰 걱정하는**
+친구한테
+조용히 보내기</textarea>
+          
+          <label class="f" for="c-9477a1b5d1a3">본문 (캡션)</label>
+          <textarea id="c-9477a1b5d1a3" class="caption">곰 쫓으려고 로봇개를 만든다는 소식, 일본에서 나왔어.
+
+가을이 되면 곰들이 겨울잠을 준비하려고 몸을 불리면서 더 대담해지고 더 넓게 돌아다닌다고 해. 곰 습격이 최근 몇 년째 큰 걱정거리인 일본에서, 곰 개체 수가 가장 많은 북부 지역의 아키타현립대학이 올해 초 &#39;베어테크 솔루션 콘테스트&#39; 아이디어를 모집했어. 교수와 학생들이 낸 아이디어는 총 41건이었고, 10월 13일 아키타시에서 유망한 아이디어들이 발표됐대.
+
+그중 하나가 로봇개 &#39;핫챤&#39;이야. 일본에서 가장 유명한 아키타견 하치코에서 이름을 따왔고, 행동은 옛날 아키타현 사냥꾼과 숲에 같이 들어가던 아키타견 사냥개에서 착안했대.
+
+핫챤은 폭력 없이 해결하는 걸 목표로 만들어졌어. 네 발 로봇이 농장이나 마을 가장자리에 배치되고, 카메라가 곰을 감지하면 내장 스피커로 개 짖는 소리를 크게 틀어서 곰이 숲으로 돌아가게 만드는 방식이야. 위치 데이터를 공유해서 다른 로봇을 현장으로 부를 수도 있어서, 여러 대가 무리를 이루면 더 위협적인 존재감을 줄 수 있대. 동시에 곰 목격과 행동 데이터베이스도 쌓아서 마을 외곽을 효율적으로, 자율적으로 순찰하게 한다는 계획이야.
+
+개발을 이끄는 지역연계·연구추진센터의 요시다 마사유키 연구원은 올해 안에 현장 테스트를 시작하고 싶다고 밝혔어.
+
+출처: SoraNews24, FNN Prime Online/Akita TV, 아키타현립대학, 요미우리신문</textarea>
+          <label class="f" for="t-9477a1b5d1a3">해시태그</label>
+          <input id="t-9477a1b5d1a3" type="text" class="tagsin" value="#로봇개 #일본 #곰출몰 #아키타견 #과학뉴스" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>핫챤은 아키타견 사냥개를 메카 버전으로 만든 로봇이다</b>
+            <q>“Hacchan is a mecha version of an Akita Inu hunting dog.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>곰이 겨울잠을 준비하며 더 대담해지고 더 넓게 돌아다닌다</b>
+            <q>“That’s because we’re getting to the part of the year when bears start bulking up in preparation of hibernating, which means they’ll be growing bolder and roaming wider in their search for stuff to eat,”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아키타현립대학이 올해 초 베어테크 솔루션 콘테스트 제안을 받았고 총 41건이 접수됐으며 10월 13일 아키타시에서 발표됐다</b>
+            <q>“A total of 41 entries were submitted, and on October 13 a selection of the most promising ideas were presented in Akita City, including an idea for a surprisingly cute anti-bear robot dog.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>핫챤은 하치코의 이름을 땄고 아키타현 사냥꾼과 함께 숲에 들어가던 아키타견 사냥개에서 행동을 착안했다</b>
+            <q>“Called Hacchan, the robot named after Japan’s most famous Akita Inu, Hachiko.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카메라가 곰을 감지하면 스피커로 개 짖는 소리를 틀어 곰을 쫓는다</b>
+            <q>“The quadrupedal robot is meant for deployment on the edge of farms or towns, and when its camera detects a bear, it uses an internal speaker to play the sound of a dog barking loudly in order to scare the animal off and make it retreat back into the woods.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>위치 데이터를 공유해 다른 로봇을 불러 무리를 만들 수 있다</b>
+            <q>“By sharing its location data, Hacchan can even call other units to the scene, creating a pack of robo dogs for a more intimidating presence, while also building a database of bear sighting and behavior to help the robots efficiently and autonomously patrol the outer edges of the community.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>곰 목격·행동 데이터베이스를 구축한다</b>
+            <q>“By sharing its location data, Hacchan can even call other units to the scene, creating a pack of robo dogs for a more intimidating presence, while also building a database of bear sighting and behavior to help the robots efficiently and autonomously patrol the outer edges of the community.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>요시다 마사유키 연구원이 연말 전 현장 테스트 시작을 희망한다</b>
+            <q>“Researcher Masayuki Yoshida of the university’s Regional Collaboration and Research Promotion Center, who’s leading the development of Hacchan, says they hope to begin field testing the robot dogs before the end of the year.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/22/japanese-scientists-developing-cute-autonomously-swarming-robo-dogs-for-anti-bear-patrols-video/" target="_blank" rel="noopener">Japanese scientists developing cute, autonomously swarming robo dogs for anti-bear patrols [Video]</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "A friendly white robot dog standing on a bright green meadow beside a wooden trail, soft sunlight, cheerful pastel sky"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Akita_Inu_Eddy.jpg" target="_blank" rel="noopener">Do1988 / Wikimedia Commons · CC BY 4.0</a> — "Akita Inu"</li><li>3장: <a href="https://pixabay.com/photos/field-plant-young-plants-green-9652617/" target="_blank" rel="noopener">ykaiavu / Pixabay</a> — "forest edge"</li><li>4장: <a href="https://pixabay.com/photos/dogs-herd-canine-animals-pets-2691871/" target="_blank" rel="noopener">kudybadorota / Pixabay</a> — "dog pack"</li><li>5장: <a href="https://pixabay.com/photos/earth-internet-globalization-2254769/" target="_blank" rel="noopener">TheDigitalArtist / Pixabay</a> — "data network"</li><li>6장: <a href="https://pixabay.com/photos/nature-landscape-fall-9277957/" target="_blank" rel="noopener">shogun / Pixabay</a> — "autumn field"</li><li>7장: <a href="https://pixabay.com/photos/forest-fall-autumn-forest-trees-7580700/" target="_blank" rel="noopener">Peggychoucair / Pixabay</a> — "autumn forest"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-143cd6da6a64">
+    <div class="head">
+      <h2>S1. 초가공식품 46만 명 대장암 연구 - 종류별로 갈렸다</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-143cd6da6a64">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;초가공식품=암&#39;이라는 통념이 전체로는 안 나왔지만, 가공육 같은 고기류는 반대 방향이었다는 반전과 종류별 비교표</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">초가공식품이냐 아니냐 따지지 말고 &#39;뭐가 들었는지&#39;부터 보라는 연구가 나옴
+미국 성인 46만 명을 따라갔더니, 전체로 보면 초가공식품 많이 먹은 쪽이 대장암 발생이 더 높지 않았대
+근데 종류별로 쪼개니까 확 갈렸음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 초가공식품을 많이 먹은 그룹도 전체로 보면 대장암 발생이 더 높지 않았어. 46만 명 넘는 미국 성인을 본 연구야. 근데 종류별로 쪼개니까 얘기가 달라졌대. 뭐가 갈렸을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">2/ 같은 초가공식품인데 방향이 반대였어. 초가공 식품 속 통곡물·섬유질·유제품·칼슘은 대장암 발생이 낮은 쪽이랑 연관됐고, 고기류는 많이 먹을수록 높은 쪽이랑 연관됐대. 구체적으로 어떤 음식이었는지 정리해봄 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">191/500자</span></div>
+      <p class="tp-text">3/ 캡처각 정리
+초가공식품 안에서 갈린 연관 (가장 많이 먹은 그룹 vs 가장 적게 먹은 그룹)
+- 빵: 낮은 쪽 (0.91)
+- 아침 시리얼: 낮은 쪽 (0.84)
+- 냉동 디저트·우유 음료: 낮은 쪽 (0.82)
+- 재가공 고기·생선 제품: 높은 쪽 (1.10)
+1보다 작으면 낮은 쪽, 크면 높은 쪽이야. 그럼 덜 가공된 걸로 바꾸면?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">4/ 연구진이 계산도 해봤대. 초가공식품 섭취량(무게 기준)의 10%를 덜 가공된 음식으로 바꾸면 대장암 발생이 2% 낮은 것과 연관됐어. 근데 이 연구, 그대로 믿어도 되는 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">5/ 한계도 분명해. 대부분 나이 든 백인 미국인이라 젊은 층엔 그대로 안 맞을 수 있대. 식습관도 시작할 때 딱 한 번만 적었고, 관찰 연구라 어떤 음식이 원인인지는 못 밝혀. 그래서 결론이 뭐냐면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">235/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 &#39;초가공&#39;이라는 딱지보다 뭘 먹는지가 더 중요해 보인다는 거야. 통곡물·섬유질·유제품·칼슘은 챙기고 가공육은 피하라는 기존 권고랑 맞아떨어진대.
+편의점 갈 때 성분표 확인하는 파 vs 그냥 집는 파?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 1보다 작으면 낮은 쪽, 크면 높은 쪽이라는 위험비(HR) 해석 설명</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>초가공식품이냐 아니냐 따지지 말고 &#39;뭐가 들었는지&#39;부터 보라는 연구가 나옴</li><li>초가공식품 많이 먹으면 대장암 걸린다는 얘기, 46만 명 따라갔더니 전체로는 안 나왔대</li><li>&#39;초가공식품&#39;이라는 딱지가 아니라 안에 든 게 중요할 수 있다는 연구가 나왔어</li><li>같은 초가공식품인데 어떤 건 대장암 낮은 쪽, 어떤 건 높은 쪽이래</li><li>초가공식품 걱정하는 사람들, 46만 명 연구 결과 한번 봐봐</li><li>성분표 볼 때 &#39;초가공&#39;인지 말고 &#39;뭐가 들었는지&#39;부터 보라는 연구가 나옴</li><li>초가공식품 = 다 나쁜 것 아니었어? 연구진은 그렇게 묶는 게 문제일 수 있대</li><li>빵이랑 시리얼은 대장암 낮은 쪽, 재가공 고기는 높은 쪽이라는 연구가 있어</li><li>19년 가까이 추적한 초가공식품 연구, 우리가 들은 얘기랑 결과가 달랐대</li><li>초가공식품 끊을지 말지 고민하기 전에 이 연구부터 봐봐</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>편의점 갈 때 성분표 확인하는 파 vs 그냥 집는 파?</li><li>소시지·햄 vs 시리얼·빵, 둘 중 하나만 끊어야 한다면 어느 쪽?</li><li>&#39;초가공식품&#39;이라는 말, 들으면 일단 피하게 돼 vs 별 생각 없어?</li><li>너라면 이 연구 보고 식단 바꿀 것 같아 vs 그대로일 것 같아?</li><li>아침에 시리얼이나 빵 먹는 파 vs 안 먹는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>가공육과 대장암, 해외 연구에서 나온 연관</li><li>통곡물·유제품과 대장암 위험, 연구에서 나온 연관</li><li>초가공식품 분류(Nova)가 뭔지 쉽게 풀기</li><li>젊은 층 대상 식습관 연구는 어떤지</li><li>식습관 설문 연구, 왜 결과가 엇갈리는지</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>3/의 빵·시리얼·냉동 디저트는 &#39;낮은 쪽 연관&#39;일 뿐 먹으라는 권유로 읽히지 않게 확인</li><li>연구 대상이 1995~96년 시작 시점 50~71세 미국인이라 한국 20~30대 식습관에 적용된다고 읽히지 않게 확인</li><li>3/의 숫자(0.91 등)는 위험비 값이라 &#39;몇 % 감소&#39;로 오해되지 않게 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 461,682명의 미국인(시작 시 50~71세)을 대상으로 했다</b>
+          <q>“researchers examined health and dietary records from 461,682 Americans who were between 50 and 71 years old when they joined the NIH-AARP Diet and Health Study in 1995 and 1996.”</q>
+          <small>post0, post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전체 초가공식품 섭취와 대장암 발생 사이에 전반적 연관이 없었다</b>
+          <q>“The results showed no overall association between total ultra-processed food consumption and colorectal cancer incidence.”</q>
+          <small>post0, post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공 식품 속 통곡물·섬유질·유제품·칼슘은 대장암 발생이 낮은 쪽과 연관됐다</b>
+          <q>“The researchers found that higher consumption of whole grains, fiber, dairy products, and calcium from ultra-processed food sources was associated with a lower incidence of colorectal cancer.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공 식품 속 고기는 많이 먹을수록 대장암 발생이 높은 쪽과 연관됐다</b>
+          <q>“Meat from ultra-processed sources showed the opposite pattern, with greater consumption associated with higher cancer incidence.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>빵, 냉동 디저트·우유 음료, 아침 시리얼은 대장암 발생이 낮은 쪽과 연관됐다 (0.91, 0.82, 0.84)</b>
+          <q>“These subgroups included bread (HRQ5vs.Q1 0.91; 95% CI [0.86,0.97]; Ptrend &lt; 0.001), frozen desserts and milk drinks (HRQ5vs.Q1 0.82; 95% CI [0.77,0.88]; Ptrend &lt; 0.001), and breakfast cereals (HRQ5vs.Q1 0.84; 95% CI [0.79,0.90]; Ptrend &lt; 0.001; S1 Fig).”</q>
+          <small>post3 · <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1005251" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>재가공 고기·생선 제품은 대장암 발생이 높은 쪽과 연관됐다 (1.10)</b>
+          <q>“Conversely, higher intake of reconstituted meat and fish products was positively associated with CRC incidence (HRQ5vs.Q1 1.10; 95% CI [1.04,1.18]; Ptrend &lt; 0.001).”</q>
+          <small>post3 · <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1005251" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공식품 섭취량 10%를 덜 가공된 음식으로 대체하면 대장암 발생이 2% 낮은 것과 연관됐다</b>
+          <q>“Their analysis found that substituting minimally processed foods for 10% of ultra-processed food intake by weight was associated with a 2% lower incidence of colorectal cancer.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자 대부분이 나이 든 백인 미국인이라 젊은 층에 그대로 적용되지 않을 수 있다</b>
+          <q>“Most participants were older, white Americans, meaning the findings may not accurately reflect the experiences of younger adults or more racially and ethnically diverse populations.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식습관은 연구 시작 때 한 번만 보고됐다</b>
+          <q>“Participants reported their eating habits only once, at the beginning of the study.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰 연구라 특정 음식이 위험을 직접 높이거나 낮추는지는 입증할 수 없다</b>
+          <q>“Because the research was observational, it also cannot establish whether particular foods directly increase or decrease cancer risk.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 통곡물·섬유질·유제품·칼슘 섭취와 가공육 회피라는 기존 식이 권고를 뒷받침한다고 밝혔다</b>
+          <q>“Our findings support current dietary guidance to consume whole grains, fiber, dairy, and calcium and avoid processed meat for CRC prevention.”</q>
+          <small>post6 · <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1005251" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대장암에는 가공 분류보다 먹는 음식의 종류가 더 중요해 보인다</b>
+          <q>“When it comes to colorectal cancer, the kinds of foods people eat appear to matter more than their processing category alone.”</q>
+          <small>post6, post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 결과는 모든 초가공식품을 똑같이 해롭게 보기보다 영양 내용에 따라 평가하는 것을 뒷받침한다</b>
+          <q>“Rather than treating all ultra-processed foods as equally harmful, the findings support evaluating foods according to their nutritional content and specific health associations.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="143cd6da6a64">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261020085014.htm" target="_blank" rel="noopener">Massive study of 460,000 people challenges ultra-processed food cancer fears</a></li><li><a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1005251" target="_blank" rel="noopener">Associations of food processing and dietary risk factors with colorectal cancer incidence in the NIH-AARP Diet and Health Study: A cohort study</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-46fdcb0eb1c3">
+    <div class="head">
+      <h2>S2. 사회활동 많은 노인일수록 기억력 점수 높았다는 5개 조사 분석</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-46fdcb0eb1c3">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;사람 만나면 뇌에 좋다&#39;로 끝내지 않고, 활동 3개 이상이 가장 좋았고 봉사·운동 모임은 5개국에서 일관됐지만 정치·종교 모임은 약했다는 &#39;어떤 활동이냐&#39;의 차이를 보여준다. 단, 인과는 아니라는 한계를 같이 전한다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">&#39;혼자 조용히 쉬는 노후&#39;보다 &#39;봉사·운동 모임 있는 노후&#39; 쪽이 기억력 점수가 더 높았대
+노인 약 5만 8천 명을 본 연구인데, 활동이 많을수록 더 앞서갔음
+근데 어떤 모임은 연관이 확 약했어 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">1/ 활동을 3가지 이상 한 사람들이 사고력 점수가 해마다 제일 가파르게 올랐대. 하나만 해도 안 하는 사람보단 나았고, 활동이 늘수록 차이도 커지는 패턴. 그럼 아무 활동이나 3개면 되는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">2/ 아니, 활동마다 달랐어. 봉사활동과 운동 동호회가 연구 대상 5개 나라 전부에서 더 높은 사고력 점수와 이어졌고, 정치·지역 단체·종교 모임은 연관이 약하고 들쭉날쭉했대. 이걸 어떻게 확인했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">3/ 새 실험이 아니라 미국·영국·중국·멕시코·유럽의 장기 조사 5개 데이터를 합친 거야. 약 6년 추적했고, 단어 기억하기·7씩 거꾸로 세기·1분 동안 동물 이름 대기 같은 테스트 점수를 비교함. 정리하면 이래 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">4/ 한눈에 정리
+- 점수 상승이 제일 컸던 쪽: 활동 3가지 이상
+- 5개국 모두에서 연관: 봉사, 운동 동호회
+- 점수 향상과도 이어진 활동: 교육 과정, 아이 돌보기
+- 연관이 약했던 쪽: 정치·지역 단체·종교 모임
+- 분석 대상: 57,793명</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">5/ 단, 관찰 연구라 &#39;모임이 기억력을 올린다&#39;를 증명한 건 아니야. 기억력이 좋은 사람이 더 쉽게 밖에 나가 어울리는 걸 수도 있다는 걸 연구진도 인정했대. 그럼 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">232/500자</span></div>
+      <p class="tp-text">6/ 기사 정리로는 &#39;그냥 사람 만나라&#39;는 막연한 조언보다 봉사나 운동 모임처럼 구체적인 활동을 권하는 쪽에 실익이 있을 수 있다는 거야. 인과는 아직 몰라.
+너라면 봉사 모임 vs 운동 동호회, 어디 들어갈래?
+이런 해외 건강·과학 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;혼자 조용히 쉬는 노후&#39;보다 &#39;봉사·운동 모임 있는 노후&#39; 쪽이 기억력 점수가 더 높았대</li><li>&#39;사람 많이 만나라&#39;는 막연한 조언 말고 봉사나 운동 모임부터 보라는 연구가 나옴</li><li>나이 들수록 기억력이 걱정이라면 &#39;쉬는 노후&#39;가 아니라 &#39;모임 있는 노후&#39;를 보라는 연구가 나옴</li><li>5만 7,793명을 따라가 봤더니 활동이 3개 이상인 사람들이 점수가 제일 빠르게 올랐대</li><li>모임은 다 똑같을 줄 알았는데 봉사는 5개국에서 다 나오고 종교·정치 모임은 약했대</li><li>집에만 있는 사람과 밖에서 활동하는 사람, 몇 년 지나니 기억력 점수 차이가 벌어졌대</li><li>친구 약속 많은 게 기억력 점수랑 이어진다는 연구인데, 연구진도 인정한 함정이 있음</li><li>활동을 하나 더할 때마다 점수 이득이 커졌다는 연구, 근데 뭘 더해야 하는지가 중요함</li><li>기억력 좋은 사람이 모임에 나가는 걸 수도 있다는 반전까지 나온 연구</li><li>은퇴하면 사회관계가 줄어드는데, 그게 뇌에 어떤 의미인지 5만 8천 명으로 본 연구</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>봉사 모임 vs 운동 동호회, 너라면 어디 들어갈래?</li><li>주말에 혼자 쉬는 파 vs 사람 만나는 파, 어느 쪽이야?</li><li>취미 모임이나 동호회 들어본 사람?</li><li>나중에 새로 해보고 싶은 모임 활동 하나만 고른다면?</li><li>약속 많은 달 vs 약속 없는 달, 어느 쪽이 더 편해?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>외로움과 치매 위험을 다룬 해외 연구</li><li>봉사활동 하는 사람들의 건강을 본 연구</li><li>혼자 운동 vs 같이 운동, 뭐가 다른지 본 연구</li><li>은퇴 후 사회관계가 줄어드는 문제를 다룬 연구</li><li>노인 인지 기능을 오래 추적한 다른 해외 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문이 &#39;24개국&#39;과 &#39;5개국&#39;을 섞어 쓰고 있어 본문에는 국가 수 대신 약 5만 8천 명, 5개 조사 데이터로만 표현함. 올리기 전 숫자 표현 확인 필요</li><li>관찰 연구라 인과로 읽히면 안 됨. 본글의 &#39;활동이 많을수록 더 앞서갔음&#39;이 효과로 오해되지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약 5만 8천 명 규모 분석에서 활동 3개 이상 한 노인의 기억력·사고력 점수가 더 빨리 올랐다</b>
+          <q>“Older adults who kept up three or more social activities, like volunteering, joining a sports club, or taking classes, saw their memory and thinking scores climb faster each year than peers who stayed home, according to a sweeping new analysis of nearly 58,000 people across 24 countries.”</q>
+          <small>post0 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사회활동을 한 노인이 기억력·사고력 점수가 더 높았고 시간이 갈수록 차이가 벌어졌다</b>
+          <q>“Older adults who took part in social activities like volunteering or joining clubs scored higher on memory and thinking tests than those who didn’t, and the gap grew over several years of follow-up.”</q>
+          <small>post0 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정치·지역 단체·종교 모임은 연관이 더 약하고 일관되지 않았다</b>
+          <q>“Meanwhile, involvement in political groups, community organizations, or religious gatherings showed weaker, less consistent links to cognitive health across the countries studied.”</q>
+          <small>post0 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>활동 3가지 이상인 사람들이 점수 상승이 가장 컸다</b>
+          <q>“Participants who took part in three or more social activities showed the strongest year-over-year increase in test scores compared with people who did nothing.”</q>
+          <small>post1 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>활동 하나만 해도 안 한 사람보다 나았고 활동이 늘수록 이득이 커졌다</b>
+          <q>“Those involved in just one activity still did better than inactive peers, but the benefit grew with each additional activity added.”</q>
+          <small>post1 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>봉사활동과 운동 동호회는 5개 나라 전부에서 더 나은 사고력 점수와 이어졌다</b>
+          <q>“Volunteer work and sports clubs consistently emerged as winners, linked to better thinking scores across all five countries.”</q>
+          <small>post2 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정치·지역 단체·종교 모임은 연관이 약하고 일관되지 않았다</b>
+          <q>“Meanwhile, involvement in political groups, community organizations, or religious gatherings showed weaker, less consistent links to cognitive health across the countries studied.”</q>
+          <small>post2 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>새 실험이 아니라 미국·영국·중국·멕시코·유럽의 5개 장기 조사 데이터를 합쳤다</b>
+          <q>“Rather than run a new experiment, the research team combined data from five well-established aging studies already underway in the U.S., England, China, Mexico, and across Europe.”</q>
+          <small>post3 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약 6년 추적 기간 동안 같은 패턴이 유지됐다</b>
+          <q>“The pattern held steady over roughly six years of follow-up, and it got stronger with every extra activity someone added to their routine.”</q>
+          <small>post3 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단어 기억하기, 7씩 거꾸로 세기, 1분 동안 동물 이름 대기 같은 테스트를 했다</b>
+          <q>“Participants also took standard memory and thinking tests at each check-in: recalling lists of words, counting backward by sevens, or naming as many animals as possible in a minute.”</q>
+          <small>post3 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>최종 분석 대상은 57,793명이다</b>
+          <q>“After excluding people with missing data or those who showed up for only one round of testing, the researchers ended up with 57,793 participants: 4,131 from the U.S. study, 5,626 from England, 9,187 from China, 11,168 from Mexico, and 27,681 from the European survey.”</q>
+          <small>post4 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>교육 과정과 아이 돌보기도 시간에 따른 더 빠른 향상과 이어졌다</b>
+          <q>“Training courses and caring for children also linked to faster improvement over time.”</q>
+          <small>post4 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 모임이 기억력을 직접 높인다는 걸 증명하지 못하며, 기억력이 좋은 사람이 더 쉽게 사회활동을 할 수 있다는 가능성을 연구진도 인정한다</b>
+          <q>“This study doesn’t prove that joining a club or volunteering directly sharpens an aging mind. People with better brain health might simply find it easier to get out and stay social, a possibility the study’s authors acknowledge.”</q>
+          <small>post5 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>막연한 조언보다 봉사나 운동 모임 같은 구체적 활동을 권하는 쪽에 실익이 있을 수 있다</b>
+          <q>“Pointing older adults toward specific activities, like volunteering or joining a sports club, rather than offering vague advice to “stay social,” may be where the real benefit lies.”</q>
+          <small>post6 · <a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="46fdcb0eb1c3">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/busy-social-calendar-may-be-secret-weapon-for-aging-minds/" target="_blank" rel="noopener">Busy Social Calendar May Be Secret Weapon for Aging Minds</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261023-am";
+  const ORIGINAL = {"3cdfab5ea16e": {"caption": "\uc880\ube44\uac00 \uce75\ud14c\uc77c\uc744 \uc11c\ube59\ud558\ub294 \uacf3\uc774 \uc9c4\uc9dc \uc788\uc5b4. \uc77c\ubcf8 \uc720\ub2c8\ubc84\uc124 \uc2a4\ud29c\ub514\uc624 \uc7ac\ud32c\uc774 \uac1c\uc7a5 25\uc8fc\ub144\uc744 \ub9de\uc740 \uc62c\ud574, \ud560\ub85c\uc708 \ud638\ub7ec \ub098\uc774\ud2b8\uac00 15\ubc88\uc9f8\ub85c \uc5f4\ub9ac\uace0 \uc788\ub300. \uae30\uac04\uc740 9\uc6d4 11\uc77c\ubd80\ud130 11\uc6d4 8\uc77c\uae4c\uc9c0\uc57c.\n\n\uc62c\ud574 \uc0c8\ub85c \uc0dd\uae34 \uac04\ud310 \uba54\ub274\ub294 \ud30c\ud06c \ucd5c\ucd08\uc758 \uc880\ube44 \ubc14. \uc0cc\ud504\ub780\uc2dc\uc2a4\ucf54 \uc9c0\uc5ed\uc758 \uc6cc\ud504 \uce74\ud398 \uc790\ub9ac\uc5d0\uc11c \ub9e4\uc77c \uc800\ub141 6\uc2dc\ubd80\ud130 \uc6b4\uc601\ud558\uace0, \uc880\ube44 \ubd84\uc7a5\uc744 \ud55c \ud06c\ub8e8\uac00 \uc74c\ub8cc\ub97c \ub0b4\uc918. \ub538\uae30\uc6b0\uc720 \uc74c\ub8cc, \ubb34\uc54c\ucf54\uc62c \ub9ac\uce58 \uc0ac\uc6cc, \ube14\ub7ec\ub4dc \uc624\ub80c\uc9c0 \ub808\ubaac \uc0ac\uc6cc\uac00 \ub300\ud45c \uba54\ub274\uc57c.\n\n\uc720\ub2c8\ubc84\uc124 \ub9c8\ucf13\uc740 \uace0\ub4f1\ud559\uc0dd \uc880\ube44\uc758 \ud559\uad50 \ucd95\uc81c\uac00 \ud14c\ub9c8\uc57c. \ube14\ub799\ucee4\ub7f0\ud2b8 \uc640\ud50c, \ub9c8\ub298\uae30\ub984\uc744 \ub123\uc740 \uc2e4\ud5d8\uc801\uc778 \ud0c0\ucf54\uc57c\ub07c, \uce58\uc988\uc640 \uc591\ud30c\ub97c \uacc1\ub4e4\uc778 \uac08\ube44 \ub77c\uc774\uc2a4 \ub3c4\uadf8\uac00 \ub098\uc624\uace0, \ubc24 \ud55c\uc815 \ubc14\ub098\ub098 \uc544\uc774\uc2a4\ub3c4 \uc788\uc5b4.\n\n\ucf5c\ub77c\ubcf4\ub3c4 \uc788\uc5b4. \ubc14\uc774\uc624\ud558\uc790\ub4dc 30\uc8fc\ub144\uc5d0 \ub9de\ucdb0 \ubc14\uc9c8 \uc18c\uc2a4 \uce58\ud0a8 \ud06c\ub8e8\uc544\uc0c1 \uc0cc\ub4dc\uc704\uce58\uc640 \ub808\uc628\uc744 \ub5a0\uc62c\ub9ac\uac8c \ud558\ub294 \uc4f4 \ucd08\ucf5c\ub9bf \uce04\ub7ec\uc2a4\uac00 \ub098\uc624\uace0, \uccb4\uc778\uc18c\ub9e8 \ucabd\uc740 \ud0a4\ub9c8 \uce74\ub808 \ubc88\uacfc \uc624\ub80c\uc9c0 \ubc14\ub2d0\ub77c \ud3ec\uce58\ud0c0 \ub0c9\ub3d9 \ud30c\ub974\ud398\uac00 \uc900\ube44\ub3fc \uc788\uc5b4. \ud30c\ub974\ud398\ub294 \ud3ec\uce58\ud0c0\uac00 \ub514\uc800\ud2b8\ub97c \ud30c\uba39\ub294 \ubaa8\uc2b5\uc774\ub77c \uc5c9\ub369\uc774\uac00 \uadf8\ub300\ub85c \ub4dc\ub7ec\ub098\ub294 \ub514\uc790\uc778\uc774\ub798.\n\n\uc138\ud2b8 \uba54\ub274\ub97c \ud558\ub098 \uc8fc\ubb38\ud560 \ub54c\ub9c8\ub2e4 \ucf54\uc2a4\ud130\uac00 \ub79c\ub364\uc73c\ub85c \ud55c \uc7a5\uc529 \ub530\ub77c\uc640. \uba5c\uc2a4 \ub4dc\ub77c\uc774\ube0c\uc778\uc758 \uac80\uc740 \ubc88 \ubc84\uac70\ub098 \ub8e8\uc774\uc2a4 \ub274\uc695 \ud53c\uc790 \ud314\ub7ec\uc758 \ube14\ub799 \ub9c8\uc694 \ud53c\uc790\ub85c \ucf54\uc2a4\ud130 \ubaa8\uc73c\uae30\ub97c \uc2dc\uc791\ud560 \uc218 \uc788\uc5b4.\n\n\ucd9c\ucc98: SoraNews24 (PR Times \ubcf4\ub3c4\uc790\ub8cc \uae30\ubc18)", "hashtags": ["#\uc720\ub2c8\ubc84\uc124\uc2a4\ud29c\ub514\uc624\uc7ac\ud32c", "#\ud560\ub85c\uc708", "#\uc77c\ubcf8\uc5ec\ud589", "#\uccb4\uc778\uc18c\ub9e8", "#USJ"], "slides": [["\uc880\ube44\uac00", "**\uce75\ud14c\uc77c** \uc11c\ube59?!"], ["USJ \ud560\ub85c\uc708", "\ud638\ub7ec \ub098\uc774\ud2b8", "\ubc8c\uc368 **15\ud68c\uc9f8**"], ["\uc5ed\ub300 \uccab **\uc880\ube44 \ubc14**", "\uc800\ub141 6\uc2dc\ubd80\ud130", "\uc880\ube44 \ud06c\ub8e8\uac00 \uc11c\ube59"], ["\uace0\uad50 \uc880\ube44 \ucee8\uc149", "\ub9c8\ub298\uae30\ub984 **\ud0c0\ucf54\uc57c\ub07c**", "\ubc14\ub098\ub098 \uc544\uc774\uc2a4\ub3c4"], ["\uccb4\uc778\uc18c\ub9e8 \ud3ec\uce58\ud0c0", "\uc624\ub80c\uc9c0 \ubc14\ub2d0\ub77c **\ud30c\ub974\ud398**", "\uc5c9\ub369\uc774 \ub178\ucd9c \uc911"], ["**\uccb4\uc778\uc18c\ub9e8 \ub355\ud6c4**", "\uce5c\uad6c \ud0dc\uadf8\ud558\uace0", "\ud30c\ub974\ud398 \ubcf4\uc5ec\uc8fc\uae30"]]}, "4ee943c4e046": {"caption": "\ubbf8\uad6d\uc5d0 \uc6d0\ud53c\uc2a4 \ub9e4\uc7a5\uc774 \uc0dd\uae34\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \ubbf8\uad6d \ucd5c\ucd08\uc758 \uc6d0\ud53c\uc2a4 \uc0c1\uc124 \uc804\ubb38 \ub9e4\uc7a5\uc778 \u0027\uc6d0\ud53c\uc2a4 \ubb34\uae30\uc640\ub77c \uc2a4\ud1a0\uc5b4\u0027\uac00 11\uc6d4 6\uc77c\uc5d0 LA\uc5d0\uc11c \ubb38\uc744 \uc5f4\uc5b4.\n\n\uc704\uce58\ub294 LA \uc6e8\uc2a4\ud2b8\ud544\ub4dc \uc13c\ucd94\ub9ac \uc2dc\ud2f0 \uc1fc\ud551\ubab0 \uc548\uc774\uc57c. \uc77c\ubcf8\uc5d0\uc11c \ub4e4\uc5ec\uc628 \uc0c1\ud488\uacfc \ud568\uaed8, \uc77c\ubcf8\uc5d0 \uc788\ub294 \ubb34\uae30\uc640\ub77c \uc2a4\ud1a0\uc5b4 \uc9c0\uc810\uc5d0\uc11c\ub3c4 \uc0b4 \uc218 \uc5c6\ub294 \ud55c\uc815 \uc0c1\ud488\uc774 \ub098\uc628\ub2e4\uace0 \ud574. \uc608\ub97c \ub4e4\uba74 \uce98\ub9ac\ud3ec\ub2c8\uc544 \ubc88\ud638\ud310 \ubaa8\ud2f0\ud504\uc758 \uc758\ub958, \uc11c\ud37c \ubc84\uc804 \ucd78\ud30c, \u0027I love LA\u0027 \ubb38\uad6c\uc5d0\uc11c \ud558\ud2b8 \uc790\ub9ac\uc5d0 Op-Op Fruit\uc774 \ub4e4\uc5b4\uac04 \ub514\uc790\uc778 \uac19\uc740 \uac83\ub4e4\uc774\uc57c.\n\n\uc11c\ud37c \ucd78\ud30c \ub514\uc790\uc778\uc740 \uc774 LA \ub9e4\uc7a5\uc744 \uc704\ud574 \ud2b9\ubcc4\ud788 \ub9cc\ub4e0 \uac70\uace0, \ubc29\ubb38\uac1d\uc774 \uc74c\uc131 \uba54\uc2dc\uc9c0\ub97c \ub4e4\uc744 \uc218 \uc788\ub294 \ub9e4\uc7a5 \uc548 \uccb4\ud5d8 \uc694\uc18c\uc5d0\ub3c4 \uc4f0\uc778\ub2e4\uace0 \ud574.\n\n\uc77c\ubcf8\uc5d0\uc11c \uac74\ub108\uc624\ub294 \uc0c1\ud488\uc73c\ub85c\ub294 \ud53c\uaddc\uc5b4, \ud6c4\ub85c\uc2dc\ud0a4 \ubcf4\uc790\uae30, \uadf8\ub9ac\uace0 \ube14\ub77c\uc778\ub4dc \uad6c\ub9e4\uc6a9 \uc18c\ud488\uc774 \uc544\uc8fc \ub9ce\uc774 \uc900\ube44\ub41c\ub2e4\uace0 \ud574.\n\n\uc0ac\ub78c\uc774 \ubab0\ub9b4 \uac78 \ub300\ube44\ud574\uc11c 11\uc6d4 6\uc77c\ubd80\ud130 12\uc77c\uae4c\uc9c0\ub294 \uc785\uc7a5\ud558\ub824\uba74 \uc608\uc57d\uc774 \ud544\uc694\ud558\uace0, \uc608\uc57d\uc740 \ub9e4\uc7a5 \uacf5\uc2dd \uc6f9\uc0ac\uc774\ud2b8\uc5d0\uc11c \ud560 \uc218 \uc788\uc5b4. \uc560\ub2c8\uba54\uc774\uc158\uc740 27\ub144 \uc804, \ub9cc\ud654\ub294 \uadf8\ubcf4\ub2e4 2\ub144 \uba3c\uc800 \uc2dc\uc791\ub410\uc73c\ub2c8 \ubbf8\uad6d \ud32c\ub4e4\uc758 \uc218\uc694\uac00 \uc313\uc5ec \uc788\uc744 \uac70\ub77c\ub294 \uac8c \ub9e4\uccb4\uc758 \uc804\ub9dd\uc774\uc57c.\n\n\ucd9c\ucc98: SoraNews24, PR Times", "hashtags": ["#\uc6d0\ud53c\uc2a4", "#\uc6d0\ud53c\uc2a4\uad7f\uc988", "#\ubb34\uae30\uc640\ub77c\uc2a4\ud1a0\uc5b4", "#LA", "#\uc560\ub2c8\uba54\uc774\uc158"], "slides": [["\ubbf8\uad6d\uc5d0 \ub4dc\ub514\uc5b4", "**\uc6d0\ud53c\uc2a4** \ub9e4\uc7a5?!"], ["**11\uc6d4 6\uc77c**", "LA\uc5d0\uc11c \uc624\ud508"], ["LA \uc6e8\uc2a4\ud2b8\ud544\ub4dc", "**\uc13c\ucd94\ub9ac \uc2dc\ud2f0** \uc548"], ["\uce98\ub9ac\ud3ec\ub2c8\uc544 **\ud55c\uc815**", "\uad7f\uc988\uac00 \ub530\ub85c \uc788\uc74c", "\uc77c\ubcf8\uc5d0\ub3c4 \uc5c6\ub300"], ["\uc11c\ud551\ud558\ub294 **\ucd78\ud30c**\uac00", "\uc774 \ub9e4\uc7a5 \uc804\uc6a9 \uad6c\ub9e4 \ud488\ubaa9"], ["11/6~12\uc77c\uc5d4", "**\uc608\uc57d \ud544\uc218**"], ["**\uc6d0\ud53c\uc2a4 \ub355\ud6c4** \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \uc54c\ub824\uc918"]]}, "9477a1b5d1a3": {"caption": "\uacf0 \ucad3\uc73c\ub824\uace0 \ub85c\ubd07\uac1c\ub97c \ub9cc\ub4e0\ub2e4\ub294 \uc18c\uc2dd, \uc77c\ubcf8\uc5d0\uc11c \ub098\uc654\uc5b4.\n\n\uac00\uc744\uc774 \ub418\uba74 \uacf0\ub4e4\uc774 \uaca8\uc6b8\uc7a0\uc744 \uc900\ube44\ud558\ub824\uace0 \ubab8\uc744 \ubd88\ub9ac\uba74\uc11c \ub354 \ub300\ub2f4\ud574\uc9c0\uace0 \ub354 \ub113\uac8c \ub3cc\uc544\ub2e4\ub2cc\ub2e4\uace0 \ud574. \uacf0 \uc2b5\uaca9\uc774 \ucd5c\uadfc \uba87 \ub144\uc9f8 \ud070 \uac71\uc815\uac70\ub9ac\uc778 \uc77c\ubcf8\uc5d0\uc11c, \uacf0 \uac1c\uccb4 \uc218\uac00 \uac00\uc7a5 \ub9ce\uc740 \ubd81\ubd80 \uc9c0\uc5ed\uc758 \uc544\ud0a4\ud0c0\ud604\ub9bd\ub300\ud559\uc774 \uc62c\ud574 \ucd08 \u0027\ubca0\uc5b4\ud14c\ud06c \uc194\ub8e8\uc158 \ucf58\ud14c\uc2a4\ud2b8\u0027 \uc544\uc774\ub514\uc5b4\ub97c \ubaa8\uc9d1\ud588\uc5b4. \uad50\uc218\uc640 \ud559\uc0dd\ub4e4\uc774 \ub0b8 \uc544\uc774\ub514\uc5b4\ub294 \ucd1d 41\uac74\uc774\uc5c8\uace0, 10\uc6d4 13\uc77c \uc544\ud0a4\ud0c0\uc2dc\uc5d0\uc11c \uc720\ub9dd\ud55c \uc544\uc774\ub514\uc5b4\ub4e4\uc774 \ubc1c\ud45c\ub410\ub300.\n\n\uadf8\uc911 \ud558\ub098\uac00 \ub85c\ubd07\uac1c \u0027\ud56b\ucc64\u0027\uc774\uc57c. \uc77c\ubcf8\uc5d0\uc11c \uac00\uc7a5 \uc720\uba85\ud55c \uc544\ud0a4\ud0c0\uacac \ud558\uce58\ucf54\uc5d0\uc11c \uc774\ub984\uc744 \ub530\uc654\uace0, \ud589\ub3d9\uc740 \uc61b\ub0a0 \uc544\ud0a4\ud0c0\ud604 \uc0ac\ub0e5\uafbc\uacfc \uc232\uc5d0 \uac19\uc774 \ub4e4\uc5b4\uac00\ub358 \uc544\ud0a4\ud0c0\uacac \uc0ac\ub0e5\uac1c\uc5d0\uc11c \ucc29\uc548\ud588\ub300.\n\n\ud56b\ucc64\uc740 \ud3ed\ub825 \uc5c6\uc774 \ud574\uacb0\ud558\ub294 \uac78 \ubaa9\ud45c\ub85c \ub9cc\ub4e4\uc5b4\uc84c\uc5b4. \ub124 \ubc1c \ub85c\ubd07\uc774 \ub18d\uc7a5\uc774\ub098 \ub9c8\uc744 \uac00\uc7a5\uc790\ub9ac\uc5d0 \ubc30\uce58\ub418\uace0, \uce74\uba54\ub77c\uac00 \uacf0\uc744 \uac10\uc9c0\ud558\uba74 \ub0b4\uc7a5 \uc2a4\ud53c\ucee4\ub85c \uac1c \uc9d6\ub294 \uc18c\ub9ac\ub97c \ud06c\uac8c \ud2c0\uc5b4\uc11c \uacf0\uc774 \uc232\uc73c\ub85c \ub3cc\uc544\uac00\uac8c \ub9cc\ub4dc\ub294 \ubc29\uc2dd\uc774\uc57c. \uc704\uce58 \ub370\uc774\ud130\ub97c \uacf5\uc720\ud574\uc11c \ub2e4\ub978 \ub85c\ubd07\uc744 \ud604\uc7a5\uc73c\ub85c \ubd80\ub97c \uc218\ub3c4 \uc788\uc5b4\uc11c, \uc5ec\ub7ec \ub300\uac00 \ubb34\ub9ac\ub97c \uc774\ub8e8\uba74 \ub354 \uc704\ud611\uc801\uc778 \uc874\uc7ac\uac10\uc744 \uc904 \uc218 \uc788\ub300. \ub3d9\uc2dc\uc5d0 \uacf0 \ubaa9\uaca9\uacfc \ud589\ub3d9 \ub370\uc774\ud130\ubca0\uc774\uc2a4\ub3c4 \uc313\uc544\uc11c \ub9c8\uc744 \uc678\uacfd\uc744 \ud6a8\uc728\uc801\uc73c\ub85c, \uc790\uc728\uc801\uc73c\ub85c \uc21c\ucc30\ud558\uac8c \ud55c\ub2e4\ub294 \uacc4\ud68d\uc774\uc57c.\n\n\uac1c\ubc1c\uc744 \uc774\ub044\ub294 \uc9c0\uc5ed\uc5f0\uacc4\u00b7\uc5f0\uad6c\ucd94\uc9c4\uc13c\ud130\uc758 \uc694\uc2dc\ub2e4 \ub9c8\uc0ac\uc720\ud0a4 \uc5f0\uad6c\uc6d0\uc740 \uc62c\ud574 \uc548\uc5d0 \ud604\uc7a5 \ud14c\uc2a4\ud2b8\ub97c \uc2dc\uc791\ud558\uace0 \uc2f6\ub2e4\uace0 \ubc1d\ud614\uc5b4.\n\n\ucd9c\ucc98: SoraNews24, FNN Prime Online/Akita TV, \uc544\ud0a4\ud0c0\ud604\ub9bd\ub300\ud559, \uc694\ubbf8\uc6b0\ub9ac\uc2e0\ubb38", "hashtags": ["#\ub85c\ubd07\uac1c", "#\uc77c\ubcf8", "#\uacf0\ucd9c\ubab0", "#\uc544\ud0a4\ud0c0\uacac", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\uacf0 \ucad3\uc73c\ub824\uace0", "**\ub85c\ubd07\uac1c\ub97c**", "\ud480\uc5b4\ub193\ub294\ub2e4\uace0???"], ["\uc774\ub984\uc740", "**\ud56b\ucc64**", "\uc544\ud0a4\ud0c0\uacac \ubaa8\ud2f0\ube0c"], ["\uce74\uba54\ub77c\ub85c", "\uacf0\uc744 \ubc1c\uacac\ud558\uba74", "**\uac1c \uc9d6\ub294 \uc18c\ub9ac**!"], ["\uc704\uce58\ub97c \uacf5\uc720\ud574", "\ub2e4\ub978 \ub85c\ubd07\uac1c\ub97c", "**\ubd88\ub7ec\ubaa8\uc740\ub2e4**"], ["\uacf0 \ucd9c\ubab0", "**\ub370\uc774\ud130**\ub3c4", "\uc313\uc544\uac04\ub2e4"], ["**\uc5f0\ub0b4** \ud604\uc7a5", "\ud14c\uc2a4\ud2b8\uac00", "\ubaa9\ud45c\ub77c\ub294\ub370?!"], ["**\uacf0 \uac71\uc815\ud558\ub294**", "\uce5c\uad6c\ud55c\ud14c", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"3cdfab5ea16e": "approve", "4ee943c4e046": "approve", "9477a1b5d1a3": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 6;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

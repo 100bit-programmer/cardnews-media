@@ -1,0 +1,1573 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.20 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.20 오전 검수 <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-49d29bd8e181" data-jump="49d29bd8e181">1</a><a href="#post-74b5ccb5d787" data-jump="74b5ccb5d787">2</a><a href="#post-9a9f51649781" data-jump="9a9f51649781">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-49d29bd8e181" data-id="49d29bd8e181">
+    <div class="head">
+      <h2>1. 거대 해파리와 어린 물고기 무리 동행 포착</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11 · 애매 2
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-01.jpg" alt="1장: 해파리랑 물고기 19마리?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-02.jpg" alt="2장: 수심 250m 몸길이 6m 유령 해파리 등장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-03.jpg" alt="3장: 팔이 10m 넘게 자라기도 해" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-04.jpg" alt="4장: 연구진 생각엔 이동식 은신처" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-05.jpg" alt="5장: 한 마리는 뭔가 먹는 중 정체는 미스터리" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-06.jpg" alt="6장: 50년 넘게 의심만 하다가 드디어 포착" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-07.jpg" alt="7장: 해양생물 덕후 친구한테 보내서 같이 놀라기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/49d29bd8e181/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">해파리 한 마리 아래에 어린 물고기 19마리가 졸졸 따라다니는 장면이 포착됐어. 아르헨티나 파타고니아 앞바다, 수심 약 250m에서 관찰된 일이야.
+
+주인공은 자이언트 팬텀 해파리(Stygiomedusa gigantea). 갓이 1m 넘게 자라고 입팔은 10m를 넘기도 하는 세계 최대급 해파리인데, 1899년 첫 표본이 채집된 뒤 목격 기록이 120건도 안 된다고 해. 깊은 바다에 살아서 사람이 가기 어렵기 때문이래.
+
+이번 장면은 2025년 12월부터 2026년 1월까지 슈미트 해양연구소의 연구선 팰컨(Falkor (too))에서 원격 조종 잠수정 SuBastian을 내려 얻은 거야. 길이 약 6m짜리 해파리 주변을 어린 러더피시(Centrolophus niger)가 갓 아래와 팔 사이를 오가고 있었어.
+
+연구진은 이 물고기들이 해파리를 이동식 피난처처럼 쓰는 걸로 보고 있어. 한 마리는 해파리 팔에서 뭔가를 쪼아 먹는 모습도 보였는데, 먹이를 가로챈 건지, 기생충을 떼어 먹은 건지, 해파리 살점인지는 알 수 없었대. 해파리가 이 관계에서 뭘 얻는지도 아직 몰라.
+
+두 종이 어울릴지 모른다는 얘기는 1973년 북대서양 트롤 어획물에서 같이 나오면서 처음 나왔어. 그런데 심해에서 이 관계가 관찰되어 기록된 건 이번이 처음이라고 연구진은 밝혔어. 연구 결과는 학술지 Ecology에 실렸어.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#해파리 #심해 #해양생물 #과학뉴스 #바다</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>갓은 1m 넘게, 입팔은 10m 넘게 자랄 수 있다 <small>애매 · 원문은 갓이 &#39;1m 넘게&#39;(more than a meter) 자랄 수 있고 입팔은 10m 넘을 수 있다고 함. 주장 자체는 맞지만 &#39;최대급&#39; 등 표현은 원문 범위 내. 다만 &#39;세계 최대급&#39;은 원문의 &#39;one of the largest&#39;를 옮긴 것으로 과장 아님에 가까움. 전반적으로 일치하나 &#39;자라기도 해&#39;는 가능성 수준으로 적을 것.</small></li><li>2025년 12월~2026년 1월 탐사에서 Falkor (too) 선상의 ROV SuBastian을 투입했다 <small>애매 · 원문은 2025년 12월~2026년 1월 탐사, 슈미트 해양연구소 연구선 Falkor (too), ROV SuBastian 투입으로 일치. 다만 이 장면이 이 탐사에서 얻어졌다는 점은 원문 맥락상 맞음. 연구선 명칭 표기 오류 여부는 없음. 전반적으로 supported에 가까우나 &#39;원격 조종 잠수정&#39; 설명은 원문에 없는 부연이라 partial 처리.</small></li>
+          <li>근거 등록 안 된 주장: 출처가 ScienceAlert라는 점(원문 출처 표기와 일치하나 claims 목록에 없음)</li><li>근거 등록 안 된 주장: 슈미트 해양연구소 연구선이라는 소속 정보</li><li>근거 등록 안 된 주장: 러더피시의 학명 Centrolophus niger 및 &#39;어린 러더피시&#39;라는 종 특정</li><li>근거 등록 안 된 주장: 원격 조종 잠수정(ROV)이라는 기기 설명</li><li>근거 등록 안 된 주장: &#39;해파리 팔에서 쪼아 먹는 모습&#39;이 관찰된 시점이 탐사 중이라는 점</li><li>근거 등록 안 된 주장: 팬텀 해파리가 &#39;해양생물 덕후&#39; 등 슬라이드 문구 외 추가 사실 주장 없음</li><li>근거 등록 안 된 주장: 슬라이드 2의 &#39;유령 해파리 등장&#39;, 슬라이드 3의 &#39;팔이 10m 넘게 자라기도 해&#39;가 원문 입팔 길이 기준임</li><li>근거 등록 안 된 주장: 슬라이드 4 &#39;이동식 은신처&#39;를 연구진 생각으로 적은 점은 원문 추정과 일치하나 본문에 추정 표현 있음</li><li>근거 등록 안 된 주장: 해파리가 기생충이나 먹이 측면에서 &#39;이득&#39;을 얻는지 알 수 없다는 점은 claims 항목 8에 있으나 슬라이드 본문에는 없음</li><li>근거 등록 안 된 주장: 연구선 팰컨에서 SuBastian을 내려 얻은 장면이라는 본문 설명</li><li>근거 등록 안 된 주장: 해파리 몸길이 6m, 갓 1m 넘음 등 슬라이드 2 수치 외 본문 수치 해석</li>
+          <li>해파리가 이 관계에서 이득을 얻는지는 원문에서도 불확실함</li><li>원문 기사 사진·영상은 사용하지 말 것(스톡 이미지 또는 위키미디어 사진만 사용)</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-49d29bd8e181-0">1장</label>
+          <textarea id="s-49d29bd8e181-0" rows="2" data-slide="0">해파리랑
+물고기 **19마리**?!</textarea>
+          
+          <label class="f" for="s-49d29bd8e181-1">2장</label>
+          <textarea id="s-49d29bd8e181-1" rows="3" data-slide="1">수심 250m
+몸길이 6m
+**유령 해파리** 등장</textarea>
+          
+          <label class="f" for="s-49d29bd8e181-2">3장</label>
+          <textarea id="s-49d29bd8e181-2" rows="2" data-slide="2">팔이 **10m** 넘게
+자라기도 해</textarea>
+          
+          <label class="f" for="s-49d29bd8e181-3">4장</label>
+          <textarea id="s-49d29bd8e181-3" rows="2" data-slide="3">연구진 생각엔
+이동식 **은신처**</textarea>
+          
+          <label class="f" for="s-49d29bd8e181-4">5장</label>
+          <textarea id="s-49d29bd8e181-4" rows="3" data-slide="4">한 마리는
+뭔가 먹는 중
+정체는 **미스터리**</textarea>
+          
+          <label class="f" for="s-49d29bd8e181-5">6장</label>
+          <textarea id="s-49d29bd8e181-5" rows="3" data-slide="5">**50년 넘게**
+의심만 하다가
+드디어 포착</textarea>
+          
+          <label class="f" for="s-49d29bd8e181-6">7장</label>
+          <textarea id="s-49d29bd8e181-6" rows="3" data-slide="6">해양생물 **덕후**
+친구한테 보내서
+같이 놀라기</textarea>
+          
+          <label class="f" for="c-49d29bd8e181">본문 (캡션)</label>
+          <textarea id="c-49d29bd8e181" class="caption">해파리 한 마리 아래에 어린 물고기 19마리가 졸졸 따라다니는 장면이 포착됐어. 아르헨티나 파타고니아 앞바다, 수심 약 250m에서 관찰된 일이야.
+
+주인공은 자이언트 팬텀 해파리(Stygiomedusa gigantea). 갓이 1m 넘게 자라고 입팔은 10m를 넘기도 하는 세계 최대급 해파리인데, 1899년 첫 표본이 채집된 뒤 목격 기록이 120건도 안 된다고 해. 깊은 바다에 살아서 사람이 가기 어렵기 때문이래.
+
+이번 장면은 2025년 12월부터 2026년 1월까지 슈미트 해양연구소의 연구선 팰컨(Falkor (too))에서 원격 조종 잠수정 SuBastian을 내려 얻은 거야. 길이 약 6m짜리 해파리 주변을 어린 러더피시(Centrolophus niger)가 갓 아래와 팔 사이를 오가고 있었어.
+
+연구진은 이 물고기들이 해파리를 이동식 피난처처럼 쓰는 걸로 보고 있어. 한 마리는 해파리 팔에서 뭔가를 쪼아 먹는 모습도 보였는데, 먹이를 가로챈 건지, 기생충을 떼어 먹은 건지, 해파리 살점인지는 알 수 없었대. 해파리가 이 관계에서 뭘 얻는지도 아직 몰라.
+
+두 종이 어울릴지 모른다는 얘기는 1973년 북대서양 트롤 어획물에서 같이 나오면서 처음 나왔어. 그런데 심해에서 이 관계가 관찰되어 기록된 건 이번이 처음이라고 연구진은 밝혔어. 연구 결과는 학술지 Ecology에 실렸어.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-49d29bd8e181">해시태그</label>
+          <input id="t-49d29bd8e181" type="text" class="tagsin" value="#해파리 #심해 #해양생물 #과학뉴스 #바다" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>갓은 1m 넘게, 입팔은 10m 넘게 자랄 수 있다</b>
+            <q>“Its bell – the &#39;head&#39; – can grow to more than a meter (3.3 feet) across, and its four long, ribbon-like oral arms can exceed 10 meters in length.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>2025년 12월~2026년 1월 탐사에서 Falkor (too) 선상의 ROV SuBastian을 투입했다</b>
+            <q>“A team of researchers aboard the Schmidt Ocean Institute&#39;s research vessel Falkor (too) deployed the ROV SuBastian in a series of dives into the deep ocean along the Argentine margin.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아르헨티나 앞바다에서 어린 물고기 무리가 거대 해파리와 함께 있는 모습이 관찰됐다</b>
+            <q>“During an ROV dive into mesopelagic waters off the coast of Argentina, marine researchers beheld a rare and stunning sight.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>해파리 주변에 어린 물고기 약 19마리가 있었다</b>
+            <q>“Flickering around it like a swarm of bustling attendants were some 19 small, blue-grey fish – juvenile rudderfish, hanging around the arms, swimming in and out of the jellyfish&#39;s bell.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>수심 약 250m에서 길이 약 6m의 해파리가 떠 있었다</b>
+            <q>“At a depth of around 250 meters, the colossus was just peacefully drifting in the twilight water column – a gentle giant about 6 meters long, trailing its long arms in the current.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1899년 첫 표본 채집 이후 목격은 120건 미만이다</b>
+            <q>“The first specimen was collected in 1899, and since then, there have been fewer than 120 sightings around the world – likely because it inhabits the deep ocean, and that&#39;s not an easy place for humans to go.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 어린 물고기들이 해파리를 이동식 피난처로 쓴다고 본다</b>
+            <q>“The researchers think these little fish were using the jellyfish as a sort of portable shelter – a safe haven from predators that can strike from the darkness, from any direction.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 마리가 해파리 팔의 무언가를 쪼아 먹었지만 정확히 무엇인지는 알 수 없었다</b>
+            <q>“The researchers couldn&#39;t tell exactly what the little fish was eating. It might have been stealing prey the jellyfish caught, picking off parasites or other small organisms living on its surface, or even nibbling on the jellyfish&#39;s flesh.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>해파리가 이 관계에서 이득을 얻는지는 판단하지 못했다</b>
+            <q>“But in this case, the researchers couldn&#39;t determine whether the giant phantom jellyfish was getting anything out of the deal.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1973년 북대서양 트롤 어획물에서 두 종이 함께 나와 관계가 제기됐다</b>
+            <q>“In 1973, researchers suggested that the two species might associate after specimens turned up together in trawl catches in the North Atlantic.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>50년 넘게 지나 이번 만남이 시각적 증거를 제공했다</b>
+            <q>“More than half a century later, the encounter off Patagonia has finally provided the missing visual evidence – and revealed that an entire school of juvenile fish can accompany one of these enormous, elusive jellies.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>심해에서 이 관계가 기록된 것은 처음이라고 연구팀이 밝혔다</b>
+            <q>“&#34;Both are poorly known and rarely observed cosmopolitan mesopelagic species, representing the first documented observation of this association in the deep ocean,&#34; writes a team led by marine ecologist María Emilia Bravo of the University of Buenos Aires in Argentina.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 학술지 Ecology에 게재됐다</b>
+            <q>“The research has been published in Ecology.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/giant-phantom-jellyfish-found-with-entourage-of-fishy-passengers-hitching-a-ride" target="_blank" rel="noopener">Giant &#39;Phantom&#39; Jellyfish Found With Entourage of Fishy Passengers Hitching a Ride</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/jellyfishes-sea-jellies-animal-5584171/" target="_blank" rel="noopener">Bru-nO / Pixabay</a> — "pale jellyfish drifting in bright blue water"</li><li>2장: <a href="https://pixabay.com/photos/jellyfish-underwater-ocean-aquarium-6653502/" target="_blank" rel="noopener">EddieKphoto / Pixabay</a> — "deep ocean"</li><li>3장: <a href="https://pixabay.com/photos/sea-ocean-fish-diving-coral-reef-10393839/" target="_blank" rel="noopener">Franziska_Stier / Pixabay</a> — "underwater"</li><li>4장: <a href="https://pixabay.com/photos/fish-small-fish-fishing-nature-3754939/" target="_blank" rel="noopener">picturedesign96 / Pixabay</a> — "small fish"</li><li>5장: <a href="https://pixabay.com/photos/diver-barracuda-school-of-fish-10408812/" target="_blank" rel="noopener">Franziska_Stier / Pixabay</a> — "fish school"</li><li>6장: <a href="https://pixabay.com/photos/antarctic-continent-pol-hurtigruten-4052326/" target="_blank" rel="noopener">Eknbg / Pixabay</a> — "ocean research"</li><li>7장: <a href="https://pixabay.com/photos/coast-waves-beach-ocean-sea-6310250/" target="_blank" rel="noopener">Kanenori / Pixabay</a> — "ocean waves"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-74b5ccb5d787" data-id="74b5ccb5d787">
+    <div class="head">
+      <h2>2. JAXA 화성 위성 포보스 샘플 채취 임무 MMX</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-01.jpg" alt="1장: 화성 달 흙을 가져온다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-02.jpg" alt="2장: 달 이름이 포보스=공포" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-03.jpg" alt="3장: 앞선 시도 3번 전부 실패" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-04.jpg" alt="4장: 이 달의 정체 아직도 미스터리" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-05.jpg" alt="5장: 최소 10g을 2031년까지 배달" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-06.jpg" alt="6장: 믿는 구석은 하야부사 경험" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-07.jpg" alt="7장: 우주 덕후 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/74b5ccb5d787/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">화성 위성의 흙을 지구로 가져온다는 소식이야. 일본 우주 기관 JAXA가 화성 위성 탐사선 MMX(Martian Moons eXploration)를 일본 다네가시마 우주센터에서 발사할 예정이래.
+
+탐사선은 약 1년을 날아 화성과 두 위성, 포보스와 데이모스에 도착해. 포보스는 그리스어로 공포, 데이모스는 두려움이라는 뜻이야. MMX는 두 위성을 멀리서 관측하고, 포보스에서는 샘플도 모을 계획이야.
+
+핵심 질문은 이 위성들이 어떻게 생겼냐는 거야. 반사하는 빛의 패턴 같은 특징을 보면 화성 중력에 붙잡힌 소행성일 수 있어. 그런데 화성 적도 방향의 둥근 궤도를 보면, 초기 화성과 거대한 소행성이 충돌하고 남은 잔해로 생겼을 가능성도 있대. 아직 정체가 미스터리라서 연구자들이 이 임무에 매달리는 거야.
+
+목표는 포보스에서 최소 10g을 두 가지 방식으로 채취해서 2031년까지 지구로 가져오는 거야. 성공하면 우리 달이 아닌 다른 위성에서 가져온 첫 샘플이 돼.
+
+물론 쉽지 않아. 1980년대부터 러시아가 포보스에 탐사선을 세 번 보냈는데 전부 실패했어. 포보스 표면을 아직 잘 몰라서, 착륙 지점도 가까이서 관측한 뒤에야 고를 수 있대.
+
+그래도 JAXA는 2010년 이토카와, 2020년 류구에서 샘플을 가져온 경력이 있어. 여기에 NASA, 유럽우주국, 독일과 프랑스 우주기관의 과학자들도 함께하고 있어.
+
+출처: WIRED</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#우주 #JAXA #화성 #포보스 #우주탐사</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: MMX가 화성 위성 흙을 지구로 가져온다는 핵심 주장 자체(슬라이드1, 캡션 도입부)</li><li>근거 등록 안 된 주장: MMX가 두 위성을 멀리서 관측한다는 내용</li><li>근거 등록 안 된 주장: 탐사선보다 먼저 로버가 착륙해 새 지형을 탐사한다는 내용</li><li>근거 등록 안 된 주장: 두 가지 채취 방식이 한쪽 실패에 대비한 안전장치라는 내용</li><li>근거 등록 안 된 주장: 포보스 표면 흙에 화성 물질이 섞여 있을 것으로 연구자들이 의심한다는 내용</li><li>근거 등록 안 된 주장: 지구로 가져온 샘플 분석으로 초기 태양계 잔해의 기원과 이동 경로를 밝힌다는 내용</li><li>근거 등록 안 된 주장: 포보스 샘플 채취가 하야부사2와 궤도·중력이 달라 다르다는 내용</li>
+          <li>발사 일정·샘플 귀환 시점(2031년 목표)은 변경될 수 있음</li><li>기사 작성 시점 기준 정보이며 발사 결과는 확인되지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-74b5ccb5d787-0">1장</label>
+          <textarea id="s-74b5ccb5d787-0" rows="2" data-slide="0">**화성 달** 흙을
+가져온다고???</textarea>
+          
+          <label class="f" for="s-74b5ccb5d787-1">2장</label>
+          <textarea id="s-74b5ccb5d787-1" rows="2" data-slide="1">달 이름이
+포보스=**공포**</textarea>
+          
+          <label class="f" for="s-74b5ccb5d787-2">3장</label>
+          <textarea id="s-74b5ccb5d787-2" rows="2" data-slide="2">앞선 시도
+**3번** 전부 실패</textarea>
+          
+          <label class="f" for="s-74b5ccb5d787-3">4장</label>
+          <textarea id="s-74b5ccb5d787-3" rows="2" data-slide="3">이 달의 정체
+아직도 **미스터리**</textarea>
+          
+          <label class="f" for="s-74b5ccb5d787-4">5장</label>
+          <textarea id="s-74b5ccb5d787-4" rows="2" data-slide="4">최소 10g을
+**2031년**까지 배달</textarea>
+          
+          <label class="f" for="s-74b5ccb5d787-5">6장</label>
+          <textarea id="s-74b5ccb5d787-5" rows="2" data-slide="5">믿는 구석은
+**하야부사** 경험</textarea>
+          
+          <label class="f" for="s-74b5ccb5d787-6">7장</label>
+          <textarea id="s-74b5ccb5d787-6" rows="2" data-slide="6">**우주 덕후** 친구
+태그해서 알려줘</textarea>
+          
+          <label class="f" for="c-74b5ccb5d787">본문 (캡션)</label>
+          <textarea id="c-74b5ccb5d787" class="caption">화성 위성의 흙을 지구로 가져온다는 소식이야. 일본 우주 기관 JAXA가 화성 위성 탐사선 MMX(Martian Moons eXploration)를 일본 다네가시마 우주센터에서 발사할 예정이래.
+
+탐사선은 약 1년을 날아 화성과 두 위성, 포보스와 데이모스에 도착해. 포보스는 그리스어로 공포, 데이모스는 두려움이라는 뜻이야. MMX는 두 위성을 멀리서 관측하고, 포보스에서는 샘플도 모을 계획이야.
+
+핵심 질문은 이 위성들이 어떻게 생겼냐는 거야. 반사하는 빛의 패턴 같은 특징을 보면 화성 중력에 붙잡힌 소행성일 수 있어. 그런데 화성 적도 방향의 둥근 궤도를 보면, 초기 화성과 거대한 소행성이 충돌하고 남은 잔해로 생겼을 가능성도 있대. 아직 정체가 미스터리라서 연구자들이 이 임무에 매달리는 거야.
+
+목표는 포보스에서 최소 10g을 두 가지 방식으로 채취해서 2031년까지 지구로 가져오는 거야. 성공하면 우리 달이 아닌 다른 위성에서 가져온 첫 샘플이 돼.
+
+물론 쉽지 않아. 1980년대부터 러시아가 포보스에 탐사선을 세 번 보냈는데 전부 실패했어. 포보스 표면을 아직 잘 몰라서, 착륙 지점도 가까이서 관측한 뒤에야 고를 수 있대.
+
+그래도 JAXA는 2010년 이토카와, 2020년 류구에서 샘플을 가져온 경력이 있어. 여기에 NASA, 유럽우주국, 독일과 프랑스 우주기관의 과학자들도 함께하고 있어.
+
+출처: WIRED</textarea>
+          <label class="f" for="t-74b5ccb5d787">해시태그</label>
+          <input id="t-74b5ccb5d787" type="text" class="tagsin" value="#우주 #JAXA #화성 #포보스 #우주탐사" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>MMX는 일본 다네가시마 우주센터에서 발사될 예정이다.</b>
+            <q>“This mission, called the Martian Moons eXploration (MMX), is set to launch from Japan’s Tanegashima Space Center in the wee hours of Tuesday in Japan (Monday afternoon in the US).”</q>
+            <small>caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>탐사선은 약 1년 여행 후 화성과 두 위성에 도착하며, 포보스는 그리스어로 공포, 데이모스는 두려움이라는 뜻이다.</b>
+            <q>“After almost a year of travel, the spacecraft will reach Mars and its two moons: Phobos, meaning fear in Greek, and Deimos, meaning dread.”</q>
+            <small>slide2, caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포보스와 데이모스의 기원은 아직 미스터리다.</b>
+            <q>“Still, researchers are anxious to achieve this mission impossible because the origin of Phobos and its sibling remains a mystery.”</q>
+            <small>slide4, caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>반사하는 빛의 패턴 등은 화성 중력에 붙잡힌 소행성일 가능성을 시사한다.</b>
+            <q>“Some of their attributes, such as the pattern of visible light they reflect, suggest they are asteroids captured into Mars’ orbit by its gravity.”</q>
+            <small>caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>화성 적도 방향의 원형 궤도는 초기 화성과 거대 소행성의 충돌 잔해로 생겼을 가능성을 시사한다.</b>
+            <q>“But the moons’ circular orbits in line with the Martian equator indicate that they could have formed from debris left over from a collision between a nascent Mars and a gigantic asteroid, Tom Statler, MMX program executive at NASA, said at a press briefing.”</q>
+            <small>caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>탐사선은 포보스에 착륙해 두 가지 방법으로 최소 10g의 물질을 채취할 계획이다.</b>
+            <q>“After scoping out Phobos with its onboard instruments and a rover—which will land ahead of the spacecraft to explore the new terrain—the spacecraft will land on the moon to collect at least 10 grams of material using two different sampling methods.”</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2031년까지 샘플을 지구로 가져오는 것이 목표이며, 성공하면 지구의 달이 아닌 위성에서 가져온 첫 샘플이 된다.</b>
+            <q>“The goal is to bring them to Earth by 2031, which would make them the first ever samples returned from a moon other than our own.”</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1980년대부터 러시아는 포보스에 탐사선을 세 번 보냈고 모두 실패했다.</b>
+            <q>“Since the 1980s, Russia has sent three probes to Phobos, all of which failed.”</q>
+            <small>slide3, caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포보스 표면을 잘 몰라서 가까이서 관측하기 전에는 착륙 지점을 고를 수 없다.</b>
+            <q>“Because scientists currently know little of Phobos’ surface, they can’t pick a landing spot until taking up-close observations of the moon, Kuramoto says.”</q>
+            <small>caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>JAXA는 2010년 이토카와, 2020년 류구에서 샘플을 가져왔다.</b>
+            <q>“Despite some setbacks, its Hayabusa mission became the first mission to return a sample from the surface of a near-Earth object when it brought back material from asteroid Itokawa in 2010. Its successor, Hayabusa2, delivered samples from the primitive asteroid Ryugu in 2020.”</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>MMX에는 NASA, 유럽우주국, 독일과 프랑스 우주기관의 과학자들이 참여한다.</b>
+            <q>“MMX is a feat of international collaboration with scientists from NASA, the European Space Agency, and Germany’s and France’s space agencies.”</q>
+            <small>caption · <a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.wired.com/story/japan-audacious-mmx-mission-sample-martian-moon/" target="_blank" rel="noopener">Japan Is Attempting an Audacious Mission to Sample a Martian Moon</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Phobos_edit_2.jpg" target="_blank" rel="noopener">NASA/JPL-Caltech/University of Arizona / Wikimedia Commons · Public domain</a> — "Phobos"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Phobos-viking1.jpg" target="_blank" rel="noopener">Composited by: NASA / Dr. Edwin V. Bell, / Wikimedia Commons · Public domain</a> — "Phobos"</li><li>3장: <a href="https://pixabay.com/photos/rocket-launch-rocket-take-off-67723/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "rocket launch"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:Phobos_PIA10369.jpg" target="_blank" rel="noopener">NASA/JPL-Caltech/University of Arizona / Wikimedia Commons · Public domain</a> — "Phobos"</li><li>5장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>6장: <a href="https://pixabay.com/photos/tourists-father-and-son-burj-khalifa-6887737/" target="_blank" rel="noopener">katetrysh / Pixabay</a> — "telescope"</li><li>7장: <a href="https://pixabay.com/photos/astronomy-bright-constellation-dark-1867616/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "galaxy"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-9a9f51649781" data-id="9a9f51649781">
+    <div class="head">
+      <h2>3. 우마무스메 미국 공연 비자 문제</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 7
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-01.jpg" alt="1장: 우마무스메 미국 공연 취소?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-02.jpg" alt="2장: 비자가 아직 안 나왔대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-03.jpg" alt="3장: 준비만 6개월 넘게 했는데" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-04.jpg" alt="4장: 10월 22·23일 LA 피콕 극장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-05.jpg" alt="5장: 티켓은 벌써 7월 23일부터 판매 중" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-06.jpg" alt="6장: 최종 결정은 10월 19일 밤 10시(LA)" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-07.jpg" alt="7장: 우마무스메 덕질 하는 친구 태그해서 소식 알려주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-am-2b0ee90d9253/9a9f51649781/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">우마무스메 미국 공연이 취소될 수도 있대.
+
+10월 22일과 23일, LA 피콕 극장에서 우마무스메 7th Event 월드투어 &#39;The Stage&#39; 공연이 열릴 예정이었어. 그런데 공연에 필요한 비자가 아직 승인되지 않았다고 10월 18일 밤 8시(LA 시간)에 공식 트위터 계정이 알렸어. 주최 측은 6개월도 더 전부터 현지 변호사, 프로모터와 함께 비자를 준비해 왔다고 밝혔고, 공식 사이트 공지에도 같은 내용이 올라왔어.
+
+이번 LA 공연에는 성우·가수 17명이 태평양을 건너 출연할 예정이었어. 이 월드투어는 6월 도쿄 아리아케 아레나 공연 두 회로 시작했고, LA가 그다음 무대야.
+
+티켓은 이미 풀린 상태야. LA 공연 사전 판매는 7월 23일에 시작했고 가격은 80달러부터 VIP 패스 350달러까지(굿즈 세트 포함). 라이브 스트리밍 시청권도 하루 39달러, 이틀 74달러로 판매 중이고 일본에서도 팔고 있었대. 취소되면 환불 문제가 가장 먼저 닥칠 거라는 게 기사의 설명이야.
+
+공연을 열지 말지 최종 결정은 10월 19일 밤 10시(LA 시간)까지 내려질 예정이라고 했어. 이 글은 그 결정 전에 나온 보도 기준이니까 최신 공지는 공식 계정에서 꼭 확인해 봐.
+
+출처: SoraNews24, 우마무스메 공식 사이트</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#우마무스메 #애니 #콘서트 #월드투어 #해외반응</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 취소될 경우 환불 문제가 가장 먼저 닥칠 것이라는 기사 설명</li><li>근거 등록 안 된 주장: 주최 측 비자 준비 내용이 공식 사이트 공지에도 올라왔다는 주장</li>
+          <li>기사는 10월 19일 최종 결정 이전에 나온 보도라 실제 공연 개최 여부는 확인되지 않음</li><li>미국 비자·행정 관련 주제라 정치적 해석으로 번질 수 있음</li><li>우마무스메 공식 이미지·캐릭터 이미지는 저작권 문제로 사용 금지</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-9a9f51649781-0">1장</label>
+          <textarea id="s-9a9f51649781-0" rows="2" data-slide="0">우마무스메
+미국 공연 **취소?!**</textarea>
+          
+          <label class="f" for="s-9a9f51649781-1">2장</label>
+          <textarea id="s-9a9f51649781-1" rows="2" data-slide="1">**비자**가
+아직 안 나왔대</textarea>
+          
+          <label class="f" for="s-9a9f51649781-2">3장</label>
+          <textarea id="s-9a9f51649781-2" rows="2" data-slide="2">준비만
+**6개월** 넘게 했는데</textarea>
+          
+          <label class="f" for="s-9a9f51649781-3">4장</label>
+          <textarea id="s-9a9f51649781-3" rows="2" data-slide="3">**10월 22·23일**
+LA 피콕 극장</textarea>
+          
+          <label class="f" for="s-9a9f51649781-4">5장</label>
+          <textarea id="s-9a9f51649781-4" rows="3" data-slide="4">티켓은 벌써
+**7월 23일부터**
+판매 중</textarea>
+          
+          <label class="f" for="s-9a9f51649781-5">6장</label>
+          <textarea id="s-9a9f51649781-5" rows="3" data-slide="5">최종 결정은
+10월 19일
+**밤 10시(LA)**</textarea>
+          
+          <label class="f" for="s-9a9f51649781-6">7장</label>
+          <textarea id="s-9a9f51649781-6" rows="3" data-slide="6">우마무스메 덕질
+하는 **친구** 태그해서
+소식 알려주기</textarea>
+          
+          <label class="f" for="c-9a9f51649781">본문 (캡션)</label>
+          <textarea id="c-9a9f51649781" class="caption">우마무스메 미국 공연이 취소될 수도 있대.
+
+10월 22일과 23일, LA 피콕 극장에서 우마무스메 7th Event 월드투어 &#39;The Stage&#39; 공연이 열릴 예정이었어. 그런데 공연에 필요한 비자가 아직 승인되지 않았다고 10월 18일 밤 8시(LA 시간)에 공식 트위터 계정이 알렸어. 주최 측은 6개월도 더 전부터 현지 변호사, 프로모터와 함께 비자를 준비해 왔다고 밝혔고, 공식 사이트 공지에도 같은 내용이 올라왔어.
+
+이번 LA 공연에는 성우·가수 17명이 태평양을 건너 출연할 예정이었어. 이 월드투어는 6월 도쿄 아리아케 아레나 공연 두 회로 시작했고, LA가 그다음 무대야.
+
+티켓은 이미 풀린 상태야. LA 공연 사전 판매는 7월 23일에 시작했고 가격은 80달러부터 VIP 패스 350달러까지(굿즈 세트 포함). 라이브 스트리밍 시청권도 하루 39달러, 이틀 74달러로 판매 중이고 일본에서도 팔고 있었대. 취소되면 환불 문제가 가장 먼저 닥칠 거라는 게 기사의 설명이야.
+
+공연을 열지 말지 최종 결정은 10월 19일 밤 10시(LA 시간)까지 내려질 예정이라고 했어. 이 글은 그 결정 전에 나온 보도 기준이니까 최신 공지는 공식 계정에서 꼭 확인해 봐.
+
+출처: SoraNews24, 우마무스메 공식 사이트</textarea>
+          <label class="f" for="t-9a9f51649781">해시태그</label>
+          <input id="t-9a9f51649781" type="text" class="tagsin" value="#우마무스메 #애니 #콘서트 #월드투어 #해외반응" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공연 비자가 아직 승인되지 않았고, 주최 측은 6개월도 더 전부터 변호사·프로모터와 비자를 준비해 왔다</b>
+            <q>“In preparation for the 7th Event: The Stage in Los Angeles concerts planned for Oct 22–23, 2026, we had been working with lawyers and promoters in the US to secure the visas necessary to enter the US since over six months ago, but as of now the visas have yet to be approved.”</q>
+            <small>slide2, slide3, caption · <a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>LA 공연은 10월 22·23일 피콕 극장에서 열릴 예정이고 성우·가수 17명이 출연하러 갈 예정이었다</b>
+            <q>“The next stage of the globetrotting event is supposed to be October 22 and 23 at Los Angeles’ Peacock Theater, with 17 Umamusume voice actresses/vocalists scheduled to make the trip across the Pacific to perform.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공식 계정이 10월 18일 밤 8시(LA 시간)에 비자를 아직 받지 못했다고 알렸다</b>
+            <q>“At 8 p.m. on October 18 (Los Angeles time), though, both the English and Japanese official Umamusume Twitter accounts announced that the concert organizers have still not been able to obtain the required visas for the concert to take place.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>월드투어는 6월 도쿄 아리아케 아레나 공연 두 회로 시작했다</b>
+            <q>“Back in June, Umamusume’s 7th Event World Tour: The Stage kicked off with a pair of concerts held at the Ariake Arena in Tokyo.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>LA 공연 티켓 사전 판매는 7월 23일에 시작했고 가격은 80달러에서 350달러까지다</b>
+            <q>“Ticket pre-sales for the Los Angeles shows started on July 23, with prices ranging from US$80 all the way up to US$350 for special VIP passes with included merch bundles.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>라이브 스트리밍 시청권은 하루 39달러, 이틀 74달러이며 일본에서도 판매 중이었다</b>
+            <q>“Viewing tickets for live-streams of the concerts have also been on sale, priced at US$39 for one day’s performance or US$74 for both, and livestream tickets have even been on sale in Japan for fans who want to watch their favorite voice actresses make their mark on an overseas stage.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공연 개최 여부의 최종 결정은 10월 19일 밤 10시(LA 시간)까지 내려진다</b>
+            <q>“A final decision on whether or not to hold the concerts will be made by 10 p.m. on October 19 (Los Angeles time).”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/20/umamusume-horse-girl-concert-in-city-of-angels-is-in-danger-of-being-cancelled-because-of-visa-issues/" target="_blank" rel="noopener">Umamusume anime concerts in U.S. may have to be cancelled over visa problems</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/monkey-music-concert-guitar-stage-3507317/" target="_blank" rel="noopener">Papafox / Pixabay</a> — "bright empty concert stage with colorful spotlights"</li><li>2장: <a href="https://pixabay.com/photos/travel-passport-korean-passport-2704011/" target="_blank" rel="noopener">SookyungAn / Pixabay</a> — "passport"</li><li>3장: <a href="https://pixabay.com/photos/laptop-office-hand-writing-3196481/" target="_blank" rel="noopener">AymaneJed / Pixabay</a> — "paperwork desk"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:Peacock_Theater_Exterior_February_2026.jpg" target="_blank" rel="noopener">Haruhi8 / Wikimedia Commons · CC0</a> — "Peacock Theater"</li><li>5장: <a href="https://pixabay.com/photos/concert-confetti-party-event-club-2527495/" target="_blank" rel="noopener">ktphotography / Pixabay</a> — "concert crowd"</li><li>6장: <a href="https://pixabay.com/photos/clocks-time-idea-concept-257911/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "wall clock"</li><li>7장: <a href="https://pixabay.com/photos/camera-phone-girl-hands-1869430/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends phone"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-1f7fda34f818">
+    <div class="head">
+      <h2>S1. 하루 3,000보와 알츠하이머 관련 뇌 변화 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-1f7fda34f818">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 만 보를 못 채워도 괜찮다는 낮은 문턱의 걷기 숫자(3,000보부터, 5,000~7,500보가 최적)를 알츠하이머 관련 뇌 변화 연구와 엮어 보여준다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">만 보를 안 채워도 된다는 연구가 나왔어
+하루 3,000보부터 알츠하이머 관련 뇌 변화와 연결된 효과가 보였대
+근데 제일 효과가 컸던 구간은 3천 보도, 만 보도 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 초기 알츠하이머 징후가 있는 노인 약 300명을 만보기로 9~11년 따라갔대. 이미 플라크가 있던 사람 중 더 활동적인 쪽은 인지·기능 저하가 거의 절반 줄었어. 근데 줄어든 게 우리가 아는 그 물질이 아니었음</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">2/ 활동량은 알츠하이머 약 대부분이 노리는 아밀로이드 플라크를 줄이진 못했대. 대신 뇌 특정 부위에 잘못 접힌 타우 단백질이 쌓이는 게 줄었어. 타우는 병 후반에 나타나고 인지 저하와 더 밀접하대. 그럼 몇 보부터 그런 거야?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">149/500자</span></div>
+      <p class="tp-text">3/ 저장해둘 걸음 수 정리
+- 3,000보: 효과가 보이기 시작 (보통 속도로 약 30분)
+- 5,000~7,500보: 가장 좋은 구간
+- 그 위: 효과가 평탄해짐
+- 많이 걷는다고 보호 효과가 계속 커지진 않았대
+- 자주 말하는 만 보 대신 현실적인 목표라는 해석</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">4/ 2022년 영국 연구는 7년간 78,430명을 손목 가속도계로 따라갔어. 하루 3,800보에서 치매 위험 25% 감소, 9,800보에서는 50%였대. 근데 많이 걷는 사람은 심혈관 건강도 더 좋아서, 걷기 때문인지 딱 잘라 말하긴 어렵다는 거야</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">5/ 이번 연구엔 한계도 있어. 규모가 작고 대부분 미국의 백인·고학력 참가자였고, 다른 생활·건강 요인은 반영하지 못했대. 거꾸로 초기 증상 때문에 덜 움직였을 가능성도 짚었어. 자기한테 맞는 운동량은 의사랑 상의해. 그럼 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">218/500자</span></div>
+      <p class="tp-text">6/ 결국 원문이 짚은 건 마라톤 같은 목표보다 30분 정도 산책 같은 현실적인 목표가 큰 보호가 될 수 있다는 거야
+너는 어느 쪽이야? 만 보 채워야 하는 파 vs 3천~7천 보면 충분한 파
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>30분 산책 같은 적당하고 달성 가능한 목표가 인지 저하에 대한 상당한 보호를 줄 수 있다 <small>애매 · 원문은 30분 산책 같은 현실적 목표가 큰 보호를 줄 수 있다고 조건부로 말한다. 글에서 &#39;큰 보호가 될 수 있다&#39;고 한 것은 대체로 맞지만, 이는 가능성 수준의 해석이므로 확정적으로 쓰지 말고 &#39;보호가 될 수 있다는 해석&#39; 정도로 낮춰 쓰는 편이 정확하다.</small></li>
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>알츠하이머 막으려고 만 보 채울 필요 없을 수도 있대</li><li>만 보 못 채워서 걷기 포기했다면, 그 숫자부터 내려놓으라는 연구가 나옴</li><li>걷기 목표는 만 보가 아니라 5천~7천 보대일 수 있대. 알츠하이머 연구 결과야</li><li>하루 3,000보, 약 30분 걷기에서 벌써 효과가 보였다는 연구가 있어</li><li>약 300명을 9~11년 따라간 연구에서 인지 저하가 거의 절반 줄었대</li><li>알츠하이머 약이 노리는 그 단백질은 안 줄었는데 걷기는 효과가 있었대</li><li>걸음 수가 많을수록 좋은 줄 알았지? 어느 지점부터는 더 안 올라간대</li><li>만 보 앱 켜놓고 스트레스받던 사람들, 이 연구 한번 봐</li><li>마라톤급 운동 말고 30분 산책이면 된다는 얘기가 나온 이유</li><li>하루 3,000보면 충분하대. 근데 제일 좋은 구간은 따로 있었음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너는 만 보 채워야 하는 파야, 3천~7천 보면 충분한 파야?</li><li>걸음 수 앱 매일 확인하는 편이야, 아예 안 보는 편이야?</li><li>걷기 vs 러닝, 오래 꾸준히 할 거면 뭐 골라?</li><li>출퇴근길에 한 정거장 먼저 내려서 걸어본 사람?</li><li>산책할 때 음악 파야, 팟캐스트 파야, 무음 파야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>폴 들고 걷는 노르딕 워킹, 알츠하이머 환자 대상 작은 시험 결과</li><li>야외에서 걷는 게 치매 위험 요인에 더 좋을 수 있다는 이야기</li><li>운동하면 근육에서 나온다는 호르몬 아이리신 이야기</li><li>거대 해파리와 어린 물고기 무리 동행 포착</li><li>JAXA 화성 위성 포보스 샘플 채취 임무 MMX</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>3,000보 효과를 치매 예방이나 치료가 보장되는 것처럼 읽히지 않게 연구 한계(소규모·미국 중심·다른 요인 미반영) 문구를 유지해야 함</li><li>원문 본문은 The Conversation 요약 기사 기반이고 Nature 원문은 유료라 확인되지 않음. 한국 상황은 확인 정보가 없어 질문으로만 처리</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>30분 산책 같은 적당하고 달성 가능한 목표가 인지 저하에 대한 상당한 보호를 줄 수 있다</b>
+          <q>“But the evidence suggests that even a few minutes of walking could make a difference, and that modest, achievable targets – a half-hour stroll rather than a marathon training regime – may offer substantial protection against cognitive decline.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>3,000보에서 효과가 나타났고, 최적 구간은 5,000~7,500보이며 그 이후 평탄해졌다</b>
+          <q>“The optimal range was 5,000 to 7,500 steps daily, after which the effect plateaued.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약 300명의 초기 알츠하이머 징후 노인을 만보기로 9~11년 추적했다</b>
+          <q>“The researchers tracked almost 300 older adults with early brain signs of Alzheimer’s for nine to 11 years using pedometers.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 활동적인 참가자에서 치매 징후가 거의 절반 줄었다</b>
+          <q>“These signs of dementia were reduced by almost half in more active participants.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>신체활동은 아밀로이드 플라크를 줄이지 못했다</b>
+          <q>“They found that physical activity didn’t reduce the toxic amyloid plaques that most Alzheimer’s treatments now target.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>플라크가 이미 있는 사람에서 신체활동이 특정 뇌 부위의 타우 단백질 축적을 줄였다</b>
+          <q>“Instead, in people who already had these plaques, physical activity reduced the accumulation of misfolded tau proteins in specific brain areas.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>타우는 병 후반에 나타나고 인지·기능 저하와 더 밀접하다</b>
+          <q>“These proteins appear later in Alzheimer’s disease and are more closely linked to cognitive and functional decline.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>3,000보는 보통 속도로 약 30분 걷기에 해당하며 그 지점부터 효과가 나타났다</b>
+          <q>“Benefits appeared at just 3,000 steps – roughly half an hour of walking at a moderate pace.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 많이 걷는다고 보호가 꼭 커지지 않았고 흔히 말하는 만 보 대신 현실적인 목표를 시사한다</b>
+          <q>“More steps didn’t necessarily mean greater protection, which suggests a realistic target for older, sedentary people, rather than the often-cited 10,000 steps.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2022년 영국 연구는 78,430명을 7년간 손목 가속도계로 추적했고 3,800보에서 치매 위험 25% 감소, 9,800보에서 50% 감소가 나왔다</b>
+          <q>“A larger 2022 UK study tracked 78,430 people for seven years using wrist accelerometers. It found a 25% reduction in dementia risk with just 3,800 steps daily, rising to 50% at 9,800 steps.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>많이 걷는 사람은 심혈관 건강도 더 좋았다</b>
+          <q>“However, people who walked more also had better cardiovascular health – lower cholesterol, better sleep and blood pressure and reduced diabetes risk.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>운동만이 원인이라고 말하기 어렵다</b>
+          <q>“The researchers tried to account for this, but because these habits are so closely linked, it’s difficult to say that exercise alone is responsible.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 소규모이고 대부분 미국의 백인·고학력자였으며 다른 생활·건강 요인을 고려하지 않았다</b>
+          <q>“It involved a fairly small group of mostly white, well-educated people in the US, and it didn’t take other lifestyle or health factors into account.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초기 알츠하이머 증상 때문에 활동이 줄었을 가능성도 있다</b>
+          <q>“But the relationship might work in reverse, too. People may become less active because of early Alzheimer’s symptoms.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="1f7fda34f818">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261018205058.htm" target="_blank" rel="noopener">Just 3,000 steps a day may help slow Alzheimer&#39;s, scientists find</a></li><li><a href="https://www.nature.com/articles/d41586-025-03596-2" target="_blank" rel="noopener">Alzheimer’s decline slows with just a few thousand steps a day</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-9ea3fef4bef4">
+    <div class="head">
+      <h2>S2. 알츠하이머 수면 손실의 범인은 뇌 면역세포 (쥐 실험)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-9ea3fef4bef4">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 잠을 방해하는 건 쌓인 단백질이 아니라 뇌를 지키는 면역세포의 &#39;밤샘 파티&#39;라는 통념 뒤집기, 그리고 단백질은 그대로인데 잠만 하루 2시간 넘게 돌아왔다는 반전</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">알츠하이머 환자가 잠을 못 자는 건 쌓인 단백질 탓이 아니라 뇌 면역세포가 &#39;밤새 파티&#39;해서일 수 있대
+이 세포를 빼봤더니 쥐가 하루 2시간 넘게 잠을 되찾음
+근데 뇌에 쌓인 단백질은 그대로였다는 게 반전 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">1/ 알츠하이머 같은 뇌 변화를 가진 쥐에서 면역세포 대부분을 일시적으로 없앴더니 잠을 더 오래, 깊은 단계에서 더 많이 잤대.
+뇌에 쌓인 단백질(아밀로이드 플라크)은 줄지도 않았는데.
+근데 뇌를 지키는 세포가 왜 잠을 막았을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">167/500자</span></div>
+      <p class="tp-text">2/ 범인으로 지목된 건 미세아교세포(microglia)라는 뇌 면역세포. 평소엔 잔해를 치우며 뇌를 지키는데, 플라크를 감지하면 방어 반응이 과해져서 염증 신호를 내보낸대.
+연구자 표현으로는 마치 &#39;밤새 파티하며 뇌를 깨워두는&#39; 셈.
+근데 더 이상한 건 플라크가 늘어도 잠은 더 안 나빠졌다는 거.</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">3/ 플라크가 처음 생기는 6개월 때 이미 생긴 잠 문제가 18개월에도 더 나빠지지 않았대. 플라크는 2배 넘게 늘었는데도.
+연구진은 플라크에 대한 초기 염증 반응이 특히 중요할 수 있다고 봄.
+그럼 어떤 잠이 망가지는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">168/500자</span></div>
+      <p class="tp-text">4/ 저장해둘 정리 (쥐 실험)
+- 정상 노화: 렘수면이 주로 줄어듦
+- 알츠하이머 변화: 가장 깊은 단계가 있는 논렘수면이 망가짐
+- 면역세포 약 87% 제거(약 14일 투여): 하루 2시간 넘게 잠 회복, 논렘수면도 길어짐
+- 아밀로이드 플라크: 줄지 않음
+그럼 이걸 사람한테 바로 쓸 수 있을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">183/500자</span></div>
+      <p class="tp-text">5/ 다만 쥐 실험이라 사람에서 같은 효과가 확인된 건 아직 아님. 면역세포를 대부분 없애는 건 알츠하이머 환자한테 쓸 수 있는 치료법도 아니고.
+그래서 연구진은 없애지 않고 활동을 조절하는 쪽을 보는 중. 당뇨약 메트포르민, 항경련제 스티리펜톨도 연구 중인데 이 용도로는 아직 실험 단계임.
+그래서 결국 뭘 가져가면 되냐면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">228/500자</span></div>
+      <p class="tp-text">6/ 결국 이 연구가 말하는 건, 알츠하이머의 잠 문제는 쌓인 단백질만이 아니라 뇌 면역세포의 반응도 같이 봐야 한다는 거. 아직 쥐 단계라 사람은 더 지켜봐야 함.
+잠 부족한 날엔 커피파 vs 낮잠파?
+이런 해외 건강·뇌과학 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 6/의 결론: 알츠하이머의 잠 문제는 쌓인 단백질뿐 아니라 뇌 면역세포의 반응도 함께 봐야 한다는 일반화</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>알츠하이머 환자가 잠을 못 자는 건 쌓인 단백질 탓이 아니라 뇌 면역세포가 &#39;밤새 파티&#39;해서일 수 있대</li><li>잠 못 자는 원인을 쌓인 단백질 탓만 하지 말고 뇌 면역세포부터 보라는 연구가 나옴</li><li>&#39;뇌가 밤새 파티 중&#39;이라는 표현까지 나온 수면 연구</li><li>쥐 잠이 하루 2시간 넘게 돌아왔는데 뇌에 쌓인 단백질은 그대로였대</li><li>뇌를 지키는 세포가 오히려 잠을 막고 있었다는 연구가 나옴</li><li>&#39;패러다임을 바꾸는 발견&#39;이라는 말까지 나온 알츠하이머 수면 연구</li><li>병의 흔적은 그대로인데 잠만 돌아왔대. 하루 2시간 넘게</li><li>플라크가 2배 넘게 쌓였는데 잠은 더 나빠지지 않았다는 연구가 있음</li><li>나이 들어서 줄어드는 잠이랑 알츠하이머에서 망가지는 잠은 종류가 다르대</li><li>잠 문제는 뇌 속 쓰레기가 아니라 뇌 면역 반응이 문제일 수 있다는 쥐 실험이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>잠 부족한 날엔 커피파 vs 낮잠파?</li><li>잠 안 올 때 폰 보는 파 vs 안 보는 파?</li><li>주말에 몰아 자는 파 vs 평일에 일정하게 자는 파?</li><li>알람 한 번에 바로 일어나는 사람?</li><li>너라면 이런 수면 연구, 사람 대상 결과 나오면 찾아볼 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>알츠하이머 잠 문제에 쓸 후보 약을 찾는 연구 (메트포르민·스티리펜톨)</li><li>뇌파(EEG)로 알츠하이머 변화를 일찍 알아보려는 연구</li><li>렘수면 vs 논렘수면, 뇌에서 각각 하는 일</li><li>거대 해파리와 어린 물고기 무리 동행 포착</li><li>JAXA 화성 위성 포보스 샘플 채취 임무 MMX</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>쥐 실험 결과가 사람에게도 해당되는 것처럼 읽히지 않는지 확인 (5/, 6/에서 쥐 단계임을 밝혔지만 본글에서도 &#39;쥐&#39;가 분명히 보이는지 점검)</li><li>&#39;밤새 파티&#39;는 연구자의 비유 표현이므로 사실처럼 읽히지 않게 인용 형태 유지</li><li>원문에 없는 20~30대 수면 부족 공감 연결은 사실로 쓰지 않았음. 댓글 질문 정도로만 쓸 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>알츠하이머 같은 뇌 변화를 가진 쥐에서 플라크를 없애지 않고도 하루 2시간 넘게 수면을 회복시켰다</b>
+          <q>“In experiments involving mice with Alzheimer&#39;s-like brain changes, researchers restored more than two hours of sleep per day without removing the amyloid plaques associated with the disease.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구자는 수면 손실의 원인이 플라크 자체가 아니라 미세아교세포라고 말했다</b>
+          <q>“Basically, we showed that it is not the plaques themselves, or solely dysfunctional neurons, that cause sleep loss but actually microglia,”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구자는 미세아교세포가 밤새 파티하며 뇌를 깨워두는 것 같다고 비유했다</b>
+          <q>“Microglia are immune cells that, when they respond to plaques, kick off this elaborate cascade of inflammation, as if the microglia are partying all night, and keeping the brain awake.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>면역세포 대부분을 일시적으로 없애자 쥐가 더 오래, 깊고 회복적인 단계에서 더 많이 잤다</b>
+          <q>“Researchers at the University of Kentucky found that temporarily eliminating most of these immune cells allowed the mice to sleep longer and spend more time in the deep, restorative stages of sleep.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수면 개선은 아밀로이드 플라크 감소 없이 일어났다</b>
+          <q>“Even more surprisingly, these improvements occurred without any reduction in amyloid plaque levels.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미세아교세포는 평소 잔해를 제거하며 신경계를 보호한다</b>
+          <q>“These cells normally protect the nervous system by removing debris, responding to injuries, and helping maintain a healthy environment for neurons.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미세아교세포가 플라크를 감지하면 방어 반응이 과해져 염증 신호를 낼 수 있다</b>
+          <q>“However, when microglia detect amyloid plaques, their defensive response can become excessive. Instead of simply addressing the threat, they release inflammatory signals that may interfere with normal brain activity.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>6개월 때 생긴 수면 장애가 플라크가 2배 넘게 늘어난 18개월에도 악화되지 않았다</b>
+          <q>“The disruptions in sleep and cortical EEG activity that occur at 6 months, when plaques first emerge, did not worsen by 18 months, despite more than double the amount of plaque burden.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>플라크가 유발하는 초기 염증 반응이 특히 중요할 수 있다</b>
+          <q>“This suggests that the initial inflammatory response triggered by plaques may be particularly important.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정상 노화는 주로 렘수면을 줄였다</b>
+          <q>“The researchers found that normal aging primarily reduced this type of sleep.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>알츠하이머 병리는 가장 깊은 단계가 포함된 논렘수면을 선택적으로 방해했다</b>
+          <q>“Alzheimer&#39;s pathology, however, had a different effect. It selectively disrupted non-rapid eye movement (NREM) sleep, which includes the deepest and most physically restorative stages of sleep.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약을 14일간 먹이에 섞어 투여하자 미세아교세포가 약 87% 줄었다</b>
+          <q>“After the mice received the medication in their food for 14 days, approximately 87% of their microglia had been depleted.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>면역세포를 제거한 쥐는 회복적인 논렘수면이 더 길어졌다</b>
+          <q>“They also experienced longer periods of restorative NREM sleep, giving them more opportunities to transition naturally into REM sleep, which is important for memory formation.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐 실험이며 사람에서의 효과는 확인되지 않았고, 면역세포 대부분 제거는 확립된 치료법이 아니다</b>
+          <q>“Although these findings are promising, the experiments were conducted in mice, and the same benefits have not yet been demonstrated in people. Temporarily removing most of the brain&#39;s immune cells is also not an established or practical treatment for Alzheimer&#39;s patients.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 세포를 없애는 대신 미세아교세포 활동을 조절해 같은 효과를 낼 수 있는지 관심을 두고 있다</b>
+          <q>“The researchers are now interested in whether the beneficial effects can be reproduced by adjusting microglial activity rather than eliminating the cells themselves.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구팀은 메트포르민과 스티리펜톨 같은 기존 약을 연구 중이다</b>
+          <q>“The laboratory is investigating existing medications, including the diabetes drug Metformin and the anti-seizure medication Stiripentol.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 용도의 약물 전략은 아직 실험 단계이며 사람에게서의 안전성과 효과는 추가 연구가 필요하다</b>
+          <q>“The proposed drug strategies remain experimental for this purpose, and additional research will be necessary to determine whether they can safely produce similar benefits in humans.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="9ea3fef4bef4">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261018084421.htm" target="_blank" rel="noopener">&#34;Mind-blowing&#34; Alzheimer’s breakthrough: Two hours of sleep restored without clearing brain plaques</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261020-am";
+  const ORIGINAL = {"49d29bd8e181": {"caption": "\ud574\ud30c\ub9ac \ud55c \ub9c8\ub9ac \uc544\ub798\uc5d0 \uc5b4\ub9b0 \ubb3c\uace0\uae30 19\ub9c8\ub9ac\uac00 \uc878\uc878 \ub530\ub77c\ub2e4\ub2c8\ub294 \uc7a5\uba74\uc774 \ud3ec\ucc29\ub410\uc5b4. \uc544\ub974\ud5e8\ud2f0\ub098 \ud30c\ud0c0\uace0\ub2c8\uc544 \uc55e\ubc14\ub2e4, \uc218\uc2ec \uc57d 250m\uc5d0\uc11c \uad00\ucc30\ub41c \uc77c\uc774\uc57c.\n\n\uc8fc\uc778\uacf5\uc740 \uc790\uc774\uc5b8\ud2b8 \ud32c\ud140 \ud574\ud30c\ub9ac(Stygiomedusa gigantea). \uac13\uc774 1m \ub118\uac8c \uc790\ub77c\uace0 \uc785\ud314\uc740 10m\ub97c \ub118\uae30\ub3c4 \ud558\ub294 \uc138\uacc4 \ucd5c\ub300\uae09 \ud574\ud30c\ub9ac\uc778\ub370, 1899\ub144 \uccab \ud45c\ubcf8\uc774 \ucc44\uc9d1\ub41c \ub4a4 \ubaa9\uaca9 \uae30\ub85d\uc774 120\uac74\ub3c4 \uc548 \ub41c\ub2e4\uace0 \ud574. \uae4a\uc740 \ubc14\ub2e4\uc5d0 \uc0b4\uc544\uc11c \uc0ac\ub78c\uc774 \uac00\uae30 \uc5b4\ub835\uae30 \ub54c\ubb38\uc774\ub798.\n\n\uc774\ubc88 \uc7a5\uba74\uc740 2025\ub144 12\uc6d4\ubd80\ud130 2026\ub144 1\uc6d4\uae4c\uc9c0 \uc288\ubbf8\ud2b8 \ud574\uc591\uc5f0\uad6c\uc18c\uc758 \uc5f0\uad6c\uc120 \ud330\ucee8(Falkor (too))\uc5d0\uc11c \uc6d0\uaca9 \uc870\uc885 \uc7a0\uc218\uc815 SuBastian\uc744 \ub0b4\ub824 \uc5bb\uc740 \uac70\uc57c. \uae38\uc774 \uc57d 6m\uc9dc\ub9ac \ud574\ud30c\ub9ac \uc8fc\ubcc0\uc744 \uc5b4\ub9b0 \ub7ec\ub354\ud53c\uc2dc(Centrolophus niger)\uac00 \uac13 \uc544\ub798\uc640 \ud314 \uc0ac\uc774\ub97c \uc624\uac00\uace0 \uc788\uc5c8\uc5b4.\n\n\uc5f0\uad6c\uc9c4\uc740 \uc774 \ubb3c\uace0\uae30\ub4e4\uc774 \ud574\ud30c\ub9ac\ub97c \uc774\ub3d9\uc2dd \ud53c\ub09c\ucc98\ucc98\ub7fc \uc4f0\ub294 \uac78\ub85c \ubcf4\uace0 \uc788\uc5b4. \ud55c \ub9c8\ub9ac\ub294 \ud574\ud30c\ub9ac \ud314\uc5d0\uc11c \ubb54\uac00\ub97c \ucabc\uc544 \uba39\ub294 \ubaa8\uc2b5\ub3c4 \ubcf4\uc600\ub294\ub370, \uba39\uc774\ub97c \uac00\ub85c\ucc48 \uac74\uc9c0, \uae30\uc0dd\ucda9\uc744 \ub5bc\uc5b4 \uba39\uc740 \uac74\uc9c0, \ud574\ud30c\ub9ac \uc0b4\uc810\uc778\uc9c0\ub294 \uc54c \uc218 \uc5c6\uc5c8\ub300. \ud574\ud30c\ub9ac\uac00 \uc774 \uad00\uacc4\uc5d0\uc11c \ubb58 \uc5bb\ub294\uc9c0\ub3c4 \uc544\uc9c1 \ubab0\ub77c.\n\n\ub450 \uc885\uc774 \uc5b4\uc6b8\ub9b4\uc9c0 \ubaa8\ub978\ub2e4\ub294 \uc598\uae30\ub294 1973\ub144 \ubd81\ub300\uc11c\uc591 \ud2b8\ub864 \uc5b4\ud68d\ubb3c\uc5d0\uc11c \uac19\uc774 \ub098\uc624\uba74\uc11c \ucc98\uc74c \ub098\uc654\uc5b4. \uadf8\ub7f0\ub370 \uc2ec\ud574\uc5d0\uc11c \uc774 \uad00\uacc4\uac00 \uad00\ucc30\ub418\uc5b4 \uae30\ub85d\ub41c \uac74 \uc774\ubc88\uc774 \ucc98\uc74c\uc774\ub77c\uace0 \uc5f0\uad6c\uc9c4\uc740 \ubc1d\ud614\uc5b4. \uc5f0\uad6c \uacb0\uacfc\ub294 \ud559\uc220\uc9c0 Ecology\uc5d0 \uc2e4\ub838\uc5b4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\ud574\ud30c\ub9ac", "#\uc2ec\ud574", "#\ud574\uc591\uc0dd\ubb3c", "#\uacfc\ud559\ub274\uc2a4", "#\ubc14\ub2e4"], "slides": [["\ud574\ud30c\ub9ac\ub791", "\ubb3c\uace0\uae30 **19\ub9c8\ub9ac**?!"], ["\uc218\uc2ec 250m", "\ubab8\uae38\uc774 6m", "**\uc720\ub839 \ud574\ud30c\ub9ac** \ub4f1\uc7a5"], ["\ud314\uc774 **10m** \ub118\uac8c", "\uc790\ub77c\uae30\ub3c4 \ud574"], ["\uc5f0\uad6c\uc9c4 \uc0dd\uac01\uc5d4", "\uc774\ub3d9\uc2dd **\uc740\uc2e0\ucc98**"], ["\ud55c \ub9c8\ub9ac\ub294", "\ubb54\uac00 \uba39\ub294 \uc911", "\uc815\uccb4\ub294 **\ubbf8\uc2a4\ud130\ub9ac**"], ["**50\ub144 \ub118\uac8c**", "\uc758\uc2ec\ub9cc \ud558\ub2e4\uac00", "\ub4dc\ub514\uc5b4 \ud3ec\ucc29"], ["\ud574\uc591\uc0dd\ubb3c **\ub355\ud6c4**", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uc11c", "\uac19\uc774 \ub180\ub77c\uae30"]]}, "74b5ccb5d787": {"caption": "\ud654\uc131 \uc704\uc131\uc758 \ud759\uc744 \uc9c0\uad6c\ub85c \uac00\uc838\uc628\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc77c\ubcf8 \uc6b0\uc8fc \uae30\uad00 JAXA\uac00 \ud654\uc131 \uc704\uc131 \ud0d0\uc0ac\uc120 MMX(Martian Moons eXploration)\ub97c \uc77c\ubcf8 \ub2e4\ub124\uac00\uc2dc\ub9c8 \uc6b0\uc8fc\uc13c\ud130\uc5d0\uc11c \ubc1c\uc0ac\ud560 \uc608\uc815\uc774\ub798.\n\n\ud0d0\uc0ac\uc120\uc740 \uc57d 1\ub144\uc744 \ub0a0\uc544 \ud654\uc131\uacfc \ub450 \uc704\uc131, \ud3ec\ubcf4\uc2a4\uc640 \ub370\uc774\ubaa8\uc2a4\uc5d0 \ub3c4\ucc29\ud574. \ud3ec\ubcf4\uc2a4\ub294 \uadf8\ub9ac\uc2a4\uc5b4\ub85c \uacf5\ud3ec, \ub370\uc774\ubaa8\uc2a4\ub294 \ub450\ub824\uc6c0\uc774\ub77c\ub294 \ub73b\uc774\uc57c. MMX\ub294 \ub450 \uc704\uc131\uc744 \uba40\ub9ac\uc11c \uad00\uce21\ud558\uace0, \ud3ec\ubcf4\uc2a4\uc5d0\uc11c\ub294 \uc0d8\ud50c\ub3c4 \ubaa8\uc744 \uacc4\ud68d\uc774\uc57c.\n\n\ud575\uc2ec \uc9c8\ubb38\uc740 \uc774 \uc704\uc131\ub4e4\uc774 \uc5b4\ub5bb\uac8c \uc0dd\uacbc\ub0d0\ub294 \uac70\uc57c. \ubc18\uc0ac\ud558\ub294 \ube5b\uc758 \ud328\ud134 \uac19\uc740 \ud2b9\uc9d5\uc744 \ubcf4\uba74 \ud654\uc131 \uc911\ub825\uc5d0 \ubd99\uc7a1\ud78c \uc18c\ud589\uc131\uc77c \uc218 \uc788\uc5b4. \uadf8\ub7f0\ub370 \ud654\uc131 \uc801\ub3c4 \ubc29\ud5a5\uc758 \ub465\uadfc \uada4\ub3c4\ub97c \ubcf4\uba74, \ucd08\uae30 \ud654\uc131\uacfc \uac70\ub300\ud55c \uc18c\ud589\uc131\uc774 \ucda9\ub3cc\ud558\uace0 \ub0a8\uc740 \uc794\ud574\ub85c \uc0dd\uacbc\uc744 \uac00\ub2a5\uc131\ub3c4 \uc788\ub300. \uc544\uc9c1 \uc815\uccb4\uac00 \ubbf8\uc2a4\ud130\ub9ac\ub77c\uc11c \uc5f0\uad6c\uc790\ub4e4\uc774 \uc774 \uc784\ubb34\uc5d0 \ub9e4\ub2ec\ub9ac\ub294 \uac70\uc57c.\n\n\ubaa9\ud45c\ub294 \ud3ec\ubcf4\uc2a4\uc5d0\uc11c \ucd5c\uc18c 10g\uc744 \ub450 \uac00\uc9c0 \ubc29\uc2dd\uc73c\ub85c \ucc44\ucde8\ud574\uc11c 2031\ub144\uae4c\uc9c0 \uc9c0\uad6c\ub85c \uac00\uc838\uc624\ub294 \uac70\uc57c. \uc131\uacf5\ud558\uba74 \uc6b0\ub9ac \ub2ec\uc774 \uc544\ub2cc \ub2e4\ub978 \uc704\uc131\uc5d0\uc11c \uac00\uc838\uc628 \uccab \uc0d8\ud50c\uc774 \ub3fc.\n\n\ubb3c\ub860 \uc27d\uc9c0 \uc54a\uc544. 1980\ub144\ub300\ubd80\ud130 \ub7ec\uc2dc\uc544\uac00 \ud3ec\ubcf4\uc2a4\uc5d0 \ud0d0\uc0ac\uc120\uc744 \uc138 \ubc88 \ubcf4\ub0c8\ub294\ub370 \uc804\ubd80 \uc2e4\ud328\ud588\uc5b4. \ud3ec\ubcf4\uc2a4 \ud45c\uba74\uc744 \uc544\uc9c1 \uc798 \ubab0\ub77c\uc11c, \ucc29\ub959 \uc9c0\uc810\ub3c4 \uac00\uae4c\uc774\uc11c \uad00\uce21\ud55c \ub4a4\uc5d0\uc57c \uace0\ub97c \uc218 \uc788\ub300.\n\n\uadf8\ub798\ub3c4 JAXA\ub294 2010\ub144 \uc774\ud1a0\uce74\uc640, 2020\ub144 \ub958\uad6c\uc5d0\uc11c \uc0d8\ud50c\uc744 \uac00\uc838\uc628 \uacbd\ub825\uc774 \uc788\uc5b4. \uc5ec\uae30\uc5d0 NASA, \uc720\ub7fd\uc6b0\uc8fc\uad6d, \ub3c5\uc77c\uacfc \ud504\ub791\uc2a4 \uc6b0\uc8fc\uae30\uad00\uc758 \uacfc\ud559\uc790\ub4e4\ub3c4 \ud568\uaed8\ud558\uace0 \uc788\uc5b4.\n\n\ucd9c\ucc98: WIRED", "hashtags": ["#\uc6b0\uc8fc", "#JAXA", "#\ud654\uc131", "#\ud3ec\ubcf4\uc2a4", "#\uc6b0\uc8fc\ud0d0\uc0ac"], "slides": [["**\ud654\uc131 \ub2ec** \ud759\uc744", "\uac00\uc838\uc628\ub2e4\uace0???"], ["\ub2ec \uc774\ub984\uc774", "\ud3ec\ubcf4\uc2a4=**\uacf5\ud3ec**"], ["\uc55e\uc120 \uc2dc\ub3c4", "**3\ubc88** \uc804\ubd80 \uc2e4\ud328"], ["\uc774 \ub2ec\uc758 \uc815\uccb4", "\uc544\uc9c1\ub3c4 **\ubbf8\uc2a4\ud130\ub9ac**"], ["\ucd5c\uc18c 10g\uc744", "**2031\ub144**\uae4c\uc9c0 \ubc30\ub2ec"], ["\ubbff\ub294 \uad6c\uc11d\uc740", "**\ud558\uc57c\ubd80\uc0ac** \uacbd\ud5d8"], ["**\uc6b0\uc8fc \ub355\ud6c4** \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \uc54c\ub824\uc918"]]}, "9a9f51649781": {"caption": "\uc6b0\ub9c8\ubb34\uc2a4\uba54 \ubbf8\uad6d \uacf5\uc5f0\uc774 \ucde8\uc18c\ub420 \uc218\ub3c4 \uc788\ub300.\n\n10\uc6d4 22\uc77c\uacfc 23\uc77c, LA \ud53c\ucf55 \uadf9\uc7a5\uc5d0\uc11c \uc6b0\ub9c8\ubb34\uc2a4\uba54 7th Event \uc6d4\ub4dc\ud22c\uc5b4 \u0027The Stage\u0027 \uacf5\uc5f0\uc774 \uc5f4\ub9b4 \uc608\uc815\uc774\uc5c8\uc5b4. \uadf8\ub7f0\ub370 \uacf5\uc5f0\uc5d0 \ud544\uc694\ud55c \ube44\uc790\uac00 \uc544\uc9c1 \uc2b9\uc778\ub418\uc9c0 \uc54a\uc558\ub2e4\uace0 10\uc6d4 18\uc77c \ubc24 8\uc2dc(LA \uc2dc\uac04)\uc5d0 \uacf5\uc2dd \ud2b8\uc704\ud130 \uacc4\uc815\uc774 \uc54c\ub838\uc5b4. \uc8fc\ucd5c \uce21\uc740 6\uac1c\uc6d4\ub3c4 \ub354 \uc804\ubd80\ud130 \ud604\uc9c0 \ubcc0\ud638\uc0ac, \ud504\ub85c\ubaa8\ud130\uc640 \ud568\uaed8 \ube44\uc790\ub97c \uc900\ube44\ud574 \uc654\ub2e4\uace0 \ubc1d\ud614\uace0, \uacf5\uc2dd \uc0ac\uc774\ud2b8 \uacf5\uc9c0\uc5d0\ub3c4 \uac19\uc740 \ub0b4\uc6a9\uc774 \uc62c\ub77c\uc654\uc5b4.\n\n\uc774\ubc88 LA \uacf5\uc5f0\uc5d0\ub294 \uc131\uc6b0\u00b7\uac00\uc218 17\uba85\uc774 \ud0dc\ud3c9\uc591\uc744 \uac74\ub108 \ucd9c\uc5f0\ud560 \uc608\uc815\uc774\uc5c8\uc5b4. \uc774 \uc6d4\ub4dc\ud22c\uc5b4\ub294 6\uc6d4 \ub3c4\ucfc4 \uc544\ub9ac\uc544\ucf00 \uc544\ub808\ub098 \uacf5\uc5f0 \ub450 \ud68c\ub85c \uc2dc\uc791\ud588\uace0, LA\uac00 \uadf8\ub2e4\uc74c \ubb34\ub300\uc57c.\n\n\ud2f0\ucf13\uc740 \uc774\ubbf8 \ud480\ub9b0 \uc0c1\ud0dc\uc57c. LA \uacf5\uc5f0 \uc0ac\uc804 \ud310\ub9e4\ub294 7\uc6d4 23\uc77c\uc5d0 \uc2dc\uc791\ud588\uace0 \uac00\uaca9\uc740 80\ub2ec\ub7ec\ubd80\ud130 VIP \ud328\uc2a4 350\ub2ec\ub7ec\uae4c\uc9c0(\uad7f\uc988 \uc138\ud2b8 \ud3ec\ud568). \ub77c\uc774\ube0c \uc2a4\ud2b8\ub9ac\ubc0d \uc2dc\uccad\uad8c\ub3c4 \ud558\ub8e8 39\ub2ec\ub7ec, \uc774\ud2c0 74\ub2ec\ub7ec\ub85c \ud310\ub9e4 \uc911\uc774\uace0 \uc77c\ubcf8\uc5d0\uc11c\ub3c4 \ud314\uace0 \uc788\uc5c8\ub300. \ucde8\uc18c\ub418\uba74 \ud658\ubd88 \ubb38\uc81c\uac00 \uac00\uc7a5 \uba3c\uc800 \ub2e5\uce60 \uac70\ub77c\ub294 \uac8c \uae30\uc0ac\uc758 \uc124\uba85\uc774\uc57c.\n\n\uacf5\uc5f0\uc744 \uc5f4\uc9c0 \ub9d0\uc9c0 \ucd5c\uc885 \uacb0\uc815\uc740 10\uc6d4 19\uc77c \ubc24 10\uc2dc(LA \uc2dc\uac04)\uae4c\uc9c0 \ub0b4\ub824\uc9c8 \uc608\uc815\uc774\ub77c\uace0 \ud588\uc5b4. \uc774 \uae00\uc740 \uadf8 \uacb0\uc815 \uc804\uc5d0 \ub098\uc628 \ubcf4\ub3c4 \uae30\uc900\uc774\ub2c8\uae4c \ucd5c\uc2e0 \uacf5\uc9c0\ub294 \uacf5\uc2dd \uacc4\uc815\uc5d0\uc11c \uaf2d \ud655\uc778\ud574 \ubd10.\n\n\ucd9c\ucc98: SoraNews24, \uc6b0\ub9c8\ubb34\uc2a4\uba54 \uacf5\uc2dd \uc0ac\uc774\ud2b8", "hashtags": ["#\uc6b0\ub9c8\ubb34\uc2a4\uba54", "#\uc560\ub2c8", "#\ucf58\uc11c\ud2b8", "#\uc6d4\ub4dc\ud22c\uc5b4", "#\ud574\uc678\ubc18\uc751"], "slides": [["\uc6b0\ub9c8\ubb34\uc2a4\uba54", "\ubbf8\uad6d \uacf5\uc5f0 **\ucde8\uc18c?!**"], ["**\ube44\uc790**\uac00", "\uc544\uc9c1 \uc548 \ub098\uc654\ub300"], ["\uc900\ube44\ub9cc", "**6\uac1c\uc6d4** \ub118\uac8c \ud588\ub294\ub370"], ["**10\uc6d4 22\u00b723\uc77c**", "LA \ud53c\ucf55 \uadf9\uc7a5"], ["\ud2f0\ucf13\uc740 \ubc8c\uc368", "**7\uc6d4 23\uc77c\ubd80\ud130**", "\ud310\ub9e4 \uc911"], ["\ucd5c\uc885 \uacb0\uc815\uc740", "10\uc6d4 19\uc77c", "**\ubc24 10\uc2dc(LA)**"], ["\uc6b0\ub9c8\ubb34\uc2a4\uba54 \ub355\uc9c8", "\ud558\ub294 **\uce5c\uad6c** \ud0dc\uadf8\ud574\uc11c", "\uc18c\uc2dd \uc54c\ub824\uc8fc\uae30"]]}};
+  const TOTAL = 3;
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>
