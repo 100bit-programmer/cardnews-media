@@ -1,0 +1,1949 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.20 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.20 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-9ff065c3cc7c" data-jump="9ff065c3cc7c">1</a><a href="#post-b8fcc65af302" data-jump="b8fcc65af302">2</a><a href="#post-086d3ca7f987" data-jump="086d3ca7f987">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-9ff065c3cc7c" data-id="9ff065c3cc7c">
+    <div class="head">
+      <h2>1. 일본 화성 위성 포보스 샘플 귀환 임무 MMX 발사</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/24 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>화성 위성의 흙을 지구로 가져온다니, 일본이 진짜 시작했어. 일본은 5개년 규모의 원정으로 5억 7,800만 달러짜리 임무를 발사했어. 이름은 MMX, 화성 위성 탐사 임무야. 목표는 화성의 가장 큰 위성인 포보스에 착륙해서 샘플을 지구로 가져오는 거야. 화성 위성에서 샘플을 가져오는 건 세계 최초가 된다고 해. 발사는 월요일 미 동부시간 오후 3시 41분, 일본 시간으로는 화요일 새벽 4시 41분에 일본 남부 다네가시마 우주센터에서 이뤄졌어. 높이 63미터짜리 H3 로켓이 탐사선을 우주로 올렸는데, 이번 로켓은 고체 로켓 부스터 4개를 단 새로운 구성이었대. 일본의 행성 간 임무 중 가장 무겁고 야심 찬 임무라서 그렇다고 해. 탐사선 무게는 약 4.5톤이고, 3분의 2가 추진제야. 발사 약 71분 뒤에 로켓에서 분리됐고, 지구 중력을 벗어나려고 시속 2만 4,000마일 넘게 가속했어. 화성까지는 10개월 걸리는 항해야. 분리 직후 지상과 교신도 됐고 태양전지판도 펼쳤어. 프로젝트 매니저는 &#34;아주 안정적인 상태&#34;라고 밝혔어. 이번 임무는 소행성에서 샘플을 가져온 하야부사와 하야부사2의 성과를 잇는 거야. 과학자들은 포보스가 수십억 년 전 화성 궤도에 붙잡힌 소행성일 수 있다고 보는데, MMX의 과학 목표 중 하나가 이 가설이 맞는지 확인하는 거야. JAXA 야마카와 히로시 이사장은 &#34;5년의 긴 여정이 막 시작됐다&#34;고 말했어.
+
+출처: Ars Technica
+
+배경 사진: WikiImages, Willgard, Pexels / Pixabay
+사진: NASA / USGS (see PIA04304 catalog page), Bill Ingalls / Wikimedia Commons, Public domain (편집)
+
+#우주 #화성 #포보스 #일본 #JAXA</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-9ff065c3cc7c">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 화성의 달이 &#39;붙잡혀 온 소행성&#39;일 수도 있다는 반전 가설을 흙으로 확인하러 가는, 세계 최초 샘플 귀환 임무</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> H3 로켓은 높이 63미터에 고체 로켓 부스터 4개를 단 새 구성이고, 탐사선은 약 4.5톤에 3분의 2가 추진제 (본문)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">화성의 달 포보스가 원래 달이 아니라 &#39;붙잡혀 온 소행성&#39;일 수도 있대
+그걸 확인하겠다고 일본이 포보스 흙을 가져오는 임무를 쐈어
+화성 위성 샘플 귀환은 세계 최초가 된다는데, 발사는 잘 됐을까 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">1/ 발사는 성공적이었어. 탐사선은 발사 약 71분 뒤 로켓에서 분리됐고, 분리 직후 지상과 교신도 되고 태양전지판도 펼쳤대. 프로젝트 매니저 말로는 &#34;아주 안정적인 상태&#34;.
+근데 이 탐사선, 정확히 뭘 하러 가는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">2/ 이름은 MMX, 화성 위성 탐사 임무야. 화성의 가장 큰 위성 포보스에 착륙해서 샘플을 지구로 가져오는 게 목표고, 5개년 규모에 5억 7,800만 달러짜리래.
+그럼 왜 하필 그 흙일까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">3/ 과학자들은 포보스가 수십억 년 전 화성 궤도에 붙잡힌 소행성일 수 있다고 봐. MMX의 과학 목표 중 하나가 바로 이 가설이 맞는지 확인하는 거야.
+숫자로 정리하면 이래 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">166/500자</span></div>
+      <p class="tp-text">4/ MMX 한눈에 보기
+- 목적지: 포보스 (화성의 가장 큰 위성)
+- 규모: 5개년, 5억 7,800만 달러
+- 가속: 지구 중력 벗어나려고 시속 2만 4,000마일 넘게
+- 항해: 화성까지 10개월
+- 목표: 샘플 지구로 가져오기 (화성 위성 최초)
+일본이 이런 걸 처음 하는 건 아니기도 해</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">5/ 소행성에서 샘플을 가져온 하야부사와 하야부사2의 성과를 잇는 임무야. JAXA 야마카와 히로시 이사장은 &#34;5년의 긴 여정이 막 시작됐다&#34;고 말했대.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">231/500자</span></div>
+      <p class="tp-text">6/ 결국 요점은 포보스가 원래 화성의 달인지, 붙잡혀 온 소행성인지 그 흙으로 확인해 보겠다는 거야.
+너라면 포보스 정체가 뭘 것 같아? 원래 화성 달파 vs 붙잡힌 소행성파
+이런 해외 우주 소식, 밤사이 터진 것만 골라서 계속 배달함. 팔로우해두면 피드에 뜸
+인스타 게시물 본문엔 로켓 구성과 탐사선 사양까지 적어둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>화성의 달 포보스가 원래 달이 아니라 &#39;붙잡혀 온 소행성&#39;일 수도 있대</li><li>화성 위성 흙을 지구로 가져오는 세계 최초 임무, 일본이 방금 쐈어</li><li>화성 달은 화성이 만든 게 아니라 &#39;잡혀 온 소행성&#39;이라는 가설이 있대. 이걸 흙으로 확인하겠다는 임무가 떴음</li><li>5억 7,800만 달러짜리 로켓이 새벽 4시 41분에 떴어. 목적지는 화성의 달</li><li>화성까지 10개월, 일본이 화성 달 흙 가지러 출발했어</li><li>&#39;5년의 긴 여정이 막 시작됐다&#39;는 말과 함께 일본이 화성 달로 떠났어</li><li>우주 덕후 모여, 일본이 화성 위성 흙 가지러 진짜 출발함</li><li>소행성 흙 가져온 일본이 이번엔 화성 달 흙까지 노린대</li><li>화성의 달은 달이 아니라 소행성? 이걸 흙으로 확인하러 간대</li><li>발사 71분 뒤 탐사선이 로켓에서 분리됐는데, 상태가 &#39;아주 안정적&#39;이래</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>포보스 정체, 원래 화성 달파 vs 붙잡힌 소행성파?</li><li>화성 위성 흙 가져오는 거, 너라면 제일 궁금한 게 뭐야?</li><li>우주 덕후 친구 한 명 떠오르는 사람?</li><li>화성 가는 데 10개월인데, 탐사선 말고 네가 타고 간다면 갈 거야?</li><li>하야부사 때도 소행성 샘플 소식 챙겨 본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>하야부사2가 소행성에서 가져온 샘플 이야기</li><li>MMX를 쏘아 올린 H3 로켓은 어떤 로켓일까</li><li>화성의 가장 큰 위성 포보스는 어떻게 생겼을까</li><li>다른 나라의 화성 탐사 소식</li><li>소행성 샘플 귀환 임무는 왜 계속 이어질까</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;세계 최초&#39;는 출처 보도의 표현(&#39;된다고 해&#39;)이므로 확정 단정처럼 보이지 않게 유지</li><li>발사 시각은 미 동부시간 월요일 오후 3시 41분, 일본 시간 화요일 새벽 4시 41분으로 원문과 일치하는지 확인</li><li>보너스(로켓 구성·탐사선 사양)는 카드 장이 아니라 본문에만 있어서, 마지막 글을 &#39;인스타 게시물 본문&#39; 기준으로 안내함. 인스타 캡션에 본문이 실제로 들어가는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/9ff065c3cc7c/v2-01.jpg" alt="1장: 화성 위성 흙을 가져온다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/9ff065c3cc7c/v2-02.jpg" alt="2장: 일본이 진짜 로켓을 쐈어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/9ff065c3cc7c/v2-03.jpg" alt="3장: 목적지는 화성의 가장 큰 위성 포보스" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/9ff065c3cc7c/v2-04.jpg" alt="4장: 가는 데만 10개월 걸려" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/9ff065c3cc7c/v2-05.jpg" alt="5장: 포보스가 혹시 과거에는 떠돌아다니는 소행성?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/9ff065c3cc7c/v2-06.jpg" alt="6장: 우주 덕후 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/9ff065c3cc7c/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">화성 위성의 흙을 지구로 가져온다니, 일본이 진짜 시작했어. 일본은 5개년 규모의 원정으로 5억 7,800만 달러짜리 임무를 발사했어. 이름은 MMX, 화성 위성 탐사 임무야. 목표는 화성의 가장 큰 위성인 포보스에 착륙해서 샘플을 지구로 가져오는 거야. 화성 위성에서 샘플을 가져오는 건 세계 최초가 된다고 해. 발사는 월요일 미 동부시간 오후 3시 41분, 일본 시간으로는 화요일 새벽 4시 41분에 일본 남부 다네가시마 우주센터에서 이뤄졌어. 높이 63미터짜리 H3 로켓이 탐사선을 우주로 올렸는데, 이번 로켓은 고체 로켓 부스터 4개를 단 새로운 구성이었대. 일본의 행성 간 임무 중 가장 무겁고 야심 찬 임무라서 그렇다고 해. 탐사선 무게는 약 4.5톤이고, 3분의 2가 추진제야. 발사 약 71분 뒤에 로켓에서 분리됐고, 지구 중력을 벗어나려고 시속 2만 4,000마일 넘게 가속했어. 화성까지는 10개월 걸리는 항해야. 분리 직후 지상과 교신도 됐고 태양전지판도 펼쳤어. 프로젝트 매니저는 &#34;아주 안정적인 상태&#34;라고 밝혔어. 이번 임무는 소행성에서 샘플을 가져온 하야부사와 하야부사2의 성과를 잇는 거야. 과학자들은 포보스가 수십억 년 전 화성 궤도에 붙잡힌 소행성일 수 있다고 보는데, MMX의 과학 목표 중 하나가 이 가설이 맞는지 확인하는 거야. JAXA 야마카와 히로시 이사장은 &#34;5년의 긴 여정이 막 시작됐다&#34;고 말했어.
+
+출처: Ars Technica</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#우주 #화성 #포보스 #일본 #JAXA</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 일본의 행성 간 임무 중 가장 무겁고 야심 찬 임무라는 주장</li><li>근거 등록 안 된 주장: 포보스가 화성의 가장 큰 위성이라는 주장(근거에는 &#39;가장 큰 위성&#39;만 있고 포보스라는 이름은 명시되지 않음)</li><li>근거 등록 안 된 주장: 하야부사와 하야부사2가 소행성에서 원시 시료를 가져온 세계 최초의 두 우주선이라는 주장</li>
+          <li>편집자 메모의 2029년 착륙 시도는 원문에 근거가 없어 카드와 본문에 쓰지 않음</li><li>원문 날짜가 2026년 10월로 되어 있어 발행 시점 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-9ff065c3cc7c-0">1장</label>
+          <textarea id="s-9ff065c3cc7c-0" rows="2" data-slide="0">**화성 위성** 흙을
+가져온다고???</textarea>
+          
+          <label class="f" for="s-9ff065c3cc7c-1">2장</label>
+          <textarea id="s-9ff065c3cc7c-1" rows="2" data-slide="1">일본이 진짜
+**로켓**을 쐈어</textarea>
+          
+          <label class="f" for="s-9ff065c3cc7c-2">3장</label>
+          <textarea id="s-9ff065c3cc7c-2" rows="3" data-slide="2">목적지는
+화성의 가장 큰 위성
+**포보스**</textarea>
+          
+          <label class="f" for="s-9ff065c3cc7c-3">4장</label>
+          <textarea id="s-9ff065c3cc7c-3" rows="2" data-slide="3">가는 데만
+**10개월** 걸려</textarea>
+          
+          <label class="f" for="s-9ff065c3cc7c-4">5장</label>
+          <textarea id="s-9ff065c3cc7c-4" rows="3" data-slide="4">포보스가 혹시
+과거에는
+떠돌아다니는 **소행성**?</textarea>
+          
+          <label class="f" for="s-9ff065c3cc7c-5">6장</label>
+          <textarea id="s-9ff065c3cc7c-5" rows="2" data-slide="5">**우주 덕후** 친구
+태그해서 알려줘</textarea>
+          
+          <label class="f" for="c-9ff065c3cc7c">본문 (캡션)</label>
+          <textarea id="c-9ff065c3cc7c" class="caption">화성 위성의 흙을 지구로 가져온다니, 일본이 진짜 시작했어. 일본은 5개년 규모의 원정으로 5억 7,800만 달러짜리 임무를 발사했어. 이름은 MMX, 화성 위성 탐사 임무야. 목표는 화성의 가장 큰 위성인 포보스에 착륙해서 샘플을 지구로 가져오는 거야. 화성 위성에서 샘플을 가져오는 건 세계 최초가 된다고 해. 발사는 월요일 미 동부시간 오후 3시 41분, 일본 시간으로는 화요일 새벽 4시 41분에 일본 남부 다네가시마 우주센터에서 이뤄졌어. 높이 63미터짜리 H3 로켓이 탐사선을 우주로 올렸는데, 이번 로켓은 고체 로켓 부스터 4개를 단 새로운 구성이었대. 일본의 행성 간 임무 중 가장 무겁고 야심 찬 임무라서 그렇다고 해. 탐사선 무게는 약 4.5톤이고, 3분의 2가 추진제야. 발사 약 71분 뒤에 로켓에서 분리됐고, 지구 중력을 벗어나려고 시속 2만 4,000마일 넘게 가속했어. 화성까지는 10개월 걸리는 항해야. 분리 직후 지상과 교신도 됐고 태양전지판도 펼쳤어. 프로젝트 매니저는 &#34;아주 안정적인 상태&#34;라고 밝혔어. 이번 임무는 소행성에서 샘플을 가져온 하야부사와 하야부사2의 성과를 잇는 거야. 과학자들은 포보스가 수십억 년 전 화성 궤도에 붙잡힌 소행성일 수 있다고 보는데, MMX의 과학 목표 중 하나가 이 가설이 맞는지 확인하는 거야. JAXA 야마카와 히로시 이사장은 &#34;5년의 긴 여정이 막 시작됐다&#34;고 말했어.
+
+출처: Ars Technica</textarea>
+          <label class="f" for="t-9ff065c3cc7c">해시태그</label>
+          <input id="t-9ff065c3cc7c" type="text" class="tagsin" value="#우주 #화성 #포보스 #일본 #JAXA" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본이 5억 7,800만 달러 규모의 임무를 발사했고, 5년짜리 원정이다</b>
+            <q>“Japan launched a $578 million mission Monday on a five-year expedition to land on the largest moon of Mars and retrieve samples for return to Earth, a daring international project that could yield new insights into the formation of the Solar System.”</q>
+            <small>caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>MMX의 목표는 화성의 가장 큰 위성에 착륙해 샘플을 지구로 가져오는 것이다</b>
+            <q>“Japan launched a $578 million mission Monday on a five-year expedition to land on the largest moon of Mars and retrieve samples for return to Earth, a daring international project that could yield new insights into the formation of the Solar System.”</q>
+            <small>slide3, caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>화성 위성에서 샘플을 가져오는 것은 세계 최초를 목표로 한다</b>
+            <q>““The MMX [mission] we launched today is a challenging mission aiming for the world’s first sample return from the Martian moons,” said Yoshihiro Seki, Japan’s science minister.”</q>
+            <small>slide1, caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>발사 시각은 미 동부시간 월요일 오후 3시 41분(일본 화요일 오전 4시 41분), 장소는 다네가시마 우주센터</b>
+            <q>“The robotic Martian Moons eXploration mission, known as MMX, lifted off at 3:41 pm EDT Monday (4:41 am Japan Standard Time Tuesday) from Tanegashima Space Center in southern Japan.”</q>
+            <small>slide2, caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>63미터 H3 로켓이 탐사선을 올렸고, 이번에는 고체 로켓 부스터 4개를 단 새 구성이었다</b>
+            <q>“The rocket assigned to MMX debuted a new souped-up configuration with four strap-on solid rocket boosters, full-throttle main engines, and an extended payload shroud to accommodate the demands of Japan’s heaviest and most ambitious interplanetary mission to date.”</q>
+            <small>caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>탐사선은 시속 2만 4,000마일 넘게 가속해 10개월간 화성으로 향한다</b>
+            <q>“The rocket’s upper stage accelerated the MMX spacecraft to a top speed of more than 24,000 mph, fast enough to break free of Earth’s gravitational pull for the 10-month voyage to Mars.”</q>
+            <small>slide4, caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>탐사선은 약 4.5톤이고 질량의 3분의 2가 추진제이며 발사 약 71분 뒤 분리됐다</b>
+            <q>“The nearly 9,900-pound (4.5-metric ton) spacecraft—two-thirds of its mass comprised of propellant—separated from the H3 rocket about 71 minutes after liftoff.”</q>
+            <small>caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>JAXA 이사장이 발사 성공을 선언하며 5년의 긴 여정이 시작됐다고 말했다</b>
+            <q>“Hiroshi Yamakawa, president of the Japan Aerospace Exploration Agency (JAXA), declared the launch a success. “A long journey of five years has just started,” Yamakawa said.”</q>
+            <small>caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>분리 직후 지상과 교신했고 태양전지판을 펼쳤으며 매우 안정적인 상태였다</b>
+            <q>“MMX established contact with ground controllers, unfurled its solar panels, and was in a “very stable condition” soon after separating from the H3 rocket, according to Yasuhiro Kawakatsu, the mission’s project manager at JAXA.”</q>
+            <small>caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하야부사와 하야부사2의 성과를 잇는 임무다</b>
+            <q>“The mission to the Martian moons builds on Japan’s success in leading the Hayabusa and Hayabusa 2 missions, the world’s first two spacecraft to bring back pristine specimens from asteroids.”</q>
+            <small>caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포보스가 수십억 년 전 화성 궤도에 붙잡힌 소행성일 수 있고, 이를 확인하는 것이 MMX의 목표 중 하나다</b>
+            <q>“Scientists believe Phobos could itself be an asteroid that was captured into orbit around Mars billions of years ago. One of MMX’s science goals is finding out if that theory is correct.”</q>
+            <small>slide5, caption · <a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://arstechnica.com/space/2026/10/japan-launches-mission-to-bring-home-a-piece-of-the-martian-moon-phobos/" target="_blank" rel="noopener">Japan launches mission to bring home a piece of the Martian moon Phobos</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Mars_Valles_Marineris.jpeg" target="_blank" rel="noopener">NASA / USGS (see PIA04304 catalog page) / Wikimedia Commons · Public domain</a> — "Mars"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Tanegashima_Space_Center_lighthouse_(201402230009HQ).jpg" target="_blank" rel="noopener">Bill Ingalls / Wikimedia Commons · Public domain</a> — "Tanegashima Space Center"</li><li>3장: <a href="https://pixabay.com/photos/space-station-moon-landing-apollo-15-60615/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "moon surface"</li><li>4장: <a href="https://pixabay.com/photos/christmas-background-orion-nebula-11107/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "outer space"</li><li>5장: <a href="https://pixabay.com/photos/cosmos-space-planets-asteroid-dust-7051165/" target="_blank" rel="noopener">Willgard / Pixabay</a> — "asteroid"</li><li>6장: <a href="https://pixabay.com/photos/star-trails-night-stars-rotation-1846734/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "night sky stars"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b8fcc65af302" data-id="b8fcc65af302">
+    <div class="head">
+      <h2>2. 심해 탐사에서 뚱이 닮은 불가사리와 신종 57종 발견</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 10
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/24 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>뚱이 닮은 불가사리가 심해에서 나타났다는 소식, 알고 보니 이게 끝이 아니었어.
+
+아르헨티나 앞바다 심해 탐사 생중계에서 스폰지밥의 뚱이를 닮은 불가사리가 화제가 됐거든. 이후 연구자들이 부에노스아이레스의 마이모니데스 대학교에 모여 그때 채집한 표본을 분류했더니, 2주 만에 신종 57종과 신속(새로운 속) 5개에 이름이 붙었대.
+
+표본은 대부분 마르델플라타 해저협곡에서 나왔어. 가장 깊은 곳은 수심 3,500m가 넘고, 따뜻하고 짠 브라질 해류와 차갑고 영양분 많은 말비나스 해류가 부딪히는 곳이라 지구에서 가장 역동적인 바다 중 하나로 꼽혀.
+
+종류별로 보면 해삼과 갯고사리 같은 극피동물이 22종, 요각류가 20종, 산호 등 자포동물이 14종, 그리고 뿔조개가 1종이야. 연구자들이 살펴본 요각류는 하나도 빠짐없이 전부 신종이었어. 뿔 같은 돌기가 북유럽 신화 속 신의 모자를 닮아 &#39;로키&#39;라는 별명이 붙은 해삼도 이번 신종 해삼 중 하나야.
+
+이번 탐사는 기후변화나 심해 채굴 같은 위협으로 바뀌기 전에 전 세계 심해 생물을 기록하려는 오션 센서스 프로젝트의 일부였어.
+
+출처: ScienceAlert
+
+배경 사진: Pexels, Eknbg, OrnaW, Alvaro_Bejarano, joakant, Kanenori / Pixabay
+표지 이미지: AI 생성
+
+#심해 #신종발견 #스폰지밥 #해양생물 #과학뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-b8fcc65af302">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 뚱이 닮은 불가사리 화제로 시작해 2주 만에 신종 57종, 검사한 요각류는 전부 신종이라는 반전 숫자로 파는 소재</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 뿔 같은 돌기가 북유럽 신화 신의 모자를 닮아 &#39;로키&#39;라는 별명이 붙은 신종 해삼 (카드 6장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">화제가 된 건 뚱이 닮은 불가사리 한 마리가 아니라 신종 57종이었대
+아르헨티나 심해 생중계에서 시작된 일인데, 표본 분류에 걸린 시간은 2주
+근데 이 표본들이 어디서 나왔는지가 더 궁금해짐 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 2주 만에 신종 57종이랑 신속(새로운 속) 5개에 이름이 붙었대. 뚱이 닮은 불가사리는 그 시작이었을 뿐이야. 그럼 이 표본들은 대체 어디서 건져 올린 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">2/ 표본은 대부분 마르델플라타 해저협곡에서 나왔어. 가장 깊은 곳은 수심 3,500m가 넘고, 따뜻하고 짠 브라질 해류랑 차갑고 영양분 많은 말비나스 해류가 부딪히는 곳이야. 지구에서 가장 역동적인 바다 중 하나로 꼽힌대. 그럼 57종은 어떤 애들일까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">3/ 57종을 종류별로 정리하면
+- 해삼·갯고사리 같은 극피동물: 22종
+- 요각류: 20종
+- 산호 등 자포동물: 14종
+- 뿔조개: 1종
+근데 요각류는 숫자보다 더 센 얘기가 있어</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">4/ 연구자들이 살펴본 요각류는 하나도 빠짐없이 전부 신종이었대. 이 정도면 심해엔 아직 이름도 못 받은 생물이 한참 남아 있다는 얘기지. 그럼 이 탐사는 왜 이렇게 서둘러 진행된 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">5/ 이번 탐사는 기후변화나 심해 채굴 같은 위협으로 바뀌기 전에 전 세계 심해 생물을 기록하려는 오션 센서스 프로젝트의 일부였어. 그래서 이렇게 한꺼번에 이름을 붙여 나간 거야.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">218/500자</span></div>
+      <p class="tp-text">6/ 결국 뚱이 닮은 불가사리로 시작한 생중계가, 심해에 이름 없던 생물이 이만큼 있었다는 걸 드러낸 셈이야.
+
+너라면 신종 하나에 이름 붙일 수 있을 때 어떤 이름 지을래?
+
+이런 해외 과학 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 신종 해삼 한 종 소개까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 이 정도면 심해엔 아직 이름도 못 받은 생물이 한참 남아 있다는 얘기지 <small>요각류 전부가 신종이었다는 사실에서 심해 미기재 생물이 많이 남아 있다고 단정하는 것은 원고에 없는 추론이다.</small></li><li>카드에 없는 내용: 그래서 이렇게 한꺼번에 이름을 붙여 나간 거야. <small>원고는 오션 센서스 프로젝트의 일부라는 점만 밝힐 뿐, 빠른 명명이 위협 때문이라는 인과 관계는 말하지 않는다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>화제가 된 건 뚱이 닮은 불가사리 한 마리가 아니라 신종 57종이었대</li><li>뚱이 닮은 불가사리 하나로 난리였는데, 진짜는 그 뒤에 나왔대</li><li>심해 생중계 표본 분류했더니 2주 만에 신종 57종에 이름이 붙었대</li><li>연구자들이 살펴본 요각류는 하나도 빠짐없이 전부 신종이었대</li><li>&#39;뚱이 닮았다&#39;로 시작해서 새로운 속 5개까지 나온 심해 탐사</li><li>수심 3,500m가 넘는 바다엔 아직 이름 없는 생물이 이렇게 많대</li><li>스폰지밥 좋아하면 이거 봐. 뚱이 닮은 불가사리의 후속 이야기</li><li>뚱이는 시작일 뿐이었어. 아르헨티나 앞바다에서 벌어진 일</li><li>지구에서 가장 역동적인 바다 중 하나에서 건져 올린 것들</li><li>생중계 한 번에 57종, 2주 만에 정리된 심해 표본 이야기</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>신종 하나에 이름 붙일 수 있다면 어떤 이름 지을래?</li><li>뚱이 닮은 불가사리 생중계 보면서 처음 알았던 사람?</li><li>심해 생중계 또 한다면 볼 사람 vs 안 볼 사람?</li><li>스폰지밥 캐릭터 중 다음에 심해에서 닮은 애 나왔으면 하는 건 누구야?</li><li>너라면 심해 탐사선 타고 가장 먼저 보고 싶은 게 뭐야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>일본 화성 위성 포보스 샘플 귀환 임무 MMX 발사</li><li>오션 센서스 프로젝트가 기록하려는 전 세계 심해 생물 이야기</li><li>브라질 해류와 말비나스 해류가 만나는 바다는 왜 역동적일까</li><li>심해 요각류는 어떤 생물인지 쉽게 풀어보기</li><li>도쿄 요쓰야역 염소 직원 출근</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>뚱이 닮은 불가사리가 신종 57종에 포함되는지 원문에 명확히 없음 — 본글에서 &#39;불가사리가 신종 57종 중 하나&#39;라고 단정하지 말 것</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-01.jpg" alt="1장: 뚱이 닮은 불가사리???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-02.jpg" alt="2장: 아르헨티나 앞바다 심해에서 생중계 중 등장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-03.jpg" alt="3장: 근데 얘가 끝이 아니었음 2주 만에 신종 57종" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-04.jpg" alt="4장: 같이 잡은 해삼·갯고사리 신종만 22종" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-05.jpg" alt="5장: 검사한 요각류 전부 신종…ㄷㄷ" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-06.jpg" alt="6장: 뿔같은 돌기 달린 해삼 별명은 로키" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-07.jpg" alt="7장: 스폰지밥 좋아하는 친구한테 이거 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/b8fcc65af302/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">뚱이 닮은 불가사리가 심해에서 나타났다는 소식, 알고 보니 이게 끝이 아니었어.
+
+아르헨티나 앞바다 심해 탐사 생중계에서 스폰지밥의 뚱이를 닮은 불가사리가 화제가 됐거든. 이후 연구자들이 부에노스아이레스의 마이모니데스 대학교에 모여 그때 채집한 표본을 분류했더니, 2주 만에 신종 57종과 신속(새로운 속) 5개에 이름이 붙었대.
+
+표본은 대부분 마르델플라타 해저협곡에서 나왔어. 가장 깊은 곳은 수심 3,500m가 넘고, 따뜻하고 짠 브라질 해류와 차갑고 영양분 많은 말비나스 해류가 부딪히는 곳이라 지구에서 가장 역동적인 바다 중 하나로 꼽혀.
+
+종류별로 보면 해삼과 갯고사리 같은 극피동물이 22종, 요각류가 20종, 산호 등 자포동물이 14종, 그리고 뿔조개가 1종이야. 연구자들이 살펴본 요각류는 하나도 빠짐없이 전부 신종이었어. 뿔 같은 돌기가 북유럽 신화 속 신의 모자를 닮아 &#39;로키&#39;라는 별명이 붙은 해삼도 이번 신종 해삼 중 하나야.
+
+이번 탐사는 기후변화나 심해 채굴 같은 위협으로 바뀌기 전에 전 세계 심해 생물을 기록하려는 오션 센서스 프로젝트의 일부였어.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#심해 #신종발견 #스폰지밥 #해양생물 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>스폰지밥은 저작권이 있는 캐릭터라 이미지·로고를 쓰지 않고 텍스트로만 언급함</li><li>뚱이를 닮았다는 표현은 원문 기준이며 주관적 비유임</li><li>신종 수치는 분류 워크숍에서 이름이 붙은 결과이며 이후 공식 기재 과정에서 달라질 수 있음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-b8fcc65af302-0">1장</label>
+          <textarea id="s-b8fcc65af302-0" rows="2" data-slide="0">**뚱이** 닮은
+불가사리???</textarea>
+          
+          <label class="f" for="s-b8fcc65af302-1">2장</label>
+          <textarea id="s-b8fcc65af302-1" rows="3" data-slide="1">아르헨티나
+앞바다 심해에서
+**생중계** 중 등장</textarea>
+          
+          <label class="f" for="s-b8fcc65af302-2">3장</label>
+          <textarea id="s-b8fcc65af302-2" rows="3" data-slide="2">근데 얘가
+끝이 아니었음
+2주 만에 신종 **57종**</textarea>
+          
+          <label class="f" for="s-b8fcc65af302-3">4장</label>
+          <textarea id="s-b8fcc65af302-3" rows="3" data-slide="3">같이 잡은
+해삼·갯고사리
+신종만 **22종**</textarea>
+          
+          <label class="f" for="s-b8fcc65af302-4">5장</label>
+          <textarea id="s-b8fcc65af302-4" rows="2" data-slide="4">검사한 요각류
+**전부** 신종…ㄷㄷ</textarea>
+          
+          <label class="f" for="s-b8fcc65af302-5">6장</label>
+          <textarea id="s-b8fcc65af302-5" rows="2" data-slide="5">뿔같은 돌기 달린 해삼
+별명은 **로키**</textarea>
+          
+          <label class="f" for="s-b8fcc65af302-6">7장</label>
+          <textarea id="s-b8fcc65af302-6" rows="3" data-slide="6">**스폰지밥** 좋아하는
+친구한테
+이거 보내기</textarea>
+          
+          <label class="f" for="c-b8fcc65af302">본문 (캡션)</label>
+          <textarea id="c-b8fcc65af302" class="caption">뚱이 닮은 불가사리가 심해에서 나타났다는 소식, 알고 보니 이게 끝이 아니었어.
+
+아르헨티나 앞바다 심해 탐사 생중계에서 스폰지밥의 뚱이를 닮은 불가사리가 화제가 됐거든. 이후 연구자들이 부에노스아이레스의 마이모니데스 대학교에 모여 그때 채집한 표본을 분류했더니, 2주 만에 신종 57종과 신속(새로운 속) 5개에 이름이 붙었대.
+
+표본은 대부분 마르델플라타 해저협곡에서 나왔어. 가장 깊은 곳은 수심 3,500m가 넘고, 따뜻하고 짠 브라질 해류와 차갑고 영양분 많은 말비나스 해류가 부딪히는 곳이라 지구에서 가장 역동적인 바다 중 하나로 꼽혀.
+
+종류별로 보면 해삼과 갯고사리 같은 극피동물이 22종, 요각류가 20종, 산호 등 자포동물이 14종, 그리고 뿔조개가 1종이야. 연구자들이 살펴본 요각류는 하나도 빠짐없이 전부 신종이었어. 뿔 같은 돌기가 북유럽 신화 속 신의 모자를 닮아 &#39;로키&#39;라는 별명이 붙은 해삼도 이번 신종 해삼 중 하나야.
+
+이번 탐사는 기후변화나 심해 채굴 같은 위협으로 바뀌기 전에 전 세계 심해 생물을 기록하려는 오션 센서스 프로젝트의 일부였어.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-b8fcc65af302">해시태그</label>
+          <input id="t-b8fcc65af302" type="text" class="tagsin" value="#심해 #신종발견 #스폰지밥 #해양생물 #과학뉴스" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아르헨티나 앞바다 심해 탐사 생중계에서 장난기 어린 얼굴의 불가사리가 화제가 됐다</b>
+            <q>“A cheeky-looking starfish stole the show during a live-streamed deep-sea expedition off the coast of Argentina last year, but that was not all scientists found.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뚱이를 닮은 불가사리가 생중계된 탐사는 2025년 8월 슈미트 해양연구소 탐사였다</b>
+            <q>“An international team of biologists recently met at Universidad Maimónides in Buenos Aires to identify a trove of species collected during the Schmidt Ocean Institute expedition in August 2025, where a Patrick Star lookalike was famously live-streamed.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구자들이 마이모니데스 대학교에 모여 표본을 분류했고 2주 만에 신종 57종과 신속 5개에 이름을 붙였다</b>
+            <q>“Within just two weeks, participants at the taxonomy workshop named 57 new species and 5 new genera that were collected with the help of the remotely operated vehicle (ROV) SuBastian.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>표본은 대부분 아르헨티나 최대급 심해 협곡 중 하나인 마르델플라타 해저협곡에서 채집됐다</b>
+            <q>“Most of the specimens were collected from the Mar del Plata Canyon, one of Argentina&#39;s largest deep-sea rifts.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마르델플라타 해저협곡의 가장 깊은 곳은 수심 3,500m가 넘는다</b>
+            <q>“At its deepest point, Mar del Plata Canyon plunges to more than 3,500 meters below the ocean&#39;s surface.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>따뜻하고 짠 브라질 해류와 차갑고 영양분 많은 말비나스 해류가 부딪혀 지구에서 가장 역동적인 바다 중 하나다</b>
+            <q>“It&#39;s also where the warm, salty Brazil current collides with the cold, nutrient-rich Malvinas current, making this one of the most energetic regions in Earth&#39;s oceans.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>신종은 극피동물 22종, 요각류 20종, 자포동물 14종, 뿔조개 1종이다</b>
+            <q>“Altogether, the team identified 22 new echinoderm species (sea cucumbers and crinoids), 20 new species of copepods (a group of crustaceans), 14 cnidarians, including octocorals, sea pens, and stony corals, and one mollusc: a tusk shell.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구자들이 살펴본 요각류는 전부 신종이었다</b>
+            <q>“Every single copepod the biologists examined during the taxonomy sprint was new to science, contributing 20 new species and one new genus to the total.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뿔 같은 돌기 때문에 &#39;로키&#39;라는 별명이 붙은 해삼이 신종 해삼 중 하나다</b>
+            <q>“An impressive deep-sea holothurian – nicknamed &#39;Loki&#39; for its horn-like appendages that resemble the Norse god&#39;s hat – was one of up to 10 new sea cucumbers discovered.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 탐사는 기후변화와 심해 채굴 같은 위협 전에 전 세계 심해 생물을 기록하려는 오션 센서스의 일부였다</b>
+            <q>“The expedition aboard Schmidt Ocean Institute&#39;s Falkor (too) research vessel was part of the Ocean Census&#39;s race to document deep-sea marine life across the world, before it is potentially disrupted by threats like climate change and deep-sea mining.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/viral-deep-sea-expedition-found-a-real-life-patrick-from-spongebob-and-57-new-species" target="_blank" rel="noopener">Viral Deep-Sea Expedition Found a Real-Life Patrick From SpongeBob, And 57 New Species</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "cheerful pastel cartoon starfish resting on a bright glowing deep sea floor with tiny bubbles"</li><li>2장: <a href="https://pixabay.com/photos/animals-jellyfish-deep-ocean-1846546/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "deep sea"</li><li>3장: <a href="https://pixabay.com/photos/antarctic-continent-pol-hurtigruten-4052326/" target="_blank" rel="noopener">Eknbg / Pixabay</a> — "ocean research"</li><li>4장: <a href="https://pixabay.com/photos/sea-cucumber-sea-shells-beach-4039066/" target="_blank" rel="noopener">OrnaW / Pixabay</a> — "sea cucumber"</li><li>5장: <a href="https://pixabay.com/photos/body-of-water-panoramic-landscape-3332522/" target="_blank" rel="noopener">Alvaro_Bejarano / Pixabay</a> — "plankton"</li><li>6장: <a href="https://pixabay.com/photos/fish-underwater-corals-sea-ocean-378286/" target="_blank" rel="noopener">joakant / Pixabay</a> — "coral reef"</li><li>7장: <a href="https://pixabay.com/photos/coast-waves-beach-ocean-sea-6310250/" target="_blank" rel="noopener">Kanenori / Pixabay</a> — "ocean waves"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-086d3ca7f987" data-id="086d3ca7f987">
+    <div class="head">
+      <h2>3. 도쿄 요쓰야역 염소 직원 출근</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/24 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>도쿄 한복판에 염소가 출근했다는 소식이야. 장소는 요쓰야역 아카사카 출구 근처인데, 매체가 직접 도심 속 정글이라고 표현할 만큼 완전 번화가야. 역에서 신주쿠까지는 전철이나 지하철로 5분 정도라고 해.
+
+이 염소들은 JR동일본의 임시 직원이야. 정확히는 JR이 염소 주인들에게 비용을 내고 염소의 일을 빌리는 형태라고 해. 일은 10월 9일부터 시작됐고, 역 부지의 풀을 친환경적으로 없애려고 투입된 거야.
+
+일하는 염소는 두 마리야. 한 살 수컷 나기군, 두 살 암컷 폿케짱이야. 현장 직원 말로는 연말까지 이곳에 배치될 예정이래. 추운 시기엔 풀이 천천히 자라서 겨울엔 쉬고, 봄에 JR이 다시 필요로 하면 돌아올 수도 있대.
+
+구경 가고 싶다면 알아둘 점이 하나 있어. JR동일본은 염소들에게 친절하게 대해 달라고 부탁하면서, 간식은 주지 말아 달라고 했어. 연말까지 근무한다니까 도쿄 갈 일 있는 친구가 있으면 지금 보내주면 딱이야.
+
+출처: SoraNews24, JR동일본 공식 계정 게시물(해당 기사 인용)
+
+배경 사진: Morgengry, aszak, Nennieinszweidrei, FotografieLink / Pixabay
+사진: Wilfredor / Wikimedia Commons, CC0 (편집)
+표지 이미지: AI 생성
+
+#도쿄 #일본여행 #염소 #해외토픽 #JR동일본</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-086d3ca7f987">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 신주쿠에서 5분 거리 번화가 역에 염소가 임시 직원으로 출근했고 연말까지만 볼 수 있어서, 도쿄 갈 사람에게 &#39;지금 가야 하는 이유&#39;가 된다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 일하는 염소 두 마리의 이름과 나이 프로필 (카드 4장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">90/500자</span></div>
+      <p class="tp-text">도쿄 갈 사람은 연말 전에 가는 게 좋겠어. 역에 염소가 출근 중이거든
+JR동일본 임시 직원인데, 맡은 일이 꽤 의외야
+그리고 이 직원 쓰는 방식도 좀 독특함 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">1/ 염소가 하는 일은 역 부지의 잡초 제거야. 풀을 친환경적으로 없애려고 투입됐대.
+근데 이 역이 어디냐면, 신주쿠까지 전철로 5분 걸리는 곳이야. 어느 역일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">2/ 요쓰야역 아카사카 출구 근처야. 신주쿠까지는 전철이나 지하철로 5분 정도래.
+매체가 직접 &#39;도심 속 정글&#39;이라고 표현할 만큼 완전 번화가라고 해.
+그럼 이 염소들은 어떻게 고용된 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">88/500자</span></div>
+      <p class="tp-text">3/ JR동일본이 염소 주인들에게 비용을 내고, 염소의 일을 빌리는 형태래. 그래서 임시 직원이야.
+일은 10월 9일부터 시작됐어.
+그럼 언제까지 일하냐면 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">4/ 현장 직원 말로는 연말까지 이곳에 배치될 예정이래.
+추운 시기엔 풀이 천천히 자라서 겨울엔 쉬고, 봄에 JR이 다시 필요로 하면 돌아올 수도 있대.
+그래서 보러 갈 거면 챙길 게 있음</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">5/ 염소 보러 갈 때 체크
+- 장소: 요쓰야역 아카사카 출구 근처
+- 시기: 연말까지 근무 예정 (겨울엔 휴직)
+- 매너: 염소들에게 친절하게 대해 달라는 부탁
+- 금지: 간식은 주지 말아 달라고 함
+(JR동일본 요청이야)
+그래서 결론은 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">234/500자</span></div>
+      <p class="tp-text">6/ 결국 도쿄 한복판 역에서 염소 둘이 연말까지 잡초 제거 근무 중이고, 구경 가면 간식은 참아야 한다는 거야.
+
+도쿄 가면 염소 보러 일부러 역까지 가는 파 vs 그냥 지나치는 파, 어느 쪽이야?
+
+이런 해외 신기한 소식, 새벽마다 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 일하는 염소 두 마리 프로필까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>도쿄 갈 사람은 연말 전에 가는 게 좋겠어. 역에 염소가 출근 중이거든</li><li>도쿄 신주쿠에서 전철로 5분 거리 역에 염소가 출근했대</li><li>역 잡초 뽑는 건 사람이 아니라 염소 일이래. 도쿄 한복판 얘기야</li><li>매체가 &#39;도심 속 정글&#39;이라고 부른 도쿄 역에 염소 직원이 생겼어</li><li>염소가 직원인데 JR은 돈을 염소 주인한테 낸대</li><li>겨울엔 휴직하는 직원이 있대. 그것도 도쿄 역에서</li><li>10월 9일부터 도쿄 역으로 출근하는 직원이 있는데, 사람이 아니야</li><li>JR동일본이 염소를 임시 직원으로 썼대</li><li>염소한테 간식 주지 말라고 JR동일본이 공식으로 부탁했대</li><li>도쿄 여행 계획 있으면 연말 전에 잡아. 역에서 일하는 염소 두 마리가 있거든</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>도쿄 가면 염소 보러 일부러 역까지 가는 파 vs 그냥 지나치는 파?</li><li>염소 직원 vs 다른 동물 직원, 역에서 보고 싶은 쪽은?</li><li>도쿄 연말 여행 간다면 염소 보러 가볼 사람?</li><li>너라면 역 잡초 제거 직원으로 어떤 동물을 뽑을 것 같아?</li><li>출근길에 염소 마주친 적 있는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>일본 화성 위성 포보스 샘플 귀환 임무 MMX 발사</li><li>해외에서 동물이 &#39;직원&#39;으로 일하는 다른 소식</li><li>도쿄 도심 속 이색 풍경 소식</li><li>해외 역이나 공공장소의 신기한 임시 직원 이야기</li><li>일본 여행 가기 전에 알아둘 해외토픽</li></ol>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/086d3ca7f987/v2-01.jpg" alt="1장: 도쿄 한복판에 염소가 출근?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/086d3ca7f987/v2-02.jpg" alt="2장: 알고 보니 JR동일본 임시 직원" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/086d3ca7f987/v2-03.jpg" alt="3장: 맡은 일은 친환경 잡초 제거" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/086d3ca7f987/v2-04.jpg" alt="4장: 나기군 1살 폿케짱 2살 둘이서 근무중" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/086d3ca7f987/v2-05.jpg" alt="5장: 근무는 연말까지 겨울엔 휴직 봄엔 돌아올 수도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/086d3ca7f987/v2-06.jpg" alt="6장: 도쿄 가는 친구 연말 전에 보내주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261020-pm-de0c8212c514/086d3ca7f987/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">도쿄 한복판에 염소가 출근했다는 소식이야. 장소는 요쓰야역 아카사카 출구 근처인데, 매체가 직접 도심 속 정글이라고 표현할 만큼 완전 번화가야. 역에서 신주쿠까지는 전철이나 지하철로 5분 정도라고 해.
+
+이 염소들은 JR동일본의 임시 직원이야. 정확히는 JR이 염소 주인들에게 비용을 내고 염소의 일을 빌리는 형태라고 해. 일은 10월 9일부터 시작됐고, 역 부지의 풀을 친환경적으로 없애려고 투입된 거야.
+
+일하는 염소는 두 마리야. 한 살 수컷 나기군, 두 살 암컷 폿케짱이야. 현장 직원 말로는 연말까지 이곳에 배치될 예정이래. 추운 시기엔 풀이 천천히 자라서 겨울엔 쉬고, 봄에 JR이 다시 필요로 하면 돌아올 수도 있대.
+
+구경 가고 싶다면 알아둘 점이 하나 있어. JR동일본은 염소들에게 친절하게 대해 달라고 부탁하면서, 간식은 주지 말아 달라고 했어. 연말까지 근무한다니까 도쿄 갈 일 있는 친구가 있으면 지금 보내주면 딱이야.
+
+출처: SoraNews24, JR동일본 공식 계정 게시물(해당 기사 인용)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#도쿄 #일본여행 #염소 #해외토픽 #JR동일본</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: &#39;완전 번화가&#39;라는 장소 묘사는 원문에 없고, 원문은 도심 속 정글이라는 표현만 담고 있다.</li><li>근거 등록 안 된 주장: &#39;염소가 출근&#39;이라는 제목 표현은 원문에 없는 연출적 서술이다.</li>
+          <li>기사 사진과 JR동일본 SNS 게시물은 사용하지 않음</li><li>배치 기간(연말까지, 봄 복귀 가능성)은 현장 직원 발언 기반이라 변동될 수 있음</li><li>원문 기사 날짜가 2026년이므로 게시 전 최신 상황 확인 권장</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-086d3ca7f987-0">1장</label>
+          <textarea id="s-086d3ca7f987-0" rows="2" data-slide="0">도쿄 한복판에
+**염소가** 출근?!</textarea>
+          
+          <label class="f" for="s-086d3ca7f987-1">2장</label>
+          <textarea id="s-086d3ca7f987-1" rows="3" data-slide="1">알고 보니
+JR동일본
+**임시 직원**</textarea>
+          
+          <label class="f" for="s-086d3ca7f987-2">3장</label>
+          <textarea id="s-086d3ca7f987-2" rows="3" data-slide="2">맡은 일은
+친환경
+**잡초 제거**</textarea>
+          
+          <label class="f" for="s-086d3ca7f987-3">4장</label>
+          <textarea id="s-086d3ca7f987-3" rows="3" data-slide="3">나기군 1살
+**폿케짱 2살**
+둘이서 근무중</textarea>
+          
+          <label class="f" for="s-086d3ca7f987-4">5장</label>
+          <textarea id="s-086d3ca7f987-4" rows="3" data-slide="4">근무는 연말까지
+**겨울엔 휴직**
+봄엔 돌아올 수도</textarea>
+          
+          <label class="f" for="s-086d3ca7f987-5">6장</label>
+          <textarea id="s-086d3ca7f987-5" rows="3" data-slide="5">도쿄 가는 친구
+**연말 전에**
+보내주기</textarea>
+          
+          <label class="f" for="c-086d3ca7f987">본문 (캡션)</label>
+          <textarea id="c-086d3ca7f987" class="caption">도쿄 한복판에 염소가 출근했다는 소식이야. 장소는 요쓰야역 아카사카 출구 근처인데, 매체가 직접 도심 속 정글이라고 표현할 만큼 완전 번화가야. 역에서 신주쿠까지는 전철이나 지하철로 5분 정도라고 해.
+
+이 염소들은 JR동일본의 임시 직원이야. 정확히는 JR이 염소 주인들에게 비용을 내고 염소의 일을 빌리는 형태라고 해. 일은 10월 9일부터 시작됐고, 역 부지의 풀을 친환경적으로 없애려고 투입된 거야.
+
+일하는 염소는 두 마리야. 한 살 수컷 나기군, 두 살 암컷 폿케짱이야. 현장 직원 말로는 연말까지 이곳에 배치될 예정이래. 추운 시기엔 풀이 천천히 자라서 겨울엔 쉬고, 봄에 JR이 다시 필요로 하면 돌아올 수도 있대.
+
+구경 가고 싶다면 알아둘 점이 하나 있어. JR동일본은 염소들에게 친절하게 대해 달라고 부탁하면서, 간식은 주지 말아 달라고 했어. 연말까지 근무한다니까 도쿄 갈 일 있는 친구가 있으면 지금 보내주면 딱이야.
+
+출처: SoraNews24, JR동일본 공식 계정 게시물(해당 기사 인용)</textarea>
+          <label class="f" for="t-086d3ca7f987">해시태그</label>
+          <input id="t-086d3ca7f987" type="text" class="tagsin" value="#도쿄 #일본여행 #염소 #해외토픽 #JR동일본" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>염소들은 JR동일본의 임시 직원이다</b>
+            <q>“Working, because they’re temporary employees of East Japan Railways/JR East.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>JR이 염소 주인들에게 비용을 내고 염소의 일을 빌리는 형태다</b>
+            <q>“OK, technically JR is paying to rent the goats’ owners to rent their services, but either way, they’re here in a professional capacity.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 9일부터 역 부지의 풀을 친환경적으로 없애는 일을 시작했다</b>
+            <q>“Their gig started earlier this month, on October 9, and they’re being employed as an ecologically friendly way of clearing out weeds from this patch of land on the station’s property.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>나기군은 한 살 수컷, 폿케짱은 두 살 암컷이다</b>
+            <q>“The two animals dispatched to this job site are Nagi-kun, a one-year-old male, and Pokke-chan, a two-year-old female.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>염소들은 연말까지 이곳에 배치될 예정이다</b>
+            <q>“We spoke with a staff member who happened to be present when we came by, and they told us that Nagi-kun and Pokke-chan are scheduled to be stationed here until the end of the year.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>추운 시기엔 풀이 천천히 자라 겨울엔 쉬고, 봄에 JR이 필요하면 돌아올 수도 있다</b>
+            <q>“Since the grass and other underbrush doesn’t grow very quickly during the coldest part of the year, the animals will then take the winter off, but they might be back again in the spring if JR needs their services again.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>요쓰야역 아카사카 출구 근처에서 염소를 발견했고 매체는 이곳을 도심 속 정글이라고 표현했다</b>
+            <q>“No, we found this goat in the jungle…the urban jungle of downtown Tokyo!”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>요쓰야는 신주쿠에서 전철이나 지하철로 5분 정도 거리다</b>
+            <q>“To give you a sense of the geography, Yotuysa is only about five minutes by train or subway from Shinjuku, the central Tokyo rail hub that’s the busiest train station in the world, and only about 10 minutes from Shibuya and its massively crowded Scramble Crossing.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>JR동일본은 염소에게 친절하게 대하고 간식을 주지 말아 달라고 요청했다</b>
+            <q>“Be aware, though, that JR East asks that everyone be kind to the goats, and also to refrain from offering them any snacks.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/20/there-are-goats-spending-every-day-in-downtown-tokyo-but-why-photos/" target="_blank" rel="noopener">There are goats spending every day in downtown Tokyo, but why? [Photos]</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "A cheerful goat wearing a tailored navy business suit standing in a bright modern Tokyo station concourse, warm morning light"</li><li>2장: <a href="https://pixabay.com/photos/berlin-central-station-5010635/" target="_blank" rel="noopener">Morgengry / Pixabay</a> — "railway station"</li><li>3장: <a href="https://pixabay.com/photos/reeds-grass-field-meadow-flora-8485465/" target="_blank" rel="noopener">aszak / Pixabay</a> — "grass field"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:Capra_aegagrus_hircus_in_isla_Margarita.jpg" target="_blank" rel="noopener">Wilfredor / Wikimedia Commons · CC0</a> — "domestic goat"</li><li>5장: <a href="https://pixabay.com/photos/chinese-reed-reed-miscanthus-9389704/" target="_blank" rel="noopener">Nennieinszweidrei / Pixabay</a> — "winter grass"</li><li>6장: <a href="https://pixabay.com/photos/women-friends-beach-sea-summer-3266211/" target="_blank" rel="noopener">FotografieLink / Pixabay</a> — "travel friends"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-cd341b0b043b">
+    <div class="head">
+      <h2>S1. 치매 고위험 유전자 보유자 중 80대에도 멀쩡한 사람들의 단서: FN1 변이와 뇌혈관 장벽</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 20
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-cd341b0b043b">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;치매 위험 유전자가 있어도 운명은 아닐 수 있다&#39;는 반전을 먼저 던지고, 가족력 걱정하는 사람이 끝까지 읽게 이유를 뇌혈관·장벽이라는 의외의 곳에서 풀어주는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">치매 위험 유전자를 갖고도 80대까지 정신이 멀쩡한 사람들이 있대
+컬럼비아대 연구진이 그 이유를 설명할 단서를 찾았다는데
+근데 그 단서가 의외로 뇌혈관 쪽이었음. 어떻게? ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">83/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 치매 위험 유전자 APOE ε4를 가진 사람 중 일부는 FN1이라는 유전자에 드문 보호 변이도 갖고 있었대. 이 변이는 뭘 막아줄까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">2/ 이 변이는 뇌혈관 주변에 쌓이는 피브로넥틴이라는 단백질을 제한하는 걸로 보인대. APOE ε4를 가진 사람은 이게 과하게 쌓여서 혈액-뇌 장벽이 위태로워질 수 있고. 근데 혈액-뇌 장벽이 뭐냐면?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">3/ 혈액-뇌 장벽은 혈액과 뇌 사이의 보호 경계선이야. 이게 손상돼서 투과성이 높아지면 원래 못 들어올 물질이 뇌로 더 쉽게 들어오고, 염증 같은 과정에 영향을 줄 수 있대. 그럼 이 단백질이 진짜 원인일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">184/500자</span></div>
+      <p class="tp-text">4/ 실험 결과 정리
+- 사람 APOE ε4를 넣은 쥐: APOE ε3 쥐보다 뇌 피브로넥틴이 거의 2배, 장벽이 샌 흔적도 있었음
+- 별세포(뇌 지지세포)에서 피브로넥틴 늘림: 장벽이 더 잘 샘
+- 피브로넥틴 줄임: 장벽 기능 개선
+→ 그냥 같이 나타난 게 아니라 직접 영향을 줄 수 있다는 실험 증거래. 그럼 치료로 이어질까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">154/500자</span></div>
+      <p class="tp-text">5/ 연구진이 그리는 건 자연이 준 방어를 흉내 내는 치료야. 피브로넥틴 쌓임 막기, 이상 신호 차단, 성장인자 신호 복구, 이 세 가지를 실험실에서 살펴보는 중. 아직은 전부 실험 단계고, 피브로넥틴은 몸에서 조직 지지·상처 치유도 해서 조심해야 한대. 그래서 결론이 뭐냐면</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">211/500자</span></div>
+      <p class="tp-text">6/ 결국 APOE ε4가 있어도 치매가 확정은 아니고, 연구진은 이 자연 방어에서 치료 단서를 찾는 중이라는 거. 치매 위험 유전자 검사, 알아보는 파 vs 모르고 사는 파?
+이런 해외 뇌 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구진이 이 자연 방어에서 치료 단서를 찾고 있다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>치매 위험 유전자를 갖고도 80대까지 정신이 멀쩡한 사람들이 있대</li><li>치매 유전자가 있다고 치매에 걸리는 게 아니래</li><li>5명 중 1명이 갖고 있는 치매 위험 유전자, 그걸 갖고도 무사한 사람들의 비밀이 나옴</li><li>치매 유전자의 문제는 유전자 자체가 아니라 뇌혈관 옆에 쌓이는 단백질일 수 있대</li><li>가족력 때문에 치매가 걱정되는 사람, 이 연구는 한번 봐</li><li>치매 위험을 71% 낮춘다고 보고된 유전자 변이, 이번엔 그 이유를 밝혔대</li><li>치매 위험 유전자를 가진 쥐는 뇌에 이 단백질이 거의 2배였대</li><li>뇌에도 경비 시스템이 있는데, 치매 위험 유전자가 그걸 망가뜨리는 방식이 밝혀졌대</li><li>치매 고위험 유전자를 가졌는데 80대에도 멀쩡한 사람들, 연구진이 단서를 찾았대</li><li>유전자가 운명이 아닐 수도 있다는 연구가 나옴, 치매 얘기야</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>치매 위험 유전자 검사, 알아보는 파 vs 모르고 사는 파?</li><li>유전자는 운명이라고 생각해, 아니면 아닐 수 있다고 생각해?</li><li>치매 연구 중에 더 기대되는 건 예방 vs 치료?</li><li>이런 뇌 연구 소식 더 보고 싶은 사람?</li><li>가족한테 건강 연구 소식 공유해본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>치매 위험 유전자 APOE ε4, 5명 중 1명이 가졌다는 변이는 뭐길래</li><li>혈액-뇌 장벽, 망가지면 뇌에 어떤 일이 생길까</li><li>알츠하이머 초기에 일어나는 뇌혈관 변화 연구</li><li>피브로넥틴처럼 &#39;보호 변이&#39;를 찾는 알츠하이머 연구들</li><li>알츠하이머 치료 연구, 지금 어디까지 왔나</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>마지막 글 댓글 질문(유전자 검사 알아보는 파 vs 모르는 파)이 검사를 권유하는 것처럼 읽히지 않는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>치매 위험 유전자를 갖고도 80대까지 정신이 멀쩡한 사람들이 있다</b>
+          <q>“Some people carry one of the strongest genetic risk factors for Alzheimer&#39;s disease yet never develop it, remaining mentally sharp well into their 80s.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>컬럼비아대 연구진이 그 저항성을 설명할 수 있는 생물학적 기전을 찾았다</b>
+          <q>“Now, researchers at Columbia University have uncovered a biological mechanism that could help explain this remarkable resistance.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>APOE ε4를 가진 일부 사람은 FN1 유전자에 드문 보호 변이도 갖고 있다</b>
+          <q>“The scientists found that some people carrying APOE ε4 also possess a rare protective mutation in the fibronectin (FN1) gene.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>드문 FN1 변이가 피브로넥틴 쌓임과 그로 인한 손상을 제한하는 것으로 보인다</b>
+          <q>“The rare FN1 mutation appears to limit this buildup and the damage associated with it.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>APOE ε4를 가진 사람은 뇌혈관 주변에 피브로넥틴이 과하게 쌓여 혈액-뇌 장벽을 해칠 수 있다</b>
+          <q>“However, in people with APOE ε4, excessive amounts can accumulate around blood vessels in the brain, potentially compromising a critical protective system known as the blood-brain barrier.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈액-뇌 장벽은 혈액과 뇌 사이의 보호 경계선이다</b>
+          <q>“The blood-brain barrier serves as a protective boundary between the bloodstream and the brain.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>장벽이 손상되거나 투과성이 높아지면 원래 막히던 물질이 뇌에 더 쉽게 들어오고 염증 등에 기여할 수 있다</b>
+          <q>“When this barrier becomes damaged or excessively permeable, substances that would normally be kept out can enter the brain more easily. Such disruptions may contribute to inflammation and other processes involved in neurological diseases, including Alzheimer&#39;s.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인간 APOE ε4를 가진 쥐는 APOE ε3 쥐보다 뇌 피브로넥틴이 거의 2배였다</b>
+          <q>“In mice engineered to carry human APOE ε4, researchers measured nearly twice as much fibronectin in the brain as in mice carrying APOE ε3, another common version of the gene.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>피브로넥틴이 더 쌓인 쥐에서 혈액-뇌 장벽이 샌 증거가 함께 나타났다</b>
+          <q>“The greater accumulation was accompanied by evidence that the blood-brain barrier had become leaky.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>별세포에서 피브로넥틴을 늘리면 장벽이 샜고 줄이면 장벽 기능이 개선됐다</b>
+          <q>“Increasing fibronectin in these cells was enough to disrupt the barrier, allowing it to become more permeable. Conversely, reducing fibronectin improved the barrier&#39;s ability to function normally.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>피브로넥틴이 장벽 손상에 직접 기여할 수 있다는 실험 증거가 나왔다</b>
+          <q>“These results provided experimental evidence that excess fibronectin can directly contribute to blood-brain barrier damage rather than merely appearing alongside it.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 발견이 자연적 방어를 흉내 내는 치료의 길을 열 수 있다</b>
+          <q>“The findings reveal a potential new way to prevent early brain damage and could pave the way for treatments that mimic this natural defense.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>피브로넥틴 쌓임을 막거나 이상 신호를 차단하는 접근이 가능하다</b>
+          <q>“One strategy would be to prevent harmful amounts of fibronectin from accumulating around the brain&#39;s blood vessels. Another would involve blocking the abnormal cellular signals triggered by excess fibronectin.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>성장인자 신호를 복구하는 접근도 가능하다</b>
+          <q>“A third possibility would be to restore the growth factor signaling that allows astrocytes and blood vessel cells to maintain a healthy blood-brain barrier.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 이 가능성들을 실험실 실험으로 조사 중이다</b>
+          <q>“Researchers are already investigating these possibilities through laboratory experiments.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이런 치료법은 아직 실험 단계다</b>
+          <q>“Although these potential therapies remain experimental, the discovery offers a promising new direction in Alzheimer&#39;s research.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>피브로넥틴은 조직 구조 지지와 상처 치유 등 몸 전체에서 필수적인 기능을 한다</b>
+          <q>“Fibronectin performs essential functions throughout the body, including supporting tissue structure and helping damaged tissues heal.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>APOE ε4를 가졌다고 알츠하이머가 확정되는 것은 아니다</b>
+          <q>“Although carrying APOE ε4 does not guarantee that someone will develop Alzheimer&#39;s, it increases their likelihood of developing the disease.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약 5명 중 1명이 APOE ε4를 한 카피 이상 가진다</b>
+          <q>“Approximately one in five people carries at least one copy of this gene variant.”</q>
+          <small>hook_options · <a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보호 기능 소실 FN1 변이가 알츠하이머 위험을 71% 낮춘다고 이전에 보고됐다</b>
+          <q>“We previously reported that APOE ε4 carriers with AD accumulate fibronectin at the gliovascular interface of the BBB, and that a protective loss-of-function fibronectin 1 (FN1) variant reduces AD risk by 71% (ref. 12).”</q>
+          <small>hook_options · <a href="https://www.nature.com/articles/s43587-026-01204-0" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="cd341b0b043b">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261018205044.htm" target="_blank" rel="noopener">Why some people escape Alzheimer’s despite carrying a high-risk gene</a></li><li><a href="https://www.nature.com/articles/s43587-026-01204-0" target="_blank" rel="noopener">Fibronectin mediates APOE4-driven blood–brain barrier dysfunction in Alzheimer’s disease - Nature Aging</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-91f261488b43">
+    <div class="head">
+      <h2>S2. 초가공식품과 대장암, 46만 명 분석에선 전체 연관이 없었다</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-91f261488b43">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;초가공식품=무조건 나쁨&#39; 통념을 뒤집되, 같은 초가공식품 안에서 시리얼·빵은 낮은 쪽, 소시지류는 높은 쪽으로 갈렸다는 반전으로 판다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">88/500자</span></div>
+      <p class="tp-text">초가공식품 제일 많이 먹은 사람도 대장암이 더 많진 않았대
+미국 46만 명을 20년쯤 따라간 연구야
+근데 초가공식품 안에서도 결과가 정반대인 음식이 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">1/ 초가공식품을 가장 많이 먹은 그룹과 가장 적게 먹은 그룹의 대장암 발생률이 거의 비슷했대. 연구진은 많이 먹는 쪽이 더 나쁠 거라고 예상했는데 반대로 나온 거야. 그럼 왜 이런 결과가 나왔을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">2/ 초가공식품이라는 한 묶음 안에 정반대 결과가 섞여 있었대. 포장 빵, 시리얼, 냉동 디저트·우유 음료는 암 발생이 낮은 쪽이었고, 소시지나 피시스틱 같은 재조합 육류·생선 제품은 높은 쪽이었어. 얼마나 차이 났을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">158/500자</span></div>
+      <p class="tp-text">3/ 가장 많이 먹은 그룹 vs 가장 적게 먹은 그룹, 대장암 위험 차이
+- 아침 시리얼: 16% 낮음
+- 냉동 디저트·우유 음료: 18% 낮음
+- 빵: 9% 낮음
+- 재조합 육류·생선: 10% 높음
+- 초가공식품 전체: 3% 낮음 (우연일 수 있는 차이)
+그럼 왜 이렇게 갈렸을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">4/ 영양소가 일부 설명할 수 있대. 이 연구에서 초가공식품은 참가자들이 먹은 통곡물의 82.8%를 채워줬는데, 가공육의 74.3%도 채워줬어. 초가공식품 속 통곡물·섬유는 낮은 위험과, 고기는 높은 위험과 연관됐고. 그럼 이 결과를 그대로 믿어도 될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">5/ 한계도 분명해. 참가자는 1995~96년에 등록한 50~71세 미국인이고 91%쯤이 비히스패닉 백인이었어. 식습관 설문도 등록할 때 딱 한 번만 했고. 연구진도 더 젊은 층엔 안 맞을 수 있다고 했고, 인과는 증명 못 한대. 그래서 결론은?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">248/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 통곡물·섬유·유제품은 늘리고 가공육은 줄이라는 기존 조언이 그대로라는 거야. 초가공식품이라는 딱지보다 뭐가 들었고 접시에 또 뭐가 있는지가 더 중요할 수 있대.
+
+편의점 도시락파 vs 직접 해먹는 파, 너는 어느 쪽이야?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 소시지와 피시스틱이 재조합 육류·생선 제품의 예시라는 내용</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>초가공식품 제일 많이 먹은 사람도 대장암이 더 많진 않았대</li><li>초가공식품은 무조건 나쁘다는 말, 46만 명 분석에선 안 맞았대</li><li>초가공식품 딱지부터 찾지 말고 뭐가 들었는지부터 보라는 연구가 나옴</li><li>&#39;초가공식품&#39;이 아니라 &#39;뭘 먹느냐&#39;가 문제일 수 있대, 미국 46만 명 연구</li><li>연구진도 놀랐대. 초가공식품 많이 먹는 쪽이 더 나쁠 거라고 예상했거든</li><li>시리얼은 위험이 16% 낮고 소시지류는 10% 높았대. 같은 초가공식품인데</li><li>편의점 음식 자주 먹는 사람들 솔깃할 소식, 대장암 연구에서 이런 결과가 나왔어</li><li>초가공식품 전체를 욕하기 전에 봐야 할 연구가 나옴</li><li>마트에서 나쁜 딱지 하나만 찾는 사람은 이 연구에서 못 찾는대</li><li>20년 따라가 봤더니 초가공식품 많이 먹은 그룹과 적게 먹은 그룹이 비슷했대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>편의점 도시락파 vs 직접 해먹는 파, 너는 어느 쪽이야?</li><li>아침에 시리얼 먹는 파 vs 안 먹는 파?</li><li>소시지 반찬 vs 계란 반찬, 하나만 고르면?</li><li>&#39;초가공식품은 무조건 나쁘다&#39;고 믿어온 사람?</li><li>너라면 마트에서 성분표부터 볼 거야, 가공 단계 표시부터 볼 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>가공육과 대장암, 연구들은 뭐라고 하나</li><li>통곡물·식이섬유 연구가 말하는 것</li><li>유제품·칼슘과 대장암의 연관</li><li>식단 점수가 낮으면 위험이 달라지나, 이 연구의 식단 품질 분석</li><li>Nova 분류로 보는 가공 단계, 초가공식품의 정의</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;편의점 음식&#39;은 원문에 없는 한국 연결이라 연구 결과로 오해되지 않게 표현 유지 필요</li><li>대장암 한정 결과를 &#39;초가공식품이 안전하다&#39;로 읽히지 않게 주의</li><li>&#39;소시지·피시스틱&#39;은 원문 예시이며 한국의 어묵 등과 동일시하지 말 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공식품을 가장 많이 먹은 사람과 가장 적게 먹은 사람의 대장암 발생률이 비슷했고, 약 46만 명을 20년쯤 추적했다</b>
+          <q>“People who ate the most ultra-processed food in a study of 461,682 older Americans developed colorectal cancer (cancer of the colon or rectum) at about the same rate as people who ate the least, even after roughly two decades of follow-up.”</q>
+          <small>post0, post1 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 많이 먹는 쪽이 더 나쁠 거라고 예상했다</b>
+          <q>“That ran against the expectations of researchers with the National Cancer Institute and partner institutions, who had predicted heavy eaters of these foods would fare worse.”</q>
+          <small>post1 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>포장 빵·시리얼·냉동 디저트와 우유 음료는 낮은 암 발생률, 재조합 육류·생선 제품은 높은 발생률과 연관됐다</b>
+          <q>“Packaged bread, breakfast cereal, and frozen desserts and milk drinks were tied to lower cancer rates, while reconstituted meat and fish products, such as sausages and fish sticks, were tied to higher ones.”</q>
+          <small>post0, post2 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>시리얼 16%, 냉동 디저트·우유 음료 18%, 빵 9% 낮고 재조합 육류·생선은 10% 높았다</b>
+          <q>“Food by food, the split was clear. Comparing the highest and lowest fifths of intake, risk was 16% lower for breakfast cereal, 18% lower for frozen desserts and milk drinks, and 9% lower for bread, but 10% higher for reconstituted meat and fish.”</q>
+          <small>post3 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공식품 전체는 3% 낮았지만 우연일 수 있는 차이였다</b>
+          <q>“People in the highest fifth of ultra-processed intake had 3% lower risk than people in the lowest fifth, a gap small enough to be chance.”</q>
+          <small>post3 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공식품이 통곡물의 82.8%를 공급했다</b>
+          <q>“Ultra-processed foods supplied 82.8% of participants’ whole grains, but only about a third of their fiber and calcium and under a quarter of their dairy.”</q>
+          <small>post4 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공식품이 가공육의 74.3%를 공급했다</b>
+          <q>“They also supplied 74.3% of the processed meat.”</q>
+          <small>post4 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초가공식품 속 통곡물·섬유는 낮은 위험, 고기는 출처와 무관하게 높은 위험과 연관됐다</b>
+          <q>“Whole grains and fiber from ultra-processed sources were tied to lower risk, dairy and calcium were linked to lower risk from any source, and meat to higher risk from any source.”</q>
+          <small>post4 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 1995~96년에 50~71세로 등록한 미국 성인이다</b>
+          <q>“Published in PLOS Medicine, the study used the NIH-AARP Diet and Health Study, which signed up adults ages 50 to 71 in 1995 and 1996.”</q>
+          <small>post5 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분석 대상의 약 91%가 비히스패닉 백인이었다</b>
+          <q>“After researchers removed people who already had cancer, kidney failure, or poor self-rated health, among other reasons, 461,682 remained: 274,269 men and 187,413 women, roughly 91% of them non-Hispanic white.”</q>
+          <small>post5 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식습관 설문은 등록 때 한 번만 했다</b>
+          <q>“Everyone filled out a questionnaire about 124 foods and drinks once, at enrollment, so the results reflect mid-1990s eating habits.”</q>
+          <small>post5 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 젊은 집단에는 적용되지 않을 수 있다</b>
+          <q>“Participants were older and mostly white, so the findings may not apply to younger or more diverse groups.”</q>
+          <small>post5 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인과관계를 증명하지 못한다</b>
+          <q>“The study cannot prove cause and effect, and it does not show that nutrients from ultra-processed and less processed foods act identically in the body.”</q>
+          <small>post5 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기존 식단 조언(통곡물·섬유·유제품·칼슘 늘리고 가공육 줄이기)이 유지됐다</b>
+          <q>“Existing dietary advice held up: more whole grains, fiber, dairy, and calcium, and less processed meat.”</q>
+          <small>post6 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>포장 안의 내용물과 접시 위의 다른 음식이 초가공식품이라는 용어보다 더 중요할 수 있다</b>
+          <q>“What is in the package, and what else is on the plate, may carry more weight than the term ultra-processed.”</q>
+          <small>post6 · <a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <p class="thr-note">📸 인스타 카드로 만들었어요 → <a href="20261022-req.html">20261022-req 검수 페이지</a></p>
+      
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/ultra-processed-foods-no-link-colorectal-cancer-risk/" target="_blank" rel="noopener">Ultra-Processed Foods Show No Overall Link To Colorectal Cancer Risk</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261020-pm";
+  const ORIGINAL = {"086d3ca7f987": {"caption": "\ub3c4\ucfc4 \ud55c\ubcf5\ud310\uc5d0 \uc5fc\uc18c\uac00 \ucd9c\uadfc\ud588\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc7a5\uc18c\ub294 \uc694\uc4f0\uc57c\uc5ed \uc544\uce74\uc0ac\uce74 \ucd9c\uad6c \uadfc\ucc98\uc778\ub370, \ub9e4\uccb4\uac00 \uc9c1\uc811 \ub3c4\uc2ec \uc18d \uc815\uae00\uc774\ub77c\uace0 \ud45c\ud604\ud560 \ub9cc\ud07c \uc644\uc804 \ubc88\ud654\uac00\uc57c. \uc5ed\uc5d0\uc11c \uc2e0\uc8fc\ucfe0\uae4c\uc9c0\ub294 \uc804\ucca0\uc774\ub098 \uc9c0\ud558\ucca0\ub85c 5\ubd84 \uc815\ub3c4\ub77c\uace0 \ud574.\n\n\uc774 \uc5fc\uc18c\ub4e4\uc740 JR\ub3d9\uc77c\ubcf8\uc758 \uc784\uc2dc \uc9c1\uc6d0\uc774\uc57c. \uc815\ud655\ud788\ub294 JR\uc774 \uc5fc\uc18c \uc8fc\uc778\ub4e4\uc5d0\uac8c \ube44\uc6a9\uc744 \ub0b4\uace0 \uc5fc\uc18c\uc758 \uc77c\uc744 \ube4c\ub9ac\ub294 \ud615\ud0dc\ub77c\uace0 \ud574. \uc77c\uc740 10\uc6d4 9\uc77c\ubd80\ud130 \uc2dc\uc791\ub410\uace0, \uc5ed \ubd80\uc9c0\uc758 \ud480\uc744 \uce5c\ud658\uacbd\uc801\uc73c\ub85c \uc5c6\uc560\ub824\uace0 \ud22c\uc785\ub41c \uac70\uc57c.\n\n\uc77c\ud558\ub294 \uc5fc\uc18c\ub294 \ub450 \ub9c8\ub9ac\uc57c. \ud55c \uc0b4 \uc218\ucef7 \ub098\uae30\uad70, \ub450 \uc0b4 \uc554\ucef7 \ud3ff\ucf00\uc9f1\uc774\uc57c. \ud604\uc7a5 \uc9c1\uc6d0 \ub9d0\ub85c\ub294 \uc5f0\ub9d0\uae4c\uc9c0 \uc774\uacf3\uc5d0 \ubc30\uce58\ub420 \uc608\uc815\uc774\ub798. \ucd94\uc6b4 \uc2dc\uae30\uc5d4 \ud480\uc774 \ucc9c\ucc9c\ud788 \uc790\ub77c\uc11c \uaca8\uc6b8\uc5d4 \uc26c\uace0, \ubd04\uc5d0 JR\uc774 \ub2e4\uc2dc \ud544\uc694\ub85c \ud558\uba74 \ub3cc\uc544\uc62c \uc218\ub3c4 \uc788\ub300.\n\n\uad6c\uacbd \uac00\uace0 \uc2f6\ub2e4\uba74 \uc54c\uc544\ub458 \uc810\uc774 \ud558\ub098 \uc788\uc5b4. JR\ub3d9\uc77c\ubcf8\uc740 \uc5fc\uc18c\ub4e4\uc5d0\uac8c \uce5c\uc808\ud558\uac8c \ub300\ud574 \ub2ec\ub77c\uace0 \ubd80\ud0c1\ud558\uba74\uc11c, \uac04\uc2dd\uc740 \uc8fc\uc9c0 \ub9d0\uc544 \ub2ec\ub77c\uace0 \ud588\uc5b4. \uc5f0\ub9d0\uae4c\uc9c0 \uadfc\ubb34\ud55c\ub2e4\ub2c8\uae4c \ub3c4\ucfc4 \uac08 \uc77c \uc788\ub294 \uce5c\uad6c\uac00 \uc788\uc73c\uba74 \uc9c0\uae08 \ubcf4\ub0b4\uc8fc\uba74 \ub531\uc774\uc57c.\n\n\ucd9c\ucc98: SoraNews24, JR\ub3d9\uc77c\ubcf8 \uacf5\uc2dd \uacc4\uc815 \uac8c\uc2dc\ubb3c(\ud574\ub2f9 \uae30\uc0ac \uc778\uc6a9)", "hashtags": ["#\ub3c4\ucfc4", "#\uc77c\ubcf8\uc5ec\ud589", "#\uc5fc\uc18c", "#\ud574\uc678\ud1a0\ud53d", "#JR\ub3d9\uc77c\ubcf8"], "slides": [["\ub3c4\ucfc4 \ud55c\ubcf5\ud310\uc5d0", "**\uc5fc\uc18c\uac00** \ucd9c\uadfc?!"], ["\uc54c\uace0 \ubcf4\ub2c8", "JR\ub3d9\uc77c\ubcf8", "**\uc784\uc2dc \uc9c1\uc6d0**"], ["\ub9e1\uc740 \uc77c\uc740", "\uce5c\ud658\uacbd", "**\uc7a1\ucd08 \uc81c\uac70**"], ["\ub098\uae30\uad70 1\uc0b4", "**\ud3ff\ucf00\uc9f1 2\uc0b4**", "\ub458\uc774\uc11c \uadfc\ubb34\uc911"], ["\uadfc\ubb34\ub294 \uc5f0\ub9d0\uae4c\uc9c0", "**\uaca8\uc6b8\uc5d4 \ud734\uc9c1**", "\ubd04\uc5d4 \ub3cc\uc544\uc62c \uc218\ub3c4"], ["\ub3c4\ucfc4 \uac00\ub294 \uce5c\uad6c", "**\uc5f0\ub9d0 \uc804\uc5d0**", "\ubcf4\ub0b4\uc8fc\uae30"]]}, "9ff065c3cc7c": {"caption": "\ud654\uc131 \uc704\uc131\uc758 \ud759\uc744 \uc9c0\uad6c\ub85c \uac00\uc838\uc628\ub2e4\ub2c8, \uc77c\ubcf8\uc774 \uc9c4\uc9dc \uc2dc\uc791\ud588\uc5b4. \uc77c\ubcf8\uc740 5\uac1c\ub144 \uaddc\ubaa8\uc758 \uc6d0\uc815\uc73c\ub85c 5\uc5b5 7,800\ub9cc \ub2ec\ub7ec\uc9dc\ub9ac \uc784\ubb34\ub97c \ubc1c\uc0ac\ud588\uc5b4. \uc774\ub984\uc740 MMX, \ud654\uc131 \uc704\uc131 \ud0d0\uc0ac \uc784\ubb34\uc57c. \ubaa9\ud45c\ub294 \ud654\uc131\uc758 \uac00\uc7a5 \ud070 \uc704\uc131\uc778 \ud3ec\ubcf4\uc2a4\uc5d0 \ucc29\ub959\ud574\uc11c \uc0d8\ud50c\uc744 \uc9c0\uad6c\ub85c \uac00\uc838\uc624\ub294 \uac70\uc57c. \ud654\uc131 \uc704\uc131\uc5d0\uc11c \uc0d8\ud50c\uc744 \uac00\uc838\uc624\ub294 \uac74 \uc138\uacc4 \ucd5c\ucd08\uac00 \ub41c\ub2e4\uace0 \ud574. \ubc1c\uc0ac\ub294 \uc6d4\uc694\uc77c \ubbf8 \ub3d9\ubd80\uc2dc\uac04 \uc624\ud6c4 3\uc2dc 41\ubd84, \uc77c\ubcf8 \uc2dc\uac04\uc73c\ub85c\ub294 \ud654\uc694\uc77c \uc0c8\ubcbd 4\uc2dc 41\ubd84\uc5d0 \uc77c\ubcf8 \ub0a8\ubd80 \ub2e4\ub124\uac00\uc2dc\ub9c8 \uc6b0\uc8fc\uc13c\ud130\uc5d0\uc11c \uc774\ub904\uc84c\uc5b4. \ub192\uc774 63\ubbf8\ud130\uc9dc\ub9ac H3 \ub85c\ucf13\uc774 \ud0d0\uc0ac\uc120\uc744 \uc6b0\uc8fc\ub85c \uc62c\ub838\ub294\ub370, \uc774\ubc88 \ub85c\ucf13\uc740 \uace0\uccb4 \ub85c\ucf13 \ubd80\uc2a4\ud130 4\uac1c\ub97c \ub2e8 \uc0c8\ub85c\uc6b4 \uad6c\uc131\uc774\uc5c8\ub300. \uc77c\ubcf8\uc758 \ud589\uc131 \uac04 \uc784\ubb34 \uc911 \uac00\uc7a5 \ubb34\uac81\uace0 \uc57c\uc2ec \ucc2c \uc784\ubb34\ub77c\uc11c \uadf8\ub807\ub2e4\uace0 \ud574. \ud0d0\uc0ac\uc120 \ubb34\uac8c\ub294 \uc57d 4.5\ud1a4\uc774\uace0, 3\ubd84\uc758 2\uac00 \ucd94\uc9c4\uc81c\uc57c. \ubc1c\uc0ac \uc57d 71\ubd84 \ub4a4\uc5d0 \ub85c\ucf13\uc5d0\uc11c \ubd84\ub9ac\ub410\uace0, \uc9c0\uad6c \uc911\ub825\uc744 \ubc97\uc5b4\ub098\ub824\uace0 \uc2dc\uc18d 2\ub9cc 4,000\ub9c8\uc77c \ub118\uac8c \uac00\uc18d\ud588\uc5b4. \ud654\uc131\uae4c\uc9c0\ub294 10\uac1c\uc6d4 \uac78\ub9ac\ub294 \ud56d\ud574\uc57c. \ubd84\ub9ac \uc9c1\ud6c4 \uc9c0\uc0c1\uacfc \uad50\uc2e0\ub3c4 \ub410\uace0 \ud0dc\uc591\uc804\uc9c0\ud310\ub3c4 \ud3bc\ucce4\uc5b4. \ud504\ub85c\uc81d\ud2b8 \ub9e4\ub2c8\uc800\ub294 \"\uc544\uc8fc \uc548\uc815\uc801\uc778 \uc0c1\ud0dc\"\ub77c\uace0 \ubc1d\ud614\uc5b4. \uc774\ubc88 \uc784\ubb34\ub294 \uc18c\ud589\uc131\uc5d0\uc11c \uc0d8\ud50c\uc744 \uac00\uc838\uc628 \ud558\uc57c\ubd80\uc0ac\uc640 \ud558\uc57c\ubd80\uc0ac2\uc758 \uc131\uacfc\ub97c \uc787\ub294 \uac70\uc57c. \uacfc\ud559\uc790\ub4e4\uc740 \ud3ec\ubcf4\uc2a4\uac00 \uc218\uc2ed\uc5b5 \ub144 \uc804 \ud654\uc131 \uada4\ub3c4\uc5d0 \ubd99\uc7a1\ud78c \uc18c\ud589\uc131\uc77c \uc218 \uc788\ub2e4\uace0 \ubcf4\ub294\ub370, MMX\uc758 \uacfc\ud559 \ubaa9\ud45c \uc911 \ud558\ub098\uac00 \uc774 \uac00\uc124\uc774 \ub9de\ub294\uc9c0 \ud655\uc778\ud558\ub294 \uac70\uc57c. JAXA \uc57c\ub9c8\uce74\uc640 \ud788\ub85c\uc2dc \uc774\uc0ac\uc7a5\uc740 \"5\ub144\uc758 \uae34 \uc5ec\uc815\uc774 \ub9c9 \uc2dc\uc791\ub410\ub2e4\"\uace0 \ub9d0\ud588\uc5b4.\n\n\ucd9c\ucc98: Ars Technica", "hashtags": ["#\uc6b0\uc8fc", "#\ud654\uc131", "#\ud3ec\ubcf4\uc2a4", "#\uc77c\ubcf8", "#JAXA"], "slides": [["**\ud654\uc131 \uc704\uc131** \ud759\uc744", "\uac00\uc838\uc628\ub2e4\uace0???"], ["\uc77c\ubcf8\uc774 \uc9c4\uc9dc", "**\ub85c\ucf13**\uc744 \uc408\uc5b4"], ["\ubaa9\uc801\uc9c0\ub294", "\ud654\uc131\uc758 \uac00\uc7a5 \ud070 \uc704\uc131", "**\ud3ec\ubcf4\uc2a4**"], ["\uac00\ub294 \ub370\ub9cc", "**10\uac1c\uc6d4** \uac78\ub824"], ["\ud3ec\ubcf4\uc2a4\uac00 \ud639\uc2dc", "\uacfc\uac70\uc5d0\ub294", "\ub5a0\ub3cc\uc544\ub2e4\ub2c8\ub294 **\uc18c\ud589\uc131**?"], ["**\uc6b0\uc8fc \ub355\ud6c4** \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \uc54c\ub824\uc918"]]}, "b8fcc65af302": {"caption": "\ub6b1\uc774 \ub2ee\uc740 \ubd88\uac00\uc0ac\ub9ac\uac00 \uc2ec\ud574\uc5d0\uc11c \ub098\ud0c0\ub0ac\ub2e4\ub294 \uc18c\uc2dd, \uc54c\uace0 \ubcf4\ub2c8 \uc774\uac8c \ub05d\uc774 \uc544\ub2c8\uc5c8\uc5b4.\n\n\uc544\ub974\ud5e8\ud2f0\ub098 \uc55e\ubc14\ub2e4 \uc2ec\ud574 \ud0d0\uc0ac \uc0dd\uc911\uacc4\uc5d0\uc11c \uc2a4\ud3f0\uc9c0\ubc25\uc758 \ub6b1\uc774\ub97c \ub2ee\uc740 \ubd88\uac00\uc0ac\ub9ac\uac00 \ud654\uc81c\uac00 \ub410\uac70\ub4e0. \uc774\ud6c4 \uc5f0\uad6c\uc790\ub4e4\uc774 \ubd80\uc5d0\ub178\uc2a4\uc544\uc774\ub808\uc2a4\uc758 \ub9c8\uc774\ubaa8\ub2c8\ub370\uc2a4 \ub300\ud559\uad50\uc5d0 \ubaa8\uc5ec \uadf8\ub54c \ucc44\uc9d1\ud55c \ud45c\ubcf8\uc744 \ubd84\ub958\ud588\ub354\ub2c8, 2\uc8fc \ub9cc\uc5d0 \uc2e0\uc885 57\uc885\uacfc \uc2e0\uc18d(\uc0c8\ub85c\uc6b4 \uc18d) 5\uac1c\uc5d0 \uc774\ub984\uc774 \ubd99\uc5c8\ub300.\n\n\ud45c\ubcf8\uc740 \ub300\ubd80\ubd84 \ub9c8\ub974\ub378\ud50c\ub77c\ud0c0 \ud574\uc800\ud611\uace1\uc5d0\uc11c \ub098\uc654\uc5b4. \uac00\uc7a5 \uae4a\uc740 \uacf3\uc740 \uc218\uc2ec 3,500m\uac00 \ub118\uace0, \ub530\ub73b\ud558\uace0 \uc9e0 \ube0c\ub77c\uc9c8 \ud574\ub958\uc640 \ucc28\uac11\uace0 \uc601\uc591\ubd84 \ub9ce\uc740 \ub9d0\ube44\ub098\uc2a4 \ud574\ub958\uac00 \ubd80\ub52a\ud788\ub294 \uacf3\uc774\ub77c \uc9c0\uad6c\uc5d0\uc11c \uac00\uc7a5 \uc5ed\ub3d9\uc801\uc778 \ubc14\ub2e4 \uc911 \ud558\ub098\ub85c \uaf3d\ud600.\n\n\uc885\ub958\ubcc4\ub85c \ubcf4\uba74 \ud574\uc0bc\uacfc \uac2f\uace0\uc0ac\ub9ac \uac19\uc740 \uadf9\ud53c\ub3d9\ubb3c\uc774 22\uc885, \uc694\uac01\ub958\uac00 20\uc885, \uc0b0\ud638 \ub4f1 \uc790\ud3ec\ub3d9\ubb3c\uc774 14\uc885, \uadf8\ub9ac\uace0 \ubfd4\uc870\uac1c\uac00 1\uc885\uc774\uc57c. \uc5f0\uad6c\uc790\ub4e4\uc774 \uc0b4\ud3b4\ubcf8 \uc694\uac01\ub958\ub294 \ud558\ub098\ub3c4 \ube60\uc9d0\uc5c6\uc774 \uc804\ubd80 \uc2e0\uc885\uc774\uc5c8\uc5b4. \ubfd4 \uac19\uc740 \ub3cc\uae30\uac00 \ubd81\uc720\ub7fd \uc2e0\ud654 \uc18d \uc2e0\uc758 \ubaa8\uc790\ub97c \ub2ee\uc544 \u0027\ub85c\ud0a4\u0027\ub77c\ub294 \ubcc4\uba85\uc774 \ubd99\uc740 \ud574\uc0bc\ub3c4 \uc774\ubc88 \uc2e0\uc885 \ud574\uc0bc \uc911 \ud558\ub098\uc57c.\n\n\uc774\ubc88 \ud0d0\uc0ac\ub294 \uae30\ud6c4\ubcc0\ud654\ub098 \uc2ec\ud574 \ucc44\uad74 \uac19\uc740 \uc704\ud611\uc73c\ub85c \ubc14\ub00c\uae30 \uc804\uc5d0 \uc804 \uc138\uacc4 \uc2ec\ud574 \uc0dd\ubb3c\uc744 \uae30\ub85d\ud558\ub824\ub294 \uc624\uc158 \uc13c\uc11c\uc2a4 \ud504\ub85c\uc81d\ud2b8\uc758 \uc77c\ubd80\uc600\uc5b4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uc2ec\ud574", "#\uc2e0\uc885\ubc1c\uacac", "#\uc2a4\ud3f0\uc9c0\ubc25", "#\ud574\uc591\uc0dd\ubb3c", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["**\ub6b1\uc774** \ub2ee\uc740", "\ubd88\uac00\uc0ac\ub9ac???"], ["\uc544\ub974\ud5e8\ud2f0\ub098", "\uc55e\ubc14\ub2e4 \uc2ec\ud574\uc5d0\uc11c", "**\uc0dd\uc911\uacc4** \uc911 \ub4f1\uc7a5"], ["\uadfc\ub370 \uc598\uac00", "\ub05d\uc774 \uc544\ub2c8\uc5c8\uc74c", "2\uc8fc \ub9cc\uc5d0 \uc2e0\uc885 **57\uc885**"], ["\uac19\uc774 \uc7a1\uc740", "\ud574\uc0bc\u00b7\uac2f\uace0\uc0ac\ub9ac", "\uc2e0\uc885\ub9cc **22\uc885**"], ["\uac80\uc0ac\ud55c \uc694\uac01\ub958", "**\uc804\ubd80** \uc2e0\uc885\u2026\u3137\u3137"], ["\ubfd4\uac19\uc740 \ub3cc\uae30 \ub2ec\ub9b0 \ud574\uc0bc", "\ubcc4\uba85\uc740 **\ub85c\ud0a4**"], ["**\uc2a4\ud3f0\uc9c0\ubc25** \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c", "\uc774\uac70 \ubcf4\ub0b4\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"086d3ca7f987": "approve", "9ff065c3cc7c": "approve", "b8fcc65af302": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 2;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

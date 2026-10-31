@@ -1,0 +1,2081 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.18 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.18 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-ea1260d39fe5" data-jump="ea1260d39fe5">1</a><a href="#post-7e118f813c8b" data-jump="7e118f813c8b">2</a><a href="#post-a567f0da8f40" data-jump="a567f0da8f40">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-ea1260d39fe5" data-id="ea1260d39fe5">
+    <div class="head">
+      <h2>1. 99세 할머니 세계 최고령 날개 걷기</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/21 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>99세 할머니가 비행기 위에 올라갔다는 소식이야. 영국 글로스터셔의 렌드콤 비행장에서 헬가 더피 할머니가 작은 비행기 위에 몸을 묶고 날개 걷기에 도전했고, 이번 주 기네스 세계기록이 세계 최고령 날개 걷기 기록으로 공식 인정했대.
+
+직전 기록은 석 달 전 97세 베티 브로메이지 할머니가 세웠던 거였어. 헬가 할머니의 조카 재키 로즈가 올해 그 뉴스를 보고 이모도 가능하겠다는 걸 깨달았고, 요양시설 직원들도 도전을 권했다고 해. 헬가 할머니는 처음엔 그게 뭔지도 몰랐지만, 99세인 지금이 뭔가 다른 걸 해볼 마지막 기회라고 말해왔고 날개 걷기가 어떤 건지 알게 된 뒤 꼭 해보겠다고 마음먹었대.
+
+관절염과 오른쪽 무릎이 좋지 않아 비행기에 오르는 것부터 걱정이었는데도, 특수 복장을 입고 5분 넘게 하늘에 있었어. 평생 간호사로 일한 할머니는 천 미터 상공에서 깊게 세 번 숨을 쉬었는데 공기가 믿기지 않을 만큼 맑았다고 말했대. 몸을 단단히 묶어서 아주 안전하다고 느꼈다고도 해.
+
+착륙하자 기네스 공식 심사관 윌 먼퍼드가 인증서를 건넸고, 인증서는 요양시설에 전시돼 있대. 이번 도전으로 지역 항공 구급 자선단체에 1,600파운드(약 2,000달러) 넘게 모금도 했어. 할머니의 좌우명은 뭐든 해보라는 것, 그리고 못 한다고 말하지 말라는 것. 기록을 넘겨준 베티 할머니는 축하를 전하며 100세가 되면 기록을 깨고 싶다고 농담했다고 해.
+
+출처: Good News Network
+
+배경 사진: cocoparisienne, Daniel_Nebreda, TimHill, TRINHDACTRUONG, FrankyFromGermany / Pixabay
+표지 이미지: AI 생성
+
+#세계기록 #기네스북 #99세 #해외토픽 #날개걷기</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-ea1260d39fe5">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 99세가 관절염에 무릎까지 안 좋은데 비행기 위에 올라갔고, 직전 기록자가 석 달 전 97세였다는 반전으로 &#39;나이 핑계&#39; 통념을 흔드는 훈훈한 사연</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 할머니의 좌우명 (카드 문구: 해보기 전엔 모른다) (카드 5장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">&#39;언젠가 해보지&#39;가 아니라 &#39;지금이 마지막 기회&#39;라고 한 99세 할머니가 있어
+관절염에 무릎까지 안 좋은데 비행기 위에 올라가서 기네스 기록을 세웠대
+근데 이 기록, 직전 보유자가 누군지가 더 놀라움 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">1/ 이번 주 기네스가 영국 헬가 더피 할머니(99세)를 세계 최고령 날개 걷기 기록 보유자로 공식 인정했어. 글로스터셔 렌드콤 비행장에서 작은 비행기 위에 몸을 묶고 도전했대. 그럼 직전 기록은 누가 갖고 있었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">2/ 직전 기록은 석 달 전 97세 베티 브로메이지 할머니가 세운 거였어. 석 달 만에 두 살 더 많은 할머니가 기록을 가져간 거지. 근데 정작 헬가 할머니는 처음엔 날개 걷기가 뭔지도 몰랐대. 어떻게 도전하게 됐을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">163/500자</span></div>
+      <p class="tp-text">3/ 시작은 조카 재키 로즈였어. 올해 97세 할머니 기록 뉴스를 보고 이모도 가능하겠다 싶었고, 요양시설 직원들도 도전을 권했대. 헬가 할머니는 날개 걷기가 뭔지 알게 된 뒤 꼭 해보겠다고 마음먹었고, 99세인 지금이 뭔가 다른 걸 해볼 마지막 기회라고 말해왔대. 근데 몸 상태가 문제였음.</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">4/ 헬가 할머니 도전 한눈에 정리
+- 나이: 99세, 평생 간호사로 일함
+- 몸 상태: 관절염, 오른쪽 무릎이 안 좋음
+- 걱정: 비행기에 오르는 것부터
+- 복장: 특수 복장
+- 하늘에 있던 시간: 5분 넘게
+그럼 하늘 위에서는 어땠을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">5/ 할머니는 천 미터 상공에서 깊게 세 번 숨을 쉬었대. 공기가 믿기지 않을 만큼 맑았다고 해. 몸을 단단히 묶어서 아주 안전하다고 느꼈다고도 했고. 그럼 기록을 뺏긴 베티 할머니는 뭐라고 했을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">6/ 착륙하자 기네스 공식 심사관이 인증서를 건넸고, 인증서는 지금 요양시설에 전시돼 있대. 기록을 넘겨준 베티 할머니는 축하를 전하면서 100세가 되면 기록을 깨고 싶다고 농담했다고 해.</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">225/500자</span></div>
+      <p class="tp-text">7/ 결국 이 할머니는 관절염에 무릎 걱정이 있어도 &#39;지금이 마지막 기회&#39;라는 마음으로 하늘 위 5분 넘게를 해낸 거야.
+너라면 비행기 날개 위 도전, 해볼래 vs 땅에서 구경만 할래?
+이런 해외 훈훈한 소식, 밤사이 터진 것만 새벽에 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 할머니 좌우명까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: &#39;언젠가 해보지&#39;가 아니라 &#39;지금이 마지막 기회&#39;라고 한 99세 할머니가 있어 <small>참고 원고에 &#39;언젠가 해보지&#39;라는 말이나 그와 대비되는 발언은 없다. 할머니가 &#39;지금이 마지막 기회&#39;라고 한 것만 확인된다.</small></li><li>카드에 없는 내용: 시작은 조카 재키 로즈였어 <small>원고는 재키 로즈가 뉴스를 보고 이모도 가능하겠다고 깨달았다고만 한다. 그것이 도전의 &#39;시작&#39;이었다는 인과 단정은 원고에 없다.</small></li><li>카드에 없는 내용: 그럼 기록을 뺏긴 베티 할머니는 뭐라고 했을까? <small>원고는 베티 할머니가 기록을 넘겨줬고 축하를 전했다고 한다. &#39;뺏겼다&#39;는 표현은 갈등이 있었던 것처럼 프레임을 바꾼다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>99세 할머니가 비행기 위에 올라가서 기네스 기록을 세웠어. 관절염에 무릎까지 안 좋은데도</li><li>세계 최고령 날개 걷기 기록, 직전 보유자가 석 달 전 97세 할머니였대</li><li>&#39;99세인 지금이 마지막 기회&#39;라며 비행기 위에 올라간 할머니가 있어</li><li>&#39;언젠가 해보지&#39;가 아니라 &#39;지금이 마지막 기회&#39;라고 한 99세 할머니가 기네스에 올랐대</li><li>천 미터 상공에서 깊게 세 번 숨 쉰 99세 할머니, 공기가 믿기지 않을 만큼 맑았대</li><li>97세 기록이 석 달 만에 깨졌는데, 기록을 넘겨준 할머니 반응이 더 웃김</li><li>처음엔 날개 걷기가 뭔지도 몰랐던 99세가 세계기록을 세웠어</li><li>비행기에 오르는 것부터 걱정이던 무릎 아픈 할머니가 하늘에서 5분 넘게 버텼대</li><li>조카가 뉴스 하나 보고 &#39;이모도 가능하겠다&#39; 했는데 그 이모가 99세였음</li><li>해외에선 99세 할머니가 비행기 날개 위에 올라가 기록을 세웠대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너라면 비행기 날개 위 도전, 해볼래 vs 땅에서 구경만 할래?</li><li>99세 할머니 도전, 응원하는 쪽이야 vs 걱정되는 쪽이야?</li><li>100세에 기록 깨겠다는 베티 할머니, 진짜 도전할 것 같아 vs 농담일 것 같아?</li><li>가족이 &#39;이모도 가능하겠다&#39;고 하면 따라나설 사람?</li><li>나중에 99세가 되면 해보고 싶은 도전 하나만 말해본다면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>97세 베티 브로메이지 할머니의 날개 걷기 기록, 어떻게 세워졌을까</li><li>기네스가 인정한 최고령 도전 기록들</li><li>요양시설 어르신들의 도전 이야기</li><li>70파운드 불독 페기 수 다이어트 후 입양</li><li>일본 버거킹 고기만 남은 햄버거 On the Beef</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>첫 줄의 &#39;언젠가 해보지가 아니라&#39; 대비는 글쓴이의 프레이밍이고, 원문에서 할머니가 한 말은 &#39;99세인 지금이 뭔가 다른 걸 해볼 마지막 기회&#39;라는 취지뿐이라 따옴표 인용처럼 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/ea1260d39fe5/v2-01.jpg" alt="1장: 99세 할머니의 위대한 도전???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/ea1260d39fe5/v2-02.jpg" alt="2장: 기네스가 인정한 세계 최고령 날개 걷기 기록" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/ea1260d39fe5/v2-03.jpg" alt="3장: 직전 기록은 석 달 전 97세 할머니" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/ea1260d39fe5/v2-04.jpg" alt="4장: 관절염에 무릎도 안 좋은데 5분 넘게 하늘에" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/ea1260d39fe5/v2-05.jpg" alt="5장: 좌우명은 해보기 전엔 모른다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/ea1260d39fe5/v2-06.jpg" alt="6장: 새로 뭘 시작하기 망설이는 친구에게 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/ea1260d39fe5/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">99세 할머니가 비행기 위에 올라갔다는 소식이야. 영국 글로스터셔의 렌드콤 비행장에서 헬가 더피 할머니가 작은 비행기 위에 몸을 묶고 날개 걷기에 도전했고, 이번 주 기네스 세계기록이 세계 최고령 날개 걷기 기록으로 공식 인정했대.
+
+직전 기록은 석 달 전 97세 베티 브로메이지 할머니가 세웠던 거였어. 헬가 할머니의 조카 재키 로즈가 올해 그 뉴스를 보고 이모도 가능하겠다는 걸 깨달았고, 요양시설 직원들도 도전을 권했다고 해. 헬가 할머니는 처음엔 그게 뭔지도 몰랐지만, 99세인 지금이 뭔가 다른 걸 해볼 마지막 기회라고 말해왔고 날개 걷기가 어떤 건지 알게 된 뒤 꼭 해보겠다고 마음먹었대.
+
+관절염과 오른쪽 무릎이 좋지 않아 비행기에 오르는 것부터 걱정이었는데도, 특수 복장을 입고 5분 넘게 하늘에 있었어. 평생 간호사로 일한 할머니는 천 미터 상공에서 깊게 세 번 숨을 쉬었는데 공기가 믿기지 않을 만큼 맑았다고 말했대. 몸을 단단히 묶어서 아주 안전하다고 느꼈다고도 해.
+
+착륙하자 기네스 공식 심사관 윌 먼퍼드가 인증서를 건넸고, 인증서는 요양시설에 전시돼 있대. 이번 도전으로 지역 항공 구급 자선단체에 1,600파운드(약 2,000달러) 넘게 모금도 했어. 할머니의 좌우명은 뭐든 해보라는 것, 그리고 못 한다고 말하지 말라는 것. 기록을 넘겨준 베티 할머니는 축하를 전하며 100세가 되면 기록을 깨고 싶다고 농담했다고 해.
+
+출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#세계기록 #기네스북 #99세 #해외토픽 #날개걷기</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 요양시설 직원들이 헬가에게 도전을 권했다는 주장은 claims 목록에 없다</li><li>근거 등록 안 된 주장: 헬가가 비행기에 오르는 것부터 걱정이었다는 내용 중 탑승 자체에 대한 우려는 별도 주장으로 적히지 않았다</li><li>근거 등록 안 된 주장: 재키 로즈가 헬가의 도전 장면을 보고 감탄했다는 내용은 claims 목록에 없다</li>
+          <li>원문 인용 중 헬가의 좌우명 문장은 의역함</li><li>슬라이드 5의 &#39;해보기 전엔 모른다&#39;는 원문 &#39;You can&#39;t see until you&#39;ve tried&#39;의 의역이라 뉘앙스 차이 가능</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-ea1260d39fe5-0">1장</label>
+          <textarea id="s-ea1260d39fe5-0" rows="2" data-slide="0">**99세** 할머니의
+위대한 도전???</textarea>
+          
+          <label class="f" for="s-ea1260d39fe5-1">2장</label>
+          <textarea id="s-ea1260d39fe5-1" rows="3" data-slide="1">기네스가 인정한
+**세계 최고령**
+날개 걷기 기록</textarea>
+          
+          <label class="f" for="s-ea1260d39fe5-2">3장</label>
+          <textarea id="s-ea1260d39fe5-2" rows="3" data-slide="2">직전 기록은
+석 달 전
+**97세** 할머니</textarea>
+          
+          <label class="f" for="s-ea1260d39fe5-3">4장</label>
+          <textarea id="s-ea1260d39fe5-3" rows="3" data-slide="3">관절염에
+무릎도 안 좋은데
+**5분 넘게** 하늘에</textarea>
+          
+          <label class="f" for="s-ea1260d39fe5-4">5장</label>
+          <textarea id="s-ea1260d39fe5-4" rows="3" data-slide="4">좌우명은
+**해보기 전엔**
+모른다</textarea>
+          
+          <label class="f" for="s-ea1260d39fe5-5">6장</label>
+          <textarea id="s-ea1260d39fe5-5" rows="3" data-slide="5">새로 뭘 시작하기
+**망설이는 친구에게**
+조용히 보내기</textarea>
+          
+          <label class="f" for="c-ea1260d39fe5">본문 (캡션)</label>
+          <textarea id="c-ea1260d39fe5" class="caption">99세 할머니가 비행기 위에 올라갔다는 소식이야. 영국 글로스터셔의 렌드콤 비행장에서 헬가 더피 할머니가 작은 비행기 위에 몸을 묶고 날개 걷기에 도전했고, 이번 주 기네스 세계기록이 세계 최고령 날개 걷기 기록으로 공식 인정했대.
+
+직전 기록은 석 달 전 97세 베티 브로메이지 할머니가 세웠던 거였어. 헬가 할머니의 조카 재키 로즈가 올해 그 뉴스를 보고 이모도 가능하겠다는 걸 깨달았고, 요양시설 직원들도 도전을 권했다고 해. 헬가 할머니는 처음엔 그게 뭔지도 몰랐지만, 99세인 지금이 뭔가 다른 걸 해볼 마지막 기회라고 말해왔고 날개 걷기가 어떤 건지 알게 된 뒤 꼭 해보겠다고 마음먹었대.
+
+관절염과 오른쪽 무릎이 좋지 않아 비행기에 오르는 것부터 걱정이었는데도, 특수 복장을 입고 5분 넘게 하늘에 있었어. 평생 간호사로 일한 할머니는 천 미터 상공에서 깊게 세 번 숨을 쉬었는데 공기가 믿기지 않을 만큼 맑았다고 말했대. 몸을 단단히 묶어서 아주 안전하다고 느꼈다고도 해.
+
+착륙하자 기네스 공식 심사관 윌 먼퍼드가 인증서를 건넸고, 인증서는 요양시설에 전시돼 있대. 이번 도전으로 지역 항공 구급 자선단체에 1,600파운드(약 2,000달러) 넘게 모금도 했어. 할머니의 좌우명은 뭐든 해보라는 것, 그리고 못 한다고 말하지 말라는 것. 기록을 넘겨준 베티 할머니는 축하를 전하며 100세가 되면 기록을 깨고 싶다고 농담했다고 해.
+
+출처: Good News Network</textarea>
+          <label class="f" for="t-ea1260d39fe5">해시태그</label>
+          <input id="t-ea1260d39fe5" type="text" class="tagsin" value="#세계기록 #기네스북 #99세 #해외토픽 #날개걷기" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>99세 할머니가 세계 최고령 날개 걷기 기록을 세웠다</b>
+            <q>“A 99-year-old has become the world’s oldest wing-walker—just three months after her niece saw another elderly woman do it, and the staff at her assisted-living facility urged her to try.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 주 기네스 세계기록이 헬가 더피에게 공식적으로 타이틀을 수여했고, 영국 글로스터셔 렌드콤 비행장의 작은 비행기 위에서 몸을 묶고 도전했다</b>
+            <q>“This week, Guinness World Records officially bestowed the title on Helga Duffy, who was strapped to the top of a small plane at Rendcomb Airfield in Gloucestershire, England.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>직전 기록은 석 달 전 97세 베티 브로메이지가 세운 것이었다</b>
+            <q>“She broke their world record for wing-walking just three months after the title was nabbed by a 97-year-old woman named Betty Bromage.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헬가는 처음엔 날개 걷기가 뭔지 몰랐다</b>
+            <q>““I had no idea what it was,” Helga said, of the aviation stunt.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>99세인 헬가는 지금이 다르게 뭔가 해볼 마지막 기회라고 말해왔고, 날개 걷기가 뭔지 알고 나서 꼭 해보겠다고 마음먹었다</b>
+            <q>“At 99, she had been saying that it was “the last time” she could “do something different”—and when she saw what wing-walking entailed, she was determined to try it.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>관절염과 안 좋은 오른쪽 무릎 때문에 걱정했지만 특수 복장을 입고 5분 넘게 하늘에 있었다</b>
+            <q>“Despite initial concerns about getting on the plane itself, due to her arthritis and a bad right knee, Helga spent over five minutes in the air—wearing special clothing.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헬가는 평생 대부분을 간호사로 일했다</b>
+            <q>““It was a very different sensation than I’ve ever had,” said the woman who spent most of her life working as a nurse.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>천 미터 상공에서 깊게 세 번 숨을 쉬었고 공기가 믿기 어려울 만큼 맑았다고 말했다</b>
+            <q>““Once we did the round and we were up a thousand meters, I took three deep breaths; the air up there is so pure you wouldn’t believe it.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>단단히 묶여 있어 아주 안전하다고 느꼈다</b>
+            <q>“Strapped in tightly, she felt “very safe”, and upon landing Helga met an official adjudicator from Guinness World Records.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>조카 재키 로즈가 올해 베티 브로메이지의 기록 뉴스를 보고 헬가도 가능하다는 걸 깨달았다</b>
+            <q>““It was a wonderful atmosphere,” said Helga’s niece, Jackie Rose, who saw news reports this year of Betty Bromage winning the title, and realized it was possible for Helga.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기네스 심사관 윌 먼퍼드가 착륙 후 공식 인증서를 전달했다</b>
+            <q>“Will Munford presented her with an official certificate when she touched down after the flight.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>인증서는 요양시설에 전시되어 있다</b>
+            <q>“The certificate is being displayed in the senior care facility as a reminder that age is just a number.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 도전으로 지역 항공 구급 자선단체에 1,600파운드(약 2,000달러) 넘게 모금했다</b>
+            <q>““Try anything,” said Helga, who also raised over £1,600 ($2,000) for the regional Air Ambulance charity with her stunt.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헬가의 좌우명은 뭐든 해보라는 것이고 못 한다고 말하지 말라는 것이다</b>
+            <q>““Don’t ever say, ‘I can’t do it’. You can’t ‘see’ until you’ve tried… It’s my motto.””</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>베티는 헬가를 축하했고 100세가 되면 기록을 깨고 싶다고 농담했다</b>
+            <q>“When asked about the new record-holder, Betty congratulated Helga on her success, “joking that she was excited to turn 100 and beat the new record”.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/99-yo-woman-snags-worlds-oldest-wing-walker-title/" target="_blank" rel="noopener">99-yo Woman Snags ‘World’s Oldest Wing-Walker’ Title – 3 Months After Another Gran Did It (LOOK)</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "bright blue sky with a small white airplane flying over fluffy clouds"</li><li>2장: <a href="https://pixabay.com/photos/aircraft-double-decker-biplane-1813731/" target="_blank" rel="noopener">cocoparisienne / Pixabay</a> — "biplane sky"</li><li>3장: <a href="https://pixabay.com/photos/people-portrait-adult-old-woman-3190181/" target="_blank" rel="noopener">Daniel_Nebreda / Pixabay</a> — "elderly woman smiling"</li><li>4장: <a href="https://pixabay.com/photos/tree-sun-sunshine-summer-meadow-2916763/" target="_blank" rel="noopener">TimHill / Pixabay</a> — "clear blue sky"</li><li>5장: <a href="https://pixabay.com/photos/sun-sunrise-beach-morning-sky-5189430/" target="_blank" rel="noopener">TRINHDACTRUONG / Pixabay</a> — "sunrise clouds"</li><li>6장: <a href="https://pixabay.com/photos/aircraft-airport-runway-biplane-547105/" target="_blank" rel="noopener">FrankyFromGermany / Pixabay</a> — "airfield sunset"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-7e118f813c8b" data-id="7e118f813c8b">
+    <div class="head">
+      <h2>2. 70파운드 불독 페기 수 다이어트 후 입양</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/22 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>아기 하마만큼 무거웠다는 불독이 있어. 이름은 페기 수. 영국 RSPCA 웨스트해치 동물센터로 오기 전에 몸무게가 70파운드(32.5kg)까지 불어 있었대. 걷는 것도, 감염도, 더위도 다 힘들었고 몇 걸음만 가도 주저앉을 정도였다고 해.
+
+7월에 서머싯의 보호소에 도착했을 때는 직원들이 승합차에서 견사까지 상자에 넣어 옮겨야 했어. 센터 부매니저 아니타 클락은 매일 움직이는 것조차 힘들어하는 모습이 안쓰러웠다고 말했어.
+
+그 뒤로 위탁 보호자가 운동량을 조금씩 늘렸고, 하루하루 조금씩 나아졌대. 지금도 운동과 엄격한 식단 관리를 이어가는 중이야.
+
+SWNS 보도에 따르면 페기는 보호소의 &#39;어답토버&#39; 캠페인 기간에 새 가족을 만났어. 지금 체중은 23.5kg으로, 처음 왔을 때보다 20파운드 줄었어. 새 주인 에미와 앤디는 토턴에 사는데, 페기가 물을 정말 좋아해서 바위 웅덩이와 개울에서 노는 걸 즐긴다고 해. 집에는 16살 형제를 떠나보낸 잭 러셀 믹스 친구도 있어서 단짝까지 생겼대.
+
+에미는 페기가 여섯 번째 구조견이라고 말했어. 또 보호소와 위탁 가정이 이미 5kg을 감량시켜 놓아서 자기들은 그 흐름만 이어가면 됐다고 했어.
+
+출처: Good News Network (SWNS 보도 인용)
+
+배경 사진: MartinDalsgaardSørensen, Pitsch, 17128499, huoadg5888, giselaatje, StockSnap / Pixabay
+표지 이미지: AI 생성
+
+#불독 #유기견입양 #반려견 #다이어트 #해외뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-7e118f813c8b">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 몇 걸음도 못 걷던 32.5kg 불독이 운동량을 조금씩 늘려 23.5kg이 되고, 개울에서 노는 새 가족까지 만난 회복 이야기</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 새 주인 에미가 페기가 여섯 번째 구조견이라고 한 말, 그리고 보호소와 위탁 가정이 이미 5kg을 감량시켜 놓아 자기들은 그 흐름만 이어가면 됐다고 한 말 (본문 마지막 단락)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">몇 걸음 가다 주저앉던 불독이 운동량을 조금씩 늘렸더니 개울에서 물놀이를 한대
+보호소 직원들이 상자에 넣어 옮겨야 했을 만큼 무거웠던 애인데
+몸무게가 얼마였고 어떻게 달라졌는지는 아래에 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">129/500자</span></div>
+      <p class="tp-text">1/ 이 불독 이름은 페기 수. 영국 보호소로 오기 전 몸무게가 70파운드, 32.5kg까지 불어 있었대.
+걷는 것도, 감염도, 더위도 다 힘들어서 몇 걸음만 가도 주저앉을 정도였다고 해.
+그런 애가 보호소에 도착한 날은 어땠을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">2/ 7월에 서머싯 보호소에 도착했을 때 직원들이 승합차에서 견사까지 상자에 넣어 옮겨야 했대.
+센터 부매니저 아니타 클락은 매일 움직이는 것조차 힘들어하는 모습이 안쓰러웠다고 말했어.
+여기서 어떻게 달라졌을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">96/500자</span></div>
+      <p class="tp-text">3/ 그 뒤로 위탁 보호자가 운동량을 조금씩 늘렸고, 하루하루 조금씩 나아졌대.
+지금도 운동이랑 엄격한 식단 관리는 계속 이어가는 중이래.
+지금 상태를 한눈에 보면 이래 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">4/ 페기 수 전후 비교
+- 체중: 32.5kg → 23.5kg
+- 걸음: 몇 걸음 가다 주저앉음 → 바위 웅덩이와 개울에서 놀기
+- 방법: 운동량 조금씩 늘리기 + 엄격한 식단 관리
+- 현재: 지금도 계속 이어가는 중
+그래서 페기는 어디로 갔을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">155/500자</span></div>
+      <p class="tp-text">5/ SWNS 보도에 따르면 페기는 보호소의 &#39;어답토버&#39; 캠페인 기간에 새 가족을 만났대. 새 주인은 토턴에 사는 에미와 앤디야.
+페기가 물을 정말 좋아해서 바위 웅덩이랑 개울에서 노는 걸 즐긴대. 집엔 16살 형제를 떠나보낸 잭 러셀 믹스 친구도 있어서 단짝까지 생겼다고 해.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">235/500자</span></div>
+      <p class="tp-text">6/ 결국 몇 걸음도 못 걷던 페기를 바꾼 건 운동량을 조금씩 늘리고 식단을 엄격하게 관리하는 거였대.
+너라면 개울에서 노는 활동파 개 vs 소파에서 뒹구는 집순이 개, 어느 쪽 키울래?
+이런 해외 동물 이야기, 새벽마다 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 에미 인터뷰 내용 중 여기서 다루지 않은 부분까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 보호소 직원들이 상자에 넣어 옮겨야 했을 만큼 무거웠던 애인데 <small>참고 원고는 승합차에서 견사까지 상자에 넣어 옮겼다는 사실만 말하고, 무거워서 그랬다는 인과 관계는 없다.</small></li><li>카드에 없는 내용: 결국 몇 걸음도 못 걷던 페기를 바꾼 건 운동량을 조금씩 늘리고 식단을 엄격하게 관리하는 거였대. <small>원고는 운동량을 늘린 뒤 나아졌다고만 하고, 변화의 원인을 운동과 식단으로 단정한 근거는 없다. 식단이 변화를 만들었다는 인과 관계는 원고에 없다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>몇 걸음 가다 주저앉던 불독이 운동량을 조금씩 늘렸더니 개울에서 물놀이를 한대</li><li>보호소 직원들이 개를 승합차에서 견사까지 상자에 넣어 옮겼대. 이유가 몸무게야</li><li>아기 하마급 체급 개가 진짜 있었대. 32.5kg 불독 얘기</li><li>다이어트가 막막한 사람 주목. 몇 걸음도 못 걷던 불독도 &#39;조금씩&#39;부터 시작했대</li><li>개가 32.5kg이면 어느 정도냐면, 직원들이 상자째 들어 옮겨야 하는 정도</li><li>32.5kg에서 23.5kg까지 내려와서 새 집에 간 불독 이야기</li><li>식단만이 아니라 운동량을 조금씩 늘리는 것까지 같이였대. 몇 걸음에 주저앉던 불독의 다이어트</li><li>부매니저가 &#39;안쓰러웠다&#39;고 말할 만큼 힘들어했던 70파운드 불독</li><li>물을 정말 좋아하는 불독 페기 수. 처음엔 몇 걸음도 못 걸었는데 지금은 개울이 놀이터래</li><li>불독 좋아하는 친구한테 보내주고 싶은 이야기. 32.5kg이던 애가 새 집에 갔대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너라면 개울에서 노는 활동파 개 vs 소파에서 뒹구는 집순이 개, 어느 쪽 키울래?</li><li>구조견 입양한다면 작은 애 vs 덩치 큰 애, 어느 쪽이야?</li><li>강아지파 vs 고양이파, 너는 어느 쪽?</li><li>불독 좋아하는 친구 있는 사람?</li><li>다이어트 시작은 운동부터 vs 식단부터, 어느 쪽이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>해외 구조견 입양 후일담</li><li>보호소 어답토버 캠페인으로 새 가족 만난 동물들</li><li>체중 줄이고 새 삶 얻은 동물 이야기</li><li>일본 버거킹 고기만 남은 햄버거 On the Beef</li><li>해외 동물 보호소에서 터진 소식</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>아니타 클락, 에미, 앤디 등 인명과 RSPCA 웨스트해치 동물센터 표기는 원문으로 다시 확인 필요</li><li>&#39;엄격한 식단 관리&#39;의 구체적인 내용은 원문에 없으니 식단 방법을 덧붙이지 말 것</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-01.jpg" alt="1장: 아기 하마급 체급인 개가 있다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-02.jpg" alt="2장: 몸무게가 32.5kg 불독" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-03.jpg" alt="3장: 몇 걸음 가다 쓰러질 정도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-04.jpg" alt="4장: 보호소 도착 땐 상자째 옮김" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-05.jpg" alt="5장: 운동량을 조금씩 늘렸더니" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-06.jpg" alt="6장: 23.5kg 찍고 새 집 도착" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-07.jpg" alt="7장: 불독 좋아하는 친구한테 보여주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/7e118f813c8b/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">아기 하마만큼 무거웠다는 불독이 있어. 이름은 페기 수. 영국 RSPCA 웨스트해치 동물센터로 오기 전에 몸무게가 70파운드(32.5kg)까지 불어 있었대. 걷는 것도, 감염도, 더위도 다 힘들었고 몇 걸음만 가도 주저앉을 정도였다고 해.
+
+7월에 서머싯의 보호소에 도착했을 때는 직원들이 승합차에서 견사까지 상자에 넣어 옮겨야 했어. 센터 부매니저 아니타 클락은 매일 움직이는 것조차 힘들어하는 모습이 안쓰러웠다고 말했어.
+
+그 뒤로 위탁 보호자가 운동량을 조금씩 늘렸고, 하루하루 조금씩 나아졌대. 지금도 운동과 엄격한 식단 관리를 이어가는 중이야.
+
+SWNS 보도에 따르면 페기는 보호소의 &#39;어답토버&#39; 캠페인 기간에 새 가족을 만났어. 지금 체중은 23.5kg으로, 처음 왔을 때보다 20파운드 줄었어. 새 주인 에미와 앤디는 토턴에 사는데, 페기가 물을 정말 좋아해서 바위 웅덩이와 개울에서 노는 걸 즐긴다고 해. 집에는 16살 형제를 떠나보낸 잭 러셀 믹스 친구도 있어서 단짝까지 생겼대.
+
+에미는 페기가 여섯 번째 구조견이라고 말했어. 또 보호소와 위탁 가정이 이미 5kg을 감량시켜 놓아서 자기들은 그 흐름만 이어가면 됐다고 했어.
+
+출처: Good News Network (SWNS 보도 인용)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#불독 #유기견입양 #반려견 #다이어트 #해외뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처 표기 &#39;Good News Network(SWNS 보도 인용)&#39;는 원문 근거에서 확인되지 않는 출처 주장이다.</li>
+          <li>원문이 단일 매체(Good News Network)이며 SWNS 보도를 재인용한 내용임</li><li>원문에 &#39;down twenty pounds&#39;와 32.5kg→23.5kg 표기가 있어 수치는 원문 그대로만 사용</li><li>원문 인용문은 번역·재구성하여 사용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-7e118f813c8b-0">1장</label>
+          <textarea id="s-7e118f813c8b-0" rows="3" data-slide="0">**아기 하마급**
+체급인
+개가 있다???</textarea>
+          
+          <label class="f" for="s-7e118f813c8b-1">2장</label>
+          <textarea id="s-7e118f813c8b-1" rows="2" data-slide="1">몸무게가
+**32.5kg** 불독</textarea>
+          
+          <label class="f" for="s-7e118f813c8b-2">3장</label>
+          <textarea id="s-7e118f813c8b-2" rows="2" data-slide="2">몇 걸음 가다
+**쓰러질** 정도</textarea>
+          
+          <label class="f" for="s-7e118f813c8b-3">4장</label>
+          <textarea id="s-7e118f813c8b-3" rows="2" data-slide="3">보호소 도착 땐
+**상자째** 옮김</textarea>
+          
+          <label class="f" for="s-7e118f813c8b-4">5장</label>
+          <textarea id="s-7e118f813c8b-4" rows="2" data-slide="4">운동량을
+**조금씩** 늘렸더니</textarea>
+          
+          <label class="f" for="s-7e118f813c8b-5">6장</label>
+          <textarea id="s-7e118f813c8b-5" rows="2" data-slide="5">**23.5kg** 찍고
+새 집 도착</textarea>
+          
+          <label class="f" for="s-7e118f813c8b-6">7장</label>
+          <textarea id="s-7e118f813c8b-6" rows="3" data-slide="6">**불독 좋아하는**
+친구한테
+보여주기</textarea>
+          
+          <label class="f" for="c-7e118f813c8b">본문 (캡션)</label>
+          <textarea id="c-7e118f813c8b" class="caption">아기 하마만큼 무거웠다는 불독이 있어. 이름은 페기 수. 영국 RSPCA 웨스트해치 동물센터로 오기 전에 몸무게가 70파운드(32.5kg)까지 불어 있었대. 걷는 것도, 감염도, 더위도 다 힘들었고 몇 걸음만 가도 주저앉을 정도였다고 해.
+
+7월에 서머싯의 보호소에 도착했을 때는 직원들이 승합차에서 견사까지 상자에 넣어 옮겨야 했어. 센터 부매니저 아니타 클락은 매일 움직이는 것조차 힘들어하는 모습이 안쓰러웠다고 말했어.
+
+그 뒤로 위탁 보호자가 운동량을 조금씩 늘렸고, 하루하루 조금씩 나아졌대. 지금도 운동과 엄격한 식단 관리를 이어가는 중이야.
+
+SWNS 보도에 따르면 페기는 보호소의 &#39;어답토버&#39; 캠페인 기간에 새 가족을 만났어. 지금 체중은 23.5kg으로, 처음 왔을 때보다 20파운드 줄었어. 새 주인 에미와 앤디는 토턴에 사는데, 페기가 물을 정말 좋아해서 바위 웅덩이와 개울에서 노는 걸 즐긴다고 해. 집에는 16살 형제를 떠나보낸 잭 러셀 믹스 친구도 있어서 단짝까지 생겼대.
+
+에미는 페기가 여섯 번째 구조견이라고 말했어. 또 보호소와 위탁 가정이 이미 5kg을 감량시켜 놓아서 자기들은 그 흐름만 이어가면 됐다고 했어.
+
+출처: Good News Network (SWNS 보도 인용)</textarea>
+          <label class="f" for="t-7e118f813c8b">해시태그</label>
+          <input id="t-7e118f813c8b" type="text" class="tagsin" value="#불독 #유기견입양 #반려견 #다이어트 #해외뉴스" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>페기 수는 아기 하마와 같은 몸무게였던 보호소 개다</b>
+            <q>“A massive shelter dog that weighed the same as a baby hippo has shed the pounds—and found a new home.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>불독 페기 수는 70파운드(32.5kg)까지 불었고 영국 RSPCA 웨스트해치 동물센터로 왔다</b>
+            <q>“The huge bulldog named Peggy Sue swelled to 70 pounds (32.5kg) before she was taken to the RSPCA’s West Hatch Animal Centre in England.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>걷기, 감염, 더위에 시달렸고 몇 걸음 못 가 쓰러질 정도였다</b>
+            <q>“She was so large she struggled with walking, infections, and overheating, and couldn’t take a few steps without collapsing.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>7월 도착 때 서머싯 보호소는 승합차에서 견사까지 상자에 넣어 옮겼다</b>
+            <q>“When she arrived in July, the shelter in Somerset had to carry her in a crate from the van to her kennel and physically move her around.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>부매니저 아니타 클락은 매일의 움직임을 힘들어하는 모습이 안쓰러웠다고 말했다</b>
+            <q>““It was awful to see her struggle with every day movement,” said RSPCA Deputy Centre Manager, Anita Clark.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>위탁 보호자가 운동량을 점차 늘려 매일 조금씩 나아졌다</b>
+            <q>“Peggy Sue’s exercise regime was increased gradually over time by a dedicated foster caretaker, which led to slow improvements every day.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지금도 운동과 엄격한 식단을 이어가고 있다</b>
+            <q>“She now continues to enjoy exercise and a strict diet plan.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>SWNS가 &#39;어답토버&#39; 캠페인 중 새 가족을 찾았다고 보도했다</b>
+            <q>“Recently, SWNS reported the happy news that she was re-homed during the charity’s ‘Adoptober’ drive.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>현재 체중은 23.5kg으로 처음 왔을 때보다 20파운드 줄었다</b>
+            <q>“Peggy’s new weight sits at a much healthier 23.5kg—down twenty pounds from when she first arrived at the charity.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새 주인 에미와 앤디는 토턴에 살고 페기는 바위 웅덩이와 개울을 즐긴다</b>
+            <q>“Her new owners, Emmie and Andy from Taunton, say she is quite a water-baby and enjoys rock pools and streams.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새 집에는 16살 형제 미스터 우를 잃은 잭 러셀 믹스 친구가 있다</b>
+            <q>“He also gained a best buddy in the Taunton household, a Jack Russel-mix that just lost its 16-year-old brother, Mr Woo.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>페기 수는 에미의 여섯 번째 구조견이다</b>
+            <q>““Peggy-Sue is our sixth rescue and they have all turned out to be the most amazing dogs ever,” said Emmie.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보호소와 위탁 가정이 이미 5kg을 감량시켰고 새 주인은 그 진전을 이어가면 됐다</b>
+            <q>““The RSPCA and her foster home had already done a great job getting her weight down by five kilograms (11 pounds), so we just had to keep the progress going.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/massive-70lb-dog-the-size-of-baby-hippo-sheds-lbs/" target="_blank" rel="noopener">Massive 70lb Dog the Size of Baby Hippo Sheds Pounds and Gets New Home</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "chubby bulldog resting on a sunlit grass lawn"</li><li>2장: <a href="https://pixabay.com/photos/french-bulldog-frenchie-forest-6038122/" target="_blank" rel="noopener">MartinDalsgaardSørensen / Pixabay</a> — "dog portrait"</li><li>3장: <a href="https://pixabay.com/photos/continental-bulldog-dog-animal-pet-2437110/" target="_blank" rel="noopener">Pitsch / Pixabay</a> — "tired dog"</li><li>4장: <a href="https://pixabay.com/photos/frog-green-leaf-5319326/" target="_blank" rel="noopener">17128499 / Pixabay</a> — "animal shelter"</li><li>5장: <a href="https://pixabay.com/photos/corgi-dog-pet-canine-rain-animal-4415649/" target="_blank" rel="noopener">huoadg5888 / Pixabay</a> — "dog walking"</li><li>6장: <a href="https://pixabay.com/photos/a-dog-and-a-cat-pets-animal-cute-4364566/" target="_blank" rel="noopener">giselaatje / Pixabay</a> — "happy dog home"</li><li>7장: <a href="https://pixabay.com/photos/dog-puppy-sofa-pet-animal-2561134/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "puppy sofa"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-a567f0da8f40" data-id="a567f0da8f40">
+    <div class="head">
+      <h2>3. 일본 버거킹 고기만 남은 햄버거 On the Beef</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 14
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/22 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>버거킹 재팬이 빵도 상추도 다 빼고 고기 패티만 파는 메뉴를 내놨어. 이름은 On the Beef. 이름만 들으면 고기 위에 뭔가 올라갈 것 같은데, 실제로는 그냥 고기야. 소금과 후추를 살짝 뿌린 패티가 450엔(약 2.85달러)이고, 매장에서 샌드위치에 쓰는 것과 같은 패티래. 버거킹 쪽 설명으로는 샌드위치에 들어가는 100% 소고기 패티 맛을 그대로 느껴보라는 취지라고 해.
+
+기본 메뉴엔 케첩 같은 소스도 없어. 토마토 할라피뇨, 스모키 바비큐, 데리야키 소스 중 하나를 얹은 Sauce on the Beef는 550엔이야. 패티 두 장에 소금·후추를 한 Beef on the Beef는 900엔, 패티 두 장에 소스를 얹은 Sauce on the Double Beef는 1,000엔이고.
+
+가격도 은근 묘해. 가장 저렴한 360엔짜리 치즈버거보다 On the Beef가 더 비싸. 대신 와퍼(690엔부터)와 같은 패티를 쓰는 걸로 보이니까, 나머지를 다 빼면 240엔 아낀다는 계산이 나와.
+
+일본에선 함박스테이크가 인기 메뉴라서, 빵 없이 패티만 먹는 게 아주 낯선 발상은 아니라는 해석도 있어. On the Beef는 버거킹 재팬의 가을 불규칙 전통 같은 메뉴가 됐고, 10월 16일부터 10월 22일까지 판매한대.
+
+출처: SoraNews24, PR Times
+
+배경 사진: jhenning, Pexels, HoaLuu, Sponchia, HirokazuTouwaku, mairaali1121 / Pixabay
+표지 이미지: AI 생성
+
+#일본버거킹 #버거킹 #일본여행 #해외토픽 #신메뉴</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-a567f0da8f40">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 5점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 빵과 상추를 다 뺀 고기 패티가 빵 있는 치즈버거보다 비싸다는 가격 역설</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 소스를 얹으면 550엔, 패티 두 장은 900엔, 소스를 얹은 패티 두 장은 1,000엔이라는 조합별 가격 (카드 4장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">82/500자</span></div>
+      <p class="tp-text">버거킹 신메뉴는 버거가 아니라 그냥 &#39;고기&#39;래
+빵도 상추도 없이 패티만 나오는데, 가격이 치즈버거보다 비싸
+일본 버거킹 얘긴데, 이름부터 헷갈려 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">1/ 일본 버거킹 신메뉴 이름은 On the Beef. 이름만 들으면 고기 위에 뭔가 올라갈 것 같은데 실제론 그냥 고기야. 소금·후추 살짝 뿌린 패티가 450엔(약 2.85달러). 근데 이 가격, 다른 메뉴랑 비교하면 좀 이상해 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">70/500자</span></div>
+      <p class="tp-text">2/ 가장 저렴한 치즈버거가 360엔이야. 빵까지 들어간 버거보다 고기만 주는 쪽이 더 비싼 거지. 그럼 패티가 특별한 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">3/ 그건 아니래. 매장에서 샌드위치에 쓰는 것과 같은 패티야. 버거킹 쪽 설명은 샌드위치에 들어가는 100% 소고기 패티 맛을 그대로 느껴보라는 취지. 와퍼(690엔부터)와 같은 패티를 쓰는 걸로 보인다고도 해.</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">4/ 한눈에 정리
+- 이름: On the Beef (일본 버거킹)
+- 구성: 소고기 패티 + 소금·후추
+- 가격: 450엔(약 2.85달러)
+- 비교: 가장 저렴한 치즈버거는 360엔
+- 판매: 10월 16일~10월 22일</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">5/ 일본은 원래 함박스테이크가 인기 메뉴라서, 빵 없이 패티만 먹는 게 아주 낯선 발상은 아니라는 해석도 있어. 게다가 이 메뉴는 버거킹 재팬의 가을 불규칙 전통 같은 메뉴가 됐대.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">234/500자</span></div>
+      <p class="tp-text">6/ 결국 빵 빼고 고기만 먹는 걸 아예 메뉴로 만들었고, 값은 빵 있는 치즈버거보다 더 받는 거야.
+버거킹 패티만 450엔, 너라면 사 먹는다 vs 안 먹는다?
+이런 해외 패스트푸드·음식 별난 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 소스를 얹은 경우와 패티를 두 장 넣은 경우의 가격까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 빵까지 들어간 버거보다 고기만 주는 쪽이 더 비싼 거지. <small>참고 원고는 가장 저렴한 치즈버거(360엔)보다 비싸다고 했지만, &#39;빵까지 들어간 버거보다 고기만 주는 쪽이 더 비싸다&#39;는 표현은 치즈버거 한정이 아닌 빵 있는 버거 전반으로 확대된 것으로 읽힐 수 있어 과장이다. 다만 원고 범위를 크게 벗어나지는 않음.</small></li><li>카드에 없는 내용: 6/ 결국 빵 빼고 고기만 먹는 걸 아예 메뉴로 만들었고, 값은 빵 있는 치즈버거보다 더 받는 거야. <small>원고와 일치하는 내용이며 새로운 사실 주장은 없음. 문제 없음으로 판단하므로 실질적 이슈는 없음.</small></li><li>카드에 없는 내용: 카드 보너스가 스레드에 드러남 <small>스레드 본문 4/과 1/에서 소스 가격(550엔)·패티 두 장 가격(900엔)·소스+두 장(1,000엔)은 언급되지 않았으나, 스레드 글 자체는 보너스 가격 조합을 직접 말하지 않음. 보너스는 카드 4장에 실제로 있어 예고가 맞고 보너스 누설도 없음.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>버거킹 신메뉴는 버거가 아니라 그냥 &#39;고기&#39;래</li><li>빵·상추 다 빼고 패티만 파는데 치즈버거보다 비싸대</li><li>고기만 먹는 친구 있지? 일본 버거킹이 그런 사람들 메뉴를 냈어</li><li>버거킹에서 패티만 450엔에 판대. 빵을 빼면 더 싸야 하는 거 아냐?</li><li>이름은 &#39;On the Beef&#39;인데 고기 위에 아무것도 안 올라감</li><li>360엔 치즈버거보다 빵 없는 고기가 더 비싸다는 게 말이 돼?</li><li>버거에서 빼기만 했는데 값은 더 올라간 메뉴가 나왔대</li><li>&#39;버거&#39;가 아니라 &#39;고기&#39;를 주문하게 만든 버거킹이 생겼어</li><li>일본은 원래 함박스테이크가 인기라서 가능한 메뉴라는 해석이 나옴</li><li>빵 빼고 먹는 사람들, 일본 버거킹이 아예 그걸 메뉴로 만들었어</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>버거킹 패티만 450엔, 너라면 사 먹는다 vs 안 먹는다?</li><li>버거는 빵까지가 버거다 vs 고기만 먹는 게 진리다, 어느 쪽이야?</li><li>빵 빼고 고기만 먹어본 사람?</li><li>함박스테이크 vs 패티만 나오는 버거, 하나만 고르면?</li><li>이 메뉴 한국에 들어오면 한 번쯤 시켜볼 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>해외 패스트푸드 한정 메뉴 중 별난 것들</li><li>일본 편의점·체인점에서 나온 독특한 신메뉴</li><li>해외 버거 체인의 이름 낚시 같은 메뉴들</li><li>해외에서 화제가 된 음식 가격 논란</li><li>나라별 버거킹 지역 한정 메뉴</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>와퍼와 같은 패티를 쓴다는 내용은 본문에서도 &#39;~로 보인다&#39;는 추정이라 단정하지 않고 같은 톤으로 씀</li><li>360엔 치즈버거를 &#39;가장 저렴한&#39; 메뉴로 쓴 건 본문 표현 기준이라 사실 확인이 필요함</li><li>2.85달러 환산액과 판매 기간(10월 16~22일, 연도 미표기)은 원문 표기 그대로라 게시 시점에 맞는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-01.jpg" alt="1장: 버거킹에서 패티만 판다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-02.jpg" alt="2장: 신메뉴 이름이 On the Beef 진짜 고기패티만 줌" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-03.jpg" alt="3장: 빵·상추 다 빼고 패티에 소금·후추 그게 450엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-04.jpg" alt="4장: 소스 얹으면 550엔 패티 2장은 900엔 소스+2장 1,000엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-05.jpg" alt="5장: 360엔 치즈버거보다 오히려 비싸" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-06.jpg" alt="6장: 일본은 원래 함박스테이크가 인기 메뉴야" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-07.jpg" alt="7장: 빵 빼고 먹는 고기파 친구 태그해줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261018-pm-bc02b3d6b9a0/a567f0da8f40/v3-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">버거킹 재팬이 빵도 상추도 다 빼고 고기 패티만 파는 메뉴를 내놨어. 이름은 On the Beef. 이름만 들으면 고기 위에 뭔가 올라갈 것 같은데, 실제로는 그냥 고기야. 소금과 후추를 살짝 뿌린 패티가 450엔(약 2.85달러)이고, 매장에서 샌드위치에 쓰는 것과 같은 패티래. 버거킹 쪽 설명으로는 샌드위치에 들어가는 100% 소고기 패티 맛을 그대로 느껴보라는 취지라고 해.
+
+기본 메뉴엔 케첩 같은 소스도 없어. 토마토 할라피뇨, 스모키 바비큐, 데리야키 소스 중 하나를 얹은 Sauce on the Beef는 550엔이야. 패티 두 장에 소금·후추를 한 Beef on the Beef는 900엔, 패티 두 장에 소스를 얹은 Sauce on the Double Beef는 1,000엔이고.
+
+가격도 은근 묘해. 가장 저렴한 360엔짜리 치즈버거보다 On the Beef가 더 비싸. 대신 와퍼(690엔부터)와 같은 패티를 쓰는 걸로 보이니까, 나머지를 다 빼면 240엔 아낀다는 계산이 나와.
+
+일본에선 함박스테이크가 인기 메뉴라서, 빵 없이 패티만 먹는 게 아주 낯선 발상은 아니라는 해석도 있어. On the Beef는 버거킹 재팬의 가을 불규칙 전통 같은 메뉴가 됐고, 10월 16일부터 10월 22일까지 판매한대.
+
+출처: SoraNews24, PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본버거킹 #버거킹 #일본여행 #해외토픽 #신메뉴</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 버거킹이 패티를 100% 소고기라고 한 표현(원문은 all-beef patties로만 기술)</li><li>근거 등록 안 된 주장: 함박스테이크 인기 때문에 빵 없이 패티만 먹는 것이 낯선 발상이 아니라는 해석(원문은 일본 식문화 맥락에서 더 이해된다고 서술)</li>
+          <li>브랜드명(버거킹, On the Beef)이 카드·본문에 포함됨</li><li>판매 기간이 10월 16~22일이라 게시 시점에 이미 종료됐을 수 있음</li><li>가격은 일본 현지 엔화 기준이며 환산액은 원문 달러 표기만 사용함</li><li>함박스테이크 맥락은 원문 필자의 해석이라 단정하지 않고 &#39;해석도 있어&#39;로 표현함</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-a567f0da8f40-0">1장</label>
+          <textarea id="s-a567f0da8f40-0" rows="2" data-slide="0">버거킹에서
+**패티만** 판다???</textarea>
+          
+          <label class="f" for="s-a567f0da8f40-1">2장</label>
+          <textarea id="s-a567f0da8f40-1" rows="3" data-slide="1">신메뉴 이름이
+**On the Beef**
+진짜 고기패티만 줌</textarea>
+          
+          <label class="f" for="s-a567f0da8f40-2">3장</label>
+          <textarea id="s-a567f0da8f40-2" rows="3" data-slide="2">빵·상추 다 빼고
+패티에 소금·후추
+그게 **450엔**</textarea>
+          
+          <label class="f" for="s-a567f0da8f40-3">4장</label>
+          <textarea id="s-a567f0da8f40-3" rows="3" data-slide="3">소스 얹으면 550엔
+패티 2장은 **900엔**
+소스+2장 1,000엔</textarea>
+          
+          <label class="f" for="s-a567f0da8f40-4">5장</label>
+          <textarea id="s-a567f0da8f40-4" rows="2" data-slide="4">360엔 치즈버거보다
+**오히려 비싸**</textarea>
+          
+          <label class="f" for="s-a567f0da8f40-5">6장</label>
+          <textarea id="s-a567f0da8f40-5" rows="3" data-slide="5">일본은 원래
+**함박스테이크가**
+인기 메뉴야</textarea>
+          
+          <label class="f" for="s-a567f0da8f40-6">7장</label>
+          <textarea id="s-a567f0da8f40-6" rows="3" data-slide="6">빵 빼고 먹는
+**고기파 친구**
+태그해줘</textarea>
+          
+          <label class="f" for="c-a567f0da8f40">본문 (캡션)</label>
+          <textarea id="c-a567f0da8f40" class="caption">버거킹 재팬이 빵도 상추도 다 빼고 고기 패티만 파는 메뉴를 내놨어. 이름은 On the Beef. 이름만 들으면 고기 위에 뭔가 올라갈 것 같은데, 실제로는 그냥 고기야. 소금과 후추를 살짝 뿌린 패티가 450엔(약 2.85달러)이고, 매장에서 샌드위치에 쓰는 것과 같은 패티래. 버거킹 쪽 설명으로는 샌드위치에 들어가는 100% 소고기 패티 맛을 그대로 느껴보라는 취지라고 해.
+
+기본 메뉴엔 케첩 같은 소스도 없어. 토마토 할라피뇨, 스모키 바비큐, 데리야키 소스 중 하나를 얹은 Sauce on the Beef는 550엔이야. 패티 두 장에 소금·후추를 한 Beef on the Beef는 900엔, 패티 두 장에 소스를 얹은 Sauce on the Double Beef는 1,000엔이고.
+
+가격도 은근 묘해. 가장 저렴한 360엔짜리 치즈버거보다 On the Beef가 더 비싸. 대신 와퍼(690엔부터)와 같은 패티를 쓰는 걸로 보이니까, 나머지를 다 빼면 240엔 아낀다는 계산이 나와.
+
+일본에선 함박스테이크가 인기 메뉴라서, 빵 없이 패티만 먹는 게 아주 낯선 발상은 아니라는 해석도 있어. On the Beef는 버거킹 재팬의 가을 불규칙 전통 같은 메뉴가 됐고, 10월 16일부터 10월 22일까지 판매한대.
+
+출처: SoraNews24, PR Times</textarea>
+          <label class="f" for="t-a567f0da8f40">해시태그</label>
+          <input id="t-a567f0da8f40" type="text" class="tagsin" value="#일본버거킹 #버거킹 #일본여행 #해외토픽 #신메뉴" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버거킹 재팬이 On the Beef라는 신메뉴를 추가했다</b>
+            <q>“The just-added item is called On the Beef.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이름과 달리 On the Beef는 그냥 소고기 패티다</b>
+            <q>“As we’ve previously discussed, though, you can’t eat a grammatical preposition, and while the name “On the Beef” would have one expecting some undetermined additional element being placed on beef, the On the Beef is just beef.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소금과 후추를 약간 뿌려 만든다</b>
+            <q>“I suppose you could argue that because it’s prepared with a dash of salt and pepper, there technically are some granulated seasonings on the On the Beef.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빵과 상추 등을 뺀 패티만 450엔(약 2.85달러)에 판다</b>
+            <q>“That still doesn’t change the fact, though, that Burger King is selling a hamburger patty for 450 yen (US$2.85), leaving out the bun, lettuce, and anything else that would be included in a burger, the very thing that Burger King claims royal dominion over.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>샌드위치에 쓰는 것과 같은 패티이며, 샌드위치 패티 맛을 보게 하려는 취지라고 버거킹이 밝혔다</b>
+            <q>“It’s the same patty that Burger King uses for its actual sandwiches, with the chain saying the point of the On the Beef is to be a way for customers to get a taste of the all-beef patties that go into the chain’s sandwiches.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기본 메뉴에는 케첩 등 소스가 없다</b>
+            <q>“So spartan is the On the Beef that the regular version doesn’t include ketchup or any other sort of sauce.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소스를 추가한 Sauce on the Beef는 550엔이다</b>
+            <q>“You can ask for a squirt of spicy tomato jalapeno, smokey barbecue, or teriyaki sauce, but there’s an additional fee, since the Sauce on the Beef, as it’s called, will cost you 550 yen.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>패티 두 장에 소금·후추를 한 Beef on the Beef는 900엔이다</b>
+            <q>“Alternatively, the Beef on the Beef, two patties with salt and pepper, can be yours for 900 yen…”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>패티 두 장에 소스를 얹은 Sauce on the Double Beef는 1,000엔이다</b>
+            <q>“…and finally there’s the top-of-the-line Sauce on the Double Beef (which seems like it should be called the Sauce on the Beef on the Beef), two patties with sauce, for 1,000 yen.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>On the Beef는 가장 저렴한 360엔 치즈버거보다 비싸다</b>
+            <q>“In terms of price, the On the Beef is actually more expensive than the most affordable hamburger that Burger King Japan offers, its 360-yen cheeseburger.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>와퍼(690엔부터)와 같은 패티로 보여 나머지를 빼면 240엔 절약된다</b>
+            <q>“However, the On the Beef looks to use the same patty as the larger Whopper, which starts at 690 yen, so you’re saving 240 yen by jettisoning everything from the sandwich but the meat.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에서는 함박스테이크가 인기 있다</b>
+            <q>“Hamburger steaks are popular in Japan.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>On the Beef는 버거킹 재팬의 가을 불규칙 전통 같은 메뉴가 됐다</b>
+            <q>“The On the Beef has become a sort of irregular autumn tradition at Burger King Japan, and while the concept seems baffling for a burger joint, it makes a little more sense within the broader context of the Japanese food industry.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 16일 재출시되어 10월 22일까지 판매된다</b>
+            <q>“The On the Beef made its return on October 16, and will be on sale until October 22, though you could make the argument that really it’ll still be available after that date as long as you’re willing to pull the patty out of a Burger King hamburger yourself.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/18/burger-king-japan-now-selling-hamburgers-minus-everything-but-the-meat/" target="_blank" rel="noopener">Burger King Japan now selling hamburgers minus everything but the meat</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "a juicy beef patty on a sizzling grill, bright warm kitchen light, clean simple composition"</li><li>2장: <a href="https://pixabay.com/photos/beef-raw-ground-meat-ground-beef-6018373/" target="_blank" rel="noopener">jhenning / Pixabay</a> — "raw beef"</li><li>3장: <a href="https://pixabay.com/photos/bell-pepper-spices-knife-2179100/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "salt pepper"</li><li>4장: <a href="https://pixabay.com/photos/pasta-lunch-dinner-wine-alcohol-2610762/" target="_blank" rel="noopener">HoaLuu / Pixabay</a> — "sauce bottle"</li><li>5장: <a href="https://pixabay.com/photos/sandwich-food-flying-food-snack-2977251/" target="_blank" rel="noopener">Sponchia / Pixabay</a> — "fast food"</li><li>6장: <a href="https://pixabay.com/photos/bento-lunch-box-japanese-food-7006657/" target="_blank" rel="noopener">HirokazuTouwaku / Pixabay</a> — "bento box"</li><li>7장: <a href="https://pixabay.com/photos/family-love-heart-reunion-winter-7727035/" target="_blank" rel="noopener">mairaali1121 / Pixabay</a> — "friends dinner"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-23558515dc4f">
+    <div class="head">
+      <h2>S1. MS 첫 증상 15년 전 병원 기록 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-23558515dc4f">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;나도 해당되나?&#39; 궁금증을 끌어낸 뒤, 흔한 증상이라 자가진단 근거는 못 된다는 반전으로 끝까지 읽게 하는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">다발성경화증(MS), 첫 전형적 증상이 나오기 최대 15년 전부터 병원 기록에 흔적이 보였다는 연구가 나옴
+근데 &#39;나도 해당되나?&#39; 하고 자가진단하면 안 되는 이유가 같은 연구 안에 있어 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 나중에 MS 진단받은 사람들은 첫 증상 14~15년 전부터 병원을 더 자주 간 걸로 나왔대. 첫 증상 14년 전엔 전체 진료 횟수가 19% 더 많았음. 근데 누구랑 비교한 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">170/500자</span></div>
+      <p class="tp-text">2/ 캐나다 브리티시컬럼비아의 1991~2018년 진료 기록을 쓴 연구야. MS 환자 2,038명을 성별·출생연도·우편번호를 맞춘 MS 없는 사람 10,182명과 비교함. 일반의 진료는 15년 내내 매년 더 많았고, 진단 안 붙은 애매한 증상 진료도 15% 넘게 많았음. 그럼 어떤 진료가 먼저 늘었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">161/500자</span></div>
+      <p class="tp-text">3/ 빠르면 첫 증상 몇 년 전부터 늘었나
+- 14년 전: 정신건강 진료 (대부분의 해)
+- 12년 전: 정신과 진료
+- 9년 전: 안과
+- 8년 전: 신경과
+- 5년 전: 근골격계
+- 4년 전: 신경계 문제
+뒤로 갈수록 구체적인 진료가 붙는 흐름이야. 그럼 흔한 증상별로 보면 어땠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">4/ MS가 확인되기 전 5년만 따로 본 다른 연구도 있어. 환자 966명 vs 대조군 4,534명에서 수면장애 기록은 오즈가 72%, 통증은 53% 더 높았음. 반전은 피로였어. 유의한 차이가 없었대. 그럼 이거 내 얘기 아닌가 싶잖아?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">159/500자</span></div>
+      <p class="tp-text">5/ 그게 아니래. 이런 증상은 너무 흔해서, 대조군의 약 43%도 통증 기록이 있었음. 연구는 집단의 패턴이지 한 사람의 위험이 아니고, 진료 기록만으로 MS가 원인이었다고 말할 수도 없대. 2024년 리뷰도 지금 근거로는 MS 관리법이나 공중보건 정책을 바꿀 정도는 아니라고 봤어.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">216/500자</span></div>
+      <p class="tp-text">6/ 결국 이 연구는 &#39;연구할 가치 있는 신호&#39;지 &#39;자가진단 근거&#39;가 아니라는 거야. 새롭거나 계속되는 증상이 있으면 의사한테 가보라는 거고.
+몸이 이상할 때 너는 검색파 vs 바로 병원파?
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구 대상 지역이 캐나다라는 점</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>다발성경화증, 첫 전형적 증상 15년 전부터 병원 기록에 흔적이 있었다는 연구가 나옴</li><li>피곤하고 잠 안 오는 게 MS 신호일까? 같은 연구가 &#39;자가진단은 아니다&#39;라고 선을 그었어</li><li>피곤하다고 MS 걱정부터 하지 말고, 이 연구가 말하는 건 &#39;내 증상&#39;이 아니라 &#39;집단 패턴&#39;이라는 거부터 봐</li><li>MS 진단받은 사람 2,038명의 진료 기록을 거슬러 올라갔더니 14~15년 전부터 차이가 났대</li><li>병원 갈 일이 19% 더 많았대. 첫 증상 나오기 14년 전부터</li><li>&#39;그냥 피곤한 거겠지&#39;가 몇 년 뒤 기록에선 패턴으로 보였다는 연구가 있어</li><li>요통, 불면, 불안... 평범한 진료 기록이 나중에 MS 연구의 단서가 됐대</li><li>MS는 증상이 아니라 진료 기록에서 먼저 티가 났대. 근데 그걸 체크리스트로 쓰면 안 된대</li><li>혈액 속 신경 손상 표지자가 MS 첫 증상 6년 전부터 높았다는 군인 연구도 나왔어</li><li>증상 검색하며 &#39;MS인가?&#39; 걱정하지 말고, 연구진이 왜 &#39;자가진단 말고 연구 대상&#39;이라 했는지부터 보라는 얘기</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>몸이 이상할 때 너는 검색파 vs 바로 병원파?</li><li>건강 기사 보고 &#39;나도 이런가?&#39; 싶어진 적 있는 사람?</li><li>건강검진 결과표, 끝까지 꼼꼼히 읽는 파 vs 결과만 훑는 파?</li><li>증상 검색하다가 괜히 불안해진 적 있어?</li><li>건강 연구 기사, 제목만 보는 파 vs 끝까지 읽는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>혈액 속 신경 손상 단백질 NfL, MS 첫 증상 6년 전부터 달랐다는 군인 연구</li><li>MS 진단은 실제로 어떻게 하나: 병력, 신경학 검사, MRI</li><li>스웨덴 연구: MS 진단 전 외래·입원·처방 이용이 달랐다</li><li>건강 기록 연구에서 &#39;연관&#39;과 &#39;원인&#39;을 구분해 읽는 법</li><li>다음 배송: 99세 할머니 세계 최고령 날개 걷기 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;15년 전&#39;은 14~15년 전 진료 이용 패턴이 집단 단위로 달랐다는 연구 결과라서, 개인의 MS 예측이나 증상 체크리스트처럼 읽히지 않게 확인 필요</li><li>오즈(odds) 수치를 &#39;가능성&#39;으로 풀어 쓴 부분이 있어 수치 의미가 과장되지 않았는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>MS가 생긴 사람들은 첫 증상 14~15년 전부터 진료를 더 자주 받았다</b>
+          <q>“A 2025 University of British Columbia study, which UBC said looked further back than any earlier study of health care use before MS, found that people who developed MS were seeing doctors more often 14 to 15 years before symptom onset.”</q>
+          <small>post0, post1 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>첫 증상 14년 전 전체 진료 방문이 19% 더 많았다</b>
+          <q>“All-cause physician visits were 19 percent higher 14 years before onset.”</q>
+          <small>post1 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>브리티시컬럼비아의 1991~2018년 건강 기록을 사용한 연구다</b>
+          <q>“The study, published in JAMA Network Open, drew on British Columbia health records from 1991 to 2018.”</q>
+          <small>post2 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>MS 환자 2,038명을 성별·출생연도·우편번호를 맞춘 MS 없는 10,182명과 비교했다</b>
+          <q>“It compared 2,038 people with MS against 10,182 people without it, matched by sex, birth year and postal code.”</q>
+          <small>post2 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>진단이 불분명한 증상 진료는 15년 내내 15% 이상 높았고 일반의 진료는 매년 더 많았다</b>
+          <q>“Visits for ill-defined symptoms and signs, meaning complaints without a clear diagnosis, ran at least 15 percent higher across all 15 years, and general practice visits were elevated in every one of those years.”</q>
+          <small>post2 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정신건강 진료는 14년 전부터, 정신과 진료는 12년 전부터 높았다</b>
+          <q>“Mental-health visits were higher in most years starting 14 years out, as were psychiatrist visits starting 12 years out.”</q>
+          <small>post3 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>안과 진료는 빠르면 9년 전, 신경과 진료는 8년 전부터 높았다</b>
+          <q>“Ophthalmology visits were elevated as early as nine years before onset, and neurology visits as early as eight.”</q>
+          <small>post3 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근골격계 문제 진료는 5년 전, 신경계 문제 진료는 4년 전부터 늘었다</b>
+          <q>“Visits for sensory-organ problems rose as early as eight years out, musculoskeletal problems five and nervous-system problems four.”</q>
+          <small>post3 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>다른 연구는 MS가 확인되기 전 5년 동안의 피로, 수면장애, 빈혈, 통증을 살폈다</b>
+          <q>“An earlier British Columbia study in Multiple Sclerosis Journal examined fatigue, sleep disorders, anemia and pain in the five years before MS was recognized, measured two ways.”</q>
+          <small>post4 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>환자 966명 vs 대조군 4,534명에서 수면장애 오즈 72%, 통증 오즈 53% 높았고 피로는 유의한 차이가 없었다</b>
+          <q>“Among 966 patients with a neurologist-dated onset and 4,534 controls, the odds of a recorded sleep disorder were 72 percent higher and the odds of pain 53 percent higher. Recorded fatigue was not significantly different.”</q>
+          <small>post4 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대조군의 약 43%도 통증 기록이 있었다</b>
+          <q>“In the Multiple Sclerosis Journal study, about 43 percent of controls in the clinical comparison had recorded pain.”</q>
+          <small>post5 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 집단 패턴을 보여줄 뿐 한 사람의 위험을 말하지 않는다</b>
+          <q>“The complaints are common, the studies describe patterns across groups rather than risk for any one person, and a recent review concluded the evidence does not yet justify changing how MS is managed or shifting public health policy.”</q>
+          <small>post5 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>진료 기록 연구 설계로는 MS가 초기 증상의 원인이었다고 보일 수 없다</b>
+          <q>“Because the records show associations in health care use, the design cannot show that MS caused these early complaints.”</q>
+          <small>post5 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2024년 리뷰는 현재 근거가 MS 관리 방식이나 공중보건 정책을 바꾸기엔 아직 부족하다고 판단했다</b>
+          <q>“They judged that the current evidence does not yet support changing how MS is managed or shifting public health policy.”</q>
+          <small>post5 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 신호는 연구할 가치는 있지만 자가진단용은 아니다</b>
+          <q>“That makes the signal worth studying, not self-diagnosing.”</q>
+          <small>post6 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>새롭거나 계속되는 증상이 있으면 의료진과 상의해야 한다</b>
+          <q>“This article is for general information and is not medical advice. Anyone with new or persistent symptoms should talk with a healthcare provider.”</q>
+          <small>post6 · <a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="23558515dc4f">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/multiple-sclerosis-everyday-complaints-15-years-before-first-classic-symptom-2180/" target="_blank" rel="noopener">Multiple Sclerosis: The Everyday Complaints That May Show Up 15 Years Before The First Classic Symptom</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-a25e10fe8a0d">
+    <div class="head">
+      <h2>S2. 조기 발병 2형 당뇨, 24주 식단+운동 프로그램 관해 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 19
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-a25e10fe8a0d">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강정보</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 당뇨는 무조건 평생 가는 병이 아니라는 통념 뒤집기에, 식단만이 아니라 근육을 지키는 운동을 같이 묶은 24주 프로그램이라는 구체성이 붙는다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">당뇨가 무조건 평생 가는 병은 아니라는 연구가 나왔어
+24주 프로그램을 한 조기 발병 2형 당뇨 환자 중 절반 넘게가 관해에 들어갔대
+근데 식단만 바꾼 게 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 프로그램을 한 50명 중 27명이 24주 뒤 관해에 들어갔어. 평소처럼 지낸 대조군은 2명뿐. 혈당 낮추는 약 없이 나온 결과래. 그럼 대상은 어떤 사람들이었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">2/ 영국·캐나다 3개 센터에서 96명이 참여했어. 조기 발병 2형 당뇨에 비만이 있고 인슐린은 안 쓰는 사람들, 평균 나이 38세. 조기 발병은 보통 45세 이하 진단을 말하고 더 빨리 진행하는 경향이 있대. 그럼 이 사람들은 뭘 했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">167/500자</span></div>
+      <p class="tp-text">3/ 24주 프로그램 한눈에
+- 1~12주: 하루 약 800~900칼로리 식단
+- 같은 기간: 주 2회 감독 하 유산소·근력 운동 + 주 1회 혼자 운동
+- 13~24주: 체중 유지 식단 + 혼자 운동 계속
+- 참가자 건강은 내내 면밀히 관찰
+※ 감독 하에 진행된 거라, 따라 하기 전엔 의사와 상의</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">4/ 지방은 크게 줄었는데 근육량과 근력은 지켜졌대. 연구진은 체중 감량만 노리면 근육이 빠질 위험이 있다고 짚었고, 근육은 인슐린 반응에 중요한 부위라고 해. 그럼 심장 쪽은 어땠을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">5/ 끝날 때쯤 체중 대비 호흡 체력이 10.3% 올랐고, 안정 시 혈압과 심박수는 내려갔대. 설문에서는 당뇨로 인한 스트레스가 줄고 삶의 질이 올랐다고 답했고. 근데 아직 모르는 것도 있음</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">6/ 시험이 24주짜리라 이 효과가 얼마나 오래 가는지는 불확실하대. 식단과 운동 중 뭐가 더 크게 작용했는지도 아직 몰라. 그래서 결국 이 연구가 말하는 게 뭐냐면</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">241/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 식단만이 아니라 운동까지 묶은 프로그램에서 관해가 나왔다는 거. 다만 24주짜리라 오래 가는지는 아직 몰라. 자기한테 맞는지는 의사랑 상의.
+
+식단 관리 vs 운동 루틴, 하나만 평생 해야 한다면 어느 쪽이야?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 대조군은 식단·운동 개입 없이 평소처럼 생활했다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>당뇨가 무조건 평생 가는 병은 아니라는 연구가 나왔어
+24주 프로그램 뒤 절반 넘게가 관해에 들어갔대</li><li>당뇨 고민이라면, 체중만 빼는 게 아니라 근육을 지키면서 빼는 쪽을 본 연구가 나옴</li><li>프로그램을 한 50명 중 27명, 평소처럼 지낸 쪽은 2명. 이 차이가 뭐였을까</li><li>식단만 하지 말고 운동까지 같이 묶어본 연구가 나왔어. 결과가 꽤 컸음</li><li>참가자 평균 38세. 이 나이에 당뇨 진단받은 사람들 얘기야</li><li>혈당 낮추는 약 없이 관해에 들어간 사람이 절반 넘었대</li><li>감독받으며 하루 800~900칼로리 식단을 한 사람들, 근육은 지켜졌대</li><li>연구진이 &#39;지금까지 보고된 것 중 상위권&#39;이라고 말한 당뇨 관해율이 나왔어</li><li>조기 발병 당뇨는 더 빨리 나빠진다는데, 그걸 거꾸로 돌려본 연구가 있대</li><li>식단이냐 운동이냐? 이 연구는 둘 다 넣었는데, 뭐가 더 컸는지는 연구진도 모른대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>식단 관리 vs 운동 루틴, 하나만 평생 해야 한다면 어느 쪽이야?</li><li>하루 800~900칼로리 식단 vs 주 3번 운동, 24주 동안 하나만 고르라면?</li><li>너라면 건강 프로그램, 혼자 하는 쪽 vs 감독받으며 하는 쪽?</li><li>운동 중에 유산소파 vs 근력파, 어느 쪽이야?</li><li>당뇨가 평생 가는 병이라고 알고 있었던 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>2편: 식단이냐 운동이냐, 뭐가 더 중요한지 연구진이 제안한 후속 시험 얘기</li><li>근육이 혈당 처리에 중요한 이유, 쉽게 풀어봄</li><li>당뇨 전 단계에서 발병 위험을 최대 58% 줄일 수 있다는 근거 얘기</li><li>조기 발병 당뇨는 왜 더 빨리 나빠질까</li><li>다음 배송: 99세 할머니 세계 최고령 날개 걷기 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>하루 800~900칼로리 식단이 감독 하에 진행된 것임을 3/ 글에 밝혔으나, 독자가 임의로 따라 하지 않도록 표현 재확인 필요</li><li>&#39;관해&#39;가 완치로 읽히지 않는지 확인 필요(연구는 24주 시점 결과이고 지속 기간은 불확실)</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2형 당뇨가 반드시 평생 가는 진단은 아니다</b>
+          <q>“Type 2 diabetes is not necessarily a lifelong diagnosis or a disease that gets progressively worse over time.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조기 발병 2형 당뇨 환자 절반 넘게를 관해에 들게 하는 방법을 연구진이 확인했다</b>
+          <q>“Researchers in the United Kingdom (UK) and Canada have now identified a way to put more than 50 percent of patients with early onset type 2 diabetes into remission.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>프로그램 그룹 50명 중 27명이 24주에 관해</b>
+          <q>“At 24 weeks, remission was achieved in 27 out of 50 participants within the intervention group.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대조군에서는 2명만 관해</b>
+          <q>“By comparison, only two participants in the control group entered remission.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈당 낮추는 약 없이 달성됐다</b>
+          <q>“That&#39;s a difference of 50 percent, and it was all achieved without glucose-lowering medicine.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국·캐나다 3개 센터, 96명, 조기 발병 2형 당뇨와 비만, 인슐린 미사용</b>
+          <q>“The randomized trial took place at three centers in Canada and the the UK and included 96 participants of various ethnicities with early onset type 2 diabetes and obesity, who were not on insulin therapy.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자 평균 나이 38세</b>
+          <q>“The average age of the group was 38.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조기 발병은 45세 이하 진단으로 정의되고 더 빨리 진행하는 경향</b>
+          <q>“Early-onset type 2 diabetes is often defined as a diagnosis at 45 years of age or younger, and it tends to progress more rapidly than cases that come on later in life.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 약 800~900칼로리 식단, 주 2회 감독 하 유산소·근력 운동, 주 1회 혼자 운동</b>
+          <q>“The diet involved eating roughly 800–900 calories a day, and the exercise intervention involved a twice-weekly supervised session of aerobic and resistance training, and a once-weekly independent exercise.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자 건강은 면밀히 관찰됐다</b>
+          <q>“The health of participants was closely supervised.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>12주 후 체중 유지 식단으로 바꾸고 12주간 혼자 운동 지속</b>
+          <q>“After 12 weeks, participants switched to a weight-maintenance diet and continued exercising independently for a further 12 weeks.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>프로그램 그룹은 지방이 크게 줄고 근육량과 근력은 보존</b>
+          <q>“Participants in the intervention group achieved substantial fat mass loss compared to the control group, but crucially, they also preserved muscle mass and strength.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체중 감량에만 집중하면 근육 손실 위험이 있을 수 있다</b>
+          <q>“While other trials have considered how a low-energy diet might put early onset type 2 diabetes into remission, focusing solely on weight loss may risk a loss of muscle mass.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근육은 포도당 처리와 인슐린 반응에 중요하다</b>
+          <q>“Muscle is important for metabolic health. It is a primary site of glucose disposal, and it is also a major determinant of how the body responds to insulin.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체중 대비 호흡 체력 10.3% 증가, 안정 시 혈압과 심박수 감소</b>
+          <q>“By the end of the trial, their cardiovascular health showed several improvements, including a 10.3 percent increase in respiratory fitness relative to body mass, and a lower resting blood pressure and heart rate.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>설문에서 당뇨 스트레스 감소와 삶의 질 향상 보고</b>
+          <q>“In surveys, participants reported that their distress from diabetes had decreased and their quality of life had increased.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>시험이 24주라 효과 지속 기간이 불확실</b>
+          <q>“The trial only lasted 24 weeks, so it is unclear how long these benefits might last for.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식단과 운동 중 어느 쪽 역할이 컸는지 불분명</b>
+          <q>“At this point, it&#39;s also unclear whether diet or exercise played a larger role.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>저칼로리 식단과 감독 하 운동 프로그램을 결합한 방식</b>
+          <q>“It involves a low-calorie diet and a supervised exercise program.”</q>
+          <small>post7 · <a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <p class="thr-note">📸 인스타 카드로 만들었어요 → <a href="20261022-req-2.html">20261022-req-2 검수 페이지</a></p>
+      
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/this-diet-and-exercise-combination-put-early-onset-diabetes-into-remission-in-half-of-participants" target="_blank" rel="noopener">Early-Onset Type 2 Diabetes Went Into Remission in More Than Half of People on This 24-Week Program</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261018-pm";
+  const ORIGINAL = {"7e118f813c8b": {"caption": "\uc544\uae30 \ud558\ub9c8\ub9cc\ud07c \ubb34\uac70\uc6e0\ub2e4\ub294 \ubd88\ub3c5\uc774 \uc788\uc5b4. \uc774\ub984\uc740 \ud398\uae30 \uc218. \uc601\uad6d RSPCA \uc6e8\uc2a4\ud2b8\ud574\uce58 \ub3d9\ubb3c\uc13c\ud130\ub85c \uc624\uae30 \uc804\uc5d0 \ubab8\ubb34\uac8c\uac00 70\ud30c\uc6b4\ub4dc(32.5kg)\uae4c\uc9c0 \ubd88\uc5b4 \uc788\uc5c8\ub300. \uac77\ub294 \uac83\ub3c4, \uac10\uc5fc\ub3c4, \ub354\uc704\ub3c4 \ub2e4 \ud798\ub4e4\uc5c8\uace0 \uba87 \uac78\uc74c\ub9cc \uac00\ub3c4 \uc8fc\uc800\uc549\uc744 \uc815\ub3c4\uc600\ub2e4\uace0 \ud574.\n\n7\uc6d4\uc5d0 \uc11c\uba38\uc2ef\uc758 \ubcf4\ud638\uc18c\uc5d0 \ub3c4\ucc29\ud588\uc744 \ub54c\ub294 \uc9c1\uc6d0\ub4e4\uc774 \uc2b9\ud569\ucc28\uc5d0\uc11c \uacac\uc0ac\uae4c\uc9c0 \uc0c1\uc790\uc5d0 \ub123\uc5b4 \uc62e\uaca8\uc57c \ud588\uc5b4. \uc13c\ud130 \ubd80\ub9e4\ub2c8\uc800 \uc544\ub2c8\ud0c0 \ud074\ub77d\uc740 \ub9e4\uc77c \uc6c0\uc9c1\uc774\ub294 \uac83\uc870\ucc28 \ud798\ub4e4\uc5b4\ud558\ub294 \ubaa8\uc2b5\uc774 \uc548\uc4f0\ub7ec\uc6e0\ub2e4\uace0 \ub9d0\ud588\uc5b4.\n\n\uadf8 \ub4a4\ub85c \uc704\ud0c1 \ubcf4\ud638\uc790\uac00 \uc6b4\ub3d9\ub7c9\uc744 \uc870\uae08\uc529 \ub298\ub838\uace0, \ud558\ub8e8\ud558\ub8e8 \uc870\uae08\uc529 \ub098\uc544\uc84c\ub300. \uc9c0\uae08\ub3c4 \uc6b4\ub3d9\uacfc \uc5c4\uaca9\ud55c \uc2dd\ub2e8 \uad00\ub9ac\ub97c \uc774\uc5b4\uac00\ub294 \uc911\uc774\uc57c.\n\nSWNS \ubcf4\ub3c4\uc5d0 \ub530\ub974\uba74 \ud398\uae30\ub294 \ubcf4\ud638\uc18c\uc758 \u0027\uc5b4\ub2f5\ud1a0\ubc84\u0027 \ucea0\ud398\uc778 \uae30\uac04\uc5d0 \uc0c8 \uac00\uc871\uc744 \ub9cc\ub0ac\uc5b4. \uc9c0\uae08 \uccb4\uc911\uc740 23.5kg\uc73c\ub85c, \ucc98\uc74c \uc654\uc744 \ub54c\ubcf4\ub2e4 20\ud30c\uc6b4\ub4dc \uc904\uc5c8\uc5b4. \uc0c8 \uc8fc\uc778 \uc5d0\ubbf8\uc640 \uc564\ub514\ub294 \ud1a0\ud134\uc5d0 \uc0ac\ub294\ub370, \ud398\uae30\uac00 \ubb3c\uc744 \uc815\ub9d0 \uc88b\uc544\ud574\uc11c \ubc14\uc704 \uc6c5\ub369\uc774\uc640 \uac1c\uc6b8\uc5d0\uc11c \ub178\ub294 \uac78 \uc990\uae34\ub2e4\uace0 \ud574. \uc9d1\uc5d0\ub294 16\uc0b4 \ud615\uc81c\ub97c \ub5a0\ub098\ubcf4\ub0b8 \uc7ad \ub7ec\uc140 \ubbf9\uc2a4 \uce5c\uad6c\ub3c4 \uc788\uc5b4\uc11c \ub2e8\uc9dd\uae4c\uc9c0 \uc0dd\uacbc\ub300.\n\n\uc5d0\ubbf8\ub294 \ud398\uae30\uac00 \uc5ec\uc12f \ubc88\uc9f8 \uad6c\uc870\uacac\uc774\ub77c\uace0 \ub9d0\ud588\uc5b4. \ub610 \ubcf4\ud638\uc18c\uc640 \uc704\ud0c1 \uac00\uc815\uc774 \uc774\ubbf8 5kg\uc744 \uac10\ub7c9\uc2dc\ucf1c \ub193\uc544\uc11c \uc790\uae30\ub4e4\uc740 \uadf8 \ud750\ub984\ub9cc \uc774\uc5b4\uac00\uba74 \ub410\ub2e4\uace0 \ud588\uc5b4.\n\n\ucd9c\ucc98: Good News Network (SWNS \ubcf4\ub3c4 \uc778\uc6a9)", "hashtags": ["#\ubd88\ub3c5", "#\uc720\uae30\uacac\uc785\uc591", "#\ubc18\ub824\uacac", "#\ub2e4\uc774\uc5b4\ud2b8", "#\ud574\uc678\ub274\uc2a4"], "slides": [["**\uc544\uae30 \ud558\ub9c8\uae09**", "\uccb4\uae09\uc778", "\uac1c\uac00 \uc788\ub2e4???"], ["\ubab8\ubb34\uac8c\uac00", "**32.5kg** \ubd88\ub3c5"], ["\uba87 \uac78\uc74c \uac00\ub2e4", "**\uc4f0\ub7ec\uc9c8** \uc815\ub3c4"], ["\ubcf4\ud638\uc18c \ub3c4\ucc29 \ub550", "**\uc0c1\uc790\uc9f8** \uc62e\uae40"], ["\uc6b4\ub3d9\ub7c9\uc744", "**\uc870\uae08\uc529** \ub298\ub838\ub354\ub2c8"], ["**23.5kg** \ucc0d\uace0", "\uc0c8 \uc9d1 \ub3c4\ucc29"], ["**\ubd88\ub3c5 \uc88b\uc544\ud558\ub294**", "\uce5c\uad6c\ud55c\ud14c", "\ubcf4\uc5ec\uc8fc\uae30"]]}, "a567f0da8f40": {"caption": "\ubc84\uac70\ud0b9 \uc7ac\ud32c\uc774 \ube75\ub3c4 \uc0c1\ucd94\ub3c4 \ub2e4 \ube7c\uace0 \uace0\uae30 \ud328\ud2f0\ub9cc \ud30c\ub294 \uba54\ub274\ub97c \ub0b4\ub1a8\uc5b4. \uc774\ub984\uc740 On the Beef. \uc774\ub984\ub9cc \ub4e4\uc73c\uba74 \uace0\uae30 \uc704\uc5d0 \ubb54\uac00 \uc62c\ub77c\uac08 \uac83 \uac19\uc740\ub370, \uc2e4\uc81c\ub85c\ub294 \uadf8\ub0e5 \uace0\uae30\uc57c. \uc18c\uae08\uacfc \ud6c4\ucd94\ub97c \uc0b4\uc9dd \ubfcc\ub9b0 \ud328\ud2f0\uac00 450\uc5d4(\uc57d 2.85\ub2ec\ub7ec)\uc774\uace0, \ub9e4\uc7a5\uc5d0\uc11c \uc0cc\ub4dc\uc704\uce58\uc5d0 \uc4f0\ub294 \uac83\uacfc \uac19\uc740 \ud328\ud2f0\ub798. \ubc84\uac70\ud0b9 \ucabd \uc124\uba85\uc73c\ub85c\ub294 \uc0cc\ub4dc\uc704\uce58\uc5d0 \ub4e4\uc5b4\uac00\ub294 100% \uc18c\uace0\uae30 \ud328\ud2f0 \ub9db\uc744 \uadf8\ub300\ub85c \ub290\uaef4\ubcf4\ub77c\ub294 \ucde8\uc9c0\ub77c\uace0 \ud574.\n\n\uae30\ubcf8 \uba54\ub274\uc5d4 \ucf00\ucca9 \uac19\uc740 \uc18c\uc2a4\ub3c4 \uc5c6\uc5b4. \ud1a0\ub9c8\ud1a0 \ud560\ub77c\ud53c\ub1e8, \uc2a4\ubaa8\ud0a4 \ubc14\ube44\ud050, \ub370\ub9ac\uc57c\ud0a4 \uc18c\uc2a4 \uc911 \ud558\ub098\ub97c \uc5b9\uc740 Sauce on the Beef\ub294 550\uc5d4\uc774\uc57c. \ud328\ud2f0 \ub450 \uc7a5\uc5d0 \uc18c\uae08\u00b7\ud6c4\ucd94\ub97c \ud55c Beef on the Beef\ub294 900\uc5d4, \ud328\ud2f0 \ub450 \uc7a5\uc5d0 \uc18c\uc2a4\ub97c \uc5b9\uc740 Sauce on the Double Beef\ub294 1,000\uc5d4\uc774\uace0.\n\n\uac00\uaca9\ub3c4 \uc740\uadfc \ubb18\ud574. \uac00\uc7a5 \uc800\ub834\ud55c 360\uc5d4\uc9dc\ub9ac \uce58\uc988\ubc84\uac70\ubcf4\ub2e4 On the Beef\uac00 \ub354 \ube44\uc2f8. \ub300\uc2e0 \uc640\ud37c(690\uc5d4\ubd80\ud130)\uc640 \uac19\uc740 \ud328\ud2f0\ub97c \uc4f0\ub294 \uac78\ub85c \ubcf4\uc774\ub2c8\uae4c, \ub098\uba38\uc9c0\ub97c \ub2e4 \ube7c\uba74 240\uc5d4 \uc544\ub080\ub2e4\ub294 \uacc4\uc0b0\uc774 \ub098\uc640.\n\n\uc77c\ubcf8\uc5d0\uc120 \ud568\ubc15\uc2a4\ud14c\uc774\ud06c\uac00 \uc778\uae30 \uba54\ub274\ub77c\uc11c, \ube75 \uc5c6\uc774 \ud328\ud2f0\ub9cc \uba39\ub294 \uac8c \uc544\uc8fc \ub0af\uc120 \ubc1c\uc0c1\uc740 \uc544\ub2c8\ub77c\ub294 \ud574\uc11d\ub3c4 \uc788\uc5b4. On the Beef\ub294 \ubc84\uac70\ud0b9 \uc7ac\ud32c\uc758 \uac00\uc744 \ubd88\uaddc\uce59 \uc804\ud1b5 \uac19\uc740 \uba54\ub274\uac00 \ub410\uace0, 10\uc6d4 16\uc77c\ubd80\ud130 10\uc6d4 22\uc77c\uae4c\uc9c0 \ud310\ub9e4\ud55c\ub300.\n\n\ucd9c\ucc98: SoraNews24, PR Times", "hashtags": ["#\uc77c\ubcf8\ubc84\uac70\ud0b9", "#\ubc84\uac70\ud0b9", "#\uc77c\ubcf8\uc5ec\ud589", "#\ud574\uc678\ud1a0\ud53d", "#\uc2e0\uba54\ub274"], "slides": [["\ubc84\uac70\ud0b9\uc5d0\uc11c", "**\ud328\ud2f0\ub9cc** \ud310\ub2e4???"], ["\uc2e0\uba54\ub274 \uc774\ub984\uc774", "**On the Beef**", "\uc9c4\uc9dc \uace0\uae30\ud328\ud2f0\ub9cc \uc90c"], ["\ube75\u00b7\uc0c1\ucd94 \ub2e4 \ube7c\uace0", "\ud328\ud2f0\uc5d0 \uc18c\uae08\u00b7\ud6c4\ucd94", "\uadf8\uac8c **450\uc5d4**"], ["\uc18c\uc2a4 \uc5b9\uc73c\uba74 550\uc5d4", "\ud328\ud2f0 2\uc7a5\uc740 **900\uc5d4**", "\uc18c\uc2a4+2\uc7a5 1,000\uc5d4"], ["360\uc5d4 \uce58\uc988\ubc84\uac70\ubcf4\ub2e4", "**\uc624\ud788\ub824 \ube44\uc2f8**"], ["\uc77c\ubcf8\uc740 \uc6d0\ub798", "**\ud568\ubc15\uc2a4\ud14c\uc774\ud06c\uac00**", "\uc778\uae30 \uba54\ub274\uc57c"], ["\ube75 \ube7c\uace0 \uba39\ub294", "**\uace0\uae30\ud30c \uce5c\uad6c**", "\ud0dc\uadf8\ud574\uc918"]]}, "ea1260d39fe5": {"caption": "99\uc138 \ud560\uba38\ub2c8\uac00 \ube44\ud589\uae30 \uc704\uc5d0 \uc62c\ub77c\uac14\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc601\uad6d \uae00\ub85c\uc2a4\ud130\uc154\uc758 \ub80c\ub4dc\ucf64 \ube44\ud589\uc7a5\uc5d0\uc11c \ud5ec\uac00 \ub354\ud53c \ud560\uba38\ub2c8\uac00 \uc791\uc740 \ube44\ud589\uae30 \uc704\uc5d0 \ubab8\uc744 \ubb36\uace0 \ub0a0\uac1c \uac77\uae30\uc5d0 \ub3c4\uc804\ud588\uace0, \uc774\ubc88 \uc8fc \uae30\ub124\uc2a4 \uc138\uacc4\uae30\ub85d\uc774 \uc138\uacc4 \ucd5c\uace0\ub839 \ub0a0\uac1c \uac77\uae30 \uae30\ub85d\uc73c\ub85c \uacf5\uc2dd \uc778\uc815\ud588\ub300.\n\n\uc9c1\uc804 \uae30\ub85d\uc740 \uc11d \ub2ec \uc804 97\uc138 \ubca0\ud2f0 \ube0c\ub85c\uba54\uc774\uc9c0 \ud560\uba38\ub2c8\uac00 \uc138\uc6e0\ub358 \uac70\uc600\uc5b4. \ud5ec\uac00 \ud560\uba38\ub2c8\uc758 \uc870\uce74 \uc7ac\ud0a4 \ub85c\uc988\uac00 \uc62c\ud574 \uadf8 \ub274\uc2a4\ub97c \ubcf4\uace0 \uc774\ubaa8\ub3c4 \uac00\ub2a5\ud558\uaca0\ub2e4\ub294 \uac78 \uae68\ub2ec\uc558\uace0, \uc694\uc591\uc2dc\uc124 \uc9c1\uc6d0\ub4e4\ub3c4 \ub3c4\uc804\uc744 \uad8c\ud588\ub2e4\uace0 \ud574. \ud5ec\uac00 \ud560\uba38\ub2c8\ub294 \ucc98\uc74c\uc5d4 \uadf8\uac8c \ubb54\uc9c0\ub3c4 \ubab0\ub790\uc9c0\ub9cc, 99\uc138\uc778 \uc9c0\uae08\uc774 \ubb54\uac00 \ub2e4\ub978 \uac78 \ud574\ubcfc \ub9c8\uc9c0\ub9c9 \uae30\ud68c\ub77c\uace0 \ub9d0\ud574\uc654\uace0 \ub0a0\uac1c \uac77\uae30\uac00 \uc5b4\ub5a4 \uac74\uc9c0 \uc54c\uac8c \ub41c \ub4a4 \uaf2d \ud574\ubcf4\uaca0\ub2e4\uace0 \ub9c8\uc74c\uba39\uc5c8\ub300.\n\n\uad00\uc808\uc5fc\uacfc \uc624\ub978\ucabd \ubb34\ub98e\uc774 \uc88b\uc9c0 \uc54a\uc544 \ube44\ud589\uae30\uc5d0 \uc624\ub974\ub294 \uac83\ubd80\ud130 \uac71\uc815\uc774\uc5c8\ub294\ub370\ub3c4, \ud2b9\uc218 \ubcf5\uc7a5\uc744 \uc785\uace0 5\ubd84 \ub118\uac8c \ud558\ub298\uc5d0 \uc788\uc5c8\uc5b4. \ud3c9\uc0dd \uac04\ud638\uc0ac\ub85c \uc77c\ud55c \ud560\uba38\ub2c8\ub294 \ucc9c \ubbf8\ud130 \uc0c1\uacf5\uc5d0\uc11c \uae4a\uac8c \uc138 \ubc88 \uc228\uc744 \uc26c\uc5c8\ub294\ub370 \uacf5\uae30\uac00 \ubbff\uae30\uc9c0 \uc54a\uc744 \ub9cc\ud07c \ub9d1\uc558\ub2e4\uace0 \ub9d0\ud588\ub300. \ubab8\uc744 \ub2e8\ub2e8\ud788 \ubb36\uc5b4\uc11c \uc544\uc8fc \uc548\uc804\ud558\ub2e4\uace0 \ub290\uaf08\ub2e4\uace0\ub3c4 \ud574.\n\n\ucc29\ub959\ud558\uc790 \uae30\ub124\uc2a4 \uacf5\uc2dd \uc2ec\uc0ac\uad00 \uc70c \uba3c\ud37c\ub4dc\uac00 \uc778\uc99d\uc11c\ub97c \uac74\ub138\uace0, \uc778\uc99d\uc11c\ub294 \uc694\uc591\uc2dc\uc124\uc5d0 \uc804\uc2dc\ub3fc \uc788\ub300. \uc774\ubc88 \ub3c4\uc804\uc73c\ub85c \uc9c0\uc5ed \ud56d\uacf5 \uad6c\uae09 \uc790\uc120\ub2e8\uccb4\uc5d0 1,600\ud30c\uc6b4\ub4dc(\uc57d 2,000\ub2ec\ub7ec) \ub118\uac8c \ubaa8\uae08\ub3c4 \ud588\uc5b4. \ud560\uba38\ub2c8\uc758 \uc88c\uc6b0\uba85\uc740 \ubb50\ub4e0 \ud574\ubcf4\ub77c\ub294 \uac83, \uadf8\ub9ac\uace0 \ubabb \ud55c\ub2e4\uace0 \ub9d0\ud558\uc9c0 \ub9d0\ub77c\ub294 \uac83. \uae30\ub85d\uc744 \ub118\uaca8\uc900 \ubca0\ud2f0 \ud560\uba38\ub2c8\ub294 \ucd95\ud558\ub97c \uc804\ud558\uba70 100\uc138\uac00 \ub418\uba74 \uae30\ub85d\uc744 \uae68\uace0 \uc2f6\ub2e4\uace0 \ub18d\ub2f4\ud588\ub2e4\uace0 \ud574.\n\n\ucd9c\ucc98: Good News Network", "hashtags": ["#\uc138\uacc4\uae30\ub85d", "#\uae30\ub124\uc2a4\ubd81", "#99\uc138", "#\ud574\uc678\ud1a0\ud53d", "#\ub0a0\uac1c\uac77\uae30"], "slides": [["**99\uc138** \ud560\uba38\ub2c8\uc758", "\uc704\ub300\ud55c \ub3c4\uc804???"], ["\uae30\ub124\uc2a4\uac00 \uc778\uc815\ud55c", "**\uc138\uacc4 \ucd5c\uace0\ub839**", "\ub0a0\uac1c \uac77\uae30 \uae30\ub85d"], ["\uc9c1\uc804 \uae30\ub85d\uc740", "\uc11d \ub2ec \uc804", "**97\uc138** \ud560\uba38\ub2c8"], ["\uad00\uc808\uc5fc\uc5d0", "\ubb34\ub98e\ub3c4 \uc548 \uc88b\uc740\ub370", "**5\ubd84 \ub118\uac8c** \ud558\ub298\uc5d0"], ["\uc88c\uc6b0\uba85\uc740", "**\ud574\ubcf4\uae30 \uc804\uc5d4**", "\ubaa8\ub978\ub2e4"], ["\uc0c8\ub85c \ubb58 \uc2dc\uc791\ud558\uae30", "**\ub9dd\uc124\uc774\ub294 \uce5c\uad6c\uc5d0\uac8c**", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"7e118f813c8b": "approve", "a567f0da8f40": "approve", "ea1260d39fe5": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 3;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

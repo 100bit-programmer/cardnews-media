@@ -1,0 +1,1540 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.19 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1>2026.10.19 오후 검수 <span id="progress">0 / 2 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-16b178b0e2dd" data-jump="16b178b0e2dd">1</a><a href="#post-5f3fe56efca1" data-jump="5f3fe56efca1">2</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-16b178b0e2dd" data-id="16b178b0e2dd">
+    <div class="head">
+      <h2>1. 레이저 포인터로 보안카메라 먹통 만들기 가능?</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 8
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/23 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>레이저 포인터로 보안카메라를 눈멀게 한다고? 드라마 속 탈출 장면이 현실에서도 되는지 정리해봤어.
+
+드라마 &#39;베터 콜 사울&#39;에서 한 인물이 레이저 포인터로 보안카메라를 먹통으로 만들고 탈출해. 그런데 실제로도 되냐고 물으면 &#39;어느 정도는 된다&#39;가 답이야. 레이저로 카메라를 일시적으로 못 보게 만들 수 있고, 경우에 따라선 영구 손상도 가능하대.
+
+다만 조건이 셋이나 붙어. 아주 강력한 레이저, 오래된 카메라, 그리고 극도로 안정적인 조준. 실제로 카메라를 망가뜨리려면 고출력 레이저를 약 10초간 가만히 대고 있어야 한다는 설명이야. 출력이 5mW 미만이면 일시적인 눈부심 정도에 그칠 가능성이 높고, 미국 FDA 규정상 5mW를 넘는 휴대용 레이저 포인터는 판매나 홍보가 불법이래.
+
+조준도 큰 걸림돌이야. 보안 업계 연구기관 IPVM가 직접 해봤더니 약 5피트 거리에서도 손이 떨려서 레이저를 계속 맞추기가 매우 어려웠고, 레이저 세기와 상관없이 영구 손상은 못 냈대. 최신 카메라는 센서 보호 기술까지 있어서 더 어렵고, 드라마 공동 제작자도 그 방법은 1960년대 카메라 모델에나 통할 거라고 팟캐스트에서 인정했대.
+
+참고로 2021년 미국 클리어워터에서 한 남성이 사이언톨로지 교회 감시카메라 여러 대에 레이저를 쐈다가 체포됐어. 렌즈에 죽은 부분이 생겨 2,000달러 넘는 피해가 났지만, 카메라는 그 남성의 모습을 그대로 잡아냈대.
+
+출처: Engadget
+
+배경 사진: umutizgi, stokpic, blickpixel, SarlaWu, yousafbhutta / Pixabay
+표지 이미지: AI 생성
+
+#보안카메라 #레이저포인터 #과학상식 #베터콜사울 #CCTV</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-16b178b0e2dd">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 드라마 속 탈출 장면이 현실에서 되는지 검증하되, 되긴 되는데 조건이 세 개 붙고 직접 해본 업계 연구기관은 손 떨림 때문에 실패했다는 반전으로 판다</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 2021년 미국에서 한 남성이 교회 감시카메라에 레이저를 쐈다가 체포된 사례 (카드 5장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">드라마에서 레이저 포인터로 보안카메라 먹통 만들던 거, 현실에서도 &#39;어느 정도는&#39; 된대
+근데 그 &#39;어느 정도&#39;에 조건이 세 개나 붙음. 직접 해본 업계 연구기관 결과는 더 의외였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">1/ 레이저로 카메라를 일시적으로 못 보게 만들 수 있고, 경우에 따라선 영구 손상도 가능하대. 드라마 &#39;베터 콜 사울&#39;에서 한 인물이 이걸로 보안카메라를 먹통으로 만들고 탈출하는데, 완전한 허구는 아니라는 거야. 근데 조건이 뭐냐면?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>2번 글 · 저장각</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">2/ 영구 손상까지 가려면 이 세 가지가 같이 필요하대
+- 아주 강력한 레이저
+- 오래된 카메라
+- 극도로 안정적인 조준
+셋이 한꺼번에 붙는 조건이야. 이 중에 조준도 큰 걸림돌이래.</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">3/ 실제로 카메라를 망가뜨리려면 고출력 레이저를 약 10초간 가만히 대고 있어야 한다는 설명이야. 출력이 5mW 미만이면 일시적인 눈부심 정도에 그칠 가능성이 높대. 그럼 이 10초를 손으로 버틸 수 있을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">4/ 보안 업계 연구기관 IPVM이 직접 해봤더니, 약 5피트 거리에서도 손이 떨려서 레이저를 계속 맞추기가 매우 어려웠대. 결과적으로 레이저 세기와 상관없이 영구 손상은 못 냈고. 그럼 요즘 카메라는 어떨까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">5/ 최신 카메라는 센서 보호 기술까지 있어서 더 어렵대. 드라마 공동 제작자도 그 방법은 1960년대 카메라 모델에나 통할 거라고 팟캐스트에서 인정했고. 드라마 속 장면은 아주 옛날 카메라 얘기에 가까웠던 거지.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">243/500자</span></div>
+      <p class="tp-text">6/ 정리하면 레이저로 카메라가 아예 안 되는 건 아닌데, 강한 레이저와 구형 카메라, 흔들림 없는 조준이 다 맞아야 한다는 거야.
+
+드라마 속 장면 중에 현실에서 되는지 제일 궁금했던 거 하나만 말해줘.
+
+이런 해외 과학 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸.
+
+카드엔 실제로 레이저를 쐈다가 체포된 사례까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>드라마에서 레이저 포인터로 보안카메라 먹통 만들던 거, 현실에서도 &#39;어느 정도는&#39; 된대</li><li>레이저로 CCTV 눈멀게 하는 거, 영구 손상까지 가려면 조건이 세 개나 붙는대</li><li>업계 연구기관이 레이저로 보안카메라 망가뜨려 보려다 손이 떨려서 실패했대</li><li>드라마 탈출 장면은 가짜가 아니라 &#39;1960년대 카메라 한정&#39;이었대</li><li>레이저 하나로 CCTV 먹통? 드라마 공동 제작자가 팟캐스트에서 직접 인정한 한계가 있대</li><li>&#39;레이저 포인터로 카메라 눈멀게 하기&#39;, 해보려면 한 곳을 약 10초간 가만히 겨눠야 한대</li><li>5피트 거리에서도 레이저를 못 맞췄다는 보안 전문가들, 드라마와 현실이 이렇게 다름</li><li>최신 CCTV는 레이저 따라 해도 안 되는 이유가 따로 있대</li><li>베터 콜 사울 속 CCTV 무력화, 현실에선 어디까지 되는지 정리해 옴</li><li>레이저 포인터가 보안카메라를 일시적으로 못 보게 만드는 건 진짜래. 문제는 그다음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>드라마 속 장면 중에 현실에서 되는지 제일 궁금했던 거 하나만 말해줘</li><li>드라마 탈출 장면 중에 제일 말도 안 된다고 느낀 건 뭐였어?</li><li>너는 드라마 볼 때 현실 가능한지 따져보는 파야, 그냥 즐기는 파야?</li><li>미드 정주행 중인 친구한테 보내주고 싶은 장면 있어?</li><li>&#39;이건 진짜 현실에서도 되겠다&#39; 싶었던 영화·드라마 장면 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>드라마·영화 속 보안 장비 장면, 현실에선 어디까지 되나</li><li>최신 CCTV 센서 보호 기술은 어떻게 작동하나</li><li>레이저 포인터 출력 기준과 규정, 뭐가 다른가</li><li>드라마 공동 제작자들이 털어놓은 현실 고증 뒷얘기</li><li>Meta Muse 성인 대화 허용 논란</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;5mW 초과 휴대용 레이저 포인터는 미국 FDA 규정상 판매·홍보 불법&#39;은 원문 설명을 옮긴 것이라, 본글에는 규정 내용을 넣지 않고 5mW 출력 기준만 썼음. 규정 언급 시 미국 기준임을 분명히 할 것</li><li>타인의 카메라에 레이저를 쏘는 행동을 따라 해보라는 뉘앙스로 읽히지 않도록 톤 확인 필요 (영구 손상 가능성, 10초 조건 설명 부분)</li><li>IPVM 실험 결과는 &#39;약 5피트 거리, 영구 손상 못 냄&#39;으로 한정해서 썼음. 모든 카메라에 일반화되지 않게 주의</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/16b178b0e2dd/v2-01.jpg" alt="1장: 레이저로 CCTV 눈멀게 한다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/16b178b0e2dd/v2-02.jpg" alt="2장: 드라마에선 레이저 하나로 CCTV 먹통" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/16b178b0e2dd/v2-03.jpg" alt="3장: 현실에서도 아예 불가능하진 않음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/16b178b0e2dd/v2-04.jpg" alt="4장: 조건이 까다롭다 강한 레이저 + 구형 CCTV" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/16b178b0e2dd/v2-05.jpg" alt="5장: 2021년 미국한 남성이 교회 감시카메라에 레이저를 쐈다가 체포" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/16b178b0e2dd/v2-06.jpg" alt="6장: 미드 정주행 중인 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/16b178b0e2dd/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">레이저 포인터로 보안카메라를 눈멀게 한다고? 드라마 속 탈출 장면이 현실에서도 되는지 정리해봤어.
+
+드라마 &#39;베터 콜 사울&#39;에서 한 인물이 레이저 포인터로 보안카메라를 먹통으로 만들고 탈출해. 그런데 실제로도 되냐고 물으면 &#39;어느 정도는 된다&#39;가 답이야. 레이저로 카메라를 일시적으로 못 보게 만들 수 있고, 경우에 따라선 영구 손상도 가능하대.
+
+다만 조건이 셋이나 붙어. 아주 강력한 레이저, 오래된 카메라, 그리고 극도로 안정적인 조준. 실제로 카메라를 망가뜨리려면 고출력 레이저를 약 10초간 가만히 대고 있어야 한다는 설명이야. 출력이 5mW 미만이면 일시적인 눈부심 정도에 그칠 가능성이 높고, 미국 FDA 규정상 5mW를 넘는 휴대용 레이저 포인터는 판매나 홍보가 불법이래.
+
+조준도 큰 걸림돌이야. 보안 업계 연구기관 IPVM가 직접 해봤더니 약 5피트 거리에서도 손이 떨려서 레이저를 계속 맞추기가 매우 어려웠고, 레이저 세기와 상관없이 영구 손상은 못 냈대. 최신 카메라는 센서 보호 기술까지 있어서 더 어렵고, 드라마 공동 제작자도 그 방법은 1960년대 카메라 모델에나 통할 거라고 팟캐스트에서 인정했대.
+
+참고로 2021년 미국 클리어워터에서 한 남성이 사이언톨로지 교회 감시카메라 여러 대에 레이저를 쐈다가 체포됐어. 렌즈에 죽은 부분이 생겨 2,000달러 넘는 피해가 났지만, 카메라는 그 남성의 모습을 그대로 잡아냈대.
+
+출처: Engadget</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#보안카메라 #레이저포인터 #과학상식 #베터콜사울 #CCTV</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 최신 카메라에는 센서 보호 기술이 있어서 손상시키기가 더 어렵다는 주장 (원문 맥락에는 있으나 claims 목록에 없음)</li><li>근거 등록 안 된 주장: IPVM을 보안 업계 연구기관이라고 설명한 부분 (원문에 명시되지 않은 배경 설명)</li>
+          <li>드라마 장면 언급 외 저작권 이미지 사용 금지</li><li>레이저로 카메라를 손상시키는 행위를 조장하는 것으로 읽히지 않도록 주의 (불법 소지)</li><li>원문 기사 날짜가 미래(2026-10-18)로 표기되어 있어 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-16b178b0e2dd-0">1장</label>
+          <textarea id="s-16b178b0e2dd-0" rows="2" data-slide="0">레이저로 **CCTV**
+눈멀게 한다고???</textarea>
+          
+          <label class="f" for="s-16b178b0e2dd-1">2장</label>
+          <textarea id="s-16b178b0e2dd-1" rows="3" data-slide="1">드라마에선
+레이저 하나로
+**CCTV 먹통**</textarea>
+          
+          <label class="f" for="s-16b178b0e2dd-2">3장</label>
+          <textarea id="s-16b178b0e2dd-2" rows="2" data-slide="2">현실에서도
+아예 **불가능하진** 않음</textarea>
+          
+          <label class="f" for="s-16b178b0e2dd-3">4장</label>
+          <textarea id="s-16b178b0e2dd-3" rows="2" data-slide="3">조건이 까다롭다
+**강한 레이저** + **구형 CCTV**</textarea>
+          
+          <label class="f" for="s-16b178b0e2dd-4">5장</label>
+          <textarea id="s-16b178b0e2dd-4" rows="3" data-slide="4">2021년 미국한 남성이
+교회 감시카메라에
+**레이저**를 쐈다가 **체포**</textarea>
+          
+          <label class="f" for="s-16b178b0e2dd-5">6장</label>
+          <textarea id="s-16b178b0e2dd-5" rows="2" data-slide="5">**미드** 정주행 중인
+친구한테 보내기</textarea>
+          
+          <label class="f" for="c-16b178b0e2dd">본문 (캡션)</label>
+          <textarea id="c-16b178b0e2dd" class="caption">레이저 포인터로 보안카메라를 눈멀게 한다고? 드라마 속 탈출 장면이 현실에서도 되는지 정리해봤어.
+
+드라마 &#39;베터 콜 사울&#39;에서 한 인물이 레이저 포인터로 보안카메라를 먹통으로 만들고 탈출해. 그런데 실제로도 되냐고 물으면 &#39;어느 정도는 된다&#39;가 답이야. 레이저로 카메라를 일시적으로 못 보게 만들 수 있고, 경우에 따라선 영구 손상도 가능하대.
+
+다만 조건이 셋이나 붙어. 아주 강력한 레이저, 오래된 카메라, 그리고 극도로 안정적인 조준. 실제로 카메라를 망가뜨리려면 고출력 레이저를 약 10초간 가만히 대고 있어야 한다는 설명이야. 출력이 5mW 미만이면 일시적인 눈부심 정도에 그칠 가능성이 높고, 미국 FDA 규정상 5mW를 넘는 휴대용 레이저 포인터는 판매나 홍보가 불법이래.
+
+조준도 큰 걸림돌이야. 보안 업계 연구기관 IPVM가 직접 해봤더니 약 5피트 거리에서도 손이 떨려서 레이저를 계속 맞추기가 매우 어려웠고, 레이저 세기와 상관없이 영구 손상은 못 냈대. 최신 카메라는 센서 보호 기술까지 있어서 더 어렵고, 드라마 공동 제작자도 그 방법은 1960년대 카메라 모델에나 통할 거라고 팟캐스트에서 인정했대.
+
+참고로 2021년 미국 클리어워터에서 한 남성이 사이언톨로지 교회 감시카메라 여러 대에 레이저를 쐈다가 체포됐어. 렌즈에 죽은 부분이 생겨 2,000달러 넘는 피해가 났지만, 카메라는 그 남성의 모습을 그대로 잡아냈대.
+
+출처: Engadget</textarea>
+          <label class="f" for="t-16b178b0e2dd">해시태그</label>
+          <input id="t-16b178b0e2dd" type="text" class="tagsin" value="#보안카메라 #레이저포인터 #과학상식 #베터콜사울 #CCTV" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>드라마에서 인물이 레이저 포인터로 보안카메라를 눈멀게 하고 탈출한다</b>
+            <q>“In the episode called &#34;Wiedersehen&#34; (Season Four Episode Nine), Werner Ziegler uses a laser pointer to blind a security camera.”</q>
+            <small>slide2, caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>레이저 포인터는 보안카메라를 눈멀게 할 수 있고 경우에 따라 영구 손상도 가능하다</b>
+            <q>“Laser pointers can blind security cameras. In some cases, they can even damage them permanently.”</q>
+            <small>slide3, caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영구 손상엔 아주 강력한 레이저, 오래된 카메라, 극도로 안정적인 조준이 필요하다</b>
+            <q>“However, this would require a combination of three things: a very powerful laser, an older camera and an extremely steady pulse.”</q>
+            <small>slide4, caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카메라를 손상시키려면 고출력 레이저를 약 10초간 고정해야 하고, 5mW 미만이면 일시적 눈부심에 그칠 가능성이 높다</b>
+            <q>“It would only be possible with a high-powered laser held still for about 10 seconds. If a laser has an output power under 5mW, it is unlikely to cause anything more than a temporary glare on the camera.”</q>
+            <small>caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>미국 FDA 규정상 5mW를 넘는 휴대용 레이저 포인터는 판매·홍보가 불법이다</b>
+            <q>“Under US Food and Drug Administration regulations, handheld laser pointers that exceed 5mW of output power are illegal to market, sell or promote.”</q>
+            <small>caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>IPVM 연구진은 약 5피트 거리에서 손이 떨려 레이저를 맞추기 매우 어려웠고 영구 손상을 내지 못했다</b>
+            <q>“When researchers at IPVM tried using a laser to blind a security camera, they found it &#34;very difficult&#34; to keep the laser focused on an object from roughly 5 feet away &#34;without their hands shaking off target.&#34; At this distance, the team could not cause any permanent damage to the security cameras, regardless of the strength of the laser used.”</q>
+            <small>slide5, caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>드라마 공동 제작자가 그 방법은 1960년대 카메라에만 통한다고 팟캐스트에서 인정했다</b>
+            <q>“Vince Gilligan, co-creator of Better Call Saul, even admitted on a podcast that Ziegler&#39;s trick would only work on a camera model from the 1960s.”</q>
+            <small>caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2021년 클리어워터의 남성이 사이언톨로지 교회 감시카메라에 레이저를 쏴 체포됐고 2,000달러 넘는 피해가 났지만 카메라는 그를 잡아냈다</b>
+            <q>“In 2021, a Clearwater man got arrested for pointing a laser at several surveillance cameras owned by the Church of Scientology. The laser did not destroy the cameras, but it did leave dead spots on their lenses, resulting in over $2,000 in damages. Still, the cameras were able to catch him red-handed.”</q>
+            <small>caption · <a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.engadget.com/2286993/why-never-point-laser-pointer-at-security-camera/" target="_blank" rel="noopener">Why you should never point a laser pointer at a security camera - Engadget</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "security camera mounted on a sunlit building wall"</li><li>2장: <a href="https://pixabay.com/photos/maidens-tower-night-landscape-7989254/" target="_blank" rel="noopener">umutizgi / Pixabay</a> — "laser beam"</li><li>3장: <a href="https://pixabay.com/photos/girl-camera-vintage-hand-legs-601552/" target="_blank" rel="noopener">stokpic / Pixabay</a> — "camera lens"</li><li>4장: <a href="https://pixabay.com/photos/board-electronics-computer-453758/" target="_blank" rel="noopener">blickpixel / Pixabay</a> — "electronic circuit"</li><li>5장: <a href="https://pixabay.com/photos/mini-storage-2449798/" target="_blank" rel="noopener">SarlaWu / Pixabay</a> — "security camera night"</li><li>6장: <a href="https://pixabay.com/photos/popcorn-watching-food-tv-7025892/" target="_blank" rel="noopener">yousafbhutta / Pixabay</a> — "watching tv"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-5f3fe56efca1" data-id="5f3fe56efca1">
+    <div class="head">
+      <h2>2. Meta Muse 성인 대화 허용 논란</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/23 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>Meta의 AI 비서가 성인 사용자와 야한 대화를 해도 된다는 소식이야. 이게 왜 화제냐면, 성인 콘텐츠 크리에이터들이 반발하고 있거든.
+
+Meta의 AI 비서 이름은 Muse야. 메신저처럼 문자를 보내면 답하는 앱인데, 캘린더나 이메일 같은 개인 데이터에 접근 권한을 주면 먼저 도울 방법을 찾아. 예를 들면 저녁 예약과 겹치는 운동 수업을 취소해주는 식이지. 인스타그램, 페이스북 같은 Meta의 유통망 덕분에 출시 첫 달에 다운로드 차트 맨 위까지 올랐다고 해.
+
+그런데 Meta는 18세 이상만 쓰는 이 앱에서 성인 사용자가 Muse와 노골적인 대화를 나눠도 괜찮다고 밝혔어. 다만 Muse가 만드는 건 텍스트뿐이고 이미지나 영상은 아니야. Meta 대변인은 성인과 개인화된 AI 에이전트 사이의 1:1 비공개 대화는 소셜 미디어에서의 서비스 홍보와는 매우 다르다고 설명했어.
+
+반응은 이래. 뉴욕의 OnlyFans 크리에이터 Vanniall은 팔로워 10만 명이 넘는 인스타그램 계정이 지금 제한된 상태인데, 진짜 성인들은 안 되고 AI만 되는 건 공평하지 않다고 말했어. 또 다른 크리에이터 Jiz Lee는 이미 AI가 사람보다 더 많은 걸 허용받는 모습을 보고 있다고 했고, Tony Genius는 지난 5년간 인스타그램 계정이 일곱 번째라고 주장했어.
+
+Jiz Lee는 Muse가 어떻게 학습됐는지, 데이터에 대한 보상은 누군가에게 갔는지도 궁금해했어.
+
+출처: WIRED
+
+배경 사진: Erik_Lucatero, kaboompics, AS_Photography, StartupStockPhotos, LoboStudioHamburg / Pixabay
+표지 이미지: AI 생성
+
+#MetaAI #Muse #AI비서 #OnlyFans #AI뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-5f3fe56efca1">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: AI 비서의 새 기능 소개가 아니라 &#39;AI는 성적 대화가 되는데 사람 계정은 제한된다&#39;는 공정성 논란으로 푼다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> Muse에 일정·이메일 같은 개인 데이터 접근 권한을 주면 어떤 도움을 주는 앱인지 (카드 3장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">AI 비서는 성인과 야한 대화가 허용됐는데, 팔로워 10만 명 넘는 사람 계정은 제한 상태래
+Meta 얘기야. 성인 크리에이터들이 &#39;공평하지 않다&#39;고 나선 중
+Meta가 내놓은 해명은 아래에 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">1/ Meta가 18세 이상만 쓰는 AI 비서 앱 Muse에서 성인 사용자가 노골적인 대화를 나눠도 괜찮다고 밝혔어.
+다만 Muse가 만드는 건 텍스트뿐이고 이미지나 영상은 아니야.
+그럼 Muse가 어떤 앱이길래 이렇게 화제일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">2/ Muse는 Meta의 AI 비서야. 메신저처럼 문자를 보내면 답하는 앱이지.
+인스타그램, 페이스북 같은 Meta의 유통망 덕분에 출시 첫 달에 다운로드 차트 맨 위까지 올랐다고 해.
+그럼 Meta는 성인 대화 허용을 어떻게 설명했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">3/ Meta 대변인 설명은 이거야.
+성인과 개인화된 AI 에이전트 사이의 1:1 비공개 대화는 소셜 미디어에서의 서비스 홍보와 매우 다르다는 거지.
+근데 성인 크리에이터들은 이걸 전혀 다르게 봤어.</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">221/500자</span></div>
+      <p class="tp-text">4/ 크리에이터들 반응 정리
+- Vanniall(뉴욕 OnlyFans 크리에이터): 팔로워 10만 명 넘는 인스타 계정이 지금 제한 상태. 진짜 성인은 안 되고 AI만 되는 건 공평하지 않다고 함
+- Jiz Lee: 이미 AI가 사람보다 더 많은 걸 허용받는 모습을 보고 있다고 함
+- Tony Genius: 지난 5년간 인스타 계정이 일곱 번째라고 주장
+Jiz Lee는 질문도 하나 더 던졌어.</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">5/ Jiz Lee는 Muse가 어떻게 학습됐는지, 그 데이터에 대한 보상이 누군가에게 갔는지도 궁금해했어.
+크리에이터들이 걸고넘어지는 건 결국 같은 종류의 대화인데 사람은 제한되고 AI는 허용된다는 점이야.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">253/500자</span></div>
+      <p class="tp-text">6/ 정리하면 Meta는 &#39;AI와의 1:1 비공개 대화는 홍보와 다르다&#39;는 입장이고, 크리에이터들은 사람은 제한되는데 AI는 허용된다며 반발하는 중이야.
+너는 어느 쪽 말이 더 와닿아? Meta 해명파 vs 크리에이터파
+이런 해외 AI·테크 논란 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 Muse가 일정·메일 같은 개인 데이터로 뭘 해주는지까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>팔로워 10만 명 넘는 인스타 계정은 제한됐는데 Meta AI 비서는 야한 대화가 허용됐대</li><li>&#39;AI는 되고 사람은 안 되냐&#39;는 말이 나온 이유, Meta 새 AI 비서 얘기야</li><li>지난 5년간 인스타 계정이 일곱 번째라는 크리에이터가 있대. 근데 AI 비서는 성인 대화가 허용됐어</li><li>그냥 AI 비서인 줄 알았는데 Meta가 성인과의 노골적인 대화까지 열어놨어</li><li>출시 한 달 만에 다운로드 차트 맨 위를 찍은 Meta AI 비서, 논란은 엉뚱한 데서 터졌어</li><li>Meta는 &#39;AI와의 1:1 비공개 대화는 홍보와 매우 다르다&#39;고 했는데 크리에이터들 반응은 달랐어</li><li>&#39;진짜 성인들은 안 되고 AI만 되는 건 공평하지 않다&#39;는 말이 나왔어</li><li>Meta AI 비서, 글로만 되고 사진은 안 된대. 그 선을 두고도 말이 많아</li><li>AI가 사람보다 더 많이 허용받고 있다는 말이 나오는 중이야</li><li>AI 비서가 아니라 규칙이 문제라는 반응이야. Meta 새 앱에서 무슨 일이 있었냐면</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>Meta 해명파 vs 크리에이터파, 어느 쪽 말이 더 와닿아?</li><li>AI랑 성적 대화가 가능한 앱, 있어도 된다 vs 없어야 한다?</li><li>성인 앱 안의 1:1 비공개 대화는 SNS 규칙과 따로 봐야 한다고 생각해?</li><li>사람 계정 제한이랑 AI 허용, 같은 기준이어야 한다 vs 달라도 된다?</li><li>너라면 AI 비서가 성인 대화를 허용하는 앱을 쓸 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>성인 크리에이터 계정 제한 논란, 인스타 쪽 규칙은 어떻게 되어 있나</li><li>AI 비서 Muse가 개인 데이터에 접근하면 뭘 해주나</li><li>AI가 학습한 데이터에 대한 보상 논란</li><li>Meta의 유통망이 AI 앱 순위에 미친 영향</li><li>다운로드 차트 오른 AI 비서 앱들 비교</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>성적 대화 소재라 스레드에서 노출 제한이나 신고를 받을 수 있음. 본문은 &#39;야한 대화&#39;, &#39;노골적인 대화&#39; 수준으로만 썼고 더 센 표현은 넣지 말 것</li><li>Tony Genius의 &#39;인스타 계정 일곱 번째&#39;는 본인 주장이라 &#39;주장&#39;으로 표기함. 정지나 삭제로 바꿔 단정하면 안 됨</li><li>Vanniall, Jiz Lee, Tony Genius 발언은 WIRED 인용이라 이름 철자와 발언 범위를 원문과 대조하고 올릴 것</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-01.jpg" alt="1장: Meta AI비서와 성적 대화 OK?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-02.jpg" alt="2장: 이름은 Muse 메신저처럼 쓰는 AI 비서" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-03.jpg" alt="3장: 일정이랑 메일도 알아서 챙겨준대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-04.jpg" alt="4장: 첫 달 만에 다운로드 차트 맨 위로" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-05.jpg" alt="5장: 성인 전용 앱에서 야한 대화 허용 글로만, 사진은 X" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-06.jpg" alt="6장: 계정 차단 당한 성인 크리에이터 반응 AI는 되고 사람은?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-07.jpg" alt="7장: AI랑 이상한 말하는거 좋아하는 친구한테 보내보기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261019-pm-67b79c6ce109/5f3fe56efca1/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">Meta의 AI 비서가 성인 사용자와 야한 대화를 해도 된다는 소식이야. 이게 왜 화제냐면, 성인 콘텐츠 크리에이터들이 반발하고 있거든.
+
+Meta의 AI 비서 이름은 Muse야. 메신저처럼 문자를 보내면 답하는 앱인데, 캘린더나 이메일 같은 개인 데이터에 접근 권한을 주면 먼저 도울 방법을 찾아. 예를 들면 저녁 예약과 겹치는 운동 수업을 취소해주는 식이지. 인스타그램, 페이스북 같은 Meta의 유통망 덕분에 출시 첫 달에 다운로드 차트 맨 위까지 올랐다고 해.
+
+그런데 Meta는 18세 이상만 쓰는 이 앱에서 성인 사용자가 Muse와 노골적인 대화를 나눠도 괜찮다고 밝혔어. 다만 Muse가 만드는 건 텍스트뿐이고 이미지나 영상은 아니야. Meta 대변인은 성인과 개인화된 AI 에이전트 사이의 1:1 비공개 대화는 소셜 미디어에서의 서비스 홍보와는 매우 다르다고 설명했어.
+
+반응은 이래. 뉴욕의 OnlyFans 크리에이터 Vanniall은 팔로워 10만 명이 넘는 인스타그램 계정이 지금 제한된 상태인데, 진짜 성인들은 안 되고 AI만 되는 건 공평하지 않다고 말했어. 또 다른 크리에이터 Jiz Lee는 이미 AI가 사람보다 더 많은 걸 허용받는 모습을 보고 있다고 했고, Tony Genius는 지난 5년간 인스타그램 계정이 일곱 번째라고 주장했어.
+
+Jiz Lee는 Muse가 어떻게 학습됐는지, 데이터에 대한 보상은 누군가에게 갔는지도 궁금해했어.
+
+출처: WIRED</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#MetaAI #Muse #AI비서 #OnlyFans #AI뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: Vanniall이 뉴욕에 거주하는 OnlyFans 크리에이터라는 설명(뉴욕)</li><li>근거 등록 안 된 주장: Muse 앱이 18세 이상만 사용할 수 있다는 제한</li><li>근거 등록 안 된 주장: Muse를 이용해 저녁 예약과 겹치는 운동 수업을 취소해주는 구체적 예시</li><li>근거 등록 안 된 주장: 성인 콘텐츠 크리에이터들이 Meta의 이번 결정에 반발하고 있다는 설명</li>
+          <li>성인 콘텐츠 관련 소재: 인스타그램 노출·수익화 제한 가능성</li><li>Meta, OnlyFans 등 브랜드명 언급 (이미지에는 로고 사용 금지)</li><li>크리에이터 발언은 개인 의견·주장이므로 출처 표기 유지 필요</li><li>원문 발행일이 2026년으로 표기되어 있어 최신성 확인 필요</li><li>FOSTA-SESTA 등 정치·법률 쟁점은 의도적으로 제외</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-5f3fe56efca1-0">1장</label>
+          <textarea id="s-5f3fe56efca1-0" rows="2" data-slide="0">Meta AI비서와
+**성적** 대화 OK?!</textarea>
+          
+          <label class="f" for="s-5f3fe56efca1-1">2장</label>
+          <textarea id="s-5f3fe56efca1-1" rows="3" data-slide="1">이름은 **Muse**
+메신저처럼 쓰는
+AI 비서</textarea>
+          
+          <label class="f" for="s-5f3fe56efca1-2">3장</label>
+          <textarea id="s-5f3fe56efca1-2" rows="2" data-slide="2">일정이랑 메일도
+**알아서** 챙겨준대</textarea>
+          
+          <label class="f" for="s-5f3fe56efca1-3">4장</label>
+          <textarea id="s-5f3fe56efca1-3" rows="3" data-slide="3">첫 달 만에
+다운로드 차트
+**맨 위로**</textarea>
+          
+          <label class="f" for="s-5f3fe56efca1-4">5장</label>
+          <textarea id="s-5f3fe56efca1-4" rows="3" data-slide="4">성인 전용 앱에서
+**야한 대화** 허용
+글로만, 사진은 X</textarea>
+          
+          <label class="f" for="s-5f3fe56efca1-5">6장</label>
+          <textarea id="s-5f3fe56efca1-5" rows="3" data-slide="5">계정 차단 당한
+성인 크리에이터 반응
+AI는 되고 **사람은?**</textarea>
+          
+          <label class="f" for="s-5f3fe56efca1-6">7장</label>
+          <textarea id="s-5f3fe56efca1-6" rows="3" data-slide="6">AI랑 이상한 말하는거
+**좋아하는 친구한테**
+보내보기</textarea>
+          
+          <label class="f" for="c-5f3fe56efca1">본문 (캡션)</label>
+          <textarea id="c-5f3fe56efca1" class="caption">Meta의 AI 비서가 성인 사용자와 야한 대화를 해도 된다는 소식이야. 이게 왜 화제냐면, 성인 콘텐츠 크리에이터들이 반발하고 있거든.
+
+Meta의 AI 비서 이름은 Muse야. 메신저처럼 문자를 보내면 답하는 앱인데, 캘린더나 이메일 같은 개인 데이터에 접근 권한을 주면 먼저 도울 방법을 찾아. 예를 들면 저녁 예약과 겹치는 운동 수업을 취소해주는 식이지. 인스타그램, 페이스북 같은 Meta의 유통망 덕분에 출시 첫 달에 다운로드 차트 맨 위까지 올랐다고 해.
+
+그런데 Meta는 18세 이상만 쓰는 이 앱에서 성인 사용자가 Muse와 노골적인 대화를 나눠도 괜찮다고 밝혔어. 다만 Muse가 만드는 건 텍스트뿐이고 이미지나 영상은 아니야. Meta 대변인은 성인과 개인화된 AI 에이전트 사이의 1:1 비공개 대화는 소셜 미디어에서의 서비스 홍보와는 매우 다르다고 설명했어.
+
+반응은 이래. 뉴욕의 OnlyFans 크리에이터 Vanniall은 팔로워 10만 명이 넘는 인스타그램 계정이 지금 제한된 상태인데, 진짜 성인들은 안 되고 AI만 되는 건 공평하지 않다고 말했어. 또 다른 크리에이터 Jiz Lee는 이미 AI가 사람보다 더 많은 걸 허용받는 모습을 보고 있다고 했고, Tony Genius는 지난 5년간 인스타그램 계정이 일곱 번째라고 주장했어.
+
+Jiz Lee는 Muse가 어떻게 학습됐는지, 데이터에 대한 보상은 누군가에게 갔는지도 궁금해했어.
+
+출처: WIRED</textarea>
+          <label class="f" for="t-5f3fe56efca1">해시태그</label>
+          <input id="t-5f3fe56efca1" type="text" class="tagsin" value="#MetaAI #Muse #AI비서 #OnlyFans #AI뉴스" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Meta는 성인 전용 앱에서 사용자가 Muse와 노골적인 AI 대화를 나눠도 된다고 밝혔다.</b>
+            <q>“In addition to having it organize your calendar, Meta says, it’s OK for users of the adults-only app to engage in X-rated AI conversations with Muse.”</q>
+            <small>slide1, slide5, caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Muse 앱은 메시지 스레드처럼 문자를 보내 쓰는 AI 비서다.</b>
+            <q>“The Muse app is like a message thread; text the digital assistant, give it access to your personal data, like calendar and email, and have it proactively find ways to help, like canceling a workout class that overlaps with your dinner reservation.”</q>
+            <small>slide2, caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>캘린더·이메일 같은 개인 데이터에 접근 권한을 주면 Muse가 먼저 도울 방법을 찾는다.</b>
+            <q>“The Muse app is like a message thread; text the digital assistant, give it access to your personal data, like calendar and email, and have it proactively find ways to help, like canceling a workout class that overlaps with your dinner reservation.”</q>
+            <small>slide3, caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Meta의 유통망 덕분에 Muse가 출시 첫 달에 다운로드 차트 최상위에 올랐다.</b>
+            <q>“Meta’s large distribution network, through platforms like Instagram and Facebook, helped catapult the app to the top of the download charts during its first month, as millions of new users experimented with an agent for the first time.”</q>
+            <small>slide4, caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Muse는 노골적인 텍스트를 생성하지만 이미지나 영상은 생성하지 않는다.</b>
+            <q>“Meta’s Muse generates explicit text but not images or videos.”</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Meta 대변인은 성인과 AI 에이전트의 1:1 비공개 대화는 소셜 미디어에서의 서비스 홍보와 매우 다르다고 말했다.</b>
+            <q>““A private, one-to-one conversation between an adult and an individualized AI agent on a platform restricted to people 18 and over is very different from the marketing and promotion of services on a social media platform,” Meta spokesperson Tracy Clayton tells WIRED.”</q>
+            <small>caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Vanniall의 팔로워 10만 명 이상 인스타그램 계정은 현재 제한된 상태다.</b>
+            <q>“Vanniall’s Instagram account, which has over 100,000 followers, is currently restricted and cannot be viewed without logging in.”</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Vanniall은 Meta가 AI는 되고 실제 성인은 안 되게 하는 것이 공평하지 않다고 말했다.</b>
+            <q>““It&#39;s not fair that they get to pull money out of people with their sexually active AI agent, but they won&#39;t let real people, real adults, engage in any sort of sensuality or sexuality.””</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Jiz Lee는 AI가 사람보다 더 많은 것을 허용받는 모습을 이미 보고 있다고 말했다.</b>
+            <q>““I think we&#39;re already seeing AI being allowed to do more than humans would get away with,” says Jiz Lee, who runs an OnlyFans account and has worked for years behind the scenes in queer porn.”</q>
+            <small>caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Tony Genius는 지난 5년간 일곱 번째 인스타그램 계정을 쓰고 있다고 주장했다.</b>
+            <q>“Genius claims to be on his seventh Instagram account in the past five years.”</q>
+            <small>caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Jiz Lee는 Muse의 학습 방식과 데이터 보상 여부를 더 알고 싶어 한다.</b>
+            <q>“Lee also wants to know more about how Muse was trained and who, if anyone, was compensated by Meta for their data.”</q>
+            <small>caption · <a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.wired.com/story/onlyfans-creators-are-pissed-that-meta-lets-muse-talk-dirty/" target="_blank" rel="noopener">OnlyFans Creators Are Pissed That Meta Lets Muse Talk Dirty</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "smartphone with chat bubbles on a sunlit desk"</li><li>2장: <a href="https://pixabay.com/photos/technology-smartphone-telephone-3353701/" target="_blank" rel="noopener">Erik_Lucatero / Pixabay</a> — "messaging app"</li><li>3장: <a href="https://pixabay.com/photos/new-year-background-organizer-791939/" target="_blank" rel="noopener">kaboompics / Pixabay</a> — "calendar planner"</li><li>4장: <a href="https://pixabay.com/photos/digital-marketing-technology-1433427/" target="_blank" rel="noopener">AS_Photography / Pixabay</a> — "analytics dashboard"</li><li>5장: <a href="https://pixabay.com/photos/student-typing-keyboard-text-849825/" target="_blank" rel="noopener">StartupStockPhotos / Pixabay</a> — "laptop typing"</li><li>6장: <a href="https://pixabay.com/photos/phone-display-apps-applications-292994/" target="_blank" rel="noopener">LoboStudioHamburg / Pixabay</a> — "social media"</li><li>7장: <a href="https://pixabay.com/photos/internet-whatsapp-smartphone-3113279/" target="_blank" rel="noopener">LoboStudioHamburg / Pixabay</a> — "smartphone chat"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-6df8525c68c0">
+    <div class="head">
+      <h2>S1. 잠수 탄 쪽도 괴롭다? 고스팅 연구 3개</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-6df8525c68c0">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 심리학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 잠수 당한 쪽은 상대가 얼마나 괴로웠는지 과소평가한다는 반전에, 한 줄 답장이라도 보내면 잠수 탄 쪽 기분이 나았다는 실용적 단서를 붙여서 판다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">96/500자</span></div>
+      <p class="tp-text">잠수 탄 사람은 속 편할 거란 믿음, 흔들리는 연구가 나옴
+잠수 탄 쪽도 죄책감에 우울 증상까지 보고된 연구 3개
+근데 어떻게 하면 그 마음이 덜했는지가 의외로 간단했음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 연구 3개 모두 비슷했대. 잠수 탄 사람 중 상당수가 죄책감, 수치심, 후회를 느꼈다고 답했고 일부는 우울 증상도 있었음.
+그럼 잠수 당한 쪽은 이걸 알고 있었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">2/ 잠수 당한 쪽은 반대로 상대가 얼마나 힘들어했는지 과소평가하는 경향이 있었대. 의도하지 않고 연락이 끊긴 경우엔 그 과소평가가 더 컸고.
+그럼 연구는 어떻게 했길래 이런 결과가 나온 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">190/500자</span></div>
+      <p class="tp-text">3/ 연구 3개 한눈에 정리
+- 1번: 195명, 잠수 해본 사람·당한 사람이 실제 경험 떠올림
+- 2번: 601명, 잠수 상황 상상하고 설문
+- 3번: 350명, 실시간 대화에서 잠수 상황 유도
+- 결론: 세 연구 결과가 서로 일치
+- 연구진: UC 버클리 하스 경영대, 케임브리지 저지 경영대
+그럼 잠수 탄 쪽은 뭘 하면 덜 괴로웠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">138/500자</span></div>
+      <p class="tp-text">4/ 잠수 탄 쪽이 기분이 나았던 경우가 있었대. 자기 행동을 잠수로 느끼지 않았거나, &#39;Sorry, can&#39;t talk&#39; 같은 짧은 답을 보낸 경우. 흔적 없이 사라지는 것보다 한 줄이라도 남긴 쪽이 나았다는 거.
+근데 이걸 그대로 믿어도 될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">5/ 다만 한계도 있음. 사람들이 답한 게 실제 감정과 다를 수 있고, 실험 조건이라 평소와 다르게 행동했을 수도 있대. 그래서 나를 잠수 탄 그 사람도 괴로워했을 거라고는 단정 못 함.
+그럼 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">224/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄. 연구에선 완전 잠수보다 &#39;Sorry, can&#39;t talk&#39; 같은 짧은 답을 보낸 쪽이 기분이 나았다는 거.
+너는 어느 쪽이야? 이별 통보는 짧은 문자라도 괜찮다 vs 직접 말해야 한다
+이런 관계·심리 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>잠수 탄 사람은 속 편할 거란 믿음, 흔들리는 연구가 나옴</li><li>이별 앞에서 망설이는 사람한테, 잠수는 편한 길이 아니라 마음 불편한 길일 수 있대
+흔적 없이 사라지지 말고 짧은 답부터 남기라는 쪽의 연구가 나옴</li><li>잠수 이별 말고 한 줄 답장부터 하라는 연구가 나옴
+완전 잠수는 편한 선택이 아니라 죄책감이 남는 선택일 수 있대</li><li>잠수 당한 쪽은 상대가 얼마나 힘들어했는지 과소평가한다는 연구가 나옴</li><li>&#39;걔는 아무렇지 않게 잘 살겠지&#39; 이 생각, 연구에선 빗나간 경우가 있었대</li><li>연구 3개에 참가자만 195명, 601명, 350명. 잠수 탄 쪽 마음을 다 뜯어봤대</li><li>완전 잠수 말고 &#39;Sorry, can&#39;t talk&#39; 한 줄. 이 차이로 잠수 탄 쪽 기분이 달랐대</li><li>죄책감, 수치심, 후회, 심지어 우울 증상까지. 잠수 탄 쪽에서 나온 얘기래</li><li>해외 연구진이 실시간 대화에서 연락 끊기는 상황을 직접 만들어봤대</li><li>이별 통보가 귀찮아서 잠수 타려는 사람, 이 연구부터 보고 가</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이별 통보는 짧은 문자라도 괜찮다 vs 직접 말해야 한다, 어느 파야?</li><li>잠수 이별, 당한 쪽이 더 힘들다 vs 탄 쪽이 더 힘들다, 너는 어느 쪽에 한 표?</li><li>완전 잠수 vs 한 줄 문자 이별, 둘 중 차라리 낫다고 생각하는 건?</li><li>잠수 탔던 사람이 몇 년 뒤 사과하면 받아줄 수 있다 vs 없다?</li><li>답장 안 하고 싶을 때 짧게라도 거절하는 편이야, 그냥 두는 편이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>잠수 당한 쪽은 상대가 아닌 내가 직접 마음 정리하라는 조언, 어떤 내용이었나</li><li>잠수 탔다가 다시 나타나는 좀비잉, 그게 뭔지</li><li>잠수 탔던 사람이 뒤늦게 보내는 사과, 어떻게 봐야 할까</li><li>레이저 포인터로 보안카메라 먹통 만들기 가능?</li><li>Meta Muse 성인 대화 허용 논란</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문은 잠수 탄 쪽과 당한 쪽 중 누가 더 큰 타격을 받는지 비교하지 않았으니, 올리기 전에 &#39;탄 쪽이 더 힘들다&#39;는 식으로 고치지 말 것</li><li>&#39;Sorry, can&#39;t talk&#39;는 연구에서 쓰인 짧은 답 예시이지 연구진의 행동 권고가 아니니, 권고처럼 읽히는 문장이 없는지 확인할 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 3개에서 잠수 탄 쪽이 죄책감을 느끼고 우울 증상까지 겪을 수 있다는 결과가 나왔다</b>
+          <q>“Three studies found that ghosters may feel bad about ghosting someone and even suffer depressive symptoms.”</q>
+          <small>post0 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>잠수 탄 사람 중 상당수가 죄책감, 수치심, 후회를 보고했고 일부는 우울 증상이 있었다</b>
+          <q>“The researchers—Sophia Li and Juliana Schroeder of the University of California, Berkeley Haas School of Business and Coral Zheng from the University of Cambridge Judge Business School—found that many of the ghosters actually reported being haunted by feelings of guilt, shame, and remorse. Some even had depressive symptoms.”</q>
+          <small>post1 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세 연구의 결과가 서로 뒷받침했다</b>
+          <q>“The results from the three studies supported each other.”</q>
+          <small>post1 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>잠수 당한 쪽은 잠수 탄 쪽이 얼마나 힘들어했는지 과소평가했고, 의도하지 않은 잠수일 때 그 정도가 더 컸다</b>
+          <q>“Meanwhile, the ghosted tended to underestimate how badly the ghosters felt. This underestimation was even greater when the ghosting was unintentional.”</q>
+          <small>post2 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>첫 번째 연구는 195명이 실제 잠수 경험을 떠올리게 했다</b>
+          <q>“One of the studies asked 195 people, including those who have ghosted and those who have been ghosted, to recall real ghosting experiences.”</q>
+          <small>post3 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 번째 연구는 601명이 잠수 상황을 상상하고 설문에 답했다</b>
+          <q>“The second study had 601 people imagine different ghosting scenarios and then complete surveys about their resulting feelings.”</q>
+          <small>post3 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세 번째 연구는 350명을 대상으로 실시간 대화에서 잠수 상황을 유도했다</b>
+          <q>“The third study did the same for 350 study participants who had ghosting induced in a live interaction.”</q>
+          <small>post3 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 UC 버클리 하스 경영대와 케임브리지 저지 경영대 소속이다</b>
+          <q>“The researchers—Sophia Li and Juliana Schroeder of the University of California, Berkeley Haas School of Business and Coral Zheng from the University of Cambridge Judge Business School—found that many of the ghosters actually reported being haunted by feelings of guilt, shame, and remorse. Some even had depressive symptoms.”</q>
+          <small>post3 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>잠수 탄 쪽은 자기 행동을 잠수로 인식하지 않았거나 짧은 답을 보냈을 때 기분이 나았다</b>
+          <q>“But the ghosters did feel better when they did not perceive their actions as ghosting or when they had sent a short response like “Sorry, can&#39;t talk” rather than do full-on disappearing wthout a trace.”</q>
+          <small>post4 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람들이 답한 내용이 실제 감정과 다를 수 있다</b>
+          <q>“Keep in mind, though, that what people reported may not have always matched what they really felt; people can do this thing called lying.”</q>
+          <small>post5 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구가 실험 조건에서 진행돼 평소와 다르게 행동했을 수 있고, 다른 잠수 탄 사람도 죄책감을 느낀다고 단정할 수 없다</b>
+          <q>“Furthermore, these studies were done under experimental conditions in which people may not necessarily behave how they normally would. Moreover, just because those in a sample of people felt guilty doesn&#39;t mean that other ghosters will—particularly those who ghosted you.”</q>
+          <small>post5 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>완전 잠수보다 짧은 답을 보낸 쪽이 기분이 나았다</b>
+          <q>“But the ghosters did feel better when they did not perceive their actions as ghosting or when they had sent a short response like “Sorry, can&#39;t talk” rather than do full-on disappearing wthout a trace.”</q>
+          <small>post6 · <a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="6df8525c68c0">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.psychologytoday.com/us/blog/a-funny-bone-to-pick/202610/how-ghosting-can-hurt-the-ghoster" target="_blank" rel="noopener">How Ghosting Can Hurt the Ghoster</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-ff5610bb1bc4">
+    <div class="head">
+      <h2>S2. 병렬 근로(parallel work) 세대별 비율 - Intch 조사</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ff5610bb1bc4">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 커리어</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 부업과는 다른 &#39;병렬 근로&#39;라는 이름과 세대별 숫자(29%→64%)를 보여주며 내 커리어가 어디쯤인지 비교하게 만드는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">직장은 하나만 다니는 거라는 생각, 해외에선 깨지고 있다는 분석이 나옴
+14만 명 넘는 이력을 봤더니 밀레니얼은 10명 중 6명 넘게 일을 동시에 여러 개 맡고 있었대
+근데 이게 흔한 부업이랑은 또 다른 얘기임 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">1/ 동시에 여러 역할을 맡은 비율이 베이비붐 29%, X세대 44%, Z세대 59%, 밀레니얼 64%였대. 세대가 내려올수록 높고, 밀레니얼이 제일 높았음. 이걸 부르는 이름이 따로 있는데 뭔지 알아?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">77/500자</span></div>
+      <p class="tp-text">2/ 병렬 근로, 영어로 parallel work래. 정규직 자리 하나 대신 일을 여러 개 맡는 걸 말함. 근데 부업이랑 뭐가 다른 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">3/ 헷갈리는 3가지 정리
+- 부업(side gig): 풀타임 하나 + 추가로 하는 일
+- 프랙셔널(fractional): 고위급이 풀타임보다 적은 시간으로 여러 고객 일을 해줌
+- 병렬 근로: 말 그대로 일을 동시에 여러 개
+병렬 근로는 범위가 꽤 넓음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">86/500자</span></div>
+      <p class="tp-text">4/ 같은 회사에서 풀타임 역할 두 개를 맡는 경우도 포함이래. 지금 하는 일 위에 완전히 다른 커리어를 얹는 것도 해당됨. 그럼 왜들 이렇게 하는 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">5/ 기사 설명은 수입원이 늘고 직업적 기회도 같이 생긴다는 거야. 또 여러 전문 기술을 동시에 쌓는 경우도 있는데, 같은 분야에서 고용주만 다른 경우가 많대. 근데 이 숫자를 낸 곳이 어딘지도 봐야 함 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">232/500자</span></div>
+      <p class="tp-text">6/ 결국 해외에선 &#39;직장 하나&#39;가 당연한 기본값이 아니게 돼가고 있다는 분석이야. 다만 조사한 Intch는 파트타임 일자리를 연결해주는 플랫폼이라는 건 알아두고.
+너라면 일 두 개 동시에 하기 vs 하나에 올인, 어느 쪽?
+이런 해외 일·커리어 트렌드 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 세대가 내려올수록 병렬 근로 비율이 높아진다는 추세 주장(29→44→59→64%)이 claims 목록에 없다.</li><li>근거 등록 안 된 주장: 직장 하나가 해외에서 당연한 기본값이 아니게 되고 있다는 결론 주장이 claims 목록에 없다.</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>직장은 하나만 다니는 거라는 생각, 해외에선 깨지고 있다는 분석이 나옴</li><li>밀레니얼 10명 중 6명 넘게가 일을 동시에 여러 개 한대</li><li>직장 하나만 다니는 게 아니라 여러 개를 동시에 맡는 게 흔해지는 중이래</li><li>퇴근하고 또 다른 회사로 출근하는 게 이제 흔한 일이래</li><li>Z세대 10명 중 6명 가까이가 일을 여러 개 맡고 있대</li><li>이거 부업이랑 달라. &#39;병렬 근로&#39;라는 새 이름까지 붙었대</li><li>베이비붐 29%, 밀레니얼 64%. 세대마다 이렇게 차이 나는 이유가 뭘까</li><li>풀타임 자리 두 개를 같은 회사에서 동시에 하는 것도 포함이래</li><li>14만 명 넘는 커리어 기록을 뜯어봤더니 직장 하나가 기본이 아니었어</li><li>투잡이 &#39;몰래 하는 일&#39;이 아니라 하나의 일하는 방식이 돼가는 중이래</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너라면 일 두 개 동시에 하기 vs 하나에 올인, 어느 쪽?</li><li>같은 회사 풀타임 두 개 vs 완전 다른 분야 일 하나 더, 고른다면?</li><li>부업파 vs 프랙셔널파, 어느 쪽이 더 끌려?</li><li>일을 동시에 여러 개 맡는 거, 너는 찬성이야 반대야?</li><li>직장 하나만 다니는 게 당연하다는 말, 아직도 맞다고 봐?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>프랙셔널 워크가 뭐길래: 고위급이 시간을 쪼개 여러 고객 일을 하는 방식</li><li>일을 여러 개 맡으면 기술이 정말 같이 늘까</li><li>세대별로 일하는 방식이 이렇게 다른 이유</li><li>해외에서 일을 여러 개 맡는 사람들의 하루 일정</li><li>한국 직장인의 겸업은 어디까지 가능할까</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>조사 주체 Intch가 파트타임 인력 연결 플랫폼이라 이해관계가 있을 수 있음. 마지막 글에 밝혔으나 톤 확인 필요</li><li>&#39;동시에 여러 역할을 맡은 비율&#39;이 특정 시점 기준인지 이력 전체 기준인지 원문이 불명확함</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분석 대상은 14만 명 넘는 직장인의 이력이었다</b>
+          <q>“The study analyzed more than 142,000 employees’ career histories, which included 1.05 million roles, and found that parallel work has doubled across generations: While around 29% of boomers hold multiple roles at the same time, Gen Xers do so 44% of the time.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>밀레니얼 64%가 여러 역할을 동시에 맡고 있다</b>
+          <q>“And for the youngest generations of workers, the numbers are even higher: 59% of Gen Zers are working in multiple roles, while 64% of millennial workers do.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>병렬 근로가 해외에서 더 퍼지고 있다</b>
+          <q>“And it’s becoming more widespread.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>베이비붐 29%, X세대 44%가 여러 역할을 동시에 맡고 있다</b>
+          <q>“The study analyzed more than 142,000 employees’ career histories, which included 1.05 million roles, and found that parallel work has doubled across generations: While around 29% of boomers hold multiple roles at the same time, Gen Xers do so 44% of the time.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Z세대 59%, 밀레니얼 64%가 여러 역할을 맡고 있다</b>
+          <q>“And for the youngest generations of workers, the numbers are even higher: 59% of Gen Zers are working in multiple roles, while 64% of millennial workers do.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>병렬 근로는 정규직 하나 대신 여러 일을 맡는 것을 뜻한다</b>
+          <q>“It’s called parallel work, and it essentially means taking on multiple jobs as opposed to having a single full-time position.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>병렬 근로는 부업(풀타임에 추가)이나 프랙셔널(고위급이 적은 시간으로 여러 고객 상대)과 다르다</b>
+          <q>“That’s different from just having a side gig in addition to a full-time one; it’s also different from fractional work, wherein senior-level employees work a fraction of full-time hours for a variety of clients.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 회사에서 풀타임 역할 두 개를 맡거나 완전히 다른 커리어를 얹는 것도 병렬 근로다</b>
+          <q>“Parallel work means having literally two jobs at once—they could even be two full-time roles at the same company, or maybe even working in an entirely different career on top of your existing one.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>병렬 근로는 추가 수입원과 직업적 기회를 준다</b>
+          <q>“While it sounds offbeat, it provides extra income streams and professional opportunities in parallel to one another.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>여러 일을 동시에 하며 전문 기술을 함께 쌓고, 같은 분야에서 고용주만 다른 경우가 많다</b>
+          <q>“These days, workers are gaining multiple specialized skills at once by juggling concurrent positions, often in the same area, but for different employers.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조사한 Intch는 고급 인력과 기업을 파트타임 역할로 연결하는 플랫폼이다</b>
+          <q>“According to a new study from Intch, a platform that connects top professionals with businesses for part-time roles, employees are taking on new roles while keeping their old ones in droves.”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ff5610bb1bc4">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91622900/parallel-work-how-working-multiple-jobs-at-once-shed-its-taboo?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">‘Parallel work’: How holding down multiple jobs at once shed its taboo</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261019-pm";
+  const ORIGINAL = {"16b178b0e2dd": {"caption": "\ub808\uc774\uc800 \ud3ec\uc778\ud130\ub85c \ubcf4\uc548\uce74\uba54\ub77c\ub97c \ub208\uba40\uac8c \ud55c\ub2e4\uace0? \ub4dc\ub77c\ub9c8 \uc18d \ud0c8\ucd9c \uc7a5\uba74\uc774 \ud604\uc2e4\uc5d0\uc11c\ub3c4 \ub418\ub294\uc9c0 \uc815\ub9ac\ud574\ubd24\uc5b4.\n\n\ub4dc\ub77c\ub9c8 \u0027\ubca0\ud130 \ucf5c \uc0ac\uc6b8\u0027\uc5d0\uc11c \ud55c \uc778\ubb3c\uc774 \ub808\uc774\uc800 \ud3ec\uc778\ud130\ub85c \ubcf4\uc548\uce74\uba54\ub77c\ub97c \uba39\ud1b5\uc73c\ub85c \ub9cc\ub4e4\uace0 \ud0c8\ucd9c\ud574. \uadf8\ub7f0\ub370 \uc2e4\uc81c\ub85c\ub3c4 \ub418\ub0d0\uace0 \ubb3c\uc73c\uba74 \u0027\uc5b4\ub290 \uc815\ub3c4\ub294 \ub41c\ub2e4\u0027\uac00 \ub2f5\uc774\uc57c. \ub808\uc774\uc800\ub85c \uce74\uba54\ub77c\ub97c \uc77c\uc2dc\uc801\uc73c\ub85c \ubabb \ubcf4\uac8c \ub9cc\ub4e4 \uc218 \uc788\uace0, \uacbd\uc6b0\uc5d0 \ub530\ub77c\uc120 \uc601\uad6c \uc190\uc0c1\ub3c4 \uac00\ub2a5\ud558\ub300.\n\n\ub2e4\ub9cc \uc870\uac74\uc774 \uc14b\uc774\ub098 \ubd99\uc5b4. \uc544\uc8fc \uac15\ub825\ud55c \ub808\uc774\uc800, \uc624\ub798\ub41c \uce74\uba54\ub77c, \uadf8\ub9ac\uace0 \uadf9\ub3c4\ub85c \uc548\uc815\uc801\uc778 \uc870\uc900. \uc2e4\uc81c\ub85c \uce74\uba54\ub77c\ub97c \ub9dd\uac00\ub728\ub9ac\ub824\uba74 \uace0\ucd9c\ub825 \ub808\uc774\uc800\ub97c \uc57d 10\ucd08\uac04 \uac00\ub9cc\ud788 \ub300\uace0 \uc788\uc5b4\uc57c \ud55c\ub2e4\ub294 \uc124\uba85\uc774\uc57c. \ucd9c\ub825\uc774 5mW \ubbf8\ub9cc\uc774\uba74 \uc77c\uc2dc\uc801\uc778 \ub208\ubd80\uc2ec \uc815\ub3c4\uc5d0 \uadf8\uce60 \uac00\ub2a5\uc131\uc774 \ub192\uace0, \ubbf8\uad6d FDA \uaddc\uc815\uc0c1 5mW\ub97c \ub118\ub294 \ud734\ub300\uc6a9 \ub808\uc774\uc800 \ud3ec\uc778\ud130\ub294 \ud310\ub9e4\ub098 \ud64d\ubcf4\uac00 \ubd88\ubc95\uc774\ub798.\n\n\uc870\uc900\ub3c4 \ud070 \uac78\ub9bc\ub3cc\uc774\uc57c. \ubcf4\uc548 \uc5c5\uacc4 \uc5f0\uad6c\uae30\uad00 IPVM\uac00 \uc9c1\uc811 \ud574\ubd24\ub354\ub2c8 \uc57d 5\ud53c\ud2b8 \uac70\ub9ac\uc5d0\uc11c\ub3c4 \uc190\uc774 \ub5a8\ub824\uc11c \ub808\uc774\uc800\ub97c \uacc4\uc18d \ub9de\ucd94\uae30\uac00 \ub9e4\uc6b0 \uc5b4\ub824\uc6e0\uace0, \ub808\uc774\uc800 \uc138\uae30\uc640 \uc0c1\uad00\uc5c6\uc774 \uc601\uad6c \uc190\uc0c1\uc740 \ubabb \ub0c8\ub300. \ucd5c\uc2e0 \uce74\uba54\ub77c\ub294 \uc13c\uc11c \ubcf4\ud638 \uae30\uc220\uae4c\uc9c0 \uc788\uc5b4\uc11c \ub354 \uc5b4\ub835\uace0, \ub4dc\ub77c\ub9c8 \uacf5\ub3d9 \uc81c\uc791\uc790\ub3c4 \uadf8 \ubc29\ubc95\uc740 1960\ub144\ub300 \uce74\uba54\ub77c \ubaa8\ub378\uc5d0\ub098 \ud1b5\ud560 \uac70\ub77c\uace0 \ud31f\uce90\uc2a4\ud2b8\uc5d0\uc11c \uc778\uc815\ud588\ub300.\n\n\ucc38\uace0\ub85c 2021\ub144 \ubbf8\uad6d \ud074\ub9ac\uc5b4\uc6cc\ud130\uc5d0\uc11c \ud55c \ub0a8\uc131\uc774 \uc0ac\uc774\uc5b8\ud1a8\ub85c\uc9c0 \uad50\ud68c \uac10\uc2dc\uce74\uba54\ub77c \uc5ec\ub7ec \ub300\uc5d0 \ub808\uc774\uc800\ub97c \uc408\ub2e4\uac00 \uccb4\ud3ec\ub410\uc5b4. \ub80c\uc988\uc5d0 \uc8fd\uc740 \ubd80\ubd84\uc774 \uc0dd\uaca8 2,000\ub2ec\ub7ec \ub118\ub294 \ud53c\ud574\uac00 \ub0ac\uc9c0\ub9cc, \uce74\uba54\ub77c\ub294 \uadf8 \ub0a8\uc131\uc758 \ubaa8\uc2b5\uc744 \uadf8\ub300\ub85c \uc7a1\uc544\ub0c8\ub300.\n\n\ucd9c\ucc98: Engadget", "hashtags": ["#\ubcf4\uc548\uce74\uba54\ub77c", "#\ub808\uc774\uc800\ud3ec\uc778\ud130", "#\uacfc\ud559\uc0c1\uc2dd", "#\ubca0\ud130\ucf5c\uc0ac\uc6b8", "#CCTV"], "slides": [["\ub808\uc774\uc800\ub85c **CCTV**", "\ub208\uba40\uac8c \ud55c\ub2e4\uace0???"], ["\ub4dc\ub77c\ub9c8\uc5d0\uc120", "\ub808\uc774\uc800 \ud558\ub098\ub85c", "**CCTV \uba39\ud1b5**"], ["\ud604\uc2e4\uc5d0\uc11c\ub3c4", "\uc544\uc608 **\ubd88\uac00\ub2a5\ud558\uc9c4** \uc54a\uc74c"], ["\uc870\uac74\uc774 \uae4c\ub2e4\ub86d\ub2e4", "**\uac15\ud55c \ub808\uc774\uc800** + **\uad6c\ud615 CCTV**"], ["2021\ub144 \ubbf8\uad6d\ud55c \ub0a8\uc131\uc774", "\uad50\ud68c \uac10\uc2dc\uce74\uba54\ub77c\uc5d0", "**\ub808\uc774\uc800**\ub97c \uc408\ub2e4\uac00 **\uccb4\ud3ec**"], ["**\ubbf8\ub4dc** \uc815\uc8fc\ud589 \uc911\uc778", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30"]]}, "5f3fe56efca1": {"caption": "Meta\uc758 AI \ube44\uc11c\uac00 \uc131\uc778 \uc0ac\uc6a9\uc790\uc640 \uc57c\ud55c \ub300\ud654\ub97c \ud574\ub3c4 \ub41c\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc774\uac8c \uc65c \ud654\uc81c\ub0d0\uba74, \uc131\uc778 \ucf58\ud150\uce20 \ud06c\ub9ac\uc5d0\uc774\ud130\ub4e4\uc774 \ubc18\ubc1c\ud558\uace0 \uc788\uac70\ub4e0.\n\nMeta\uc758 AI \ube44\uc11c \uc774\ub984\uc740 Muse\uc57c. \uba54\uc2e0\uc800\ucc98\ub7fc \ubb38\uc790\ub97c \ubcf4\ub0b4\uba74 \ub2f5\ud558\ub294 \uc571\uc778\ub370, \uce98\ub9b0\ub354\ub098 \uc774\uba54\uc77c \uac19\uc740 \uac1c\uc778 \ub370\uc774\ud130\uc5d0 \uc811\uadfc \uad8c\ud55c\uc744 \uc8fc\uba74 \uba3c\uc800 \ub3c4\uc6b8 \ubc29\ubc95\uc744 \ucc3e\uc544. \uc608\ub97c \ub4e4\uba74 \uc800\ub141 \uc608\uc57d\uacfc \uacb9\uce58\ub294 \uc6b4\ub3d9 \uc218\uc5c5\uc744 \ucde8\uc18c\ud574\uc8fc\ub294 \uc2dd\uc774\uc9c0. \uc778\uc2a4\ud0c0\uadf8\ub7a8, \ud398\uc774\uc2a4\ubd81 \uac19\uc740 Meta\uc758 \uc720\ud1b5\ub9dd \ub355\ubd84\uc5d0 \ucd9c\uc2dc \uccab \ub2ec\uc5d0 \ub2e4\uc6b4\ub85c\ub4dc \ucc28\ud2b8 \ub9e8 \uc704\uae4c\uc9c0 \uc62c\ub790\ub2e4\uace0 \ud574.\n\n\uadf8\ub7f0\ub370 Meta\ub294 18\uc138 \uc774\uc0c1\ub9cc \uc4f0\ub294 \uc774 \uc571\uc5d0\uc11c \uc131\uc778 \uc0ac\uc6a9\uc790\uac00 Muse\uc640 \ub178\uace8\uc801\uc778 \ub300\ud654\ub97c \ub098\ub220\ub3c4 \uad1c\ucc2e\ub2e4\uace0 \ubc1d\ud614\uc5b4. \ub2e4\ub9cc Muse\uac00 \ub9cc\ub4dc\ub294 \uac74 \ud14d\uc2a4\ud2b8\ubfd0\uc774\uace0 \uc774\ubbf8\uc9c0\ub098 \uc601\uc0c1\uc740 \uc544\ub2c8\uc57c. Meta \ub300\ubcc0\uc778\uc740 \uc131\uc778\uacfc \uac1c\uc778\ud654\ub41c AI \uc5d0\uc774\uc804\ud2b8 \uc0ac\uc774\uc758 1:1 \ube44\uacf5\uac1c \ub300\ud654\ub294 \uc18c\uc15c \ubbf8\ub514\uc5b4\uc5d0\uc11c\uc758 \uc11c\ube44\uc2a4 \ud64d\ubcf4\uc640\ub294 \ub9e4\uc6b0 \ub2e4\ub974\ub2e4\uace0 \uc124\uba85\ud588\uc5b4.\n\n\ubc18\uc751\uc740 \uc774\ub798. \ub274\uc695\uc758 OnlyFans \ud06c\ub9ac\uc5d0\uc774\ud130 Vanniall\uc740 \ud314\ub85c\uc6cc 10\ub9cc \uba85\uc774 \ub118\ub294 \uc778\uc2a4\ud0c0\uadf8\ub7a8 \uacc4\uc815\uc774 \uc9c0\uae08 \uc81c\ud55c\ub41c \uc0c1\ud0dc\uc778\ub370, \uc9c4\uc9dc \uc131\uc778\ub4e4\uc740 \uc548 \ub418\uace0 AI\ub9cc \ub418\ub294 \uac74 \uacf5\ud3c9\ud558\uc9c0 \uc54a\ub2e4\uace0 \ub9d0\ud588\uc5b4. \ub610 \ub2e4\ub978 \ud06c\ub9ac\uc5d0\uc774\ud130 Jiz Lee\ub294 \uc774\ubbf8 AI\uac00 \uc0ac\ub78c\ubcf4\ub2e4 \ub354 \ub9ce\uc740 \uac78 \ud5c8\uc6a9\ubc1b\ub294 \ubaa8\uc2b5\uc744 \ubcf4\uace0 \uc788\ub2e4\uace0 \ud588\uace0, Tony Genius\ub294 \uc9c0\ub09c 5\ub144\uac04 \uc778\uc2a4\ud0c0\uadf8\ub7a8 \uacc4\uc815\uc774 \uc77c\uacf1 \ubc88\uc9f8\ub77c\uace0 \uc8fc\uc7a5\ud588\uc5b4.\n\nJiz Lee\ub294 Muse\uac00 \uc5b4\ub5bb\uac8c \ud559\uc2b5\ub410\ub294\uc9c0, \ub370\uc774\ud130\uc5d0 \ub300\ud55c \ubcf4\uc0c1\uc740 \ub204\uad70\uac00\uc5d0\uac8c \uac14\ub294\uc9c0\ub3c4 \uad81\uae08\ud574\ud588\uc5b4.\n\n\ucd9c\ucc98: WIRED", "hashtags": ["#MetaAI", "#Muse", "#AI\ube44\uc11c", "#OnlyFans", "#AI\ub274\uc2a4"], "slides": [["Meta AI\ube44\uc11c\uc640", "**\uc131\uc801** \ub300\ud654 OK?!"], ["\uc774\ub984\uc740 **Muse**", "\uba54\uc2e0\uc800\ucc98\ub7fc \uc4f0\ub294", "AI \ube44\uc11c"], ["\uc77c\uc815\uc774\ub791 \uba54\uc77c\ub3c4", "**\uc54c\uc544\uc11c** \ucc59\uaca8\uc900\ub300"], ["\uccab \ub2ec \ub9cc\uc5d0", "\ub2e4\uc6b4\ub85c\ub4dc \ucc28\ud2b8", "**\ub9e8 \uc704\ub85c**"], ["\uc131\uc778 \uc804\uc6a9 \uc571\uc5d0\uc11c", "**\uc57c\ud55c \ub300\ud654** \ud5c8\uc6a9", "\uae00\ub85c\ub9cc, \uc0ac\uc9c4\uc740 X"], ["\uacc4\uc815 \ucc28\ub2e8 \ub2f9\ud55c", "\uc131\uc778 \ud06c\ub9ac\uc5d0\uc774\ud130 \ubc18\uc751", "AI\ub294 \ub418\uace0 **\uc0ac\ub78c\uc740?**"], ["AI\ub791 \uc774\uc0c1\ud55c \ub9d0\ud558\ub294\uac70", "**\uc88b\uc544\ud558\ub294 \uce5c\uad6c\ud55c\ud14c**", "\ubcf4\ub0b4\ubcf4\uae30"]]}};
+  const TOTAL = 2;
+  const SERVER = {"16b178b0e2dd": "approve", "5f3fe56efca1": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 1;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

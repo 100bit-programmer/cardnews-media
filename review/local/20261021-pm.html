@@ -1,0 +1,1152 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.21 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.21 오후 검수</span> <span id="progress">0 / 1 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-6bd232635e39" data-jump="6bd232635e39">1</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-6bd232635e39" data-id="6bd232635e39">
+    <div class="head">
+      <h2>1. 교장 생일 깜짝 이벤트 - 싸움 난 줄 알았던 교장</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-01.jpg" alt="1장: 싸움 났다더니 생일파티?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-02.jpg" alt="2장: 교장쌤은 싸움 말리러 복도를 질주" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-03.jpg" alt="3장: 붙잡은 학생이 몰래 준비한 깜짝 주인공" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-04.jpg" alt="4장: 그 학생, 한때 싸움이 잦던 아이였대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-05.jpg" alt="5장: 교장쌤 만나 시 쓰고 작곡하는 학생" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-06.jpg" alt="6장: 교장쌤 말은 사랑·존중 없인 배움도 없다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-07.jpg" alt="7장: 인생 바꿔준 선생님 있는 친구 태그" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261021-pm-2e304e023457/6bd232635e39/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">싸움 났다는 말에 복도를 달려간 교장쌤, 알고 보니 생일 깜짝 이벤트였대.
+
+미국 조지아주 Lakeview-Fort Oglethorpe 고등학교의 51세 교장 바비 데이비스는 사무실에 있다가 식당에서 싸움이 났다는 말을 듣고 곧장 뛰쳐나갔어. 현장에서 그는 싸움 전력이 있는 걸 잘 아는 학생을 붙잡았는데, 그날이 마침 데이비스 교장의 생일이었고 붙잡힌 학생이 이 깜짝 이벤트를 직접 기획한 거였어.
+
+주인공은 17세 드제이비언 왓킨스. 투데이(TODAY)와의 인터뷰에서 교장이 자기 삶을 좋은 쪽으로 바꿔줬다고 말했대. 예전엔 불안정하고 싸움에 잘 휘말렸는데, 교장이 곁에서 도우면서 다른 사람에 대한 공감을 알게 됐다는 거야. 지금은 시를 쓰고 작곡을 하고 자동차 정비사를 꿈꾸는 학생이 됐고, 졸업이 얼마 남지 않아 멘토에게 잊지 못할 선물을 하고 싶었대.
+
+데이비스 교장은 학생들은 어른이 자기한테 관심이 없는지 다 안다고 말했어. 사랑받고 존중받는다고 느끼지 못하면 배우지 못한다는 게 그의 생각이래. 왓킨스가 스스로를 &#39;나쁜 아이&#39;라고 여러 번 말해도 교장은 인정하지 않고 &#39;훌륭한 아이&#39;라고 불렀다고 해. 왓킨스는 영상 댓글에 교장이 혼자 힘으로 자신을 더 나은 사람으로 바꿔놨다고 남겼대.
+
+출처: Good News Network (TODAY 인터뷰 인용)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#깜짝생일 #교장선생님 #훈훈한이야기 #멘토 #해외화제</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 미국 조지아주에 위치한 학교라는 사실 (근거에는 조지아 학생 영상이라는 언급만 있음)</li><li>근거 등록 안 된 주장: 출처가 Good News Network라는 주장</li><li>근거 등록 안 된 주장: 교장이 생일 깜짝 이벤트에 기뻐서 펄쩍 뛰었다는 장면</li><li>근거 등록 안 된 주장: 해당 내용이 담긴 영상이 SNS에서 화제가 되었다는 사실</li>
+          <li>미성년자(17세) 실명 언급 - 게시 전 확인 필요</li><li>SNS 바이럴 영상 기반 소식이라 영상 자체는 사용하지 않음</li><li>교장 발언과 학생 발언은 투데이 인터뷰를 인용한 2차 출처 기반</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-6bd232635e39-0">1장</label>
+          <textarea id="s-6bd232635e39-0" rows="2" data-slide="0">싸움 났다더니
+**생일파티?!**</textarea>
+          
+          <label class="f" for="s-6bd232635e39-1">2장</label>
+          <textarea id="s-6bd232635e39-1" rows="3" data-slide="1">교장쌤은
+싸움 말리러
+복도를 **질주**</textarea>
+          
+          <label class="f" for="s-6bd232635e39-2">3장</label>
+          <textarea id="s-6bd232635e39-2" rows="3" data-slide="2">붙잡은 학생이
+몰래 준비한
+**깜짝** 주인공</textarea>
+          
+          <label class="f" for="s-6bd232635e39-3">4장</label>
+          <textarea id="s-6bd232635e39-3" rows="3" data-slide="3">그 학생, 한때
+**싸움**이 잦던
+아이였대</textarea>
+          
+          <label class="f" for="s-6bd232635e39-4">5장</label>
+          <textarea id="s-6bd232635e39-4" rows="3" data-slide="4">교장쌤 만나
+시 쓰고
+**작곡**하는 학생</textarea>
+          
+          <label class="f" for="s-6bd232635e39-5">6장</label>
+          <textarea id="s-6bd232635e39-5" rows="3" data-slide="5">교장쌤 말은
+사랑·존중 없인
+**배움도 없다**</textarea>
+          
+          <label class="f" for="s-6bd232635e39-6">7장</label>
+          <textarea id="s-6bd232635e39-6" rows="3" data-slide="6">인생 바꿔준
+**선생님** 있는
+친구 태그</textarea>
+          
+          <label class="f" for="c-6bd232635e39">본문 (캡션)</label>
+          <textarea id="c-6bd232635e39" class="caption">싸움 났다는 말에 복도를 달려간 교장쌤, 알고 보니 생일 깜짝 이벤트였대.
+
+미국 조지아주 Lakeview-Fort Oglethorpe 고등학교의 51세 교장 바비 데이비스는 사무실에 있다가 식당에서 싸움이 났다는 말을 듣고 곧장 뛰쳐나갔어. 현장에서 그는 싸움 전력이 있는 걸 잘 아는 학생을 붙잡았는데, 그날이 마침 데이비스 교장의 생일이었고 붙잡힌 학생이 이 깜짝 이벤트를 직접 기획한 거였어.
+
+주인공은 17세 드제이비언 왓킨스. 투데이(TODAY)와의 인터뷰에서 교장이 자기 삶을 좋은 쪽으로 바꿔줬다고 말했대. 예전엔 불안정하고 싸움에 잘 휘말렸는데, 교장이 곁에서 도우면서 다른 사람에 대한 공감을 알게 됐다는 거야. 지금은 시를 쓰고 작곡을 하고 자동차 정비사를 꿈꾸는 학생이 됐고, 졸업이 얼마 남지 않아 멘토에게 잊지 못할 선물을 하고 싶었대.
+
+데이비스 교장은 학생들은 어른이 자기한테 관심이 없는지 다 안다고 말했어. 사랑받고 존중받는다고 느끼지 못하면 배우지 못한다는 게 그의 생각이래. 왓킨스가 스스로를 &#39;나쁜 아이&#39;라고 여러 번 말해도 교장은 인정하지 않고 &#39;훌륭한 아이&#39;라고 불렀다고 해. 왓킨스는 영상 댓글에 교장이 혼자 힘으로 자신을 더 나은 사람으로 바꿔놨다고 남겼대.
+
+출처: Good News Network (TODAY 인터뷰 인용)</textarea>
+          <label class="f" for="t-6bd232635e39">해시태그</label>
+          <input id="t-6bd232635e39" type="text" class="tagsin" value="#깜짝생일 #교장선생님 #훈훈한이야기 #멘토 #해외화제" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>교장 바비 데이비스는 51세이며 Lakeview-Fort Oglethorpe 고등학교 소속이다</b>
+            <q>“51-year-old Bobby Davis of Lakeview-Fort Oglethorpe High School was sitting in his office when someone rushed in saying a fight had broken out in the cafeteria.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>교장은 식당에서 싸움이 났다는 말을 듣고 사무실에서 뛰쳐나갔다</b>
+            <q>“Not on Davis’ watch—the principal tore off down the hall.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>교장은 싸움 전력이 있는, 잘 아는 학생을 붙잡았다</b>
+            <q>“He quickly pushed his way through the crowd and grabbed a student he knew very well, one who had a history of fighting.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>붙잡힌 학생이 깜짝 이벤트를 기획했고 그날은 교장의 생일이었다</b>
+            <q>“It was Davis’ Birthday. The young man whom he’d grabbed had organized the surprise.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>왓킨스는 17세이며 투데이에 교장이 자기 삶을 좋은 쪽으로 바꿨다고 말했다</b>
+            <q>“De’Zayviun Watkins, 17, told TODAY that principal Davis had changed his life for the better.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>왓킨스는 불안정하고 싸움에 잘 휘말렸다</b>
+            <q>“As a young man of inclinations towards high school football, Watkins was unstable and prone to fights.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>교장이 점차 도우면서 왓킨스가 타인에 대한 공감을 발견했다</b>
+            <q>“He struggled with anger, but Davis, who’s also involved with the football team, gradually helped him reconsider what his life might be like, and to discover his empathy for others.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>교장과의 시간이 왓킨스를 시를 쓰고 작곡하며 정비사를 꿈꾸는 학생으로 바꿨다</b>
+            <q>“Time with Davis turned the angry teen into a writer of poetry, a composer of music, and an aspiring auto mechanic.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>졸업이 얼마 남지 않아 왓킨스는 멘토에게 잊지 못할 선물을 남기고 싶었다</b>
+            <q>“His journey at Lakeview-Fort Oglethorpe doesn’t have long left, and Watkins wanted to leave an unforgettable mark on his mentor.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>교장은 학생들이 어른의 무관심을 안다고 말했다</b>
+            <q>“For his part, Davis, who also spoke with TODAY, said that students know when figures of seniority don’t care about them, and that the only way to ensure they have the right environment is to treat them with compassion.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>교장은 사랑과 존중을 느끼지 못하면 배우지 못한다고 말했다</b>
+            <q>““If your kids don’t feel like they’re loved and respected, they’re not going to learn,” he says.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>왓킨스는 스스로를 나쁜 아이라 했지만 교장은 훌륭한 아이라 불렀다</b>
+            <q>“To wit, while Watkins repeatedly referred to himself as a “bad kid” Davis never conceded that point, calling him “a great kid.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>왓킨스는 영상 댓글에 교장이 혼자 힘으로 자신을 더 나은 사람으로 바꿨다고 썼다</b>
+            <q>““He single-handedly changed me for the better and he knows I could never take it for granted,” Watkins wrote in a comment on the viral video.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/student-plays-truly-epic-birthday-prank-on-high-school-principal-who-changed-his-life-watch/" target="_blank" rel="noopener">Student Plays Truly Epic Birthday Prank on High School Principal Who Changed His Life (WATCH)</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/balloons-date-of-birth-balloon-6804504/" target="_blank" rel="noopener">fotoblend / Pixabay</a> — "sunlit school hallway with colorful birthday balloons"</li><li>2장: <a href="https://pixabay.com/photos/man-runner-running-sport-fitness-8293794/" target="_blank" rel="noopener">wal_172619_II / Pixabay</a> — "running"</li><li>3장: <a href="https://pixabay.com/photos/balloons-heart-sky-decoration-1786430/" target="_blank" rel="noopener">Artturi_Mantysaari / Pixabay</a> — "birthday balloons"</li><li>4장: <a href="https://pixabay.com/photos/athletes-american-football-players-1867185/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "football field"</li><li>5장: <a href="https://pixabay.com/photos/notebook-notes-pen-writing-diary-1840276/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "notebook pen"</li><li>6장: <a href="https://pixabay.com/photos/bricks-chairs-classroom-empty-2181920/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "classroom"</li><li>7장: <a href="https://pixabay.com/photos/dawn-graduates-throwing-hats-dusk-1840298/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "graduation caps"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-1d46813529e3">
+    <div class="head">
+      <h2>S1. 수면 운동 순위 1위 요가, 걷기와 1점도 차이 안 남</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 12 · 애매 2
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-1d46813529e3">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강과학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;수면엔 뭘 해야 해?&#39;에 &#39;1위는 요가인데 걷기랑 통계로 구분이 안 되고, 연구마다 1위가 달라서 결국 계속할 운동이 답&#39;이라는 반전을 주는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">잠 잘 자려고 운동한다면 &#39;1위 운동&#39;부터 찾지 말라는 분석이 나옴
+30개 임상시험으로 순위를 매겼는데 1위 요가와 걷기 차이가 1점도 안 났대
+근데 이 &#39;1위&#39; 점수가 뭘 뜻하는지 알면 더 놀람 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">1/ 1위는 요가, 근데 걷기가 1점도 안 뒤졌음. 점수는 요가 82.1, 걷기 81.2, 근력운동 66.3. 수면 문제 있는 2,576명, 임상시험 30개를 묶은 하얼빈체육대 분석인데, 이 점수가 뭘 뜻하는지가 포인트야 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">2/ 이 점수는 잠이 얼마나 좋아졌는지가 아니라 순위 점수래. 실제로 요가와 걷기, 요가와 근력운동 비교는 결론이 안 났음. 연구진도 연구 수가 적다고 조심하라고 했고. 그럼 운동별로 확인된 건 뭘까 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">3/ 이 분석에서 확인된 것만 정리하면
+- 요가: 운동 안 한 것보다 잠 개선, 에어로빅보다도 나음
+- 걷기: 운동 안 한 것보다 잠 개선
+- 근력운동: 시험이 2개뿐이라 안 한 것보다 낫다고 말하기 어려움
+- 요가 vs 걷기, 요가 vs 근력: 결론 안 남
+그럼 연구팀이 꼽은 &#39;최강 루틴&#39;은 검증된 걸까 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">148/500자</span></div>
+      <p class="tp-text">4/ 연구팀이 꼽은 1위 루틴은 고강도 요가, 주 2회, 30분 이하, 8~10주. 근데 항목별 1등을 따로 뽑아 이어붙인 거고, 요가 시험 4개 중 이걸 그대로 한 건 없었음. 고강도 운동은 시작 전에 의사랑 상의하라고도 함. 다른 연구들은 뭘 1위로 뽑았을까 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">5/ 순위는 연구마다 뒤집혔음. 86개 시험·7,276명을 묶은 BMC Public Health 분석은 필라테스 1위, 요가는 6종 중 꼴찌. 근데 그 분석도 모든 운동이 안 한 것보다는 잠이 나아졌다고 했음. 그럼 결국 뭘 하라는 거야 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">232/500자</span></div>
+      <p class="tp-text">6/ 결국 리뷰들이 같이 말한 건 운동하면 안 하는 것보다 잠이 나아졌다는 거고, 뭐가 최고인지는 갈렸음. 한 분석 저자들은 각자 좋아하고 필요한 운동에 맞추라고 함.
+
+요가파 vs 걷기파, 너는 어느 쪽이야?
+
+이런 해외 수면·운동 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>고강도 운동은 시작 전에 의사와 상의해야 한다 <small>애매 · 원문은 수면장애나 기타 건강 문제가 있는 사람이 특히 고강도 운동을 시작하기 전에 의사와 상의해야 한다고 한정한다. 카드는 모든 사람에게 해당하는 것처럼 일반화했으니 &#39;수면장애 등 건강 문제가 있는 사람은&#39;으로 한정할 것.</small></li><li>모든 리뷰가 운동이 안 한 것보다 잠을 개선한다고 봤지만 뭐가 최고인지는 갈렸고, 한 분석 저자들은 각자 좋아하고 필요한 운동에 맞추라고 제안했다 <small>애매 · 원문은 &#39;일부 형태의 운동&#39;이 안 한 것보다 잠을 개선했다고 보았고 리뷰마다 최선이 달랐다고 한다. 카드의 &#39;운동하면 잠이 나아졌다&#39;는 &#39;일부 운동&#39;을 모든 운동으로 일반화했으니 &#39;일부 형태의 운동이&#39;로 고칠 것. 맞춤 운동 제안 부분은 원문과 일치한다.</small></li>
+        <li>근거 등록 안 된 주장: 연구팀의 1위 루틴은 운동 종류, 주간 빈도, 세션 길이, 강도, 프로그램 기간 항목별 1등을 따로 뽑아 이어붙인 것이다</li><li>근거 등록 안 된 주장: 순위는 연구마다 뒤집혔다(다른 리뷰들은 필라테스나 에어로빅을 1위로 꼽았다)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>잠 잘 자려고 운동한다면 &#39;1위 운동&#39;부터 찾지 말라는 분석이 나옴
+30개 임상시험으로 순위를 매겼는데 1위 요가와 걷기 차이가 1점도 안 났대</li><li>잠 잘 자는 운동 1위가 요가인데, 통계로는 걷기랑 구분이 안 된대</li><li>연구팀 4곳한테 수면에 제일 좋은 운동을 물으면 답이 3개 나온대</li><li>수면 운동 순위에서 요가가 1위였는데 다른 분석에선 6종 중 꼴찌로 나왔대</li><li>잠 못 자는 사람 2,576명 데이터로 순위를 매겼더니 요가와 걷기는 승자가 안 갈렸음</li><li>잠 때문에 운동 고를 땐 &#39;제일 센 운동&#39;이 아니라 &#39;계속할 수 있는 운동&#39;부터 보라는 분석이 나옴</li><li>수면 운동 &#39;최강 루틴&#39;이 사실 한 번도 그대로 실험된 적 없는 조합이래</li><li>운동하면 잠이 나아지는 건 맞는데, 뭐가 제일 좋은지는 연구마다 싸우는 중</li><li>퇴근하고 뭘 해야 잠 잘 자? 임상시험 30개 순위 매겼더니 걷기가 거의 동점이었음</li><li>&#39;수면 1위 운동&#39; 기사 믿고 요가 등록하기 전에, 이 순위 점수가 뭔지부터 봐야 함</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>잠 때문에 운동 고른다면 요가파 vs 걷기파, 너는 어느 쪽이야?</li><li>퇴근 후에 운동하는 사람 손?</li><li>필라테스랑 요가 중에 해본 건 어느 쪽이야?</li><li>너라면 계속하기 쉬운 운동 vs 1위 운동, 뭘 고를 거야?</li><li>운동 중에 제일 오래 꾸준히 해본 게 뭐야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>수면 운동 2편: 운동하는 시간대는 잠에 영향이 있을까</li><li>필라테스가 수면 1위로 나온 분석 자세히 보기</li><li>잠이 안 올 때 약 말고 시도해본 방법들을 다룬 해외 연구</li><li>불면증과 운동을 같이 다룬 해외 연구</li><li>수면 부족이 몸에 미치는 영향을 다룬 해외 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;1점도 안 났다&#39;는 SUCRA 순위 점수 차(82.1 vs 81.2)이지 수면 개선 폭의 차이가 아니라서, 개선 정도 차이로 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>고강도 운동은 시작 전에 의사와 상의해야 한다</b>
+          <q>“People with sleep disorders or other health conditions should talk with a doctor before starting a new exercise program, especially a high-intensity one.”</q>
+          <small>post4 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>모든 리뷰가 운동이 안 한 것보다 잠을 개선한다고 봤지만 뭐가 최고인지는 갈렸고, 한 분석 저자들은 각자 좋아하고 필요한 운동에 맞추라고 제안했다</b>
+          <q>“Every review found that some forms of exercise improved sleep compared with doing nothing, but they disagreed about which worked best. The Preventive Medicine authors suggested tailoring exercise to what each person enjoys and needs.”</q>
+          <small>post6 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요가가 1위였지만 걷기가 1점도 안 뒤졌고 통계로 구분이 안 됐다</b>
+          <q>“Even the yoga result came with an asterisk: walking finished less than a point behind, close enough that the study’s own statistics couldn’t separate the two.”</q>
+          <small>post0 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>&#39;1위 운동&#39;을 찾는 것보다 계속할 운동이 중요하다는 취지</b>
+          <q>“For someone choosing an exercise to stick with, the ranking matters less than the headline suggests.”</q>
+          <small>post0 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하얼빈체육대 분석은 수면 문제 있는 2,576명, 임상시험 30개를 묶었다</b>
+          <q>“A 2025 network meta-analysis from Harbin Sport University, covering 30 randomized trials and 2,576 people with sleep disturbances, placed yoga narrowly ahead of walking and resistance exercise for sleep quality.”</q>
+          <small>post1 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요가 82.1, 걷기 81.2, 근력운동 66.3점</b>
+          <q>“Yoga scored 82.1, walking 81.2, and resistance exercise (strength training) 66.3.”</q>
+          <small>post1 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>점수는 개선 퍼센트가 아니라 순위 점수다</b>
+          <q>“These are ranking scores, not percentages of improvement.”</q>
+          <small>post2 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요가와 걷기, 요가와 근력운동 비교는 결론이 나지 않았다</b>
+          <q>“The comparisons of yoga against walking and against resistance exercise were inconclusive.”</q>
+          <small>post2 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 연구 수가 적고 대상 특성이 있어 조심하라고 했다</b>
+          <q>“The authors urged caution because of the limited number of studies and the particular traits of people with sleep disturbances.”</q>
+          <small>post2 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요가와 걷기만 운동 안 한 것보다 확실히 잠을 개선했고 요가는 에어로빅보다도 나았다</b>
+          <q>“Of the seven exercise types, only yoga and walking clearly improved sleep compared with no exercise, and yoga also outperformed aerobic exercise.”</q>
+          <small>post3 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근력운동은 시험 2개 기반이며 안 한 것보다 낫다고 분명히 말하기 어려웠다</b>
+          <q>“Resistance exercise, based on just two trials, did not clearly beat doing nothing.”</q>
+          <small>post3 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구팀의 1위 루틴은 고강도 요가 주 2회 30분 이하 8~10주이며 요가 시험 4개 중 일치한 것은 없었다</b>
+          <q>“The researchers assembled their top-ranked prescription from separate category rankings: high-intensity yoga, twice weekly, no more than 30 minutes, for eight to 10 weeks. None of the analysis’s four yoga trials matched it.”</q>
+          <small>post4 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>BMC Public Health 분석은 86개 시험, 7,276명을 묶었다</b>
+          <q>“A BMC Public Health network meta-analysis published in April 2025 pooled 86 randomized trials involving 7,276 adults ages 18 to 75.”</q>
+          <small>post5 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그 분석에서 필라테스가 1위, 요가는 6종 중 꼴찌였지만 모든 운동이 안 한 것보다 잠을 개선했다</b>
+          <q>“Pilates ranked first at 91.7, and yoga came last of six exercise types at 30.1. Yet every exercise type improved sleep compared with no exercise, and the authors found no statistically significant differences among most of them.”</q>
+          <small>post5 · <a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="1d46813529e3">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/one-exercise-ranked-best-for-sleep-walking-finished-less-than-point-behind-2180/" target="_blank" rel="noopener">One Form Of Exercise Ranked Best For Sleep Across 30 Trials. Walking Finished Less Than A Point Behind</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-07ddbccd19d3">
+    <div class="head">
+      <h2>S2. 만보 걷기 숫자는 의학이 아니라 1960년대 만보기 마케팅에서 나왔다</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-07ddbccd19d3">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 매일 보던 만보 목표가 의학 기준이 아니라 광고에서 나왔다는 반전에, 그럼 얼마나 걸어야 하고 뭘 바꿔야 하는지를 바로 이어주는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">하루 만보, 의학이 정한 기준이 아니라 광고에서 나온 숫자래
+1960년대 만보기 마케팅이 시작이라는 거
+그럼 걷는 건 의미 없냐고? 그건 또 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">1/ 결론부터 말하면 만보가 건강의 기준선이라는 과학적 근거는 없대
+외우기 쉬운 숫자라서 퍼졌다는 설명이야
+이스트런던대 운동생리학 선임강사 잭 맥나마라 말인데, 그럼 연구자들은 뭐라고 했을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">2/ 연구하는 사람들이 따져보니 걷기 자체의 이득은 있었대
+그래서 가짜 과학으로 버려지진 않았음
+심혈관·심폐 건강에 좋고 일부 암 가능성도 낮춘다고 확인됐대
+근데 걸음이 늘수록 이득이 점점 줄어든다고 함 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 저장각</span>
+        <span class="len">163/500자</span></div>
+      <p class="tp-text">3/ 걸음 수 늘릴 때 체감 효과 (맥나마라 설명)
+- 앉아만 지내던 상태나 2,000보 → 4,000보: 건강 개선 큼
+- 8,000보 → 10,000보: 훨씬 작음
+- 10,000보 → 12,000보: 훨씬 작음
+- 그래도 이득은 있음, 기대만큼은 아닐 뿐
+그럼 많이 걷지 말라는 거냐고?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">4/ 그렇다고 더 앉아 있으라는 얘기는 아니래
+걷는 게 좋으면 얼마든지 걸어도 됨
+문제는 걸음 수 자체를 쫓으면서, 못 채우면 스스로를 몰아붙이는 거라고 해
+그럼 이미 많이 걷는 사람은 뭘 하라고 했을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">5/ 걸음 수가 이미 충분하면, 가능한 선에서 걷기 일부를 더 센 운동으로 바꿔보라고 제안함
+- 달리기
+- 빠르게 수영
+- 오르막 걷기
+- 파워워킹
+공통점은 숨이 차오르는 운동이라는 것</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">215/500자</span></div>
+      <p class="tp-text">6/ 결국 포인트는 만보 숫자 채우기보다, 안 움직이던 사람은 조금 더 걷고 이미 많이 걷는다면 숨 차는 운동을 섞어보라는 거
+너라면 스마트워치 만보 알림 계속 켜둘 거야, 끌 거야?
+이런 해외 건강·운동 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>하루 만보, 의학이 정한 기준이 아니라 광고에서 나온 숫자래</li><li>스마트워치 만보 목표, 1960년대 만보기 광고에서 시작됐대</li><li>만보 못 채웠다고 자책하지 말고, 이미 많이 걷는다면 숨 차는 운동부터 섞어보라는 전문가 말이 나옴</li><li>&#39;걷기 건강 기준은 만보&#39;가 아니라 &#39;안 움직이던 사람이 조금 더 걷는 것&#39;이 더 크다는 설명이 나옴</li><li>2,000보에서 4,000보로 늘리는 게 8,000보에서 10,000보보다 훨씬 효과가 크대</li><li>&#39;만보에는 과학적 근거가 없다&#39;는 말까지 나옴</li><li>만보 못 채우면 스스로 벌주는 사람들 있잖아. 전문가는 그게 문제라고 함</li><li>걸음 수가 이미 충분하면 걷기 일부를 숨차는 운동으로 바꿔보라는 제안이 나옴</li><li>그동안 믿은 만보, 알고 보니 외우기 쉬워서 퍼진 숫자였대</li><li>만보 채우기가 아니라 숨이 차느냐가 포인트라는 전문가 얘기, 들어볼래?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>스마트워치 만보 알림, 켜둘 거야 끌 거야?</li><li>걷기파 vs 숨차는 운동파, 넌 어디야?</li><li>만보 채우려고 일부러 돌아서 걸어본 사람?</li><li>이 얘기 듣고 너라면 걸음 수 목표 바꿀 거야?</li><li>걸음 수 앱 아직 쓰는 사람 손?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>걷기 vs 달리기, 어느 쪽이 건강에 더 좋은지 해외 연구</li><li>오래 앉아 있는 시간이 건강에 미치는 영향 연구</li><li>짧고 강한 운동의 효과를 다룬 해외 연구</li><li>걸음 수가 적어도 이득이 있다는 최소 걸음 연구</li><li>운동 목표 수치 중 근거가 약한 다른 통념</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>기사 전체가 맥나마라 한 명의 설명에 기대고 있어 &#39;연구 결과&#39;처럼 단정하지 말고 &#39;맥나마라 설명&#39;으로 귀속해서 전할 것</li><li>&#39;암 가능성 감소&#39;, &#39;숨차는 운동이 훨씬 낫다&#39;는 기사 속 발언이라 구체적 수치나 연구 규모가 원문에 없음 (수치를 덧붙이지 말 것)</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 만보라는 개념은 의학 연구가 아니라 1960년대 만보기 마케팅 캠페인에서 시작됐다는 설명 (이스트런던대 잭 맥나마라)</b>
+          <q>“The idea that we need to walk 10,000 steps a day originated not in medical research but in a 1960s marketing campaign for a pedometer, says Jack McNamara, senior lecturer in clinical exercise physiology at the University of East London.”</q>
+          <small>post0 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>만보가 건강의 특정 기준선이라는 과학적 근거는 없고 외우기 쉬운 숫자라 퍼졌다</b>
+          <q>“The round number was easy to remember and the idea caught on, despite there being no scientific evidence for 10,000 steps as a specific threshold for health.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>맥나마라는 이스트런던대 임상운동생리학 선임강사</b>
+          <q>“The idea that we need to walk 10,000 steps a day originated not in medical research but in a 1960s marketing campaign for a pedometer, says Jack McNamara, senior lecturer in clinical exercise physiology at the University of East London.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 커뮤니티가 살펴보니 건강 이득이 있어 가짜 과학으로 버려지지는 않았다</b>
+          <q>““When the research community looked into it, they found that there were health benefits, so it didn’t necessarily get thrown out as pseudoscience,” says McNamara.”</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>걷기는 심혈관·심폐 건강에 이롭고 일부 암 가능성을 낮추는 것으로 나타났다</b>
+          <q>“Walking has been shown to benefit cardiovascular and cardiorespiratory health, as well as reducing the likelihood of some cancers.”</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체계적 문헌고찰과 대규모 연구를 보면 걸음 수가 늘수록 이득이 줄어드는 수확 체감이 나타난다</b>
+          <q>““But when we look into it with systematic reviews and large-scale studies, there start to be diminishing returns the more steps you do.””</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>앉아 지내던 상태나 2,000보에서 4,000보로 가면 개선이 크고, 8,000에서 10,000 또는 10,000에서 12,000은 이득이 훨씬 작다</b>
+          <q>“McNamara says the health improvement is huge when someone goes from a sedentary lifestyle, or 2,000 steps a day to 4,000. But going from 8,000 to 10,000 or 10,000 to 12,000 brings a much smaller benefit.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그래도 이득은 있지만 사람들이 기대하는 만큼은 아니다</b>
+          <q>““It still has some benefits, just not as many as people might expect.””</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 앉아 있으라는 뜻은 아니며 걷는 게 좋으면 원하는 만큼 걸어도 된다, 문제는 걸음 수 자체를 쫓으며 못 채우면 자책하는 것</b>
+          <q>“If you enjoy walking, McNamara says, walk for as long as you like. The problem comes when you start chasing step counts for their own sake, particularly if you punish yourself for missing them.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 앉아 있으라는 뜻이 아니다</b>
+          <q>“That’s not to say we should spend more time sitting down.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이미 걸음 수가 충분하면 가능한 선에서 걷기 일부를 더 강도 높은 운동으로 바꿔 더 큰 건강 이득을 얻도록 제안</b>
+          <q>“If you’re already clocking up plenty of daily steps, he suggests switching some walking for higher-intensity exercise, if you can, to get greater health benefits.”</q>
+          <small>post5 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>달리기, 빠른 수영, 오르막 걷기, 파워워킹처럼 숨이 차오르는 운동이 예시</b>
+          <q>““Going for a run, or swimming at pace, or walking uphill, or power walking – something that gets your breathing up. You’d be so much better doing something that’s a little bit more vigorous.””</q>
+          <small>post5 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="07ddbccd19d3">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.theguardian.com/lifeandstyle/2026/oct/19/is-it-true-that-you-need-to-take-10000-steps-a-day-to-be-healthy" target="_blank" rel="noopener">Is it true that … you need to take 10,000 steps a day to be healthy?</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261021-pm";
+  const ORIGINAL = {"6bd232635e39": {"caption": "\uc2f8\uc6c0 \ub0ac\ub2e4\ub294 \ub9d0\uc5d0 \ubcf5\ub3c4\ub97c \ub2ec\ub824\uac04 \uad50\uc7a5\uc324, \uc54c\uace0 \ubcf4\ub2c8 \uc0dd\uc77c \uae5c\uc9dd \uc774\ubca4\ud2b8\uc600\ub300.\n\n\ubbf8\uad6d \uc870\uc9c0\uc544\uc8fc Lakeview-Fort Oglethorpe \uace0\ub4f1\ud559\uad50\uc758 51\uc138 \uad50\uc7a5 \ubc14\ube44 \ub370\uc774\ube44\uc2a4\ub294 \uc0ac\ubb34\uc2e4\uc5d0 \uc788\ub2e4\uac00 \uc2dd\ub2f9\uc5d0\uc11c \uc2f8\uc6c0\uc774 \ub0ac\ub2e4\ub294 \ub9d0\uc744 \ub4e3\uace0 \uace7\uc7a5 \ub6f0\uccd0\ub098\uac14\uc5b4. \ud604\uc7a5\uc5d0\uc11c \uadf8\ub294 \uc2f8\uc6c0 \uc804\ub825\uc774 \uc788\ub294 \uac78 \uc798 \uc544\ub294 \ud559\uc0dd\uc744 \ubd99\uc7a1\uc558\ub294\ub370, \uadf8\ub0a0\uc774 \ub9c8\uce68 \ub370\uc774\ube44\uc2a4 \uad50\uc7a5\uc758 \uc0dd\uc77c\uc774\uc5c8\uace0 \ubd99\uc7a1\ud78c \ud559\uc0dd\uc774 \uc774 \uae5c\uc9dd \uc774\ubca4\ud2b8\ub97c \uc9c1\uc811 \uae30\ud68d\ud55c \uac70\uc600\uc5b4.\n\n\uc8fc\uc778\uacf5\uc740 17\uc138 \ub4dc\uc81c\uc774\ube44\uc5b8 \uc653\ud0a8\uc2a4. \ud22c\ub370\uc774(TODAY)\uc640\uc758 \uc778\ud130\ubdf0\uc5d0\uc11c \uad50\uc7a5\uc774 \uc790\uae30 \uc0b6\uc744 \uc88b\uc740 \ucabd\uc73c\ub85c \ubc14\uafd4\uc92c\ub2e4\uace0 \ub9d0\ud588\ub300. \uc608\uc804\uc5d4 \ubd88\uc548\uc815\ud558\uace0 \uc2f8\uc6c0\uc5d0 \uc798 \ud718\ub9d0\ub838\ub294\ub370, \uad50\uc7a5\uc774 \uacc1\uc5d0\uc11c \ub3c4\uc6b0\uba74\uc11c \ub2e4\ub978 \uc0ac\ub78c\uc5d0 \ub300\ud55c \uacf5\uac10\uc744 \uc54c\uac8c \ub410\ub2e4\ub294 \uac70\uc57c. \uc9c0\uae08\uc740 \uc2dc\ub97c \uc4f0\uace0 \uc791\uace1\uc744 \ud558\uace0 \uc790\ub3d9\ucc28 \uc815\ube44\uc0ac\ub97c \uafc8\uafb8\ub294 \ud559\uc0dd\uc774 \ub410\uace0, \uc878\uc5c5\uc774 \uc5bc\ub9c8 \ub0a8\uc9c0 \uc54a\uc544 \uba58\ud1a0\uc5d0\uac8c \uc78a\uc9c0 \ubabb\ud560 \uc120\ubb3c\uc744 \ud558\uace0 \uc2f6\uc5c8\ub300.\n\n\ub370\uc774\ube44\uc2a4 \uad50\uc7a5\uc740 \ud559\uc0dd\ub4e4\uc740 \uc5b4\ub978\uc774 \uc790\uae30\ud55c\ud14c \uad00\uc2ec\uc774 \uc5c6\ub294\uc9c0 \ub2e4 \uc548\ub2e4\uace0 \ub9d0\ud588\uc5b4. \uc0ac\ub791\ubc1b\uace0 \uc874\uc911\ubc1b\ub294\ub2e4\uace0 \ub290\ub07c\uc9c0 \ubabb\ud558\uba74 \ubc30\uc6b0\uc9c0 \ubabb\ud55c\ub2e4\ub294 \uac8c \uadf8\uc758 \uc0dd\uac01\uc774\ub798. \uc653\ud0a8\uc2a4\uac00 \uc2a4\uc2a4\ub85c\ub97c \u0027\ub098\uc05c \uc544\uc774\u0027\ub77c\uace0 \uc5ec\ub7ec \ubc88 \ub9d0\ud574\ub3c4 \uad50\uc7a5\uc740 \uc778\uc815\ud558\uc9c0 \uc54a\uace0 \u0027\ud6cc\ub96d\ud55c \uc544\uc774\u0027\ub77c\uace0 \ubd88\ub800\ub2e4\uace0 \ud574. \uc653\ud0a8\uc2a4\ub294 \uc601\uc0c1 \ub313\uae00\uc5d0 \uad50\uc7a5\uc774 \ud63c\uc790 \ud798\uc73c\ub85c \uc790\uc2e0\uc744 \ub354 \ub098\uc740 \uc0ac\ub78c\uc73c\ub85c \ubc14\uafd4\ub1a8\ub2e4\uace0 \ub0a8\uacbc\ub300.\n\n\ucd9c\ucc98: Good News Network (TODAY \uc778\ud130\ubdf0 \uc778\uc6a9)", "hashtags": ["#\uae5c\uc9dd\uc0dd\uc77c", "#\uad50\uc7a5\uc120\uc0dd\ub2d8", "#\ud6c8\ud6c8\ud55c\uc774\uc57c\uae30", "#\uba58\ud1a0", "#\ud574\uc678\ud654\uc81c"], "slides": [["\uc2f8\uc6c0 \ub0ac\ub2e4\ub354\ub2c8", "**\uc0dd\uc77c\ud30c\ud2f0?!**"], ["\uad50\uc7a5\uc324\uc740", "\uc2f8\uc6c0 \ub9d0\ub9ac\ub7ec", "\ubcf5\ub3c4\ub97c **\uc9c8\uc8fc**"], ["\ubd99\uc7a1\uc740 \ud559\uc0dd\uc774", "\ubab0\ub798 \uc900\ube44\ud55c", "**\uae5c\uc9dd** \uc8fc\uc778\uacf5"], ["\uadf8 \ud559\uc0dd, \ud55c\ub54c", "**\uc2f8\uc6c0**\uc774 \uc7a6\ub358", "\uc544\uc774\uc600\ub300"], ["\uad50\uc7a5\uc324 \ub9cc\ub098", "\uc2dc \uc4f0\uace0", "**\uc791\uace1**\ud558\ub294 \ud559\uc0dd"], ["\uad50\uc7a5\uc324 \ub9d0\uc740", "\uc0ac\ub791\u00b7\uc874\uc911 \uc5c6\uc778", "**\ubc30\uc6c0\ub3c4 \uc5c6\ub2e4**"], ["\uc778\uc0dd \ubc14\uafd4\uc900", "**\uc120\uc0dd\ub2d8** \uc788\ub294", "\uce5c\uad6c \ud0dc\uadf8"]]}};
+  const TOTAL = 1;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

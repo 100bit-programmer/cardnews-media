@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.31 요청 소재</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.31 요청 소재 검수</span> <span id="progress">0 / 1 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-197e2dc1b383" data-jump="197e2dc1b383">1</a>
+      
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-197e2dc1b383" data-id="197e2dc1b383">
+    <div class="head">
+      <h2>1. 스쿼트 쪼개기 vs 몰아서 하기 연구</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+    <section class="thr">
+      <div class="thr-head"><b>💬 스레드 원글에 달 댓글</b><span class="chip hot">스레드에서 터진 글로 만든 카드</span></div>
+      <p class="thr-note">승인하고 인스타에 이 카드를 올린 뒤, 원래 스레드 글("근력운동은 &#39;한 번에 몰아서&#39;가 아니라 &#39;하루에 나눠서&#39;여도 된다는 연구가 나옴")에 내 계정으로 댓글을 달아요. 이 카드는 새 스레드 글을 따로 만들지 않아요.</p>
+      <div class="tp"><p class="tp-text">스쿼트 20개씩 세 번 vs 60개 한 번, 카드 6장에 핵심 숫자 45명, 8주, 주 3회만 정리해 뒀어. 저장해 두고 운동 미룰 때 꺼내 봐. 👉 instagram.com/oesin_saebyeok</p><button class="cp reply" type="button">댓글 문구 복사</button></div>
+    </section>
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-01.jpg" alt="1장: 스쿼트 60개를 쪼개도 된다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-02.jpg" alt="2장: 8주 뒤 측정했더니 차이가 없었대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-03.jpg" alt="3장: 달랐던 건 딱 하나 재미였음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-04.jpg" alt="4장: 20개씩 3번 vs 60개 한 번에" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-05.jpg" alt="5장: 대상은 꽤 한정적 아직 초기 결과" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-06.jpg" alt="6장: 저장용 핵심 정리" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-07.jpg" alt="7장: 운동할 시간 없다는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261031-req-6ef298979553/197e2dc1b383/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">스쿼트 60개를 한 번에 몰아서 하든, 20개씩 세 번 나눠서 하든 8주 뒤 근력 차이는 유의미하지 않았다는 연구가 나왔다.
+
+중국 Tongji University 연구팀이 평소 웨이트를 꾸준히 하던 18~25세 남학생 45명을 대상으로 8주간 스쿼트 프로그램을 진행했다. 참가자들은 주 3회, 1분짜리 세션 세 번에 각각 20회를 하거나 60회를 이어서 했다. 스미스 머신에서 전문가 감독 아래 진행했고, 무게는 개인별로 점점 늘렸다.
+
+결과적으로 상대적 근지구력과 근력 모두 두 방식 사이에 유의미한 차이가 없었다. 전통적인 방식이 수치상 더 크게 늘긴 했지만 통계적으로 유의미하지 않았다. 두 운동 그룹은 모두 운동하지 않은 대조군보다 향상됐다. 달랐던 건 재미였다. 하루 중에 나눠서 한 쪽이 더 재미있었다고 답했다.
+
+연구진은 같은 운동량을 짧게 나누면 부담이 줄고 일상에 끼워 넣기 쉬워질 수 있다고 추정했다. 다만 규모가 작은 연구라 더 긴 기간, 더 다양한 집단에서의 추가 연구가 필요하다. 시간이 빠듯한 사람에게는 실용적인 대안이 될 수 있다는 예비 결과다.
+
+출처: ScienceAlert, Journal of Exercise Science &amp; Fitness</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#근력운동 #스쿼트 #운동루틴 #홈트레이닝 #운동과학</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 카드와 캡션의 출처 표기인 ScienceAlert 매체명은 claims 목록에 없는 사실 주장이다.</li>
+          <li>표본이 45명으로 작고 평소 웨이트를 하던 18~25세 남학생에 한정된 연구라 일반화하기 어려움</li><li>예비 결과이며 연구진도 추가 연구가 필요하다고 밝힘</li><li>전통적 방식이 수치상 더 크게 늘었지만 통계적으로 유의미하지 않았음 - &#39;똑같다&#39;가 아니라 &#39;유의미한 차이 없음&#39;으로 읽혀야 함</li><li>스레드 본글의 &#39;근력 차이 유의미하지 않음&#39; 표현을 그대로 유지하고 효과 동등으로 단정하지 않을 것</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-197e2dc1b383-0">1장</label>
+          <textarea id="s-197e2dc1b383-0" rows="6" data-slide="0">스쿼트 60개를
+**쪼개도** 된다고???
+---
+중국 연구팀이 스쿼트 60회를 한 번에 한 쪽과 20회씩 세 번 나눠 한 쪽을 8주간 비교했더니 근력 차이가 유의미하지 않았다.</textarea>
+          
+          <label class="f" for="s-197e2dc1b383-1">2장</label>
+          <textarea id="s-197e2dc1b383-1" rows="6" data-slide="1">8주 뒤 측정했더니
+차이가 **없었대**
+---
+8주가 끝난 시점에 상대적 근지구력과 근력을 비교했는데, 쪼갠 훈련과 전통적인 훈련 사이에 유의미한 차이는 없었다. 두 운동 그룹 모두 운동하지 않은 대조군보다는 향상됐다.</textarea>
+          
+          <label class="f" for="s-197e2dc1b383-2">3장</label>
+          <textarea id="s-197e2dc1b383-2" rows="6" data-slide="2">달랐던 건 딱 하나
+**재미**였음
+---
+유일한 차이는 즐거움이었다. 하루 중에 스쿼트를 나눠 한 참가자들이 한 번에 몰아서 한 참가자들보다 더 재미있었다고 답했다. 연구진은 운동 부담이 줄 수 있다고 추정했다.</textarea>
+          
+          <label class="f" for="s-197e2dc1b383-3">4장</label>
+          <textarea id="s-197e2dc1b383-3" rows="6" data-slide="3">**20개씩** 3번 vs
+60개 한 번에
+---
+참가자들은 주 3회, 8주 동안 스미스 머신으로 전문가 감독 아래 스쿼트를 했다. 한 그룹은 1분짜리 세션 세 번에 각 20회, 다른 그룹은 60회를 이어서 했고 무게는 점점 늘렸다.</textarea>
+          
+          <label class="f" for="s-197e2dc1b383-4">5장</label>
+          <textarea id="s-197e2dc1b383-4" rows="6" data-slide="4">대상은 꽤 **한정적**
+아직 초기 결과
+---
+대상은 평소 웨이트를 꾸준히 하던 18~25세 남학생 45명이었다. 연구진은 더 긴 기간과 더 다양한 집단에서 추가 연구가 필요하다고 밝혔다. 시간이 빠듯한 사람에게 실용적인 대안일 수 있다는 예비 결과다.</textarea>
+          
+          <label class="f" for="s-197e2dc1b383-5">6장</label>
+          <textarea id="s-197e2dc1b383-5" rows="5" data-slide="5">**저장용** 핵심 정리
+---
+핵심 숫자는 45명, 8주, 주 3회, 그리고 20회씩 세 번 대 60회 한 번이다. 근력과 근지구력 차이는 유의미하지 않았고, 재미는 쪼갠 쪽이 더 높았다.</textarea>
+          
+          <label class="f" for="s-197e2dc1b383-6">7장</label>
+          <textarea id="s-197e2dc1b383-6" rows="6" data-slide="6">운동할 시간 없다는
+**친구한테** 보내기
+---
+8주 연구에서 쪼개서 해도 근력 차이가 유의미하지 않았고 더 재미있었다고 하니, 시간 없다고 미루는 친구라면 반가워할 소식</textarea>
+          
+          <label class="f" for="c-197e2dc1b383">본문 (캡션)</label>
+          <textarea id="c-197e2dc1b383" class="caption">스쿼트 60개를 한 번에 몰아서 하든, 20개씩 세 번 나눠서 하든 8주 뒤 근력 차이는 유의미하지 않았다는 연구가 나왔다.
+
+중국 Tongji University 연구팀이 평소 웨이트를 꾸준히 하던 18~25세 남학생 45명을 대상으로 8주간 스쿼트 프로그램을 진행했다. 참가자들은 주 3회, 1분짜리 세션 세 번에 각각 20회를 하거나 60회를 이어서 했다. 스미스 머신에서 전문가 감독 아래 진행했고, 무게는 개인별로 점점 늘렸다.
+
+결과적으로 상대적 근지구력과 근력 모두 두 방식 사이에 유의미한 차이가 없었다. 전통적인 방식이 수치상 더 크게 늘긴 했지만 통계적으로 유의미하지 않았다. 두 운동 그룹은 모두 운동하지 않은 대조군보다 향상됐다. 달랐던 건 재미였다. 하루 중에 나눠서 한 쪽이 더 재미있었다고 답했다.
+
+연구진은 같은 운동량을 짧게 나누면 부담이 줄고 일상에 끼워 넣기 쉬워질 수 있다고 추정했다. 다만 규모가 작은 연구라 더 긴 기간, 더 다양한 집단에서의 추가 연구가 필요하다. 시간이 빠듯한 사람에게는 실용적인 대안이 될 수 있다는 예비 결과다.
+
+출처: ScienceAlert, Journal of Exercise Science &amp; Fitness</textarea>
+          <label class="f" for="t-197e2dc1b383">해시태그</label>
+          <input id="t-197e2dc1b383" type="text" class="tagsin" value="#근력운동 #스쿼트 #운동루틴 #홈트레이닝 #운동과학" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>중국 연구팀이 스쿼트 60회 한 번 대 20회씩 세 번을 비교했고 연구 결과가 학술지에 실렸다</b>
+            <q>“The research was led by scientists at Tongji University in China, and the results have been published in the Journal of Exercise Science &amp; Fitness.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>참가자들은 주 3회, 1분짜리 세션 세 번에 각 20회 또는 60회 연속 스쿼트를 했다</b>
+            <q>“Three times a week, participants either completed three 1-minute bouts of resistance training, each including just 20 weighted squats, or a single continuous session of 60 weighted squats.”</q>
+            <small>slide1, slide4, slide6, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스미스 머신에서 전문가 감독 아래 스쿼트를 했고 무게는 두 달에 걸쳐 점점 늘었다</b>
+            <q>“The squats were performed using a Smith machine under expert supervision, and the weight squatted became progressively heavier for each individual over the course of two months.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>쪼갠 훈련과 전통적 훈련 사이에 상대적 근지구력과 근력의 유의미한 차이가 없었다</b>
+            <q>“By the end of the trial, researchers found no significant differences between the fragmented resistance training and traditional training in terms of relative muscular endurance or strength.”</q>
+            <small>slide1, slide2, slide6, slide7, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 운동 그룹 모두 대조군보다 근력과 근지구력이 향상됐다</b>
+            <q>“In the end, muscular strength, isometric squat force, and relative muscular endurance improved in both exercise cohorts compared to the control group.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전통적 훈련이 수치상 더 큰 향상을 보였지만 통계적으로 유의미하지 않았다</b>
+            <q>“Even though traditional training yielded greater gains in strength and endurance than exercise snacking, the differences were not statistically significant.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유일한 차이는 즐거움이었다</b>
+            <q>“The only difference was enjoyment.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스쿼트를 나눠 한 참가자들이 한 번에 한 참가자들보다 더 재미있었다고 답했다</b>
+            <q>“Participants who &#39;snacked&#39; on their squats throughout the day reported having more fun than those who completed one big squatting session.”</q>
+            <small>slide3, slide6, slide7, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 같은 운동량을 짧게 나누면 부담이 줄고 일상에 끼워 넣기 쉬워질 수 있다고 추정했다</b>
+            <q>“&#34;Dividing the same training volume into several brief sessions may reduce the perceived burden associated with prolonged exercise while allowing individuals greater flexibility to integrate exercise into their daily schedules,&#34; the study authors hypothesize.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>대상은 평소 웨이트를 꾸준히 하던 18~25세 남학생 45명이었고 8주 프로그램이었다</b>
+            <q>“In the experiment, 45 young male students aged 18 to 25 who already lifted weights regularly took part in an eight-week squatting program.”</q>
+            <small>slide5, slide6, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>더 긴 기간과 더 다양한 집단에서 추가 연구가 필요하다</b>
+            <q>“Further research is now needed to investigate how these exercises compare over longer training periods and across more diverse cohorts.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>예비 결과상 쪼갠 운동은 시간이 부족한 사람에게 실용적인 대안이 될 수 있다</b>
+            <q>“According to these preliminary results, however, fragmented exercise could be a practical alternative for people who are time-constrained.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구 규모가 작은 연구다</b>
+            <q>“A small new study has now found that bite-sized &#39;snacks&#39; of physical activity throughout the day can build comparable strength to one big workout.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">Exercise &#39;Snacking&#39; Can Build Similar Strength to One Big Training Session, Study Finds</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/squat-snacking-can-build-similar-strength-to-one-big-training-session-study-finds" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/10/GettyImages-2229891038-2560x1440-1.jpg"</li><li>2장: <a href="https://pixabay.com/photos/physiotherapy-weight-training-595529/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "gym weights"</li><li>3장: <a href="https://pixabay.com/photos/time-chronometer-chronograph-7683809/" target="_blank" rel="noopener">Bru-nO / Pixabay</a> — "stopwatch"</li><li>4장: <a href="https://pixabay.com/photos/jogging-run-sport-jog-sporty-race-2343558/" target="_blank" rel="noopener">kinkate / Pixabay</a> — "fitness training"</li><li>5장: <a href="https://pixabay.com/photos/people-students-university-campus-6027028/" target="_blank" rel="noopener">naassomz1 / Pixabay</a> — "university campus"</li><li>6장: <a href="https://pixabay.com/photos/checklist-goals-box-notebook-pen-2589418/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "notebook checklist"</li><li>7장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261031-req";
+  const ORIGINAL = {"197e2dc1b383": {"caption": "\uc2a4\ucffc\ud2b8 60\uac1c\ub97c \ud55c \ubc88\uc5d0 \ubab0\uc544\uc11c \ud558\ub4e0, 20\uac1c\uc529 \uc138 \ubc88 \ub098\ub220\uc11c \ud558\ub4e0 8\uc8fc \ub4a4 \uadfc\ub825 \ucc28\uc774\ub294 \uc720\uc758\ubbf8\ud558\uc9c0 \uc54a\uc558\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4.\n\n\uc911\uad6d Tongji University \uc5f0\uad6c\ud300\uc774 \ud3c9\uc18c \uc6e8\uc774\ud2b8\ub97c \uafb8\uc900\ud788 \ud558\ub358 18~25\uc138 \ub0a8\ud559\uc0dd 45\uba85\uc744 \ub300\uc0c1\uc73c\ub85c 8\uc8fc\uac04 \uc2a4\ucffc\ud2b8 \ud504\ub85c\uadf8\ub7a8\uc744 \uc9c4\ud589\ud588\ub2e4. \ucc38\uac00\uc790\ub4e4\uc740 \uc8fc 3\ud68c, 1\ubd84\uc9dc\ub9ac \uc138\uc158 \uc138 \ubc88\uc5d0 \uac01\uac01 20\ud68c\ub97c \ud558\uac70\ub098 60\ud68c\ub97c \uc774\uc5b4\uc11c \ud588\ub2e4. \uc2a4\ubbf8\uc2a4 \uba38\uc2e0\uc5d0\uc11c \uc804\ubb38\uac00 \uac10\ub3c5 \uc544\ub798 \uc9c4\ud589\ud588\uace0, \ubb34\uac8c\ub294 \uac1c\uc778\ubcc4\ub85c \uc810\uc810 \ub298\ub838\ub2e4.\n\n\uacb0\uacfc\uc801\uc73c\ub85c \uc0c1\ub300\uc801 \uadfc\uc9c0\uad6c\ub825\uacfc \uadfc\ub825 \ubaa8\ub450 \ub450 \ubc29\uc2dd \uc0ac\uc774\uc5d0 \uc720\uc758\ubbf8\ud55c \ucc28\uc774\uac00 \uc5c6\uc5c8\ub2e4. \uc804\ud1b5\uc801\uc778 \ubc29\uc2dd\uc774 \uc218\uce58\uc0c1 \ub354 \ud06c\uac8c \ub298\uae34 \ud588\uc9c0\ub9cc \ud1b5\uacc4\uc801\uc73c\ub85c \uc720\uc758\ubbf8\ud558\uc9c0 \uc54a\uc558\ub2e4. \ub450 \uc6b4\ub3d9 \uadf8\ub8f9\uc740 \ubaa8\ub450 \uc6b4\ub3d9\ud558\uc9c0 \uc54a\uc740 \ub300\uc870\uad70\ubcf4\ub2e4 \ud5a5\uc0c1\ub410\ub2e4. \ub2ec\ub790\ub358 \uac74 \uc7ac\ubbf8\uc600\ub2e4. \ud558\ub8e8 \uc911\uc5d0 \ub098\ub220\uc11c \ud55c \ucabd\uc774 \ub354 \uc7ac\ubbf8\uc788\uc5c8\ub2e4\uace0 \ub2f5\ud588\ub2e4.\n\n\uc5f0\uad6c\uc9c4\uc740 \uac19\uc740 \uc6b4\ub3d9\ub7c9\uc744 \uc9e7\uac8c \ub098\ub204\uba74 \ubd80\ub2f4\uc774 \uc904\uace0 \uc77c\uc0c1\uc5d0 \ub07c\uc6cc \ub123\uae30 \uc26c\uc6cc\uc9c8 \uc218 \uc788\ub2e4\uace0 \ucd94\uc815\ud588\ub2e4. \ub2e4\ub9cc \uaddc\ubaa8\uac00 \uc791\uc740 \uc5f0\uad6c\ub77c \ub354 \uae34 \uae30\uac04, \ub354 \ub2e4\uc591\ud55c \uc9d1\ub2e8\uc5d0\uc11c\uc758 \ucd94\uac00 \uc5f0\uad6c\uac00 \ud544\uc694\ud558\ub2e4. \uc2dc\uac04\uc774 \ube60\ub4ef\ud55c \uc0ac\ub78c\uc5d0\uac8c\ub294 \uc2e4\uc6a9\uc801\uc778 \ub300\uc548\uc774 \ub420 \uc218 \uc788\ub2e4\ub294 \uc608\ube44 \uacb0\uacfc\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert, Journal of Exercise Science \u0026 Fitness", "hashtags": ["#\uadfc\ub825\uc6b4\ub3d9", "#\uc2a4\ucffc\ud2b8", "#\uc6b4\ub3d9\ub8e8\ud2f4", "#\ud648\ud2b8\ub808\uc774\ub2dd", "#\uc6b4\ub3d9\uacfc\ud559"], "slides": [["\uc2a4\ucffc\ud2b8 60\uac1c\ub97c", "**\ucabc\uac1c\ub3c4** \ub41c\ub2e4\uace0???", "---", "\uc911\uad6d \uc5f0\uad6c\ud300\uc774 \uc2a4\ucffc\ud2b8 60\ud68c\ub97c \ud55c \ubc88\uc5d0 \ud55c \ucabd\uacfc 20\ud68c\uc529 \uc138 \ubc88 \ub098\ub220 \ud55c \ucabd\uc744 8\uc8fc\uac04 \ube44\uad50\ud588\ub354\ub2c8 \uadfc\ub825 \ucc28\uc774\uac00 \uc720\uc758\ubbf8\ud558\uc9c0 \uc54a\uc558\ub2e4."], ["8\uc8fc \ub4a4 \uce21\uc815\ud588\ub354\ub2c8", "\ucc28\uc774\uac00 **\uc5c6\uc5c8\ub300**", "---", "8\uc8fc\uac00 \ub05d\ub09c \uc2dc\uc810\uc5d0 \uc0c1\ub300\uc801 \uadfc\uc9c0\uad6c\ub825\uacfc \uadfc\ub825\uc744 \ube44\uad50\ud588\ub294\ub370, \ucabc\uac20 \ud6c8\ub828\uacfc \uc804\ud1b5\uc801\uc778 \ud6c8\ub828 \uc0ac\uc774\uc5d0 \uc720\uc758\ubbf8\ud55c \ucc28\uc774\ub294 \uc5c6\uc5c8\ub2e4. \ub450 \uc6b4\ub3d9 \uadf8\ub8f9 \ubaa8\ub450 \uc6b4\ub3d9\ud558\uc9c0 \uc54a\uc740 \ub300\uc870\uad70\ubcf4\ub2e4\ub294 \ud5a5\uc0c1\ub410\ub2e4."], ["\ub2ec\ub790\ub358 \uac74 \ub531 \ud558\ub098", "**\uc7ac\ubbf8**\uc600\uc74c", "---", "\uc720\uc77c\ud55c \ucc28\uc774\ub294 \uc990\uac70\uc6c0\uc774\uc5c8\ub2e4. \ud558\ub8e8 \uc911\uc5d0 \uc2a4\ucffc\ud2b8\ub97c \ub098\ub220 \ud55c \ucc38\uac00\uc790\ub4e4\uc774 \ud55c \ubc88\uc5d0 \ubab0\uc544\uc11c \ud55c \ucc38\uac00\uc790\ub4e4\ubcf4\ub2e4 \ub354 \uc7ac\ubbf8\uc788\uc5c8\ub2e4\uace0 \ub2f5\ud588\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uc6b4\ub3d9 \ubd80\ub2f4\uc774 \uc904 \uc218 \uc788\ub2e4\uace0 \ucd94\uc815\ud588\ub2e4."], ["**20\uac1c\uc529** 3\ubc88 vs", "60\uac1c \ud55c \ubc88\uc5d0", "---", "\ucc38\uac00\uc790\ub4e4\uc740 \uc8fc 3\ud68c, 8\uc8fc \ub3d9\uc548 \uc2a4\ubbf8\uc2a4 \uba38\uc2e0\uc73c\ub85c \uc804\ubb38\uac00 \uac10\ub3c5 \uc544\ub798 \uc2a4\ucffc\ud2b8\ub97c \ud588\ub2e4. \ud55c \uadf8\ub8f9\uc740 1\ubd84\uc9dc\ub9ac \uc138\uc158 \uc138 \ubc88\uc5d0 \uac01 20\ud68c, \ub2e4\ub978 \uadf8\ub8f9\uc740 60\ud68c\ub97c \uc774\uc5b4\uc11c \ud588\uace0 \ubb34\uac8c\ub294 \uc810\uc810 \ub298\ub838\ub2e4."], ["\ub300\uc0c1\uc740 \uaf64 **\ud55c\uc815\uc801**", "\uc544\uc9c1 \ucd08\uae30 \uacb0\uacfc", "---", "\ub300\uc0c1\uc740 \ud3c9\uc18c \uc6e8\uc774\ud2b8\ub97c \uafb8\uc900\ud788 \ud558\ub358 18~25\uc138 \ub0a8\ud559\uc0dd 45\uba85\uc774\uc5c8\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \ub354 \uae34 \uae30\uac04\uacfc \ub354 \ub2e4\uc591\ud55c \uc9d1\ub2e8\uc5d0\uc11c \ucd94\uac00 \uc5f0\uad6c\uac00 \ud544\uc694\ud558\ub2e4\uace0 \ubc1d\ud614\ub2e4. \uc2dc\uac04\uc774 \ube60\ub4ef\ud55c \uc0ac\ub78c\uc5d0\uac8c \uc2e4\uc6a9\uc801\uc778 \ub300\uc548\uc77c \uc218 \uc788\ub2e4\ub294 \uc608\ube44 \uacb0\uacfc\ub2e4."], ["**\uc800\uc7a5\uc6a9** \ud575\uc2ec \uc815\ub9ac", "---", "\ud575\uc2ec \uc22b\uc790\ub294 45\uba85, 8\uc8fc, \uc8fc 3\ud68c, \uadf8\ub9ac\uace0 20\ud68c\uc529 \uc138 \ubc88 \ub300 60\ud68c \ud55c \ubc88\uc774\ub2e4. \uadfc\ub825\uacfc \uadfc\uc9c0\uad6c\ub825 \ucc28\uc774\ub294 \uc720\uc758\ubbf8\ud558\uc9c0 \uc54a\uc558\uace0, \uc7ac\ubbf8\ub294 \ucabc\uac20 \ucabd\uc774 \ub354 \ub192\uc558\ub2e4."], ["\uc6b4\ub3d9\ud560 \uc2dc\uac04 \uc5c6\ub2e4\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "8\uc8fc \uc5f0\uad6c\uc5d0\uc11c \ucabc\uac1c\uc11c \ud574\ub3c4 \uadfc\ub825 \ucc28\uc774\uac00 \uc720\uc758\ubbf8\ud558\uc9c0 \uc54a\uc558\uace0 \ub354 \uc7ac\ubbf8\uc788\uc5c8\ub2e4\uace0 \ud558\ub2c8, \uc2dc\uac04 \uc5c6\ub2e4\uace0 \ubbf8\ub8e8\ub294 \uce5c\uad6c\ub77c\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 1;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

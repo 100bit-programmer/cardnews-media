@@ -1,0 +1,2072 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.30 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.30 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-c441d3025b9e" data-jump="c441d3025b9e">1</a><a href="#post-e0b37817487f" data-jump="e0b37817487f">2</a><a href="#post-bd8c9a5a2e1a" data-jump="bd8c9a5a2e1a">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-c441d3025b9e" data-id="c441d3025b9e">
+    <div class="head">
+      <h2>1. 포터가이스트 촬영지 집을 산 사람, 팬들에게 문을 열다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 19
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/2 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>영화 포터가이스트에서 프리링 가족의 집으로 쓰인 주택에 지금 실제로 사람이 산다. 집을 산 사람은 세 딸과 함께 살 새 집을 찾던 중 이 집의 매물 소식을 들었고, 여러 건의 제안 속에서 자신의 제안이 받아들여졌다. 집을 판 사람은 영화에 나왔을 때의 주인과 같았고, 안에는 꿀색 레트로 가구가 그대로 남아 있었다고 한다. 집이 팔리자 언론의 관심이 쏟아졌고 전 세계 팬들이 영화 추억을 담은 이메일을 보내왔다. 이를 계기로 일부 팬이 집을 방문하거나 하룻밤 묵을 수 있게 했다. 영화 세트를 재현하지는 않았지만 켜면 잡음만 나오는 TV와 비디오테이프를 두었고, 팬들이 직접 찾아낸 소품이 더해지기도 했다. 일부 손님은 깜빡이는 불빛을 봤거나 유선전화 수화기에서 이상한 목소리를 들었다고 전했는데, 집에 오래된 구리 전화선이 있어 평범한 설명이 있을 것이라고 집주인은 말한다. 영화에서 살아나던 나무는 촬영 뒤 치워졌고, 해골이 가득한 진흙 구덩이 자리에는 지금 수영장이 있다. 최근에는 예약을 받지 않고 있지만 로비 역 배우 올리버 로빈스는 몇 번 들렀다. 출처: 가디언(The Guardian)
+
+배경 사진: JillWellington / Pixabay
+사진: U.S. Air Force photo by Senior Master Sg / Wikimedia Commons, Public domain (편집)
+표지 이미지: The Guardian
+3장 이미지: Matador Network
+4장 이미지: Matador Network
+5장 이미지: Bloody Disgusting
+7장 이미지: Mental Floss
+
+#포터가이스트 #영화촬영지 #핼러윈 #해외토픽 #호러영화</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-c441d3025b9e">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 호러 영화 속 그 집에 지금 진짜 가족이 살고, 팬들이 하룻밤 묵을 수 있었다는 대비</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 지난 핼러윈에 올리버 로빈스가 영화 속처럼 빨간 잠옷을 입고 와 집 앞에서 함께 사탕을 나눠 준 일 (카드 6장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">영화 포터가이스트 속 그 집, 지금 세 딸이 사는 진짜 집이래
+그것도 팬들이 하룻밤 묵을 수 있게 열어줬다는데
+손님 중엔 깜빡이는 불빛을 봤다는 사람도 있었음. 집주인 설명은 꽤 현실적이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">1/ 포터가이스트에서 프리링 가족의 집으로 쓰인 주택이 팔렸고, 새 주인은 세 딸과 지금 거기서 살고 있음. 제일 센 건 팬들이 하룻밤 묵을 수 있게 문을 열었다는 거. 왜 열었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">2/ 집이 팔리자 언론 관심이 쏟아졌고, 전 세계 팬들이 영화 추억을 담은 이메일을 보내왔대. 이걸 계기로 일부 팬이 집을 찾아오거나 하룻밤 묵을 수 있게 했음. 그럼 집 안은 어떨까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">3/ 집을 판 사람은 영화에 나왔을 때의 주인과 같은 사람들이었고, 안엔 꿀색 레트로 가구가 그대로 있었대. 새 주인은 처음 들어서는 순간 80년대로 돌아간 느낌이었다고 함. 그럼 영화 세트까지 재현했을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">4/ 영화 세트를 재현하려던 건 아닌데, 켜면 잡음만 나오는 TV는 뒀대. 손님이 볼 수 있게 직접 가진 포터가이스트 비디오테이프도 준비했고, 팬들이 찾아낸 소품이 더해지기도 했음. 그럼 손님들은 여기서 뭘 겪었을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">5/ 일부 손님은 깜빡이는 불빛을 봤거나 유선전화 수화기에서 이상한 목소리를 들었다고 전했대. 근데 집주인은 집에 오래된 구리 전화선이 있어서 평범한 설명이 있을 거라고 말함. 그럼 지금까지 나온 걸 한 번 모아보면?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">191/500자</span></div>
+      <p class="tp-text">6/ 요약 정리
+- 영화 속 프리링 가족 집, 지금은 새 주인과 세 딸이 사는 집
+- 집을 판 사람은 영화에 나왔을 때의 주인과 같은 사람들
+- 집 안엔 꿀색 레트로 가구가 그대로
+- 팬들 방문과 하룻밤 숙박 허용 (최근엔 예약을 안 받는 중)
+- 잡음 TV와 비디오테이프는 있지만 세트 재현은 아님
+- 로비 역 올리버 로빈스도 몇 번 들렀음</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">230/500자</span></div>
+      <p class="tp-text">7/ 결국 영화 속 그 집은 지금 세 딸이 사는 진짜 집이고, 팬들한테 하룻밤을 열어준 적도 있다는 얘기야.
+너라면 포터가이스트 집에서 하룻밤 잘 수 있어? 잔다 vs 절대 못 잔다
+이런 해외토픽, 밤사이 터진 소식 새벽에 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 올리버 로빈스가 집에 왔던 날 얘기까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>포터가이스트 그 집, 지금 세 딸이 사는 진짜 집이래</li><li>영화 속 그 집이 세트장이 아니라 누군가의 집이 됐음. 팬들은 하룻밤 잘 수도 있었대</li><li>호러 영화 좋아하는 친구한테 보내야 할 소식. 포터가이스트 집에서 하룻밤 잘 수 있었대</li><li>80년대로 돌아간 느낌이었다는 새 주인. 포터가이스트 촬영지 얘기야</li><li>포터가이스트 집을 산 사람이 전 세계 팬들한테 문을 열어버림</li><li>켜면 지지직 소리만 나는 TV가 놓인 집에서 하룻밤 자는 팬들이 있었대</li><li>포터가이스트 집에서 묵은 손님이 깜빡이는 불빛을 봤다는데, 집주인 설명은 꽤 현실적이었음</li><li>세트장이 아니라 진짜 사람 사는 집이야. 포터가이스트 그 집 근황</li><li>포터가이스트 집이 팔린 뒤 전 세계 팬들이 이메일을 보내왔대</li><li>영화에서 로비를 연기한 배우가 그 집에 몇 번 들렀대. 포터가이스트 집 근황</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>포터가이스트 집에서 하룻밤 잘 수 있어? 잔다 vs 절대 못 잔다</li><li>지지직 소리만 나는 TV 켜진 방에서 잘 수 있다 vs 절대 못 잔다?</li><li>호러 영화 촬영지 중에 가보고 싶은 데 있어?</li><li>포터가이스트 본 사람?</li><li>이 소식 같이 보낼 호러 영화 덕후 친구 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>영화 촬영지가 지금 어떻게 쓰이는지 보여주는 다른 해외 사례</li><li>호러 영화 팬들이 모이는 해외 숙박·체험 소식</li><li>영화 배우가 촬영지를 다시 찾은 해외 소식</li><li>에반게리온 x 하드록 카페 콜라보 굿즈</li><li>해왕성 너머 왜소행성 후보 2026 ED138 발견</li></ol>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-01.jpg" alt="1장: 포터가이스트 집 진짜 샀다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-02.jpg" alt="2장: 몇 주 뒤 진짜 매물로 나옴" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-03.jpg" alt="3장: 들어가 보니 80년대 그대로" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-04.jpg" alt="4장: 팬들한테 하룻밤 열어줌" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-05.jpg" alt="5장: 지지직 TV와 비디오테이프" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-06.jpg" alt="6장: 로비 역 배우도 다녀감" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-07.jpg" alt="7장: 포터가이스트 팬 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/c441d3025b9e/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">영화 포터가이스트에서 프리링 가족의 집으로 쓰인 주택에 지금 실제로 사람이 산다. 집을 산 사람은 세 딸과 함께 살 새 집을 찾던 중 이 집의 매물 소식을 들었고, 여러 건의 제안 속에서 자신의 제안이 받아들여졌다. 집을 판 사람은 영화에 나왔을 때의 주인과 같았고, 안에는 꿀색 레트로 가구가 그대로 남아 있었다고 한다. 집이 팔리자 언론의 관심이 쏟아졌고 전 세계 팬들이 영화 추억을 담은 이메일을 보내왔다. 이를 계기로 일부 팬이 집을 방문하거나 하룻밤 묵을 수 있게 했다. 영화 세트를 재현하지는 않았지만 켜면 잡음만 나오는 TV와 비디오테이프를 두었고, 팬들이 직접 찾아낸 소품이 더해지기도 했다. 일부 손님은 깜빡이는 불빛을 봤거나 유선전화 수화기에서 이상한 목소리를 들었다고 전했는데, 집에 오래된 구리 전화선이 있어 평범한 설명이 있을 것이라고 집주인은 말한다. 영화에서 살아나던 나무는 촬영 뒤 치워졌고, 해골이 가득한 진흙 구덩이 자리에는 지금 수영장이 있다. 최근에는 예약을 받지 않고 있지만 로비 역 배우 올리버 로빈스는 몇 번 들렀다. 출처: 가디언(The Guardian)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#포터가이스트 #영화촬영지 #핼러윈 #해외토픽 #호러영화</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 새 주인이 세 딸과 함께 현재 그 집에서 살고 있다는 주장</li><li>근거 등록 안 된 주장: 출처는 가디언(The Guardian)이라는 주장</li>
+          <li>단일 출처(가디언 1인칭 체험담)에 기반해 집주인 본인의 진술에 의존함</li><li>영화 스틸컷·포스터 등 저작권 있는 이미지는 사용 금지</li><li>깜빡이는 불빛·이상한 목소리는 손님이 전한 이야기일 뿐 확인된 사실 아님</li><li>글쓴이는 최근 예약을 받지 않았다고 밝혀, 지금도 숙박이 가능한 것처럼 읽히지 않게 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-c441d3025b9e-0">1장</label>
+          <textarea id="s-c441d3025b9e-0" rows="6" data-slide="0">포터가이스트 집
+진짜 **샀다???**
+---
+영화 포터가이스트에서 프리링 가족의 집으로 쓰인 주택이 팔렸고, 새 주인은 세 딸과 함께 그 집에서 살고 있다.</textarea>
+          
+          <label class="f" for="s-c441d3025b9e-1">2장</label>
+          <textarea id="s-c441d3025b9e-1" rows="6" data-slide="1">몇 주 뒤
+진짜 **매물로** 나옴
+---
+글쓴이는 영화 속 집과 멀지 않은 시미밸리에 사는 언니를 만나러 갈 때마다 그 집 앞을 지났다. 곧 팔릴 것 같다는 직감이 든 지 몇 주 뒤, 언니가 매물 소식을 전했다.</textarea>
+          
+          <label class="f" for="s-c441d3025b9e-2">3장</label>
+          <textarea id="s-c441d3025b9e-2" rows="6" data-slide="2">들어가 보니
+**80년대** 그대로
+---
+집을 판 사람들은 영화에 이 집이 나왔을 때의 주인과 같았다. 안에는 꿀색 레트로 가구가 그대로 있어, 처음 들어선 순간 80년대로 돌아간 듯한 느낌이 들었다고 한다.</textarea>
+          
+          <label class="f" for="s-c441d3025b9e-3">4장</label>
+          <textarea id="s-c441d3025b9e-3" rows="6" data-slide="3">팬들한테
+**하룻밤** 열어줌
+---
+집이 팔리자 언론의 관심이 쏟아졌고, 전 세계 팬들이 영화 추억을 담은 이메일을 보내왔다. 그래서 일부 팬이 집을 찾아오거나 하룻밤 묵을 수 있게 하기로 했다.</textarea>
+          
+          <label class="f" for="s-c441d3025b9e-4">5장</label>
+          <textarea id="s-c441d3025b9e-4" rows="6" data-slide="4">**지지직 TV와**
+비디오테이프
+---
+영화 세트를 재현하려는 건 아니었지만, 켜면 잡음만 나오는 TV를 뒀다. 손님이 볼 수 있도록 직접 가진 포터가이스트 비디오테이프도 준비했다.</textarea>
+          
+          <label class="f" for="s-c441d3025b9e-5">6장</label>
+          <textarea id="s-c441d3025b9e-5" rows="6" data-slide="5">로비 역 배우도
+**다녀감**
+---
+영화에서 로비를 연기한 올리버 로빈스가 집에 몇 번 들렀다. 지난 핼러윈에는 영화 속처럼 빨간 잠옷을 입고 와 집 앞에서 함께 사탕을 나눠 줬다.</textarea>
+          
+          <label class="f" for="s-c441d3025b9e-6">7장</label>
+          <textarea id="s-c441d3025b9e-6" rows="6" data-slide="6">포터가이스트 팬
+**친구한테** 보내기
+---
+영화 속 그 집에 지금 사람이 살고 팬들이 하룻밤 묵기도 했다는 점에서, 호러 영화를 좋아하는 친구라면 신기해할 소식</textarea>
+          
+          <label class="f" for="c-c441d3025b9e">본문 (캡션)</label>
+          <textarea id="c-c441d3025b9e" class="caption">영화 포터가이스트에서 프리링 가족의 집으로 쓰인 주택에 지금 실제로 사람이 산다. 집을 산 사람은 세 딸과 함께 살 새 집을 찾던 중 이 집의 매물 소식을 들었고, 여러 건의 제안 속에서 자신의 제안이 받아들여졌다. 집을 판 사람은 영화에 나왔을 때의 주인과 같았고, 안에는 꿀색 레트로 가구가 그대로 남아 있었다고 한다. 집이 팔리자 언론의 관심이 쏟아졌고 전 세계 팬들이 영화 추억을 담은 이메일을 보내왔다. 이를 계기로 일부 팬이 집을 방문하거나 하룻밤 묵을 수 있게 했다. 영화 세트를 재현하지는 않았지만 켜면 잡음만 나오는 TV와 비디오테이프를 두었고, 팬들이 직접 찾아낸 소품이 더해지기도 했다. 일부 손님은 깜빡이는 불빛을 봤거나 유선전화 수화기에서 이상한 목소리를 들었다고 전했는데, 집에 오래된 구리 전화선이 있어 평범한 설명이 있을 것이라고 집주인은 말한다. 영화에서 살아나던 나무는 촬영 뒤 치워졌고, 해골이 가득한 진흙 구덩이 자리에는 지금 수영장이 있다. 최근에는 예약을 받지 않고 있지만 로비 역 배우 올리버 로빈스는 몇 번 들렀다. 출처: 가디언(The Guardian)</textarea>
+          <label class="f" for="t-c441d3025b9e">해시태그</label>
+          <input id="t-c441d3025b9e" type="text" class="tagsin" value="#포터가이스트 #영화촬영지 #핼러윈 #해외토픽 #호러영화" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포터가이스트는 1982년에 개봉했다</b>
+            <q>“I first saw Poltergeist at the movie theatre with my mom and sisters, back when it came out in 1982.”</q>
+            <small>slide1 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>글쓴이의 언니는 영화 속 프리링 가족의 집으로 쓰인 집과 멀지 않은 시미밸리에 산다</b>
+            <q>“My sister moved there, too – to Simi Valley, not far from the house used as the Freeling family’s home in the movie.”</q>
+            <small>slide2 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>글쓴이는 세 딸과 함께 살 새 집을 찾고 있었고 매물을 보러 갔다</b>
+            <q>“As it happened, I’d been looking for a new home for me and my three daughters, so I booked a viewing.”</q>
+            <small>slide1, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>글쓴이는 언니를 방문할 때 그 집 앞을 지나다녔다</b>
+            <q>“I’d drive past it when I visited her.”</q>
+            <small>slide2 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>곧 매물로 나올 것 같다는 직감이 든 지 몇 주 뒤 언니가 매물 소식을 전했다</b>
+            <q>“A couple of years ago, I had a gut instinct that it would soon go up for sale. Sure enough, just weeks later I was sitting with my sister in her back yard when she looked up from her phone and said, “Hey! The Poltergeist house went on the market!””</q>
+            <small>slide2 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>집을 판 사람은 영화에 나왔을 때의 주인과 같은 사람들이다</b>
+            <q>“The house was being sold by the same people who’d owned it when it appeared in the movie.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>집 안에 꿀색 레트로 가구가 그대로 있어 80년대로 돌아간 듯한 느낌이 들었다</b>
+            <q>“Walking in for the first time was the most bizarre experience – it still had honey-coloured retro furniture everywhere, and I got the trippy impression that I’d travelled back to the 80s.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>여러 제안 중 글쓴이의 제안이 받아들여졌다</b>
+            <q>“There were multiple offers, so when mine was accepted I was very excited.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>집 매매가 언론의 큰 관심을 끌었다</b>
+            <q>“The sale had attracted a lot of press attention, which made me realise I’d entered into a different realm of home ownership.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전 세계 팬들이 영화를 본 추억을 이메일로 보내왔다</b>
+            <q>“Families would stop and take selfies outside, and Poltergeist fans from all over the world started emailing me their memories of watching the movie.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>글쓴이는 일부 팬이 집을 방문하거나 하룻밤 묵을 수 있게 하기로 했다</b>
+            <q>“It occurred to me I could give some of them the opportunity to experience the house for themselves by allowing them to visit or rent it for an overnight stay.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영화 세트를 재현하려 하지 않았고, 일부 소품은 팬들이 찾아준 도움을 받았다</b>
+            <q>“Without attempting to recreate the movie set, I started adding playful touches for these occasional visitors, sometimes with help from fans who had found particular items seen onscreen.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>켜면 잡음만 나오는 TV를 두고 손님이 자신의 포터가이스트 비디오테이프를 볼 수 있게 했다</b>
+            <q>“I had to have a TV that played only static when switched on, as a nod to the one in the film, and ensured guests had access to my own video cassette copy of Poltergeist, along with a stack of other 80s movies.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일부 손님이 깜빡이는 불빛을 보거나 수화기에서 이상한 목소리를 들었다고 전했다</b>
+            <q>“Some guests reported seeing flickering lights, or hearing mysterious voices when they picked up the landline receiver.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>집에는 오래된 구리 전화선이 있어 평범한 설명이 있을 것이라고 글쓴이는 본다</b>
+            <q>“The house still has old copper phone lines, so there’s probably a perfectly ordinary explanation, though perhaps it’s more fun not to know.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영화에서 살아나던 나무는 촬영 뒤 치워졌고 해골 가득한 진흙 구덩이는 지금 수영장이다</b>
+            <q>“The tree that comes alive outside the bedroom window was taken away after filming, and the muddy hole full of skeletons that the mother Diane Freeling falls into is now a finished swimming pool.”</q>
+            <small>caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>최근 예약은 받지 않았지만 로비 역 배우 올리버 로빈스가 몇 번 들렀다</b>
+            <q>“We haven’t taken any recent bookings, though Oliver Robins, who played Robbie Freeling, has dropped in a couple of times.”</q>
+            <small>slide6, caption · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지난 핼러윈에 올리버 로빈스가 와서 집 앞에서 함께 사탕을 나눠 줬고 영화 속처럼 빨간 잠옷을 입었다</b>
+            <q>“Last Halloween he came and we handed out candy together in front of the house. He wore red jammies, just as he did as an eight-year-old boy in the movie.”</q>
+            <small>slide6 · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새 주인은 처음 이사 왔을 때와 달리 이 집을 평생의 집으로 생각하기 시작했다</b>
+            <q>“When we first moved in, I didn’t necessarily picture this as my for ever home, but I think that’s changing.”</q>
+            <small>summary · <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">Experience: I live in the house from the 80s horror movie Poltergeist</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.theguardian.com/lifeandstyle/2026/oct/30/experience-i-live-in-the-house-from-the-80s-horror-movie-poltergeist" target="_blank" rel="noopener">The Guardian / </a> — "https://i.guim.co.uk/img/media/6c3dcf076474b83a41ffa343627553682e8ea037/0_0_6720_4480/master/6720.jpg?width=1300&amp;dpr=2&amp;s=none&amp;crop=none"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Simi_Valley_fire_California_USA.jpg" target="_blank" rel="noopener">U.S. Air Force photo by Senior Master Sg / Wikimedia Commons · Public domain</a> — "Simi Valley"</li><li>3장: <a href="https://matadornetwork.com/read/poltergeist-house-airbnb/" target="_blank" rel="noopener">Matador Network / </a> — "https://cdn1.matadornetwork.com/blogs/1/2025/08/poltergeist-1-social.jpeg"</li><li>4장: <a href="https://matadornetwork.com/read/poltergeist-house-airbnb/" target="_blank" rel="noopener">Matador Network / </a> — "https://cdn1.matadornetwork.com/blogs/1/2025/08/poltergeist-2.jpeg"</li><li>5장: <a href="https://bloody-disgusting.com/editorials/3907809/i-stayed-in-the-house-from-poltergeist-and-heres-what-happened/" target="_blank" rel="noopener">Bloody Disgusting / </a> — "https://i0.wp.com/bloody-disgusting.com/wp-content/uploads/2025/10/1B1A1964-scaled.jpg?resize=2048%2C1366&amp;ssl=1"</li><li>6장: <a href="https://pixabay.com/photos/halloween-trick-or-treat-pumpkin-1773447/" target="_blank" rel="noopener">JillWellington / Pixabay</a> — "halloween candy"</li><li>7장: <a href="https://www.mentalfloss.com/entertainment/movies/book-stay-at-poltergeist-house" target="_blank" rel="noopener">Mental Floss / </a> — "https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_170,w_1920,h_1080/c_fill,w_1440,ar_1440:810,f_auto,q_auto,g_auto/images/voltaxMediaLibrary/mmsport/mentalfloss/01k20j97jn6d0gtk6mfs.webp"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-e0b37817487f" data-id="e0b37817487f">
+    <div class="head">
+      <h2>2. 에반게리온 x 하드록 카페 콜라보 굿즈</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/2 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>에반게리온이 하드록 카페를 만났다. 일본 하드록 카페가 애니메이션 에반게리온과 손잡고 콜라보 굿즈를 선보인다.
+
+이번 콜라보의 출발점은 하드록 카페가 에반게리온의 배경인 도쿄-3에 지점을 냈다면 어땠을까 하는 상상이다. 주인공은 초호기로, 특유의 녹색과 보라색 배색과 AT필드 육각형 무늬를 하드록 로고에 입혔다.
+
+티셔츠는 흰색, 회색, 검은색 세 가지다. 색상마다 살 수 있는 지점이 조금씩 다르다. 흰색은 롯폰기, 우에노, 교토, 오사카 유니버설 시티워크 지점에서, 회색은 롯폰기, 요코하마, 시티워크 오사카, 난바 지점에서 판매한다. 검은색은 우에노, 요코하마, 교토, 난바 지점에서 만날 수 있다. 요코스카 재킷과 모자도 나오고, 샷잔·자석·핀에는 초호기와 주요 파일럿이 들어간다.
+
+자석과 샷잔에는 구매한 도시 이름이 새겨지고, 핀은 지점마다 디자인이 다르다. 핀은 디자인별 500개 한정이며 3,080엔이다. 자석도 3,080엔, 샷잔은 1,980엔, 티셔츠는 5,940엔, 요코스카 재킷은 6만 6,000엔이다. 재고가 있는 동안 구매하면 전용 쇼핑백에 담아 준다.
+
+발매일은 11월 3일이며, 핀은 11월 초에 나올 예정이다.
+
+출처: SoraNews24
+
+배경 사진: wilkernet / Pixabay
+표지 이미지: SoraNews24 (©khara)
+2장 이미지: SoraNews24 (©khara)
+3장 이미지: SoraNews24 (©khara)
+4장 이미지: SoraNews24 (©khara)
+5장 이미지: SoraNews24 (©khara)
+
+#에반게리온 #하드록카페 #일본굿즈 #콜라보 #애니메이션</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-e0b37817487f">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 5점</span>
+      <span class="chip">주제 태그: 일본문화</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 에바 팬이라면 &#39;뭘 살까&#39;보다 &#39;어느 지점에서 살까&#39;가 중요한 콜라보라는 각도 (지점마다 다른 디자인, 디자인별 500개 한정 핀)</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 티셔츠 색상(흰색·회색·검은색)별로 살 수 있는 하드록 지점 목록 (본문 (티셔츠 설명 단락))</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">에바 굿즈는 &#39;뭘 살까&#39;가 아니라 &#39;어디서 살까&#39;부터 정해야 한대
+일본 하드록 카페가 에반게리온이랑 손잡고 초호기 굿즈를 냈는데, 같은 핀도 지점마다 디자인이 다름
+그럼 제일 비싼 굿즈는 얼마일까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">89/500자</span></div>
+      <p class="tp-text">1/ 제일 비싼 건 요코스카 재킷으로 6만 6,000엔이야. 자수 재킷이고 모자도 같이 나옴.
+그럼 지점마다 디자인이 다르다는 핀은 얼마고 몇 개나 만들었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">87/500자</span></div>
+      <p class="tp-text">2/ 핀은 3,080엔이고 디자인별로 500개만 만들어. 어디서 샀는지가 곧 수집의 재미가 되는 구조임.
+근데 이 콜라보는 대체 어떤 상상에서 시작된 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">3/ 하드록 카페가 에반게리온의 무대인 도쿄-3에 지점을 냈다면 어땠을까 하는 상상이 출발점이래. 하드록 로고에 AT필드 육각형 무늬를 입히고, 초호기 특유의 녹색과 보라색 배색을 썼음.
+그럼 굿즈별 가격은 한눈에 어떻게 될까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">201/500자</span></div>
+      <p class="tp-text">4/ 굿즈 요약 정리
+- 핀: 3,080엔 (디자인별 500개 한정, 지점마다 디자인 다름)
+- 자석: 3,080엔 (구매한 도시 이름 새김)
+- 샷잔: 1,980엔 (구매한 도시 이름 새김)
+- 티셔츠: 5,940엔 (흰색·회색·검은색)
+- 요코스카 재킷: 6만 6,000엔
+- 발매일 11월 3일, 핀은 11월 초
+그럼 이 소식 누구한테 먼저 보내야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">73/500자</span></div>
+      <p class="tp-text">5/ 에반게리온 좋아하는 친구한테 발매 전에 보내 두면, 어느 지점에서 뭘 살지 미리 정할 수 있대.
+마지막으로 하나만 정리하면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">241/500자</span></div>
+      <p class="tp-text">6/ 결국 포인트는 하나야. 핀이랑 자석, 샷잔은 어디서 사느냐에 따라 달라지니까 발매 전에 어느 지점에서 뭘 살지 정해두는 게 좋다는 거.
+에바 굿즈 딱 하나만 산다면 핀 vs 티셔츠, 어느 쪽이야?
+이런 일본 콜라보 굿즈 소식, 새벽마다 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 티셔츠 색상별로 어느 지점에서 파는지까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>에바 굿즈는 &#39;뭘 살까&#39;가 아니라 &#39;어디서 살까&#39;부터 정해야 한대</li><li>에바 팬이면 11월 3일 전에 어느 지점 갈지부터 정해두라는 소식이 나옴</li><li>핀 하나에 3,080엔인데 디자인별로 500개뿐이래</li><li>하드록 카페가 에반게리온 무대 도쿄-3에 문을 열었다면 어땠을까</li><li>같은 초호기 핀인데 사는 지점마다 디자인이 다르대</li><li>에바 굿즈 중에 제일 비싼 게 6만 6,000엔짜리 재킷이래</li><li>하드록 로고에 AT필드 육각형이 박혔음</li><li>자석이랑 샷잔엔 &#39;산 도시 이름&#39;이 새겨진다는 에바 콜라보</li><li>에바 덕후 친구 있으면 이 소식부터 보내야 함</li><li>초호기가 하드록 카페에 떴다는 소식, 굿즈 가격표까지 가져옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>에바 굿즈 딱 하나만 산다면 핀 vs 티셔츠, 어느 쪽이야?</li><li>초호기파 vs 2호기파, 너는 어느 쪽이야?</li><li>콜라보 굿즈 사려고 일부러 지점까지 가본 사람?</li><li>한정판 핀이라면 너라면 여러 지점 돌면서 모을 거야?</li><li>에바 덕후 친구 있는 사람, 이 소식 보내줄 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>에반게리온 다른 콜라보 굿즈 소식</li><li>일본 캐릭터 콜라보 카페 소식</li><li>일본 한정 굿즈 수집 문화 이야기</li><li>하드록 카페 지점별 한정 굿즈 이야기</li><li>일본 애니메이션 콜라보 상품 소식</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>콜라보 공식 이미지나 초호기 일러스트를 카드·썸네일에 쓸 경우 저작권 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/e0b37817487f/v1-01.jpg" alt="1장: 에바가 / 하드록에?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/e0b37817487f/v1-02.jpg" alt="2장: 도쿄-3에 / 하드록 지점?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/e0b37817487f/v1-03.jpg" alt="3장: 티셔츠부터 / 요코스카 재킷" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/e0b37817487f/v1-04.jpg" alt="4장: 사는 곳마다 / 다르다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/e0b37817487f/v1-05.jpg" alt="5장: 핀은 500개 / 한정판" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/e0b37817487f/v1-06.jpg" alt="6장: 에바 덕후 친구한테 이거 먼저 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/e0b37817487f/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">에반게리온이 하드록 카페를 만났다. 일본 하드록 카페가 애니메이션 에반게리온과 손잡고 콜라보 굿즈를 선보인다.
+
+이번 콜라보의 출발점은 하드록 카페가 에반게리온의 배경인 도쿄-3에 지점을 냈다면 어땠을까 하는 상상이다. 주인공은 초호기로, 특유의 녹색과 보라색 배색과 AT필드 육각형 무늬를 하드록 로고에 입혔다.
+
+티셔츠는 흰색, 회색, 검은색 세 가지다. 색상마다 살 수 있는 지점이 조금씩 다르다. 흰색은 롯폰기, 우에노, 교토, 오사카 유니버설 시티워크 지점에서, 회색은 롯폰기, 요코하마, 시티워크 오사카, 난바 지점에서 판매한다. 검은색은 우에노, 요코하마, 교토, 난바 지점에서 만날 수 있다. 요코스카 재킷과 모자도 나오고, 샷잔·자석·핀에는 초호기와 주요 파일럿이 들어간다.
+
+자석과 샷잔에는 구매한 도시 이름이 새겨지고, 핀은 지점마다 디자인이 다르다. 핀은 디자인별 500개 한정이며 3,080엔이다. 자석도 3,080엔, 샷잔은 1,980엔, 티셔츠는 5,940엔, 요코스카 재킷은 6만 6,000엔이다. 재고가 있는 동안 구매하면 전용 쇼핑백에 담아 준다.
+
+발매일은 11월 3일이며, 핀은 11월 초에 나올 예정이다.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#에반게리온 #하드록카페 #일본굿즈 #콜라보 #애니메이션</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 흰색 티셔츠는 롯폰기, 우에노, 교토, 오사카 유니버설 시티워크 지점에서 판매한다는 주장</li><li>근거 등록 안 된 주장: 검은색 티셔츠는 우에노, 요코하마, 교토, 난바 지점에서 판매한다는 주장</li><li>근거 등록 안 된 주장: 하드록 카페가 현재 도쿄에 두 지점(롯폰기, 우에노역 부근)을 운영 중이라는 주장</li><li>근거 등록 안 된 주장: 요코스카 재킷이 자수 제품이며 가장 비싼 상품이라는 주장</li><li>근거 등록 안 된 주장: 색상마다 판매 지점이 다르다는 주장</li>
+          <li>에반게리온 등 IP 캐릭터 이미지는 사용하지 말 것(저작권)</li><li>발매일·핀 출시 시점은 변동 가능성 있음</li><li>원문 발행일(2026-10-30) 기준 정보이며 가격·판매 지점은 달라질 수 있음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-e0b37817487f-0">1장</label>
+          <textarea id="s-e0b37817487f-0" rows="5" data-slide="0">에바가 / **하드록**에?!
+---
+일본 하드록 카페가 애니메이션 에반게리온과 손잡고 초호기를 앞세운 콜라보 굿즈를 내놓는다.</textarea>
+          
+          <label class="f" for="s-e0b37817487f-1">2장</label>
+          <textarea id="s-e0b37817487f-1" rows="5" data-slide="1">**도쿄-3**에 / 하드록 지점?
+---
+하드록 카페가 에반게리온의 무대인 도쿄-3에 문을 열었다면 어땠을까, 하는 상상이 이번 콜라보의 출발점이다. 하드록 로고에 AT필드 육각형 무늬를 입혔다.</textarea>
+          
+          <label class="f" for="s-e0b37817487f-2">3장</label>
+          <textarea id="s-e0b37817487f-2" rows="5" data-slide="2">티셔츠부터 / **요코스카 재킷**
+---
+초호기가 그려진 티셔츠는 흰색, 회색, 검은색 세 가지다. 자수 재킷과 모자도 나오고, 샷잔·자석·핀에는 초호기와 주요 파일럿이 들어간다.</textarea>
+          
+          <label class="f" for="s-e0b37817487f-3">4장</label>
+          <textarea id="s-e0b37817487f-3" rows="5" data-slide="3">**사는 곳마다** / 다르다
+---
+자석과 샷잔에는 구매한 도시 이름이 들어간다. 핀은 하드록 지점마다 디자인이 달라서, 어디서 샀는지가 곧 수집의 재미가 된다.</textarea>
+          
+          <label class="f" for="s-e0b37817487f-4">5장</label>
+          <textarea id="s-e0b37817487f-4" rows="5" data-slide="4">핀은 **500개** / 한정판
+---
+핀은 디자인마다 500개만 만들며 3,080엔이다. 티셔츠는 5,940엔, 샷잔은 1,980엔이고, 요코스카 재킷은 6만 6,000엔으로 가장 비싸다.</textarea>
+          
+          <label class="f" for="s-e0b37817487f-5">6장</label>
+          <textarea id="s-e0b37817487f-5" rows="6" data-slide="5">**에바 덕후** 친구한테
+이거 먼저 보내기
+---
+에반게리온을 좋아하는 친구라면 반가워할 소식. 11월 3일 발매 전에 보내 두면 어느 지점에서 뭘 살지 미리 정할 수 있다.</textarea>
+          
+          <label class="f" for="c-e0b37817487f">본문 (캡션)</label>
+          <textarea id="c-e0b37817487f" class="caption">에반게리온이 하드록 카페를 만났다. 일본 하드록 카페가 애니메이션 에반게리온과 손잡고 콜라보 굿즈를 선보인다.
+
+이번 콜라보의 출발점은 하드록 카페가 에반게리온의 배경인 도쿄-3에 지점을 냈다면 어땠을까 하는 상상이다. 주인공은 초호기로, 특유의 녹색과 보라색 배색과 AT필드 육각형 무늬를 하드록 로고에 입혔다.
+
+티셔츠는 흰색, 회색, 검은색 세 가지다. 색상마다 살 수 있는 지점이 조금씩 다르다. 흰색은 롯폰기, 우에노, 교토, 오사카 유니버설 시티워크 지점에서, 회색은 롯폰기, 요코하마, 시티워크 오사카, 난바 지점에서 판매한다. 검은색은 우에노, 요코하마, 교토, 난바 지점에서 만날 수 있다. 요코스카 재킷과 모자도 나오고, 샷잔·자석·핀에는 초호기와 주요 파일럿이 들어간다.
+
+자석과 샷잔에는 구매한 도시 이름이 새겨지고, 핀은 지점마다 디자인이 다르다. 핀은 디자인별 500개 한정이며 3,080엔이다. 자석도 3,080엔, 샷잔은 1,980엔, 티셔츠는 5,940엔, 요코스카 재킷은 6만 6,000엔이다. 재고가 있는 동안 구매하면 전용 쇼핑백에 담아 준다.
+
+발매일은 11월 3일이며, 핀은 11월 초에 나올 예정이다.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-e0b37817487f">해시태그</label>
+          <input id="t-e0b37817487f" type="text" class="tagsin" value="#에반게리온 #하드록카페 #일본굿즈 #콜라보 #애니메이션" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하드록 카페와 에반게리온이 콜라보 굿즈를 내놓는다</b>
+            <q>“That’s the concept behind a new collaboration between the giant robot anime series and music-themed restaurant chain, which has led to a new collection of crossover merch.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하드록 카페가 에반게리온의 배경 도쿄-3에 있다면 하는 상상이 콜라보의 콘셉트이다</b>
+            <q>“The Hard Rock Cafe currently has two branches in Tokyo, one in the Roppongi Neighborhood and one attached to Ueno Station, but what if the restaurant had a Tokyo-3 branch? And no, we don’t mean a third branch in Tokyo, but a branch inside Tokyo-3, the city that serves as the main setting of Evangelion.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>초호기의 녹색·보라색 배색과 AT필드 육각형 무늬를 하드록 로고에 적용한 티셔츠가 나온다</b>
+            <q>“Evangelion Unit-01 is the star here, featured on T-shirts with its iconic green-and-purple color scheme and AT field hexagonal pattern applied to the Hard Rock Logo.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>티셔츠는 흰색, 회색, 검은색 세 가지 색이다</b>
+            <q>“Three different colors are on offer, with white available at the Roppongi, Ueno Kyoto, and Universal Citywalk Osaka Hard Rock Cafes.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>요코스카 재킷과 모자도 나온다</b>
+            <q>“Also part of the lineup is a sukajan/Yokosuka jacket, which seems like a very appropriate canvas for this sort of East-meets-West endeavor.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>모자가 나오고 초호기와 파일럿이 샷잔·자석·핀에 등장한다</b>
+            <q>“Rounding out the fashion selection is the Eva/Hard Rock cap, and Unit-01 and the series’ core pilot roster will also be appearing on shot glasses, magnets, and pins.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자석과 샷잔에는 구매 도시 이름이 들어가고 핀은 지점마다 다르다</b>
+            <q>“The magnet and shot glass, pictures above, will include the name of the city in which they were purchased, but the pins will be specific to each Hard Rock location.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>핀은 디자인별 500개 한정, 3,080엔이며 자석도 같은 가격이다</b>
+            <q>“The pins are limited-quantity items, with only 500 of each design being made and carrying a price of 3,080 yen (US$19), which is also the price of the magnet.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>샷잔 1,980엔, 티셔츠 5,940엔, 요코스카 재킷 6만 6,000엔이다</b>
+            <q>“The shot glass, meanwhile, is 1,980 yen, the shirts 5,940 yen, and the Yokosuka jacket, as is often the case for the embroidered garments, is a premium piece, at 66,000 yen.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>재고가 있는 동안 구매하면 전용 쇼핑백에 담아 준다</b>
+            <q>“While supplies last, fans purchasing the collaboration items will get them placed inside an Evangelion/Hard Rock shopping bag.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>발매일은 11월 3일이고 핀은 11월 초 예정이다</b>
+            <q>“The lineup goes on sale November 3, with the exception of the pin which is scheduled to be available sometime in “early November.””</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>회색 티셔츠는 롯폰기, 요코하마, 시티워크 오사카, 난바 지점에서 판매한다</b>
+            <q>“Gray shirts will be on the rack at Roppongi, Yokohama, Citywalk Osaka, and the Namba store, while those looking for black shirts will find them at Ueno, Yokohama, Kyoto, and Namba.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">Evangelion announces collaboration with Hard Rock Cafe</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">SoraNews24 (©khara) / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/2_4b1396.jpg"</li><li>2장: <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">SoraNews24 (©khara) / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/8_4ed804.jpg?w=423"</li><li>3장: <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">SoraNews24 (©khara) / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/5_687938.jpg?w=640"</li><li>4장: <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">SoraNews24 (©khara) / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/10_808124.jpg?w=640"</li><li>5장: <a href="https://soranews24.com/2026/10/30/evangelion-announces-collaboration-with-hard-rock-cafe/" target="_blank" rel="noopener">SoraNews24 (©khara) / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/6_88e21f.jpg?w=640"</li><li>6장: <a href="https://pixabay.com/photos/selfie-smartphone-cellphone-465563/" target="_blank" rel="noopener">wilkernet / Pixabay</a> — "friends smartphone"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-bd8c9a5a2e1a" data-id="bd8c9a5a2e1a">
+    <div class="head">
+      <h2>3. 해왕성 너머 왜소행성 후보 2026 ED138 발견</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 18
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/2 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>명왕성 근처에 왜소행성 후보가 10년 동안 숨어 있었다는 소식이 나왔다. 베라 C. 루빈 천문대가 카이퍼 벨트에서 찾은 2026 ED138은 지름이 600~1,500km로 추정되는 천체로, 루빈이 처음 찾아낸 왜소행성 후보다.
+
+발견자인 매튜 홀먼은 처음 반응이 흥분 섞인 불신이었다고 말했다. 이런 천체는 매우 드물어서 자신이나 코드가 뭔가 잘못한 건 아닌지부터 확인했다고 한다. 2026년 10월 13일 루빈 관측 자료를 분석하다 눈에 띄었고, 3월 4일부터 7월 11일 사이 20일 밤에 걸친 30번의 검출로 추적했다.
+
+과거 자료에서도 흔적이 나왔다. 암흑에너지 카메라가 2016년 2월을 시작으로 2017, 2018, 2019, 2023년에도 이 천체를 찍어 두었다. 덕분에 궤도를 계산할 수 있었고, 공전 주기는 약 281년이다.
+
+찾기 어려웠던 이유도 있다. 궤도가 약 24.5도 기울어 있었고, 별이 빽빽한 은하수 배경에 묻혀 있었다. 정확한 크기는 표면 반사율을 몰라 아직 범위로만 추정한다.
+
+루빈은 10년 동안 남쪽 하늘을 반복해서 촬영하며 외곽 태양계에서 수천 개의 새 천체를 찾을 것으로 기대된다. 우주에 아직 뭐가 숨어 있을지 궁금해지는 소식이다.
+
+출처: ScienceAlert
+
+배경 사진: 51581, Pexels, WikiImages / Pixabay
+사진: Rubin Observatory/NSF/AURA, oliwok / Wikimedia Commons, CC BY 4.0 (편집)
+표지 이미지: National Geographic
+3장 이미지: NSF
+
+#왜소행성 #우주 #천문학 #베라루빈천문대 #카이퍼벨트</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-bd8c9a5a2e1a">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 우주</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 새로 찍은 사진이 아니라 10년 전 사진 속에 이미 찍혀 있었고, 발견자도 자기 코드부터 의심했다는 반전</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 2026 ED138이 태양에서 가까워지고 멀어지는 거리 범위(36.86~49.04천문단위)를 명왕성(29.6~49.08천문단위)과 비교한 수치 (카드 4장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">왜소행성 후보를 찾은 천문학자가 제일 먼저 한 일은 자기 코드부터 의심하는 거였대
+명왕성 근처에 있던 건데, 알고 보니 10년 전 사진에도 이미 찍혀 있었음
+근데 왜 10년 동안 아무도 몰랐을까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">1/ 이 천체 이름은 2026 ED138. 베라 루빈 천문대가 카이퍼 벨트에서 찾은, 지름 600~1,500km로 추정되는 왜소행성 후보고 루빈이 찾은 첫 후보임.
+그런데 이게 과거 사진 속에 있었다는데, 언제부터 찍혀 있었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">2/ 암흑에너지 카메라가 2016년 2월에 이미 이 천체를 담아 놨었음. 2017, 2018, 2019, 2023년에도 찍혀 있어서 그 덕에 궤도를 계산할 수 있었대.
+그럼 이 천체는 태양을 한 바퀴 도는 데 얼마나 걸릴까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">57/500자</span></div>
+      <p class="tp-text">3/ 공전 주기가 약 281년이래.
+그런데 이렇게 오래 돌면서도 이제야 발견됐다는 건데, 왜 그랬을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">4/ 이유는 두 가지. 궤도가 태양계 평면에 대해 약 24.5도 기울어 있었고, 별이 빽빽한 은하수 배경에 묻혀 있었대. 크기도 표면 반사율을 몰라서 아직 범위로만 추정 중임.
+그럼 이게 루빈의 마지막 발견일까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">185/500자</span></div>
+      <p class="tp-text">5/ 2026 ED138 요약 정리
+- 발견: 베라 루빈 천문대, 카이퍼 벨트
+- 크기: 지름 600~1,500km 추정 (반사율을 몰라서 범위로만)
+- 공전 주기: 약 281년
+- 과거 기록: 2016, 2017, 2018, 2019, 2023년 사진에 찍혀 있었음
+- 늦게 발견된 이유: 24.5도 기울어진 궤도 + 은하수 배경</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">6/ 루빈은 10년 동안 남쪽 하늘을 반복해서 찍으면서 외곽 태양계에서 수천 개의 새 천체를 찾을 걸로 기대받고 있음. 발견자 홀먼은 이전 탐사가 건너뛴 곳에 숨은 천체도 이제 닿을 거리에 들어왔다고 했대.
+그럼 우리가 아직 못 본 건 얼마나 더 있을까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">256/500자</span></div>
+      <p class="tp-text">7/ 결국 포인트는 10년 전 사진 속에 이미 찍혀 있었다는 거, 그리고 루빈이 앞으로 수천 개의 새 천체를 더 찾을 걸로 기대된다는 거.
+너는 어느 쪽이 더 신기해? 10년 전 사진에 찍혀 있었던 거 vs 앞으로 수천 개 더 나온다는 거
+이런 해외 우주·과학 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 태양과의 거리 범위 비교까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>왜소행성 후보를 찾은 천문학자가 제일 먼저 한 일은 자기 코드 의심이었대</li><li>신천체 단서는 새 사진이 아니라 10년 전 사진 속에 있었대</li><li>명왕성 근처에 왜소행성 후보가 10년 동안 숨어 있었대</li><li>새로 찍은 게 아니라 10년 전부터 사진에 찍혀 있던 천체래</li><li>태양을 한 바퀴 도는 데 281년 걸리는 천체가 이제야 발견됐대</li><li>&#39;흥분 섞인 불신&#39;이라는 말까지 나온 발견이래</li><li>우주에 아직 못 본 천체가 수천 개 더 있다는 말이 나옴</li><li>별이 너무 많아서 10년 동안 못 찾았던 천체가 있대</li><li>루빈 천문대가 카이퍼 벨트에서 첫 왜소행성 후보를 찾았대</li><li>우주 덕후한테 보내줄 소식, 10년 전 사진에 이미 찍혀 있던 왜소행성 후보</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>10년 전 사진에 찍혀 있었던 거 vs 앞으로 수천 개 더 나온다는 거, 어느 쪽이 더 신기해?</li><li>우주 덕후 친구 있는 사람?</li><li>밤하늘 별 보러 일부러 어디 가본 사람?</li><li>너라면 새로 찾은 천체에 이름 뭐라고 붙이고 싶어?</li><li>옛날 사진 뒤져서 뭐 발견해본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>명왕성이 행성에서 빠진 이유</li><li>카이퍼 벨트에는 뭐가 있을까</li><li>베라 루빈 천문대는 어떤 곳인가</li><li>왜소행성이란 무엇인가</li><li>태양계 바깥쪽에서 아직 못 찾은 천체 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>카드 2장은 &#39;2026년 3월 시야에 들어옴&#39;이라 하고 본문은 &#39;3월 4일~7월 11일 추적, 10월 13일 분석&#39;이라고 해서 시점이 맞지 않음. 스레드에는 날짜를 쓰지 않았으니 원문 확인 필요</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-01.jpg" alt="1장: 명왕성 근처에 왜소행성 후보?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-02.jpg" alt="2장: 루빈의 첫 왜소행성 후보" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-03.jpg" alt="3장: 10년 전 사진에 이미 찍혀 있었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-04.jpg" alt="4장: 태양 한 바퀴에 281년" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-05.jpg" alt="5장: 왜 이제야 발견됐을까" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-06.jpg" alt="6장: 이게 끝이 아니라는 말" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-07.jpg" alt="7장: 우주 덕후 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261030-pm-dedad398cbe7/bd8c9a5a2e1a/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">명왕성 근처에 왜소행성 후보가 10년 동안 숨어 있었다는 소식이 나왔다. 베라 C. 루빈 천문대가 카이퍼 벨트에서 찾은 2026 ED138은 지름이 600~1,500km로 추정되는 천체로, 루빈이 처음 찾아낸 왜소행성 후보다.
+
+발견자인 매튜 홀먼은 처음 반응이 흥분 섞인 불신이었다고 말했다. 이런 천체는 매우 드물어서 자신이나 코드가 뭔가 잘못한 건 아닌지부터 확인했다고 한다. 2026년 10월 13일 루빈 관측 자료를 분석하다 눈에 띄었고, 3월 4일부터 7월 11일 사이 20일 밤에 걸친 30번의 검출로 추적했다.
+
+과거 자료에서도 흔적이 나왔다. 암흑에너지 카메라가 2016년 2월을 시작으로 2017, 2018, 2019, 2023년에도 이 천체를 찍어 두었다. 덕분에 궤도를 계산할 수 있었고, 공전 주기는 약 281년이다.
+
+찾기 어려웠던 이유도 있다. 궤도가 약 24.5도 기울어 있었고, 별이 빽빽한 은하수 배경에 묻혀 있었다. 정확한 크기는 표면 반사율을 몰라 아직 범위로만 추정한다.
+
+루빈은 10년 동안 남쪽 하늘을 반복해서 촬영하며 외곽 태양계에서 수천 개의 새 천체를 찾을 것으로 기대된다. 우주에 아직 뭐가 숨어 있을지 궁금해지는 소식이다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#왜소행성 #우주 #천문학 #베라루빈천문대 #카이퍼벨트</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>아직 왜소행성 후보 단계이며 공식 지위는 확정되지 않았음</li><li>정확한 크기는 반사율을 몰라 600~1,500km의 추정 범위임</li><li>원문 발행일과 발견 날짜가 2026년으로 표기되어 있어 게시 전 날짜 재확인 필요</li><li>단일 매체(ScienceAlert) 기사만을 근거로 함</li><li>원문 기사 사진과 SNS 이미지는 사용하지 않고 스톡·위키미디어 이미지만 사용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-bd8c9a5a2e1a-0">1장</label>
+          <textarea id="s-bd8c9a5a2e1a-0" rows="6" data-slide="0">명왕성 근처에
+**왜소행성** 후보?!
+---
+베라 루빈 천문대가 카이퍼 벨트에서 지름 600~1,500km로 추정되는 첫 왜소행성 후보 2026 ED138을 찾아냈다.</textarea>
+          
+          <label class="f" for="s-bd8c9a5a2e1a-1">2장</label>
+          <textarea id="s-bd8c9a5a2e1a-1" rows="6" data-slide="1">루빈의 첫
+**왜소행성 후보**
+---
+루빈 천문대는 2025년 6월 첫 빛을 봤고, 2026년 3월 이 천체가 시야에 들어왔다. 하버드-스미스소니언 천체물리센터의 매튜 홀먼이 10월 13일 관측 자료를 분석하다 이상한 점을 발견했다.</textarea>
+          
+          <label class="f" for="s-bd8c9a5a2e1a-2">3장</label>
+          <textarea id="s-bd8c9a5a2e1a-2" rows="6" data-slide="2">**10년 전** 사진에
+이미 찍혀 있었다
+---
+연구팀이 과거 자료를 거슬러 올라가자 암흑에너지 카메라가 2016년 2월 관측에서 이 천체를 담아 둔 사실이 나왔다. 2017·2018·2019·2023년에도 찍혀 있어 궤도를 계산할 수 있었다.</textarea>
+          
+          <label class="f" for="s-bd8c9a5a2e1a-3">4장</label>
+          <textarea id="s-bd8c9a5a2e1a-3" rows="6" data-slide="3">태양 한 바퀴에
+**281년**
+---
+소행성센터에 따르면 공전 주기는 약 281년이고, 태양과의 거리는 36.86~49.04천문단위를 오간다. 명왕성이 도는 29.6~49.08천문단위 범위 안에 들어간다.</textarea>
+          
+          <label class="f" for="s-bd8c9a5a2e1a-4">5장</label>
+          <textarea id="s-bd8c9a5a2e1a-4" rows="6" data-slide="4">왜 **이제야**
+발견됐을까
+---
+궤도가 태양계 평면에 대해 약 24.5도 기울어 있었고, 별이 빽빽한 은하수 배경에 묻혀 있었다. 표면 반사율을 몰라 크기도 600~1,500km 사이로만 추정된다.</textarea>
+          
+          <label class="f" for="s-bd8c9a5a2e1a-5">6장</label>
+          <textarea id="s-bd8c9a5a2e1a-5" rows="6" data-slide="5">이게 **끝이**
+아니라는 말
+---
+루빈은 10년 동안 하늘을 반복해 촬영하며 외곽 태양계에서 수천 개의 새 천체를 찾을 것으로 기대된다. 홀먼은 이전 탐사가 건너뛴 곳에 숨은 다른 천체도 이제 닿을 거리에 들어왔다고 했다.</textarea>
+          
+          <label class="f" for="s-bd8c9a5a2e1a-6">7장</label>
+          <textarea id="s-bd8c9a5a2e1a-6" rows="6" data-slide="6">**우주 덕후** 친구한테
+조용히 보내기
+---
+10년 전 사진 속에 이미 찍혀 있었다는 점이 이 발견의 포인트다. 우주 이야기를 좋아하는 친구라면 신기해할 소식</textarea>
+          
+          <label class="f" for="c-bd8c9a5a2e1a">본문 (캡션)</label>
+          <textarea id="c-bd8c9a5a2e1a" class="caption">명왕성 근처에 왜소행성 후보가 10년 동안 숨어 있었다는 소식이 나왔다. 베라 C. 루빈 천문대가 카이퍼 벨트에서 찾은 2026 ED138은 지름이 600~1,500km로 추정되는 천체로, 루빈이 처음 찾아낸 왜소행성 후보다.
+
+발견자인 매튜 홀먼은 처음 반응이 흥분 섞인 불신이었다고 말했다. 이런 천체는 매우 드물어서 자신이나 코드가 뭔가 잘못한 건 아닌지부터 확인했다고 한다. 2026년 10월 13일 루빈 관측 자료를 분석하다 눈에 띄었고, 3월 4일부터 7월 11일 사이 20일 밤에 걸친 30번의 검출로 추적했다.
+
+과거 자료에서도 흔적이 나왔다. 암흑에너지 카메라가 2016년 2월을 시작으로 2017, 2018, 2019, 2023년에도 이 천체를 찍어 두었다. 덕분에 궤도를 계산할 수 있었고, 공전 주기는 약 281년이다.
+
+찾기 어려웠던 이유도 있다. 궤도가 약 24.5도 기울어 있었고, 별이 빽빽한 은하수 배경에 묻혀 있었다. 정확한 크기는 표면 반사율을 몰라 아직 범위로만 추정한다.
+
+루빈은 10년 동안 남쪽 하늘을 반복해서 촬영하며 외곽 태양계에서 수천 개의 새 천체를 찾을 것으로 기대된다. 우주에 아직 뭐가 숨어 있을지 궁금해지는 소식이다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-bd8c9a5a2e1a">해시태그</label>
+          <input id="t-bd8c9a5a2e1a" type="text" class="tagsin" value="#왜소행성 #우주 #천문학 #베라루빈천문대 #카이퍼벨트" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루빈 천문대가 카이퍼 벨트에서 지름 약 600~1,500km의 첫 왜소행성 후보를 발견했다</b>
+            <q>“Researchers have just announced a spectacular new discovery – the telescope&#39;s first candidate dwarf planet, a large object in the Kuiper Belt some 600 to 1,500 kilometers (373 to 932 miles) across.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>천체 이름은 2026 ED138이며 궤도 전체가 명왕성의 태양 거리 범위 안에 있다</b>
+            <q>“The object, named 2026 ED138, may have been right under our noses all along. Its entire orbit lies within Pluto&#39;s range of distances from the Sun – yet we&#39;ve only just discovered it.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루빈은 2025년 6월 첫 빛을 봤고 2026년 3월 ED138이 시야에 들어왔다</b>
+            <q>“It saw first light in June 2025 – and by March 2026, ED138 had wandered into its field of view.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>홀먼이 2026년 10월 13일 루빈 관측 자료를 분석하다 이상한 점을 발견했다</b>
+            <q>“On 13 October 2026, Holman was analyzing Rubin observations using software developed with colleague Kevin Napier when something unusual caught his attention.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>발견자는 하버드-스미스소니언 천체물리센터의 천체물리학자 매튜 홀먼이다</b>
+            <q>“&#34;My first reaction was one of excited disbelief,&#34; says astrophysicist Matthew Holman of the Harvard-Smithsonian Center for Astrophysics, who made the discovery.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>암흑에너지 카메라의 2016년 2월 보관 관측 자료에서도 이 천체가 발견됐다</b>
+            <q>“Then, they looked further back – and found the object hiding in archival observations from the Dark Energy Camera, dating all the way back to February 2016.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>암흑에너지 카메라는 2017, 2018, 2019, 2023년에도 이 천체를 촬영했다</b>
+            <q>“And it wasn&#39;t limited to just one observation. The Dark Energy Camera had also snapped the object in 2017, 2018, 2019, and 2023.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>과거 관측 기록 덕분에 궤도를 파악할 수 있었다</b>
+            <q>“Those archival observations were a gift – extending the observational record back years and allowing the researchers to characterize ED138&#39;s orbit.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공전 주기는 약 281년이며 태양과의 거리는 근일점 36.86, 원일점 49.04천문단위다</b>
+            <q>“According to the Minor Planet Center, ED138 takes around 281 years to complete one orbit of the Sun, coming to a distance of 36.86 astronomical units from the Sun at perihelion and 49.04 astronomical units at aphelion.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>명왕성은 태양에서 29.6~49.08천문단위 사이를 공전한다</b>
+            <q>“Pluto, for context, orbits between 29.6 and 49.08 astronomical units from the Sun.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>궤도가 태양계 평면에 대해 약 24.5도 기울어 있다</b>
+            <q>“Well, its orbit is also tilted by around 24.5 degrees relative to the plane of the Solar System – a striking example of the orbital shenanigans that can make trans-Neptunian objects so difficult to find.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>ED138은 별이 빽빽한 은하수 배경에 숨어 있어 찾기 더 어려웠다</b>
+            <q>“To make matters worse, ED138 was hiding against the densely populated backdrop of the Milky Way, where myriad stars made it even harder to pick out.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>반사율을 몰라 크기는 600~1,500km로만 추정할 수 있다</b>
+            <q>“Without knowing how reflective ED138 is, researchers can only estimate that it measures somewhere between 600 and 1,500 kilometers across.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루빈은 10년간의 탐사에서 외곽 태양계의 미지 천체 수천 개를 발견할 것으로 기대된다</b>
+            <q>“Over the decade-long survey it commenced in June 2026, Rubin is expected to discover thousands of previously unknown objects in the outer Solar System, helping astronomers piece together its history and evolution – and perhaps even revealing worlds larger and stranger than anything we&#39;ve found so far.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>홀먼은 이전 탐사가 건너뛴 곳에 숨은 다른 천체도 이제 닿을 거리에 있다고 말했다</b>
+            <q>“&#34;Rubin will image the whole southern sky again and again for ten years,&#34; Holman says, &#34;so any others hiding in the places earlier surveys skipped are now within reach.&#34;”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10년 동안 이 천체의 증거가 천문 이미지 속에 있었다</b>
+            <q>“For a decade, evidence of this distant world had been sitting in astronomical images, just waiting for someone to come along and find it.”</q>
+            <small>slide7 · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>홀먼은 이런 천체가 매우 드물어 자신이나 코드가 잘못했는지 바로 확인했다</b>
+            <q>“&#34;Objects like this are very rare, so I immediately started checking whether I or the code had done something wrong.&#34;”</q>
+            <small>caption · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 3월 4일부터 7월 11일 사이 20일 밤, 30번의 검출로 천체를 추적했다</b>
+            <q>“The team traced it through 30 detections across 20 nights of Rubin observations, dating from 4 March to 11 July 2026.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/astronomers-discover-giant-new-dwarf-planet-candidate-hiding-beyond-pluto" target="_blank" rel="noopener">Big News: A Giant New Dwarf Planet Candidate May Be Hiding Beyond Pluto</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.nationalgeographic.com/science/article/new-dwarf-planet-rubin-pluto" target="_blank" rel="noopener">National Geographic / </a> — "https://i.natgeofe.com/n/efb924f7-9231-4929-bb7d-d68059b0d20b/noirlab2626b.jpg?w=826&amp;h=620"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Heavy_Lifting_at_Vera_C._Rubin_Observatory.jpg" target="_blank" rel="noopener">Rubin Observatory/NSF/AURA / Wikimedia Commons · CC BY 4.0</a> — "Vera C. Rubin Observatory"</li><li>3장: <a href="https://www.nsf.gov/news/new-dwarf-planet-candidate-discovered-nsf-doe-rubin" target="_blank" rel="noopener">NSF / </a> — "https://nsf-gov-resources.nsf.gov/styles/_inline_image_full_width/s3/media_hub/noirlab2626a.jpg?itok=FGH-HWPN"</li><li>4장: <a href="https://pixabay.com/photos/solar-system-sun-mercury-venus-439046/" target="_blank" rel="noopener">51581 / Pixabay</a> — "solar system"</li><li>5장: <a href="https://commons.wikimedia.org/wiki/File:Milky_way_in_Elbrus.jpg" target="_blank" rel="noopener">oliwok / Wikimedia Commons · CC BY 4.0</a> — "Milky Way"</li><li>6장: <a href="https://pixabay.com/photos/astronomy-bright-constellation-dark-1867616/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "galaxy"</li><li>7장: <a href="https://pixabay.com/photos/mars-red-planet-planet-space-11012/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "planet"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-6e5698a0746d">
+    <div class="head">
+      <h2>S1. 조산아 소뇌 배선이 달라진다는 Science 연구</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 9
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-6e5698a0746d">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 조산아 뇌는 시간이 지나면 따라잡는 게 아니라 세포 단위로 다른 길을 간다는 통념 뒤집기와, 1주당 소뇌 부피 감소라는 구체적 숫자</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">조산아 뇌는 &#39;느리게&#39; 자라는 게 아니라 &#39;다르게&#39; 자라는 거래
+나중에 따라잡겠지라는 통념을 뒤집는 연구가 Science에 실림
+근데 1주 일찍 태어날 때마다 줄어드는 양이 꽤 구체적으로 나왔음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 만삭 전에 자궁 밖에서 보낸 기간이 1주 늘 때마다 소뇌 부피가 약 230세제곱밀리미터씩 줄어든 것과 연관됐대. 완두콩 한 알쯤 되는 크기라는 설명도 있음. 근데 이 숫자가 아이 발달이랑 실제로 이어졌을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">2/ 이어졌어. 9~36개월 아이들을 보니 소뇌 부피가 줄어든 정도가 운동 능력, 언어 능력, 실행 인지 기능의 지연과 뚜렷한 상관을 보였대. 연관성이라 원인이라고 단정할 순 없지만. 그럼 그냥 천천히 크는 거랑 뭐가 다른 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">3/ 연구진이 세포를 들여다보니 소뇌 세포들은 원래 출산 예정일까지 성장을 멈추고 기다리는 게 아니라 다른 성숙 상태로 넘어가 있었대. 소뇌는 임신 24~40주 사이에 부피가 5배로 커지는데, 그 시기를 자궁 밖에서 보내게 되는 거. 이걸 어떻게 확인했을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">202/500자</span></div>
+      <p class="tp-text">4/ 조산아 소뇌 연구 요약 정리
+- 대상: 살아있는 조산아 176명을 몇 년간 추적 + 조산·만삭 영아 83명의 사후 소뇌 조직
+- 만삭 전 1주마다 소뇌 부피 약 230mm³ 감소와 연관
+- 9~36개월 운동·언어·실행 인지 지연과 연관
+- NICU의 스트레스·질환·집중치료 방식도 소뇌 성장 속도에 영향을 줬다고 함
+그럼 연구진은 앞으로 뭘 바꾸자고 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">208/500자</span></div>
+      <p class="tp-text">5/ 챙겨갈 한 줄: 연구진 말은 조산아 평가와 치료를 달력 나이보다 &#39;발달 성숙도&#39; 기준으로 해야 한다는 거.
+이런 연구 뉴스, 제목만 보는 파 vs 끝까지 읽는 파?
+이런 해외 건강·뇌과학 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>조산아 뇌는 &#39;느리게&#39;가 아니라 &#39;다르게&#39; 자란대</li><li>&#39;나중에 따라잡겠지&#39;라는 통념을 뒤집는 연구가 Science에 나옴</li><li>1주 일찍 태어날 때마다 소뇌 부피가 완두콩 한 알만큼 줄었다는 연구</li><li>조산아 뇌가 그냥 느린 줄 알았는데, 세포 단위로 다른 길을 가고 있었대</li><li>수십 년 믿어온 &#39;조산아는 시간 지나면 따라잡는다&#39;가 흔들리는 중</li><li>임신 24~40주 사이에 소뇌가 5배 커진다는데, 그 시기를 자궁 밖에서 보내면?</li><li>MRI엔 뚜렷한 이상이 없는데도 조산아가 균형·언어에서 어려움을 겪던 이유가 나왔대</li><li>조산은 뇌 성장을 &#39;멈추는&#39; 게 아니라 &#39;배선을 바꾼다&#39;는 연구</li><li>연구진 한마디: 조산아는 달력 나이가 아니라 &#39;발달 성숙도&#39;로 봐야 한다</li><li>176명 조산아를 몇 년간 따라가 봤더니 소뇌에서 나온 숫자</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이런 연구 뉴스, 제목만 보는 파 vs 끝까지 읽는 파?</li><li>뇌 연구 소식 중에 제일 신기했던 거 하나만 말해줄 사람?</li><li>&#39;나중에 따라잡겠지&#39;라는 말, 다른 분야에서도 들어본 적 있어?</li><li>새벽에 뉴스 챙겨보는 파 vs 아침에 몰아보는 파?</li><li>연구 결과 뒤집히는 뉴스 보면 오히려 더 궁금해지는 파 vs 못 믿겠는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>조산아 뇌 연구 2편: 푸르키녀 세포와 과립세포는 소뇌에서 뭘 하는 세포일까</li><li>소뇌가 운동만이 아니라 언어·인지에도 관여한다는 연구</li><li>임신 후기 뇌 발달 시기를 다룬 해외 연구</li><li>해왕성 너머 왜소행성 후보 2026 ED138 발견</li><li>포터가이스트 촬영지 집을 산 사람, 팬들에게 문을 열다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>조산을 겪은 가정에 불안이나 죄책감을 줄 수 있는 표현이 없는지, 연관성이 인과로 읽히지 않는지 올리기 전에 한 번 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조산이 뇌 성장을 늦출 뿐 나중에 따라잡는다는 통념을 뒤집는 연구가 Science에 실렸다</b>
+          <q>“A landmark study published in Science by researchers at Children’s National Hospital and Seattle Children’s overturns the long-standing assumption that premature birth merely delays brain growth that later “catches up.””</q>
+          <small>post0 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>만삭 전 자궁 밖에서 보낸 기간이 1주 늘 때마다 소뇌 부피가 약 230세제곱밀리미터 줄어든 것과 연관됐다</b>
+          <q>“The team calculated that each week an infant spent developing outside the uterus prior to full term was associated with a loss of approximately 230 cubic millimeters of total cerebellar volume.”</q>
+          <small>post1 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>230세제곱밀리미터는 완두콩 한 알 크기쯤이라는 설명이 있다</b>
+          <q>“Each week an infant spent developing outside the womb prior to full term resulted in an average loss of 230 cubic millimeters in cerebellar volume—roughly equivalent to the size of a pea.”</q>
+          <small>post1 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>9~36개월에 소뇌 부피 감소가 운동·언어·실행 인지 지연과 뚜렷한 상관을 보였다</b>
+          <q>“When these children reached toddlerhood (between 9 and 36 months), these cerebellar volume reductions showed strong, statistically significant correlations with clinical delays in gross and fine motor skills, expressive and receptive language abilities, and executive cognitive functioning.”</q>
+          <small>post2 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소뇌 세포들이 예정일까지 멈추는 대신 다른 성숙 상태로 넘어갔다</b>
+          <q>“Rather than pausing development until the original due date, cerebellar cells shifted into an alternative maturation state in response to premature delivery.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>임신 24~40주 사이 소뇌 부피가 5배로 커진다</b>
+          <q>“Between weeks 24 and 40 of human gestation, the cerebellum undergoes an explosive developmental transformation. During this third-trimester window, its volume expands fivefold as millions of granule neurons migrate and elaborate intricate dendritic arbors around massive Purkinje cells, establishing the precision sensorimotor, linguistic, and cognitive processing loops that underwrite human development.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>살아있는 조산아 176명을 몇 년간 추적하고 조산·만삭 영아 83명의 사후 소뇌 조직을 분석했다</b>
+          <q>“The team followed 176 living premature infants across several years, pairing continuous neuroimaging with detailed neurodevelopmental assessments at 9, 18, 24, and 36 months of age. Simultaneously, they analyzed postmortem cerebellar tissue from 83 human infants (both preterm and full-term) sourced from national tissue repositories, including the NIH NeuroBioBank.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>NICU의 스트레스, 질환, 집중치료 방식도 소뇌 성장 속도에 영향을 줬다</b>
+          <q>“Crucially, while gestational age at birth established the baseline molecular trajectory, the researchers noted that secondary factors in the NICU, including physiological stressors, systemic illnesses, and specific intensive care practices, further modulated cerebellar growth rates.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 조산아 평가와 치료가 달력 나이보다 발달 성숙도 기준이어야 한다고 말했다</b>
+          <q>““Assessment and treatment of preterm infants should be guided by developmental maturity rather than chronological age,” said Vittorio Gallo, PhD, joint senior author, who initiated the study at Children’s National before becoming senior vice president and chief scientific officer at Seattle Children’s.”</q>
+          <small>post5 · <a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="6e5698a0746d">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://neurosciencenews.com/premature-birth-cerebellar-wiring-32361/" target="_blank" rel="noopener">Premature Birth Alters Cerebellar Wiring - Neuroscience News</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-ae4474a385ab">
+    <div class="head">
+      <h2>S2. 근육 노화는 고장이 아니라 방어 기작? 카디오리핀 연구</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ae4474a385ab">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 나이 들어 힘 빠지는 게 근육이 망가져서가 아니라 세포를 지키려고 힘을 내준 거래라는 반전, 그리고 항산화제를 준 쥐는 오히려 나빠졌다는 의외성</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">나이 들어 힘 빠지는 건 근육이 &#39;고장&#39;나서가 아니라 &#39;거래&#39;를 해서래
+세포를 지키려고 힘을 내주는 방어 기작이라는 연구가 나옴
+근데 이걸 막겠다고 항산화제를 준 쥐는 근육이 오히려 나빠졌음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">1/ 연구진 표현으로는 근육이 망가지는 게 아니라 &#39;힘을 내주고 보호를 얻는 거래&#39;래. 나이 들면 미토콘드리아 효율은 떨어지는데, 노화 근육은 오히려 그 미토콘드리아에 크게 기대는 느린 섬유 비율이 늘어난대. 왜 하필 그쪽으로 갈아타는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">146/500자</span></div>
+      <p class="tp-text">2/ 단서는 미토콘드리아 안쪽 막에 거의 몰려 있는 지방 분자 카디오리핀이야. 쥐와 사람 근육 모두 나이 들거나 병이 생기면 이게 줄어들었대. 젊은 쥐에서 일부러 줄였더니 노화 때처럼 빠른 섬유에서 느린 섬유로 바뀌었음. 그럼 이 전환 신호는 뭐가 보내는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">161/500자</span></div>
+      <p class="tp-text">3/ 카디오리핀이 줄면 손상된 미토콘드리아가 활성산소(ROS)를 훨씬 많이 만드는데, 이게 &#39;뭔가 잘못됐다&#39;는 신호 역할도 한대. 연구진은 ROS가 섬유 전환을 시작시킨다고 봤고, 실험실 근육세포에서 ERRγ 단백질을 막자 전환이 완전히 멈췄음. 그럼 갈아탄 근육은 어떻게 자기를 지킬까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">141/500자</span></div>
+      <p class="tp-text">4/ 카디오리핀이 부족한 쥐는 혈액 속 포도당을 훨씬 많이 흡수했는데, 에너지 만드는 데 쓰기보다 근육세포가 자기 항산화물질을 만드는 쪽으로 돌렸대. 연구진은 그래서 이걸 건드리면 역효과가 날 수 있다고 함. 그럼 카디오리핀을 다시 채우면 어떻게 될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 쥐: 카디오리핀을 정상의 약 3분의 2까지 되돌리자 근육 감소가 되돌려지기 시작했고, 조기 사망도 완전히 막음
+- 사람: 근육에서 카디오리핀이 나이 들며 줄어드는 것만 확인
+- 카디오리핀 안정화 약은 희귀질환에만 FDA 가속승인, 일반 노화 근손실 효과는 아직 모름</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">244/500자</span></div>
+      <p class="tp-text">6/ 결국 나이 들며 힘 빠지는 근육 안에는 세포를 지키려는 방어 반응이 숨어 있었다는 얘기야. 연구진은 카디오리핀을 늘리거나 ERRγ를 건드리는 치료 가능성을 보고 있대.
+근손실 막는 약이 나온다면 너라면 쓸 거야, 운동으로 버틸 거야?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>나이 들어 힘 빠지는 건 근육이 &#39;고장&#39;나서가 아니라 &#39;거래&#39;를 해서래</li><li>근육이 약해지는 걸 &#39;노화 고장&#39;으로만 보지 말라는 연구가 나옴</li><li>나이 들면 근육이 힘을 내주고 보호를 사는 거래를 한대</li><li>쥐한테 항산화제를 줬더니 근육이 오히려 나빠졌대. 이유가 의외임</li><li>나이 들면 에너지 공장이 약해지는데 근육은 오히려 그쪽에 기대는 방향으로 바뀐대. 왜 그럴까?</li><li>&#39;근육이 실패한 게 아니라 힘을 보호와 맞바꾼 것&#39;이라는 연구진 말이 나옴</li><li>카디오리핀을 정상의 3분의 2만 되돌렸는데 쥐 근육이 돌아오기 시작했대</li><li>근육 노화를 되돌리는 실마리가 지방 분자 하나일 수 있다는 쥐 연구가 나옴</li><li>나이 들면 왜 힘이 빠질까? 답이 &#39;세포 보호&#39;라는 연구가 나왔어</li><li>빠른 근육이 느린 근육으로 바뀌는 게 노화의 정체인 줄 알았는데 그게 방어였대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>근손실 막는 약이 나온다면 너라면 쓸 거야, 운동으로 버틸 거야?</li><li>빠른 근육 vs 느린 근육, 너는 단거리 파야 장거리 파야?</li><li>&#39;힘 대신 보호를 택하는&#39; 몸의 선택, 똑똑하다 vs 아쉽다 어느 쪽이야?</li><li>헬스장 등록해놓고 안 간 적 있는 사람?</li><li>나이 들어도 운동은 계속할 거다 vs 모르겠다, 어느 쪽이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>미토콘드리아가 약해지면 몸에서 생기는 일</li><li>빠른 근육과 느린 근육, 뭐가 어떻게 다른가</li><li>카디오리핀 안정화 약 엘라미프레티드 이야기</li><li>ERRγ 같은 핵 수용체 표적 약 연구</li><li>근육 노화를 다룬 해외 연구 또 정리</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>본글과 4/의 항산화제 역효과는 쥐 실험 결과인데, 사람이 항산화제 보충제를 먹거나 끊으라는 조언으로 읽힐 수 있음</li><li>본글 &#39;방어 기작이라는 연구&#39;가 사람 전반에 확인된 것처럼 읽힐 수 있음. 보호 기작과 복구 효과는 쥐 실험이고 사람 근육은 카디오리핀 감소 확인에만 쓰였음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>노화 근육에는 세포를 손상에서 지키기 위해 힘을 희생하는 방어 기작이 있다</b>
+          <q>“Scientists have uncovered a hidden defense mechanism in aging muscles that sacrifices strength to protect cells from damage.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐에게 항산화제를 주었더니 근육이 오히려 나빠졌다</b>
+          <q>“That&#39;s also why interfering with it can backfire: when we gave the mice antioxidants to mop up the ROS, their muscles fared worse, not better,”</q>
+          <small>post0, post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 섬유 전환을 근육이 실패한 것이 아니라 힘을 보호와 맞바꾸는 것이라고 표현했다</b>
+          <q>“The fiber switch is not the muscle failing, but the muscle trading power for protection.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나이 들면 미토콘드리아 효율이 떨어지는데도 노화 근육은 미토콘드리아에 크게 의존하는 느린 섬유 비율이 늘어난다</b>
+          <q>“Surprisingly, aging muscles also develop a greater proportion of slow-twitch fibers, even though these fibers depend heavily on the very mitochondria that are losing their ability to function.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카디오리핀은 미토콘드리아 안쪽 막에 거의 몰려 있는 지방 분자다</b>
+          <q>“To investigate this puzzle, scientists focused on cardiolipin, a specialized fat molecule located almost exclusively within the inner membrane of mitochondria.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐와 사람 근육 미토콘드리아에서 나이가 들거나 병이 생기면 카디오리핀이 줄어든다</b>
+          <q>“The researchers discovered that cardiolipin levels decrease in muscle mitochondria from both mice and humans as they age or experience disease.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>젊은 쥐에서 카디오리핀을 낮추자 노화 때처럼 빠른 섬유에서 느린 섬유로 바뀌었다</b>
+          <q>“The results closely resembled what happens during natural aging. Muscle fibers shifted away from the fast-twitch type toward slow-twitch fibers, matching the pattern previously observed in older mice and humans.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카디오리핀이 줄면 손상된 미토콘드리아가 활성산소를 훨씬 많이 만든다</b>
+          <q>“When cardiolipin concentrations fall, damaged mitochondria produce much larger quantities of reactive oxygen species (ROS).”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>활성산소는 뭔가 잘못됐다는 신호 역할도 한다</b>
+          <q>“These highly reactive molecules can harm cellular structures, but they also play an important role in signaling that something is wrong.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>활성산소가 빠른 섬유에서 느린 섬유로의 전환을 시작시키는 데 도움을 준다</b>
+          <q>“The researchers found that ROS help initiate the transition from fast-twitch to slow-twitch muscle fibers.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>실험실에서 키운 근육세포에서 ERRγ를 막자 섬유 전환이 완전히 멈췄다</b>
+          <q>“When scientists inhibited ERRγ in muscle cells grown in the laboratory, the transition between fiber types stopped entirely.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카디오리핀이 부족한 쥐는 혈액 속 포도당을 훨씬 많이 흡수했다</b>
+          <q>“Mice with insufficient cardiolipin absorbed considerably more glucose from their bloodstreams.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근육세포는 그 포도당을 자기 항산화물질을 만드는 쪽으로 돌렸다</b>
+          <q>“Instead, experiments that tracked specially labeled glucose showed that muscle cells redirected the sugar toward manufacturing their own antioxidants.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카디오리핀을 정상 농도의 약 3분의 2로 되돌리자 근육 감소가 되돌려지기 시작했고 조기 사망이 완전히 막혔다</b>
+          <q>“Even more strikingly, restoring cardiolipin to approximately two-thirds of its normal concentration began reversing muscle wasting and completely prevented the premature deaths seen in the affected animals.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람 근육 샘플은 나이 들며 카디오리핀이 줄어드는 것을 확인하는 데만 쓰였다</b>
+          <q>“Human muscle samples were used only to establish that cardiolipin levels also decrease with age in people.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카디오리핀 안정화 약은 희귀질환에만 FDA 가속승인을 받았고 일반 노화 근손실 효과는 알려지지 않았다</b>
+          <q>“The FDA recently granted accelerated approval to elamipretide, a medication designed to help stabilize cardiolipin, for Barth syndrome, a rare inherited disorder. This suggests that targeting the molecule is medically feasible, although its effectiveness against ordinary age-related muscle loss remains unknown.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 카디오리핀을 늘리거나 ERRγ를 건드리는 방식의 치료 가능성을 본다</b>
+          <q>“The findings suggest that future therapies might work by restoring cardiolipin levels or by influencing the protective adaptations controlled by ERRγ.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ae4474a385ab">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261027063704.htm" target="_blank" rel="noopener">Scientists discover a hidden reason why muscles weaken with age</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261030-pm";
+  const ORIGINAL = {"bd8c9a5a2e1a": {"caption": "\uba85\uc655\uc131 \uadfc\ucc98\uc5d0 \uc65c\uc18c\ud589\uc131 \ud6c4\ubcf4\uac00 10\ub144 \ub3d9\uc548 \uc228\uc5b4 \uc788\uc5c8\ub2e4\ub294 \uc18c\uc2dd\uc774 \ub098\uc654\ub2e4. \ubca0\ub77c C. \ub8e8\ube48 \ucc9c\ubb38\ub300\uac00 \uce74\uc774\ud37c \ubca8\ud2b8\uc5d0\uc11c \ucc3e\uc740 2026 ED138\uc740 \uc9c0\ub984\uc774 600~1,500km\ub85c \ucd94\uc815\ub418\ub294 \ucc9c\uccb4\ub85c, \ub8e8\ube48\uc774 \ucc98\uc74c \ucc3e\uc544\ub0b8 \uc65c\uc18c\ud589\uc131 \ud6c4\ubcf4\ub2e4.\n\n\ubc1c\uacac\uc790\uc778 \ub9e4\ud29c \ud640\uba3c\uc740 \ucc98\uc74c \ubc18\uc751\uc774 \ud765\ubd84 \uc11e\uc778 \ubd88\uc2e0\uc774\uc5c8\ub2e4\uace0 \ub9d0\ud588\ub2e4. \uc774\ub7f0 \ucc9c\uccb4\ub294 \ub9e4\uc6b0 \ub4dc\ubb3c\uc5b4\uc11c \uc790\uc2e0\uc774\ub098 \ucf54\ub4dc\uac00 \ubb54\uac00 \uc798\ubabb\ud55c \uac74 \uc544\ub2cc\uc9c0\ubd80\ud130 \ud655\uc778\ud588\ub2e4\uace0 \ud55c\ub2e4. 2026\ub144 10\uc6d4 13\uc77c \ub8e8\ube48 \uad00\uce21 \uc790\ub8cc\ub97c \ubd84\uc11d\ud558\ub2e4 \ub208\uc5d0 \ub744\uc5c8\uace0, 3\uc6d4 4\uc77c\ubd80\ud130 7\uc6d4 11\uc77c \uc0ac\uc774 20\uc77c \ubc24\uc5d0 \uac78\uce5c 30\ubc88\uc758 \uac80\ucd9c\ub85c \ucd94\uc801\ud588\ub2e4.\n\n\uacfc\uac70 \uc790\ub8cc\uc5d0\uc11c\ub3c4 \ud754\uc801\uc774 \ub098\uc654\ub2e4. \uc554\ud751\uc5d0\ub108\uc9c0 \uce74\uba54\ub77c\uac00 2016\ub144 2\uc6d4\uc744 \uc2dc\uc791\uc73c\ub85c 2017, 2018, 2019, 2023\ub144\uc5d0\ub3c4 \uc774 \ucc9c\uccb4\ub97c \ucc0d\uc5b4 \ub450\uc5c8\ub2e4. \ub355\ubd84\uc5d0 \uada4\ub3c4\ub97c \uacc4\uc0b0\ud560 \uc218 \uc788\uc5c8\uace0, \uacf5\uc804 \uc8fc\uae30\ub294 \uc57d 281\ub144\uc774\ub2e4.\n\n\ucc3e\uae30 \uc5b4\ub824\uc6e0\ub358 \uc774\uc720\ub3c4 \uc788\ub2e4. \uada4\ub3c4\uac00 \uc57d 24.5\ub3c4 \uae30\uc6b8\uc5b4 \uc788\uc5c8\uace0, \ubcc4\uc774 \ube7d\ube7d\ud55c \uc740\ud558\uc218 \ubc30\uacbd\uc5d0 \ubb3b\ud600 \uc788\uc5c8\ub2e4. \uc815\ud655\ud55c \ud06c\uae30\ub294 \ud45c\uba74 \ubc18\uc0ac\uc728\uc744 \ubab0\ub77c \uc544\uc9c1 \ubc94\uc704\ub85c\ub9cc \ucd94\uc815\ud55c\ub2e4.\n\n\ub8e8\ube48\uc740 10\ub144 \ub3d9\uc548 \ub0a8\ucabd \ud558\ub298\uc744 \ubc18\ubcf5\ud574\uc11c \ucd2c\uc601\ud558\uba70 \uc678\uacfd \ud0dc\uc591\uacc4\uc5d0\uc11c \uc218\ucc9c \uac1c\uc758 \uc0c8 \ucc9c\uccb4\ub97c \ucc3e\uc744 \uac83\uc73c\ub85c \uae30\ub300\ub41c\ub2e4. \uc6b0\uc8fc\uc5d0 \uc544\uc9c1 \ubb50\uac00 \uc228\uc5b4 \uc788\uc744\uc9c0 \uad81\uae08\ud574\uc9c0\ub294 \uc18c\uc2dd\uc774\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uc65c\uc18c\ud589\uc131", "#\uc6b0\uc8fc", "#\ucc9c\ubb38\ud559", "#\ubca0\ub77c\ub8e8\ube48\ucc9c\ubb38\ub300", "#\uce74\uc774\ud37c\ubca8\ud2b8"], "slides": [["\uba85\uc655\uc131 \uadfc\ucc98\uc5d0", "**\uc65c\uc18c\ud589\uc131** \ud6c4\ubcf4?!", "---", "\ubca0\ub77c \ub8e8\ube48 \ucc9c\ubb38\ub300\uac00 \uce74\uc774\ud37c \ubca8\ud2b8\uc5d0\uc11c \uc9c0\ub984 600~1,500km\ub85c \ucd94\uc815\ub418\ub294 \uccab \uc65c\uc18c\ud589\uc131 \ud6c4\ubcf4 2026 ED138\uc744 \ucc3e\uc544\ub0c8\ub2e4."], ["\ub8e8\ube48\uc758 \uccab", "**\uc65c\uc18c\ud589\uc131 \ud6c4\ubcf4**", "---", "\ub8e8\ube48 \ucc9c\ubb38\ub300\ub294 2025\ub144 6\uc6d4 \uccab \ube5b\uc744 \ubd24\uace0, 2026\ub144 3\uc6d4 \uc774 \ucc9c\uccb4\uac00 \uc2dc\uc57c\uc5d0 \ub4e4\uc5b4\uc654\ub2e4. \ud558\ubc84\ub4dc-\uc2a4\ubbf8\uc2a4\uc18c\ub2c8\uc5b8 \ucc9c\uccb4\ubb3c\ub9ac\uc13c\ud130\uc758 \ub9e4\ud29c \ud640\uba3c\uc774 10\uc6d4 13\uc77c \uad00\uce21 \uc790\ub8cc\ub97c \ubd84\uc11d\ud558\ub2e4 \uc774\uc0c1\ud55c \uc810\uc744 \ubc1c\uacac\ud588\ub2e4."], ["**10\ub144 \uc804** \uc0ac\uc9c4\uc5d0", "\uc774\ubbf8 \ucc0d\ud600 \uc788\uc5c8\ub2e4", "---", "\uc5f0\uad6c\ud300\uc774 \uacfc\uac70 \uc790\ub8cc\ub97c \uac70\uc2ac\ub7ec \uc62c\ub77c\uac00\uc790 \uc554\ud751\uc5d0\ub108\uc9c0 \uce74\uba54\ub77c\uac00 2016\ub144 2\uc6d4 \uad00\uce21\uc5d0\uc11c \uc774 \ucc9c\uccb4\ub97c \ub2f4\uc544 \ub454 \uc0ac\uc2e4\uc774 \ub098\uc654\ub2e4. 2017\u00b72018\u00b72019\u00b72023\ub144\uc5d0\ub3c4 \ucc0d\ud600 \uc788\uc5b4 \uada4\ub3c4\ub97c \uacc4\uc0b0\ud560 \uc218 \uc788\uc5c8\ub2e4."], ["\ud0dc\uc591 \ud55c \ubc14\ud034\uc5d0", "**281\ub144**", "---", "\uc18c\ud589\uc131\uc13c\ud130\uc5d0 \ub530\ub974\uba74 \uacf5\uc804 \uc8fc\uae30\ub294 \uc57d 281\ub144\uc774\uace0, \ud0dc\uc591\uacfc\uc758 \uac70\ub9ac\ub294 36.86~49.04\ucc9c\ubb38\ub2e8\uc704\ub97c \uc624\uac04\ub2e4. \uba85\uc655\uc131\uc774 \ub3c4\ub294 29.6~49.08\ucc9c\ubb38\ub2e8\uc704 \ubc94\uc704 \uc548\uc5d0 \ub4e4\uc5b4\uac04\ub2e4."], ["\uc65c **\uc774\uc81c\uc57c**", "\ubc1c\uacac\ub410\uc744\uae4c", "---", "\uada4\ub3c4\uac00 \ud0dc\uc591\uacc4 \ud3c9\uba74\uc5d0 \ub300\ud574 \uc57d 24.5\ub3c4 \uae30\uc6b8\uc5b4 \uc788\uc5c8\uace0, \ubcc4\uc774 \ube7d\ube7d\ud55c \uc740\ud558\uc218 \ubc30\uacbd\uc5d0 \ubb3b\ud600 \uc788\uc5c8\ub2e4. \ud45c\uba74 \ubc18\uc0ac\uc728\uc744 \ubab0\ub77c \ud06c\uae30\ub3c4 600~1,500km \uc0ac\uc774\ub85c\ub9cc \ucd94\uc815\ub41c\ub2e4."], ["\uc774\uac8c **\ub05d\uc774**", "\uc544\ub2c8\ub77c\ub294 \ub9d0", "---", "\ub8e8\ube48\uc740 10\ub144 \ub3d9\uc548 \ud558\ub298\uc744 \ubc18\ubcf5\ud574 \ucd2c\uc601\ud558\uba70 \uc678\uacfd \ud0dc\uc591\uacc4\uc5d0\uc11c \uc218\ucc9c \uac1c\uc758 \uc0c8 \ucc9c\uccb4\ub97c \ucc3e\uc744 \uac83\uc73c\ub85c \uae30\ub300\ub41c\ub2e4. \ud640\uba3c\uc740 \uc774\uc804 \ud0d0\uc0ac\uac00 \uac74\ub108\ub6f4 \uacf3\uc5d0 \uc228\uc740 \ub2e4\ub978 \ucc9c\uccb4\ub3c4 \uc774\uc81c \ub2ff\uc744 \uac70\ub9ac\uc5d0 \ub4e4\uc5b4\uc654\ub2e4\uace0 \ud588\ub2e4."], ["**\uc6b0\uc8fc \ub355\ud6c4** \uce5c\uad6c\ud55c\ud14c", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30", "---", "10\ub144 \uc804 \uc0ac\uc9c4 \uc18d\uc5d0 \uc774\ubbf8 \ucc0d\ud600 \uc788\uc5c8\ub2e4\ub294 \uc810\uc774 \uc774 \ubc1c\uacac\uc758 \ud3ec\uc778\ud2b8\ub2e4. \uc6b0\uc8fc \uc774\uc57c\uae30\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "c441d3025b9e": {"caption": "\uc601\ud654 \ud3ec\ud130\uac00\uc774\uc2a4\ud2b8\uc5d0\uc11c \ud504\ub9ac\ub9c1 \uac00\uc871\uc758 \uc9d1\uc73c\ub85c \uc4f0\uc778 \uc8fc\ud0dd\uc5d0 \uc9c0\uae08 \uc2e4\uc81c\ub85c \uc0ac\ub78c\uc774 \uc0b0\ub2e4. \uc9d1\uc744 \uc0b0 \uc0ac\ub78c\uc740 \uc138 \ub538\uacfc \ud568\uaed8 \uc0b4 \uc0c8 \uc9d1\uc744 \ucc3e\ub358 \uc911 \uc774 \uc9d1\uc758 \ub9e4\ubb3c \uc18c\uc2dd\uc744 \ub4e4\uc5c8\uace0, \uc5ec\ub7ec \uac74\uc758 \uc81c\uc548 \uc18d\uc5d0\uc11c \uc790\uc2e0\uc758 \uc81c\uc548\uc774 \ubc1b\uc544\ub4e4\uc5ec\uc84c\ub2e4. \uc9d1\uc744 \ud310 \uc0ac\ub78c\uc740 \uc601\ud654\uc5d0 \ub098\uc654\uc744 \ub54c\uc758 \uc8fc\uc778\uacfc \uac19\uc558\uace0, \uc548\uc5d0\ub294 \uafc0\uc0c9 \ub808\ud2b8\ub85c \uac00\uad6c\uac00 \uadf8\ub300\ub85c \ub0a8\uc544 \uc788\uc5c8\ub2e4\uace0 \ud55c\ub2e4. \uc9d1\uc774 \ud314\ub9ac\uc790 \uc5b8\ub860\uc758 \uad00\uc2ec\uc774 \uc3df\uc544\uc84c\uace0 \uc804 \uc138\uacc4 \ud32c\ub4e4\uc774 \uc601\ud654 \ucd94\uc5b5\uc744 \ub2f4\uc740 \uc774\uba54\uc77c\uc744 \ubcf4\ub0b4\uc654\ub2e4. \uc774\ub97c \uacc4\uae30\ub85c \uc77c\ubd80 \ud32c\uc774 \uc9d1\uc744 \ubc29\ubb38\ud558\uac70\ub098 \ud558\ub8fb\ubc24 \ubb35\uc744 \uc218 \uc788\uac8c \ud588\ub2e4. \uc601\ud654 \uc138\ud2b8\ub97c \uc7ac\ud604\ud558\uc9c0\ub294 \uc54a\uc558\uc9c0\ub9cc \ucf1c\uba74 \uc7a1\uc74c\ub9cc \ub098\uc624\ub294 TV\uc640 \ube44\ub514\uc624\ud14c\uc774\ud504\ub97c \ub450\uc5c8\uace0, \ud32c\ub4e4\uc774 \uc9c1\uc811 \ucc3e\uc544\ub0b8 \uc18c\ud488\uc774 \ub354\ud574\uc9c0\uae30\ub3c4 \ud588\ub2e4. \uc77c\ubd80 \uc190\ub2d8\uc740 \uae5c\ube61\uc774\ub294 \ubd88\ube5b\uc744 \ubd24\uac70\ub098 \uc720\uc120\uc804\ud654 \uc218\ud654\uae30\uc5d0\uc11c \uc774\uc0c1\ud55c \ubaa9\uc18c\ub9ac\ub97c \ub4e4\uc5c8\ub2e4\uace0 \uc804\ud588\ub294\ub370, \uc9d1\uc5d0 \uc624\ub798\ub41c \uad6c\ub9ac \uc804\ud654\uc120\uc774 \uc788\uc5b4 \ud3c9\ubc94\ud55c \uc124\uba85\uc774 \uc788\uc744 \uac83\uc774\ub77c\uace0 \uc9d1\uc8fc\uc778\uc740 \ub9d0\ud55c\ub2e4. \uc601\ud654\uc5d0\uc11c \uc0b4\uc544\ub098\ub358 \ub098\ubb34\ub294 \ucd2c\uc601 \ub4a4 \uce58\uc6cc\uc84c\uace0, \ud574\uace8\uc774 \uac00\ub4dd\ud55c \uc9c4\ud759 \uad6c\ub369\uc774 \uc790\ub9ac\uc5d0\ub294 \uc9c0\uae08 \uc218\uc601\uc7a5\uc774 \uc788\ub2e4. \ucd5c\uadfc\uc5d0\ub294 \uc608\uc57d\uc744 \ubc1b\uc9c0 \uc54a\uace0 \uc788\uc9c0\ub9cc \ub85c\ube44 \uc5ed \ubc30\uc6b0 \uc62c\ub9ac\ubc84 \ub85c\ube48\uc2a4\ub294 \uba87 \ubc88 \ub4e4\ub800\ub2e4. \ucd9c\ucc98: \uac00\ub514\uc5b8(The Guardian)", "hashtags": ["#\ud3ec\ud130\uac00\uc774\uc2a4\ud2b8", "#\uc601\ud654\ucd2c\uc601\uc9c0", "#\ud57c\ub7ec\uc708", "#\ud574\uc678\ud1a0\ud53d", "#\ud638\ub7ec\uc601\ud654"], "slides": [["\ud3ec\ud130\uac00\uc774\uc2a4\ud2b8 \uc9d1", "\uc9c4\uc9dc **\uc0c0\ub2e4???**", "---", "\uc601\ud654 \ud3ec\ud130\uac00\uc774\uc2a4\ud2b8\uc5d0\uc11c \ud504\ub9ac\ub9c1 \uac00\uc871\uc758 \uc9d1\uc73c\ub85c \uc4f0\uc778 \uc8fc\ud0dd\uc774 \ud314\ub838\uace0, \uc0c8 \uc8fc\uc778\uc740 \uc138 \ub538\uacfc \ud568\uaed8 \uadf8 \uc9d1\uc5d0\uc11c \uc0b4\uace0 \uc788\ub2e4."], ["\uba87 \uc8fc \ub4a4", "\uc9c4\uc9dc **\ub9e4\ubb3c\ub85c** \ub098\uc634", "---", "\uae00\uc4f4\uc774\ub294 \uc601\ud654 \uc18d \uc9d1\uacfc \uba40\uc9c0 \uc54a\uc740 \uc2dc\ubbf8\ubc38\ub9ac\uc5d0 \uc0ac\ub294 \uc5b8\ub2c8\ub97c \ub9cc\ub098\ub7ec \uac08 \ub54c\ub9c8\ub2e4 \uadf8 \uc9d1 \uc55e\uc744 \uc9c0\ub0ac\ub2e4. \uace7 \ud314\ub9b4 \uac83 \uac19\ub2e4\ub294 \uc9c1\uac10\uc774 \ub4e0 \uc9c0 \uba87 \uc8fc \ub4a4, \uc5b8\ub2c8\uac00 \ub9e4\ubb3c \uc18c\uc2dd\uc744 \uc804\ud588\ub2e4."], ["\ub4e4\uc5b4\uac00 \ubcf4\ub2c8", "**80\ub144\ub300** \uadf8\ub300\ub85c", "---", "\uc9d1\uc744 \ud310 \uc0ac\ub78c\ub4e4\uc740 \uc601\ud654\uc5d0 \uc774 \uc9d1\uc774 \ub098\uc654\uc744 \ub54c\uc758 \uc8fc\uc778\uacfc \uac19\uc558\ub2e4. \uc548\uc5d0\ub294 \uafc0\uc0c9 \ub808\ud2b8\ub85c \uac00\uad6c\uac00 \uadf8\ub300\ub85c \uc788\uc5b4, \ucc98\uc74c \ub4e4\uc5b4\uc120 \uc21c\uac04 80\ub144\ub300\ub85c \ub3cc\uc544\uac04 \ub4ef\ud55c \ub290\ub08c\uc774 \ub4e4\uc5c8\ub2e4\uace0 \ud55c\ub2e4."], ["\ud32c\ub4e4\ud55c\ud14c", "**\ud558\ub8fb\ubc24** \uc5f4\uc5b4\uc90c", "---", "\uc9d1\uc774 \ud314\ub9ac\uc790 \uc5b8\ub860\uc758 \uad00\uc2ec\uc774 \uc3df\uc544\uc84c\uace0, \uc804 \uc138\uacc4 \ud32c\ub4e4\uc774 \uc601\ud654 \ucd94\uc5b5\uc744 \ub2f4\uc740 \uc774\uba54\uc77c\uc744 \ubcf4\ub0b4\uc654\ub2e4. \uadf8\ub798\uc11c \uc77c\ubd80 \ud32c\uc774 \uc9d1\uc744 \ucc3e\uc544\uc624\uac70\ub098 \ud558\ub8fb\ubc24 \ubb35\uc744 \uc218 \uc788\uac8c \ud558\uae30\ub85c \ud588\ub2e4."], ["**\uc9c0\uc9c0\uc9c1 TV\uc640**", "\ube44\ub514\uc624\ud14c\uc774\ud504", "---", "\uc601\ud654 \uc138\ud2b8\ub97c \uc7ac\ud604\ud558\ub824\ub294 \uac74 \uc544\ub2c8\uc5c8\uc9c0\ub9cc, \ucf1c\uba74 \uc7a1\uc74c\ub9cc \ub098\uc624\ub294 TV\ub97c \ub480\ub2e4. \uc190\ub2d8\uc774 \ubcfc \uc218 \uc788\ub3c4\ub85d \uc9c1\uc811 \uac00\uc9c4 \ud3ec\ud130\uac00\uc774\uc2a4\ud2b8 \ube44\ub514\uc624\ud14c\uc774\ud504\ub3c4 \uc900\ube44\ud588\ub2e4."], ["\ub85c\ube44 \uc5ed \ubc30\uc6b0\ub3c4", "**\ub2e4\ub140\uac10**", "---", "\uc601\ud654\uc5d0\uc11c \ub85c\ube44\ub97c \uc5f0\uae30\ud55c \uc62c\ub9ac\ubc84 \ub85c\ube48\uc2a4\uac00 \uc9d1\uc5d0 \uba87 \ubc88 \ub4e4\ub800\ub2e4. \uc9c0\ub09c \ud57c\ub7ec\uc708\uc5d0\ub294 \uc601\ud654 \uc18d\ucc98\ub7fc \ube68\uac04 \uc7a0\uc637\uc744 \uc785\uace0 \uc640 \uc9d1 \uc55e\uc5d0\uc11c \ud568\uaed8 \uc0ac\ud0d5\uc744 \ub098\ub220 \uc92c\ub2e4."], ["\ud3ec\ud130\uac00\uc774\uc2a4\ud2b8 \ud32c", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uc601\ud654 \uc18d \uadf8 \uc9d1\uc5d0 \uc9c0\uae08 \uc0ac\ub78c\uc774 \uc0b4\uace0 \ud32c\ub4e4\uc774 \ud558\ub8fb\ubc24 \ubb35\uae30\ub3c4 \ud588\ub2e4\ub294 \uc810\uc5d0\uc11c, \ud638\ub7ec \uc601\ud654\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "e0b37817487f": {"caption": "\uc5d0\ubc18\uac8c\ub9ac\uc628\uc774 \ud558\ub4dc\ub85d \uce74\ud398\ub97c \ub9cc\ub0ac\ub2e4. \uc77c\ubcf8 \ud558\ub4dc\ub85d \uce74\ud398\uac00 \uc560\ub2c8\uba54\uc774\uc158 \uc5d0\ubc18\uac8c\ub9ac\uc628\uacfc \uc190\uc7a1\uace0 \ucf5c\ub77c\ubcf4 \uad7f\uc988\ub97c \uc120\ubcf4\uc778\ub2e4.\n\n\uc774\ubc88 \ucf5c\ub77c\ubcf4\uc758 \ucd9c\ubc1c\uc810\uc740 \ud558\ub4dc\ub85d \uce74\ud398\uac00 \uc5d0\ubc18\uac8c\ub9ac\uc628\uc758 \ubc30\uacbd\uc778 \ub3c4\ucfc4-3\uc5d0 \uc9c0\uc810\uc744 \ub0c8\ub2e4\uba74 \uc5b4\ub560\uc744\uae4c \ud558\ub294 \uc0c1\uc0c1\uc774\ub2e4. \uc8fc\uc778\uacf5\uc740 \ucd08\ud638\uae30\ub85c, \ud2b9\uc720\uc758 \ub179\uc0c9\uacfc \ubcf4\ub77c\uc0c9 \ubc30\uc0c9\uacfc AT\ud544\ub4dc \uc721\uac01\ud615 \ubb34\ub2ac\ub97c \ud558\ub4dc\ub85d \ub85c\uace0\uc5d0 \uc785\ud614\ub2e4.\n\n\ud2f0\uc154\uce20\ub294 \ud770\uc0c9, \ud68c\uc0c9, \uac80\uc740\uc0c9 \uc138 \uac00\uc9c0\ub2e4. \uc0c9\uc0c1\ub9c8\ub2e4 \uc0b4 \uc218 \uc788\ub294 \uc9c0\uc810\uc774 \uc870\uae08\uc529 \ub2e4\ub974\ub2e4. \ud770\uc0c9\uc740 \ub86f\ud3f0\uae30, \uc6b0\uc5d0\ub178, \uad50\ud1a0, \uc624\uc0ac\uce74 \uc720\ub2c8\ubc84\uc124 \uc2dc\ud2f0\uc6cc\ud06c \uc9c0\uc810\uc5d0\uc11c, \ud68c\uc0c9\uc740 \ub86f\ud3f0\uae30, \uc694\ucf54\ud558\ub9c8, \uc2dc\ud2f0\uc6cc\ud06c \uc624\uc0ac\uce74, \ub09c\ubc14 \uc9c0\uc810\uc5d0\uc11c \ud310\ub9e4\ud55c\ub2e4. \uac80\uc740\uc0c9\uc740 \uc6b0\uc5d0\ub178, \uc694\ucf54\ud558\ub9c8, \uad50\ud1a0, \ub09c\ubc14 \uc9c0\uc810\uc5d0\uc11c \ub9cc\ub0a0 \uc218 \uc788\ub2e4. \uc694\ucf54\uc2a4\uce74 \uc7ac\ud0b7\uacfc \ubaa8\uc790\ub3c4 \ub098\uc624\uace0, \uc0f7\uc794\u00b7\uc790\uc11d\u00b7\ud540\uc5d0\ub294 \ucd08\ud638\uae30\uc640 \uc8fc\uc694 \ud30c\uc77c\ub7ff\uc774 \ub4e4\uc5b4\uac04\ub2e4.\n\n\uc790\uc11d\uacfc \uc0f7\uc794\uc5d0\ub294 \uad6c\ub9e4\ud55c \ub3c4\uc2dc \uc774\ub984\uc774 \uc0c8\uaca8\uc9c0\uace0, \ud540\uc740 \uc9c0\uc810\ub9c8\ub2e4 \ub514\uc790\uc778\uc774 \ub2e4\ub974\ub2e4. \ud540\uc740 \ub514\uc790\uc778\ubcc4 500\uac1c \ud55c\uc815\uc774\uba70 3,080\uc5d4\uc774\ub2e4. \uc790\uc11d\ub3c4 3,080\uc5d4, \uc0f7\uc794\uc740 1,980\uc5d4, \ud2f0\uc154\uce20\ub294 5,940\uc5d4, \uc694\ucf54\uc2a4\uce74 \uc7ac\ud0b7\uc740 6\ub9cc 6,000\uc5d4\uc774\ub2e4. \uc7ac\uace0\uac00 \uc788\ub294 \ub3d9\uc548 \uad6c\ub9e4\ud558\uba74 \uc804\uc6a9 \uc1fc\ud551\ubc31\uc5d0 \ub2f4\uc544 \uc900\ub2e4.\n\n\ubc1c\ub9e4\uc77c\uc740 11\uc6d4 3\uc77c\uc774\uba70, \ud540\uc740 11\uc6d4 \ucd08\uc5d0 \ub098\uc62c \uc608\uc815\uc774\ub2e4.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\uc5d0\ubc18\uac8c\ub9ac\uc628", "#\ud558\ub4dc\ub85d\uce74\ud398", "#\uc77c\ubcf8\uad7f\uc988", "#\ucf5c\ub77c\ubcf4", "#\uc560\ub2c8\uba54\uc774\uc158"], "slides": [["\uc5d0\ubc14\uac00 / **\ud558\ub4dc\ub85d**\uc5d0?!", "---", "\uc77c\ubcf8 \ud558\ub4dc\ub85d \uce74\ud398\uac00 \uc560\ub2c8\uba54\uc774\uc158 \uc5d0\ubc18\uac8c\ub9ac\uc628\uacfc \uc190\uc7a1\uace0 \ucd08\ud638\uae30\ub97c \uc55e\uc138\uc6b4 \ucf5c\ub77c\ubcf4 \uad7f\uc988\ub97c \ub0b4\ub193\ub294\ub2e4."], ["**\ub3c4\ucfc4-3**\uc5d0 / \ud558\ub4dc\ub85d \uc9c0\uc810?", "---", "\ud558\ub4dc\ub85d \uce74\ud398\uac00 \uc5d0\ubc18\uac8c\ub9ac\uc628\uc758 \ubb34\ub300\uc778 \ub3c4\ucfc4-3\uc5d0 \ubb38\uc744 \uc5f4\uc5c8\ub2e4\uba74 \uc5b4\ub560\uc744\uae4c, \ud558\ub294 \uc0c1\uc0c1\uc774 \uc774\ubc88 \ucf5c\ub77c\ubcf4\uc758 \ucd9c\ubc1c\uc810\uc774\ub2e4. \ud558\ub4dc\ub85d \ub85c\uace0\uc5d0 AT\ud544\ub4dc \uc721\uac01\ud615 \ubb34\ub2ac\ub97c \uc785\ud614\ub2e4."], ["\ud2f0\uc154\uce20\ubd80\ud130 / **\uc694\ucf54\uc2a4\uce74 \uc7ac\ud0b7**", "---", "\ucd08\ud638\uae30\uac00 \uadf8\ub824\uc9c4 \ud2f0\uc154\uce20\ub294 \ud770\uc0c9, \ud68c\uc0c9, \uac80\uc740\uc0c9 \uc138 \uac00\uc9c0\ub2e4. \uc790\uc218 \uc7ac\ud0b7\uacfc \ubaa8\uc790\ub3c4 \ub098\uc624\uace0, \uc0f7\uc794\u00b7\uc790\uc11d\u00b7\ud540\uc5d0\ub294 \ucd08\ud638\uae30\uc640 \uc8fc\uc694 \ud30c\uc77c\ub7ff\uc774 \ub4e4\uc5b4\uac04\ub2e4."], ["**\uc0ac\ub294 \uacf3\ub9c8\ub2e4** / \ub2e4\ub974\ub2e4", "---", "\uc790\uc11d\uacfc \uc0f7\uc794\uc5d0\ub294 \uad6c\ub9e4\ud55c \ub3c4\uc2dc \uc774\ub984\uc774 \ub4e4\uc5b4\uac04\ub2e4. \ud540\uc740 \ud558\ub4dc\ub85d \uc9c0\uc810\ub9c8\ub2e4 \ub514\uc790\uc778\uc774 \ub2ec\ub77c\uc11c, \uc5b4\ub514\uc11c \uc0c0\ub294\uc9c0\uac00 \uace7 \uc218\uc9d1\uc758 \uc7ac\ubbf8\uac00 \ub41c\ub2e4."], ["\ud540\uc740 **500\uac1c** / \ud55c\uc815\ud310", "---", "\ud540\uc740 \ub514\uc790\uc778\ub9c8\ub2e4 500\uac1c\ub9cc \ub9cc\ub4e4\uba70 3,080\uc5d4\uc774\ub2e4. \ud2f0\uc154\uce20\ub294 5,940\uc5d4, \uc0f7\uc794\uc740 1,980\uc5d4\uc774\uace0, \uc694\ucf54\uc2a4\uce74 \uc7ac\ud0b7\uc740 6\ub9cc 6,000\uc5d4\uc73c\ub85c \uac00\uc7a5 \ube44\uc2f8\ub2e4."], ["**\uc5d0\ubc14 \ub355\ud6c4** \uce5c\uad6c\ud55c\ud14c", "\uc774\uac70 \uba3c\uc800 \ubcf4\ub0b4\uae30", "---", "\uc5d0\ubc18\uac8c\ub9ac\uc628\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd. 11\uc6d4 3\uc77c \ubc1c\ub9e4 \uc804\uc5d0 \ubcf4\ub0b4 \ub450\uba74 \uc5b4\ub290 \uc9c0\uc810\uc5d0\uc11c \ubb58 \uc0b4\uc9c0 \ubbf8\ub9ac \uc815\ud560 \uc218 \uc788\ub2e4."]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"bd8c9a5a2e1a": "approve", "c441d3025b9e": "approve", "e0b37817487f": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 1;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

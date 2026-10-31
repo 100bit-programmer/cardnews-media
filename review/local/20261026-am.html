@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.26 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.26 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-f2b4e631f3f3" data-jump="f2b4e631f3f3">1</a><a href="#post-39172dd164b8" data-jump="39172dd164b8">2</a><a href="#post-66812590c36e" data-jump="66812590c36e">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-f2b4e631f3f3" data-id="f2b4e631f3f3">
+    <div class="head">
+      <h2>1. 로슨 모치도 재출시</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-01.jpg" alt="1장: 로슨 모찌도넛 전국에 돌아옴?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-02.jpg" alt="2장: 이름은 모치비→모치도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-03.jpg" alt="3장: 10월 20일부터 일본 전역 발매" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-04.jpg" alt="4장: 맛은 슈가랑 키나코 두 가지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-05.jpg" alt="5장: 가격은 예전 그대로 171엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-06.jpg" alt="6장: 기자가 간 곳은 첫날 저녁에 이미 품절" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-07.jpg" alt="7장: 일본 가는 친구한테 로슨 가보라고 보내주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/f2b4e631f3f3/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">로슨 모찌도넛이 일본 전역에 다시 돌아왔다는 소식이야. 일본 매체 소라뉴스24는 올해 초 로슨에서 만난 이 도넛이 편의점 도넛이라는 장르를 완전히 새로 정의했다고 소개했던 바 있어.
+
+처음엔 &#39;모치비&#39;라는 이름으로 설탕 맛과 키나코(볶은 콩가루) 맛 두 가지가 나왔는데, 한정 시범 판매라 전국에서 팔지는 않았대. 이번에는 10월 20일부터 일본 전역에서 다시 나오고, 이름은 &#39;모치도&#39;로 바뀌었어. 기사는 이름 끝부분 때문에 사람들이 도넛을 베이글로 착각했을 수도 있다고 추측했어.
+
+맛은 지난번과 같은 설탕, 키나코 두 가지고 가격도 그대로 개당 171엔(약 1.10달러)이야. 기사를 쓴 기자는 20일 저녁에 가까운 로슨에 갔더니 이미 품절이었고, 다음 날 아침에야 구했다고 해. 직접 먹어본 기자는 식감이 예전과 똑같고 어쩌면 더 낫다고 평가했어. 편의점이 아니라 빵집에서 산 것 같은 디테일이라는 감상도 남겼고.
+
+일본 여행 계획이 있는 친구가 있다면 이 소식 한번 보내줘도 좋겠지?
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#로슨 #일본편의점 #모찌도넛 #일본여행 #편의점디저트</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>이름 변경 이유는 기사 필자의 추측임</li><li>식감·맛 평가는 기사 필자 개인의 감상임</li><li>재고와 판매 상황은 매장별로 다를 수 있음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-f2b4e631f3f3-0">1장</label>
+          <textarea id="s-f2b4e631f3f3-0" rows="2" data-slide="0">로슨 모찌도넛
+**전국에** 돌아옴?!</textarea>
+          
+          <label class="f" for="s-f2b4e631f3f3-1">2장</label>
+          <textarea id="s-f2b4e631f3f3-1" rows="2" data-slide="1">이름은
+모치비→**모치도**</textarea>
+          
+          <label class="f" for="s-f2b4e631f3f3-2">3장</label>
+          <textarea id="s-f2b4e631f3f3-2" rows="2" data-slide="2">**10월 20일부터**
+일본 전역 발매</textarea>
+          
+          <label class="f" for="s-f2b4e631f3f3-3">4장</label>
+          <textarea id="s-f2b4e631f3f3-3" rows="2" data-slide="3">맛은 슈가랑
+**키나코** 두 가지</textarea>
+          
+          <label class="f" for="s-f2b4e631f3f3-4">5장</label>
+          <textarea id="s-f2b4e631f3f3-4" rows="3" data-slide="4">가격은
+예전 그대로
+**171엔**</textarea>
+          
+          <label class="f" for="s-f2b4e631f3f3-5">6장</label>
+          <textarea id="s-f2b4e631f3f3-5" rows="3" data-slide="5">기자가 간 곳은
+첫날 저녁에
+이미 **품절**</textarea>
+          
+          <label class="f" for="s-f2b4e631f3f3-6">7장</label>
+          <textarea id="s-f2b4e631f3f3-6" rows="3" data-slide="6">일본 가는 친구한테
+**로슨** 가보라고
+보내주기</textarea>
+          
+          <label class="f" for="c-f2b4e631f3f3">본문 (캡션)</label>
+          <textarea id="c-f2b4e631f3f3" class="caption">로슨 모찌도넛이 일본 전역에 다시 돌아왔다는 소식이야. 일본 매체 소라뉴스24는 올해 초 로슨에서 만난 이 도넛이 편의점 도넛이라는 장르를 완전히 새로 정의했다고 소개했던 바 있어.
+
+처음엔 &#39;모치비&#39;라는 이름으로 설탕 맛과 키나코(볶은 콩가루) 맛 두 가지가 나왔는데, 한정 시범 판매라 전국에서 팔지는 않았대. 이번에는 10월 20일부터 일본 전역에서 다시 나오고, 이름은 &#39;모치도&#39;로 바뀌었어. 기사는 이름 끝부분 때문에 사람들이 도넛을 베이글로 착각했을 수도 있다고 추측했어.
+
+맛은 지난번과 같은 설탕, 키나코 두 가지고 가격도 그대로 개당 171엔(약 1.10달러)이야. 기사를 쓴 기자는 20일 저녁에 가까운 로슨에 갔더니 이미 품절이었고, 다음 날 아침에야 구했다고 해. 직접 먹어본 기자는 식감이 예전과 똑같고 어쩌면 더 낫다고 평가했어. 편의점이 아니라 빵집에서 산 것 같은 디테일이라는 감상도 남겼고.
+
+일본 여행 계획이 있는 친구가 있다면 이 소식 한번 보내줘도 좋겠지?
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-f2b4e631f3f3">해시태그</label>
+          <input id="t-f2b4e631f3f3" type="text" class="tagsin" value="#로슨 #일본편의점 #모찌도넛 #일본여행 #편의점디저트" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소라뉴스24는 올해 초 로슨의 도넛이 편의점 도넛이라는 장르를 완전히 새로 정의했다고 소개했다</b>
+            <q>“Earlier this year, we stumbled upon a pair of donuts sold by convenience store chain Lawson that completely redefined the genre of convenience store donuts.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>처음 이름은 모치비였고 설탕 맛과 키나코 맛 두 가지였다</b>
+            <q>“They were called Mochibee (Mo-chee-bay), and came in powdered sugar and roasted soybean (kinako) flavors.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이전 판매는 한정 시범 판매였고 전국 판매가 아니었다</b>
+            <q>“Though they tasted delectably sweet, the whole experience was a bittersweet one because this was just a limited trial run, and Mochibee weren’t sold nationwide.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 20일부터 일본 전역에서 재출시되었고 이름이 모치도로 바뀌었다</b>
+            <q>“But our writer Natsuno Futon was delighted to hear that Lawson have finally gotten their act together and re-released these treats all over Japan, starting on 20 October. However, the name has changed to Mochido, perhaps because the “beh” part of the name led people to think they were bagels instead of the similarly shaped donuts.”</q>
+            <small>slide1, slide2, slide3, caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기사는 이름 변경 이유로 베이글로 착각했을 가능성을 추측했다</b>
+            <q>“However, the name has changed to Mochido, perhaps because the “beh” part of the name led people to think they were bagels instead of the similarly shaped donuts.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자가 20일 저녁에 가까운 로슨에 갔더니 이미 품절이었다</b>
+            <q>“Hoping only the name was different, she hurried to her nearest Lawson on the evening of the 20th, only to find they were already sold out.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 다음 날 아침에 도넛을 구할 수 있었다</b>
+            <q>“Unsure if they were really that popular already or if her timing was just unlucky, she decided to give up for the night but was able to find them the next morning.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>맛은 설탕과 키나코 두 가지이고 가격은 이전과 같은 개당 171엔(약 1.10달러)이다</b>
+            <q>“The same flavors of sugar and kinako were there, and Futon picked up one of each. The price was just the same as before: 171 yen (US$1.10) each.”</q>
+            <small>slide4, slide5, caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 식감이 예전과 같고 어쩌면 더 낫다고 느꼈다</b>
+            <q>“It was every bit as good as it was back then, possibly even better somehow.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 두 도넛이 편의점보다 빵집에서 살 법한 디테일이라고 감상을 남겼다</b>
+            <q>“Both donuts had incredible attention to detail and seemed more like the kind you’d buy from a bakery rather than a convenience store.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/26/mochido-donuts-make-a-squishy-return-to-lawson-stores-across-japan/" target="_blank" rel="noopener">Mochido donuts make a squishy return to Lawson stores across Japan</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/pancakes-schaumomelette-omelette-1984716/" target="_blank" rel="noopener">RitaE / Pixabay</a> — "fluffy powdered sugar donuts on a bright plate"</li><li>4장: <a href="https://pixabay.com/photos/new-year-background-spoon-fork-2426623/" target="_blank" rel="noopener">congerdesign / Pixabay</a> — "powdered sugar"</li><li>7장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-39172dd164b8" data-id="39172dd164b8">
+    <div class="head">
+      <h2>2. 스미소니언 치타 새끼 5마리 라이브캠</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 7 · 애매 2
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-01.jpg" alt="1장: 치타 새끼 5마리 생중계 중?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-02.jpg" alt="2장: 엄마 치타 이름은 주라 10월 5일에 출산" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-03.jpg" alt="3장: 장소는 미국 스미소니언 보전연구소" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-04.jpg" alt="4장: 밤낮 없이 웹캠으로 볼 수 있대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-05.jpg" alt="5장: 소리까지 들린다니까 짹짹, 그르릉" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-06.jpg" alt="6장: 야생엔 단 7천 마리만 남았대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-07.jpg" alt="7장: 동물 영상 좋아하는 친구한테 지금 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/39172dd164b8/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">치타 새끼 5마리가 생중계 중이라니, 이거 진짜야?
+
+미국 버지니아에 있는 스미소니언 보전연구소에서 10월 5일, 주라라는 이름의 치타가 새끼 다섯 마리를 낳았어. 그리고 이 가족의 모습을 밤낮으로 라이브 웹캠을 통해 볼 수 있대.
+
+카메라로는 엄마 치타가 새끼들을 돌보는 모습을 볼 수 있고, 부드러운 짹짹 소리, 작은 그르릉 소리, 야옹 소리도 함께 들을 수 있어. 새끼들이 젖을 먹든, 그루밍을 하든, 서로 뒹굴며 놀든 모든 순간을 보고 들을 수 있다는 거지.
+
+그런데 이건 귀여운 아기 동물 이야기만은 아니야. 치타는 보전 문제를 안고 있고, 야생에는 약 7,000마리만 남아 있다고 해.
+
+이 라이브 영상은 사육 담당 직원들이 멀리서 큰 고양이들을 살필 때 쓰는 것과 같은 카메라라고 해. 이곳에서 태어난 새끼들은 워싱턴 DC에 있는 동물원의 동물들과 달리 초기에 사람과의 접촉이 제한된다는 설명이야. 덕분에 새끼들이 엄마와 유대를 쌓을 수 있고, 직원들은 동물원 우리 안에서는 어려운 행동 연구도 할 수 있대.
+
+주라의 굴을 지켜보는 것은 종의 생존을 위한 보전 활동을 엿보는 일이라는 소개도 있었어. 웹페이지에서는 기부도 할 수 있대.
+
+출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#치타 #스미소니언 #라이브캠 #동물보호 #아기동물</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>엄마 치타가 새끼를 돌보는 모습과 짹짹, 그르릉, 야옹 소리를 함께 볼 수 있다 <small>애매 · 근거에는 짹짹(soft chirps), 그르릉(tiny purrs), 야옹(meows) 소리가 있으나 &#39;엄마가 새끼를 돌보는 모습&#39;과 소리가 함께 제공된다는 내용은 맞다. 다만 &#39;야옹 소리&#39;는 근거상 소리 목록에 있어 supported 가능하나, 원문은 &#39;짹짹&#39;을 &#39;부드러운 짹짹&#39;으로 표현하므로 큰 문제는 없다. 전체적으로 일치하는 편이지만 판정 기준상 보수적으로 partial 처리.</small></li><li>새끼들이 엄마와 유대를 쌓고 직원들은 동물원 서식지에서는 불가능한 행동 연구를 할 수 있다 <small>애매 · 근거는 엄마와 유대 형성과 동물원 서식지 내에서는 불가능한 행동 연구 기회를 말한다. 그러나 &#39;직원들이 동물원 우리 안에서는 어려운 행동 연구도 할 수 있다&#39;는 표현은 &#39;어려운&#39;과 &#39;불가능한&#39;의 강도 차이가 있어 약간 완화되어 있다. 고칠 방향: &#39;동물원 서식지 안에서는 불가능한&#39;으로 표현.</small></li>
+          <li>근거 등록 안 된 주장: 출처가 Good News Network라는 주장(출처 표기 자체는 원문 post 근거와 별개로 확인 필요)</li><li>근거 등록 안 된 주장: 치타 보전 문제를 안고 있다는 주장(근거의 &#39;conservation challenges&#39;와 대응되나 claims 목록에 별도 항목 없음)</li><li>근거 등록 안 된 주장: 야옹 소리도 들을 수 있다는 구체적 소리 목록(claims index 2에 포함되었으나 별도 항목 없음)</li>
+          <li>기사 발행일이 2026-10-25로 표기되어 있어 날짜·연도 확인 필요</li><li>원문에 라이브캠 주소가 없어 링크 안내 불가</li><li>원문에 새끼 5마리 이외 개체 상태나 현재 방송 지속 여부 정보 없음</li><li>기부 안내는 원문 내용일 뿐 수익화·모금 연결 시 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-39172dd164b8-0">1장</label>
+          <textarea id="s-39172dd164b8-0" rows="2" data-slide="0">치타 새끼 **5마리**
+생중계 중?!</textarea>
+          
+          <label class="f" for="s-39172dd164b8-1">2장</label>
+          <textarea id="s-39172dd164b8-1" rows="3" data-slide="1">엄마 치타 이름은
+**주라**
+10월 5일에 출산</textarea>
+          
+          <label class="f" for="s-39172dd164b8-2">3장</label>
+          <textarea id="s-39172dd164b8-2" rows="3" data-slide="2">장소는 미국
+**스미소니언**
+보전연구소</textarea>
+          
+          <label class="f" for="s-39172dd164b8-3">4장</label>
+          <textarea id="s-39172dd164b8-3" rows="3" data-slide="3">**밤낮** 없이
+웹캠으로
+볼 수 있대</textarea>
+          
+          <label class="f" for="s-39172dd164b8-4">5장</label>
+          <textarea id="s-39172dd164b8-4" rows="3" data-slide="4">**소리**까지
+들린다니까
+짹짹, 그르릉</textarea>
+          
+          <label class="f" for="s-39172dd164b8-5">6장</label>
+          <textarea id="s-39172dd164b8-5" rows="2" data-slide="5">야생엔 단 **7천**
+마리만 남았대</textarea>
+          
+          <label class="f" for="s-39172dd164b8-6">7장</label>
+          <textarea id="s-39172dd164b8-6" rows="3" data-slide="6">동물 영상 좋아하는
+**친구**한테
+지금 보내기</textarea>
+          
+          <label class="f" for="c-39172dd164b8">본문 (캡션)</label>
+          <textarea id="c-39172dd164b8" class="caption">치타 새끼 5마리가 생중계 중이라니, 이거 진짜야?
+
+미국 버지니아에 있는 스미소니언 보전연구소에서 10월 5일, 주라라는 이름의 치타가 새끼 다섯 마리를 낳았어. 그리고 이 가족의 모습을 밤낮으로 라이브 웹캠을 통해 볼 수 있대.
+
+카메라로는 엄마 치타가 새끼들을 돌보는 모습을 볼 수 있고, 부드러운 짹짹 소리, 작은 그르릉 소리, 야옹 소리도 함께 들을 수 있어. 새끼들이 젖을 먹든, 그루밍을 하든, 서로 뒹굴며 놀든 모든 순간을 보고 들을 수 있다는 거지.
+
+그런데 이건 귀여운 아기 동물 이야기만은 아니야. 치타는 보전 문제를 안고 있고, 야생에는 약 7,000마리만 남아 있다고 해.
+
+이 라이브 영상은 사육 담당 직원들이 멀리서 큰 고양이들을 살필 때 쓰는 것과 같은 카메라라고 해. 이곳에서 태어난 새끼들은 워싱턴 DC에 있는 동물원의 동물들과 달리 초기에 사람과의 접촉이 제한된다는 설명이야. 덕분에 새끼들이 엄마와 유대를 쌓을 수 있고, 직원들은 동물원 우리 안에서는 어려운 행동 연구도 할 수 있대.
+
+주라의 굴을 지켜보는 것은 종의 생존을 위한 보전 활동을 엿보는 일이라는 소개도 있었어. 웹페이지에서는 기부도 할 수 있대.
+
+출처: Good News Network</textarea>
+          <label class="f" for="t-39172dd164b8">해시태그</label>
+          <input id="t-39172dd164b8" type="text" class="tagsin" value="#치타 #스미소니언 #라이브캠 #동물보호 #아기동물" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>엄마 치타가 새끼를 돌보는 모습과 짹짹, 그르릉, 야옹 소리를 함께 볼 수 있다</b>
+            <q>“The camera offers a rare opportunity to see a mama cheetah caring for her newborn cubs—while you listen to the intimate vocalizing of soft chirps, tiny purrs, and meows.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>새끼들이 엄마와 유대를 쌓고 직원들은 동물원 서식지에서는 불가능한 행동 연구를 할 수 있다</b>
+            <q>“That helps the cubs bond with their mother while giving the staff an opportunity for behavioral research not possible inside a zoo habitat.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 5일 주라라는 치타가 미국 버지니아의 스미소니언 보전연구소에서 새끼 다섯 마리를 낳았다</b>
+            <q>“On October 5, a cheetah named Zura gave birth to five adorable cubs at the Smithsonian’s Conservation Institute in Virginia—and you can spy on them night and day.”</q>
+            <small>slide1, slide2, slide3, caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새끼들을 밤낮으로 볼 수 있는 라이브 웹캠이 있다</b>
+            <q>“On October 5, a cheetah named Zura gave birth to five adorable cubs at the Smithsonian’s Conservation Institute in Virginia—and you can spy on them night and day.”</q>
+            <small>slide1, slide4, caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>젖 먹기, 그루밍, 뒹굴기 등 모든 순간의 영상과 소리를 제공한다</b>
+            <q>“Whether the cats are nursing, grooming or wrestling around, the cheetah cam provides the sights–and sounds–of every moment.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>야생에는 치타가 약 7,000마리만 남아 있다</b>
+            <q>“Cheetahs face conservation challenges, with just 7,000 individuals remaining in the wild.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 라이브 영상은 사육 담당 직원이 멀리서 큰 고양이들을 살필 때 쓰는 것과 같다</b>
+            <q>“Notably, this live feed is the same one used by the animal caretaker staff to monitor the big cats remotely from the Smithsonian facility in Front Royal.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이곳에서 태어난 새끼는 워싱턴 DC 동물원 동물들과 달리 초기에 사람과의 접촉이 제한된다</b>
+            <q>““Unlike animals living at our Zoo in nearby Washington, DC, cubs born here experience limited human contact early in their lives.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주라의 굴을 지켜보는 것은 종의 생존을 위한 보전 활동을 엿보는 일이며 웹페이지에서 기부할 수 있다</b>
+            <q>“By tuning in to Zura’s den, you’re sharing a rare window into the conservation work that ensures the species’ survival. Feel free to donate while on their webpage.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/live-smithsonian-webcam-for-cheetah-den-and-5-cubs/" target="_blank" rel="noopener">LIVE Webcam Brings You Inside Cheetah Den With 5 Tiny Cubs Tended By Mom (WATCH and LISTEN)</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Cheetah_portrait_Whipsnade_Zoo.jpg" target="_blank" rel="noopener">William Warby / Wikimedia Commons · CC BY 2.0</a> — "cheetah"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Namibia_Otjiwarongo_Cheetah_Conservation_Fund_Cheetah_Sitting.jpg" target="_blank" rel="noopener">Alexander Klink / Wikimedia Commons · CC BY 4.0</a> — "cheetah"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Gina_DellaTogna_determining_sperm_viability_in_golden_frogs_Photo_credit_(c)_Gina_DellaTogna,_Smithsonian_Conservation_Biology_Institute)._(16404619088).jpg" target="_blank" rel="noopener">Brian Gratwicke from DC, USA / Wikimedia Commons · CC BY 2.0</a> — "Smithsonian Conservation Biology Institute"</li><li>4장: <a href="https://pixabay.com/photos/portable-computer-computer-pra%C3%A7a-1155173/" target="_blank" rel="noopener">sarinharas / Pixabay</a> — "webcam"</li><li>7장: <a href="https://pixabay.com/photos/cheetah-africa-safari-cat-wildlife-7277665/" target="_blank" rel="noopener">greatplaces360 / Pixabay</a> — "cheetah cub"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-66812590c36e" data-id="66812590c36e">
+    <div class="head">
+      <h2>3. 매커너히 20년치 악평 사막 독파</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 5 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/66812590c36e/v1-01.jpg" alt="1장: 악평 20년치를 사막에서 읽음?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/66812590c36e/v1-02.jpg" alt="2장: 주인공은 매튜 매커너히" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/66812590c36e/v1-03.jpg" alt="3장: 기간은 딱 이틀…ㄷㄷ" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/66812590c36e/v1-04.jpg" alt="4장: 자기 욕을 전부 모았대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/66812590c36e/v1-05.jpg" alt="5장: 본인 말로는 &#34;하나도 안 빼고&#34;" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/66812590c36e/v1-06.jpg" alt="6장: 악플에 흔들리는 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261026-am-f6e9873fa903/66812590c36e/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">악평 20년치를 사막에서 이틀 동안 다 읽었다는 얘기, 들어봤어?
+
+주인공은 할리우드 배우 매튜 매커너히야. 최근 팟캐스트 Build or Break에 나와서 자기에 대한 부정적인 리뷰를 20년 치 모아 읽었다고 털어놨어.
+
+본인 설명은 이래. 20년 치 악평을 모아서 주말 동안 사막으로 떠났고, 그걸 두꺼운 책 한 권으로 묶어 가져가 전부 읽었다는 거야. 그는 &#34;하나도 빼놓지 않고 다 읽었다&#34;고 했고, 이틀 동안 찬찬히 들여다봤는데 쉽지 않았다고 말했어.
+
+이 일화를 두고 가디언의 칼럼니스트 폴리 허드슨은 &#34;이 모든 게 마음에 든다&#34;며 박수를 보냈어. 대부분의 사람은 자기 비판을 듣는 걸 좋아하지 않는데, 그래서 이번 고백이 더 특이하다는 반응이야. 장소와 기간, 그리고 20년이라는 세월까지 디테일이 완벽하다는 평가도 덧붙였어.
+
+칼럼은 책을 직접 만들었는지, 조수가 대신 만들었는지 같은 빈틈은 우리가 상상으로 채워야 한다고도 짚었어. 사실 확인된 건 어디까지나 본인이 한 말이라는 점은 알아두자.
+
+출처: 가디언(The Guardian)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#매튜매커너히 #해외화제 #할리우드 #악플 #해외반응</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>가디언 칼럼니스트 폴리 허드슨은 이 일화의 모든 면이 마음에 든다고 썼다 <small>애매 · &#39;I love everything about this&#39; 등 칼럼의 평가는 원문에 있지만, 발언자가 폴리 허드슨이라는 이름은 발췌문에 나오지 않는다. 필자 이름은 원문 근거로 확인되지 않으므로 &#39;칼럼 필자가 이렇게 썼다&#39;로만 쓰는 것이 안전하다.</small></li>
+          <li>근거 등록 안 된 주장: 칼럼이 가디언(The Guardian)에 실렸다는 출처 주장은 발췌문으로 확인되지 않는다</li><li>근거 등록 안 된 주장: &#39;사실 확인된 건 어디까지나 본인이 한 말이라는 점&#39;이라는 주장은 원문 근거가 없다</li><li>근거 등록 안 된 주장: 매커너히를 할리우드 배우로 소개한 부분은 원문 맥락에 있으나 claims 목록에 별도로 없다</li><li>근거 등록 안 된 주장: 이번 팟캐스트 고백이 &#39;최근&#39;(recent)이라는 시점 주장은 원문에 recent로만 있고 날짜는 없다</li>
+          <li>실존 인물(매튜 매커너히) 관련 내용: 본인 발언 기반이며 사실 확인은 본인 주장에 한정</li><li>원문이 칼럼(의견 기사)이라 평가는 필자 의견으로만 표기</li><li>출처 기사 속 사진·영상 묘사는 사용하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-66812590c36e-0">1장</label>
+          <textarea id="s-66812590c36e-0" rows="2" data-slide="0">악평 20년치를
+**사막**에서 읽음?!</textarea>
+          
+          <label class="f" for="s-66812590c36e-1">2장</label>
+          <textarea id="s-66812590c36e-1" rows="2" data-slide="1">주인공은
+매튜 **매커너히**</textarea>
+          
+          <label class="f" for="s-66812590c36e-2">3장</label>
+          <textarea id="s-66812590c36e-2" rows="2" data-slide="2">기간은
+딱 **이틀**…ㄷㄷ</textarea>
+          
+          <label class="f" for="s-66812590c36e-3">4장</label>
+          <textarea id="s-66812590c36e-3" rows="2" data-slide="3">자기 욕을
+**전부** 모았대</textarea>
+          
+          <label class="f" for="s-66812590c36e-4">5장</label>
+          <textarea id="s-66812590c36e-4" rows="2" data-slide="4">본인 말로는
+&#34;**하나도** 안 빼고&#34;</textarea>
+          
+          <label class="f" for="s-66812590c36e-5">6장</label>
+          <textarea id="s-66812590c36e-5" rows="3" data-slide="5">**악플**에 흔들리는
+친구한테
+조용히 보내기</textarea>
+          
+          <label class="f" for="c-66812590c36e">본문 (캡션)</label>
+          <textarea id="c-66812590c36e" class="caption">악평 20년치를 사막에서 이틀 동안 다 읽었다는 얘기, 들어봤어?
+
+주인공은 할리우드 배우 매튜 매커너히야. 최근 팟캐스트 Build or Break에 나와서 자기에 대한 부정적인 리뷰를 20년 치 모아 읽었다고 털어놨어.
+
+본인 설명은 이래. 20년 치 악평을 모아서 주말 동안 사막으로 떠났고, 그걸 두꺼운 책 한 권으로 묶어 가져가 전부 읽었다는 거야. 그는 &#34;하나도 빼놓지 않고 다 읽었다&#34;고 했고, 이틀 동안 찬찬히 들여다봤는데 쉽지 않았다고 말했어.
+
+이 일화를 두고 가디언의 칼럼니스트 폴리 허드슨은 &#34;이 모든 게 마음에 든다&#34;며 박수를 보냈어. 대부분의 사람은 자기 비판을 듣는 걸 좋아하지 않는데, 그래서 이번 고백이 더 특이하다는 반응이야. 장소와 기간, 그리고 20년이라는 세월까지 디테일이 완벽하다는 평가도 덧붙였어.
+
+칼럼은 책을 직접 만들었는지, 조수가 대신 만들었는지 같은 빈틈은 우리가 상상으로 채워야 한다고도 짚었어. 사실 확인된 건 어디까지나 본인이 한 말이라는 점은 알아두자.
+
+출처: 가디언(The Guardian)</textarea>
+          <label class="f" for="t-66812590c36e">해시태그</label>
+          <input id="t-66812590c36e" type="text" class="tagsin" value="#매튜매커너히 #해외화제 #할리우드 #악플 #해외반응" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>가디언 칼럼니스트 폴리 허드슨은 이 일화의 모든 면이 마음에 든다고 썼다</b>
+            <q>“I love everything about this. Each detail is perfect: the setting, the duration of the pursuit and the period spanned by the reviews, the narcissistic/anti-narcissistic intent, the ridiculousness, the pretension, the commitment.”</q>
+            <small>caption · <a href="https://www.theguardian.com/commentisfree/2026/oct/25/matthew-mcconaughey-bad-reviews" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매튜 매커너히가 사막에서 이틀 동안 20년치 자신에 대한 악평을 읽었다고 밝혔다</b>
+            <q>“The Hollywood actor revealed that he once spent two days in the desert reading 20 years’ worth of negative reviews about himself.”</q>
+            <small>slide1, slide3, caption · <a href="https://www.theguardian.com/commentisfree/2026/oct/25/matthew-mcconaughey-bad-reviews" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매커너히는 팟캐스트 Build or Break에서 모든 리뷰를 읽었고 이틀 동안 봤으며 힘들었다고 말했다</b>
+            <q>““I read every one,” McConaughey said on the podcast Build or Break, while wearing tinted sunglasses inside and the sort of hat last seen on The Only Way Is Essex. “I sat with them – I spent two days looking. It was hard.””</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/commentisfree/2026/oct/25/matthew-mcconaughey-bad-reviews" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매커너히는 20년치 악평을 모아 주말 동안 사막에 가서 두꺼운 책 한 권으로 묶어 읽었다고 말했다</b>
+            <q>“When McConaughey says he “collected 20 years” of slatings and “went away to the desert for a weekend and took them all in this thick book”, do we imagine him sitting by the printer with his Pritt Stick, constructing his burn book with his own fair hands?”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/commentisfree/2026/oct/25/matthew-mcconaughey-bad-reviews" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>대부분의 사람은 자신이 비판받는 걸 좋아하지 않아서 이번 고백이 특이하다</b>
+            <q>“Which is why a recent admission from Matthew McConaughey is unusual.”</q>
+            <small>caption · <a href="https://www.theguardian.com/commentisfree/2026/oct/25/matthew-mcconaughey-bad-reviews" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>칼럼은 책을 직접 만들었는지 조수가 했는지 등 빈틈은 독자가 채워야 한다고 썼다</b>
+            <q>“There are a few gaps we’ll have to fill in ourselves.”</q>
+            <small>caption · <a href="https://www.theguardian.com/commentisfree/2026/oct/25/matthew-mcconaughey-bad-reviews" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/commentisfree/2026/oct/25/matthew-mcconaughey-bad-reviews" target="_blank" rel="noopener">Matthew McConaughey has read all his bad reviews – and I applaud him | Polly Hudson</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/road-nevada-clouds-bird-landscape-3856796/" target="_blank" rel="noopener">jplenio / Pixabay</a> — "lone desert road under bright blue sky"</li><li>2장: <a href="https://pixabay.com/photos/summer-travel-vacation-holiday-2880261/" target="_blank" rel="noopener">veerasantinithi / Pixabay</a> — "sunglasses hat"</li><li>3장: <a href="https://pixabay.com/photos/alarm-clock-2175382/" target="_blank" rel="noopener">PIRO4D / Pixabay</a> — "alarm clock"</li><li>4장: <a href="https://pixabay.com/photos/books-stack-white-stack-of-books-1845614/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "stack of papers"</li><li>5장: <a href="https://pixabay.com/photos/a-book-book-gift-heart-gift-read-1760998/" target="_blank" rel="noopener">congerdesign / Pixabay</a> — "open book"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-9073145c26c3">
+    <div class="head">
+      <h2>S1. 지중해식 식단과 미토콘드리아 마이크로단백질(휴마닌·SHMOOSE) USC 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-9073145c26c3">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 지중해식이 좋다는 건 다 아는데, 올리브오일·생선·콩 같은 음식이 혈액 속 작은 단백질 수치와 같이 움직였다는 새 단서. 단 49명 관찰 연구라는 한계까지 같이 전해야 신뢰를 얻는다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">지중해식 식단 잘 지킨 노인들, 혈액에서 심장·뇌 보호와 연결돼 온 작은 단백질이 더 높았대
+지중해식이 왜 좋은지에 대한 새 단서가 나온 거야
+근데 단백질마다 붙어 있는 음식이 달랐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 지중해식을 더 잘 지킨 사람들은 휴마닌, SHMOOSE라는 작은 단백질 혈중 수치가 더 높았음. 둘 다 세포 속 미토콘드리아가 만드는 거래. 그럼 이 단백질이 뭐 하는 애들인데?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">2/ 이 둘은 심혈관 질환, 알츠하이머 같은 신경퇴행 보호와 연결돼 왔던 단백질이야. 연구진은 이게 먹는 걸 세포 기능으로 번역해 주는 분자 메신저일 수 있다고 봄. 그럼 어떤 음식이랑 붙어 있었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">183/500자</span></div>
+      <p class="tp-text">3/ 음식별 연관 요약 정리 ()
+- 휴마닌: 올리브오일, 생선, 콩류를 많이 먹은 쪽이 높음
+- SHMOOSE: 올리브오일은 많이, 정제 탄수화물은 적게 먹은 쪽이 높음
+연구에서 쓴 기준
+- 올리브오일 하루 1큰술 이상
+- 생선 주 3회 이상
+- 콩류 주 2회 이상
+- 흰 빵 하루 1회분 미만
+그럼 심장 쪽 단서는 뭐였을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">4/ 심장 쪽 단서도 있었음. 휴마닌 수치가 높은 사람은 활성산소를 만드는 효소 Nox2 활동이 낮은 경향이 있었대. 휴마닌이 해로운 산화 과정을 줄이는 걸 도울 수도 있다는 가설이야. 근데 이 결과, 규모가 어땠을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">5/ 중요한 단서. 대상은 심방세동 환자 49명, 평균 78.4세였어. 관찰 연구라서 식단이 이 단백질을 늘렸는지, 단백질이 심혈관 질환을 막는지는 아직 몰라. 연구진도 다음 목표를 인과 확인이라고 함. 그래서 결국 뭘 챙겨가면 되냐면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">212/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 식단과 몸속 작은 단백질 사이에 연관이 보였고, 진짜 원인인지는 이제 확인하겠다는 연구야.
+한식 밥상 vs 지중해식 밥상, 일주일 먹는다면 너는 어느 쪽?
+이런 해외 건강·식단 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 단백질을 혈액(혈장)에서 측정했다는 내용</li><li>근거 등록 안 된 주장: 연구 대상이 노인(older adults)이라는 내용</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>지중해식이 좋다는 말은 들었는데, 왜 좋은지 세포 속 단서가 나왔대</li><li>올리브오일·생선·콩, 혈액 속 작은 단백질 수치랑 같이 움직였다는 연구가 나옴</li><li>49명 혈액을 뜯어봤더니 지중해식 잘 지킨 쪽만 달랐던 게 있대</li><li>&#39;먹는 걸 세포 기능으로 번역하는 메신저&#39;라는 말까지 나온 단백질 얘기</li><li>지중해식 식단은 &#39;그냥 몸에 좋다&#39;가 아니라 &#39;세포 속 발전소와 연결된다&#39;일 수도 있대</li><li>흰 빵 적게, 올리브오일 많이 먹은 사람들 혈액에서 이게 더 높았대</li><li>해외에선 식단이 몸에 어떻게 작동하는지 혈액 속 단백질로 보려는 연구가 나왔어</li><li>식단 따라 달라지는 작은 단백질 두 개, 하나는 알츠하이머 연구와도 얽혀 있대</li><li>지중해식 식단 연구, 이번엔 영양소 말고 미토콘드리아 단백질을 봤음</li><li>지중해식 식단 잘 지킨 노인들, 혈액에서 심장·뇌 보호와 연결돼 온 작은 단백질이 더 높았대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>한식 밥상 vs 지중해식 밥상, 일주일 먹는다면 너는 어느 쪽?</li><li>올리브오일 vs 참기름, 요리할 때 너는 어느 파야?</li><li>생선 반찬 vs 콩 반찬, 밥상에 하나만 남긴다면?</li><li>흰 빵 끊기 vs 흰 쌀밥 끊기, 더 힘든 쪽은?</li><li>지중해식 식단 따라 먹어본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>지중해식 점수 9문항, 어떤 항목으로 식단을 채점하나</li><li>지중해식 식단과 알츠하이머 연구, 뇌에는 어떤 단서가 있나</li><li>정제 탄수화물을 줄이면 몸속에서 무슨 일이 생기나 연구 정리</li><li>11월 16일 세계 지중해식 식단의 날, 어떻게 만들어졌나</li><li>식단에 맞춰 건강을 설계하는 정밀 영양학이란 뭘까</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>ScienceDaily는 &#39;older adults&#39;라고 쓰지만 실제 대상은 심방세동 환자 49명이라, 일반 노년층 전체로 읽히지 않는지 확인</li><li>3/ 음식 기준(올리브오일 1큰술, 생선 주 3회 등)이 권장량처럼 읽히지 않는지 확인. 원문에서는 연구에서 쓴 구분 기준임</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지중해식을 더 잘 지킨 사람들이 휴마닌과 SHMOOSE 수치가 더 높았다</b>
+          <q>“Researchers at the USC Leonard Davis School of Gerontology discovered that people who more closely followed the Mediterranean diet had higher levels of two mitochondrial microproteins called humanin and SHMOOSE.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 단백질은 미토콘드리아가 만든다</b>
+          <q>“Researchers at USC found that older adults who closely followed the diet had higher levels of two tiny proteins, humanin and SHMOOSE, produced by the mitochondria, the energy-producing structures inside cells.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 단백질은 이전부터 심혈관 질환과 신경퇴행 보호와 연결돼 왔다</b>
+          <q>“Both have previously been linked to protection against cardiovascular disease and neurodegeneration, the gradual deterioration of nerve cells that occurs in conditions such as Alzheimer&#39;s disease.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 이 단백질이 먹는 것을 세포 기능으로 번역하는 분자 메신저일 수 있다고 봤다</b>
+          <q>“These microproteins may act as molecular messengers that translate what we eat into how our cells function and age”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>휴마닌은 올리브오일, 생선, 콩류 섭취와 연관됐다</b>
+          <q>“Higher consumption of olive oil, fish, and legumes was linked to increased humanin levels.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>SHMOOSE는 올리브오일 섭취, 정제 탄수화물을 적게 먹는 것과 연관됐다</b>
+          <q>“Meanwhile, olive oil consumption and eating fewer refined carbohydrates were associated with higher levels of SHMOOSE.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>SHMOOSE는 하루 올리브오일 1큰술 이상, 흰 빵 하루 1회분 미만 섭취와 연관됐다</b>
+          <q>“SHMOOSE levels were significantly higher in individuals consuming ≥1 tablespoon of olive oil daily (p = 0.0207) and in those consuming less than one serving of white bread per day (p = 0.0295; Figure 3A).”</q>
+          <small>post3 · <a href="https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2025.1727012/full" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>휴마닌은 하루 올리브오일 1큰술 이상 섭취와 연관됐다</b>
+          <q>“Humanin levels were significantly higher in individuals consuming ≥1 tablespoon of olive oil daily compared to those with a lower intake (p = 0.0069).”</q>
+          <small>post3 · <a href="https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2025.1727012/full" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>휴마닌은 생선 주 3회 이상, 콩류 주 2회 이상 섭취와 연관됐다</b>
+          <q>“Additionally, elevated Humanin concentrations were observed in patients consuming ≥3 servings of fish per week (p = 0.0384) and ≥2 servings of legumes per week (p = 0.0282; Figure 3B).”</q>
+          <small>post3 · <a href="https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2025.1727012/full" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Nox2는 활성산소 생성을 돕는 효소다</b>
+          <q>“The scientists also identified a potentially important connection between humanin and an enzyme called Nox2, which helps generate reactive oxygen species.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>휴마닌 수치가 높은 사람은 Nox2 활동이 낮은 경향이 있었다</b>
+          <q>“The researchers observed that people with higher humanin levels tended to have lower Nox2 activity.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>휴마닌이 해로운 산화 과정을 줄이는 걸 도울 가능성이 제기됐다</b>
+          <q>“This relationship raises the possibility that humanin helps limit damaging oxidative processes, potentially offering an additional layer of cardiovascular protection.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 대상은 심방세동 환자 49명, 평균 78.4세의 횡단 분석이다</b>
+          <q>“Cross-sectional analysis of 49 patients (mean age 78.4 ± 8.7 years; 57% female) selected from an observational study of non-valvular atrial fibrillation (AF) conducted at the Atherothrombosis Center of Sapienza University of Rome.”</q>
+          <small>post5 · <a href="https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2025.1727012/full" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰된 연관성만으로는 식단이 단백질을 늘렸는지, 단백질이 심혈관 질환을 막는지 확정할 수 없다</b>
+          <q>“However, the observed associations do not establish that the diet directly increases these proteins or that the proteins themselves prevent cardiovascular disease.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진의 목표는 연관성 관찰에서 인과 이해로 넘어가는 것이다</b>
+          <q>“Our goal is to move from observing associations to understanding causality”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>다음 단계는 지중해식 식단이 실제로 이 단백질을 늘리는지, 건강 개선으로 이어지는지 확인하는 것이다</b>
+          <q>“The next step is to determine whether adopting a Mediterranean-style diet actually increases these proteins and whether those changes lead to measurable improvements in cardiovascular health, brain function, or disease risk.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="9073145c26c3">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261023003337.htm" target="_blank" rel="noopener">Mediterranean diet may boost tiny proteins that protect the heart and brain</a></li><li><a href="https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2025.1727012/full" target="_blank" rel="noopener">Frontiers | Mediterranean diet adherence is associated with mitochondrial microproteins Humanin and SHMOOSE; potential role of the Humanin–Nox2 interaction in cardioprotection</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-22f5241b654a">
+    <div class="head">
+      <h2>S2. 혈압약 꾸준히 vs 자주 빼먹기, 9만 명 분석</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-22f5241b654a">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 혈압약을 먹는지가 아니라 얼마나 꾸준히 먹는지에 따라 예방 효과가 갈렸다는 9만 명 분석. 누구나 한 번쯤 약을 빼먹어 봐서 나도 해당되나 하는 반응이 나온다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">혈압약은 &#39;먹고 있다&#39;가 아니라 &#39;안 빼먹는다&#39;가 중요하대
+9만 명 넘는 분석에서, 약을 많이 빼먹은 쪽은 심혈관 사고 예방 효과가 통계적으로 안 보였다는 연구가 나옴
+그럼 얼마나 빼먹으면 그런 걸까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">1/ 잘 챙겨 먹은 그룹은 뇌졸중·심근경색 같은 주요 심혈관 사고가 비교 그룹보다 11% 적었어.
+근데 많이 빼먹은 그룹은 통계적으로 의미 있는 감소가 없었대.
+그 &#39;많이&#39;의 기준이 뭐였냐면?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">2/ 기준은 처방받은 약의 80%야. 80% 이상 먹으면 잘 챙긴 그룹, 그 미만이면 덜 챙긴 그룹으로 나눴대.
+9개 임상시험에 참여한 91,339명의 개별 데이터를 분석한 거고.
+그럼 혈압 수치는 얼마나 달랐을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">176/500자</span></div>
+      <p class="tp-text">3/ 한눈에 정리 (치료군과 비교군의 차이, 비교군은 위약이거나 덜 강한 치료)
+- 80% 이상 먹은 그룹: 수축기 혈압 5.2 mmHg 더 낮음 / 심혈관 사고 11% 적음
+- 80% 미만 먹은 그룹: 수축기 혈압 3.0 mmHg 더 낮음 / 심혈관 사고 유의한 감소 없음
+근데 이 비율이 시간이 갈수록 줄었대 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">4/ 꼼꼼히 관리받는 임상시험 안에서도 그랬어. 첫해엔 88%가 80% 기준을 넘겼는데 5년째엔 79%로 줄었대.
+원래 고혈압 환자 절반쯤은 처방대로 안 먹는다는 게 연구진 설명이고.
+그럼 연구진은 뭘 하자고 했을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">145/500자</span></div>
+      <p class="tp-text">5/ 연구진은 복용을 잘 지키는지 진료 때 더 자주 확인하자고 했어.
+방법으로는 복용 일정 단순화, 여러 약을 한 알로 합치기, 가끔 빼먹어도 영향이 덜한 오래 가는 약 처방이 거론됨.
+자기한테 맞는 방법은 의사랑 상의해야 하고. 그래서 뭘 챙겨가면 되냐면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">217/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 혈압약은 꾸준히 먹을 때 보호 효과가 제대로 나온다는 거. 먹기 힘든 이유가 있으면 의사랑 터놓고 얘기하라는 쪽이고.
+매일 챙겨야 하는 게 있으면 알람파 vs 약통파?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 자기에게 맞는 복용 방법은 의사와 상의해야 한다는 내용</li><li>근거 등록 안 된 주장: 혈압약은 &#39;먹고 있다&#39;보다 &#39;빼먹지 않는다&#39;가 중요하다는 핵심 프레이밍</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>혈압약은 &#39;먹고 있다&#39;가 아니라 &#39;안 빼먹는다&#39;가 중요하대</li><li>혈압약을 처방량의 80% 밑으로 먹은 그룹은 심혈관 사고 예방 효과가 통계적으로 안 보였대</li><li>혈압약 처방받는 걸로 끝내지 말고 꾸준히 먹는 것부터 챙기라는 연구가 나옴</li><li>같은 혈압약인데 한쪽은 심혈관 사고 11% 감소, 한쪽은 유의한 감소 없음</li><li>&#39;약은 먹지 않는 환자한테는 듣지 않는다&#39;는 연구진의 말이 나왔어</li><li>고혈압 환자 절반쯤이 처방대로 안 먹는다는데, 그럼 무슨 일이 생기냐면</li><li>관리 빡센 임상시험에서도 5년 지나니 약 잘 챙기는 사람이 88%에서 79%로 줄었대</li><li>혈압약 자주 빼먹는 사람, 이 분석은 한번 봐야 해</li><li>혈압 5.2 vs 3.0, 이 차이가 약을 얼마나 챙겨 먹었냐에서 갈렸대</li><li>약 먹는 일정을 단순하게 하자고 연구진이 직접 제안한 이유</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>매일 챙겨야 하는 게 있으면 알람파 vs 약통파?</li><li>약 하나 먹을 때 물 한 컵 습관, 있는 사람?</li><li>여러 약을 한 알로 합친 거 vs 따로따로, 너라면 어느 쪽이 편할 것 같아?</li><li>자주 먹는 약 시간 잊어버려서 폰 알람 맞춰본 사람?</li><li>아침 약 챙기기, 식후 바로파 vs 출근 전 따로파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>혈압 수치 5mmHg 차이, 실제로 어떤 의미인지 풀어보기</li><li>고혈압 환자들이 약을 거르게 되는 이유 연구</li><li>약 복용 일정을 단순하게 하면 달라지는 것들</li><li>다음 배송: 로슨 모치도 재출시 얘기</li><li>다음 배송: 스미소니언 치타 새끼 5마리 라이브캠 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>학회(ESC Congress 2026) 발표 내용이라 정식 논문 심사 여부는 원문에 나와 있지 않음. 연구 결과로만 전하고 있음.</li><li>80% 미만이면 효과가 없다는 식으로 읽히지 않게 확인 필요. 원문은 통계적으로 유의한 감소가 없었다는 표현임.</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>91,000명 넘는 분석에서 약을 놓치면 심장마비·뇌졸중 예방 효과를 많이 잃을 수 있다는 결과</b>
+          <q>“Missing blood pressure medication could mean losing much of its protection against heart attacks and strokes, according to an analysis of more than 91,000 people.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복용을 덜 한 그룹은 심혈관 사고에서 통계적으로 유의한 감소가 없었다</b>
+          <q>“However, among patients with lower adherence, there was no statistically significant reduction in these events.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>꾸준히 복용한 그룹은 비교군보다 주요 심혈관 사고가 11% 적었다</b>
+          <q>“Among patients who consistently followed their treatment plans, the intervention group experienced an 11% lower incidence of major cardiovascular events compared with the comparator group.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>결과 지표에는 뇌졸중, 심근경색, 허혈성 심장질환, 입원이나 사망으로 이어진 심부전이 포함됐다</b>
+          <q>“The outcomes included strokes, heart attacks (myocardial infarction), ischemic heart disease, and heart failure that resulted in hospitalization or death.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처방약의 80% 이상 먹으면 높은 복용 그룹, 미만이면 낮은 복용 그룹으로 나눴다</b>
+          <q>“Those who took at least 80% of their assigned medication were considered to have higher adherence, while those who took less than 80% were placed in the lower adherence group.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>9개 임상시험의 91,339명 개별 환자 데이터를 분석했다</b>
+          <q>“To better understand how consistently taking medication affects its benefits, researchers analyzed individual patient data from 91,339 participants across nine clinical trials.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>각 임상시험은 혈압 치료를 위약이나 덜 강한 치료와 비교했다</b>
+          <q>“Each trial compared a blood pressure treatment (intervention group) with an alternative approach (comparator group: either placebo or a less-intensive regimen).”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수축기 혈압 차이는 복용을 잘한 그룹 5.2 mmHg, 덜한 그룹 3.0 mmHg</b>
+          <q>“Among participants with higher adherence, systolic blood pressure, the top number in a blood pressure reading, was 5.2 mmHg lower in the intervention group than in the comparator group. For those with lower adherence, the difference was considerably smaller at just 3.0 mmHg.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>임상시험의 체계적인 환경에서도 시간이 지나며 복용이 덜 꾸준해졌다</b>
+          <q>“Even with the regular monitoring and structured conditions of clinical trials, patients became less consistent about taking their medication as time passed.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>첫해 88%가 높은 복용 기준을 충족했지만 5년째에는 79%로 줄었다</b>
+          <q>“Overall, 88% of participants met the higher adherence threshold during the first year, but that figure had dropped to just 79% by the fifth year.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>환자의 약 절반은 처방대로 약을 먹지 않는다</b>
+          <q>“Although medications that lower blood pressure are proven to reduce the risk of cardiovascular complications, approximately half of patients do not take their prescriptions as directed.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 복용 준수 여부를 더 자주 확인하고 환자 교육과 실용적 전략을 늘리자고 권고했다</b>
+          <q>“They recommend more routine assessments of medication adherence, along with better patient education and practical strategies to make treatment easier to follow.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복용 일정 단순화, 복합제, 오래 작용하는 약이 가능한 접근으로 거론됐다</b>
+          <q>“Possible approaches include simplifying medication schedules, combining multiple treatments into a single pill, and prescribing longer-acting drugs that can help limit the consequences of an occasional missed dose.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복용을 잘한 환자는 혈압 감소와 심혈관 사건 예방 효과가 더 컸다</b>
+          <q>“Patients with lower adherence derived little or no cardiovascular benefit, whereas those with higher adherence had greater reductions in blood pressure and prevention of cardiovascular events”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>의료진은 복용에 어려움이 있는지 비판 없이 열린 대화를 하려 한다</b>
+          <q>“As healthcare providers, we are here to have open, non-judgmental conversations with our patients about any barriers they may have to taking medication, to help improve adherence.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="22f5241b654a">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261024222028.htm" target="_blank" rel="noopener">Scientists reveal the hidden danger of missing blood pressure medication</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261026-am";
+  const ORIGINAL = {"39172dd164b8": {"caption": "\uce58\ud0c0 \uc0c8\ub07c 5\ub9c8\ub9ac\uac00 \uc0dd\uc911\uacc4 \uc911\uc774\ub77c\ub2c8, \uc774\uac70 \uc9c4\uc9dc\uc57c?\n\n\ubbf8\uad6d \ubc84\uc9c0\ub2c8\uc544\uc5d0 \uc788\ub294 \uc2a4\ubbf8\uc18c\ub2c8\uc5b8 \ubcf4\uc804\uc5f0\uad6c\uc18c\uc5d0\uc11c 10\uc6d4 5\uc77c, \uc8fc\ub77c\ub77c\ub294 \uc774\ub984\uc758 \uce58\ud0c0\uac00 \uc0c8\ub07c \ub2e4\uc12f \ub9c8\ub9ac\ub97c \ub0b3\uc558\uc5b4. \uadf8\ub9ac\uace0 \uc774 \uac00\uc871\uc758 \ubaa8\uc2b5\uc744 \ubc24\ub0ae\uc73c\ub85c \ub77c\uc774\ube0c \uc6f9\ucea0\uc744 \ud1b5\ud574 \ubcfc \uc218 \uc788\ub300.\n\n\uce74\uba54\ub77c\ub85c\ub294 \uc5c4\ub9c8 \uce58\ud0c0\uac00 \uc0c8\ub07c\ub4e4\uc744 \ub3cc\ubcf4\ub294 \ubaa8\uc2b5\uc744 \ubcfc \uc218 \uc788\uace0, \ubd80\ub4dc\ub7ec\uc6b4 \uc9f9\uc9f9 \uc18c\ub9ac, \uc791\uc740 \uadf8\ub974\ub989 \uc18c\ub9ac, \uc57c\uc639 \uc18c\ub9ac\ub3c4 \ud568\uaed8 \ub4e4\uc744 \uc218 \uc788\uc5b4. \uc0c8\ub07c\ub4e4\uc774 \uc816\uc744 \uba39\ub4e0, \uadf8\ub8e8\ubc0d\uc744 \ud558\ub4e0, \uc11c\ub85c \ub4b9\uad74\uba70 \ub180\ub4e0 \ubaa8\ub4e0 \uc21c\uac04\uc744 \ubcf4\uace0 \ub4e4\uc744 \uc218 \uc788\ub2e4\ub294 \uac70\uc9c0.\n\n\uadf8\ub7f0\ub370 \uc774\uac74 \uadc0\uc5ec\uc6b4 \uc544\uae30 \ub3d9\ubb3c \uc774\uc57c\uae30\ub9cc\uc740 \uc544\ub2c8\uc57c. \uce58\ud0c0\ub294 \ubcf4\uc804 \ubb38\uc81c\ub97c \uc548\uace0 \uc788\uace0, \uc57c\uc0dd\uc5d0\ub294 \uc57d 7,000\ub9c8\ub9ac\ub9cc \ub0a8\uc544 \uc788\ub2e4\uace0 \ud574.\n\n\uc774 \ub77c\uc774\ube0c \uc601\uc0c1\uc740 \uc0ac\uc721 \ub2f4\ub2f9 \uc9c1\uc6d0\ub4e4\uc774 \uba40\ub9ac\uc11c \ud070 \uace0\uc591\uc774\ub4e4\uc744 \uc0b4\ud544 \ub54c \uc4f0\ub294 \uac83\uacfc \uac19\uc740 \uce74\uba54\ub77c\ub77c\uace0 \ud574. \uc774\uacf3\uc5d0\uc11c \ud0dc\uc5b4\ub09c \uc0c8\ub07c\ub4e4\uc740 \uc6cc\uc2f1\ud134 DC\uc5d0 \uc788\ub294 \ub3d9\ubb3c\uc6d0\uc758 \ub3d9\ubb3c\ub4e4\uacfc \ub2ec\ub9ac \ucd08\uae30\uc5d0 \uc0ac\ub78c\uacfc\uc758 \uc811\ucd09\uc774 \uc81c\ud55c\ub41c\ub2e4\ub294 \uc124\uba85\uc774\uc57c. \ub355\ubd84\uc5d0 \uc0c8\ub07c\ub4e4\uc774 \uc5c4\ub9c8\uc640 \uc720\ub300\ub97c \uc313\uc744 \uc218 \uc788\uace0, \uc9c1\uc6d0\ub4e4\uc740 \ub3d9\ubb3c\uc6d0 \uc6b0\ub9ac \uc548\uc5d0\uc11c\ub294 \uc5b4\ub824\uc6b4 \ud589\ub3d9 \uc5f0\uad6c\ub3c4 \ud560 \uc218 \uc788\ub300.\n\n\uc8fc\ub77c\uc758 \uad74\uc744 \uc9c0\ucf1c\ubcf4\ub294 \uac83\uc740 \uc885\uc758 \uc0dd\uc874\uc744 \uc704\ud55c \ubcf4\uc804 \ud65c\ub3d9\uc744 \uc5ff\ubcf4\ub294 \uc77c\uc774\ub77c\ub294 \uc18c\uac1c\ub3c4 \uc788\uc5c8\uc5b4. \uc6f9\ud398\uc774\uc9c0\uc5d0\uc11c\ub294 \uae30\ubd80\ub3c4 \ud560 \uc218 \uc788\ub300.\n\n\ucd9c\ucc98: Good News Network", "hashtags": ["#\uce58\ud0c0", "#\uc2a4\ubbf8\uc18c\ub2c8\uc5b8", "#\ub77c\uc774\ube0c\ucea0", "#\ub3d9\ubb3c\ubcf4\ud638", "#\uc544\uae30\ub3d9\ubb3c"], "slides": [["\uce58\ud0c0 \uc0c8\ub07c **5\ub9c8\ub9ac**", "\uc0dd\uc911\uacc4 \uc911?!"], ["\uc5c4\ub9c8 \uce58\ud0c0 \uc774\ub984\uc740", "**\uc8fc\ub77c**", "10\uc6d4 5\uc77c\uc5d0 \ucd9c\uc0b0"], ["\uc7a5\uc18c\ub294 \ubbf8\uad6d", "**\uc2a4\ubbf8\uc18c\ub2c8\uc5b8**", "\ubcf4\uc804\uc5f0\uad6c\uc18c"], ["**\ubc24\ub0ae** \uc5c6\uc774", "\uc6f9\ucea0\uc73c\ub85c", "\ubcfc \uc218 \uc788\ub300"], ["**\uc18c\ub9ac**\uae4c\uc9c0", "\ub4e4\ub9b0\ub2e4\ub2c8\uae4c", "\uc9f9\uc9f9, \uadf8\ub974\ub989"], ["\uc57c\uc0dd\uc5d4 \ub2e8 **7\ucc9c**", "\ub9c8\ub9ac\ub9cc \ub0a8\uc558\ub300"], ["\ub3d9\ubb3c \uc601\uc0c1 \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c**\ud55c\ud14c", "\uc9c0\uae08 \ubcf4\ub0b4\uae30"]]}, "66812590c36e": {"caption": "\uc545\ud3c9 20\ub144\uce58\ub97c \uc0ac\ub9c9\uc5d0\uc11c \uc774\ud2c0 \ub3d9\uc548 \ub2e4 \uc77d\uc5c8\ub2e4\ub294 \uc598\uae30, \ub4e4\uc5b4\ubd24\uc5b4?\n\n\uc8fc\uc778\uacf5\uc740 \ud560\ub9ac\uc6b0\ub4dc \ubc30\uc6b0 \ub9e4\ud29c \ub9e4\ucee4\ub108\ud788\uc57c. \ucd5c\uadfc \ud31f\uce90\uc2a4\ud2b8 Build or Break\uc5d0 \ub098\uc640\uc11c \uc790\uae30\uc5d0 \ub300\ud55c \ubd80\uc815\uc801\uc778 \ub9ac\ubdf0\ub97c 20\ub144 \uce58 \ubaa8\uc544 \uc77d\uc5c8\ub2e4\uace0 \ud138\uc5b4\ub1a8\uc5b4.\n\n\ubcf8\uc778 \uc124\uba85\uc740 \uc774\ub798. 20\ub144 \uce58 \uc545\ud3c9\uc744 \ubaa8\uc544\uc11c \uc8fc\ub9d0 \ub3d9\uc548 \uc0ac\ub9c9\uc73c\ub85c \ub5a0\ub0ac\uace0, \uadf8\uac78 \ub450\uaebc\uc6b4 \ucc45 \ud55c \uad8c\uc73c\ub85c \ubb36\uc5b4 \uac00\uc838\uac00 \uc804\ubd80 \uc77d\uc5c8\ub2e4\ub294 \uac70\uc57c. \uadf8\ub294 \"\ud558\ub098\ub3c4 \ube7c\ub193\uc9c0 \uc54a\uace0 \ub2e4 \uc77d\uc5c8\ub2e4\"\uace0 \ud588\uace0, \uc774\ud2c0 \ub3d9\uc548 \ucc2c\ucc2c\ud788 \ub4e4\uc5ec\ub2e4\ubd24\ub294\ub370 \uc27d\uc9c0 \uc54a\uc558\ub2e4\uace0 \ub9d0\ud588\uc5b4.\n\n\uc774 \uc77c\ud654\ub97c \ub450\uace0 \uac00\ub514\uc5b8\uc758 \uce7c\ub7fc\ub2c8\uc2a4\ud2b8 \ud3f4\ub9ac \ud5c8\ub4dc\uc2a8\uc740 \"\uc774 \ubaa8\ub4e0 \uac8c \ub9c8\uc74c\uc5d0 \ub4e0\ub2e4\"\uba70 \ubc15\uc218\ub97c \ubcf4\ub0c8\uc5b4. \ub300\ubd80\ubd84\uc758 \uc0ac\ub78c\uc740 \uc790\uae30 \ube44\ud310\uc744 \ub4e3\ub294 \uac78 \uc88b\uc544\ud558\uc9c0 \uc54a\ub294\ub370, \uadf8\ub798\uc11c \uc774\ubc88 \uace0\ubc31\uc774 \ub354 \ud2b9\uc774\ud558\ub2e4\ub294 \ubc18\uc751\uc774\uc57c. \uc7a5\uc18c\uc640 \uae30\uac04, \uadf8\ub9ac\uace0 20\ub144\uc774\ub77c\ub294 \uc138\uc6d4\uae4c\uc9c0 \ub514\ud14c\uc77c\uc774 \uc644\ubcbd\ud558\ub2e4\ub294 \ud3c9\uac00\ub3c4 \ub367\ubd99\uc600\uc5b4.\n\n\uce7c\ub7fc\uc740 \ucc45\uc744 \uc9c1\uc811 \ub9cc\ub4e4\uc5c8\ub294\uc9c0, \uc870\uc218\uac00 \ub300\uc2e0 \ub9cc\ub4e4\uc5c8\ub294\uc9c0 \uac19\uc740 \ube48\ud2c8\uc740 \uc6b0\ub9ac\uac00 \uc0c1\uc0c1\uc73c\ub85c \ucc44\uc6cc\uc57c \ud55c\ub2e4\uace0\ub3c4 \uc9da\uc5c8\uc5b4. \uc0ac\uc2e4 \ud655\uc778\ub41c \uac74 \uc5b4\ub514\uae4c\uc9c0\ub098 \ubcf8\uc778\uc774 \ud55c \ub9d0\uc774\ub77c\ub294 \uc810\uc740 \uc54c\uc544\ub450\uc790.\n\n\ucd9c\ucc98: \uac00\ub514\uc5b8(The Guardian)", "hashtags": ["#\ub9e4\ud29c\ub9e4\ucee4\ub108\ud788", "#\ud574\uc678\ud654\uc81c", "#\ud560\ub9ac\uc6b0\ub4dc", "#\uc545\ud50c", "#\ud574\uc678\ubc18\uc751"], "slides": [["\uc545\ud3c9 20\ub144\uce58\ub97c", "**\uc0ac\ub9c9**\uc5d0\uc11c \uc77d\uc74c?!"], ["\uc8fc\uc778\uacf5\uc740", "\ub9e4\ud29c **\ub9e4\ucee4\ub108\ud788**"], ["\uae30\uac04\uc740", "\ub531 **\uc774\ud2c0**\u2026\u3137\u3137"], ["\uc790\uae30 \uc695\uc744", "**\uc804\ubd80** \ubaa8\uc558\ub300"], ["\ubcf8\uc778 \ub9d0\ub85c\ub294", "\"**\ud558\ub098\ub3c4** \uc548 \ube7c\uace0\""], ["**\uc545\ud50c**\uc5d0 \ud754\ub4e4\ub9ac\ub294", "\uce5c\uad6c\ud55c\ud14c", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30"]]}, "f2b4e631f3f3": {"caption": "\ub85c\uc2a8 \ubaa8\ucc0c\ub3c4\ub11b\uc774 \uc77c\ubcf8 \uc804\uc5ed\uc5d0 \ub2e4\uc2dc \ub3cc\uc544\uc654\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \uc77c\ubcf8 \ub9e4\uccb4 \uc18c\ub77c\ub274\uc2a424\ub294 \uc62c\ud574 \ucd08 \ub85c\uc2a8\uc5d0\uc11c \ub9cc\ub09c \uc774 \ub3c4\ub11b\uc774 \ud3b8\uc758\uc810 \ub3c4\ub11b\uc774\ub77c\ub294 \uc7a5\ub974\ub97c \uc644\uc804\ud788 \uc0c8\ub85c \uc815\uc758\ud588\ub2e4\uace0 \uc18c\uac1c\ud588\ub358 \ubc14 \uc788\uc5b4.\n\n\ucc98\uc74c\uc5d4 \u0027\ubaa8\uce58\ube44\u0027\ub77c\ub294 \uc774\ub984\uc73c\ub85c \uc124\ud0d5 \ub9db\uacfc \ud0a4\ub098\ucf54(\ubcf6\uc740 \ucf69\uac00\ub8e8) \ub9db \ub450 \uac00\uc9c0\uac00 \ub098\uc654\ub294\ub370, \ud55c\uc815 \uc2dc\ubc94 \ud310\ub9e4\ub77c \uc804\uad6d\uc5d0\uc11c \ud314\uc9c0\ub294 \uc54a\uc558\ub300. \uc774\ubc88\uc5d0\ub294 10\uc6d4 20\uc77c\ubd80\ud130 \uc77c\ubcf8 \uc804\uc5ed\uc5d0\uc11c \ub2e4\uc2dc \ub098\uc624\uace0, \uc774\ub984\uc740 \u0027\ubaa8\uce58\ub3c4\u0027\ub85c \ubc14\ub00c\uc5c8\uc5b4. \uae30\uc0ac\ub294 \uc774\ub984 \ub05d\ubd80\ubd84 \ub54c\ubb38\uc5d0 \uc0ac\ub78c\ub4e4\uc774 \ub3c4\ub11b\uc744 \ubca0\uc774\uae00\ub85c \ucc29\uac01\ud588\uc744 \uc218\ub3c4 \uc788\ub2e4\uace0 \ucd94\uce21\ud588\uc5b4.\n\n\ub9db\uc740 \uc9c0\ub09c\ubc88\uacfc \uac19\uc740 \uc124\ud0d5, \ud0a4\ub098\ucf54 \ub450 \uac00\uc9c0\uace0 \uac00\uaca9\ub3c4 \uadf8\ub300\ub85c \uac1c\ub2f9 171\uc5d4(\uc57d 1.10\ub2ec\ub7ec)\uc774\uc57c. \uae30\uc0ac\ub97c \uc4f4 \uae30\uc790\ub294 20\uc77c \uc800\ub141\uc5d0 \uac00\uae4c\uc6b4 \ub85c\uc2a8\uc5d0 \uac14\ub354\ub2c8 \uc774\ubbf8 \ud488\uc808\uc774\uc5c8\uace0, \ub2e4\uc74c \ub0a0 \uc544\uce68\uc5d0\uc57c \uad6c\ud588\ub2e4\uace0 \ud574. \uc9c1\uc811 \uba39\uc5b4\ubcf8 \uae30\uc790\ub294 \uc2dd\uac10\uc774 \uc608\uc804\uacfc \ub611\uac19\uace0 \uc5b4\uca4c\uba74 \ub354 \ub0ab\ub2e4\uace0 \ud3c9\uac00\ud588\uc5b4. \ud3b8\uc758\uc810\uc774 \uc544\ub2c8\ub77c \ube75\uc9d1\uc5d0\uc11c \uc0b0 \uac83 \uac19\uc740 \ub514\ud14c\uc77c\uc774\ub77c\ub294 \uac10\uc0c1\ub3c4 \ub0a8\uacbc\uace0.\n\n\uc77c\ubcf8 \uc5ec\ud589 \uacc4\ud68d\uc774 \uc788\ub294 \uce5c\uad6c\uac00 \uc788\ub2e4\uba74 \uc774 \uc18c\uc2dd \ud55c\ubc88 \ubcf4\ub0b4\uc918\ub3c4 \uc88b\uaca0\uc9c0?\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\ub85c\uc2a8", "#\uc77c\ubcf8\ud3b8\uc758\uc810", "#\ubaa8\ucc0c\ub3c4\ub11b", "#\uc77c\ubcf8\uc5ec\ud589", "#\ud3b8\uc758\uc810\ub514\uc800\ud2b8"], "slides": [["\ub85c\uc2a8 \ubaa8\ucc0c\ub3c4\ub11b", "**\uc804\uad6d\uc5d0** \ub3cc\uc544\uc634?!"], ["\uc774\ub984\uc740", "\ubaa8\uce58\ube44\u2192**\ubaa8\uce58\ub3c4**"], ["**10\uc6d4 20\uc77c\ubd80\ud130**", "\uc77c\ubcf8 \uc804\uc5ed \ubc1c\ub9e4"], ["\ub9db\uc740 \uc288\uac00\ub791", "**\ud0a4\ub098\ucf54** \ub450 \uac00\uc9c0"], ["\uac00\uaca9\uc740", "\uc608\uc804 \uadf8\ub300\ub85c", "**171\uc5d4**"], ["\uae30\uc790\uac00 \uac04 \uacf3\uc740", "\uccab\ub0a0 \uc800\ub141\uc5d0", "\uc774\ubbf8 **\ud488\uc808**"], ["\uc77c\ubcf8 \uac00\ub294 \uce5c\uad6c\ud55c\ud14c", "**\ub85c\uc2a8** \uac00\ubcf4\ub77c\uace0", "\ubcf4\ub0b4\uc8fc\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>
