@@ -1,0 +1,1727 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.03 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.03 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-e536396438df" data-jump="e536396438df">1</a><a href="#post-af6e23ec4edc" data-jump="af6e23ec4edc">2</a><a href="#post-0d7083740654" data-jump="0d7083740654">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-e536396438df" data-id="e536396438df">
+    <div class="head">
+      <h2>1. 1억 1500만 년 된 공룡 화석에서 혈구 추정 구조 발견</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-01.jpg" alt="1장: 공룡 피가 나왔다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-02.jpg" alt="2장: 브라질 광산에서 나온 다리뼈" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-03.jpg" alt="3장: 핏줄 길 안에 타원형 구조 가득" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-04.jpg" alt="4장: 닮았다만으론 안 돼" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-05.jpg" alt="5장: 가장 오래된 공룡 혈구 후보" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-06.jpg" alt="6장: 서랍 속 화석도 다시 본다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-07.jpg" alt="7장: 공룡 덕후 친구 지금 바로 태그" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/e536396438df/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">공룡 뼈, 이빨, 피부, 깃털, 알, 심지어 배설물 화석까지 찾았는데 이번엔 피의 흔적이다. 호주 커틴대 연구진이 이끈 팀이 1억 1500만 년 전 공룡 다리뼈 화석에서 적혈구로 보이는 구조와 혈액 유래 분자를 확인했다고 밝혔다.
+
+화석은 2008년 브라질의 한 광산에서 나온 작은 수각류 공룡 아라타사우루스의 오른쪽 다리뼈다. 뼛속 혈관 통로 안에서 타원형 미세 구조가 대량으로 발견됐다. 과거에도 공룡 화석에서 단백질이나 세포를 찾았다는 주장이 여러 번 있었지만, 재현과 사후 오염 배제가 어려웠다. 이번에는 현미경 관찰에 화학 분석을 더해 신원을 뒷받침했다.
+
+연구진은 곰팡이나 미생물의 흔적일 가능성을 검토했지만 필라멘트, 포자, 바이오필름은 찾지 못했다. 황철석 광물화나 퇴적 입자의 흔적도 없었다. 대신 산소 운반을 돕는 분자 헴, 그중에서도 헴 B가 뼈 추출물에서 우세했다. 이전 발견은 길어야 약 8000만 년 전으로, 이번 화석이 가장 오래된 사례라고 한다.
+
+다만 연구진은 신중하다. 커틴대의 클리티 그라이스 박사는 가장 먼저 필요한 일이 재현이라고 말했다. 다른 화석과 다른 지질 환경에서도 비슷한 신호가 독립적으로 확인되어야 한다는 설명이다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#공룡 #화석 #과학뉴스 #고생물학 #해외뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 화석의 연대가 약 1억 1500만 년 전이라는 주장(슬라이드1·2, 본문)은 claims 목록에 없다</li><li>근거 등록 안 된 주장: 공룡 뼈, 이빨, 피부, 깃털, 알, 배설물 화석 등이 발견됐다는 주장(캡션)은 claims 목록에 없다</li><li>근거 등록 안 된 주장: 클리티 그라이스가 커틴대 유기지구화학자라는 직함 주장은 claims 목록에 없다</li>
+          <li>연구 결과는 &#39;혈구로 추정&#39;되는 단계이며 재현 확인 전이라 단정 표현 주의</li><li>원문은 매체 기사로, 논문 원문(PNAS)은 직접 확인하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-e536396438df-0">1장</label>
+          <textarea id="s-e536396438df-0" rows="6" data-slide="0">**공룡 피가**
+나왔다고???
+---
+호주 커틴대 연구진이 1억 1500만 년 전 공룡 다리뼈 화석에서 적혈구로 보이는 구조와 혈액 유래 분자를 찾아냈다.</textarea>
+          
+          <label class="f" for="s-e536396438df-1">2장</label>
+          <textarea id="s-e536396438df-1" rows="6" data-slide="1">브라질 광산에서
+나온 **다리뼈**
+---
+문제의 화석은 2008년 브라질의 한 광산에서 나왔다. 약 1억 1500만 년 전에 살았던 작은 수각류 공룡 아라타사우루스의 오른쪽 다리뼈였다.</textarea>
+          
+          <label class="f" for="s-e536396438df-2">3장</label>
+          <textarea id="s-e536396438df-2" rows="6" data-slide="2">핏줄 길 안에
+**타원형** 구조 가득
+---
+뼛속 혈관 통로가 화석으로 남아 있었고, 그 안에서 타원형의 미세 구조가 대량으로 발견됐다. 연구진은 크기와 위치가 세포와 꼭 맞는다고 밝혔다.</textarea>
+          
+          <label class="f" for="s-e536396438df-3">4장</label>
+          <textarea id="s-e536396438df-3" rows="6" data-slide="3">닮았다만으론
+안 돼
+---
+연구진은 곰팡이나 미생물이 남긴 흔적일 가능성을 따져 봤지만 필라멘트, 포자, 바이오필름은 없었다. 산소를 나르는 분자인 헴 B가 뼈 추출물을 지배했다는 분석이 근거가 됐다.</textarea>
+          
+          <label class="f" for="s-e536396438df-4">5장</label>
+          <textarea id="s-e536396438df-4" rows="6" data-slide="4">**가장 오래된**
+공룡 혈구 후보
+---
+이전 발견은 길어야 약 8000만 년 전 것이었다. 이번 화석은 산소가 거의 없는 얕은 물의 미생물 매트에서 보존된 것으로, 망간 광물화가 구조를 안정시켰을 수 있다고 연구진은 해석했다.</textarea>
+          
+          <label class="f" for="s-e536396438df-5">6장</label>
+          <textarea id="s-e536396438df-5" rows="6" data-slide="5">서랍 속 화석도
+**다시** 본다
+---
+연구진의 최우선 과제는 재현 확인이다. 박물관과 대학에 보관된 수천 점의 화석을 다시 조사할 수 있다는 점에서 기대를 밝혔다.</textarea>
+          
+          <label class="f" for="s-e536396438df-6">7장</label>
+          <textarea id="s-e536396438df-6" rows="6" data-slide="6">**공룡 덕후** 친구
+지금 바로 태그
+---
+1억 1500만 년 된 뼈에서 혈구 후보가 나왔다는 이야기는 공룡을 좋아하는 친구라면 반길 소식. 재현 확인이 남았다는 점까지 함께 전해 주기 좋다.</textarea>
+          
+          <label class="f" for="c-e536396438df">본문 (캡션)</label>
+          <textarea id="c-e536396438df" class="caption">공룡 뼈, 이빨, 피부, 깃털, 알, 심지어 배설물 화석까지 찾았는데 이번엔 피의 흔적이다. 호주 커틴대 연구진이 이끈 팀이 1억 1500만 년 전 공룡 다리뼈 화석에서 적혈구로 보이는 구조와 혈액 유래 분자를 확인했다고 밝혔다.
+
+화석은 2008년 브라질의 한 광산에서 나온 작은 수각류 공룡 아라타사우루스의 오른쪽 다리뼈다. 뼛속 혈관 통로 안에서 타원형 미세 구조가 대량으로 발견됐다. 과거에도 공룡 화석에서 단백질이나 세포를 찾았다는 주장이 여러 번 있었지만, 재현과 사후 오염 배제가 어려웠다. 이번에는 현미경 관찰에 화학 분석을 더해 신원을 뒷받침했다.
+
+연구진은 곰팡이나 미생물의 흔적일 가능성을 검토했지만 필라멘트, 포자, 바이오필름은 찾지 못했다. 황철석 광물화나 퇴적 입자의 흔적도 없었다. 대신 산소 운반을 돕는 분자 헴, 그중에서도 헴 B가 뼈 추출물에서 우세했다. 이전 발견은 길어야 약 8000만 년 전으로, 이번 화석이 가장 오래된 사례라고 한다.
+
+다만 연구진은 신중하다. 커틴대의 클리티 그라이스 박사는 가장 먼저 필요한 일이 재현이라고 말했다. 다른 화석과 다른 지질 환경에서도 비슷한 신호가 독립적으로 확인되어야 한다는 설명이다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-e536396438df">해시태그</label>
+          <input id="t-e536396438df" type="text" class="tagsin" value="#공룡 #화석 #과학뉴스 #고생물학 #해외뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>호주 커틴대 연구진이 이끈 팀이 공룡 뼈에서 화석화된 적혈구로 보이는 구조와 혈액 유래 분자를 확인했다</b>
+            <q>“A team led by scientists at Curtin University in Australia has identified what appear to be fossilized red blood cells, along with blood-derived molecules, preserved for over 100 million years, inside an unassuming dinosaur leg bone.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>화석은 2008년 브라질의 광산에서 발견됐고 작은 수각류 아라타사우루스의 오른쪽 다리뼈다</b>
+            <q>“The discovery was made in a fossil recovered from a mine in Brazil in 2008. These bones were from the right leg of an Aratasaurus museunacionali, a small theropod dinosaur that lived around 115 million years ago.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뼛속 혈관 통로가 화석으로 남아 있었고 그 안에서 타원형 미세 구조가 대량 발견됐다</b>
+            <q>“On close inspection, fossilized vascular canals were detected inside the bones – and inside those canals, the team found a treasure trove of ellipsoidal microstructures.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그라이스는 구조가 세포와 크기가 맞고 혈관 통로의 알맞은 위치에 많았다고 말했다</b>
+            <q>“&#34;When we examined the Aratasaurus bone at the microscopic and chemical level, we encountered structures that were remarkably cell-like, in the order of right size, and a lot of them in the right location in the vascular canals,&#34; Grice said.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>곰팡이나 미생물의 흔적이라면 필라멘트, 포자, 바이오필름 등이 보여야 하지만 연구진은 찾지 못했다</b>
+            <q>“But if that were the case, you&#39;d expect to see traces of filaments, spores, biofilms, or other structures – and the team found none.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>황철석 광물화나 퇴적 입자의 흔적은 없었다</b>
+            <q>“Geochemical analysis also revealed no traces of pyrite mineralization or sedimentary grains that could masquerade as cellular structures.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헴은 혈구가 산소를 나르도록 돕는 핵심 분자이며, 뼈 추출물은 헴 B가 우세했다</b>
+            <q>“High-performance liquid chromatography–mass spectrometry revealed the bone extract was dominated by heme B, very different from the molecular signatures in the surrounding rock, which seemed to have been produced by photosynthetic microbes.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이전 발견은 길어야 약 8000만 년 전이며 이번 화석이 가장 오래된 공룡 혈구 후보 사례다</b>
+            <q>“Being around 115 million years old, this fossil marks the oldest known example of possible dinosaur blood cells – previous finds date back &#34;only&#34; about 80 million years at most.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>화석은 산소가 거의 없는 얕은 물의 미생물 매트에서 보존됐다</b>
+            <q>“The team suggests that it&#39;s largely due to the specific geological setting in which this Aratasaurus was preserved: a microbial mat in shallow waters almost completely starved of oxygen.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그라이스는 망간 광물화가 섬세한 구조를 안정시켰을 수 있다고 해석했다</b>
+            <q>“&#34;Our interpretation is that manganese mineralization may have contributed to stabilizing or replicating these extremely delicate structures during fossilization,&#34; Grice said.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진의 최우선 과제는 재현이다</b>
+            <q>“&#34;The immediate priority is replication,&#34; said Grice.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>박물관과 대학에 보관된 수천 점의 화석을 다시 조사할 수 있다</b>
+            <q>“&#34;What particularly excites me is that thousands of fossils already sitting in museum and university collections could potentially be revisited,&#34; said Grice.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다른 화석과 지질 환경에서 비슷한 신호가 독립적으로 확인되어야 한다</b>
+            <q>“If similar signals can be demonstrated independently, we can begin asking much bigger questions about preservation and, cautiously, about ancient physiology.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>과거에도 공룡 화석에서 단백질과 세포를 찾았다는 주장이 있었으나 재현과 오염 배제가 어려웠다</b>
+            <q>“If the claim sounds familiar, that&#39;s because several teams have claimed to detect proteins and cells in dinosaur fossils over the last few decades. But these finds have been difficult to replicate and confirm that the cells indeed belonged to the original animal, and weren&#39;t just outside contamination after death.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 연구는 현미경 관찰에 화학 분석을 더해 의심 세포의 정체를 뒷받침했다</b>
+            <q>“In the new study, the identity of the suspected cells was backed up by chemical analysis.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">Dinosaur Blood Cells Detected in 115-Million-Year-Old Fossil</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/national-history-museum-4314035/" target="_blank" rel="noopener">just-pics / Pixabay</a> — "fossil bone fragment on sunlit desk with magnifying glass"</li><li>2장: <a href="https://www.curtin.edu.au/news/media-release/dinosaur-blood-oldest-discovery-rewrites-what-fossils-can-reveal-about-the-past/" target="_blank" rel="noopener">커틴대학교 / </a> — "https://www.curtin.edu.au/news/wp-content/uploads/2026/10/P1012262-scaled.jpg"</li><li>3장: <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/Kliti-RBC-composition-for-Conversation3-flat-2048x1810.jpg"</li><li>4장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>5장: <a href="https://www.sciencealert.com/dinosaur-blood-cells-detected-in-115-million-year-old-fossil" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/Aratasaur-RBC-new-edits-for-PNAS-2-flat-2048x1786.jpg"</li><li>6장: <a href="https://pixabay.com/photos/manuscript-ancient-writing-document-547042/" target="_blank" rel="noopener">pcdazero / Pixabay</a> — "museum archive"</li><li>7장: <a href="https://pixabay.com/photos/museum-dinosaur-dino-fossil-5082786/" target="_blank" rel="noopener">adventurous_blondine / Pixabay</a> — "dinosaur skeleton"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-af6e23ec4edc" data-id="af6e23ec4edc">
+    <div class="head">
+      <h2>2. 시간이 한 방향인 이유 - 조각 우주 시뮬레이션</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 16 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-01.jpg" alt="1장: 시간은 왜 하나뿐이야???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-02.jpg" alt="2장: 공간 3, 시간 1 왜 이 조합일까" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-03.jpg" alt="3장: 조각을 던져 우주를 조립" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-04.jpg" alt="4장: 85%가 우리 우주를 닮았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-05.jpg" alt="5장: 시간 변 없이도 시간이 생겼다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-06.jpg" alt="6장: 아직 장난감 모형 단계야" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-07.jpg" alt="7장: 우주 덕후 친구 태그해서 보내" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/af6e23ec4edc/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">시간은 왜 한 방향으로만 흐를까, 공간은 왜 3차원일까. 이런 질문에 새 수학적 접근이 나왔다. 세르비아 베오그라드대학 물리학자 세 명이 4차원 조각을 가상으로 조립하는 시뮬레이션을 돌려, 우리가 아는 공간 3차원과 시간 1차원 구조가 저절로 나오는지 확인했다. 연구진은 약 10만 개의 조각을 쓰고 변 길이를 무작위로 정한 뒤, 물리 법칙 같은 복잡한 동역학은 빼고 기하만으로 맞물리게 했다. 평가 횟수는 200억 건이 넘는다. 변을 공간형 길이로만 둔 경우 최대 약 85%가 공간 3차원, 시간 1차원 구조가 됐다. 약 8%는 공간 2차원, 시간 2차원으로 갈라진 우주였다. 반대로 공간형과 시간형 변을 모두 허용하면 분할 구조가 72~81%로 가장 많았다. 다만 이 연구는 양자중력의 장난감 모형을 쓴 것이고, arXiv에 올라온 프리프린트라 아직 동료 검토를 거치지 않았다. 연구진은 이후 물리 법칙 같은 요소를 더해 더 검증할 수 있다고 밝혔다. 우주와 시간이 궁금한 친구에게 보내서 같이 이야기해 보자. 출처: ScienceAlert, arXiv</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#시간 #우주 #물리학 #양자중력 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>이 모형에서는 공간형 변만으로 충분했고, 길이가 어긋난 변은 시간 방향이 있는 기하로만 맞물리는 경우가 많았다 <small>애매 · 원문은 공간형 변만으로 충분했고 어긋난 변은 &#39;종종(often)&#39; 시간 방향이 있는 기하에서만 맞는다고 한다. &#39;많았다&#39;는 표현은 허용되지만 &#39;시간 방향 기하로만 맞물린다&#39;를 일반화하지 말고 &#39;경우가 많았다&#39;로 유지해야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 카드·캡션의 출처 표기 &#39;출처: ScienceAlert&#39;는 원문 기사 출처에 대한 사실 주장이며 claims 목록에 없다.</li>
+          <li>동료 검토를 거치지 않은 arXiv 프리프린트임</li><li>양자중력의 단순화한 장난감 모형 결과라 실제 우주의 설명으로 단정할 수 없음</li><li>85%는 공간형 변 길이 범위와 UV 컷오프를 적절히 고른 조건에서의 수치임</li><li>변을 공간형·시간형 모두 허용하면 분할 구조가 우세해지는 등 조건에 따라 결과가 달라짐</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-af6e23ec4edc-0">1장</label>
+          <textarea id="s-af6e23ec4edc-0" rows="6" data-slide="0">시간은 왜
+**하나뿐이야???**
+---
+세르비아 베오그라드대 물리학자 세 명이 4차원 조각으로 가상 우주를 조립해, 공간 3차원과 시간 1차원이 왜 생기는지 살펴봤다.</textarea>
+          
+          <label class="f" for="s-af6e23ec4edc-1">2장</label>
+          <textarea id="s-af6e23ec4edc-1" rows="6" data-slide="1">공간 3, 시간 1
+**왜 이 조합일까**
+---
+민코프스키는 100여 년 전 공간과 시간이 하나의 직물로 얽혀 있다고 설명했다. 그 틀은 공간 세 차원과 시간 한 차원으로 이뤄지는데, 왜 이 조합인지가 이번 연구의 질문이다.</textarea>
+          
+          <label class="f" for="s-af6e23ec4edc-2">3장</label>
+          <textarea id="s-af6e23ec4edc-2" rows="6" data-slide="2">조각을 던져
+우주를 **조립**
+---
+연구진은 4차원 조각 약 10만 개의 변 길이를 무작위로 정했다. 복잡한 물리 법칙은 빼고 기하만으로 조립해, 평가를 200억 건 넘게 모았다.</textarea>
+          
+          <label class="f" for="s-af6e23ec4edc-3">4장</label>
+          <textarea id="s-af6e23ec4edc-3" rows="6" data-slide="3">**85%**가 우리
+우주를 닮았다
+---
+변을 공간형 길이로 둔 시뮬레이션에서 최대 약 85%가 공간 3차원·시간 1차원 구조로 모였다. 약 6%는 시간 없이 공간만 4차원인 얼어붙은 우주였다.</textarea>
+          
+          <label class="f" for="s-af6e23ec4edc-4">5장</label>
+          <textarea id="s-af6e23ec4edc-4" rows="6" data-slide="4">시간 변 없이도
+**시간이 생겼다**
+---
+시간형 변을 따로 넣지 않아도 공간형 변만으로 충분했다. 길이가 어긋난 변들은 시간 방향이 있는 기하로만 맞물리는 경우가 많았고, 전체 모양이 공이든 구든 차이는 거의 없었다.</textarea>
+          
+          <label class="f" for="s-af6e23ec4edc-5">6장</label>
+          <textarea id="s-af6e23ec4edc-5" rows="6" data-slide="5">아직 **장난감**
+모형 단계야
+---
+연구진이 쓴 건 양자중력의 단순화한 장난감 모형이다. 논문은 arXiv에 올라온 프리프린트로 아직 동료 검토를 거치지 않았고, 이후 물리 법칙 같은 동역학을 더해 검증할 수 있다고 했다.</textarea>
+          
+          <label class="f" for="s-af6e23ec4edc-6">7장</label>
+          <textarea id="s-af6e23ec4edc-6" rows="6" data-slide="6">우주 덕후 친구
+태그해서 보내
+---
+무작위 조각을 맞췄더니 최대 약 85%가 우리 우주와 같은 구조로 모였다. 시간이 왜 하나인지 궁금해하던 물리 덕후 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-af6e23ec4edc">본문 (캡션)</label>
+          <textarea id="c-af6e23ec4edc" class="caption">시간은 왜 한 방향으로만 흐를까, 공간은 왜 3차원일까. 이런 질문에 새 수학적 접근이 나왔다. 세르비아 베오그라드대학 물리학자 세 명이 4차원 조각을 가상으로 조립하는 시뮬레이션을 돌려, 우리가 아는 공간 3차원과 시간 1차원 구조가 저절로 나오는지 확인했다. 연구진은 약 10만 개의 조각을 쓰고 변 길이를 무작위로 정한 뒤, 물리 법칙 같은 복잡한 동역학은 빼고 기하만으로 맞물리게 했다. 평가 횟수는 200억 건이 넘는다. 변을 공간형 길이로만 둔 경우 최대 약 85%가 공간 3차원, 시간 1차원 구조가 됐다. 약 8%는 공간 2차원, 시간 2차원으로 갈라진 우주였다. 반대로 공간형과 시간형 변을 모두 허용하면 분할 구조가 72~81%로 가장 많았다. 다만 이 연구는 양자중력의 장난감 모형을 쓴 것이고, arXiv에 올라온 프리프린트라 아직 동료 검토를 거치지 않았다. 연구진은 이후 물리 법칙 같은 요소를 더해 더 검증할 수 있다고 밝혔다. 우주와 시간이 궁금한 친구에게 보내서 같이 이야기해 보자. 출처: ScienceAlert, arXiv</textarea>
+          <label class="f" for="t-af6e23ec4edc">해시태그</label>
+          <input id="t-af6e23ec4edc" type="text" class="tagsin" value="#시간 #우주 #물리학 #양자중력 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>이 모형에서는 공간형 변만으로 충분했고, 길이가 어긋난 변은 시간 방향이 있는 기하로만 맞물리는 경우가 많았다</b>
+            <q>“Yet in this model, space-like edges alone were enough: edges of mismatched lengths often can only fit together in a geometry that includes a time direction”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>베오그라드대 물리학자 세 명이 4차원 조각으로 가상 우주 기하를 시뮬레이션해 공간 3차원·시간 1차원이 나오는지 살폈다</b>
+            <q>“In a preprint paper posted to arXiv, which has not yet been peer-reviewed, a trio of physicists from the University of Belgrade, in Serbia, simulated different cosmic geometries, out of virtual four-dimensional triangles, to see if they could give rise to our familiar mix of three dimensions of space and one of time.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>민코프스키가 100여 년 전 공간과 시간이 하나의 직물로 얽혀 있다고 설명했다</b>
+            <q>“He told us that they&#39;re both intertwined in a fabric that permeates the cosmos, comprising three dimensions of space and one dimension of time.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>100여 년 전 공간과 시간에 대한 이해를 바꾼 사상가가 있었다</b>
+            <q>“Over one hundred years ago, a pioneering thinker changed how we understand space and time.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>왜 우주는 공간 3차원과 시간 1차원인지가 질문이다</b>
+            <q>“But why does the Universe have three spatial dimensions and one temporal dimension?”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 약 10만 개의 조각으로 이뤄진 구성을 고려했다</b>
+            <q>“The researchers also considered three different topologies, or cosmic landscapes, made of approximately 100,000 simplices in three configurations.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 조각의 변 길이를 무작위로 정했다</b>
+            <q>“The researchers then randomized the edge lengths for these pieces, setting the minimum at the Planck length, a scale of 10-35 meters that represents the breakdown of our physical understanding.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>복잡한 우주 역학과 힘을 걷어내고 기하만으로 조립하게 했다</b>
+            <q>“When you toss a bunch of randomized puzzle pieces in a mixer, strip away complex cosmic dynamics and forces, and let them assemble geometrically, up to about 85 percent of the time they organize into a spacetime with three spatial dimensions and one temporal dimension – according to mathematical signatures the researchers assigned to these dimensions.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>평가 데이터가 200억 건이 넘는다</b>
+            <q>“Altogether, their final data pool included over 20 billion evaluations of these various simplices-based simulations.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>변을 공간형 길이로 둔 경우 최대 약 85%가 공간 3차원·시간 1차원 구조로 모였다</b>
+            <q>“We obtain that for a suitably chosen spacelike domain of edge lengths and the UV cutoff, the probability of observing Minkowski signature reaches approximately 85%.”</q>
+            <small>slide4, slide7, caption · <a href="https://arxiv.org/abs/2610.31776" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약 6%는 시간 없이 공간 4차원인 얼어붙은 우주였다</b>
+            <q>“Around 6 percent of the trials give a Euclidean signature: a frozen Universe with four spatial dimensions and no time.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약 8%는 공간 2차원, 시간 2차원의 갈라진 우주였다</b>
+            <q>“And, intriguingly, about 8 percent of the trials yielded a split Universe, with two dimensions of space and two dimensions of time.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공간형과 시간형 변을 모두 허용하면 분할 구조가 72~81%로 우세했다</b>
+            <q>“In contrast, allowing both spacelike and timelike edge lengths leads to the split signature being dominant, with probability between 72% and 81%.”</q>
+            <small>caption · <a href="https://arxiv.org/abs/2610.31776" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전체 모양이 공이든 구든 결과에 거의 차이가 없었다</b>
+            <q>“Just as surprisingly, the topology didn&#39;t matter, making little difference whether the global shape of the Universe was a ball, sphere, or just a jumble of puzzle pieces, perhaps suggesting that the split between space and time is set locally.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 양자중력의 장난감 모형을 썼다</b>
+            <q>“The authors used a toy model of quantum gravity – which is itself mysterious and debated – to probe some complex cosmic mechanics without the messy real-Universe complications, like the laws of physics.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 연구는 arXiv 프리프린트이며 아직 동료 검토를 거치지 않았다</b>
+            <q>“The research is available as a preprint on arXiv and has not yet been peer-reviewed.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이후 연구에서 물리 법칙 같은 동역학을 더해 검증할 수 있다</b>
+            <q>“Future research can include other dynamics, like physical laws, and various shapes, to further test &#34;whether the spacetime signature can ultimately be understood as an emergent property of quantum geometry,&#34; the researchers conclude.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/a-strange-new-theory-helps-explain-why-our-universe-has-only-one-dimension-of-time" target="_blank" rel="noopener">A Strange New Theory Helps Explain Why Our Universe Has Only One Dimension of Time</a> (기사)</li><li><a href="https://arxiv.org/abs/2610.31776" target="_blank" rel="noopener">Minkowski metric signature as a statistical prediction of piecewise-flat quantum gravity</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/puzzle-pieces-puzzle-share-game-7696621/" target="_blank" rel="noopener">congerdesign / Pixabay</a> — "colorful geometric puzzle pieces floating in bright space"</li><li>2장: <a href="https://pixabay.com/photos/alarm-clock-2175382/" target="_blank" rel="noopener">PIRO4D / Pixabay</a> — "clock"</li><li>3장: <a href="https://pixabay.com/photos/puzzle-last-part-joining-together-3223941/" target="_blank" rel="noopener">Alexas_Fotos / Pixabay</a> — "puzzle pieces"</li><li>4장: <a href="https://pixabay.com/photos/tiles-shapes-texture-pattern-art-2617112/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "geometric pattern"</li><li>5장: <a href="https://pixabay.com/photos/new-year-background-hourglass-time-620397/" target="_blank" rel="noopener">Nile / Pixabay</a> — "hourglass"</li><li>6장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>7장: <a href="https://pixabay.com/photos/dark-milky-way-night-silhouette-1867202/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "starry sky"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-0d7083740654" data-id="0d7083740654">
+    <div class="head">
+      <h2>3. 카시오 Feel Sync 키보드 CT-FS1</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12 · 애매 2
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/v1-01.jpg" alt="1장: 건반이 절대 안 틀린다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/v1-02.jpg" alt="2장: Feel Sync라는 새 기술 탑재" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/v1-03.jpg" alt="3장: 앱에 곡을 올리면 알아서 분석" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/v1-04.jpg" alt="4장: 초보와 고수가 한 건반에서" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/v1-05.jpg" alt="5장: 음계엔 도움 없지만 리듬엔 도움" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/v1-06.jpg" alt="6장: 음악 시작하려는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/product-1102213944-01.jpg" alt="상품 사진: 흰 배경 위에 놓인 검은색 디지털 키보드 단품, 사선 각도 촬영, 건반과 상단 조작부 보임 (casio.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/product-1102213944-02.jpg" alt="상품 사진: 검은색 디지털 키보드(건반 악기)를 정면 위에서 본 모습, 상단 패널에 버튼과 조작부가 있음 (engadget.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/product-1102213944-03.jpg" alt="상품 사진: 위에서 내려다본 흰색 디지털 키보드를 사람이 연주하는 장면. 카펫 바닥과 소파 일부가 함께 보임 (engadget.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 3장이 카드 뒤에 같이 들어가요 (casio.com, engadget.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">건반을 아무렇게나 눌러도 틀린 음이 나지 않는다면 어떨까. 카시오가 새 키보드 CT-FS1을 공개했다. 핵심은 이번에 처음 선보인 Feel Sync 기술이다.
+
+사용법은 이렇다. 전용 Feel Sync 앱에 연주하고 싶은 곡을 올리면 알고리즘이 내용을 분석해 키보드가 항상 곡의 조에 맞도록 만든다. 조가 자주 바뀌거나 브리지가 여러 번 나오는 복잡한 곡에서도 작동한다고 한다.
+
+Feel Sync 영역은 두 구역으로 나눌 수도 있다. 초보자는 한쪽에서 건반을 두드리고, 숙련자는 반대쪽에서 실제 음을 연주하는 식이다. Engadget은 음계를 익히는 데는 도움이 되지 않겠지만 리듬, 타이밍, 표현을 익히는 데는 도움이 될 것이라고 평했다.
+
+일반 카시오 키보드처럼 평소 방식대로 연주할 수도 있다. 터치 반응 건반 61개, 서라운드 효과가 있는 스테레오 스피커 내장, 헤드폰 출력과 블루투스를 갖췄다. AA 건전지나 AC 어댑터로 작동하고 무게는 10파운드가 채 안 된다. 색상은 검은색과 흰색 두 가지로, 건반까지 한 가지 색으로 통일했다. 가격은 400달러이며 지금 구매할 수 있다.
+
+출처: Engadget</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#카시오 #키보드 #전자피아노 #악기초보 #신기한제품</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>Feel Sync는 키보드를 어떤 곡에든 맞게 조정해 연주자가 틀린 음을 칠 수 없게 한다 <small>애매 · 원문은 &#39;the player can never hit a wrong note&#39;라고 하여 틀린 음을 칠 수 없다고 쓰지만, 기사 본문 자체가 이를 Engadget의 주장으로 전하는 것이므로 &#39;틀린 음을 칠 수 없다&#39;는 단정은 과장 여지가 있다. &#39;가능성이 있다/표방한다&#39;로 완화 필요.</small></li><li>조 변화와 브리지가 많은 복잡한 곡에서도 작동한다 <small>애매 · 원문은 복잡한 곡에서도 작동한다고 하지만 이는 Engadget 기자의 서술이며 실제 검증된 결과는 아니다. &#39;작동한다고 한다&#39;처럼 전달 표현이 필요하다.</small></li>
+          <li>근거 등록 안 된 주장: 카드뉴스 슬라이드 제목의 &#39;건반이 절대 안 틀린다&#39;는 표현은 원문이 단정하지 않은 과장이다</li><li>근거 등록 안 된 주장: &#39;초보와 고수가 한 건반에서&#39;라는 설명 중 함께 연주한다는 표현은 원문에 명시된 것이 아니라 두 구역 분할에서 유추된 내용이다</li><li>근거 등록 안 된 주장: 슬라이드6의 &#39;음악을 시작하려는 친구에게 보낼 이유&#39; 및 &#39;친구가 좋아하는 곡에 맞춰 칠 수 있다&#39;는 권유성 주장은 원문에 없는 기사 측 추론이다</li><li>근거 등록 안 된 주장: &#39;Feel Sync는 이번에 처음 선보인 기술&#39;이라는 주장은 원문의 new/brand-new 표현에서 나왔으나 처음 선보였다는 시점 표현은 과잉 해석 여지가 있다</li><li>근거 등록 안 된 주장: &#39;키보드가 곡의 조에 맞게 된다&#39;는 설명에서 조 변화와 브리지가 많은 복잡한 곡의 작동은 원문상 기자 서술이며 실제 시험 결과가 아님이 명시되지 않았다</li>
+          <li>효과에 대한 평가는 Engadget 필자의 의견이므로 출처를 밝혀 서술함</li><li>가격과 구매 가능 여부는 기사 작성 시점 기준이라 변동 가능</li><li>Feel Sync는 음계 학습에는 도움이 되지 않는다는 한계가 기사에 언급됨</li><li>제품명·브랜드명이 등장하므로 홍보로 읽히지 않도록 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-0d7083740654-0">1장</label>
+          <textarea id="s-0d7083740654-0" rows="6" data-slide="0">건반이 절대
+**안 틀린다???**
+---
+카시오가 어떤 노래를 올려도 틀린 음을 칠 수 없게 만들어 주는 키보드 CT-FS1을 새로 공개했다.</textarea>
+          
+          <label class="f" for="s-0d7083740654-1">2장</label>
+          <textarea id="s-0d7083740654-1" rows="6" data-slide="1">Feel Sync라는
+**새 기술** 탑재
+---
+이 키보드에는 카시오가 새로 내놓은 Feel Sync 기술이 들어 있다. 이 기술이 키보드를 어떤 곡에든 맞게 조정해 주기 때문에 연주자는 틀린 음을 칠 수 없다.</textarea>
+          
+          <label class="f" for="s-0d7083740654-2">3장</label>
+          <textarea id="s-0d7083740654-2" rows="6" data-slide="2">앱에 곡을 올리면
+**알아서 분석**
+---
+전용 Feel Sync 앱에 원하는 곡을 올리면 알고리즘이 내용을 분석해 키보드가 항상 곡의 조에 맞게 한다. 조 변화와 브리지가 많은 복잡한 곡에서도 작동한다.</textarea>
+          
+          <label class="f" for="s-0d7083740654-3">4장</label>
+          <textarea id="s-0d7083740654-3" rows="6" data-slide="3">**초보와 고수가**
+한 건반에서
+---
+Feel Sync 영역은 건반을 두 구역으로 나눠 쓸 수 있다. 초보자가 한쪽에서 건반을 누르는 동안 숙련자는 다른 쪽에서 실제 음을 연주할 수 있다.</textarea>
+          
+          <label class="f" for="s-0d7083740654-4">5장</label>
+          <textarea id="s-0d7083740654-4" rows="6" data-slide="4">음계엔 도움 없지만
+**리듬엔 도움**
+---
+Engadget은 음계를 익히는 데는 도움이 안 되겠지만 리듬과 타이밍, 표현을 익히는 데는 도움이 될 것이라고 평했다. 악기를 배울 때 흔히 간과되는 부분이라고 했다.</textarea>
+          
+          <label class="f" for="s-0d7083740654-5">6장</label>
+          <textarea id="s-0d7083740654-5" rows="6" data-slide="5">음악 시작하려는
+**친구한테** 보내기
+---
+건반을 처음 배우려는 친구라면 틀릴 걱정 없이 좋아하는 곡에 맞춰 쳐 볼 수 있다는 점에 솔깃할 소식. 초보와 숙련자가 함께 연주할 수 있다는 점도 보내 줄 이유.</textarea>
+          
+          <label class="f" for="c-0d7083740654">본문 (캡션)</label>
+          <textarea id="c-0d7083740654" class="caption">건반을 아무렇게나 눌러도 틀린 음이 나지 않는다면 어떨까. 카시오가 새 키보드 CT-FS1을 공개했다. 핵심은 이번에 처음 선보인 Feel Sync 기술이다.
+
+사용법은 이렇다. 전용 Feel Sync 앱에 연주하고 싶은 곡을 올리면 알고리즘이 내용을 분석해 키보드가 항상 곡의 조에 맞도록 만든다. 조가 자주 바뀌거나 브리지가 여러 번 나오는 복잡한 곡에서도 작동한다고 한다.
+
+Feel Sync 영역은 두 구역으로 나눌 수도 있다. 초보자는 한쪽에서 건반을 두드리고, 숙련자는 반대쪽에서 실제 음을 연주하는 식이다. Engadget은 음계를 익히는 데는 도움이 되지 않겠지만 리듬, 타이밍, 표현을 익히는 데는 도움이 될 것이라고 평했다.
+
+일반 카시오 키보드처럼 평소 방식대로 연주할 수도 있다. 터치 반응 건반 61개, 서라운드 효과가 있는 스테레오 스피커 내장, 헤드폰 출력과 블루투스를 갖췄다. AA 건전지나 AC 어댑터로 작동하고 무게는 10파운드가 채 안 된다. 색상은 검은색과 흰색 두 가지로, 건반까지 한 가지 색으로 통일했다. 가격은 400달러이며 지금 구매할 수 있다.
+
+출처: Engadget</textarea>
+          <label class="f" for="t-0d7083740654">해시태그</label>
+          <input id="t-0d7083740654" type="text" class="tagsin" value="#카시오 #키보드 #전자피아노 #악기초보 #신기한제품" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/product-1102213944-01.jpg" alt="" width="56" height="56" loading="lazy"> 흰 배경 위에 놓인 검은색 디지털 키보드 단품, 사선 각도 촬영, 건반과 상단 조작부 보임 · casio.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/product-1102213944-02.jpg" alt="" width="56" height="56" loading="lazy"> 검은색 디지털 키보드(건반 악기)를 정면 위에서 본 모습, 상단 패널에 버튼과 조작부가 있음 · engadget.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="2"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261103-am-be146551d216/0d7083740654/product-1102213944-03.jpg" alt="" width="56" height="56" loading="lazy"> 위에서 내려다본 흰색 디지털 키보드를 사람이 연주하는 장면. 카펫 바닥과 소파 일부가 함께 보임 · engadget.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>Feel Sync는 키보드를 어떤 곡에든 맞게 조정해 연주자가 틀린 음을 칠 수 없게 한다</b>
+            <q>“This adapts the keyboard to any song, so the player can never hit a wrong note.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>조 변화와 브리지가 많은 복잡한 곡에서도 작동한다</b>
+            <q>“This even works on complicated songs with tons of key changes and various bridges and the like.”</q>
+            <small>slide3, caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카시오가 키보드 CT-FS1을 공개했다</b>
+            <q>“Casio just unveiled the CT-FS1 keyboard and it looks like a great entrypoint for budding musicians.”</q>
+            <small>slide1, caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>CT-FS1에는 카시오의 새 Feel Sync 기술이 들어 있다</b>
+            <q>“That&#39;s because it comes equipped with the company&#39;s brand-new Feel Sync technology.”</q>
+            <small>slide2, caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>앱에 곡을 올리면 알고리즘이 내용을 분석해 키보드가 항상 곡의 조에 맞게 한다</b>
+            <q>“Basically, people upload any song they want into the app and the algorithm analyzes the content and ensures the keyboard will always be in key.”</q>
+            <small>slide3, summary, caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Feel Sync 영역은 두 구역으로 나눌 수 있고 초보자와 숙련자가 각각 다른 쪽에서 연주할 수 있다</b>
+            <q>“The Feel Sync portion of the keyboard can also be split into two zones. This allows a newbie to plunk keys on one end and a more seasoned musician to play the actual notes on the other end.”</q>
+            <small>slide4, slide6, summary, caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Engadget은 음계 학습에는 도움이 안 되지만 리듬·타이밍·표현에는 도움이 될 것이라고 평했다</b>
+            <q>“While it certainly won&#39;t help with learning scales or anything like that, it&#39;ll be a boon for nailing rhythm, timing and expression.”</q>
+            <small>slide5, caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>리듬·타이밍·표현은 악기를 배울 때 흔히 간과되는 부분이다</b>
+            <q>“These are often overlooked facets of learning any instrument.”</q>
+            <small>slide5 · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>CT-FS1은 일반 카시오 키보드처럼 평소 방식으로도 연주할 수 있다</b>
+            <q>“Of course, this is also a standard Casio keyboard that can be played in the regular way.”</q>
+            <small>caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>터치 반응 건반 61개와 서라운드 효과가 있는 스테레오 스피커를 갖췄다</b>
+            <q>“It features 61 touch-responsive keys, a built-in stereo speaker with a surround effect and plenty of sounds to choose from.”</q>
+            <small>caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헤드폰 출력과 블루투스를 갖췄다</b>
+            <q>“There&#39;s a headphone output and Bluetooth integration.”</q>
+            <small>caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>AA 건전지나 AC 어댑터로 작동하며 무게는 10파운드가 채 안 된다</b>
+            <q>“The CT-FS1 runs on AA batteries or an AC adapter and is just under ten pounds.”</q>
+            <small>caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>검은색과 흰색 두 가지 색상이며 건반까지 한 가지 색으로 통일했다</b>
+            <q>“There&#39;s a black one that&#39;s entirely black, keys and all. The same goes for the white model.”</q>
+            <small>caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가격은 400달러이며 지금 구매할 수 있다</b>
+            <q>“The CT-FS1 costs $400 and is available right now.”</q>
+            <small>caption · <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">Casio&#39;s new keyboard lets anyone play along to songs without ever hitting a wrong note - Engadget</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.musicradar.com/music-tech/keyboards-pianos/no-practice-required-this-new-casiotone-keyboard-makes-it-impossible-to-hit-a-wrong-note-when-youre-playing-along-to-your-favourite-songs" target="_blank" rel="noopener">MusicRadar / </a> — "https://cdn.mos.cms.futurecdn.net/VrnukNt8GXzEX3r3NDxXHD-1200-80.jpg"</li><li>2장: <a href="https://pixabay.com/photos/keyboard-hardware-computer-70506/" target="_blank" rel="noopener">geralt / Pixabay</a> — "electronic keyboard"</li><li>3장: <a href="https://pixabay.com/photos/social-media-facebook-smartphone-763731/" target="_blank" rel="noopener">Firmbee / Pixabay</a> — "smartphone app"</li><li>4장: <a href="https://www.engadget.com/2304552/casio-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/" target="_blank" rel="noopener">Engadget / </a> — "https://www.engadget.com/img/gallery/casios-new-keyboard-lets-anyone-play-along-to-songs-without-ever-hitting-a-wrong-note/l-intro-1793648368.jpg"</li><li>5장: <a href="https://pixabay.com/photos/hypnosis-clock-pocket-watch-4041582/" target="_blank" rel="noopener">geralt / Pixabay</a> — "metronome"</li><li>6장: <a href="https://pixabay.com/photos/headsets-music-pink-background-1971383/" target="_blank" rel="noopener">whoalice-moore / Pixabay</a> — "headphones"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-d632cd2a22e9">
+    <div class="head">
+      <h2>S1. 적당한 음주도 암·조기사망 위험과 연관된다는 컬럼비아대 대규모 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-d632cd2a22e9">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;적당히 마시면 괜찮다&#39;는 통념을 뒤집고, 회식·반주 하는 직장인에게 &#39;하루 1잔 넘기면 위험 연관&#39;이라는 기준선을 던져주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">&#39;적당히 마시면 괜찮다&#39;는 말, 이번 연구에선 안 통했음
+하루 두 잔이면 흔히 무난한 수준이라 보는데, 연구진 결론은 달랐대
+그럼 &#39;소량은 심장에 좋다&#39;던 얘기는 어떻게 된 걸까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 하루 두 잔 마시는 건 알코올 때문에 생기는 조기 사망 위험이 상당히 높아지는 것과 연관됐대. 보통 사회적으로 적당하다고 보는 양인데도. 그럼 이 결론은 어떻게 나온 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">145/500자</span></div>
+      <p class="tp-text">2/ 미국·캐나다 연구진이 알코올 관련 질병·부상을 다룬 논문 7,200편 넘게 평가하고, 대규모 국가 건강 데이터와 합쳐 통계 모델로 평생 위험을 추정했대. 새로 사람을 모아 추적한 게 아니라 기존 근거를 종합한 연구야. 그럼 심장엔 정말 좋은 거 아니었어?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">3/ 소량이면 허혈성 심장질환·뇌졸중 위험이 낮을 수 있다는 건 연구진도 인정함. 근데 암·간질환·부상까지 다 합치니 그 이득이 해로움에 밀렸고, 주 7잔 마시는 사람들도 마찬가지였대. 그럼 전체로 보면 어느 선부터 위험이 올라간다는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">180/500자</span></div>
+      <p class="tp-text">4/ 연구 결과 요약 정리
+- 하루 2잔: 알코올 기인 조기 사망 위험이 상당히 높아짐과 연관
+- 소량: 심장·뇌졸중엔 이득 가능성, 전체로 합치면 해로움이 더 큼
+- 하루 1잔 초과: 남녀 모두 건강 위험 증가와 연관
+- 주 14잔: 논문 제목에 &#39;사망 위험 25명 중 1명&#39;
+그럼 이 숫자가 내 몸에 그대로 맞는 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">5/ 딱 그렇진 않대. 이건 집단 단위 위험 추정이지, 개인이 병에 걸릴 확률을 정확히 짚은 게 아니라고 연구진이 강조함. 유전, 생활습관, 음주 패턴에 따라 개인차도 꽤 크다고. 그럼 여기서 말하는 &#39;한 잔&#39;은 얼마만큼일까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">6/ 미국 기준으로 한 잔은 보통 맥주 12온스, 와인 5온스, 증류주 1.5온스래. 술마다 도수 차이가 있어서 이 양은 달라질 수 있다고도 했고. 그럼 우리 술자리의 한 잔은 몇 잔으로 세야 할까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">203/500자</span></div>
+      <p class="tp-text">7/ 결국 연구 쪽 얘기는 하루 1잔을 넘기면 위험 연관이 커지고, 소량에서도 전체 건강 이득은 못 찾았다는 거
+회식 자리에서 &#39;딱 한 잔만&#39; 가능파 vs 불가능파?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구가 새로 사람을 모아 추적한 것이 아니라 기존 근거를 종합한 연구라는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;적당히 마시면 괜찮다&#39;는 말, 이번 연구에선 안 통했음</li><li>술은 &#39;적당히&#39;만 믿지 말고 &#39;하루 1잔을 넘는지&#39;부터 보라는 연구가 나옴</li><li>반주는 &#39;적당히&#39;가 아니라 &#39;적을수록 좋다&#39;는 쪽에 가까운 연구가 나옴</li><li>하루 두 잔이면 무난하다고들 하는데, 연구진은 위험이 올라간다고 봤대</li><li>회식 술 &#39;한두 잔쯤이야&#39; 하는 사람, 이 연구 한번 봐봐</li><li>&#39;소량은 심장에 좋다&#39;던 술 얘기, 전부 합쳐 계산하니 이렇게 나옴</li><li>논문 7,200편 넘게 뜯어본 술 연구, 결론이 &#39;적당히&#39;가 아니었음</li><li>주 14잔이면 사망 위험이 25명 중 1명이라는 계산이 나왔대</li><li>술 한 잔의 기준이 맥주 12온스, 와인 5온스라는데 우리 술자리 한 잔이랑 맞아?</li><li>저녁 반주 한 잔이 건강에 이득이라 믿었다면 이 연구 얘기부터 들어봐</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>회식 자리에서 &#39;딱 한 잔만&#39; 가능파 vs 불가능파?</li><li>술자리에서 내가 몇 잔 마셨는지 세어본 적 있는 사람?</li><li>&#39;적당히 마시면 약&#39;이라는 말, 들어본 적 있어?</li><li>너라면 이 연구 보고 회식 술자리를 줄일 것 같아, 그대로일 것 같아?</li><li>저녁 반주파 vs 평일엔 안 마시는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>술이 암 위험과 연관된다는 연구, 어떤 암이 거론됐나</li><li>미국 식생활 지침과 이번 연구가 엇갈린 이유</li><li>술 한 잔의 기준, 술 종류별 양 비교</li><li>소량 음주가 심장에 좋다던 얘기가 나온 배경</li><li>췌장암 등 술과 새로 연관 가능성이 거론되는 질환들</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문은 &#39;연관(associated with)&#39;으로 서술한 관찰·모델링 연구라서 &#39;술 마시면 죽는다&#39;처럼 인과로 읽히지 않게 확인 필요</li><li>&#39;25명 중 1명&#39;은 논문 제목에만 나온 수치라 정확한 대상(평생 알코올 기인 사망 위험 등)이 원문에 풀려 있지 않음</li><li>한 잔 기준(온스)은 미국 기준이라 한국 술잔 기준으로 오해되지 않게 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 두 잔 음주는 알코올 기인 조기 사망 위험이 상당히 높아지는 것과 연관되며, 흔히 사회적으로 적당하다고 보는 수준이다</b>
+          <q>“Consuming two alcoholic drinks per day, a level often viewed as socially moderate, was associated with a substantially higher risk of premature death attributable to alcohol.”</q>
+          <small>post0, post1, post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국·캐나다 연구진이 기존 과학적 근거를 광범위하게 검토했다</b>
+          <q>“To better understand how drinking affects health over a lifetime, researchers from the United States and Canada conducted an extensive review of existing scientific evidence.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 알코올 관련 질병·부상을 다룬 논문 7,200편 넘게 평가했다</b>
+          <q>“Medical experts evaluated more than 7,200 scientific articles examining diseases and injuries associated with alcohol consumption.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그 근거를 대규모 국가 건강 데이터와 합쳤다</b>
+          <q>“They used this evidence to determine how drinking influences the risk of individual health conditions, then combined those findings with large national health data sets.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>통계 모델로 음주량별 평생 위험을 추정했다</b>
+          <q>“Using statistical models, the team estimated how different levels of alcohol consumption affect the likelihood of developing serious illnesses or dying prematurely over a lifetime.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진도 소량 음주가 허혈성 심장질환·뇌졸중 위험 감소와 연관될 수 있음을 인정했다</b>
+          <q>“They acknowledged that relatively low alcohol intake may be associated with a reduced risk of ischemic heart disease and stroke.”</q>
+          <small>post0, post3, post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>심혈관 이득은 암·간질환·부상 등과의 연관성과 함께 따져야 한다</b>
+          <q>“However, any potential cardiovascular benefits must be considered alongside alcohol&#39;s association with cancer, liver disease, injuries, and other serious conditions.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>결과를 합치면 주 7잔 마시는 사람들에게서도 잠재적 이득이 해로움에 밀렸다</b>
+          <q>“When the researchers combined these outcomes, the potential benefits were outweighed by the harmful effects, even among people consuming seven alcoholic drinks per week.”</q>
+          <small>post3, post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>어떤 음주 수준에서도 전체 건강에 통계적으로 유의한 보호 효과는 없었다</b>
+          <q>“The researchers found no statistically significant protective effect on overall health at any level of alcohol consumption.”</q>
+          <small>post3, post4, post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 1잔을 넘는 음주는 남녀 모두에서 건강 위험 증가와 연관됐다</b>
+          <q>“alcohol consumption above one drink per day was associated with increased health risks for both men and women.”</q>
+          <small>post4, post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>논문 제목에 주 14잔에서 사망 위험이 25명 중 1명까지 증가한다고 나온다</b>
+          <q>“Alcohol Intake and Health Study: No Protective Effect at Low Levels, With Mortality Increasing to 1 in 25 at 14 Drinks Per Week.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추정치는 집단 단위 위험이며 개인이 특정 질병에 걸릴 정확한 확률은 아니라고 연구진이 강조했다</b>
+          <q>“the researchers emphasize that the estimates describe risks across populations, not the precise likelihood that any individual will develop a particular disease.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>개인 결과는 유전, 생활습관, 음주 패턴 등에 따라 크게 다를 수 있다</b>
+          <q>“Nevertheless, personal health outcomes can differ considerably depending on genetics, lifestyle, drinking patterns, and other individual factors.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 기준 한 잔은 맥주 12온스, 와인 5온스, 증류주 1.5온스 정도이며 도수에 따라 달라질 수 있다</b>
+          <q>“A standard drink generally corresponds to 12 ounces of beer, 5 ounces of wine, or 1.5 ounces of spirits, although differences in alcohol concentration can change those amounts.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="d632cd2a22e9">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261031221159.htm" target="_blank" rel="noopener">Even moderate drinking linked to cancer and early death, major study finds</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-908334b37e7d">
+    <div class="head">
+      <h2>S2. 혈압, 소금 줄이기만으론 부족? 칼륨 같이 챙기라는 보고서</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-908334b37e7d">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 수십 년 들은 &#39;소금 줄여라&#39;가 절반만 맞는 얘기일 수 있고, 나머지 절반은 평범한 음식으로 바로 실천할 수 있다는 통념 뒤집기</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">혈압 관리, &#39;소금 줄이기&#39;만이 아니라 &#39;칼륨 더 먹기&#39;도 같이 하라는 보고서가 나옴
+수십 년 &#39;짠 거 줄여라&#39;만 들었는데 그게 절반만 맞는 얘기일 수 있다는 거야
+그 나머지 절반이 의외로 평범한 음식에 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 소금 줄이기에 칼륨 늘리기를 같이 하면, 소금만 줄일 때보다 혈압 조절에 더 도움이 될 수 있다는 거야. 근데 칼륨이 대체 뭘 하길래?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">2/ 나트륨을 많이 먹으면 몸이 수분을 더 붙잡아서 혈관 속 압력이 올라갈 수 있대. 칼륨은 신장이 남는 나트륨을 소변으로 내보내는 걸 도와서 그 영향을 일부 막아줌. 근데 우리는 칼륨을 충분히 먹고 있을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">3/ 보고서에 따르면 소금 줄이라는 노력에도 평균 나트륨 섭취는 권장 수준을 넘고, 칼륨은 선진국·개발도상국 모두 최적 수준에 한참 못 미친대. 그럼 뭘 먹으라는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">163/500자</span></div>
+      <p class="tp-text">4/ 칼륨 챙기기 요약 정리
+- 칼륨 들어 있는 음식: 과일, 채소, 콩류, 유제품
+- 예: 바나나, 감자, 콩, 잎채소, 요거트
+- 소금 일부를 칼륨염으로 바꾸는 방법도 거론됨
+- 신장질환이 있거나 특정 약을 먹으면 칼륨은 의료진과 상의
+근데 그럼 소금 줄이는 건 이제 안 해도 되는 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">5/ 아니, 저자들은 소금 줄이기가 여전히 필수라고 해. 기존 조언을 버리자는 게 아니라 칼륨까지 넓히자는 거야. 참고로 새 실험이 아니라 근거를 검토한 보고서야. 그럼 국물·찌개 좋아하는 우리 식탁엔 어떻게 적용할 수 있을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">187/500자</span></div>
+      <p class="tp-text">6/ 결국 보고서 말은 소금은 계속 줄이되, 뭘 더 먹을지도 같이 보자는 거야.
+국물 줄이기파 vs 채소·과일 더하기파, 너는 어느 쪽?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 보고서가 새 실험이 아니라 기존 과학적 근거를 검토한 보고서라는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>혈압 관리, &#39;소금 줄이기&#39;만이 아니라 &#39;칼륨 더 먹기&#39;도 같이 하라는 보고서가 나옴</li><li>고혈압 식단, 소금만 줄이지 말고 뭘 더 먹을지도 같이 보라는 보고서가 나옴</li><li>&#39;소금 줄여라&#39; 수십 년 들었는데, 그게 절반만 맞는 얘기일 수 있대</li><li>혈압 관리, &#39;뭘 뺄까&#39;만 하고 있었다면 절반만 한 걸 수도 있대</li><li>12억 8천만 명 넘게 겪는 고혈압, 가이드라인에 &#39;절반&#39;이 빠져 있다는 전문가들</li><li>혈압엔 &#39;뭘 뺄까&#39;만큼 &#39;뭘 더할까&#39;도 중요하대</li><li>해외에선 고혈압 식단을 &#39;소금 빼기&#39;에서 &#39;칼륨 더하기&#39;까지 넓히자고 해</li><li>소금 줄이는 것만으로는 혈압 관리 효과가 최대가 아닐 수 있대</li><li>바나나, 감자, 요거트가 혈압 얘기에 갑자기 나온 이유</li><li>짠 거 줄이는 건 기본, 혈압에 같이 챙기라는 영양소가 따로 있대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>국물 줄이기파 vs 채소·과일 더하기파, 너는 어느 쪽?</li><li>바나나, 감자, 요거트, 콩 중에 제일 자주 먹는 건?</li><li>라면 국물 끝까지 마시는 편 vs 남기는 편?</li><li>소금 대신 칼륨염 쓴 제품, 맛이 좀 달라도 써볼 의향 있어?</li><li>짠 음식 줄이기, 너라면 국물부터 줄일 거야 반찬부터 줄일 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>칼륨염 소금 대체재, 금속 맛 때문에 만들기 어려운 이유</li><li>신장질환이 있으면 칼륨을 조심해야 하는 이유</li><li>소금 줄이기 노력에도 나트륨 섭취가 안 줄어드는 이유</li><li>해외에서 말하는 고혈압 식단, 뭘 빼고 뭘 더하나</li><li>다음 배송: 1억 1500만 년 된 공룡 화석에서 혈구 추정 구조 발견</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수십 년간 혈압 조언은 소금 줄이기였지만 새 보고서는 이 조언이 똑같이 중요한 절반을 놓쳤을 수 있다고 함</b>
+          <q>“For decades, one of the most common recommendations for lowering high blood pressure has been simple: eat less salt. But a new scientific report suggests that this advice may be missing an equally important part of the equation.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>칼륨 섭취 증가와 나트륨 감소를 합치면 나트륨 감소만 할 때보다 혈압 조절에 더 큰 이점이 있을 수 있음</b>
+          <q>“A new report finds that combining increased potassium intake with reduced sodium consumption may offer greater benefits for blood pressure control than sodium reduction alone.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나트륨을 많이 먹으면 수분이 쌓여 혈관 압력이 오르고, 칼륨은 신장이 나트륨을 소변으로 내보내는 것을 도움</b>
+          <q>“Eating too much sodium can cause the body to retain additional fluid, increasing the pressure inside blood vessels. Potassium helps counter some of sodium&#39;s effects by supporting the kidneys in removing excess sodium through urine.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소금을 제한하려는 노력에도 평균 나트륨 섭취는 권장 수준을 넘음</b>
+          <q>“Despite widespread efforts to encourage people to limit salt, average sodium consumption continues to exceed recommended levels.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>칼륨 섭취는 선진국과 개발도상국 모두에서 최적 수준에 한참 못 미침</b>
+          <q>“Meanwhile, potassium intake remains &#34;far below optimal levels in both developed and developing nations,&#34; according to the authors.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>칼륨은 과일, 채소, 콩류, 유제품에 있고 바나나, 감자, 콩, 잎채소, 요거트가 예시</b>
+          <q>“Potassium is naturally present in many familiar foods, including fruits, vegetables, legumes, and dairy products. Bananas, potatoes, beans, leafy greens, and yogurt are examples of foods that can help increase potassium intake.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소금의 염화나트륨 일부를 칼륨염으로 바꾸는 방법도 있음</b>
+          <q>“Another possibility is replacing some sodium chloride, the main ingredient in ordinary table salt, with potassium salts.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>신장질환이 있거나 특정 약을 먹는 사람은 칼륨 조절이 어려울 수 있어 의료진 상담이 필요함</b>
+          <q>“Increasing potassium is also not appropriate for everyone. People with kidney disease or those taking certain medications may have difficulty regulating potassium levels, so potassium supplements and potassium-based salt substitutes should be used with medical guidance when these concerns apply.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 나트륨 줄이기가 여전히 필수라고 강조함</b>
+          <q>“The researchers emphasize that reducing sodium remains essential.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제안은 기존 조언을 버리는 게 아니라 칼륨 섭취도 주요 요인으로 넓히는 것</b>
+          <q>“Their proposal is not to abandon existing advice, but to expand it by recognizing that potassium intake is another major factor in blood pressure regulation.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보고서는 나트륨과 칼륨 권고의 근거를 검토한 것</b>
+          <q>“The researchers examined the scientific evidence underlying current sodium and potassium recommendations, along with practical ways to reduce sodium consumption and increase potassium intake.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈압 조절은 식단에서 뺀 것뿐 아니라 더한 것에도 달려 있을 수 있음</b>
+          <q>“The underlying message is straightforward: better blood pressure control may depend not only on what people remove from their diets, but also on what they add.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="908334b37e7d">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261102075553.htm" target="_blank" rel="noopener">Experts say high blood pressure guidelines are missing half the equation</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261103-am";
+  const ORIGINAL = {"0d7083740654": {"caption": "\uac74\ubc18\uc744 \uc544\ubb34\ub807\uac8c\ub098 \ub20c\ub7ec\ub3c4 \ud2c0\ub9b0 \uc74c\uc774 \ub098\uc9c0 \uc54a\ub294\ub2e4\uba74 \uc5b4\ub5a8\uae4c. \uce74\uc2dc\uc624\uac00 \uc0c8 \ud0a4\ubcf4\ub4dc CT-FS1\uc744 \uacf5\uac1c\ud588\ub2e4. \ud575\uc2ec\uc740 \uc774\ubc88\uc5d0 \ucc98\uc74c \uc120\ubcf4\uc778 Feel Sync \uae30\uc220\uc774\ub2e4.\n\n\uc0ac\uc6a9\ubc95\uc740 \uc774\ub807\ub2e4. \uc804\uc6a9 Feel Sync \uc571\uc5d0 \uc5f0\uc8fc\ud558\uace0 \uc2f6\uc740 \uace1\uc744 \uc62c\ub9ac\uba74 \uc54c\uace0\ub9ac\uc998\uc774 \ub0b4\uc6a9\uc744 \ubd84\uc11d\ud574 \ud0a4\ubcf4\ub4dc\uac00 \ud56d\uc0c1 \uace1\uc758 \uc870\uc5d0 \ub9de\ub3c4\ub85d \ub9cc\ub4e0\ub2e4. \uc870\uac00 \uc790\uc8fc \ubc14\ub00c\uac70\ub098 \ube0c\ub9ac\uc9c0\uac00 \uc5ec\ub7ec \ubc88 \ub098\uc624\ub294 \ubcf5\uc7a1\ud55c \uace1\uc5d0\uc11c\ub3c4 \uc791\ub3d9\ud55c\ub2e4\uace0 \ud55c\ub2e4.\n\nFeel Sync \uc601\uc5ed\uc740 \ub450 \uad6c\uc5ed\uc73c\ub85c \ub098\ub20c \uc218\ub3c4 \uc788\ub2e4. \ucd08\ubcf4\uc790\ub294 \ud55c\ucabd\uc5d0\uc11c \uac74\ubc18\uc744 \ub450\ub4dc\ub9ac\uace0, \uc219\ub828\uc790\ub294 \ubc18\ub300\ucabd\uc5d0\uc11c \uc2e4\uc81c \uc74c\uc744 \uc5f0\uc8fc\ud558\ub294 \uc2dd\uc774\ub2e4. Engadget\uc740 \uc74c\uacc4\ub97c \uc775\ud788\ub294 \ub370\ub294 \ub3c4\uc6c0\uc774 \ub418\uc9c0 \uc54a\uaca0\uc9c0\ub9cc \ub9ac\ub4ec, \ud0c0\uc774\ubc0d, \ud45c\ud604\uc744 \uc775\ud788\ub294 \ub370\ub294 \ub3c4\uc6c0\uc774 \ub420 \uac83\uc774\ub77c\uace0 \ud3c9\ud588\ub2e4.\n\n\uc77c\ubc18 \uce74\uc2dc\uc624 \ud0a4\ubcf4\ub4dc\ucc98\ub7fc \ud3c9\uc18c \ubc29\uc2dd\ub300\ub85c \uc5f0\uc8fc\ud560 \uc218\ub3c4 \uc788\ub2e4. \ud130\uce58 \ubc18\uc751 \uac74\ubc18 61\uac1c, \uc11c\ub77c\uc6b4\ub4dc \ud6a8\uacfc\uac00 \uc788\ub294 \uc2a4\ud14c\ub808\uc624 \uc2a4\ud53c\ucee4 \ub0b4\uc7a5, \ud5e4\ub4dc\ud3f0 \ucd9c\ub825\uacfc \ube14\ub8e8\ud22c\uc2a4\ub97c \uac16\ucdc4\ub2e4. AA \uac74\uc804\uc9c0\ub098 AC \uc5b4\ub311\ud130\ub85c \uc791\ub3d9\ud558\uace0 \ubb34\uac8c\ub294 10\ud30c\uc6b4\ub4dc\uac00 \ucc44 \uc548 \ub41c\ub2e4. \uc0c9\uc0c1\uc740 \uac80\uc740\uc0c9\uacfc \ud770\uc0c9 \ub450 \uac00\uc9c0\ub85c, \uac74\ubc18\uae4c\uc9c0 \ud55c \uac00\uc9c0 \uc0c9\uc73c\ub85c \ud1b5\uc77c\ud588\ub2e4. \uac00\uaca9\uc740 400\ub2ec\ub7ec\uc774\uba70 \uc9c0\uae08 \uad6c\ub9e4\ud560 \uc218 \uc788\ub2e4.\n\n\ucd9c\ucc98: Engadget", "hashtags": ["#\uce74\uc2dc\uc624", "#\ud0a4\ubcf4\ub4dc", "#\uc804\uc790\ud53c\uc544\ub178", "#\uc545\uae30\ucd08\ubcf4", "#\uc2e0\uae30\ud55c\uc81c\ud488"], "slides": [["\uac74\ubc18\uc774 \uc808\ub300", "**\uc548 \ud2c0\ub9b0\ub2e4???**", "---", "\uce74\uc2dc\uc624\uac00 \uc5b4\ub5a4 \ub178\ub798\ub97c \uc62c\ub824\ub3c4 \ud2c0\ub9b0 \uc74c\uc744 \uce60 \uc218 \uc5c6\uac8c \ub9cc\ub4e4\uc5b4 \uc8fc\ub294 \ud0a4\ubcf4\ub4dc CT-FS1\uc744 \uc0c8\ub85c \uacf5\uac1c\ud588\ub2e4."], ["Feel Sync\ub77c\ub294", "**\uc0c8 \uae30\uc220** \ud0d1\uc7ac", "---", "\uc774 \ud0a4\ubcf4\ub4dc\uc5d0\ub294 \uce74\uc2dc\uc624\uac00 \uc0c8\ub85c \ub0b4\ub193\uc740 Feel Sync \uae30\uc220\uc774 \ub4e4\uc5b4 \uc788\ub2e4. \uc774 \uae30\uc220\uc774 \ud0a4\ubcf4\ub4dc\ub97c \uc5b4\ub5a4 \uace1\uc5d0\ub4e0 \ub9de\uac8c \uc870\uc815\ud574 \uc8fc\uae30 \ub54c\ubb38\uc5d0 \uc5f0\uc8fc\uc790\ub294 \ud2c0\ub9b0 \uc74c\uc744 \uce60 \uc218 \uc5c6\ub2e4."], ["\uc571\uc5d0 \uace1\uc744 \uc62c\ub9ac\uba74", "**\uc54c\uc544\uc11c \ubd84\uc11d**", "---", "\uc804\uc6a9 Feel Sync \uc571\uc5d0 \uc6d0\ud558\ub294 \uace1\uc744 \uc62c\ub9ac\uba74 \uc54c\uace0\ub9ac\uc998\uc774 \ub0b4\uc6a9\uc744 \ubd84\uc11d\ud574 \ud0a4\ubcf4\ub4dc\uac00 \ud56d\uc0c1 \uace1\uc758 \uc870\uc5d0 \ub9de\uac8c \ud55c\ub2e4. \uc870 \ubcc0\ud654\uc640 \ube0c\ub9ac\uc9c0\uac00 \ub9ce\uc740 \ubcf5\uc7a1\ud55c \uace1\uc5d0\uc11c\ub3c4 \uc791\ub3d9\ud55c\ub2e4."], ["**\ucd08\ubcf4\uc640 \uace0\uc218\uac00**", "\ud55c \uac74\ubc18\uc5d0\uc11c", "---", "Feel Sync \uc601\uc5ed\uc740 \uac74\ubc18\uc744 \ub450 \uad6c\uc5ed\uc73c\ub85c \ub098\ub220 \uc4f8 \uc218 \uc788\ub2e4. \ucd08\ubcf4\uc790\uac00 \ud55c\ucabd\uc5d0\uc11c \uac74\ubc18\uc744 \ub204\ub974\ub294 \ub3d9\uc548 \uc219\ub828\uc790\ub294 \ub2e4\ub978 \ucabd\uc5d0\uc11c \uc2e4\uc81c \uc74c\uc744 \uc5f0\uc8fc\ud560 \uc218 \uc788\ub2e4."], ["\uc74c\uacc4\uc5d4 \ub3c4\uc6c0 \uc5c6\uc9c0\ub9cc", "**\ub9ac\ub4ec\uc5d4 \ub3c4\uc6c0**", "---", "Engadget\uc740 \uc74c\uacc4\ub97c \uc775\ud788\ub294 \ub370\ub294 \ub3c4\uc6c0\uc774 \uc548 \ub418\uaca0\uc9c0\ub9cc \ub9ac\ub4ec\uacfc \ud0c0\uc774\ubc0d, \ud45c\ud604\uc744 \uc775\ud788\ub294 \ub370\ub294 \ub3c4\uc6c0\uc774 \ub420 \uac83\uc774\ub77c\uace0 \ud3c9\ud588\ub2e4. \uc545\uae30\ub97c \ubc30\uc6b8 \ub54c \ud754\ud788 \uac04\uacfc\ub418\ub294 \ubd80\ubd84\uc774\ub77c\uace0 \ud588\ub2e4."], ["\uc74c\uc545 \uc2dc\uc791\ud558\ub824\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uac74\ubc18\uc744 \ucc98\uc74c \ubc30\uc6b0\ub824\ub294 \uce5c\uad6c\ub77c\uba74 \ud2c0\ub9b4 \uac71\uc815 \uc5c6\uc774 \uc88b\uc544\ud558\ub294 \uace1\uc5d0 \ub9de\ucdb0 \uccd0 \ubcfc \uc218 \uc788\ub2e4\ub294 \uc810\uc5d0 \uc194\uae43\ud560 \uc18c\uc2dd. \ucd08\ubcf4\uc640 \uc219\ub828\uc790\uac00 \ud568\uaed8 \uc5f0\uc8fc\ud560 \uc218 \uc788\ub2e4\ub294 \uc810\ub3c4 \ubcf4\ub0b4 \uc904 \uc774\uc720."]]}, "af6e23ec4edc": {"caption": "\uc2dc\uac04\uc740 \uc65c \ud55c \ubc29\ud5a5\uc73c\ub85c\ub9cc \ud750\ub97c\uae4c, \uacf5\uac04\uc740 \uc65c 3\ucc28\uc6d0\uc77c\uae4c. \uc774\ub7f0 \uc9c8\ubb38\uc5d0 \uc0c8 \uc218\ud559\uc801 \uc811\uadfc\uc774 \ub098\uc654\ub2e4. \uc138\ub974\ube44\uc544 \ubca0\uc624\uadf8\ub77c\ub4dc\ub300\ud559 \ubb3c\ub9ac\ud559\uc790 \uc138 \uba85\uc774 4\ucc28\uc6d0 \uc870\uac01\uc744 \uac00\uc0c1\uc73c\ub85c \uc870\ub9bd\ud558\ub294 \uc2dc\ubbac\ub808\uc774\uc158\uc744 \ub3cc\ub824, \uc6b0\ub9ac\uac00 \uc544\ub294 \uacf5\uac04 3\ucc28\uc6d0\uacfc \uc2dc\uac04 1\ucc28\uc6d0 \uad6c\uc870\uac00 \uc800\uc808\ub85c \ub098\uc624\ub294\uc9c0 \ud655\uc778\ud588\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uc57d 10\ub9cc \uac1c\uc758 \uc870\uac01\uc744 \uc4f0\uace0 \ubcc0 \uae38\uc774\ub97c \ubb34\uc791\uc704\ub85c \uc815\ud55c \ub4a4, \ubb3c\ub9ac \ubc95\uce59 \uac19\uc740 \ubcf5\uc7a1\ud55c \ub3d9\uc5ed\ud559\uc740 \ube7c\uace0 \uae30\ud558\ub9cc\uc73c\ub85c \ub9de\ubb3c\ub9ac\uac8c \ud588\ub2e4. \ud3c9\uac00 \ud69f\uc218\ub294 200\uc5b5 \uac74\uc774 \ub118\ub294\ub2e4. \ubcc0\uc744 \uacf5\uac04\ud615 \uae38\uc774\ub85c\ub9cc \ub454 \uacbd\uc6b0 \ucd5c\ub300 \uc57d 85%\uac00 \uacf5\uac04 3\ucc28\uc6d0, \uc2dc\uac04 1\ucc28\uc6d0 \uad6c\uc870\uac00 \ub410\ub2e4. \uc57d 8%\ub294 \uacf5\uac04 2\ucc28\uc6d0, \uc2dc\uac04 2\ucc28\uc6d0\uc73c\ub85c \uac08\ub77c\uc9c4 \uc6b0\uc8fc\uc600\ub2e4. \ubc18\ub300\ub85c \uacf5\uac04\ud615\uacfc \uc2dc\uac04\ud615 \ubcc0\uc744 \ubaa8\ub450 \ud5c8\uc6a9\ud558\uba74 \ubd84\ud560 \uad6c\uc870\uac00 72~81%\ub85c \uac00\uc7a5 \ub9ce\uc558\ub2e4. \ub2e4\ub9cc \uc774 \uc5f0\uad6c\ub294 \uc591\uc790\uc911\ub825\uc758 \uc7a5\ub09c\uac10 \ubaa8\ud615\uc744 \uc4f4 \uac83\uc774\uace0, arXiv\uc5d0 \uc62c\ub77c\uc628 \ud504\ub9ac\ud504\ub9b0\ud2b8\ub77c \uc544\uc9c1 \ub3d9\ub8cc \uac80\ud1a0\ub97c \uac70\uce58\uc9c0 \uc54a\uc558\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uc774\ud6c4 \ubb3c\ub9ac \ubc95\uce59 \uac19\uc740 \uc694\uc18c\ub97c \ub354\ud574 \ub354 \uac80\uc99d\ud560 \uc218 \uc788\ub2e4\uace0 \ubc1d\ud614\ub2e4. \uc6b0\uc8fc\uc640 \uc2dc\uac04\uc774 \uad81\uae08\ud55c \uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4\uc11c \uac19\uc774 \uc774\uc57c\uae30\ud574 \ubcf4\uc790. \ucd9c\ucc98: ScienceAlert, arXiv", "hashtags": ["#\uc2dc\uac04", "#\uc6b0\uc8fc", "#\ubb3c\ub9ac\ud559", "#\uc591\uc790\uc911\ub825", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\uc2dc\uac04\uc740 \uc65c", "**\ud558\ub098\ubfd0\uc774\uc57c???**", "---", "\uc138\ub974\ube44\uc544 \ubca0\uc624\uadf8\ub77c\ub4dc\ub300 \ubb3c\ub9ac\ud559\uc790 \uc138 \uba85\uc774 4\ucc28\uc6d0 \uc870\uac01\uc73c\ub85c \uac00\uc0c1 \uc6b0\uc8fc\ub97c \uc870\ub9bd\ud574, \uacf5\uac04 3\ucc28\uc6d0\uacfc \uc2dc\uac04 1\ucc28\uc6d0\uc774 \uc65c \uc0dd\uae30\ub294\uc9c0 \uc0b4\ud3b4\ubd24\ub2e4."], ["\uacf5\uac04 3, \uc2dc\uac04 1", "**\uc65c \uc774 \uc870\ud569\uc77c\uae4c**", "---", "\ubbfc\ucf54\ud504\uc2a4\ud0a4\ub294 100\uc5ec \ub144 \uc804 \uacf5\uac04\uacfc \uc2dc\uac04\uc774 \ud558\ub098\uc758 \uc9c1\ubb3c\ub85c \uc5bd\ud600 \uc788\ub2e4\uace0 \uc124\uba85\ud588\ub2e4. \uadf8 \ud2c0\uc740 \uacf5\uac04 \uc138 \ucc28\uc6d0\uacfc \uc2dc\uac04 \ud55c \ucc28\uc6d0\uc73c\ub85c \uc774\ub904\uc9c0\ub294\ub370, \uc65c \uc774 \uc870\ud569\uc778\uc9c0\uac00 \uc774\ubc88 \uc5f0\uad6c\uc758 \uc9c8\ubb38\uc774\ub2e4."], ["\uc870\uac01\uc744 \ub358\uc838", "\uc6b0\uc8fc\ub97c **\uc870\ub9bd**", "---", "\uc5f0\uad6c\uc9c4\uc740 4\ucc28\uc6d0 \uc870\uac01 \uc57d 10\ub9cc \uac1c\uc758 \ubcc0 \uae38\uc774\ub97c \ubb34\uc791\uc704\ub85c \uc815\ud588\ub2e4. \ubcf5\uc7a1\ud55c \ubb3c\ub9ac \ubc95\uce59\uc740 \ube7c\uace0 \uae30\ud558\ub9cc\uc73c\ub85c \uc870\ub9bd\ud574, \ud3c9\uac00\ub97c 200\uc5b5 \uac74 \ub118\uac8c \ubaa8\uc558\ub2e4."], ["**85%**\uac00 \uc6b0\ub9ac", "\uc6b0\uc8fc\ub97c \ub2ee\uc558\ub2e4", "---", "\ubcc0\uc744 \uacf5\uac04\ud615 \uae38\uc774\ub85c \ub454 \uc2dc\ubbac\ub808\uc774\uc158\uc5d0\uc11c \ucd5c\ub300 \uc57d 85%\uac00 \uacf5\uac04 3\ucc28\uc6d0\u00b7\uc2dc\uac04 1\ucc28\uc6d0 \uad6c\uc870\ub85c \ubaa8\uc600\ub2e4. \uc57d 6%\ub294 \uc2dc\uac04 \uc5c6\uc774 \uacf5\uac04\ub9cc 4\ucc28\uc6d0\uc778 \uc5bc\uc5b4\ubd99\uc740 \uc6b0\uc8fc\uc600\ub2e4."], ["\uc2dc\uac04 \ubcc0 \uc5c6\uc774\ub3c4", "**\uc2dc\uac04\uc774 \uc0dd\uacbc\ub2e4**", "---", "\uc2dc\uac04\ud615 \ubcc0\uc744 \ub530\ub85c \ub123\uc9c0 \uc54a\uc544\ub3c4 \uacf5\uac04\ud615 \ubcc0\ub9cc\uc73c\ub85c \ucda9\ubd84\ud588\ub2e4. \uae38\uc774\uac00 \uc5b4\uae0b\ub09c \ubcc0\ub4e4\uc740 \uc2dc\uac04 \ubc29\ud5a5\uc774 \uc788\ub294 \uae30\ud558\ub85c\ub9cc \ub9de\ubb3c\ub9ac\ub294 \uacbd\uc6b0\uac00 \ub9ce\uc558\uace0, \uc804\uccb4 \ubaa8\uc591\uc774 \uacf5\uc774\ub4e0 \uad6c\ub4e0 \ucc28\uc774\ub294 \uac70\uc758 \uc5c6\uc5c8\ub2e4."], ["\uc544\uc9c1 **\uc7a5\ub09c\uac10**", "\ubaa8\ud615 \ub2e8\uacc4\uc57c", "---", "\uc5f0\uad6c\uc9c4\uc774 \uc4f4 \uac74 \uc591\uc790\uc911\ub825\uc758 \ub2e8\uc21c\ud654\ud55c \uc7a5\ub09c\uac10 \ubaa8\ud615\uc774\ub2e4. \ub17c\ubb38\uc740 arXiv\uc5d0 \uc62c\ub77c\uc628 \ud504\ub9ac\ud504\ub9b0\ud2b8\ub85c \uc544\uc9c1 \ub3d9\ub8cc \uac80\ud1a0\ub97c \uac70\uce58\uc9c0 \uc54a\uc558\uace0, \uc774\ud6c4 \ubb3c\ub9ac \ubc95\uce59 \uac19\uc740 \ub3d9\uc5ed\ud559\uc744 \ub354\ud574 \uac80\uc99d\ud560 \uc218 \uc788\ub2e4\uace0 \ud588\ub2e4."], ["\uc6b0\uc8fc \ub355\ud6c4 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \ubcf4\ub0b4", "---", "\ubb34\uc791\uc704 \uc870\uac01\uc744 \ub9de\ucdc4\ub354\ub2c8 \ucd5c\ub300 \uc57d 85%\uac00 \uc6b0\ub9ac \uc6b0\uc8fc\uc640 \uac19\uc740 \uad6c\uc870\ub85c \ubaa8\uc600\ub2e4. \uc2dc\uac04\uc774 \uc65c \ud558\ub098\uc778\uc9c0 \uad81\uae08\ud574\ud558\ub358 \ubb3c\ub9ac \ub355\ud6c4 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "e536396438df": {"caption": "\uacf5\ub8e1 \ubf08, \uc774\ube68, \ud53c\ubd80, \uae43\ud138, \uc54c, \uc2ec\uc9c0\uc5b4 \ubc30\uc124\ubb3c \ud654\uc11d\uae4c\uc9c0 \ucc3e\uc558\ub294\ub370 \uc774\ubc88\uc5d4 \ud53c\uc758 \ud754\uc801\uc774\ub2e4. \ud638\uc8fc \ucee4\ud2f4\ub300 \uc5f0\uad6c\uc9c4\uc774 \uc774\ub048 \ud300\uc774 1\uc5b5 1500\ub9cc \ub144 \uc804 \uacf5\ub8e1 \ub2e4\ub9ac\ubf08 \ud654\uc11d\uc5d0\uc11c \uc801\ud608\uad6c\ub85c \ubcf4\uc774\ub294 \uad6c\uc870\uc640 \ud608\uc561 \uc720\ub798 \ubd84\uc790\ub97c \ud655\uc778\ud588\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\ud654\uc11d\uc740 2008\ub144 \ube0c\ub77c\uc9c8\uc758 \ud55c \uad11\uc0b0\uc5d0\uc11c \ub098\uc628 \uc791\uc740 \uc218\uac01\ub958 \uacf5\ub8e1 \uc544\ub77c\ud0c0\uc0ac\uc6b0\ub8e8\uc2a4\uc758 \uc624\ub978\ucabd \ub2e4\ub9ac\ubf08\ub2e4. \ubf1b\uc18d \ud608\uad00 \ud1b5\ub85c \uc548\uc5d0\uc11c \ud0c0\uc6d0\ud615 \ubbf8\uc138 \uad6c\uc870\uac00 \ub300\ub7c9\uc73c\ub85c \ubc1c\uacac\ub410\ub2e4. \uacfc\uac70\uc5d0\ub3c4 \uacf5\ub8e1 \ud654\uc11d\uc5d0\uc11c \ub2e8\ubc31\uc9c8\uc774\ub098 \uc138\ud3ec\ub97c \ucc3e\uc558\ub2e4\ub294 \uc8fc\uc7a5\uc774 \uc5ec\ub7ec \ubc88 \uc788\uc5c8\uc9c0\ub9cc, \uc7ac\ud604\uacfc \uc0ac\ud6c4 \uc624\uc5fc \ubc30\uc81c\uac00 \uc5b4\ub824\uc6e0\ub2e4. \uc774\ubc88\uc5d0\ub294 \ud604\ubbf8\uacbd \uad00\ucc30\uc5d0 \ud654\ud559 \ubd84\uc11d\uc744 \ub354\ud574 \uc2e0\uc6d0\uc744 \ub4b7\ubc1b\uce68\ud588\ub2e4.\n\n\uc5f0\uad6c\uc9c4\uc740 \uacf0\ud321\uc774\ub098 \ubbf8\uc0dd\ubb3c\uc758 \ud754\uc801\uc77c \uac00\ub2a5\uc131\uc744 \uac80\ud1a0\ud588\uc9c0\ub9cc \ud544\ub77c\uba58\ud2b8, \ud3ec\uc790, \ubc14\uc774\uc624\ud544\ub984\uc740 \ucc3e\uc9c0 \ubabb\ud588\ub2e4. \ud669\ucca0\uc11d \uad11\ubb3c\ud654\ub098 \ud1f4\uc801 \uc785\uc790\uc758 \ud754\uc801\ub3c4 \uc5c6\uc5c8\ub2e4. \ub300\uc2e0 \uc0b0\uc18c \uc6b4\ubc18\uc744 \ub3d5\ub294 \ubd84\uc790 \ud5f4, \uadf8\uc911\uc5d0\uc11c\ub3c4 \ud5f4 B\uac00 \ubf08 \ucd94\ucd9c\ubb3c\uc5d0\uc11c \uc6b0\uc138\ud588\ub2e4. \uc774\uc804 \ubc1c\uacac\uc740 \uae38\uc5b4\uc57c \uc57d 8000\ub9cc \ub144 \uc804\uc73c\ub85c, \uc774\ubc88 \ud654\uc11d\uc774 \uac00\uc7a5 \uc624\ub798\ub41c \uc0ac\ub840\ub77c\uace0 \ud55c\ub2e4.\n\n\ub2e4\ub9cc \uc5f0\uad6c\uc9c4\uc740 \uc2e0\uc911\ud558\ub2e4. \ucee4\ud2f4\ub300\uc758 \ud074\ub9ac\ud2f0 \uadf8\ub77c\uc774\uc2a4 \ubc15\uc0ac\ub294 \uac00\uc7a5 \uba3c\uc800 \ud544\uc694\ud55c \uc77c\uc774 \uc7ac\ud604\uc774\ub77c\uace0 \ub9d0\ud588\ub2e4. \ub2e4\ub978 \ud654\uc11d\uacfc \ub2e4\ub978 \uc9c0\uc9c8 \ud658\uacbd\uc5d0\uc11c\ub3c4 \ube44\uc2b7\ud55c \uc2e0\ud638\uac00 \ub3c5\ub9bd\uc801\uc73c\ub85c \ud655\uc778\ub418\uc5b4\uc57c \ud55c\ub2e4\ub294 \uc124\uba85\uc774\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uacf5\ub8e1", "#\ud654\uc11d", "#\uacfc\ud559\ub274\uc2a4", "#\uace0\uc0dd\ubb3c\ud559", "#\ud574\uc678\ub274\uc2a4"], "slides": [["**\uacf5\ub8e1 \ud53c\uac00**", "\ub098\uc654\ub2e4\uace0???", "---", "\ud638\uc8fc \ucee4\ud2f4\ub300 \uc5f0\uad6c\uc9c4\uc774 1\uc5b5 1500\ub9cc \ub144 \uc804 \uacf5\ub8e1 \ub2e4\ub9ac\ubf08 \ud654\uc11d\uc5d0\uc11c \uc801\ud608\uad6c\ub85c \ubcf4\uc774\ub294 \uad6c\uc870\uc640 \ud608\uc561 \uc720\ub798 \ubd84\uc790\ub97c \ucc3e\uc544\ub0c8\ub2e4."], ["\ube0c\ub77c\uc9c8 \uad11\uc0b0\uc5d0\uc11c", "\ub098\uc628 **\ub2e4\ub9ac\ubf08**", "---", "\ubb38\uc81c\uc758 \ud654\uc11d\uc740 2008\ub144 \ube0c\ub77c\uc9c8\uc758 \ud55c \uad11\uc0b0\uc5d0\uc11c \ub098\uc654\ub2e4. \uc57d 1\uc5b5 1500\ub9cc \ub144 \uc804\uc5d0 \uc0b4\uc558\ub358 \uc791\uc740 \uc218\uac01\ub958 \uacf5\ub8e1 \uc544\ub77c\ud0c0\uc0ac\uc6b0\ub8e8\uc2a4\uc758 \uc624\ub978\ucabd \ub2e4\ub9ac\ubf08\uc600\ub2e4."], ["\ud54f\uc904 \uae38 \uc548\uc5d0", "**\ud0c0\uc6d0\ud615** \uad6c\uc870 \uac00\ub4dd", "---", "\ubf1b\uc18d \ud608\uad00 \ud1b5\ub85c\uac00 \ud654\uc11d\uc73c\ub85c \ub0a8\uc544 \uc788\uc5c8\uace0, \uadf8 \uc548\uc5d0\uc11c \ud0c0\uc6d0\ud615\uc758 \ubbf8\uc138 \uad6c\uc870\uac00 \ub300\ub7c9\uc73c\ub85c \ubc1c\uacac\ub410\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \ud06c\uae30\uc640 \uc704\uce58\uac00 \uc138\ud3ec\uc640 \uaf2d \ub9de\ub294\ub2e4\uace0 \ubc1d\ud614\ub2e4."], ["\ub2ee\uc558\ub2e4\ub9cc\uc73c\ub860", "\uc548 \ub3fc", "---", "\uc5f0\uad6c\uc9c4\uc740 \uacf0\ud321\uc774\ub098 \ubbf8\uc0dd\ubb3c\uc774 \ub0a8\uae34 \ud754\uc801\uc77c \uac00\ub2a5\uc131\uc744 \ub530\uc838 \ubd24\uc9c0\ub9cc \ud544\ub77c\uba58\ud2b8, \ud3ec\uc790, \ubc14\uc774\uc624\ud544\ub984\uc740 \uc5c6\uc5c8\ub2e4. \uc0b0\uc18c\ub97c \ub098\ub974\ub294 \ubd84\uc790\uc778 \ud5f4 B\uac00 \ubf08 \ucd94\ucd9c\ubb3c\uc744 \uc9c0\ubc30\ud588\ub2e4\ub294 \ubd84\uc11d\uc774 \uadfc\uac70\uac00 \ub410\ub2e4."], ["**\uac00\uc7a5 \uc624\ub798\ub41c**", "\uacf5\ub8e1 \ud608\uad6c \ud6c4\ubcf4", "---", "\uc774\uc804 \ubc1c\uacac\uc740 \uae38\uc5b4\uc57c \uc57d 8000\ub9cc \ub144 \uc804 \uac83\uc774\uc5c8\ub2e4. \uc774\ubc88 \ud654\uc11d\uc740 \uc0b0\uc18c\uac00 \uac70\uc758 \uc5c6\ub294 \uc595\uc740 \ubb3c\uc758 \ubbf8\uc0dd\ubb3c \ub9e4\ud2b8\uc5d0\uc11c \ubcf4\uc874\ub41c \uac83\uc73c\ub85c, \ub9dd\uac04 \uad11\ubb3c\ud654\uac00 \uad6c\uc870\ub97c \uc548\uc815\uc2dc\ucf30\uc744 \uc218 \uc788\ub2e4\uace0 \uc5f0\uad6c\uc9c4\uc740 \ud574\uc11d\ud588\ub2e4."], ["\uc11c\ub78d \uc18d \ud654\uc11d\ub3c4", "**\ub2e4\uc2dc** \ubcf8\ub2e4", "---", "\uc5f0\uad6c\uc9c4\uc758 \ucd5c\uc6b0\uc120 \uacfc\uc81c\ub294 \uc7ac\ud604 \ud655\uc778\uc774\ub2e4. \ubc15\ubb3c\uad00\uacfc \ub300\ud559\uc5d0 \ubcf4\uad00\ub41c \uc218\ucc9c \uc810\uc758 \ud654\uc11d\uc744 \ub2e4\uc2dc \uc870\uc0ac\ud560 \uc218 \uc788\ub2e4\ub294 \uc810\uc5d0\uc11c \uae30\ub300\ub97c \ubc1d\ud614\ub2e4."], ["**\uacf5\ub8e1 \ub355\ud6c4** \uce5c\uad6c", "\uc9c0\uae08 \ubc14\ub85c \ud0dc\uadf8", "---", "1\uc5b5 1500\ub9cc \ub144 \ub41c \ubf08\uc5d0\uc11c \ud608\uad6c \ud6c4\ubcf4\uac00 \ub098\uc654\ub2e4\ub294 \uc774\uc57c\uae30\ub294 \uacf5\ub8e1\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \ubc18\uae38 \uc18c\uc2dd. \uc7ac\ud604 \ud655\uc778\uc774 \ub0a8\uc558\ub2e4\ub294 \uc810\uae4c\uc9c0 \ud568\uaed8 \uc804\ud574 \uc8fc\uae30 \uc88b\ub2e4."]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

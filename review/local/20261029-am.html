@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.29 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.29 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-90d42d654127" data-jump="90d42d654127">1</a><a href="#post-b91a850cdd0c" data-jump="b91a850cdd0c">2</a><a href="#post-6c6a51e2e8b3" data-jump="6c6a51e2e8b3">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-90d42d654127" data-id="90d42d654127">
+    <div class="head">
+      <h2>1. 낯선 사람이 장애인 단체 27명 점심값 420달러 익명 계산</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 8
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/90d42d654127/v1-01.jpg" alt="1장: 모르는 사람이 27명 밥값을 몰래 냈다?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/90d42d654127/v1-02.jpg" alt="2장: 인천 복지관 팀의 나들이 점심 자리 였대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/90d42d654127/v1-03.jpg" alt="3장: 계산하려는데 이미 누가 냈다는 거야" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/90d42d654127/v1-04.jpg" alt="4장: 비싼 소고기도 추가해 놓고 말없이 갔대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/90d42d654127/v1-05.jpg" alt="5장: 보고 뭔가 의미 있는 일을 하고 싶었대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/90d42d654127/v1-06.jpg" alt="6장: 요즘 지친 친구한테 이 얘기 보내주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/90d42d654127/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">모르는 사람이 27명의 점심값을 몰래 냈다는 소식이야.
+
+무대는 인천 서해 지역의 한 고깃집이었어. 제물포구 한마음복지관 직원, 봉사자, 장애인 이용자까지 27명이 오전에 청라호수공원 같은 인천 명소를 구경하고 점심을 먹으러 들른 자리였대. 밖으로 나온 것만으로도 다들 신나 있었다고 해.
+
+그런데 계산하려던 순간 예상 못한 얘기를 들었어. 먼저 식사를 마치고 나간 손님이 100달러어치가 넘는 고급 소고기를 더 추가해서 41만 원이던 금액을 60만 원으로 만들었고, 그걸 전부 결제한 뒤 아무 말 없이 떠났다는 거야. 총액은 60만 원, 달러로 약 420달러야.
+
+복지관 봉사자 김 씨는 연합뉴스에, 그 손님이 복지시설 단체가 식사하러 온 걸 보고 뭔가 의미 있는 일을 하고 싶어 했다고, 그리고 미국 하와이에 살았다고 들었다고 전했어. 다만 연합뉴스가 후속 취재를 했을 때 식당 사장님은 그 손님이 가끔 찾아오던 사람이라고 말했대. 그래서 정말 미국 사람이 한 일인지는 조금 불확실해 보인다는 게 해외 매체의 전언이야.
+
+김 씨는 이름조차 알 수 없어 아쉽다면서도, 27명의 감사한 마음이 그분께 닿았으면 좋겠다고 했어. 그리고 이날 받은 건 단순한 식사가 아니라, 주변에 따뜻한 사람이 아직 많다는 걸 떠올리게 해 준 값진 경험이었다고 말했대.
+
+출처: Good News Network, 연합뉴스(Yonhap News Agency 인용 보도)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#미담 #인천 #훈훈한소식 #해외토픽 #선행</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 김 씨가 손님의 이름을 알 수 없어 아쉽다고 말했다</li><li>근거 등록 안 된 주장: 김 씨가 복지관 봉사자이며 연합뉴스에 이야기했다는 취재 출처</li><li>근거 등록 안 된 주장: 기사 출처가 Good News Network 및 Yonhap News Agency 인용 보도라는 점</li><li>근거 등록 안 된 주장: 일행이 식당에 들어오기 전 밖으로 나온 것만으로도 신나 있었다는 묘사</li><li>근거 등록 안 된 주장: 손님이 미국인인지 불확실하다는 판단(원문상 기자의 추정)</li>
+          <li>손님이 하와이에 살았다는 내용은 전해 들은 말이고, 식당 사장의 말과 엇갈려 사실이 불확실함</li><li>원문 기사 제목과 URL에서 lunch와 dinner가 섞여 쓰임(본문 내용은 점심 기준)</li><li>금액은 원화와 달러 표기가 기사 그대로이며 환산 오차 가능</li><li>원문의 인용을 한국어로 의역했으므로 게시 전 표현 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-90d42d654127-0">1장</label>
+          <textarea id="s-90d42d654127-0" rows="3" data-slide="0">모르는 사람이
+**27명** 밥값을
+몰래 냈다?!</textarea>
+          
+          <label class="f" for="s-90d42d654127-1">2장</label>
+          <textarea id="s-90d42d654127-1" rows="3" data-slide="1">**인천** 복지관 팀의
+나들이 점심 자리
+였대</textarea>
+          
+          <label class="f" for="s-90d42d654127-2">3장</label>
+          <textarea id="s-90d42d654127-2" rows="3" data-slide="2">계산하려는데
+**이미** 누가
+냈다는 거야</textarea>
+          
+          <label class="f" for="s-90d42d654127-3">4장</label>
+          <textarea id="s-90d42d654127-3" rows="3" data-slide="3">비싼 **소고기**도
+추가해 놓고
+말없이 갔대</textarea>
+          
+          <label class="f" for="s-90d42d654127-4">5장</label>
+          <textarea id="s-90d42d654127-4" rows="3" data-slide="4">보고 뭔가
+**의미 있는 일을**
+하고 싶었대</textarea>
+          
+          <label class="f" for="s-90d42d654127-5">6장</label>
+          <textarea id="s-90d42d654127-5" rows="2" data-slide="5">요즘 **지친 친구**한테
+이 얘기 보내주기</textarea>
+          
+          <label class="f" for="c-90d42d654127">본문 (캡션)</label>
+          <textarea id="c-90d42d654127" class="caption">모르는 사람이 27명의 점심값을 몰래 냈다는 소식이야.
+
+무대는 인천 서해 지역의 한 고깃집이었어. 제물포구 한마음복지관 직원, 봉사자, 장애인 이용자까지 27명이 오전에 청라호수공원 같은 인천 명소를 구경하고 점심을 먹으러 들른 자리였대. 밖으로 나온 것만으로도 다들 신나 있었다고 해.
+
+그런데 계산하려던 순간 예상 못한 얘기를 들었어. 먼저 식사를 마치고 나간 손님이 100달러어치가 넘는 고급 소고기를 더 추가해서 41만 원이던 금액을 60만 원으로 만들었고, 그걸 전부 결제한 뒤 아무 말 없이 떠났다는 거야. 총액은 60만 원, 달러로 약 420달러야.
+
+복지관 봉사자 김 씨는 연합뉴스에, 그 손님이 복지시설 단체가 식사하러 온 걸 보고 뭔가 의미 있는 일을 하고 싶어 했다고, 그리고 미국 하와이에 살았다고 들었다고 전했어. 다만 연합뉴스가 후속 취재를 했을 때 식당 사장님은 그 손님이 가끔 찾아오던 사람이라고 말했대. 그래서 정말 미국 사람이 한 일인지는 조금 불확실해 보인다는 게 해외 매체의 전언이야.
+
+김 씨는 이름조차 알 수 없어 아쉽다면서도, 27명의 감사한 마음이 그분께 닿았으면 좋겠다고 했어. 그리고 이날 받은 건 단순한 식사가 아니라, 주변에 따뜻한 사람이 아직 많다는 걸 떠올리게 해 준 값진 경험이었다고 말했대.
+
+출처: Good News Network, 연합뉴스(Yonhap News Agency 인용 보도)</textarea>
+          <label class="f" for="t-90d42d654127">해시태그</label>
+          <input id="t-90d42d654127" type="text" class="tagsin" value="#미담 #인천 #훈훈한소식 #해외토픽 #선행" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>인천의 복지관 직원과 장애인 이용자 27명이 인천 서해 지역 고깃집에서 점심을 먹었다</b>
+            <q>“The story begins when the party of 27 community center staff and disabled residents from the city of Incheon, just west of the capital Seoul, stopped for lunch at a BBQ resident in Incheon’s Seohae district.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제물포구 한마음복지관 직원과 봉사자들이 조직했고, 오전에 청라호수공원 등 인천 명소를 구경했다</b>
+            <q>“Organized by the staff and volunteers at the Jemulpo-gu Hanmaum Community Welfare Center, the morning had been spent seeing some of the sights in Incheon, such as Cheongna Lake Park, according to the country’s Yonhap News Agency.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>계산서가 60만 원, 약 420달러였고 일행은 예상 못한 소식을 들었다</b>
+            <q>“A volunteer from the center, named Kim, told Yonhap that when it came time to pay the bill, which had crested 600,000 Korean won, or $420 dollars, they received some unexpected news.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>익명의 손님이 100달러 넘는 프리미엄 소고기를 추가해 41만 원에서 60만 원으로 만든 뒤 전부 결제하고 말없이 떠났다</b>
+            <q>“An anonymous diner, who’d just finished and left, had added over $100 worth of premium beef to their order, taking the total from 410,000 to 600,000 won, before paying for it all and leaving without a word further.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그 손님은 복지시설 단체를 보고 의미 있는 일을 하고 싶어 했고 하와이에 살았다고 전해 들었다</b>
+            <q>““All we heard was that the person had wanted to do something meaningful after seeing a group from a welfare facility come in to eat, and that they had been living in Hawaii in the United States.””</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>식당 사장은 그 손님이 가끔 찾아오던 사람이라고 연합뉴스에 말했다</b>
+            <q>“Whether this random act of kindness was executed by an American seems ever so slightly doubtful, as Yonhap News, following up on the story, heard from the BBQ restaurant owner that the generous stranger dined there every so often.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>김 씨는 27명의 감사한 마음이 그 사람에게 닿기를 바란다고 했다</b>
+            <q>““I hope the gratitude of all 27 of us reaches that person.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>김 씨는 단순한 식사가 아니라 주변에 따뜻한 사람이 많다는 걸 떠올리게 한 값진 경험이었다고 말했다</b>
+            <q>““What we received was not just a meal,” Kim said. “It was a valuable experience that reminded us there are still many warmhearted people around us.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/anonymously-pays-dinner-tab-for-27-disability-staff-in-south-korea/" target="_blank" rel="noopener">Stranger Anonymously Pays $420 Lunch Tab for 27 Disabled Residents and Caregivers</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/korean-barbecue-barbecue-korean-food-8579177/" target="_blank" rel="noopener">nicehee0610 / Pixabay</a> — "korean barbecue table in warm sunlit restaurant"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Chemulpo_(Incheon),_1890.jpg" target="_blank" rel="noopener">d&#39;Amade / Wikimedia Commons · Public domain</a> — "Incheon"</li><li>3장: <a href="https://pixabay.com/photos/brick-wall-chairs-furniture-1834784/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "restaurant table"</li><li>4장: <a href="https://pixabay.com/photos/burgers-fire-grill-grilling-cook-1839090/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "beef grill"</li><li>5장: <a href="https://pixabay.com/photos/hand-woman-female-man-touch-3035665/" target="_blank" rel="noopener">zhivko / Pixabay</a> — "helping hands"</li><li>6장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b91a850cdd0c" data-id="b91a850cdd0c">
+    <div class="head">
+      <h2>2. 이집트 오이 농부 밭에서 람세스 2세 석상 조각 발견</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/b91a850cdd0c/v1-01.jpg" alt="1장: 오이밭에서 람세스 2세 머리 발견?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/b91a850cdd0c/v1-02.jpg" alt="2장: 집 앞 땅에서 문양 새겨진 돌 발견" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/b91a850cdd0c/v1-03.jpg" alt="3장: 머리 높이만 1.6m 완성본은 8.5m?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/b91a850cdd0c/v1-04.jpg" alt="4장: 석상이 하나 더 얼굴 멀쩡히 남음 아직 확정 전" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/b91a850cdd0c/v1-05.jpg" alt="5장: 농부 부부 움라 여행 포상" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/b91a850cdd0c/v1-06.jpg" alt="6장: 텃밭 가꾸는 친구한테 땅 파보라고 전송" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/b91a850cdd0c/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">오이 키우던 농부 땅에서 람세스 2세 석상 조각이 나왔대. 이집트 나일강 삼각주 가르비아주의 베헤이트 엘하가르 마을에서 벌어진 일이야. 농부 칼리드 칼릴이 집 앞 땅에서 고대 문양이 새겨진 돌을 발견하고 유물 당국에 알렸고, 이집트 최고유물위원회 팀이 구조 발굴에 들어갔어. 그 결과 거대한 왕실 석상 두 점의 잔해가 나왔는데, 그중 하나는 높이 1.6미터짜리 람세스 2세의 머리야. 상하 이집트를 상징하는 이중 왕관을 쓴 모습이고, 파라오의 공식 이름 중 하나인 호루스 이름이 새겨진 등 기둥 일부도 같이 나왔어. 최고유물위원회 사무총장 히샴 엘레이티는 머리 비율을 보면 받침까지 합쳐 원래 높이가 약 8.5미터였을 수 있다고 밝혔어. 두 번째 석상은 남은 부분이 약 2.4미터이고, 다리와 받침은 없지만 얼굴은 잘 보존돼 있대. 첫 번째 머리와 이목구비가 닮아서 람세스 2세일 수 있다고 보지만 아직 확정은 아니야. 길이 약 1.3미터의 분홍 화강암 블록에서는 &#39;상하 이집트의 왕&#39;, &#39;라의 아들&#39; 같은 칭호가 적힌 상형문자도 확인됐어. 발굴과 연구는 계속 이어지는 중이야. 농부 부부는 신고에 대한 감사의 뜻으로 움라(메카 성지순례) 여행을 받았고, 가르비아 주지사는 농부 집을 찾아 &#34;오이가 유물을 불러온다&#34;는 농담을 했대.
+
+출처: Euronews</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#이집트 #람세스2세 #고고학 #유물발견 #해외뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 슬라이드6: 농부가 텃밭 친구에게 땅을 파보라고 메시지를 보냈다는 내용은 근거 claims에 없다.</li><li>근거 등록 안 된 주장: 본문: 이집트 나일강 삼각주 지역에 위치한다는 지리적 사실이 claims 목록의 개별 주장으로 분리되어 있지 않다.</li>
+          <li>두 번째 석상이 람세스 2세인지는 아직 확정되지 않음</li><li>8.5미터 높이는 머리 비율에 따른 추정치</li><li>주지사 농담 발언은 현지 매체를 인용한 Euronews 보도 기반</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b91a850cdd0c-0">1장</label>
+          <textarea id="s-b91a850cdd0c-0" rows="3" data-slide="0">오이밭에서
+**람세스 2세**
+머리 발견?!</textarea>
+          
+          <label class="f" for="s-b91a850cdd0c-1">2장</label>
+          <textarea id="s-b91a850cdd0c-1" rows="3" data-slide="1">집 앞 땅에서
+문양 새겨진
+**돌** 발견</textarea>
+          
+          <label class="f" for="s-b91a850cdd0c-2">3장</label>
+          <textarea id="s-b91a850cdd0c-2" rows="3" data-slide="2">머리 높이만
+1.6m
+완성본은 **8.5m**?</textarea>
+          
+          <label class="f" for="s-b91a850cdd0c-3">4장</label>
+          <textarea id="s-b91a850cdd0c-3" rows="3" data-slide="3">석상이 **하나 더**
+얼굴 멀쩡히 남음
+아직 확정 전</textarea>
+          
+          <label class="f" for="s-b91a850cdd0c-4">5장</label>
+          <textarea id="s-b91a850cdd0c-4" rows="2" data-slide="4">농부 부부
+**움라** 여행 포상</textarea>
+          
+          <label class="f" for="s-b91a850cdd0c-5">6장</label>
+          <textarea id="s-b91a850cdd0c-5" rows="3" data-slide="5">**텃밭** 가꾸는
+친구한테
+땅 파보라고 전송</textarea>
+          
+          <label class="f" for="c-b91a850cdd0c">본문 (캡션)</label>
+          <textarea id="c-b91a850cdd0c" class="caption">오이 키우던 농부 땅에서 람세스 2세 석상 조각이 나왔대. 이집트 나일강 삼각주 가르비아주의 베헤이트 엘하가르 마을에서 벌어진 일이야. 농부 칼리드 칼릴이 집 앞 땅에서 고대 문양이 새겨진 돌을 발견하고 유물 당국에 알렸고, 이집트 최고유물위원회 팀이 구조 발굴에 들어갔어. 그 결과 거대한 왕실 석상 두 점의 잔해가 나왔는데, 그중 하나는 높이 1.6미터짜리 람세스 2세의 머리야. 상하 이집트를 상징하는 이중 왕관을 쓴 모습이고, 파라오의 공식 이름 중 하나인 호루스 이름이 새겨진 등 기둥 일부도 같이 나왔어. 최고유물위원회 사무총장 히샴 엘레이티는 머리 비율을 보면 받침까지 합쳐 원래 높이가 약 8.5미터였을 수 있다고 밝혔어. 두 번째 석상은 남은 부분이 약 2.4미터이고, 다리와 받침은 없지만 얼굴은 잘 보존돼 있대. 첫 번째 머리와 이목구비가 닮아서 람세스 2세일 수 있다고 보지만 아직 확정은 아니야. 길이 약 1.3미터의 분홍 화강암 블록에서는 &#39;상하 이집트의 왕&#39;, &#39;라의 아들&#39; 같은 칭호가 적힌 상형문자도 확인됐어. 발굴과 연구는 계속 이어지는 중이야. 농부 부부는 신고에 대한 감사의 뜻으로 움라(메카 성지순례) 여행을 받았고, 가르비아 주지사는 농부 집을 찾아 &#34;오이가 유물을 불러온다&#34;는 농담을 했대.
+
+출처: Euronews</textarea>
+          <label class="f" for="t-b91a850cdd0c">해시태그</label>
+          <input id="t-b91a850cdd0c" type="text" class="tagsin" value="#이집트 #람세스2세 #고고학 #유물발견 #해외뉴스" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>농부 칼리드 칼릴이 가르비아주 베헤이트 엘하가르 마을 집 앞 땅에서 고대 문양이 새겨진 돌을 발견하고 유물 당국에 알렸다</b>
+            <q>“Khaled Khalil came across a stone bearing ancient carvings on land in front of his home in Behbeit el-Hagar, a village in the Nile Delta’s Gharbia governorate, and alerted antiquities officials.”</q>
+            <small>slide2, caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>최고유물위원회 이집트 팀이 구조 발굴을 시작했다</b>
+            <q>“Officials examined the stone before an Egyptian team from the Supreme Council of Antiquities began a rescue excavation, according to the Ministry of Tourism and Antiquities.”</q>
+            <small>caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오이를 키우던 농부 덕에 왕실 석상 두 점의 잔해가 발견됐고, 그중 하나는 높이 1.6미터의 람세스 2세 머리다</b>
+            <q>“An Egyptian farmer growing cucumbers on his land has helped archaeologists find the remains of two colossal royal statues, including a head of Ramses II measuring 1.6 metres tall.”</q>
+            <small>slide1, slide3, caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>머리는 상하 이집트의 이중 왕관을 쓴 모습이며, 호루스 이름이 새겨진 등 기둥 일부도 발견됐다</b>
+            <q>“The newly discovered head depicts Ramses II wearing the double crown of Upper and Lower Egypt. Archaeologists also found part of the statue’s back pillar bearing his Horus name, one of the pharaoh’s formal royal names.”</q>
+            <small>caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>최고유물위원회 사무총장은 완성된 석상이 받침 포함 약 8.5미터였을 수 있다고 밝혔다</b>
+            <q>“Hisham el-Leithy, secretary-general of the Supreme Council of Antiquities, said the head’s proportions suggested the complete statue could originally have stood about 8.5 metres tall, including its base.”</q>
+            <small>slide3, caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 번째 석상은 남은 부분이 약 2.4미터이고 다리와 받침은 없지만 얼굴은 잘 보존돼 있다</b>
+            <q>“The surviving section of the second statue measures about 2.4 metres. Its legs and base are missing, but the face remains well preserved.”</q>
+            <small>slide4, caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 번째 석상은 첫 번째 머리와 얼굴이 닮아 람세스 2세일 수 있지만 아직 확정되지 않았다</b>
+            <q>“Archaeologists think it may depict Ramses II because its facial features resemble those of the first head, although that identification has yet to be confirmed.”</q>
+            <small>slide4, caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>길이 약 1.3미터의 분홍 화강암 블록에 &#39;상하 이집트의 왕&#39;, &#39;라의 아들&#39; 등의 칭호가 담긴 상형문자가 있다</b>
+            <q>“A separate pink granite block, about 1.3 metres long, carries hieroglyphic inscriptions including the titles “King of Upper and Lower Egypt” and “Son of Ra”.”</q>
+            <small>caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>발굴과 연구는 계속되고 있다</b>
+            <q>“Excavations and studies are continuing to establish how the newly found pieces relate to one another and to the surrounding site.”</q>
+            <small>caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>농부와 아내는 움라 여행을 포상으로 받았다</b>
+            <q>“The farmer and his wife were awarded a trip to perform Umrah, the Muslim pilgrimage to Mecca that can be undertaken throughout the year.”</q>
+            <small>slide5, caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가르비아 주지사가 농부 집을 방문해 오이가 유물을 부른다고 농담했다</b>
+            <q>““See? Cucumbers bring antiquities,” Gharbia governor Alaa Abdel Moaty joked during a visit to the farmer’s home last week, according to the newspaper.”</q>
+            <small>caption · <a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.euronews.com/2026/10/20/egyptian-cucumber-farmer-helps-archaeologists-find-giant-ramses-ii-statue-fragments" target="_blank" rel="noopener">Ramses II statue fragments found on Egyptian farmer’s land</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/grapes-fruits-food-fresh-healthy-3586314/" target="_blank" rel="noopener">manfredrichter / Pixabay</a> — "green cucumber vines in sunlit field"</li><li>2장: <a href="https://pixabay.com/photos/barley-field-wheat-agriculture-plow-1684052/" target="_blank" rel="noopener">kangbch / Pixabay</a> — "farmland"</li><li>3장: <a href="https://pixabay.com/photos/kaiser-wilhelm-monument-hagen-2176402/" target="_blank" rel="noopener">Tama66 / Pixabay</a> — "stone statue"</li><li>4장: <a href="https://pixabay.com/photos/ruin-castle-middle-ages-dramatic-3746423/" target="_blank" rel="noopener">Darkmoon_Art / Pixabay</a> — "ancient ruins"</li><li>5장: <a href="https://pixabay.com/photos/mosque-abu-dhabi-to-travel-white-615415/" target="_blank" rel="noopener">jpeter2 / Pixabay</a> — "mosque"</li><li>6장: <a href="https://pixabay.com/photos/garden-radish-vegetables-food-7300875/" target="_blank" rel="noopener">Mirko_Fabian / Pixabay</a> — "vegetable garden"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-6c6a51e2e8b3" data-id="6c6a51e2e8b3">
+    <div class="head">
+      <h2>3. Nanotyrannus 골격 4730만 달러 경매</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 7
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/6c6a51e2e8b3/v1-01.jpg" alt="1장: 공룡 뼈 하나가 567억???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/6c6a51e2e8b3/v1-02.jpg" alt="2장: T. rex 아님 그 사촌임" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/6c6a51e2e8b3/v1-03.jpg" alt="3장: 예상가는 6~9백만 달러였는데" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/6c6a51e2e8b3/v1-04.jpg" alt="4장: 입찰 6명이 12분 붙었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/6c6a51e2e8b3/v1-05.jpg" alt="5장: 산 사람은 아직 비공개" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/6c6a51e2e8b3/v1-06.jpg" alt="6장: 공룡 덕후 친구 이거 보면 기절" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261029-am-1342c7a2af1c/6c6a51e2e8b3/v1-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">공룡 뼈 하나가 4730만 달러에 팔렸다는 소식이야. 뉴욕 소더비 경매에서 Nanotyrannus 골격이 이번 주 화요일 이 가격에 낙찰됐고, 세계에서 가장 비싼 화석 중 하나가 됐어.
+
+Nanotyrannus는 티라노사우루스 렉스의 작은 친척으로 소개된 공룡이야. 이 골격의 별명은 &#39;조디&#39;인데, 2019년에 발견한 사람 이름을 땄대. 발견 장소는 몬태나주 가필드 카운티 헬 크릭 층에 있는 조디 피어슨의 개인 땅이야.
+
+소더비 설명으로는 길이가 코끝에서 꼬리까지 약 19.6피트, 거치대 위 높이는 약 9.6피트, 화석 뼈 요소는 약 191개야. 처음 추정가는 600만~900만 달러였지만 12분 동안 입찰 6명이 온라인과 전화로 붙었고, 결국 전화 입찰자가 가져갔어. 소더비는 역대 경매 공룡 중 두 번째로 비싼 가격이라고 밝혔어. 구매자는 아직 공개되지 않았어.
+
+소더비에 따르면 이런 규모의 Nanotyrannus 골격은 학계에 알려진 것이 세 점뿐이고, 이 속이 확인된 뒤 시장에 나온 건 처음이래.
+
+과학계에선 비판도 나왔어. 메릴랜드대의 토머스 홀츠 주니어는 같은 시기에 일부 박물관이 문을 닫거나 폐쇄 위기에 놓였는데, 그 적자가 이 낙찰가의 10분의 1 수준이라고 지적했어. 그는 화석이 개인 소장으로 넘어가면 연구와 대중에게서 사라질 수 있다고도 말했어.
+
+출처: The Guardian, Sotheby&#39;s 발표 인용</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#공룡 #화석 #경매 #과학뉴스 #해외뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처가 The Guardian과 Sotheby&#39;s 발표라는 보도 출처 표기</li>
+          <li>수익화 제한: 경매 낙찰가 소식으로 상업적 홍보처럼 보이지 않게 주의</li><li>사실 불확실성: 구매자 미공개, 화석 향방 불명</li><li>환율 환산(약 567억 원)은 원문에 없는 수치라 확인 필요</li><li>소더비 발표 인용이 많아 원문 표현 복사 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-6c6a51e2e8b3-0">1장</label>
+          <textarea id="s-6c6a51e2e8b3-0" rows="2" data-slide="0">공룡 뼈 하나가
+**567억**???</textarea>
+          
+          <label class="f" for="s-6c6a51e2e8b3-1">2장</label>
+          <textarea id="s-6c6a51e2e8b3-1" rows="2" data-slide="1">T. rex 아님
+그 **사촌**임</textarea>
+          
+          <label class="f" for="s-6c6a51e2e8b3-2">3장</label>
+          <textarea id="s-6c6a51e2e8b3-2" rows="2" data-slide="2">**예상가**는
+6~9백만 달러였는데</textarea>
+          
+          <label class="f" for="s-6c6a51e2e8b3-3">4장</label>
+          <textarea id="s-6c6a51e2e8b3-3" rows="2" data-slide="3">입찰 6명이
+**12분** 붙었다</textarea>
+          
+          <label class="f" for="s-6c6a51e2e8b3-4">5장</label>
+          <textarea id="s-6c6a51e2e8b3-4" rows="2" data-slide="4">산 사람은
+아직 **비공개**</textarea>
+          
+          <label class="f" for="s-6c6a51e2e8b3-5">6장</label>
+          <textarea id="s-6c6a51e2e8b3-5" rows="2" data-slide="5">**공룡 덕후** 친구
+이거 보면 기절</textarea>
+          
+          <label class="f" for="c-6c6a51e2e8b3">본문 (캡션)</label>
+          <textarea id="c-6c6a51e2e8b3" class="caption">공룡 뼈 하나가 4730만 달러에 팔렸다는 소식이야. 뉴욕 소더비 경매에서 Nanotyrannus 골격이 이번 주 화요일 이 가격에 낙찰됐고, 세계에서 가장 비싼 화석 중 하나가 됐어.
+
+Nanotyrannus는 티라노사우루스 렉스의 작은 친척으로 소개된 공룡이야. 이 골격의 별명은 &#39;조디&#39;인데, 2019년에 발견한 사람 이름을 땄대. 발견 장소는 몬태나주 가필드 카운티 헬 크릭 층에 있는 조디 피어슨의 개인 땅이야.
+
+소더비 설명으로는 길이가 코끝에서 꼬리까지 약 19.6피트, 거치대 위 높이는 약 9.6피트, 화석 뼈 요소는 약 191개야. 처음 추정가는 600만~900만 달러였지만 12분 동안 입찰 6명이 온라인과 전화로 붙었고, 결국 전화 입찰자가 가져갔어. 소더비는 역대 경매 공룡 중 두 번째로 비싼 가격이라고 밝혔어. 구매자는 아직 공개되지 않았어.
+
+소더비에 따르면 이런 규모의 Nanotyrannus 골격은 학계에 알려진 것이 세 점뿐이고, 이 속이 확인된 뒤 시장에 나온 건 처음이래.
+
+과학계에선 비판도 나왔어. 메릴랜드대의 토머스 홀츠 주니어는 같은 시기에 일부 박물관이 문을 닫거나 폐쇄 위기에 놓였는데, 그 적자가 이 낙찰가의 10분의 1 수준이라고 지적했어. 그는 화석이 개인 소장으로 넘어가면 연구와 대중에게서 사라질 수 있다고도 말했어.
+
+출처: The Guardian, Sotheby&#39;s 발표 인용</textarea>
+          <label class="f" for="t-6c6a51e2e8b3">해시태그</label>
+          <input id="t-6c6a51e2e8b3" type="text" class="tagsin" value="#공룡 #화석 #경매 #과학뉴스 #해외뉴스" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Nanotyrannus 골격이 뉴욕 경매에서 4730만 달러에 팔려 세계에서 가장 비싼 화석 중 하나가 됐다</b>
+            <q>“A rare skeleton of a Nanotyrannus, a smaller relative of the Tyrannosaurus rex, sold at auction in New York this week for $47.3m, making it one of the world’s most expensive fossils.”</q>
+            <small>slide1, caption · <a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>골격 별명은 발견자 이름을 딴 &#39;조디&#39;이고 소더비에서 화요일에 낙찰됐다. 12분간 입찰자 6명이 경쟁했고 전화 입찰자가 가져갔다</b>
+            <q>“The skeleton, named “Jodi” after the person who found the remains in 2019, sold at Sotheby’s on Tuesday for $47.3m, “after a twelve-minute bidding battle that saw six bidders compete online and over the phones, before ultimately selling on the phone”, Sotheby’s said in a statement.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>처음 추정가는 600만~900만 달러였고 역대 경매 공룡 중 두 번째로 비싸다. 구매자는 아직 공개되지 않았다</b>
+            <q>“Sotheby’s initially estimated that the skeleton would sell for $6m to $9m. Tuesday’s result makes “Jodi” the “second most valuable dinosaur ever sold at auction”, Sotheby’s noted. The buyer has not yet been identified publicly.”</q>
+            <small>slide3, slide5, caption · <a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2019년 몬태나주 가필드 카운티 헬 크릭 층의 개인 소유지에서 발견됐고 길이 약 19.6피트, 높이 약 9.6피트, 화석 뼈 약 191개로 구성된다</b>
+            <q>“The skeleton, which was unveiled at a Manhattan auction earlier this month, was discovered by Jodi Pierson in 2019 on her privately owned land in the Hell Creek Formation in Garfield County, Montana, near the town of Jordan. According to Sotheby’s, the skeleton measures 19.6ft long from nose to the tail, and around 9.6ft tall on the armature, “comprising approximately 191 fossil bone elements”.”</q>
+            <small>caption · <a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>학계에 알려진 상당한 Nanotyrannus 골격은 세 점뿐이고, 속이 확인된 뒤 시장에 나온 첫 사례다</b>
+            <q>““Jodi” is one of only “three substantial Nanotyrannus skeletons known to science, and the first to come to market since the genus was confirmed last fall”, per Sotheby’s.”</q>
+            <small>caption · <a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>홀츠는 일부 박물관이 폐쇄되거나 폐쇄 위기인데 그 초과 비용이 낙찰가의 10분의 1 수준이라고 지적했다</b>
+            <q>““At the same time this sale went on, some museums are closing (the Academy of Natural Sciences at Drexel in Philadelphia) or being threatened with closure (the Sternberg Museum of Natural History at Fort Hays State University) because of cost overruns literally only 1/10th that of the final cost of Jodi.”</q>
+            <small>caption · <a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>홀츠는 화석이 개인 소장이 되면 연구와 대중에게서 사라질 수 있다고 강조했다</b>
+            <q>“He also emphasized that “potentially scientifically significant fossils” like Jodi “can be lost to research and the public when they are in private hands”.”</q>
+            <small>caption · <a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/us-news/2026/oct/27/nanotyrannus-dinosaur-fossil-sothebys-auction" target="_blank" rel="noopener">Rare Nanotyrannus skeleton sells for $47.3m at New York auction</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/museum-dinosaur-dino-fossil-5082786/" target="_blank" rel="noopener">adventurous_blondine / Pixabay</a> — "dinosaur skeleton in a bright museum hall"</li><li>2장: <a href="https://pixabay.com/photos/national-history-museum-4314035/" target="_blank" rel="noopener">just-pics / Pixabay</a> — "fossil museum"</li><li>3장: <a href="https://pixabay.com/photos/hamburg-fish-auction-hall-4517389/" target="_blank" rel="noopener">2857440 / Pixabay</a> — "auction hall"</li><li>4장: <a href="https://pixabay.com/photos/telephone-vintage-monochrome-phone-3594206/" target="_blank" rel="noopener">Alexas_Fotos / Pixabay</a> — "telephone"</li><li>5장: <a href="https://pixabay.com/photos/space-hotel-lobby-lighting-2897820/" target="_blank" rel="noopener">kalhh / Pixabay</a> — "mansion lobby"</li><li>6장: <a href="https://pixabay.com/photos/woman-art-creative-relaxation-girl-1283009/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "museum visitors"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-067e1be0e9b6">
+    <div class="head">
+      <h2>S1. 사우나 30분 백혈구 증가 핀란드 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-067e1be0e9b6">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;사우나 하면 면역력 올라간다&#39;는 통념을 뒤집고, 백혈구가 잠깐 늘었다가 30분 안에 돌아온다는 반전과 찜질방 일상으로 연결한다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">90/500자</span></div>
+      <p class="tp-text">사우나 30분에 백혈구가 쭉 늘었는데 &#39;면역력 올랐다&#39;는 얘기는 아니래
+핀란드 연구에서 나온 결과인데, 연구진이 직접 선을 그은 부분이 있음
+그게 뭔지는 아래 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 사우나 30분 하고 나니 연구진이 측정한 백혈구가 종류 상관없이 전부 늘었대. 감염에 제일 먼저 달려가는 호중구, 위협을 알아보는 림프구도 포함이고.
+근데 이 숫자가 얼마나 유지됐는지가 진짜 포인트임</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">2/ 답은 &#39;오래 안 감&#39;이야. 사우나 끝나고 30분 안에 호중구랑 림프구 수치가 원래대로 돌아왔대.
+그럼 늘어난 백혈구들은 대체 어디서 나왔다가 어디로 간 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">163/500자</span></div>
+      <p class="tp-text">3/ 연구진 설명은 이래. 평소 조직에 머물던 백혈구가 사우나 중에 혈액으로 풀려나왔다가, 끝나면 다시 조직으로 돌아가는 걸 수 있다는 거.
+조직을 떠난 백혈구는 몸을 더 잘 순찰하고 병원체에 대응할 수 있다는 설명이야.
+이거 운동할 때랑 비슷하다는데, 그럼 사우나가 운동 대신이 되는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">4/ 운동할 때도 면역세포가 혈액 속을 도는 수가 잠깐 늘어나는데, 사우나에서도 비슷한 반응이 나왔다는 거야.
+다만 두 활동의 면역 효과가 똑같다는 뜻은 아니래.
+이제 이 연구가 확인한 것과 못 한 것만 정리해볼게 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">172/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 대상: 성인 51명, 평균 나이 50세
+- 방식: 사우나 30분 + 중간에 짧은 찬물 샤워
+- 확인된 것: 백혈구 전부 증가, 30분 안에 호중구·림프구는 원래대로
+- 못 밝힌 것: 오래가는 면역 개선, 병 걸릴 위험 감소
+- 주의: 찬물 샤워까지 합친 결과라 열 효과만 따로 본 건 아님</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">208/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 사우나 하는 동안 백혈구가 잠깐 혈액으로 나온다는 것까지고, 오래가는 효과는 아직 모른다는 거.
+
+사우나 끝에 찬물 샤워 넣는 파 vs 안 넣는 파?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 호중구는 감염에 가장 먼저 달려가는 면역세포다</li><li>근거 등록 안 된 주장: 림프구는 위협을 알아보는 면역세포다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>사우나 30분에 백혈구가 쭉 늘었는데 &#39;면역력 올랐다&#39;는 얘기는 아니래</li><li>찜질방 가면 몸속에서 면역세포가 순찰 돈다는 연구, 근데 30분 뒤엔 어떻게 됐을까</li><li>면역력이 오른 게 아니라 백혈구가 잠깐 풀려나는 거래, 사우나 얘기야</li><li>사우나 30분 vs 운동, 몸속 면역세포한테 비슷한 일이 벌어진대</li><li>51명이 사우나에 들어갔더니 측정한 백혈구가 전부 늘었대</li><li>사우나 중간에 찬물 샤워 한 번이 변수였대, 핀란드 연구 결과</li><li>핀란드 연구진이 사우나 30분 뒤 피 속 백혈구를 봤더니 이런 일이 있었대</li><li>&#39;사우나가 면역에 좋다&#39;는 말, 연구진은 딱 여기까지만 말했어</li><li>사우나 끝나고 30분 지나면 호중구랑 림프구가 원래대로 돌아간대</li><li>찜질방 좋아하는 사람 주목, 사우나 하는 동안 몸속에선 백혈구가 움직였대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>사우나 끝에 찬물 샤워 넣는 파 vs 안 넣는 파?</li><li>찜질방이나 사우나 가면 꼭 챙겨 먹는 거 하나만 말해줘</li><li>사우나 30분 풀로 버티는 거, 너라면 할 수 있어?</li><li>사우나 vs 러닝, 평생 하나만 해야 하면 뭐 고를래?</li><li>사우나 해본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>사우나를 자주 하는 사람들의 건강을 본 기존 연구들</li><li>운동할 때 면역세포가 늘어나는 원리</li><li>사이토카인이 뭐길래 체온 변화와 연결되나</li><li>찬물 샤워가 몸에 주는 변화</li><li>면역 감시(immune surveillance)는 몸속에서 어떻게 일어나나</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>핀란드 연구진이 30분 사우나(중간에 짧은 찬물 샤워 포함)가 백혈구를 혈류로 급증시킨다는 것을 발견했다</b>
+          <q>“Researchers in Finland have discovered that spending just 30 minutes in a sauna, with a brief cold shower halfway through, causes white blood cells to surge into the bloodstream.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 오래가는 면역 개선이나 질병 위험 감소 여부는 밝혀지지 않았다고 선을 그었다</b>
+          <q>“However, the researchers caution that the results do not establish whether sauna bathing produces lasting improvements in immune function or reduces the risk of illness.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>측정한 모든 종류의 순환 백혈구가 증가했다</b>
+          <q>“During the study, researchers observed an increase in every type of circulating white blood cell they measured.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>증가한 백혈구에 호중구와 림프구가 포함됐다</b>
+          <q>“Among them were neutrophils and lymphocytes, two important groups of immune cells.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사우나 후 30분 안에 호중구와 림프구 수치가 원래대로 돌아왔다</b>
+          <q>“The increase was temporary. Within 30 minutes after the sauna session, neutrophil and lymphocyte counts had returned to their original levels.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 사우나가 조직의 백혈구를 혈류로 동원하고 끝나면 다시 조직에 자리잡는 것일 수 있다고 설명했다</b>
+          <q>“This may indicate that sauna bathing mobilizes additional white blood cells into the bloodstream from tissues, where they are then redeposited after the session.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>저장소를 떠난 백혈구는 몸을 더 잘 순찰하고 병원체에 대응할 수 있다는 설명</b>
+          <q>“This kind of periodic release of white blood cells into the bloodstream is beneficial, as once they leave their storage sites, they are better able to patrol the body and respond to pathogens,”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>운동 중에도 면역세포가 혈류를 도는 수가 일시적으로 늘어난다</b>
+          <q>“Exercise can temporarily increase the number of immune cells moving through the bloodstream, helping distribute them throughout the body.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사우나와 운동의 면역 효과가 동일하다는 뜻은 아니다</b>
+          <q>“The new findings suggest that sauna bathing may produce a comparable short-term response, although this does not mean the two activities provide identical immune benefits.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 대상은 평균 나이 50세의 성인 51명이었다</b>
+          <q>“The research involved 51 adults with an average age of 50.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>찬물 샤워가 포함돼 있어 결과는 사우나와 냉각 루틴을 합친 것이지 열 효과만 따로 본 것이 아니다</b>
+          <q>“Because the session also included a brief cold shower, the findings reflect the combined sauna and cooling routine rather than the isolated effects of heat alone.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>오래가는 면역 개선이나 질병 위험 감소 여부는 확립되지 않았다</b>
+          <q>“However, the researchers caution that the results do not establish whether sauna bathing produces lasting improvements in immune function or reduces the risk of illness.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="067e1be0e9b6">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261027231021.htm" target="_blank" rel="noopener">A single sauna session sends immune cells surging through your body</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-ddb0bec07f59">
+    <div class="head">
+      <h2>S2. 지원자 81% 무응답, 채용 양쪽 다 망했다는 Greenhouse 설문</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 7 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ddb0bec07f59">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 취업이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 답장이 없는 건 나만 겪는 일이 아니라는 숫자로 취준생의 공감을 건드리고, 지원자와 회사 모두 채용이 안 된다고 느낀다는 반전으로 끝까지 읽게 한다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">취업 답장이 없는 건 네가 못나서가 아니라 &#39;블랙홀&#39; 때문일 수 있대
+해외 설문에서 지원자 81%가 1년 새 무응답을 겪었고, 채용하는 회사도 &#39;채용이 안 된다&#39;고 하는 중
+그 이유가 좀 아이러니함 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">1/ Greenhouse라는 채용 플랫폼 설문에서 지원자 81%가 지난 1년 사이 적어도 한 번은 회사한테 아무 답도 못 받았대. 사람이든 AI든 상관없이. 이게 가끔 있는 일인지, 자주 있는 일인지는 다음 글에 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">87/500자</span></div>
+      <p class="tp-text">2/ 전체의 31%는 이런 일이 &#39;자주 또는 거의 항상&#39; 일어난다고 답했어. Z세대 지원자만 보면 이 비율이 38%였음. 근데 면접까지 간 사람은 괜찮을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">69/500자</span></div>
+      <p class="tp-text">3/ 안 괜찮았음. 응답자 45%가 면접까지 보고도 완전히 잠수당한 적 있대. 그럼 회사 쪽은 편하냐 하면 그것도 아니래 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">4/ 구인하는 쪽도 쓸 만한 지원자 찾기가 더 어려워졌다고 함. Greenhouse 인사 책임자는 자기가 기억하는 한 처음으로 양쪽 다 채용이 안 되고 있다고 느낀다고 말했대. 왜 이렇게 됐을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">5/ 원인으로 거론된 게 &#39;AI 둠 루프&#39;. 회사가 AI 심사에 기대니까 지원자도 AI로 최적화한 지원서를 마구 뿌리게 되고, 비슷비슷한 지원서 더미에 묻힌 회사는 정식 불합격 통보를 보낼 시간도 없을 수 있다는 설명이야.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">150/500자</span></div>
+      <p class="tp-text">6/ 요약 정리 (Greenhouse 설문)
+- 1년 새 한 번 이상 무응답: 81%
+- &#39;자주·거의 항상&#39; 무응답: 31%
+- Z세대 지원자 중 같은 응답: 38%
+- 면접 보고도 잠수당함: 45%
+한국 취준생도 비슷할지는 이 설문만으론 몰라서, 마지막에 물어볼게 ↓</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">228/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 이 설문 기준으로 &#39;무응답&#39;은 지원자 대부분이 겪은 흔한 일이었음.
+불합격 메일이라도 받는 게 낫다 vs 차라리 안 받는 게 낫다, 어느 쪽이야?
+2편: &#39;AI 둠 루프&#39; 더 풀어서 내일 새벽 배달. 이런 해외 취업 데이터 계속 가져오니까 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>지원자들이 겪는 &#39;블랙홀&#39;은 Greenhouse가 말한 &#39;AI 둠 루프&#39;와 관련 있을 수 있고, 회사의 AI 심사 의존이 지원자들의 AI 최적화 지원서 남발을 부추긴다 <small>애매 · 원문은 &#39;may be related&#39;(관련 있을 수 있다)로 단정을 피함. 본문의 &#39;원인으로 거론된 게&#39;는 인과 단정으로 읽혀 과장임. &#39;관련 있을 수 있다&#39; 또는 &#39;가능성이 거론됐다&#39;로 고칠 것.</small></li>
+        <li>근거 등록 안 된 주장: 이 설문 기준으로 무응답은 지원자 대부분이 겪은 흔한 일이었다(81% 한 번 이상 기준으로 일반화한 결론)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>취업 답장이 없는 건 네가 못나서가 아니라 &#39;블랙홀&#39; 때문일 수 있대</li><li>지원서 넣고 답장 한 번도 못 받은 사람이 81%라는 설문이 나왔어</li><li>면접까지 보고도 잠수당한 사람이 45%라니, 이게 진짜야?</li><li>이번엔 지원자만 힘든 게 아니래. 채용하는 회사도 &#39;채용이 안 된다&#39;고 하는 중</li><li>지원자는 AI로 다듬고 회사는 AI로 거르는데, 둘 다 힘들어졌대</li><li>&#39;AI 둠 루프&#39;라는 말까지 나왔어. 취업 시장에 무슨 일이 생긴 거야</li><li>Z세대 지원자 38%가 &#39;자주 또는 거의 항상&#39; 무응답이라는 설문</li><li>&#39;내가 기억하는 한 처음으로 양쪽 다 채용이 안 된다고 생각한다&#39;는 인사 책임자의 말</li><li>불합격 메일조차 못 받는 시대, 이유가 좀 아이러니함</li><li>취업 준비하는 사람 10명 중 8명이 겪은 일이 해외 설문으로 나왔어</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>불합격 메일이라도 받는 게 낫다 vs 차라리 안 받는 게 낫다, 어느 쪽이야?</li><li>지원서 다듬을 때 AI 써본 사람?</li><li>AI로 다듬은 지원서 vs 직접 쓴 투박한 지원서, 너라면 뭘 내겠어?</li><li>지원하고 한 달 지나도 연락 없으면 불합격으로 치는 파 vs 계속 기다리는 파?</li><li>지원하고 연락 없던 경험 있는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>AI 심사와 AI 지원서가 서로를 부르는 &#39;AI 둠 루프&#39; 자세히 풀기</li><li>Z세대 구직자가 겪는 해외 취업 시장 이야기</li><li>채용 담당자들이 말하는 구인난의 속사정</li><li>면접 보고도 연락이 끊기는 &#39;고스팅&#39; 해외 사례</li><li>AI 시대에 지원서가 비슷해지는 이유</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>Greenhouse 자체 설문이라 표본 규모와 대상이 원문에 없음. 한국 취준생에게도 같은 수치로 읽히지 않게 확인</li><li>&#39;블랙홀&#39; 원인은 원문에서 &#39;관련 있을 수 있다&#39;는 추정이라 단정처럼 읽히지 않는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>지원자들이 겪는 &#39;블랙홀&#39;은 Greenhouse가 말한 &#39;AI 둠 루프&#39;와 관련 있을 수 있고, 회사의 AI 심사 의존이 지원자들의 AI 최적화 지원서 남발을 부추긴다</b>
+          <q>“The “black hole” that job seekers are experiencing may be related to what Greenhouse has called the “AI doom loop”: employers’ reliance on AI screening systems incentivizes applicants to blast out AI-optimized applications.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지원자 81%가 지난 1년 사이 적어도 한 번은 회사(사람이든 기계든)에게서 답을 못 받았다</b>
+          <q>“In a recent survey by hiring platform Greenhouse, 81% of job seekers said they never heard back from a company, be it human or machine, at least once during the past year.”</q>
+          <small>post0, post1, post6 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>31%가 이런 일이 &#39;자주 또는 거의 항상&#39; 일어난다고 답했다</b>
+          <q>“Nearly one third (31%) say this happens “often or almost always,” including 38% of Gen Z applicants.”</q>
+          <small>post2, post6 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Z세대 지원자는 38%가 같은 응답을 했다</b>
+          <q>“Nearly one third (31%) say this happens “often or almost always,” including 38% of Gen Z applicants.”</q>
+          <small>post2, post6 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>응답자 45%가 면접까지 보고도 완전히 잠수당한 적이 있다</b>
+          <q>“Even those who get interviews are not immune: 45% of respondents said they interviewed with an organization only to be ghosted completely.”</q>
+          <small>post3, post6 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>구인하는 쪽도 쓸 만한 지원자 찾기가 더 어려워졌다고 보고했다</b>
+          <q>“Ironically, employers are also reporting greater difficulty finding qualified candidates, said Greenhouse chief people officer Sharawn Tipton.”</q>
+          <small>post0, post4 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Greenhouse 인사 책임자는 자기가 기억하는 한 처음으로 양쪽 모두 채용이 안 되고 있다고 생각한다고 말했다</b>
+          <q>““For the first time I can remember, neither side thinks hiring is working,” she said.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>구별되지 않는 지원서 더미에 묻힌 회사는 정식 불합격 통보를 보낼 시간이 없을 수 있다</b>
+          <q>“Buried under a mountain of indistinguishable applications, employers may not have time to send formal rejections.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ddb0bec07f59">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91629911/at-this-point-80-of-jobseekers-apply-and-hear-nothing?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">At this point, 80% of job seekers apply and hear nothing</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261029-am";
+  const ORIGINAL = {"6c6a51e2e8b3": {"caption": "\uacf5\ub8e1 \ubf08 \ud558\ub098\uac00 4730\ub9cc \ub2ec\ub7ec\uc5d0 \ud314\ub838\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \ub274\uc695 \uc18c\ub354\ube44 \uacbd\ub9e4\uc5d0\uc11c Nanotyrannus \uace8\uaca9\uc774 \uc774\ubc88 \uc8fc \ud654\uc694\uc77c \uc774 \uac00\uaca9\uc5d0 \ub099\ucc30\ub410\uace0, \uc138\uacc4\uc5d0\uc11c \uac00\uc7a5 \ube44\uc2fc \ud654\uc11d \uc911 \ud558\ub098\uac00 \ub410\uc5b4.\n\nNanotyrannus\ub294 \ud2f0\ub77c\ub178\uc0ac\uc6b0\ub8e8\uc2a4 \ub809\uc2a4\uc758 \uc791\uc740 \uce5c\ucc99\uc73c\ub85c \uc18c\uac1c\ub41c \uacf5\ub8e1\uc774\uc57c. \uc774 \uace8\uaca9\uc758 \ubcc4\uba85\uc740 \u0027\uc870\ub514\u0027\uc778\ub370, 2019\ub144\uc5d0 \ubc1c\uacac\ud55c \uc0ac\ub78c \uc774\ub984\uc744 \ub544\ub300. \ubc1c\uacac \uc7a5\uc18c\ub294 \ubaac\ud0dc\ub098\uc8fc \uac00\ud544\ub4dc \uce74\uc6b4\ud2f0 \ud5ec \ud06c\ub9ad \uce35\uc5d0 \uc788\ub294 \uc870\ub514 \ud53c\uc5b4\uc2a8\uc758 \uac1c\uc778 \ub545\uc774\uc57c.\n\n\uc18c\ub354\ube44 \uc124\uba85\uc73c\ub85c\ub294 \uae38\uc774\uac00 \ucf54\ub05d\uc5d0\uc11c \uaf2c\ub9ac\uae4c\uc9c0 \uc57d 19.6\ud53c\ud2b8, \uac70\uce58\ub300 \uc704 \ub192\uc774\ub294 \uc57d 9.6\ud53c\ud2b8, \ud654\uc11d \ubf08 \uc694\uc18c\ub294 \uc57d 191\uac1c\uc57c. \ucc98\uc74c \ucd94\uc815\uac00\ub294 600\ub9cc~900\ub9cc \ub2ec\ub7ec\uc600\uc9c0\ub9cc 12\ubd84 \ub3d9\uc548 \uc785\ucc30 6\uba85\uc774 \uc628\ub77c\uc778\uacfc \uc804\ud654\ub85c \ubd99\uc5c8\uace0, \uacb0\uad6d \uc804\ud654 \uc785\ucc30\uc790\uac00 \uac00\uc838\uac14\uc5b4. \uc18c\ub354\ube44\ub294 \uc5ed\ub300 \uacbd\ub9e4 \uacf5\ub8e1 \uc911 \ub450 \ubc88\uc9f8\ub85c \ube44\uc2fc \uac00\uaca9\uc774\ub77c\uace0 \ubc1d\ud614\uc5b4. \uad6c\ub9e4\uc790\ub294 \uc544\uc9c1 \uacf5\uac1c\ub418\uc9c0 \uc54a\uc558\uc5b4.\n\n\uc18c\ub354\ube44\uc5d0 \ub530\ub974\uba74 \uc774\ub7f0 \uaddc\ubaa8\uc758 Nanotyrannus \uace8\uaca9\uc740 \ud559\uacc4\uc5d0 \uc54c\ub824\uc9c4 \uac83\uc774 \uc138 \uc810\ubfd0\uc774\uace0, \uc774 \uc18d\uc774 \ud655\uc778\ub41c \ub4a4 \uc2dc\uc7a5\uc5d0 \ub098\uc628 \uac74 \ucc98\uc74c\uc774\ub798.\n\n\uacfc\ud559\uacc4\uc5d0\uc120 \ube44\ud310\ub3c4 \ub098\uc654\uc5b4. \uba54\ub9b4\ub79c\ub4dc\ub300\uc758 \ud1a0\uba38\uc2a4 \ud640\uce20 \uc8fc\ub2c8\uc5b4\ub294 \uac19\uc740 \uc2dc\uae30\uc5d0 \uc77c\ubd80 \ubc15\ubb3c\uad00\uc774 \ubb38\uc744 \ub2eb\uac70\ub098 \ud3d0\uc1c4 \uc704\uae30\uc5d0 \ub193\uc600\ub294\ub370, \uadf8 \uc801\uc790\uac00 \uc774 \ub099\ucc30\uac00\uc758 10\ubd84\uc758 1 \uc218\uc900\uc774\ub77c\uace0 \uc9c0\uc801\ud588\uc5b4. \uadf8\ub294 \ud654\uc11d\uc774 \uac1c\uc778 \uc18c\uc7a5\uc73c\ub85c \ub118\uc5b4\uac00\uba74 \uc5f0\uad6c\uc640 \ub300\uc911\uc5d0\uac8c\uc11c \uc0ac\ub77c\uc9c8 \uc218 \uc788\ub2e4\uace0\ub3c4 \ub9d0\ud588\uc5b4.\n\n\ucd9c\ucc98: The Guardian, Sotheby\u0027s \ubc1c\ud45c \uc778\uc6a9", "hashtags": ["#\uacf5\ub8e1", "#\ud654\uc11d", "#\uacbd\ub9e4", "#\uacfc\ud559\ub274\uc2a4", "#\ud574\uc678\ub274\uc2a4"], "slides": [["\uacf5\ub8e1 \ubf08 \ud558\ub098\uac00", "**567\uc5b5**???"], ["T. rex \uc544\ub2d8", "\uadf8 **\uc0ac\ucd0c**\uc784"], ["**\uc608\uc0c1\uac00**\ub294", "6~9\ubc31\ub9cc \ub2ec\ub7ec\uc600\ub294\ub370"], ["\uc785\ucc30 6\uba85\uc774", "**12\ubd84** \ubd99\uc5c8\ub2e4"], ["\uc0b0 \uc0ac\ub78c\uc740", "\uc544\uc9c1 **\ube44\uacf5\uac1c**"], ["**\uacf5\ub8e1 \ub355\ud6c4** \uce5c\uad6c", "\uc774\uac70 \ubcf4\uba74 \uae30\uc808"]]}, "90d42d654127": {"caption": "\ubaa8\ub974\ub294 \uc0ac\ub78c\uc774 27\uba85\uc758 \uc810\uc2ec\uac12\uc744 \ubab0\ub798 \ub0c8\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c.\n\n\ubb34\ub300\ub294 \uc778\ucc9c \uc11c\ud574 \uc9c0\uc5ed\uc758 \ud55c \uace0\uae43\uc9d1\uc774\uc5c8\uc5b4. \uc81c\ubb3c\ud3ec\uad6c \ud55c\ub9c8\uc74c\ubcf5\uc9c0\uad00 \uc9c1\uc6d0, \ubd09\uc0ac\uc790, \uc7a5\uc560\uc778 \uc774\uc6a9\uc790\uae4c\uc9c0 27\uba85\uc774 \uc624\uc804\uc5d0 \uccad\ub77c\ud638\uc218\uacf5\uc6d0 \uac19\uc740 \uc778\ucc9c \uba85\uc18c\ub97c \uad6c\uacbd\ud558\uace0 \uc810\uc2ec\uc744 \uba39\uc73c\ub7ec \ub4e4\ub978 \uc790\ub9ac\uc600\ub300. \ubc16\uc73c\ub85c \ub098\uc628 \uac83\ub9cc\uc73c\ub85c\ub3c4 \ub2e4\ub4e4 \uc2e0\ub098 \uc788\uc5c8\ub2e4\uace0 \ud574.\n\n\uadf8\ub7f0\ub370 \uacc4\uc0b0\ud558\ub824\ub358 \uc21c\uac04 \uc608\uc0c1 \ubabb\ud55c \uc598\uae30\ub97c \ub4e4\uc5c8\uc5b4. \uba3c\uc800 \uc2dd\uc0ac\ub97c \ub9c8\uce58\uace0 \ub098\uac04 \uc190\ub2d8\uc774 100\ub2ec\ub7ec\uc5b4\uce58\uac00 \ub118\ub294 \uace0\uae09 \uc18c\uace0\uae30\ub97c \ub354 \ucd94\uac00\ud574\uc11c 41\ub9cc \uc6d0\uc774\ub358 \uae08\uc561\uc744 60\ub9cc \uc6d0\uc73c\ub85c \ub9cc\ub4e4\uc5c8\uace0, \uadf8\uac78 \uc804\ubd80 \uacb0\uc81c\ud55c \ub4a4 \uc544\ubb34 \ub9d0 \uc5c6\uc774 \ub5a0\ub0ac\ub2e4\ub294 \uac70\uc57c. \ucd1d\uc561\uc740 60\ub9cc \uc6d0, \ub2ec\ub7ec\ub85c \uc57d 420\ub2ec\ub7ec\uc57c.\n\n\ubcf5\uc9c0\uad00 \ubd09\uc0ac\uc790 \uae40 \uc528\ub294 \uc5f0\ud569\ub274\uc2a4\uc5d0, \uadf8 \uc190\ub2d8\uc774 \ubcf5\uc9c0\uc2dc\uc124 \ub2e8\uccb4\uac00 \uc2dd\uc0ac\ud558\ub7ec \uc628 \uac78 \ubcf4\uace0 \ubb54\uac00 \uc758\ubbf8 \uc788\ub294 \uc77c\uc744 \ud558\uace0 \uc2f6\uc5b4 \ud588\ub2e4\uace0, \uadf8\ub9ac\uace0 \ubbf8\uad6d \ud558\uc640\uc774\uc5d0 \uc0b4\uc558\ub2e4\uace0 \ub4e4\uc5c8\ub2e4\uace0 \uc804\ud588\uc5b4. \ub2e4\ub9cc \uc5f0\ud569\ub274\uc2a4\uac00 \ud6c4\uc18d \ucde8\uc7ac\ub97c \ud588\uc744 \ub54c \uc2dd\ub2f9 \uc0ac\uc7a5\ub2d8\uc740 \uadf8 \uc190\ub2d8\uc774 \uac00\ub054 \ucc3e\uc544\uc624\ub358 \uc0ac\ub78c\uc774\ub77c\uace0 \ub9d0\ud588\ub300. \uadf8\ub798\uc11c \uc815\ub9d0 \ubbf8\uad6d \uc0ac\ub78c\uc774 \ud55c \uc77c\uc778\uc9c0\ub294 \uc870\uae08 \ubd88\ud655\uc2e4\ud574 \ubcf4\uc778\ub2e4\ub294 \uac8c \ud574\uc678 \ub9e4\uccb4\uc758 \uc804\uc5b8\uc774\uc57c.\n\n\uae40 \uc528\ub294 \uc774\ub984\uc870\ucc28 \uc54c \uc218 \uc5c6\uc5b4 \uc544\uc27d\ub2e4\uba74\uc11c\ub3c4, 27\uba85\uc758 \uac10\uc0ac\ud55c \ub9c8\uc74c\uc774 \uadf8\ubd84\uaed8 \ub2ff\uc558\uc73c\uba74 \uc88b\uaca0\ub2e4\uace0 \ud588\uc5b4. \uadf8\ub9ac\uace0 \uc774\ub0a0 \ubc1b\uc740 \uac74 \ub2e8\uc21c\ud55c \uc2dd\uc0ac\uac00 \uc544\ub2c8\ub77c, \uc8fc\ubcc0\uc5d0 \ub530\ub73b\ud55c \uc0ac\ub78c\uc774 \uc544\uc9c1 \ub9ce\ub2e4\ub294 \uac78 \ub5a0\uc62c\ub9ac\uac8c \ud574 \uc900 \uac12\uc9c4 \uacbd\ud5d8\uc774\uc5c8\ub2e4\uace0 \ub9d0\ud588\ub300.\n\n\ucd9c\ucc98: Good News Network, \uc5f0\ud569\ub274\uc2a4(Yonhap News Agency \uc778\uc6a9 \ubcf4\ub3c4)", "hashtags": ["#\ubbf8\ub2f4", "#\uc778\ucc9c", "#\ud6c8\ud6c8\ud55c\uc18c\uc2dd", "#\ud574\uc678\ud1a0\ud53d", "#\uc120\ud589"], "slides": [["\ubaa8\ub974\ub294 \uc0ac\ub78c\uc774", "**27\uba85** \ubc25\uac12\uc744", "\ubab0\ub798 \ub0c8\ub2e4?!"], ["**\uc778\ucc9c** \ubcf5\uc9c0\uad00 \ud300\uc758", "\ub098\ub4e4\uc774 \uc810\uc2ec \uc790\ub9ac", "\uc600\ub300"], ["\uacc4\uc0b0\ud558\ub824\ub294\ub370", "**\uc774\ubbf8** \ub204\uac00", "\ub0c8\ub2e4\ub294 \uac70\uc57c"], ["\ube44\uc2fc **\uc18c\uace0\uae30**\ub3c4", "\ucd94\uac00\ud574 \ub193\uace0", "\ub9d0\uc5c6\uc774 \uac14\ub300"], ["\ubcf4\uace0 \ubb54\uac00", "**\uc758\ubbf8 \uc788\ub294 \uc77c\uc744**", "\ud558\uace0 \uc2f6\uc5c8\ub300"], ["\uc694\uc998 **\uc9c0\uce5c \uce5c\uad6c**\ud55c\ud14c", "\uc774 \uc598\uae30 \ubcf4\ub0b4\uc8fc\uae30"]]}, "b91a850cdd0c": {"caption": "\uc624\uc774 \ud0a4\uc6b0\ub358 \ub18d\ubd80 \ub545\uc5d0\uc11c \ub78c\uc138\uc2a4 2\uc138 \uc11d\uc0c1 \uc870\uac01\uc774 \ub098\uc654\ub300. \uc774\uc9d1\ud2b8 \ub098\uc77c\uac15 \uc0bc\uac01\uc8fc \uac00\ub974\ube44\uc544\uc8fc\uc758 \ubca0\ud5e4\uc774\ud2b8 \uc5d8\ud558\uac00\ub974 \ub9c8\uc744\uc5d0\uc11c \ubc8c\uc5b4\uc9c4 \uc77c\uc774\uc57c. \ub18d\ubd80 \uce7c\ub9ac\ub4dc \uce7c\ub9b4\uc774 \uc9d1 \uc55e \ub545\uc5d0\uc11c \uace0\ub300 \ubb38\uc591\uc774 \uc0c8\uaca8\uc9c4 \ub3cc\uc744 \ubc1c\uacac\ud558\uace0 \uc720\ubb3c \ub2f9\uad6d\uc5d0 \uc54c\ub838\uace0, \uc774\uc9d1\ud2b8 \ucd5c\uace0\uc720\ubb3c\uc704\uc6d0\ud68c \ud300\uc774 \uad6c\uc870 \ubc1c\uad74\uc5d0 \ub4e4\uc5b4\uac14\uc5b4. \uadf8 \uacb0\uacfc \uac70\ub300\ud55c \uc655\uc2e4 \uc11d\uc0c1 \ub450 \uc810\uc758 \uc794\ud574\uac00 \ub098\uc654\ub294\ub370, \uadf8\uc911 \ud558\ub098\ub294 \ub192\uc774 1.6\ubbf8\ud130\uc9dc\ub9ac \ub78c\uc138\uc2a4 2\uc138\uc758 \uba38\ub9ac\uc57c. \uc0c1\ud558 \uc774\uc9d1\ud2b8\ub97c \uc0c1\uc9d5\ud558\ub294 \uc774\uc911 \uc655\uad00\uc744 \uc4f4 \ubaa8\uc2b5\uc774\uace0, \ud30c\ub77c\uc624\uc758 \uacf5\uc2dd \uc774\ub984 \uc911 \ud558\ub098\uc778 \ud638\ub8e8\uc2a4 \uc774\ub984\uc774 \uc0c8\uaca8\uc9c4 \ub4f1 \uae30\ub465 \uc77c\ubd80\ub3c4 \uac19\uc774 \ub098\uc654\uc5b4. \ucd5c\uace0\uc720\ubb3c\uc704\uc6d0\ud68c \uc0ac\ubb34\ucd1d\uc7a5 \ud788\uc0f4 \uc5d8\ub808\uc774\ud2f0\ub294 \uba38\ub9ac \ube44\uc728\uc744 \ubcf4\uba74 \ubc1b\uce68\uae4c\uc9c0 \ud569\uccd0 \uc6d0\ub798 \ub192\uc774\uac00 \uc57d 8.5\ubbf8\ud130\uc600\uc744 \uc218 \uc788\ub2e4\uace0 \ubc1d\ud614\uc5b4. \ub450 \ubc88\uc9f8 \uc11d\uc0c1\uc740 \ub0a8\uc740 \ubd80\ubd84\uc774 \uc57d 2.4\ubbf8\ud130\uc774\uace0, \ub2e4\ub9ac\uc640 \ubc1b\uce68\uc740 \uc5c6\uc9c0\ub9cc \uc5bc\uad74\uc740 \uc798 \ubcf4\uc874\ub3fc \uc788\ub300. \uccab \ubc88\uc9f8 \uba38\ub9ac\uc640 \uc774\ubaa9\uad6c\ube44\uac00 \ub2ee\uc544\uc11c \ub78c\uc138\uc2a4 2\uc138\uc77c \uc218 \uc788\ub2e4\uace0 \ubcf4\uc9c0\ub9cc \uc544\uc9c1 \ud655\uc815\uc740 \uc544\ub2c8\uc57c. \uae38\uc774 \uc57d 1.3\ubbf8\ud130\uc758 \ubd84\ud64d \ud654\uac15\uc554 \ube14\ub85d\uc5d0\uc11c\ub294 \u0027\uc0c1\ud558 \uc774\uc9d1\ud2b8\uc758 \uc655\u0027, \u0027\ub77c\uc758 \uc544\ub4e4\u0027 \uac19\uc740 \uce6d\ud638\uac00 \uc801\ud78c \uc0c1\ud615\ubb38\uc790\ub3c4 \ud655\uc778\ub410\uc5b4. \ubc1c\uad74\uacfc \uc5f0\uad6c\ub294 \uacc4\uc18d \uc774\uc5b4\uc9c0\ub294 \uc911\uc774\uc57c. \ub18d\ubd80 \ubd80\ubd80\ub294 \uc2e0\uace0\uc5d0 \ub300\ud55c \uac10\uc0ac\uc758 \ub73b\uc73c\ub85c \uc6c0\ub77c(\uba54\uce74 \uc131\uc9c0\uc21c\ub840) \uc5ec\ud589\uc744 \ubc1b\uc558\uace0, \uac00\ub974\ube44\uc544 \uc8fc\uc9c0\uc0ac\ub294 \ub18d\ubd80 \uc9d1\uc744 \ucc3e\uc544 \"\uc624\uc774\uac00 \uc720\ubb3c\uc744 \ubd88\ub7ec\uc628\ub2e4\"\ub294 \ub18d\ub2f4\uc744 \ud588\ub300.\n\n\ucd9c\ucc98: Euronews", "hashtags": ["#\uc774\uc9d1\ud2b8", "#\ub78c\uc138\uc2a42\uc138", "#\uace0\uace0\ud559", "#\uc720\ubb3c\ubc1c\uacac", "#\ud574\uc678\ub274\uc2a4"], "slides": [["\uc624\uc774\ubc2d\uc5d0\uc11c", "**\ub78c\uc138\uc2a4 2\uc138**", "\uba38\ub9ac \ubc1c\uacac?!"], ["\uc9d1 \uc55e \ub545\uc5d0\uc11c", "\ubb38\uc591 \uc0c8\uaca8\uc9c4", "**\ub3cc** \ubc1c\uacac"], ["\uba38\ub9ac \ub192\uc774\ub9cc", "1.6m", "\uc644\uc131\ubcf8\uc740 **8.5m**?"], ["\uc11d\uc0c1\uc774 **\ud558\ub098 \ub354**", "\uc5bc\uad74 \uba40\uca61\ud788 \ub0a8\uc74c", "\uc544\uc9c1 \ud655\uc815 \uc804"], ["\ub18d\ubd80 \ubd80\ubd80", "**\uc6c0\ub77c** \uc5ec\ud589 \ud3ec\uc0c1"], ["**\ud143\ubc2d** \uac00\uafb8\ub294", "\uce5c\uad6c\ud55c\ud14c", "\ub545 \ud30c\ubcf4\ub77c\uace0 \uc804\uc1a1"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

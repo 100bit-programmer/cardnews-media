@@ -1,0 +1,1602 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.06 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.06 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-c27b39dcb9ca" data-jump="c27b39dcb9ca">1</a><a href="#post-78eb91c30d5e" data-jump="78eb91c30d5e">2</a><a href="#post-e09e97c1f8e6" data-jump="e09e97c1f8e6">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-c27b39dcb9ca" data-id="c27b39dcb9ca">
+    <div class="head">
+      <h2>1. 400년 된 자물쇠 암호를 병원 CT로 푼 이야기</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-01.jpg" alt="1장: CT로 풀렸다??? 400년 된 자물쇠" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-02.jpg" alt="2장: 금속탐지기에 걸린 보물" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-03.jpg" alt="3장: 1583년 폭풍에 가라앉은 배" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-04.jpg" alt="4장: 경우의 수가 1296개" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-05.jpg" alt="5장: 20년을 매달려도 못 풀었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-06.jpg" alt="6장: 세 번째 스캔에서 ANCE 등장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-07.jpg" alt="7장: 퍼즐 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/c27b39dcb9ca/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">400년 된 자물쇠의 암호가 병원 CT 스캐너의 도움으로 풀렸다. 웨일스 남부 포트탤벗 근처 해변에서 금속탐지기에 걸린 이 자물쇠는 1583년 12월 폭풍에 난파한 앤 프랜시스호의 화물이었다. 자물쇠에는 고리 네 개가 있고 고리마다 글자가 여섯 개라서 조합이 1,296가지다. 움직이지 않는 글자도 끝에 붙어 있어 도둑을 헷갈리게 하려는 것 같다는 게 큐레이터의 설명이다. 발견자 피터 휴스는 약 20년간 직접 열어 보려 했지만 실패했다. 이 보물은 2017년 웨일스 박물관에 넘어가 Tides of Treasure라는 전시에 올랐다. 이후 박물관과 카디프대학교가 마이크로 CT 스캔을 시도했고, 두 번의 불확실한 스캔 뒤 세 번째에서 답 ANCE가 나왔다. 담당한 윌리엄스 박사는 CT가 통할지 확신하지 못했다고 한다. 연구진은 이 자물쇠가 동전이나, 세월 속에 사라진 문서·직물 같은 귀중품이 든 궤짝을 잠갔을 것으로 추정한다. 출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#자물쇠 #CT스캔 #미스터리 #난파선 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 자물쇠 자체가 앤 프랜시스호의 화물이었다는 주장(슬라이드3)</li><li>근거 등록 안 된 주장: 출처가 Good News Network라는 주장(캡션)</li><li>근거 등록 안 된 주장: &#39;병원 CT&#39; 표현이 본문의 마이크로 CT와 같은 장치인지에 대한 설명 없이 제목과 캡션에서 병원 CT로 쓰인 점</li>
+          <li>원문 기사 한 건에만 의존한 내용이며 별도 교차 확인은 하지 않음</li><li>&#39;400년 된&#39;은 원문 표현을 따랐고, 난파 연도(1583년)와 단순 계산이 다를 수 있음</li><li>마이크로 CT와 병원 CT 스캐너 표현이 원문에서 혼용되어 카드에서도 구분이 모호할 수 있음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-c27b39dcb9ca-0">1장</label>
+          <textarea id="s-c27b39dcb9ca-0" rows="6" data-slide="0">CT로 풀렸다???
+**400년** 된 자물쇠
+---
+웨일스 해변의 난파선 보물에서 나온 400년 된 자물쇠의 암호를, 과학자들이 병원 CT 스캐너의 도움으로 알아냈다.</textarea>
+          
+          <label class="f" for="s-c27b39dcb9ca-1">2장</label>
+          <textarea id="s-c27b39dcb9ca-1" rows="6" data-slide="1">**금속탐지기에**
+걸린 보물
+---
+웨일스 남부 포트탤벗 근처 해변에서 피터 휴스가 금속탐지기로 모래 밑의 유물을 찾아냈다. 첫 단서는 스페인 은화였고, 이후 금화와 은화, 황동 자물쇠도 차례로 나왔다.</textarea>
+          
+          <label class="f" for="s-c27b39dcb9ca-2">3장</label>
+          <textarea id="s-c27b39dcb9ca-2" rows="6" data-slide="2">**1583년** 폭풍에
+가라앉은 배
+---
+이 보물은 나중에 앤 프랜시스호의 화물이었던 것으로 밝혀졌다. 이 배는 1583년 12월, 스페인에서 돌아오던 길에 폭풍을 만나 난파했다. 자물쇠도 그 배에 실려 있었다.</textarea>
+          
+          <label class="f" for="s-c27b39dcb9ca-3">4장</label>
+          <textarea id="s-c27b39dcb9ca-3" rows="6" data-slide="3">경우의 수가
+**1296개**
+---
+자물쇠에는 고리 네 개가 있고, 고리마다 글자가 여섯 개씩이라 조합이 1,296가지다. 양 끝에는 움직이지 않는 글자도 있어 도둑을 헷갈리게 하려는 장치 같다고 큐레이터는 설명했다.</textarea>
+          
+          <label class="f" for="s-c27b39dcb9ca-4">5장</label>
+          <textarea id="s-c27b39dcb9ca-4" rows="6" data-slide="4">**20년을** 매달려도
+못 풀었다
+---
+발견자 휴스는 약 20년 동안 다이얼을 돌려 가며 열어 보려 했지만 실패했다고 BBC에 말했다. 그는 2017년 유물을 모두 박물관에 넘겼고, 자물쇠는 전시품이 됐다.</textarea>
+          
+          <label class="f" for="s-c27b39dcb9ca-5">6장</label>
+          <textarea id="s-c27b39dcb9ca-5" rows="6" data-slide="5">세 번째 스캔에서
+**ANCE** 등장
+---
+박물관과 카디프대학교가 마이크로 CT 스캐너로 조합을 찾아보기로 했다. 담당 연구원 윌리엄스 박사는 효과를 확신하지 못했지만 프로젝트를 맡았고, 두 번의 불확실한 스캔 뒤 세 번째에서 답을 얻었다.</textarea>
+          
+          <label class="f" for="s-c27b39dcb9ca-6">7장</label>
+          <textarea id="s-c27b39dcb9ca-6" rows="6" data-slide="6">퍼즐 좋아하는
+친구한테 보내기
+---
+약 20년간 풀리지 않던 자물쇠의 암호를 CT 덕에 알아냈다는 점이 신기해서, 퍼즐이나 미스터리를 좋아하는 친구라면 반길 이야기</textarea>
+          
+          <label class="f" for="c-c27b39dcb9ca">본문 (캡션)</label>
+          <textarea id="c-c27b39dcb9ca" class="caption">400년 된 자물쇠의 암호가 병원 CT 스캐너의 도움으로 풀렸다. 웨일스 남부 포트탤벗 근처 해변에서 금속탐지기에 걸린 이 자물쇠는 1583년 12월 폭풍에 난파한 앤 프랜시스호의 화물이었다. 자물쇠에는 고리 네 개가 있고 고리마다 글자가 여섯 개라서 조합이 1,296가지다. 움직이지 않는 글자도 끝에 붙어 있어 도둑을 헷갈리게 하려는 것 같다는 게 큐레이터의 설명이다. 발견자 피터 휴스는 약 20년간 직접 열어 보려 했지만 실패했다. 이 보물은 2017년 웨일스 박물관에 넘어가 Tides of Treasure라는 전시에 올랐다. 이후 박물관과 카디프대학교가 마이크로 CT 스캔을 시도했고, 두 번의 불확실한 스캔 뒤 세 번째에서 답 ANCE가 나왔다. 담당한 윌리엄스 박사는 CT가 통할지 확신하지 못했다고 한다. 연구진은 이 자물쇠가 동전이나, 세월 속에 사라진 문서·직물 같은 귀중품이 든 궤짝을 잠갔을 것으로 추정한다. 출처: Good News Network</textarea>
+          <label class="f" for="t-c27b39dcb9ca">해시태그</label>
+          <input id="t-c27b39dcb9ca" type="text" class="tagsin" value="#자물쇠 #CT스캔 #미스터리 #난파선 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>과학자들이 병원 CT 스캐너의 도움으로 웨일스 해변 난파선 보물에서 나온 400년 된 자물쇠의 암호를 풀었다</b>
+            <q>“With the help of a hospital CT scanner, scientists have cracked the code to a 400-year-old padlock discovered in a treasure-laden shipwreck on a beach in Wales.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>피터 휴스가 금속탐지기로 모래 밑에서 유물을 발견했다</b>
+            <q>“The metal detector, named Peter Hughes happened to pass over its location, which led to this nationally-significant discovery.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포트탤벗 근처 해변의 모래 밑에서 유물과 보물이 발견됐다</b>
+            <q>“The padlock was discovered along with other relics and treasures under the sand on a beach near Port Talbot in southern Wales.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>첫 단서는 스페인 은화였고 이후 금화·은화와 황동 자물쇠도 나왔다</b>
+            <q>“The first indication to Hughes that he had found something big was the presence of a Spanish silver coin. Additional artifacts, gold and silver coins, standardized coin weights, and the brass padlock were all found during subsequent visits by Hughes.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보물은 앤 프랜시스호의 화물이었고 1583년 12월 스페인에서 돌아오던 중 폭풍에 난파했다</b>
+            <q>“It was later determined to have been part of the cargo of the ship Ann Francis, which was wrecked in a storm in December, 1583, on her way back from Spain.”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고리 네 개, 고리마다 글자 여섯 개로 1,296가지 조합이 있다</b>
+            <q>““There are four different rings, and because there are six different letters on each of the rings, there are 1,296 different combinations, and you have to make sure they’re aligned with the loop at the top,” said senior curator Alastair Willis at the Swansea Waterfront Museum, which received the padlock and the rest of the treasure on loan in July of 2026.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>양 끝에 움직이지 않는 글자가 있어 도둑을 헷갈리게 하려는 것 같다고 큐레이터가 설명했다</b>
+            <q>““Also, confusingly, there are other letters on the ends which don’t move, which are unrelated, and it’s like they were to mislead any potential burglar.””</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>휴스는 약 20년 동안 다이얼을 돌려 열어 보려 했지만 실패했다고 BBC에 말했다</b>
+            <q>““I tried to unlock it for about 20 years, I tried moving the dials, finding the right combinations, and I failed,” Hughes told the BBC.”</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>휴스가 2017년 유물을 넘겼고 자물쇠는 Tides of Treasure 전시의 일부로 박물관에 자리 잡았다</b>
+            <q>“The unyielding padlock eventually found a home, along with the rest of the treasure, in the Amgueddfa Cymru, or the Museum of Wales, as part of an exhibit called Tides of Treasure after Hughes turned them all over in 2017.”</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>박물관과 카디프대학교가 마이크로 CT 스캐너로 조합을 찾기로 했고, 윌리엄스 박사는 효과를 확신하지 못했지만 프로젝트를 맡았다</b>
+            <q>“Eventually, Amgueddfa Cymru and Cardiff University decided to use a micro-CT scanning device to find the correct combination. Dr. David Williams, a research associate based at Cardiff University’s School of Engineering, wasn’t convinced CT scanning would work, but took up the project nonetheless.”</q>
+            <small>slide6 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 번의 불확실한 스캔 뒤 세 번째 스캔에서 암호 ANCE를 알아냈다</b>
+            <q>“After two inconclusive scans, the third one allowed them to crack the code: ANCE.”</q>
+            <small>slide6 · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 자물쇠가 동전이나 문서·직물 같은 귀중품이 든 궤짝을 잠갔을 것으로 추정한다</b>
+            <q>“Researchers suppose that the padlock would have locked a chest that perhaps contained the coins, or other valuables that perished in the intervening centuries like documents or textiles.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">400-yo Shipwreck Puzzle Finally Cracked After More Than 20 Years of Mystery</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://vt.co/news/world/researchers-unlock-400-year-old-padlockshipwreck-cracking-secret-code" target="_blank" rel="noopener">Amgueddfa Cymru / </a> — "https://images.vt.co/wp-content/uploads/Screenshot2026-11-05at16.53.26.png_BXVvNs?tr=cr-0.0.1176.780,f-webp,q-70,w-1024"</li><li>2장: <a href="https://www.zmescience.com/science/news-science/scientists-used-ct-and-finally-opened-a-400-year-old-lock-from-a-welsh-shipwreck/" target="_blank" rel="noopener">ZME Science / </a> — "https://cdn.zmescience.com/wp-content/uploads/2026/11/ct-scans-help-unlock-4.jpg"</li><li>3장: <a href="https://pixabay.com/photos/zakynthos-greece-shipwreck-beach-1583127/" target="_blank" rel="noopener">GregMontani / Pixabay</a> — "shipwreck beach"</li><li>4장: <a href="https://www.goodnewsnetwork.org/400-yo-padlock-code-finally-cracked-more-than-20-years-after-being-found-in-shipwreck-treasure/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/credit-Museum-of-Wales.jpg"</li><li>5장: <a href="https://pixabay.com/photos/bust-head-sculpture-art-hellenic-5524961/" target="_blank" rel="noopener">Engin_Akyurt / Pixabay</a> — "museum exhibit"</li><li>6장: <a href="https://www.zmescience.com/science/news-science/scientists-used-ct-and-finally-opened-a-400-year-old-lock-from-a-welsh-shipwreck/" target="_blank" rel="noopener">ZME Science / </a> — "https://cdn.zmescience.com/wp-content/uploads/2026/11/cfa6c840-d79c-11f1-84dd-e55f4bec0ecd.jpg.webp"</li><li>7장: <a href="https://vt.co/news/world/researchers-unlock-400-year-old-padlockshipwreck-cracking-secret-code" target="_blank" rel="noopener">Amgueddfa Cymru / </a> — "https://images.vt.co/wp-content/uploads/Screenshot2026-11-05at16.56.39.png_xXpvRn?tr=cr-0.0.1126.768,f-webp,q-70,w-1024"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-78eb91c30d5e" data-id="78eb91c30d5e">
+    <div class="head">
+      <h2>2. 스톡홀름 브레스 부티크, 입냄새로 결제</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 8
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/78eb91c30d5e/v1-01.jpg" alt="1장: 입냄새가 결제수단???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/78eb91c30d5e/v1-02.jpg" alt="2장: 3명 중 1명은 매주 입냄새" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/78eb91c30d5e/v1-03.jpg" alt="3장: 그래서 연 가게 브레스 부티크" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/78eb91c30d5e/v1-04.jpg" alt="4장: 기계로 재는 황 화합물" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/78eb91c30d5e/v1-05.jpg" alt="5장: 어색함을 깨고 싶었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/78eb91c30d5e/v1-06.jpg" alt="6장: 치약 고르는 친구 태그해서 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/78eb91c30d5e/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">입냄새가 결제 수단이 되는 가게가 스웨덴 스톡홀름에 있다. 구강용품 회사 The Humble Co.가 호른스툴 지역에 연 브레스 부티크 이야기다.
+
+이 가게에서는 칫솔, 치약, 치실 같은 제품을 무료로 가져갈 수 있다. 조건은 입냄새가 충분히 심해야 한다는 것이다. 손님은 휴대용 분석기로 입속 황 화합물을 재고, 결과는 1에서 4까지의 등급으로 나온다.
+
+이 캠페인은 회사가 의뢰한 설문에서 출발했다. 3명 중 1명이 적어도 매주 입냄새를 겪고, 50%는 다른 사람에게 입냄새가 난다고 말하길 피한 적이 있다고 한다. 아이디어를 낸 크리에이티브 디렉터 마르틴 노레비와 시몬 루블린은 나쁜 구강 관리의 대가를 입냄새가 치르던 상황을 뒤집어, 사람들이 더 나은 관리를 위해 말 그대로 값을 치르게 했다고 말했다. 마케팅 매니저 루이스 레만은 어색함을 줄이고 금기에 도전하며 구강 건강을 챙기게 하고 싶었다고 밝혔다.
+
+주변에 구강용품을 챙기는 친구가 있다면 이 소식을 보내 보자.
+
+출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#입냄새 #스웨덴 #스톡홀름 #해외이슈 #구강건강</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처를 Good News Network로 표기한 부분은 원문 근거가 없는 출처 주장이다.</li><li>근거 등록 안 된 주장: 캠페인이 설문에서 출발했다는 인과 표현은 원문이 설문 의뢰 사실만 언급하므로 근거가 부족하다.</li><li>근거 등록 안 된 주장: 호른스툴을 스톡홀름 지역으로 특정하는 표현은 원문 부티크 항목에 스톡홀름 명시가 없어 근거가 약하다.</li>
+          <li>기업 마케팅 캠페인 소식이라 홍보성으로 읽힐 수 있음</li><li>입냄새 소재라 특정인을 놀리는 표현으로 읽히지 않게 주의</li><li>원문 인물 이름의 한국어 표기는 음역이라 부정확할 수 있음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-78eb91c30d5e-0">1장</label>
+          <textarea id="s-78eb91c30d5e-0" rows="6" data-slide="0">입냄새가
+**결제수단???**
+---
+스웨덴 스톡홀름의 한 작은 가게가 입냄새가 충분히 심한 손님에게 치약과 칫솔 같은 구강용품을 무료로 내준다.</textarea>
+          
+          <label class="f" for="s-78eb91c30d5e-1">2장</label>
+          <textarea id="s-78eb91c30d5e-1" rows="6" data-slide="1">3명 중 **1명은**
+매주 입냄새
+---
+스웨덴 구강용품 회사 The Humble Co.가 의뢰한 설문에서 3명 중 1명이 적어도 매주 입냄새를 겪는다고 나왔다. 응답자의 50%는 상대에게 입냄새가 난다고 말하길 피한 적이 있었다.</textarea>
+          
+          <label class="f" for="s-78eb91c30d5e-2">3장</label>
+          <textarea id="s-78eb91c30d5e-2" rows="6" data-slide="2">그래서 연 가게
+**브레스 부티크**
+---
+The Humble Co.는 스웨덴 호른스툴 지역에 브레스 부티크를 열었다. 스톡홀름에 있는 이 작은 가게는 입냄새를 결제 수단으로 받는다.</textarea>
+          
+          <label class="f" for="s-78eb91c30d5e-3">4장</label>
+          <textarea id="s-78eb91c30d5e-3" rows="6" data-slide="3">기계로 재는
+**황 화합물**
+---
+누구나 들어가 휴대용 분석기로 입속 황 화합물을 측정할 수 있다. 결과는 1에서 4까지 등급으로 매겨지고, 충분히 심한 냄새는 제품값으로 인정된다.</textarea>
+          
+          <label class="f" for="s-78eb91c30d5e-4">5장</label>
+          <textarea id="s-78eb91c30d5e-4" rows="6" data-slide="4">**어색함을**
+깨고 싶었다
+---
+마케팅 매니저 루이스 레만은 입냄새를 결제 수단으로 삼아 주제의 어색함을 줄이고 금기에 도전하려 했다고 말했다. 더 많은 사람이 구강 건강을 챙기게 하는 것도 목표였다.</textarea>
+          
+          <label class="f" for="s-78eb91c30d5e-5">6장</label>
+          <textarea id="s-78eb91c30d5e-5" rows="6" data-slide="5">치약 고르는 친구
+**태그해서** 보내기
+---
+응답자 절반이 입냄새 얘기를 꺼내길 피한 적 있다고 했다. 어색한 주제를 웃으며 꺼내고 싶을 때 구강용품 챙기는 친구에게 보내기 좋은 소식</textarea>
+          
+          <label class="f" for="c-78eb91c30d5e">본문 (캡션)</label>
+          <textarea id="c-78eb91c30d5e" class="caption">입냄새가 결제 수단이 되는 가게가 스웨덴 스톡홀름에 있다. 구강용품 회사 The Humble Co.가 호른스툴 지역에 연 브레스 부티크 이야기다.
+
+이 가게에서는 칫솔, 치약, 치실 같은 제품을 무료로 가져갈 수 있다. 조건은 입냄새가 충분히 심해야 한다는 것이다. 손님은 휴대용 분석기로 입속 황 화합물을 재고, 결과는 1에서 4까지의 등급으로 나온다.
+
+이 캠페인은 회사가 의뢰한 설문에서 출발했다. 3명 중 1명이 적어도 매주 입냄새를 겪고, 50%는 다른 사람에게 입냄새가 난다고 말하길 피한 적이 있다고 한다. 아이디어를 낸 크리에이티브 디렉터 마르틴 노레비와 시몬 루블린은 나쁜 구강 관리의 대가를 입냄새가 치르던 상황을 뒤집어, 사람들이 더 나은 관리를 위해 말 그대로 값을 치르게 했다고 말했다. 마케팅 매니저 루이스 레만은 어색함을 줄이고 금기에 도전하며 구강 건강을 챙기게 하고 싶었다고 밝혔다.
+
+주변에 구강용품을 챙기는 친구가 있다면 이 소식을 보내 보자.
+
+출처: Good News Network</textarea>
+          <label class="f" for="t-78eb91c30d5e">해시태그</label>
+          <input id="t-78eb91c30d5e" type="text" class="tagsin" value="#입냄새 #스웨덴 #스톡홀름 #해외이슈 #구강건강" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스톡홀름의 작은 가게에서 입냄새로 결제하면 할인(무료 제공)을 받는다</b>
+            <q>“At a small store in Stockholm, there’s a discount if you pay with bad breath.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>입냄새가 충분히 심하면 치약, 칫솔, 치실 등을 무료로 준다</b>
+            <q>“In fact, they’ll give you everything you need: toothpaste, a toothbrush, flossers, and more all for free—provided your breath is sufficiently rancid.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>The Humble Co.가 의뢰한 설문에서 3명 중 1명이 적어도 매주 입냄새를 겪고 50%는 상대에게 입냄새를 말하길 피했다</b>
+            <q>“Jokes aside, the Swedish oral care company The Humble Co. commissioned a survey that found 1 in 3 people experience bad breath at least weekly, while 50% have avoided telling someone else their breath stinks.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>The Humble Co.가 스웨덴 호른스툴 지역에 브레스 부티크를 열었다</b>
+            <q>“To help clear the air, Humble Co. opened the Breath Boutique in the Hornstull neighborhood of Sweden.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>누구나 휴대용 분석기로 입속 황 화합물을 측정할 수 있다</b>
+            <q>“Anyone can come to the Breath Boutique and use a handheld analyzer to measure sulfur compounds in their breath.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1~4 등급으로 평가되며 충분히 심한 입냄새가 결제 수단으로 인정된다</b>
+            <q>“Rated on a scale of 1 – 4, sufficiently stinky breath is an acceptable payment method for The Humble Company’s line of oral care products.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마케팅 매니저 루이스 레만은 입냄새를 결제 수단으로 삼아 주제의 어색함을 줄이고 금기에 도전하며 구강 건강을 챙기게 하려 했다고 말했다</b>
+            <q>““By turning bad breath into a payment method, we wanted to make the subject less awkward, challenge the taboo, and inspire more people to take care of their oral health,” says Louise Lehmann, Marketing Manager at The Humble Co.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>크리에이티브 디렉터 마르틴 노레비와 시몬 루블린은 입냄새가 치르던 대가를 뒤집어 사람들이 말 그대로 더 나은 관리를 위해 값을 치르게 했다고 말했다</b>
+            <q>““Your breath usually pays the price for a poor oral care routine. With this campaign, we turned that around and let people literally pay for a better one,” say Martin Noreby and Simon Lublin, creative directors behind the idea.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">Got Bad Breath? Get Free Dental Care at This Store</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.goodnewsnetwork.org/got-bad-breath-get-free-dental-care-at-this-store/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/The-Breath-Boutique-credit-The-Humble-Co.-released.jpg"</li><li>2장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Hornstull_trafikledartorn_1962.jpg" target="_blank" rel="noopener">Tore Johanson / Wikimedia Commons · Public domain</a> — "Hornstull"</li><li>4장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>5장: <a href="https://pixabay.com/photos/toothbrush-toothpaste-dental-care-571741/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "dental care"</li><li>6장: <a href="https://pixabay.com/photos/toothbrush-toothpaste-healthcare-3191097/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "toothpaste"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-e09e97c1f8e6" data-id="e09e97c1f8e6">
+    <div class="head">
+      <h2>3. 2026 세계 50대 레스토랑, 방콕 Gaggan 2위</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-01.jpg" alt="1장: 방콕 식당이 세계 2위???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-02.jpg" alt="2장: 새 1위는 바스크 식당" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-03.jpg" alt="3장: 톱5 중 둘이 아시아" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-04.jpg" alt="4장: 서울 식당도 두 곳 진입" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-05.jpg" alt="5장: Atomix 셰프 특별상 받았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-06.jpg" alt="6장: 순위는 결국 투표로 정해져" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-07.jpg" alt="7장: 미식 여행 가는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261106-am-360fb4358fea/e09e97c1f8e6/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">방콕 식당이 세계 2위에 올랐다. 페루 리마에서 열린 올해 세계 50대 레스토랑 시상식에서 스페인 바스크 지방의 Asador Etxebarri가 새 1위로 발표됐고, 방콕의 Gaggan이 2위, 코펜하겐의 Alchemist가 3위, 멕시코시티의 Quintonil이 4위, 홍콩의 Wing이 5위를 차지했다. 6위 역시 홍콩의 The Chairman이었다.
+
+한국 식당도 이름을 올렸다. 서울의 Mingles는 17위, Onjium은 41위로 새로 진입했다. 뉴욕의 Atomix는 11위로 순위에 오른 미국 식당 중 유일했고, 이곳의 Junghyun Park은 Estrella Damm Chefs’ Choice Award를 받았다.
+
+순위는 1,100명이 넘는 투표자의 익명 투표로 정해진다. 투표자는 업계 종사자, 음식 작가, 여행 경험이 많은 미식가 등으로 구성되며, 각자 10곳을 선호 순으로 적는다. 본인이 속한 지역 식당은 최대 여섯 곳, 그 밖의 지역 식당은 최소 네 곳을 적는다. 순위는 이 표를 집계한 결과다.
+
+다음 미식 여행을 계획 중인 친구가 있다면 이 목록을 보내 주자.
+
+출처: Eater</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">세계50대레스토랑 미식 파인다이닝 방콕맛집 아시아레스토랑</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: Alchemist가 코펜하겐 소재이며 3위였다는 주장</li><li>근거 등록 안 된 주장: Quintonil이 멕시코시티 소재이며 4위였다는 주장</li><li>근거 등록 안 된 주장: Junghyun Park이 Atomix의 셰프라는 주장</li><li>근거 등록 안 된 주장: 톱5 중 아시아 식당이 두 곳이라는 집계 주장</li>
+          <li>단일 출처(Eater) 기반이라 순위·수상 내용은 원문 기준</li><li>원문에 순위 방식과 금전 의혹을 둘러싼 비판이 언급되어 있음</li><li>레스토랑명·인명은 영문 표기를 그대로 사용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-e09e97c1f8e6-0">1장</label>
+          <textarea id="s-e09e97c1f8e6-0" rows="6" data-slide="0">방콕 식당이
+세계 **2위**???
+---
+페루 리마에서 열린 올해 세계 50대 레스토랑 발표에서 태국 방콕의 Gaggan이 2위에 올랐다.</textarea>
+          
+          <label class="f" for="s-e09e97c1f8e6-1">2장</label>
+          <textarea id="s-e09e97c1f8e6-1" rows="6" data-slide="1">새 **1위**는
+바스크 식당
+---
+스페인 바스크 지방의 Asador Etxebarri가 새로운 1위로 호명됐다. 발표는 페루 리마의 시상식에서 이뤄졌다.</textarea>
+          
+          <label class="f" for="s-e09e97c1f8e6-2">3장</label>
+          <textarea id="s-e09e97c1f8e6-2" rows="6" data-slide="2">톱5 중
+둘이 **아시아**
+---
+2위는 방콕의 Gaggan, 5위는 홍콩의 Wing이었다. 6위에도 홍콩의 The Chairman이 이름을 올렸다.</textarea>
+          
+          <label class="f" for="s-e09e97c1f8e6-3">4장</label>
+          <textarea id="s-e09e97c1f8e6-3" rows="6" data-slide="3">서울 식당도
+**두 곳** 진입
+---
+서울의 Mingles가 17위, Onjium이 41위에 올랐다. Onjium은 올해 새로 순위에 진입한 곳이다.</textarea>
+          
+          <label class="f" for="s-e09e97c1f8e6-4">5장</label>
+          <textarea id="s-e09e97c1f8e6-4" rows="6" data-slide="4">Atomix 셰프
+**특별상** 받았다
+---
+뉴욕 Atomix의 Junghyun Park이 Estrella Damm Chefs’ Choice Award를 받았다. Atomix는 11위로, 순위에 오른 미국 식당 중 유일했다.</textarea>
+          
+          <label class="f" for="s-e09e97c1f8e6-5">6장</label>
+          <textarea id="s-e09e97c1f8e6-5" rows="6" data-slide="5">순위는 결국
+**투표**로 정해져
+---
+1,100명이 넘는 투표자가 익명으로 참여한다. 각자 10곳을 선호 순으로 적고, 순위는 그 표를 집계한 결과다.</textarea>
+          
+          <label class="f" for="s-e09e97c1f8e6-6">7장</label>
+          <textarea id="s-e09e97c1f8e6-6" rows="6" data-slide="6">미식 여행 가는
+친구한테 보내기
+---
+방콕과 홍콩, 서울 식당이 이름을 올린 목록이라 다음 여행지를 고르는 친구가 반가워할 소식</textarea>
+          
+          <label class="f" for="c-e09e97c1f8e6">본문 (캡션)</label>
+          <textarea id="c-e09e97c1f8e6" class="caption">방콕 식당이 세계 2위에 올랐다. 페루 리마에서 열린 올해 세계 50대 레스토랑 시상식에서 스페인 바스크 지방의 Asador Etxebarri가 새 1위로 발표됐고, 방콕의 Gaggan이 2위, 코펜하겐의 Alchemist가 3위, 멕시코시티의 Quintonil이 4위, 홍콩의 Wing이 5위를 차지했다. 6위 역시 홍콩의 The Chairman이었다.
+
+한국 식당도 이름을 올렸다. 서울의 Mingles는 17위, Onjium은 41위로 새로 진입했다. 뉴욕의 Atomix는 11위로 순위에 오른 미국 식당 중 유일했고, 이곳의 Junghyun Park은 Estrella Damm Chefs’ Choice Award를 받았다.
+
+순위는 1,100명이 넘는 투표자의 익명 투표로 정해진다. 투표자는 업계 종사자, 음식 작가, 여행 경험이 많은 미식가 등으로 구성되며, 각자 10곳을 선호 순으로 적는다. 본인이 속한 지역 식당은 최대 여섯 곳, 그 밖의 지역 식당은 최소 네 곳을 적는다. 순위는 이 표를 집계한 결과다.
+
+다음 미식 여행을 계획 중인 친구가 있다면 이 목록을 보내 주자.
+
+출처: Eater</textarea>
+          <label class="f" for="t-e09e97c1f8e6">해시태그</label>
+          <input id="t-e09e97c1f8e6" type="text" class="tagsin" value="세계50대레스토랑 미식 파인다이닝 방콕맛집 아시아레스토랑" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 세계 50대 레스토랑이 페루 리마의 시상식에서 발표됐다</b>
+            <q>“Tonight, the 50 Best Restaurants 2026 were announced at a ceremony in Lima, Peru, with Basque Country restaurant Asador Etxebarri crowned the new top slot on the list.”</q>
+            <small>slide1, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>방콕의 Gaggan이 2위, 홍콩의 Wing이 5위에 올랐다</b>
+            <q>“Bangkok tasting counter Gaggan was ranked No. 2, Copenhagen’s immersive, 50-course experience Alchemist was No. 3, Mexico City’s Quintonil No. 4, and Hong Kong’s Wing No. 5, shuffling most of the top rankings from last year.”</q>
+            <small>slide1, slide3, summary, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스페인 바스크 지방의 Asador Etxebarri가 새 1위로 발표됐다</b>
+            <q>“Tonight, the 50 Best Restaurants 2026 were announced at a ceremony in Lima, Peru, with Basque Country restaurant Asador Etxebarri crowned the new top slot on the list.”</q>
+            <small>slide2, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>홍콩의 The Chairman이 6위에 올랐다</b>
+            <q>“6. The Chairman, Hong Kong, China”</q>
+            <small>slide3, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>서울의 Mingles가 17위에 올랐다</b>
+            <q>“17. Mingles, Seoul, South Korea”</q>
+            <small>slide4, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>서울의 Onjium이 41위로 새로 진입했다</b>
+            <q>“41. Onjium, Seoul, South Korea (New entry)”</q>
+            <small>slide4, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Atomix의 Junghyun Park이 Estrella Damm Chefs’ Choice Award를 받았다</b>
+            <q>“Atomix’s Junghyun Park was given the Estrella Damm Chefs’ Choice Award”</q>
+            <small>slide5, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Atomix는 11위에 올랐다</b>
+            <q>“11. Atomix, New York, USA”</q>
+            <small>slide5, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Atomix는 순위에 오른 유일한 미국 식당이었다</b>
+            <q>“New York City’s Atomix was the only U.S. restaurant to make the 50 Best Restaurants.”</q>
+            <small>slide5, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1,100명이 넘는 투표자가 익명으로 참여하며 업계 종사자, 음식 작가, 여행 경험 많은 미식가로 구성된다</b>
+            <q>“The polling is conducted anonymously among more than 1,100 voters, a mix of industry professionals, food writers, and “well-traveled gourmets,” with at least 25 percent turning over annually.”</q>
+            <small>slide6, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>각 투표자는 10곳을 선호 순으로 적고 순위는 표의 집계 결과다</b>
+            <q>“Each voter nominates 10 restaurants in order of preference, up to six in their home region and at least four outside it. The rankings are just a pure tabulation of those votes.”</q>
+            <small>slide6, caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>본인 지역 식당은 최대 여섯 곳, 그 밖은 최소 네 곳을 적는다</b>
+            <q>“Each voter nominates 10 restaurants in order of preference, up to six in their home region and at least four outside it.”</q>
+            <small>caption · <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">The 50 Best Restaurants 2026: The Full List of Winners</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Lima_public_square.jpg" target="_blank" rel="noopener">Nyttend / Wikimedia Commons · Public domain</a> — "Lima"</li><li>2장: <a href="https://www.eater.com/awards-season/998589/worlds-50-best-restaurants-2026-full-list-of-winners" target="_blank" rel="noopener">Eater / </a> — "https://platform.eater.com/wp-content/uploads/sites/2/2026/11/T50BR26-No.1-shot_high-res.jpg?quality=90&amp;strip=all&amp;crop=0%2C0%2C100%2C100&amp;w=2400"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Hong_Kong_Skyline_Restitch_-_Dec_2007.jpg" target="_blank" rel="noopener">Diliff / Wikimedia Commons · CC BY 3.0</a> — "Hong Kong"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:KTX_in_Seoul_3.jpg" target="_blank" rel="noopener">Syced / Wikimedia Commons · CC0</a> — "Seoul"</li><li>5장: <a href="https://pixabay.com/photos/man-cook-cooking-cut-food-meat-890885/" target="_blank" rel="noopener">752910 / Pixabay</a> — "chef cooking"</li><li>6장: <a href="https://pixabay.com/photos/ballot-box-choice-federal-election-2586565/" target="_blank" rel="noopener">8385 / Pixabay</a> — "ballot box"</li><li>7장: <a href="https://pixabay.com/photos/food-dishes-restaurant-meal-menu-1050813/" target="_blank" rel="noopener">karriezhu / Pixabay</a> — "dinner table"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-c3275fd0a2da">
+    <div class="head">
+      <h2>S1. 과일·채소 버리는 부분에 식이섬유가 더 많다는 연구(킹스칼리지 런던)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 10
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-c3275fd0a2da">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강정보</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 식이섬유 더 챙기려고 새로 사는 게 아니라 이미 사 놓고 버리는 부분부터 보라는 반전, 파인애플·수박 껍질 수치로 설득</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">식이섬유 챙기려고 뭘 더 사기 전에, 지금 &#39;버리는 부분&#39;부터 보라는 연구가 나옴
+과일·채소 12가지를 뜯어봤더니 버리는 쪽에 섬유가 더 많은 경우가 대부분이었대
+근데 파인애플은 껍질에 조심할 점도 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">1/ 12가지 과일·채소를 분석했더니, 브로콜리·펜넬만 빼고 10가지는 버리는 부분이 무게 기준으로 섬유가 더 많았대. 그럼 차이가 제일 컸던 건 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">2/ 1위는 파인애플. 껍질과 심에 섬유가 살보다 약 453% 더 많았대. 수박 껍질은 425%, 단호박은 껍질·씨·속이 362% 더 많았고. 근데 이걸 그냥 다 먹으라는 얘기는 아니었음 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">3/ 파인애플 껍질엔 원래 들어 있는 독성 화합물이 있을 수 있대. 연구진도 단호박 껍질·씨를 100g씩 먹으라는 게 아니라고 선을 그음. 그럼 연구진이 말하는 방법은 뭘까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">4/ 연구진 취지는 평소 식사에서 놓치던 부분을 조금씩 더 활용하자는 거. 미국은 식이섬유 권장량을 채우는 사람이 남성 4%, 여성 11%뿐이라 그 틈을 메울 간단한 방법으로 본 거래. 근데 사람들이 꺼리는 이유가 따로 있었음 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 과일·채소 12종 분석 (껍질·씨·줄기 등 버리는 부분 포함)
+- 10종은 버리는 부분이 섬유 더 많음 (브로콜리·펜넬 제외)
+- 버리는 부분은 전체 무게의 25~48%
+- 파인애플 껍질은 독성 화합물 가능성 있어 주의
+- 포커스 그룹: 껍질 먹는 게 왠지 내키지 않는다는 반응도 나옴</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">190/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 완벽할 필요 없이, 평소 버리던 부분을 조금 더 활용해 보자는 거.
+과일·채소 껍질, 먹는 파 vs 버리는 파?
+이런 해외 식습관·건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 파인애플이 상대적 섬유 차이 1위라는 순위 주장</li><li>근거 등록 안 된 주장: 연구진이 미국의 식이섬유 섭취 격차를 메울 방법으로 이 접근을 제시했다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>식이섬유 챙기려고 뭘 더 사기 전에, 지금 &#39;버리는 부분&#39;부터 보라는 연구가 나옴</li><li>식이섬유는 &#39;더 사 먹는 것&#39;이 아니라 &#39;덜 버리는 것&#39;부터라는 연구가 나옴</li><li>수박 껍질엔 살보다 식이섬유가 425% 더 많대</li><li>과일 먹을 때 우리가 버리는 쪽에 섬유가 더 많았다면?</li><li>&#39;과일은 속살만 먹는 거&#39;라는 습관, 이 연구 보면 좀 달라짐</li><li>미국은 식이섬유 권장량 채우는 사람이 남성 4%, 여성 11%뿐이래. 근데 해법이 쓰레기통에 있었다는 연구</li><li>&#39;껍질째 먹으면 좋대&#39;라는 말, 연구진이 선 그은 부분이 있음</li><li>파인애플은 섬유가 제일 많은 부분이 하필 우리가 버리는 쪽이래</li><li>연구진 말이 &#39;완벽하게 먹자&#39;는 게 아님. 근데 버리는 쪽에 섬유가 더 많았음</li><li>식이섬유 부족한 사람들, 장바구니 말고 음식물 쓰레기통부터 보라는 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>과일·채소 껍질, 먹는 파 vs 버리는 파?</li><li>사과 껍질, 깎아 먹는 파 vs 째로 먹는 파?</li><li>수박 흰 부분까지 먹어본 사람?</li><li>브로콜리 줄기, 먹는 파 vs 버리는 파?</li><li>너라면 과일 껍질 더 먹어볼 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>식이섬유 부족하면 몸에 어떤 변화가 생기는지 보는 해외 연구</li><li>껍질째 먹어도 되는 과일·채소 vs 조심할 것들</li><li>음식물 쓰레기 줄이기, 해외에서는 어떻게 하나</li><li>400년 된 자물쇠 암호를 병원 CT로 푼 이야기</li><li>스톡홀름 브레스 부티크, 입냄새로 결제</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문이 짧아 표본 규모·분석 방법 등 연구 세부는 확인 안 됨. 식품 성분 분석 연구라 건강 효과가 검증된 건 아님</li><li>파인애플 껍질 독성 언급은 원문 범위만 전달. 껍질 섭취를 권하는 글로 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 과일·채소 12종의 껍질·씨·줄기 등 버리는 부분을 분석했다</b>
+          <q>“In the study, Gibson and fellow researchers analyzed the &#39;root-to-tip&#39; components of 12 common fruits and vegetables, examining how much fiber is contained in edible parts of the plant that are usually discarded during food preparation, such as peels, skins, seeds, and stalks.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>12종 중 브로콜리·펜넬 제외 10종은 버리는 부분이 무게 기준 섬유가 더 많았다</b>
+          <q>“Of these 12 different foods, the researchers found that in all but 2 (broccoli and fennel), the discarded parts of the plants had higher fiber content by weight than the commonly consumed portions – and sometimes much more.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>파인애플 껍질+심 약 453%, 수박 껍질 425%, 단호박 껍질·씨·속 362% 더 많은 섬유</b>
+          <q>“Among the foods analyzed, the three with the largest relative differences were pineapple (by weight, the skin and core together contain approximately 453 percent more fiber than the flesh), watermelon (rind has 425 percent more fiber than flesh), and butternut squash (362 percent more fiber in skin, seeds, and innards than in flesh).”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>파인애플 껍질엔 자연적으로 있는 독성 화합물이 들어 있을 수 있다</b>
+          <q>“The study&#39;s standout winner in terms of its fiber differential, pineapple skin and core, might technically be edible, but the skin can contain naturally occurring toxic compounds, so the aim is to highlight the variety of fiber-rich foods we&#39;re currently wasting.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 단호박 껍질·씨를 100g씩 먹으라는 게 아니라고 말했다</b>
+          <q>“Importantly, this is not about encouraging people to eat &#39;100g of butternut squash skin and seeds&#39; to increase fiber intake,”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국인 중 식이섬유 권장량을 채우는 사람은 남성 4%, 여성 11%</b>
+          <q>“But despite decades of nutritional advice, research shows the vast majority of Americans are falling short on fiber intake, with only 4 percent of men and 11 percent of women meeting recommended levels.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 평소 식사에서 간과된 부분을 더 활용해 간단하고 지속 가능하게 섬유 섭취를 늘릴 수 있다고 본다</b>
+          <q>“Rather, by making better use of the often-overlooked parts of fruits and vegetables as part of everyday meals, we have an opportunity to increase dietary fiber intake in a simple and sustainable way.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>버리는 부분이 전체 무게의 25~48%를 차지한다</b>
+          <q>“The &#39;root-to-tip&#39; components in our study represented between 25 percent and 48 percent of the total weight of the produce.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>포커스 그룹 참가자 중 껍질 먹는 게 내키지 않는다는 반응이 있었다</b>
+          <q>“But yeah um, it&#39;s just something about eating the skins that isn&#39;t quite sitting right with me.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 완벽함이나 억지로 먹는 것을 요구하는 게 아니라고 말했다</b>
+          <q>“This isn&#39;t about perfection and this isn&#39;t about forcing people to eat unpalatable food,”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="c3275fd0a2da">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/you-might-be-throwing-out-the-healthiest-parts-of-fruit-and-vegetables-study-shows" target="_blank" rel="noopener">There&#39;s a Surprisingly Simple Way to Get More Fiber From Your Fruits And Vegetables</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-44fda1a069ea">
+    <div class="head">
+      <h2>S2. 찬물 샤워 병가 31% 연구(바젤대·2016 네덜란드 RCT)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-44fda1a069ea">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;찬물 샤워 하면 병가 31% 감소&#39;라는 솔깃한 숫자와, 그 뒤에 붙은 단서(자가보고·무작위 아님·심사 전)를 같이 보여주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">78/500자</span></div>
+      <p class="tp-text">찬물 샤워 꾸준히 한 사람들, 병가가 31% 적었다는 연구가 나옴
+719명 대상 분석인데
+근데 이 숫자, 그대로 믿기엔 걸리는 게 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">1/ 찬물 샤워를 꾸준히 한 쪽이 병가 31%, 아픈 날 26% 적다고 보고함. 스위스 바젤대 Lena Glaser의 박사논문 연구고. 근데 이 비교, 방식이 좀 특이했음. 뭐가 달랐을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">2/ 참가자를 무작위로 나눈 게 아니라 &#39;찬물 샤워를 실제로 얼마나 했는지&#39;로 묶었대. 아픈 날도 본인이 적어낸 자료고, 논문은 아직 동료 심사 전. 그럼 예전 연구는 어땠을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">3/ 2016년 네덜란드 연구는 3018명을 무작위로 나눴는데, 병가는 29% 줄었지만 &#39;아팠던 날 수&#39;는 의미 있는 차이가 없었음. 찬물 30초·60초·90초끼리도 차이 없었고. 그럼 한눈에 정리하면?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">188/500자</span></div>
+      <p class="tp-text">4/ 찬물 샤워 연구 요약 정리
+- 바젤대 분석(719명): 병가 31%↓, 아픈 날 26%↓ (자가보고, 심사 전)
+- 2016 네덜란드(3018명, 무작위): 병가 29%↓, 아픈 날은 차이 없음
+- 찬물 30·60·90초 사이엔 차이 없음
+- 2016 연구는 심각한 심장·폐 질환자 제외
+- 왜 효과가 나는지는 이번 연구에서 안 봄</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">5/ 해보고 싶으면 Glaser 말은 천천히 시작해서 온도를 조금씩 낮추라는 거. &#39;매일 똑같이 차가울 필요는 없다&#39;고도 했고. 참가자들도 첫 2주에 많이 그만뒀다가 그 뒤론 이탈이 줄었대. 그래서 결국 챙겨갈 건 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">235/500자</span></div>
+      <p class="tp-text">6/ 결국 지금 나온 건 &#39;찬물 샤워 꾸준히 한 사람들이 병가를 덜 냈다고 적었다&#39;까지고, 찬물이 원인인지는 후속 연구가 필요하다는 거. 나한테 맞는지는 의사랑 상의.
+
+찬물 샤워 vs 따뜻한 물 샤워, 너는 어느 파야?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 2016년 무작위 대조 연구가 네덜란드에서 진행되었다는 사실</li><li>근거 등록 안 된 주장: 찬물 샤워가 병가 감소의 원인이라는 점은 아직 입증되지 않았다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>찬물 샤워 꾸준히 한 사람들, 병가가 31% 적었다는 연구가 나옴. 근데 이 숫자, 그대로 믿기엔 걸리는 게 있었음</li><li>찬물 샤워는 &#39;참는 훈련&#39;이 아니라 &#39;병가를 줄이는 습관&#39;일지도 모른다는 연구가 나옴</li><li>찬물 샤워하면 기분만 나빠질 거라는 걱정, 연구에선 오히려 반대로 나왔대</li><li>찬물 샤워는 처음부터 확 차갑게가 아니라 &#39;조금씩 낮추기&#39;부터 하라는 연구자 조언이 나옴</li><li>찬물 샤워 시작하면 사람들이 제일 많이 포기하는 때가 첫 2주래. 그 뒤엔 어떻게 될까?</li><li>샤워 끝에 찬물 30초면 될까? 3018명 연구에선 30초·60초·90초가 별 차이 없었대</li><li>&#39;찬물 샤워 하면 감기 안 걸린다&#39;는 말, 연구 결과는 생각보다 복잡함</li><li>병가는 29% 줄었는데 아팠던 날 수는 그대로? 찬물 샤워 연구의 이상한 결과</li><li>매일 하는 샤워, 찬물로 바꾸면 &#39;아픈 날&#39;이 26% 줄었다고 보고한 연구가 나옴</li><li>찬물 샤워는 매일 똑같이 차가울 필요 없다고 연구자가 말함. 그럼 어떻게 하라는 걸까?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>찬물 샤워 vs 따뜻한 물 샤워, 너는 어느 파야?</li><li>여름에 찬물 샤워 해본 사람?</li><li>샤워 마지막에 찬물로 헹궈본 적 있는 사람?</li><li>아침 샤워 vs 저녁 샤워, 너는 어느 쪽이야?</li><li>찬물 샤워 30초, 너라면 버틸 수 있을 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>찬물 샤워가 면역 반응 신호를 높였다는 2024년 연구</li><li>2016 네덜란드 연구에서 찬물 샤워 후 가장 많이 나온 반응(에너지 증가)</li><li>운동 습관과 병가 감소, 2016 연구에서 나온 숫자</li><li>찬물 샤워 부작용, 손발이 계속 차가웠다는 사람들 이야기</li><li>찬물 입수(냉수 침수)가 면역에 미치는 영향 연구들</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문이 동료 심사 전 프리프린트이고 자가보고 데이터라, &#39;병가가 줄었다&#39;를 찬물의 효과로 단정하는 표현이 없는지 확인</li><li>찬물 샤워 시도를 권하는 인상을 주지 않도록 의사 상담 문구와 2016 연구의 심장·폐 질환자 제외 내용 유지</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>719명 대상 3건의 무작위 대조시험 통합 분석에서 찬물 샤워를 꾸준히 한 사람들이 병가 일수가 31% 적다고 보고함</b>
+          <q>“In a pooled analysis of three randomized controlled trials involving 719 people, participants who regularly took cold showers reported 31 percent fewer days off work due to illness, compared with those who didn&#39;t regularly take cold showers.”</q>
+          <small>post0, post4 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>찬물 샤워 그룹은 아픈 날이 26% 적다고 보고함</b>
+          <q>“The cold shower group also saw a 26 percent reduction in reported illness days, compared to the participants who mostly took warm showers.”</q>
+          <small>post1, post4 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 스위스 바젤대 Lena Glaser의 박사논문의 일부</b>
+          <q>“The research, completed as part of Glaser&#39;s doctoral dissertation at the University of Basel in Switzerland, uncovered a striking finding.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무작위가 아니라 실제 찬물 샤워 빈도로 묶었고, 자가보고 자료이며 아직 동료 심사 전</b>
+          <q>“It&#39;s worth noting that the findings have not yet been peer-reviewed, the results come from self-reported data provided by the participants during the experiment, and participants were grouped by how often they actually took cold showers rather than at random.”</q>
+          <small>post2, post4 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2016년 연구는 3018명을 무작위로 나눠 찬물 샤워 30·60·90초 또는 대조군에 배정함</b>
+          <q>“Between January and March 2015, 3018 participants between 18 and 65 years without severe comorbidity and no routine experience of cold showering were randomized (1:1:1:1) to a (hot-to-) cold shower for 30, 60, 90 seconds or a control group during 30 consecutive days followed by 60 days of showering cold at their own discretion for the intervention groups.”</q>
+          <small>post3, post4 · <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2016년 연구에서 병가가 29% 줄었음</b>
+          <q>“A negative binomial regression model showed a 29% reduction in sickness absence for (hot-to-) cold shower regimen compared to the control group (incident rate ratio: 0.71, P = 0.003).”</q>
+          <small>post3, post4 · <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2016년 연구에서 아팠던 날 수에는 의미 있는 그룹 효과가 없었음</b>
+          <q>“For illness days there was no significant group effect.”</q>
+          <small>post3, post4 · <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>찬물 샤워 시간(30·60·90초)에 따른 결과 차이는 없었음</b>
+          <q>“The duration of the cold shower did not influence outcome as there was no significant difference between intervention groups.”</q>
+          <small>post3, post4 · <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2016년 연구는 심장·폐 등 심각한 질환이 있는 사람을 제외함</b>
+          <q>“As no harmful effects of cold showering have previously been reported, the only exclusion criterion was significant comorbidity, including cardiac, pulmonary or any other severe disease.”</q>
+          <small>post4 · <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이번 연구는 효과의 생물학적 기전을 보지 않았음</b>
+          <q>“As to what it is about cold showers that might provide benefits to health, this study didn&#39;t look at the biological mechanisms.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Glaser는 천천히 시작해 온도를 점차 낮추라고 제안함</b>
+          <q>“For now, if you want to try taking cold showers yourself, Glaser suggests starting off slowly, gradually dropping the temperature over time, and experimenting with it to stay comfortable.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Glaser는 물이 매일 똑같이 차가울 필요는 없다고 말함</b>
+          <q>“The water doesn&#39;t have to be equally cold every day”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자 다수가 첫 2주에 그만뒀고 이후 이탈률은 줄었음</b>
+          <q>“According to Glaser, many participants dropped out in the first two weeks of the experiment, but the dropout rate declined after that.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>후속 연구로 확인되어야 직장 개입 등으로 쓸 수 있다고 연구진이 말함</b>
+          <q>“But if future studies can confirm and replicate these results, cold showers could make for a simple, low-cost intervention in workplaces that promotes employees&#39; health while curbing absenteeism, the researchers say.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="44fda1a069ea">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/people-started-to-take-cold-showers-in-an-experiment-and-a-strange-thing-happened" target="_blank" rel="noopener">People Started to Take Cold Showers in an Experiment, And a Strange Thing Happened</a></li><li><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749" target="_blank" rel="noopener">The Effect of Cold Showering on Health and Work: A Randomized Controlled Trial</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261106-am";
+  const ORIGINAL = {"78eb91c30d5e": {"caption": "\uc785\ub0c4\uc0c8\uac00 \uacb0\uc81c \uc218\ub2e8\uc774 \ub418\ub294 \uac00\uac8c\uac00 \uc2a4\uc6e8\ub374 \uc2a4\ud1a1\ud640\ub984\uc5d0 \uc788\ub2e4. \uad6c\uac15\uc6a9\ud488 \ud68c\uc0ac The Humble Co.\uac00 \ud638\ub978\uc2a4\ud234 \uc9c0\uc5ed\uc5d0 \uc5f0 \ube0c\ub808\uc2a4 \ubd80\ud2f0\ud06c \uc774\uc57c\uae30\ub2e4.\n\n\uc774 \uac00\uac8c\uc5d0\uc11c\ub294 \uce6b\uc194, \uce58\uc57d, \uce58\uc2e4 \uac19\uc740 \uc81c\ud488\uc744 \ubb34\ub8cc\ub85c \uac00\uc838\uac08 \uc218 \uc788\ub2e4. \uc870\uac74\uc740 \uc785\ub0c4\uc0c8\uac00 \ucda9\ubd84\ud788 \uc2ec\ud574\uc57c \ud55c\ub2e4\ub294 \uac83\uc774\ub2e4. \uc190\ub2d8\uc740 \ud734\ub300\uc6a9 \ubd84\uc11d\uae30\ub85c \uc785\uc18d \ud669 \ud654\ud569\ubb3c\uc744 \uc7ac\uace0, \uacb0\uacfc\ub294 1\uc5d0\uc11c 4\uae4c\uc9c0\uc758 \ub4f1\uae09\uc73c\ub85c \ub098\uc628\ub2e4.\n\n\uc774 \ucea0\ud398\uc778\uc740 \ud68c\uc0ac\uac00 \uc758\ub8b0\ud55c \uc124\ubb38\uc5d0\uc11c \ucd9c\ubc1c\ud588\ub2e4. 3\uba85 \uc911 1\uba85\uc774 \uc801\uc5b4\ub3c4 \ub9e4\uc8fc \uc785\ub0c4\uc0c8\ub97c \uacaa\uace0, 50%\ub294 \ub2e4\ub978 \uc0ac\ub78c\uc5d0\uac8c \uc785\ub0c4\uc0c8\uac00 \ub09c\ub2e4\uace0 \ub9d0\ud558\uae38 \ud53c\ud55c \uc801\uc774 \uc788\ub2e4\uace0 \ud55c\ub2e4. \uc544\uc774\ub514\uc5b4\ub97c \ub0b8 \ud06c\ub9ac\uc5d0\uc774\ud2f0\ube0c \ub514\ub809\ud130 \ub9c8\ub974\ud2f4 \ub178\ub808\ube44\uc640 \uc2dc\ubaac \ub8e8\ube14\ub9b0\uc740 \ub098\uc05c \uad6c\uac15 \uad00\ub9ac\uc758 \ub300\uac00\ub97c \uc785\ub0c4\uc0c8\uac00 \uce58\ub974\ub358 \uc0c1\ud669\uc744 \ub4a4\uc9d1\uc5b4, \uc0ac\ub78c\ub4e4\uc774 \ub354 \ub098\uc740 \uad00\ub9ac\ub97c \uc704\ud574 \ub9d0 \uadf8\ub300\ub85c \uac12\uc744 \uce58\ub974\uac8c \ud588\ub2e4\uace0 \ub9d0\ud588\ub2e4. \ub9c8\ucf00\ud305 \ub9e4\ub2c8\uc800 \ub8e8\uc774\uc2a4 \ub808\ub9cc\uc740 \uc5b4\uc0c9\ud568\uc744 \uc904\uc774\uace0 \uae08\uae30\uc5d0 \ub3c4\uc804\ud558\uba70 \uad6c\uac15 \uac74\uac15\uc744 \ucc59\uae30\uac8c \ud558\uace0 \uc2f6\uc5c8\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\uc8fc\ubcc0\uc5d0 \uad6c\uac15\uc6a9\ud488\uc744 \ucc59\uae30\ub294 \uce5c\uad6c\uac00 \uc788\ub2e4\uba74 \uc774 \uc18c\uc2dd\uc744 \ubcf4\ub0b4 \ubcf4\uc790.\n\n\ucd9c\ucc98: Good News Network", "hashtags": ["#\uc785\ub0c4\uc0c8", "#\uc2a4\uc6e8\ub374", "#\uc2a4\ud1a1\ud640\ub984", "#\ud574\uc678\uc774\uc288", "#\uad6c\uac15\uac74\uac15"], "slides": [["\uc785\ub0c4\uc0c8\uac00", "**\uacb0\uc81c\uc218\ub2e8???**", "---", "\uc2a4\uc6e8\ub374 \uc2a4\ud1a1\ud640\ub984\uc758 \ud55c \uc791\uc740 \uac00\uac8c\uac00 \uc785\ub0c4\uc0c8\uac00 \ucda9\ubd84\ud788 \uc2ec\ud55c \uc190\ub2d8\uc5d0\uac8c \uce58\uc57d\uacfc \uce6b\uc194 \uac19\uc740 \uad6c\uac15\uc6a9\ud488\uc744 \ubb34\ub8cc\ub85c \ub0b4\uc900\ub2e4."], ["3\uba85 \uc911 **1\uba85\uc740**", "\ub9e4\uc8fc \uc785\ub0c4\uc0c8", "---", "\uc2a4\uc6e8\ub374 \uad6c\uac15\uc6a9\ud488 \ud68c\uc0ac The Humble Co.\uac00 \uc758\ub8b0\ud55c \uc124\ubb38\uc5d0\uc11c 3\uba85 \uc911 1\uba85\uc774 \uc801\uc5b4\ub3c4 \ub9e4\uc8fc \uc785\ub0c4\uc0c8\ub97c \uacaa\ub294\ub2e4\uace0 \ub098\uc654\ub2e4. \uc751\ub2f5\uc790\uc758 50%\ub294 \uc0c1\ub300\uc5d0\uac8c \uc785\ub0c4\uc0c8\uac00 \ub09c\ub2e4\uace0 \ub9d0\ud558\uae38 \ud53c\ud55c \uc801\uc774 \uc788\uc5c8\ub2e4."], ["\uadf8\ub798\uc11c \uc5f0 \uac00\uac8c", "**\ube0c\ub808\uc2a4 \ubd80\ud2f0\ud06c**", "---", "The Humble Co.\ub294 \uc2a4\uc6e8\ub374 \ud638\ub978\uc2a4\ud234 \uc9c0\uc5ed\uc5d0 \ube0c\ub808\uc2a4 \ubd80\ud2f0\ud06c\ub97c \uc5f4\uc5c8\ub2e4. \uc2a4\ud1a1\ud640\ub984\uc5d0 \uc788\ub294 \uc774 \uc791\uc740 \uac00\uac8c\ub294 \uc785\ub0c4\uc0c8\ub97c \uacb0\uc81c \uc218\ub2e8\uc73c\ub85c \ubc1b\ub294\ub2e4."], ["\uae30\uacc4\ub85c \uc7ac\ub294", "**\ud669 \ud654\ud569\ubb3c**", "---", "\ub204\uad6c\ub098 \ub4e4\uc5b4\uac00 \ud734\ub300\uc6a9 \ubd84\uc11d\uae30\ub85c \uc785\uc18d \ud669 \ud654\ud569\ubb3c\uc744 \uce21\uc815\ud560 \uc218 \uc788\ub2e4. \uacb0\uacfc\ub294 1\uc5d0\uc11c 4\uae4c\uc9c0 \ub4f1\uae09\uc73c\ub85c \ub9e4\uaca8\uc9c0\uace0, \ucda9\ubd84\ud788 \uc2ec\ud55c \ub0c4\uc0c8\ub294 \uc81c\ud488\uac12\uc73c\ub85c \uc778\uc815\ub41c\ub2e4."], ["**\uc5b4\uc0c9\ud568\uc744**", "\uae68\uace0 \uc2f6\uc5c8\ub2e4", "---", "\ub9c8\ucf00\ud305 \ub9e4\ub2c8\uc800 \ub8e8\uc774\uc2a4 \ub808\ub9cc\uc740 \uc785\ub0c4\uc0c8\ub97c \uacb0\uc81c \uc218\ub2e8\uc73c\ub85c \uc0bc\uc544 \uc8fc\uc81c\uc758 \uc5b4\uc0c9\ud568\uc744 \uc904\uc774\uace0 \uae08\uae30\uc5d0 \ub3c4\uc804\ud558\ub824 \ud588\ub2e4\uace0 \ub9d0\ud588\ub2e4. \ub354 \ub9ce\uc740 \uc0ac\ub78c\uc774 \uad6c\uac15 \uac74\uac15\uc744 \ucc59\uae30\uac8c \ud558\ub294 \uac83\ub3c4 \ubaa9\ud45c\uc600\ub2e4."], ["\uce58\uc57d \uace0\ub974\ub294 \uce5c\uad6c", "**\ud0dc\uadf8\ud574\uc11c** \ubcf4\ub0b4\uae30", "---", "\uc751\ub2f5\uc790 \uc808\ubc18\uc774 \uc785\ub0c4\uc0c8 \uc598\uae30\ub97c \uaebc\ub0b4\uae38 \ud53c\ud55c \uc801 \uc788\ub2e4\uace0 \ud588\ub2e4. \uc5b4\uc0c9\ud55c \uc8fc\uc81c\ub97c \uc6c3\uc73c\uba70 \uaebc\ub0b4\uace0 \uc2f6\uc744 \ub54c \uad6c\uac15\uc6a9\ud488 \ucc59\uae30\ub294 \uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4\uae30 \uc88b\uc740 \uc18c\uc2dd"]]}, "c27b39dcb9ca": {"caption": "400\ub144 \ub41c \uc790\ubb3c\uc1e0\uc758 \uc554\ud638\uac00 \ubcd1\uc6d0 CT \uc2a4\uce90\ub108\uc758 \ub3c4\uc6c0\uc73c\ub85c \ud480\ub838\ub2e4. \uc6e8\uc77c\uc2a4 \ub0a8\ubd80 \ud3ec\ud2b8\ud0e4\ubc97 \uadfc\ucc98 \ud574\ubcc0\uc5d0\uc11c \uae08\uc18d\ud0d0\uc9c0\uae30\uc5d0 \uac78\ub9b0 \uc774 \uc790\ubb3c\uc1e0\ub294 1583\ub144 12\uc6d4 \ud3ed\ud48d\uc5d0 \ub09c\ud30c\ud55c \uc564 \ud504\ub79c\uc2dc\uc2a4\ud638\uc758 \ud654\ubb3c\uc774\uc5c8\ub2e4. \uc790\ubb3c\uc1e0\uc5d0\ub294 \uace0\ub9ac \ub124 \uac1c\uac00 \uc788\uace0 \uace0\ub9ac\ub9c8\ub2e4 \uae00\uc790\uac00 \uc5ec\uc12f \uac1c\ub77c\uc11c \uc870\ud569\uc774 1,296\uac00\uc9c0\ub2e4. \uc6c0\uc9c1\uc774\uc9c0 \uc54a\ub294 \uae00\uc790\ub3c4 \ub05d\uc5d0 \ubd99\uc5b4 \uc788\uc5b4 \ub3c4\ub451\uc744 \ud5f7\uac08\ub9ac\uac8c \ud558\ub824\ub294 \uac83 \uac19\ub2e4\ub294 \uac8c \ud050\ub808\uc774\ud130\uc758 \uc124\uba85\uc774\ub2e4. \ubc1c\uacac\uc790 \ud53c\ud130 \ud734\uc2a4\ub294 \uc57d 20\ub144\uac04 \uc9c1\uc811 \uc5f4\uc5b4 \ubcf4\ub824 \ud588\uc9c0\ub9cc \uc2e4\ud328\ud588\ub2e4. \uc774 \ubcf4\ubb3c\uc740 2017\ub144 \uc6e8\uc77c\uc2a4 \ubc15\ubb3c\uad00\uc5d0 \ub118\uc5b4\uac00 Tides of Treasure\ub77c\ub294 \uc804\uc2dc\uc5d0 \uc62c\ub790\ub2e4. \uc774\ud6c4 \ubc15\ubb3c\uad00\uacfc \uce74\ub514\ud504\ub300\ud559\uad50\uac00 \ub9c8\uc774\ud06c\ub85c CT \uc2a4\uce94\uc744 \uc2dc\ub3c4\ud588\uace0, \ub450 \ubc88\uc758 \ubd88\ud655\uc2e4\ud55c \uc2a4\uce94 \ub4a4 \uc138 \ubc88\uc9f8\uc5d0\uc11c \ub2f5 ANCE\uac00 \ub098\uc654\ub2e4. \ub2f4\ub2f9\ud55c \uc70c\ub9ac\uc5c4\uc2a4 \ubc15\uc0ac\ub294 CT\uac00 \ud1b5\ud560\uc9c0 \ud655\uc2e0\ud558\uc9c0 \ubabb\ud588\ub2e4\uace0 \ud55c\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uc774 \uc790\ubb3c\uc1e0\uac00 \ub3d9\uc804\uc774\ub098, \uc138\uc6d4 \uc18d\uc5d0 \uc0ac\ub77c\uc9c4 \ubb38\uc11c\u00b7\uc9c1\ubb3c \uac19\uc740 \uadc0\uc911\ud488\uc774 \ub4e0 \uada4\uc9dd\uc744 \uc7a0\uac14\uc744 \uac83\uc73c\ub85c \ucd94\uc815\ud55c\ub2e4. \ucd9c\ucc98: Good News Network", "hashtags": ["#\uc790\ubb3c\uc1e0", "#CT\uc2a4\uce94", "#\ubbf8\uc2a4\ud130\ub9ac", "#\ub09c\ud30c\uc120", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["CT\ub85c \ud480\ub838\ub2e4???", "**400\ub144** \ub41c \uc790\ubb3c\uc1e0", "---", "\uc6e8\uc77c\uc2a4 \ud574\ubcc0\uc758 \ub09c\ud30c\uc120 \ubcf4\ubb3c\uc5d0\uc11c \ub098\uc628 400\ub144 \ub41c \uc790\ubb3c\uc1e0\uc758 \uc554\ud638\ub97c, \uacfc\ud559\uc790\ub4e4\uc774 \ubcd1\uc6d0 CT \uc2a4\uce90\ub108\uc758 \ub3c4\uc6c0\uc73c\ub85c \uc54c\uc544\ub0c8\ub2e4."], ["**\uae08\uc18d\ud0d0\uc9c0\uae30\uc5d0**", "\uac78\ub9b0 \ubcf4\ubb3c", "---", "\uc6e8\uc77c\uc2a4 \ub0a8\ubd80 \ud3ec\ud2b8\ud0e4\ubc97 \uadfc\ucc98 \ud574\ubcc0\uc5d0\uc11c \ud53c\ud130 \ud734\uc2a4\uac00 \uae08\uc18d\ud0d0\uc9c0\uae30\ub85c \ubaa8\ub798 \ubc11\uc758 \uc720\ubb3c\uc744 \ucc3e\uc544\ub0c8\ub2e4. \uccab \ub2e8\uc11c\ub294 \uc2a4\ud398\uc778 \uc740\ud654\uc600\uace0, \uc774\ud6c4 \uae08\ud654\uc640 \uc740\ud654, \ud669\ub3d9 \uc790\ubb3c\uc1e0\ub3c4 \ucc28\ub840\ub85c \ub098\uc654\ub2e4."], ["**1583\ub144** \ud3ed\ud48d\uc5d0", "\uac00\ub77c\uc549\uc740 \ubc30", "---", "\uc774 \ubcf4\ubb3c\uc740 \ub098\uc911\uc5d0 \uc564 \ud504\ub79c\uc2dc\uc2a4\ud638\uc758 \ud654\ubb3c\uc774\uc5c8\ub358 \uac83\uc73c\ub85c \ubc1d\ud600\uc84c\ub2e4. \uc774 \ubc30\ub294 1583\ub144 12\uc6d4, \uc2a4\ud398\uc778\uc5d0\uc11c \ub3cc\uc544\uc624\ub358 \uae38\uc5d0 \ud3ed\ud48d\uc744 \ub9cc\ub098 \ub09c\ud30c\ud588\ub2e4. \uc790\ubb3c\uc1e0\ub3c4 \uadf8 \ubc30\uc5d0 \uc2e4\ub824 \uc788\uc5c8\ub2e4."], ["\uacbd\uc6b0\uc758 \uc218\uac00", "**1296\uac1c**", "---", "\uc790\ubb3c\uc1e0\uc5d0\ub294 \uace0\ub9ac \ub124 \uac1c\uac00 \uc788\uace0, \uace0\ub9ac\ub9c8\ub2e4 \uae00\uc790\uac00 \uc5ec\uc12f \uac1c\uc529\uc774\ub77c \uc870\ud569\uc774 1,296\uac00\uc9c0\ub2e4. \uc591 \ub05d\uc5d0\ub294 \uc6c0\uc9c1\uc774\uc9c0 \uc54a\ub294 \uae00\uc790\ub3c4 \uc788\uc5b4 \ub3c4\ub451\uc744 \ud5f7\uac08\ub9ac\uac8c \ud558\ub824\ub294 \uc7a5\uce58 \uac19\ub2e4\uace0 \ud050\ub808\uc774\ud130\ub294 \uc124\uba85\ud588\ub2e4."], ["**20\ub144\uc744** \ub9e4\ub2ec\ub824\ub3c4", "\ubabb \ud480\uc5c8\ub2e4", "---", "\ubc1c\uacac\uc790 \ud734\uc2a4\ub294 \uc57d 20\ub144 \ub3d9\uc548 \ub2e4\uc774\uc5bc\uc744 \ub3cc\ub824 \uac00\uba70 \uc5f4\uc5b4 \ubcf4\ub824 \ud588\uc9c0\ub9cc \uc2e4\ud328\ud588\ub2e4\uace0 BBC\uc5d0 \ub9d0\ud588\ub2e4. \uadf8\ub294 2017\ub144 \uc720\ubb3c\uc744 \ubaa8\ub450 \ubc15\ubb3c\uad00\uc5d0 \ub118\uacbc\uace0, \uc790\ubb3c\uc1e0\ub294 \uc804\uc2dc\ud488\uc774 \ub410\ub2e4."], ["\uc138 \ubc88\uc9f8 \uc2a4\uce94\uc5d0\uc11c", "**ANCE** \ub4f1\uc7a5", "---", "\ubc15\ubb3c\uad00\uacfc \uce74\ub514\ud504\ub300\ud559\uad50\uac00 \ub9c8\uc774\ud06c\ub85c CT \uc2a4\uce90\ub108\ub85c \uc870\ud569\uc744 \ucc3e\uc544\ubcf4\uae30\ub85c \ud588\ub2e4. \ub2f4\ub2f9 \uc5f0\uad6c\uc6d0 \uc70c\ub9ac\uc5c4\uc2a4 \ubc15\uc0ac\ub294 \ud6a8\uacfc\ub97c \ud655\uc2e0\ud558\uc9c0 \ubabb\ud588\uc9c0\ub9cc \ud504\ub85c\uc81d\ud2b8\ub97c \ub9e1\uc558\uace0, \ub450 \ubc88\uc758 \ubd88\ud655\uc2e4\ud55c \uc2a4\uce94 \ub4a4 \uc138 \ubc88\uc9f8\uc5d0\uc11c \ub2f5\uc744 \uc5bb\uc5c8\ub2e4."], ["\ud37c\uc990 \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc57d 20\ub144\uac04 \ud480\ub9ac\uc9c0 \uc54a\ub358 \uc790\ubb3c\uc1e0\uc758 \uc554\ud638\ub97c CT \ub355\uc5d0 \uc54c\uc544\ub0c8\ub2e4\ub294 \uc810\uc774 \uc2e0\uae30\ud574\uc11c, \ud37c\uc990\uc774\ub098 \ubbf8\uc2a4\ud130\ub9ac\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \ubc18\uae38 \uc774\uc57c\uae30"]]}, "e09e97c1f8e6": {"caption": "\ubc29\ucf55 \uc2dd\ub2f9\uc774 \uc138\uacc4 2\uc704\uc5d0 \uc62c\ub790\ub2e4. \ud398\ub8e8 \ub9ac\ub9c8\uc5d0\uc11c \uc5f4\ub9b0 \uc62c\ud574 \uc138\uacc4 50\ub300 \ub808\uc2a4\ud1a0\ub791 \uc2dc\uc0c1\uc2dd\uc5d0\uc11c \uc2a4\ud398\uc778 \ubc14\uc2a4\ud06c \uc9c0\ubc29\uc758 Asador Etxebarri\uac00 \uc0c8 1\uc704\ub85c \ubc1c\ud45c\ub410\uace0, \ubc29\ucf55\uc758 Gaggan\uc774 2\uc704, \ucf54\ud39c\ud558\uac90\uc758 Alchemist\uac00 3\uc704, \uba55\uc2dc\ucf54\uc2dc\ud2f0\uc758 Quintonil\uc774 4\uc704, \ud64d\ucf69\uc758 Wing\uc774 5\uc704\ub97c \ucc28\uc9c0\ud588\ub2e4. 6\uc704 \uc5ed\uc2dc \ud64d\ucf69\uc758 The Chairman\uc774\uc5c8\ub2e4.\n\n\ud55c\uad6d \uc2dd\ub2f9\ub3c4 \uc774\ub984\uc744 \uc62c\ub838\ub2e4. \uc11c\uc6b8\uc758 Mingles\ub294 17\uc704, Onjium\uc740 41\uc704\ub85c \uc0c8\ub85c \uc9c4\uc785\ud588\ub2e4. \ub274\uc695\uc758 Atomix\ub294 11\uc704\ub85c \uc21c\uc704\uc5d0 \uc624\ub978 \ubbf8\uad6d \uc2dd\ub2f9 \uc911 \uc720\uc77c\ud588\uace0, \uc774\uacf3\uc758 Junghyun Park\uc740 Estrella Damm Chefs\u2019 Choice Award\ub97c \ubc1b\uc558\ub2e4.\n\n\uc21c\uc704\ub294 1,100\uba85\uc774 \ub118\ub294 \ud22c\ud45c\uc790\uc758 \uc775\uba85 \ud22c\ud45c\ub85c \uc815\ud574\uc9c4\ub2e4. \ud22c\ud45c\uc790\ub294 \uc5c5\uacc4 \uc885\uc0ac\uc790, \uc74c\uc2dd \uc791\uac00, \uc5ec\ud589 \uacbd\ud5d8\uc774 \ub9ce\uc740 \ubbf8\uc2dd\uac00 \ub4f1\uc73c\ub85c \uad6c\uc131\ub418\uba70, \uac01\uc790 10\uacf3\uc744 \uc120\ud638 \uc21c\uc73c\ub85c \uc801\ub294\ub2e4. \ubcf8\uc778\uc774 \uc18d\ud55c \uc9c0\uc5ed \uc2dd\ub2f9\uc740 \ucd5c\ub300 \uc5ec\uc12f \uacf3, \uadf8 \ubc16\uc758 \uc9c0\uc5ed \uc2dd\ub2f9\uc740 \ucd5c\uc18c \ub124 \uacf3\uc744 \uc801\ub294\ub2e4. \uc21c\uc704\ub294 \uc774 \ud45c\ub97c \uc9d1\uacc4\ud55c \uacb0\uacfc\ub2e4.\n\n\ub2e4\uc74c \ubbf8\uc2dd \uc5ec\ud589\uc744 \uacc4\ud68d \uc911\uc778 \uce5c\uad6c\uac00 \uc788\ub2e4\uba74 \uc774 \ubaa9\ub85d\uc744 \ubcf4\ub0b4 \uc8fc\uc790.\n\n\ucd9c\ucc98: Eater", "hashtags": ["\uc138\uacc450\ub300\ub808\uc2a4\ud1a0\ub791", "\ubbf8\uc2dd", "\ud30c\uc778\ub2e4\uc774\ub2dd", "\ubc29\ucf55\ub9db\uc9d1", "\uc544\uc2dc\uc544\ub808\uc2a4\ud1a0\ub791"], "slides": [["\ubc29\ucf55 \uc2dd\ub2f9\uc774", "\uc138\uacc4 **2\uc704**???", "---", "\ud398\ub8e8 \ub9ac\ub9c8\uc5d0\uc11c \uc5f4\ub9b0 \uc62c\ud574 \uc138\uacc4 50\ub300 \ub808\uc2a4\ud1a0\ub791 \ubc1c\ud45c\uc5d0\uc11c \ud0dc\uad6d \ubc29\ucf55\uc758 Gaggan\uc774 2\uc704\uc5d0 \uc62c\ub790\ub2e4."], ["\uc0c8 **1\uc704**\ub294", "\ubc14\uc2a4\ud06c \uc2dd\ub2f9", "---", "\uc2a4\ud398\uc778 \ubc14\uc2a4\ud06c \uc9c0\ubc29\uc758 Asador Etxebarri\uac00 \uc0c8\ub85c\uc6b4 1\uc704\ub85c \ud638\uba85\ub410\ub2e4. \ubc1c\ud45c\ub294 \ud398\ub8e8 \ub9ac\ub9c8\uc758 \uc2dc\uc0c1\uc2dd\uc5d0\uc11c \uc774\ub904\uc84c\ub2e4."], ["\ud1b15 \uc911", "\ub458\uc774 **\uc544\uc2dc\uc544**", "---", "2\uc704\ub294 \ubc29\ucf55\uc758 Gaggan, 5\uc704\ub294 \ud64d\ucf69\uc758 Wing\uc774\uc5c8\ub2e4. 6\uc704\uc5d0\ub3c4 \ud64d\ucf69\uc758 The Chairman\uc774 \uc774\ub984\uc744 \uc62c\ub838\ub2e4."], ["\uc11c\uc6b8 \uc2dd\ub2f9\ub3c4", "**\ub450 \uacf3** \uc9c4\uc785", "---", "\uc11c\uc6b8\uc758 Mingles\uac00 17\uc704, Onjium\uc774 41\uc704\uc5d0 \uc62c\ub790\ub2e4. Onjium\uc740 \uc62c\ud574 \uc0c8\ub85c \uc21c\uc704\uc5d0 \uc9c4\uc785\ud55c \uacf3\uc774\ub2e4."], ["Atomix \uc170\ud504", "**\ud2b9\ubcc4\uc0c1** \ubc1b\uc558\ub2e4", "---", "\ub274\uc695 Atomix\uc758 Junghyun Park\uc774 Estrella Damm Chefs\u2019 Choice Award\ub97c \ubc1b\uc558\ub2e4. Atomix\ub294 11\uc704\ub85c, \uc21c\uc704\uc5d0 \uc624\ub978 \ubbf8\uad6d \uc2dd\ub2f9 \uc911 \uc720\uc77c\ud588\ub2e4."], ["\uc21c\uc704\ub294 \uacb0\uad6d", "**\ud22c\ud45c**\ub85c \uc815\ud574\uc838", "---", "1,100\uba85\uc774 \ub118\ub294 \ud22c\ud45c\uc790\uac00 \uc775\uba85\uc73c\ub85c \ucc38\uc5ec\ud55c\ub2e4. \uac01\uc790 10\uacf3\uc744 \uc120\ud638 \uc21c\uc73c\ub85c \uc801\uace0, \uc21c\uc704\ub294 \uadf8 \ud45c\ub97c \uc9d1\uacc4\ud55c \uacb0\uacfc\ub2e4."], ["\ubbf8\uc2dd \uc5ec\ud589 \uac00\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\ubc29\ucf55\uacfc \ud64d\ucf69, \uc11c\uc6b8 \uc2dd\ub2f9\uc774 \uc774\ub984\uc744 \uc62c\ub9b0 \ubaa9\ub85d\uc774\ub77c \ub2e4\uc74c \uc5ec\ud589\uc9c0\ub97c \uace0\ub974\ub294 \uce5c\uad6c\uac00 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

@@ -1,0 +1,1876 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.05 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.05 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-c0ab3688f166" data-jump="c0ab3688f166">1</a><a href="#post-e9262ebde8d5" data-jump="e9262ebde8d5">2</a><a href="#post-1fab8ae1ccc8" data-jump="1fab8ae1ccc8">3</a>
+      <a href="#threads">🧵 스레드 3</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-c0ab3688f166" data-id="c0ab3688f166">
+    <div class="head">
+      <h2>1. 다이아몬드 사이에서 눌린 물, 처음 관측된 변화</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/c0ab3688f166/v1-01.jpg" alt="1장: 다이아 사이에 물을 눌렀더니???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/c0ab3688f166/v1-02.jpg" alt="2장: 다이아 끝 사이에 물방울 하나" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/c0ab3688f166/v1-03.jpg" alt="3장: 지구의 220만 배 압력이었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/c0ab3688f166/v1-04.jpg" alt="4장: 대칭이 아니라 오히려 찌그러짐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/c0ab3688f166/v1-05.jpg" alt="5장: 먼 행성 속을 엿본 셈" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/c0ab3688f166/v1-06.jpg" alt="6장: 우주 덕후 친구 바로 태그" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/c0ab3688f166/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">두 다이아몬드 끝 사이에 물방울을 끼우고 눌렀더니, 실험실에서 처음 관측된 것으로 보이는 변화가 나타났다. 미국 연구팀은 천왕성이나 해왕성 같은 행성에서 물이 받을 만한 압력을 재현했고, 물의 원자 구조가 변하는 것을 확인했다. 압력은 222기가파스칼을 넘겼고, 이는 지구에서 걸어 다닐 때 느끼는 압력의 약 220만 배다.
+
+보통은 원자가 촘촘히 모이면 더 대칭적이 될 거라 예상하지만, 이번에는 얼음의 결정 구조가 한쪽으로 기울고 늘어났다. 이런 변화는 전에 시뮬레이션으로 예측된 적은 있었다. 연구팀은 알려진 얼음 종류가 20가지 넘는 가운데 하나인 ice-X를 기존 한계 너머로 밀어붙였고, 새로운 무언가가 만들어진 것처럼 보이지만 확실히 알려면 추가 연구가 필요하다고 밝혔다.
+
+네바다대 라스베이거스 캠퍼스의 물리학자 아슈칸 살라마트는 &#34;지구와 비슷한 조건을 벗어난 물은 우리가 상상한 것보다 훨씬 복잡하게 행동한다&#34;고 말했다. 다만 이번 실험은 압력만 다른 행성과 같았고 온도는 달랐다는 점은 기억해 둘 만하다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#과학 #우주 #다이아몬드 #해왕성 #물리학</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 기사 출처가 ScienceAlert라는 귀속 정보</li>
+          <li>이번 실험은 압력만 다른 행성과 같고 온도는 달라 해석에 주의 필요</li><li>ice-X 너머의 새로운 상태인지는 추가 연구가 필요하다고 원문이 밝힘</li><li>실험실에서 처음 관측했다는 표현은 원문에서 &#39;처음으로 보인다&#39; 수준의 서술</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-c0ab3688f166-0">1장</label>
+          <textarea id="s-c0ab3688f166-0" rows="6" data-slide="0">다이아 사이에
+물을 **눌렀더니**???
+---
+미국 연구팀이 두 다이아몬드 끝 사이에 물방울을 넣고 압력을 높였더니, 실험실에서 처음 관측된 것으로 보이는 변화가 나타났다.</textarea>
+          
+          <label class="f" for="s-c0ab3688f166-1">2장</label>
+          <textarea id="s-c0ab3688f166-1" rows="6" data-slide="1">다이아 끝 사이에
+**물방울** 하나
+---
+연구팀은 작은 물방울을 다이아몬드 끝 두 개 사이에 놓고 눌렀다. 압력은 222기가파스칼을 넘을 때까지 끌어올렸다. 물속 변화는 X선이 퍼지는 방식으로 확인했다.</textarea>
+          
+          <label class="f" for="s-c0ab3688f166-2">3장</label>
+          <textarea id="s-c0ab3688f166-2" rows="6" data-slide="2">지구의 **220만 배**
+압력이었다
+---
+이 압력은 우리가 지구에서 걸어 다니며 느끼는 압력의 약 220만 배에 해당한다. 천왕성이나 해왕성 같은 행성이 겪을 만한 수준의 압력이다.</textarea>
+          
+          <label class="f" for="s-c0ab3688f166-3">4장</label>
+          <textarea id="s-c0ab3688f166-3" rows="6" data-slide="3">대칭이 아니라
+오히려 **찌그러짐**
+---
+보통은 원자가 촘촘히 모일수록 더 대칭적이 될 거라 예상한다. 그런데 이번엔 얼음의 결정 구조가 한쪽으로 기울고 길게 늘어났다.</textarea>
+          
+          <label class="f" for="s-c0ab3688f166-4">5장</label>
+          <textarea id="s-c0ab3688f166-4" rows="6" data-slide="4">먼 행성 속을
+엿본 셈
+---
+물의 구조가 이렇게 바뀌면 열 전도와 자기장, 행성의 밀도 해석에도 영향이 간다. 다만 이번 실험은 압력만 다른 행성과 같았고 온도는 달랐다.</textarea>
+          
+          <label class="f" for="s-c0ab3688f166-5">6장</label>
+          <textarea id="s-c0ab3688f166-5" rows="6" data-slide="5">우주 덕후 친구
+바로 **태그**
+---
+다이아몬드 사이에서 물을 누른 실험으로 먼 행성 속 물의 모습을 엿봤다. 우주나 과학을 좋아하는 친구가 오늘 가장 신기해할 소식</textarea>
+          
+          <label class="f" for="c-c0ab3688f166">본문 (캡션)</label>
+          <textarea id="c-c0ab3688f166" class="caption">두 다이아몬드 끝 사이에 물방울을 끼우고 눌렀더니, 실험실에서 처음 관측된 것으로 보이는 변화가 나타났다. 미국 연구팀은 천왕성이나 해왕성 같은 행성에서 물이 받을 만한 압력을 재현했고, 물의 원자 구조가 변하는 것을 확인했다. 압력은 222기가파스칼을 넘겼고, 이는 지구에서 걸어 다닐 때 느끼는 압력의 약 220만 배다.
+
+보통은 원자가 촘촘히 모이면 더 대칭적이 될 거라 예상하지만, 이번에는 얼음의 결정 구조가 한쪽으로 기울고 늘어났다. 이런 변화는 전에 시뮬레이션으로 예측된 적은 있었다. 연구팀은 알려진 얼음 종류가 20가지 넘는 가운데 하나인 ice-X를 기존 한계 너머로 밀어붙였고, 새로운 무언가가 만들어진 것처럼 보이지만 확실히 알려면 추가 연구가 필요하다고 밝혔다.
+
+네바다대 라스베이거스 캠퍼스의 물리학자 아슈칸 살라마트는 &#34;지구와 비슷한 조건을 벗어난 물은 우리가 상상한 것보다 훨씬 복잡하게 행동한다&#34;고 말했다. 다만 이번 실험은 압력만 다른 행성과 같았고 온도는 달랐다는 점은 기억해 둘 만하다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-c0ab3688f166">해시태그</label>
+          <input id="t-c0ab3688f166" type="text" class="tagsin" value="#과학 #우주 #다이아몬드 #해왕성 #물리학" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>미국 연구팀이 천왕성이나 해왕성 같은 행성이 겪을 만한 압력을 물에 가했다</b>
+            <q>“In a new study published in Communications Chemistry, researchers in the US put water under the kind of pressure it would experience on planets like Uranus or Neptune and found that its fundamental atomic structure changes in response.”</q>
+            <small>slide1, slide3, caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이런 변화는 시뮬레이션으로 예측된 적이 있으나 실험실에서 관측한 것은 이번이 처음으로 보인다</b>
+            <q>“This kind of transformation has previously been predicted in simulations, but this appears to be the first time scientists have been able to observe it in the lab.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>작은 물방울을 두 다이아몬드 끝 사이에 놓고 222기가파스칼 넘게 압력을 높였다</b>
+            <q>“The researchers placed a tiny water droplet between two diamond tips to apply the pressure, cranking it up to beyond 222 gigapascals (GPa).”</q>
+            <small>slide1, slide2, caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>X선이 물을 통과하며 퍼지는 방식으로 물속 변화를 확인했다</b>
+            <q>“X-ray diffraction was used to identify chemical changes in the water at the smallest scales, based on how X-rays scattered as they passed through the water.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>222GPa는 지구에서 걸어 다닐 때 느끼는 압력의 약 220만 배다</b>
+            <q>“That&#39;s about 2.2 million times the pressure we feel walking around on Earth.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보통은 압축된 원자가 더 대칭적이 될 거라 예상하지만 이번에는 얼음 결정 구조가 더 한쪽으로 기울고 늘어났다</b>
+            <q>“Ordinarily, you would expect squashed atoms to become more symmetrical as they bunch up in tighter arrangements, but that&#39;s not what happened here. The ice&#39;s crystal structure became more lopsided and stretched.”</q>
+            <small>slide4, summary, caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>물의 구조 변화는 열 전도, 자기장, 행성 밀도에 영향을 주며 망원경 관측과 해석에 중요하다</b>
+            <q>“In short, the water becomes less symmetrical and more warped, atomically – which has implications for how it conducts heat, influences magnetic fields, and affects the density of a planet, all of which are important for telescope observations and interpretations.”</q>
+            <small>slide5, summary · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 실험에서 다른 행성 조건과 일치한 것은 압력뿐이고 온도는 아니었다</b>
+            <q>“That gives us a glimpse into what&#39;s happening elsewhere in the Universe – though it&#39;s worth bearing in mind that only the pressure matched the conditions on some other planets, not the temperature.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 실험으로 우주의 다른 곳에서 벌어지는 일을 엿볼 수 있다</b>
+            <q>“That gives us a glimpse into what&#39;s happening elsewhere in the Universe – though it&#39;s worth bearing in mind that only the pressure matched the conditions on some other planets, not the temperature.”</q>
+            <small>slide6, summary · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>ice-X는 과학자들이 아는 20가지 넘는 얼음 종류 중 하나다</b>
+            <q>“The experiments also tell us more about ice-X, one of more than 20 types of ice that scientists know of.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀이 ice-X를 알려진 한계 너머로 밀어붙여 새로워 보이는 것을 만들었으나 확실히 알려면 추가 연구가 필요하다</b>
+            <q>“Here, the team pushed ice-X beyond its known limits, creating something that looks new – though further study will be needed to know for sure.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>네바다대 라스베이거스 캠퍼스의 물리학자 아슈칸 살라마트가 지구와 비슷한 조건을 벗어난 물은 상상보다 복잡하게 행동한다고 말했다</b>
+            <q>“&#34;Water beyond Earth-like conditions has more complex behavior than we ever previously imagined,&#34; says physicist Ashkan Salamat, from the University of Nevada, Las Vegas.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/water-does-something-unexpected-under-the-crushing-pressures-of-alien-worlds" target="_blank" rel="noopener">Scientists Crushed Water Between Two Diamonds And Saw Something Never Observed in a Lab Before.</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/beverages-sparkling-wine-drink-wet-6074749/" target="_blank" rel="noopener">Anrita1705 / Pixabay</a> — "water droplet between sparkling diamonds, bright light"</li><li>2장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>3장: <a href="https://pixabay.com/photos/earth-planet-space-world-universe-11009/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "blue planet"</li><li>4장: <a href="https://pixabay.com/photos/ice-cold-snowflakes-ice-crystals-1997289/" target="_blank" rel="noopener">Pezibear / Pixabay</a> — "crystal"</li><li>5장: <a href="https://www.unlv.edu/news/release/water-weve-never-known-it-physicists-test-water-beyond-earth-conditions" target="_blank" rel="noopener">UNLV / </a> — "https://www.unlv.edu/sites/default/files/styles/1920_width/public/media/image/2026-10/uranus-neptune-eff5357_1.jpg?itok=rwNzj3py"</li><li>6장: <a href="https://pixabay.com/photos/space-astronomy-galaxy-universe-9250868/" target="_blank" rel="noopener">mattiaverga / Pixabay</a> — "galaxy"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-e9262ebde8d5" data-id="e9262ebde8d5">
+    <div class="head">
+      <h2>2. 독일 원자로 실패 이유, 우라늄 큐브가 말해준다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-01.jpg" alt="1장: 우라늄 큐브가 실패 이유 폭로?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-02.jpg" alt="2장: 미국이 걱정한 나치의 원자폭탄" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-03.jpg" alt="3장: 마지막 시도는 B8 원자로" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-04.jpg" alt="4장: 우라늄도 중수도 모자랐다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-05.jpg" alt="5장: 친구가 준 수상한 금속" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-06.jpg" alt="6장: 미국 곳곳에서 10개를 찾았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-07.jpg" alt="7장: 물리 덕후 친구 태그해서 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/e9262ebde8d5/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">우라늄 큐브가 2차 대전 독일 원자로 프로젝트의 실패 이유를 보여줬다는 연구가 나왔다.
+
+2차 대전 중 맨해튼 프로젝트의 물리학자들은 나치 독일이 먼저 핵폭탄을 만들지 모른다고 걱정했다. 결과는 그렇지 않았지만, 독일이 마지막 원자로 시도인 B8 파일에서 임계에 얼마나 가까이 갔는지는 역사가들 사이에서 논쟁거리였다. 이 시도를 이끈 베르너 하이젠베르크는 거의 다 왔고 우라늄만 조금 더 있었으면 됐다고 주장했다.
+
+미국 국립과학원회보(PNAS) 넥서스에 실린 새 논문의 결론은 달랐다. 당시 쓰던 설계로는 우라늄과 중수가 충분하지 않았다는 것이다.
+
+이 연구의 출발은 2013년이다. 메릴랜드대 물리학자 티머시 쾨트가 친구에게 정체 모를 묵직한 금속 큐브를 선물로 받았고, 그는 이것이 독일 과학자들이 원자로 시도에 쓴 우라늄 큐브 중 하나임을 바로 알아봤다. 이런 큐브는 지금 14개만 알려져 있다. 2019년 보도 당시 쾨트와 대학원생이던 미리엄 히버트는 미국 곳곳에서 큐브 10개를 찾아냈다. 스미스소니언이 하나를 보관 중이었고, 하버드의 한 큐브는 입문 물리 수업에서 학생들 사이를 돌아다녔다.
+
+역사나 물리를 좋아하는 친구에게 보내 주면 좋을 소식이다.
+
+출처: Ars Technica</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#우라늄 #하이젠베르크 #원자로 #물리학 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 슬라이드7의 &#39;하이젠베르크의 주장을 뒤집은 연구&#39;라는 표현: 논문이 하이젠베르크 주장과 상충한다는 해석으로, 원문 근거는 논문 결론(claim 4)에 의존한다.</li><li>근거 등록 안 된 주장: 카드 본문의 &#39;이 연구의 출발은 2013년이다&#39;는 쾨트가 이 논문의 공저자라는 원문 맥락을 담고 있으나, 본문에는 공저자 여부가 명시되지 않는다.</li>
+          <li>하이젠베르크 등 실존 역사 인물 관련 내용이라 표현에 주의 필요</li><li>제공된 원문에는 논문의 구체적 실험 방법이 없어 카드에 방법 설명을 넣지 않음</li><li>원문은 일부만 제공되어 논문의 세부 결론은 원문 이상으로 확인되지 않음</li><li>편집자 메모의 드라마 속 인물 언급은 원문에 없어 카드에서 제외</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-e9262ebde8d5-0">1장</label>
+          <textarea id="s-e9262ebde8d5-0" rows="6" data-slide="0">우라늄 큐브가
+실패 이유 **폭로?!**
+---
+2차 대전 중 독일의 마지막 원자로 시도가 왜 실패했는지를 우라늄 큐브 연구가 보여줬다는 논문이 나왔다.</textarea>
+          
+          <label class="f" for="s-e9262ebde8d5-1">2장</label>
+          <textarea id="s-e9262ebde8d5-1" rows="6" data-slide="1">미국이 걱정한
+**나치**의 원자폭탄
+---
+2차 대전 중 맨해튼 프로젝트의 물리학자들은 나치 독일이 먼저 핵폭탄을 만들지 모른다고 걱정했다. 결과는 그렇지 않았지만, 독일이 얼마나 근접했는지는 역사가들 사이에서 논쟁거리였다.</textarea>
+          
+          <label class="f" for="s-e9262ebde8d5-2">3장</label>
+          <textarea id="s-e9262ebde8d5-2" rows="6" data-slide="2">마지막 시도는
+**B8** 원자로
+---
+독일의 마지막 원자로 시도는 B8 파일이라 불렸고, 이를 이끈 사람은 베르너 하이젠베르크였다. 그는 거의 다 왔고 우라늄만 조금 더 있었으면 됐다고 주장했다.</textarea>
+          
+          <label class="f" for="s-e9262ebde8d5-3">4장</label>
+          <textarea id="s-e9262ebde8d5-3" rows="6" data-slide="3">우라늄도 중수도
+**모자랐다**
+---
+미국 국립과학원회보(PNAS) 넥서스에 실린 논문은 다른 결론을 냈다. 당시 쓰던 설계로는 프로젝트에 우라늄과 중수가 충분하지 않았다는 것이다.</textarea>
+          
+          <label class="f" for="s-e9262ebde8d5-4">5장</label>
+          <textarea id="s-e9262ebde8d5-4" rows="6" data-slide="4">친구가 준
+수상한 **금속**
+---
+2013년 메릴랜드대 물리학자 티머시 쾨트는 친구에게 정체 모를 묵직한 금속 큐브를 선물받았다. 그는 곧바로 독일 원자로 시도에 쓰인 우라늄 큐브임을 알아봤고, 이런 큐브는 지금 14개만 알려져 있다.</textarea>
+          
+          <label class="f" for="s-e9262ebde8d5-5">6장</label>
+          <textarea id="s-e9262ebde8d5-5" rows="6" data-slide="5">미국 곳곳에서
+**10개**를 찾았다
+---
+2019년 보도 당시 쾨트와 대학원생이던 미리엄 히버트는 미국 곳곳에서 큐브 10개를 찾아냈다. 스미스소니언은 하나를 보관 중이었고, 하버드의 한 큐브는 입문 물리 수업 학생들 손을 돌아다녔다.</textarea>
+          
+          <label class="f" for="s-e9262ebde8d5-6">7장</label>
+          <textarea id="s-e9262ebde8d5-6" rows="6" data-slide="6">물리 덕후 친구
+태그해서 보내기
+---
+하이젠베르크의 주장을 뒤집은 연구와, 학생들 손을 돌던 우라늄 큐브 이야기까지 담겼다. 역사나 물리를 좋아하는 친구라면 신기해할 소식</textarea>
+          
+          <label class="f" for="c-e9262ebde8d5">본문 (캡션)</label>
+          <textarea id="c-e9262ebde8d5" class="caption">우라늄 큐브가 2차 대전 독일 원자로 프로젝트의 실패 이유를 보여줬다는 연구가 나왔다.
+
+2차 대전 중 맨해튼 프로젝트의 물리학자들은 나치 독일이 먼저 핵폭탄을 만들지 모른다고 걱정했다. 결과는 그렇지 않았지만, 독일이 마지막 원자로 시도인 B8 파일에서 임계에 얼마나 가까이 갔는지는 역사가들 사이에서 논쟁거리였다. 이 시도를 이끈 베르너 하이젠베르크는 거의 다 왔고 우라늄만 조금 더 있었으면 됐다고 주장했다.
+
+미국 국립과학원회보(PNAS) 넥서스에 실린 새 논문의 결론은 달랐다. 당시 쓰던 설계로는 우라늄과 중수가 충분하지 않았다는 것이다.
+
+이 연구의 출발은 2013년이다. 메릴랜드대 물리학자 티머시 쾨트가 친구에게 정체 모를 묵직한 금속 큐브를 선물로 받았고, 그는 이것이 독일 과학자들이 원자로 시도에 쓴 우라늄 큐브 중 하나임을 바로 알아봤다. 이런 큐브는 지금 14개만 알려져 있다. 2019년 보도 당시 쾨트와 대학원생이던 미리엄 히버트는 미국 곳곳에서 큐브 10개를 찾아냈다. 스미스소니언이 하나를 보관 중이었고, 하버드의 한 큐브는 입문 물리 수업에서 학생들 사이를 돌아다녔다.
+
+역사나 물리를 좋아하는 친구에게 보내 주면 좋을 소식이다.
+
+출처: Ars Technica</textarea>
+          <label class="f" for="t-e9262ebde8d5">해시태그</label>
+          <input id="t-e9262ebde8d5" type="text" class="tagsin" value="#우라늄 #하이젠베르크 #원자로 #물리학 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>독일의 마지막 원자로 시도가 왜 실패했는지를 밝힌 논문이 나왔고, 프로젝트에 우라늄과 중수가 충분하지 않았다는 결론이다</b>
+            <q>“But according to a paper published in the Proceedings of the National Academy of Sciences Nexus, that was not the case: the project simply didn’t have sufficient uranium and heavy water to build a working bomb, given the design they were using.”</q>
+            <small>slide1 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>맨해튼 프로젝트 물리학자들은 나치 독일이 먼저 핵폭탄을 만들까 걱정했다</b>
+            <q>“During World War II, physicists on the Manhattan Project worried that the Nazi German nuclear program might achieve the first nuclear bomb before the US and its allies.”</q>
+            <small>slide2 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>독일이 얼마나 근접했는지를 두고 역사가들이 논쟁했고, 마지막 시도는 B8 파일이었다</b>
+            <q>“That’s not what transpired, but historians have debated just how close the Germans came to achieving criticality in their last attempt at building a reactor: the B8 pile.”</q>
+            <small>slide2 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하이젠베르크가 B8 시도를 이끌었고, 거의 다 왔으며 우라늄만 조금 더 필요했다고 주장했다</b>
+            <q>“Werner Heisenberg, who led that effort, claimed that they were close and had only needed a little more uranium.”</q>
+            <small>slide3 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>논문은 당시 설계로는 우라늄과 중수가 충분하지 않았다고 결론 내렸다</b>
+            <q>“But according to a paper published in the Proceedings of the National Academy of Sciences Nexus, that was not the case: the project simply didn’t have sufficient uranium and heavy water to build a working bomb, given the design they were using.”</q>
+            <small>slide4 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2013년 메릴랜드대 물리학자 쾨트가 친구에게 금속 큐브를 선물받았고 독일 원자로 시도에 쓰인 우라늄 큐브임을 바로 알아봤다</b>
+            <q>“This particular research started in 2013, when University of Maryland physicist Timothy Koeth—a co-author on the new paper—received the gift of a mysterious heavy metal cube from a friend. He instantly recognized it as one of the uranium cubes used by German scientists in their unsuccessful attempt to build a working nuclear reactor.”</q>
+            <small>slide5 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이런 큐브는 현재 14개만 알려져 있다</b>
+            <q>“Only 14 such cubes are known to exist today.”</q>
+            <small>slide5 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2019년 보도 당시 쾨트와 히버트는 미국에서 큐브 10개를 추적했고 스미스소니언이 하나를 보관 중이었다</b>
+            <q>“At the time, Koeth and his partner in the quest, then-graduate student Miriam “Mimi” Hiebert, had tracked down ten such cubes around the US. For instance, the Smithsonian Institute had a German uranium cube in storage.”</q>
+            <small>slide6 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하버드의 한 큐브는 입문 물리 수업 학생들 사이에서 돌려 보던 물건이었다</b>
+            <q>“They tracked a third cube to Harvard University, where it was regularly passed around to students in introductory physics classes as a curiosity.”</q>
+            <small>slide6 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2019년에 쾨트의 큐브 추적을 보도했다</b>
+            <q>“In 2019, we reported on Koeth’s quest to track down the cube’s origins, as well as several other similar cubes that had somehow found their way across the Atlantic.”</q>
+            <small>slide6 · <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">Uranium cubes reveal why the German nuclear project failed</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencedaily.com/releases/2026/10/261015073218.htm" target="_blank" rel="noopener">ScienceDaily / </a> — "https://www.sciencedaily.com/images/1920/natural-uranium-cube.webp"</li><li>2장: <a href="https://pixabay.com/photos/camera-steampunk-clock-photography-2887804/" target="_blank" rel="noopener">Darkmoon_Art / Pixabay</a> — "old blueprint"</li><li>3장: <a href="https://hayadan.com/Nazi-nuclear-reactor-uranium-cubes" target="_blank" rel="noopener">Hayadan / </a> — "https://www.hayadan.org.il/images/content3/2026/10/haigerloch-b8-reactor-reconstruction-scaled.jpg.webp"</li><li>4장: <a href="https://arstechnica.com/science/2026/11/uranium-cubes-reveal-why-the-german-nuclear-project-failed/" target="_blank" rel="noopener">Ars Technica / </a> — "https://cdn.arstechnica.net/wp-content/uploads/2026/11/cube3.jpg"</li><li>5장: <a href="https://pixabay.com/photos/microscope-german-zeiss-jena-optic-3536527/" target="_blank" rel="noopener">2427999 / Pixabay</a> — "metal cube"</li><li>6장: <a href="https://pixabay.com/photos/people-girls-women-students-2557396/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "university classroom"</li><li>7장: <a href="https://pixabay.com/photos/book-read-college-student-students-4126483/" target="_blank" rel="noopener">geralt / Pixabay</a> — "physics books"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-1fab8ae1ccc8" data-id="1fab8ae1ccc8">
+    <div class="head">
+      <h2>3. 휴스턴 고등학생 정비소 개업</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/1fab8ae1ccc8/v1-01.jpg" alt="1장: 고등학생이 오일 갈아준다?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/1fab8ae1ccc8/v1-02.jpg" alt="2장: 졸업 6년 뒤 20%도 안 돼" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/1fab8ae1ccc8/v1-03.jpg" alt="3장: 학생 1,200명 12개 캠퍼스" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/1fab8ae1ccc8/v1-04.jpg" alt="4장: 매주 금요일 오전 9시~3시" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/1fab8ae1ccc8/v1-05.jpg" alt="5장: 실력도 쌓고 취업도 노린다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/1fab8ae1ccc8/v1-06.jpg" alt="6장: 차 만지는 친구한테 보내주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/1fab8ae1ccc8/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">미국 휴스턴 피프스 워드 지역에 자동차공학을 배우는 고등학생들이 운영하는 정비소가 문을 열었다. 일반 손님도 이용할 수 있다.
+
+정비소는 휴스턴 ISD 산하 바버라 조던 직업센터를 통해 열렸다. 이 센터는 12개 학교 캠퍼스, 1,200명이 넘는 학생을 대상으로 하며, 수요가 높은 직종과 기술을 배우는 학생들에게 임금이 괜찮은 실무형 일자리와 인턴 기회를 연결해 주려 한다. 배경에는 한 지역 교육 단체의 조사가 있다. 이 조사에서 휴스턴 ISD 졸업생 중 졸업 6년 뒤 생활임금을 버는 비율이 20% 미만으로 나타났다고 한다.
+
+운영 방식도 독특하다. 매주 금요일 오전 9시부터 오후 3시까지 훈련을 받은 학생들이 오일 교환, 타이어 위치 교환, 다점 점검 같은 정비를 해 준다. 손님은 필요한 부품과 오일류를 직접 가져오고 학생 인건비만 낸다. 다소 번거로울 수 있지만, 그만큼 다음 세대 정비사를 응원하는 셈이다.
+
+휴스턴 ISD의 직업교육은 정비 말고도 요리, 공학, 로봇, 휴먼서비스 분야를 다룬다. 학생들이 소프트 스킬과 기술 노하우를 함께 쌓아 졸업 뒤 채용 가능성을 높이는 것이 목표다.
+
+출처: Good News Network (Houston Chronicle 보도 인용)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#해외이슈 #미국 #직업교육 #자동차정비 #휴스턴</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 직업센터가 학생들에게 임금이 괜찮은 실무형 일자리와 인턴 기회를 연결해 주려 한다는 내용</li><li>근거 등록 안 된 주장: 수요가 높은 직종과 기술을 배우는 학생들을 대상으로 한다는 내용</li><li>근거 등록 안 된 주장: 정비소 운영 공지가 직업센터의 소셜미디어 게시물로 나왔다는 출처 정보</li><li>근거 등록 안 된 주장: Houston Chronicle 보도를 인용했다는 출처 정보</li><li>근거 등록 안 된 주장: Good News Network를 출처로 명시한 부분</li>
+          <li>원문 기사 발행일이 2026-11-04로 표기되어 있어 날짜 확인 필요</li><li>20% 미만 수치는 이름이 밝혀지지 않은 &#39;지역 교육 단체&#39; 조사를 Houston Chronicle이 인용 보도한 것</li><li>운영 시간·예약 방식은 바뀔 수 있으니 방문 전 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-1fab8ae1ccc8-0">1장</label>
+          <textarea id="s-1fab8ae1ccc8-0" rows="6" data-slide="0">고등학생이
+**오일** 갈아준다?!
+---
+미국 휴스턴 피프스 워드 지역에 자동차공학을 배우는 고등학생들이 일반 손님을 받는 정비소를 열었다.</textarea>
+          
+          <label class="f" for="s-1fab8ae1ccc8-1">2장</label>
+          <textarea id="s-1fab8ae1ccc8-1" rows="6" data-slide="1">졸업 6년 뒤
+**20%도 안 돼**
+---
+지역 교육 단체 조사에서 휴스턴 ISD 졸업생 중 졸업 6년 뒤 생활임금을 버는 비율이 20% 미만으로 나타났다. 직업센터는 이후 실무 중심 기회를 넓히는 데 힘써 왔다.</textarea>
+          
+          <label class="f" for="s-1fab8ae1ccc8-2">3장</label>
+          <textarea id="s-1fab8ae1ccc8-2" rows="6" data-slide="2">학생 **1,200명**
+12개 캠퍼스
+---
+정비소를 연 곳은 휴스턴 ISD 산하 바버라 조던 직업센터다. 이곳은 12개 학교 캠퍼스, 1,200명이 넘는 학생을 대상으로 한다. 정비소 개설은 여름부터 준비해 왔다.</textarea>
+          
+          <label class="f" for="s-1fab8ae1ccc8-3">4장</label>
+          <textarea id="s-1fab8ae1ccc8-3" rows="6" data-slide="3">매주 **금요일**
+오전 9시~3시
+---
+학생들은 오일 교환, 타이어 위치 교환, 다점 점검 같은 정비를 일반 손님에게 해 준다. 손님은 필요한 부품과 오일류를 직접 가져오고 학생 인건비만 낸다.</textarea>
+          
+          <label class="f" for="s-1fab8ae1ccc8-4">5장</label>
+          <textarea id="s-1fab8ae1ccc8-4" rows="6" data-slide="4">실력도 쌓고
+**취업**도 노린다
+---
+자동차 교육 프로그램은 오래전부터 학생들이 소프트 스킬과 기술 노하우를 함께 쌓을 기회를 찾아 왔다. 졸업생이 더 쉽게 채용되도록 하려는 취지다.</textarea>
+          
+          <label class="f" for="s-1fab8ae1ccc8-5">6장</label>
+          <textarea id="s-1fab8ae1ccc8-5" rows="6" data-slide="5">차 만지는 친구한테
+보내주기
+---
+손님은 학생 인건비를 내며 다음 세대 정비사를 응원하게 되는 구조라, 자동차에 관심 있는 친구에게 보여줄 만한 소식</textarea>
+          
+          <label class="f" for="c-1fab8ae1ccc8">본문 (캡션)</label>
+          <textarea id="c-1fab8ae1ccc8" class="caption">미국 휴스턴 피프스 워드 지역에 자동차공학을 배우는 고등학생들이 운영하는 정비소가 문을 열었다. 일반 손님도 이용할 수 있다.
+
+정비소는 휴스턴 ISD 산하 바버라 조던 직업센터를 통해 열렸다. 이 센터는 12개 학교 캠퍼스, 1,200명이 넘는 학생을 대상으로 하며, 수요가 높은 직종과 기술을 배우는 학생들에게 임금이 괜찮은 실무형 일자리와 인턴 기회를 연결해 주려 한다. 배경에는 한 지역 교육 단체의 조사가 있다. 이 조사에서 휴스턴 ISD 졸업생 중 졸업 6년 뒤 생활임금을 버는 비율이 20% 미만으로 나타났다고 한다.
+
+운영 방식도 독특하다. 매주 금요일 오전 9시부터 오후 3시까지 훈련을 받은 학생들이 오일 교환, 타이어 위치 교환, 다점 점검 같은 정비를 해 준다. 손님은 필요한 부품과 오일류를 직접 가져오고 학생 인건비만 낸다. 다소 번거로울 수 있지만, 그만큼 다음 세대 정비사를 응원하는 셈이다.
+
+휴스턴 ISD의 직업교육은 정비 말고도 요리, 공학, 로봇, 휴먼서비스 분야를 다룬다. 학생들이 소프트 스킬과 기술 노하우를 함께 쌓아 졸업 뒤 채용 가능성을 높이는 것이 목표다.
+
+출처: Good News Network (Houston Chronicle 보도 인용)</textarea>
+          <label class="f" for="t-1fab8ae1ccc8">해시태그</label>
+          <input id="t-1fab8ae1ccc8" type="text" class="tagsin" value="#해외이슈 #미국 #직업교육 #자동차정비 #휴스턴" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>휴스턴 피프스 워드에 자동차공학을 배우는 고등학생들이 정비소를 열었다.</b>
+            <q>“Having lately opened an auto shop in the city’s Fifth Ward, students in automotive engineering are ready to change your oil, rotate your tires, or tinker with whatever’s making *that sound.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>졸업 6년 뒤 생활임금을 버는 휴스턴 ISD 졸업생이 20% 미만이라는 지역 교육 단체 조사가 있었다.</b>
+            <q>“Serving 12 school campuses and over 1,200 students, the Barbara Jordan Center has been committed to expanding these sorts of opportunities after a “local education group” found that less than 20% of Houston ISD grads were earning a “living wage” 6 years after graduating, the Chronicle reported.”</q>
+            <small>slide2, summary, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>정비소는 휴스턴 ISD 산하 바버라 조던 직업센터를 통해 열렸다.</b>
+            <q>“The shop was opened through the Houston Independent School District’s (ISD) Barbara Jordan Career Center, which seeks well-paying, hands-on job and internship opportunities in northeast Houston for students training in high-demand professions and trades.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>바버라 조던 센터는 12개 캠퍼스, 1,200명 넘는 학생을 대상으로 한다.</b>
+            <q>“Serving 12 school campuses and over 1,200 students, the Barbara Jordan Center has been committed to expanding these sorts of opportunities after a “local education group” found that less than 20% of Houston ISD grads were earning a “living wage” 6 years after graduating, the Chronicle reported.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>직업센터는 여름부터 정비소 개설을 준비해 왔다.</b>
+            <q>“The career center had been working to open the auto shop since the summer.”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매주 금요일 오전 9시부터 오후 3시까지 학생들이 오일 교환, 타이어 위치 교환, 다점 점검을 해 준다.</b>
+            <q>““Starting every Friday from 9:00 AM to 3:00 PM, trained automotive pathway students will perform vehicle maintenance services for the public, including oil changes, tire rotations, and multi-point inspections. Customers provide all required parts and fluids and pay for student labor,” the career center wrote in a social media post announcing the opening.”</q>
+            <small>slide4, summary, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>손님은 부품과 오일류를 직접 가져오고 학생 인건비를 낸다.</b>
+            <q>“Customers provide all required parts and fluids and pay for student labor,” the career center wrote in a social media post announcing the opening.”</q>
+            <small>slide4, slide6, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자동차 교육 프로그램은 학생들이 소프트 스킬과 기술 노하우를 쌓아 졸업생의 채용 가능성을 높이려 한다.</b>
+            <q>“The ISD’s automotive education program has long been seeking more opportunities for students to build “both soft skills and technical know-how” in order to make graduates more hirable.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>손님이 직접 부품을 가져와야 하는 점은 불편할 수 있지만 다음 세대 정비사를 지원하게 된다.</b>
+            <q>“It may not be the most convenient commercial option to bring one’s own parts and fluids, but at least customers will be supporting the next generation of auto mechanics when they pull their car into the career center’s shop.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>휴스턴 ISD 직업교육은 요리, 공학, 로봇, 휴먼서비스 분야도 다룬다.</b>
+            <q>“Its technical education programs cover the trades, culinary arts and industries, engineering and robotics, and human services.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">Student-run Automotive Shop Opens to the Public in Houston Where Every Oil Change Helps the Next Generation</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.goodnewsnetwork.org/student-run-automotive-shop-opens-to-the-public-in-houston-where-every-oil-change-helps-the-next-generation/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/YouTube-Screengrab-Houston-Independent-School-District.jpg"</li><li>2장: <a href="https://pixabay.com/photos/dawn-graduates-throwing-hats-dusk-1840298/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "graduation caps"</li><li>3장: <a href="https://pixabay.com/photos/school-lockers-hallway-high-school-417612/" target="_blank" rel="noopener">elizabethaferry / Pixabay</a> — "school hallway"</li><li>4장: <a href="https://kvnutalk.com/watch-david-muir-on-how-a-high-schools-auto-shop-is-bringing-houston-together/" target="_blank" rel="noopener">HISD / KVNU / </a> — "https://kvnutalk.com/wp-content/uploads/2026/11/261104_wn_ender_hpMain_16x9.jpg"</li><li>5장: <a href="https://pixabay.com/photos/auto-car-garage-auto-shop-vintage-1868726/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "mechanic tools"</li><li>6장: <a href="https://pixabay.com/photos/classic-cars-vintage-car-show-9614046/" target="_blank" rel="noopener">Mybbor / Pixabay</a> — "car engine"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 3개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-11d26a925bb5">
+    <div class="head">
+      <h2>S1. 독서 방식과 브레인 롯: 딥 리딩 기사 정리</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-11d26a925bb5">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 자기계발</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 책을 몇 권 읽었나가 아니라 &#39;어떻게 읽나&#39;가 문제라는 반전을, 매일 스크롤하는 사람의 습관과 맞붙여서 판다</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">책을 몇 권 읽었나보다 &#39;어떻게 읽나&#39;가 문제라는 글이 나옴
+미국 18~29세 63%가 &#39;거의 계속&#39; 온라인에 있다고 답한 조사도 같이 인용됨
+그 반대편에 있다는 읽기 방식이 뭔지가 포인트였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">1/ 2025년 한 연구에서 &#39;브레인 롯&#39; 콘텐츠가 감정 둔감화, 인지 과부하, 자기 자신에 대한 부정적인 감정으로 이어진다는 결과가 나왔대. 연구 규모는 기사에 안 나와 있음. 그럼 이 반대편에 있다는 &#39;딥 리딩&#39;은 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">2/ 딥 리딩은 책에 푹 빠져서 읽는 거래. 기사 설명으론 피드를 멈춤 없이 훑는 것과 달리, 속도를 늦추고 읽는 내용을 비판적이고 분석적으로 따져보는 읽기야. 소설을 읽을 땐 여기에 하나가 더 붙음. 뭘까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">3/ 소설이라면 등장인물의 입장에 서 보는 거래. 글자만 넘기는 게 아니라 그 사람 자리에 앉아보는 읽기야. 근데 기사가 진짜 문제 삼은 건 읽는 양이 아니었음. 그럼 뭐가 문제라는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">4/ 미국 독해 점수는 계속 떨어지고 대학생 중엔 책 한 권을 끝까지 못 읽는 사람이 많대. 그런데 스스로 독서가라는 Gen Z도 늘고 있고, 기사는 &#39;얼마나 읽나&#39;보다 &#39;깊이 읽고 있나&#39;가 진짜 질문이라고 봄. 한눈에 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">204/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 스크롤: 미국 18~29세 63%가 &#39;거의 계속&#39; 온라인 (2025 퓨리서치)
+- 독서량: 미국인 다수가 지난해 책 5권 이하 (2025 퓨리서치)
+- 브레인 롯 콘텐츠: 감정 둔감화, 인지 과부하, 자기 부정감과 연결 (2025 연구)
+- 딥 리딩: 천천히, 비판적이고 분석적으로, 소설이면 인물 입장에서
+- 기사 요점: 읽는 양보다 읽는 방식</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">198/500자</span></div>
+      <p class="tp-text">6/ 결국 기사 말은 책을 몇 권 읽었나보다 어떻게 읽고 있나를 보라는 거야.
+책 읽다 폰부터 보는 파 vs 끝까지 버티는 파, 너는 어디야?
+이런 해외 자기계발·읽기 습관 얘기, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 기사에 2025년 연구의 규모(표본 크기 등)가 나와 있지 않다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>책을 몇 권 읽었나보다 &#39;어떻게 읽나&#39;가 문제라는 글이 나옴</li><li>독서량 늘리려 하지 말고 &#39;깊이 읽고 있나&#39;부터 보라는 글이 나옴</li><li>책이 안 읽히면 권수 채우기 말고 읽는 방식부터 보라는 글이 나옴</li><li>미국 18~29세 63%가 &#39;거의 계속&#39; 온라인에 있대. 너도 여기 들어갈지도</li><li>스크롤 한 바퀴 돌고 나면 지치는 거, 해외 기사에선 이렇게 짚음</li><li>미국인 다수가 작년에 책 5권 이하 읽었대. 근데 기사는 그게 핵심이 아니라고 함</li><li>&#39;브레인 롯&#39; 콘텐츠가 감정 둔감화랑 같이 나왔다는 2025년 연구가 있음</li><li>대학생 중엔 책 한 권을 끝까지 못 읽는 사람이 많대. 그래도 독서가라는 Gen Z는 늘고 있고</li><li>소설 읽을 때 글자만 넘기지 말고 인물 입장부터 서보라는 얘기가 나옴</li><li>독서 파티에 셀럽 북클럽까지 책이 유행인데도 미국 독해 점수는 계속 떨어진대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>책 읽다 폰부터 보는 파 vs 끝까지 버티는 파, 너는 어디야?</li><li>소설 읽을 때 인물 입장에 서보는 편이야, 줄거리만 따라가는 편이야?</li><li>종이책파 vs 전자책파, 어느 쪽이 더 안 끊기고 읽혀?</li><li>한 권 끝까지 읽기 vs 숏폼 한 시간 끊기, 뭐가 더 어려울 것 같아?</li><li>올해 책 5권 넘게 읽을 수 있을 것 같은 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>소설 읽을 때 인물 입장에 서는 읽기, 기사가 설명한 내용 더 풀기</li><li>미국 독해 점수가 계속 떨어진다는 얘기</li><li>독서 파티·셀럽 북클럽까지, Gen Z 독서 열풍 얘기</li><li>&#39;브레인 롯&#39; 콘텐츠가 남기는 것, 2025년 연구 얘기</li><li>미국 청년 63%가 &#39;거의 계속&#39; 온라인이라는 퓨리서치 조사 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>편집자 메모의 &#39;독서 습관을 바꾸면 주의력과 독해력이 회복된다&#39;는 원문 본문이 뒷받침하지 않음. 글에서 회복 효과를 단정하지 않았는지 확인 필요</li><li>2025년 브레인 롯 연구의 대상과 규모가 원문에 없음. 인과로 읽히지 않는지 확인 필요</li><li>&#39;한국 20~30대 집중력&#39; 연결은 사실 확인이 안 된 아이디어라 본문에 쓰지 않았음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 18~29세 성인의 63%가 2025 퓨리서치 조사에서 &#39;거의 계속&#39; 온라인에 있다고 답했다</b>
+          <q>“Nowadays, “brain rot” is rampant: Most of us spend more time than we’d care to admit mindlessly scrolling low-quality content online, with 63% of U.S. adults ages 18 to 29 admitting they are online “almost constantly,” per a 2025 Pew Research Center survey.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2025년 한 연구에서 브레인 롯 콘텐츠가 감정 둔감화, 인지 과부하, 자기 자신에 대한 부정적 감정으로 이어진다는 결과가 나왔다</b>
+          <q>“A 2025 study also found “brain rot” content leads to emotional desensitization, cognitive overload, and negative feelings about oneself.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>딥 리딩은 책에 푹 빠져 읽는 것이다</b>
+          <q>“In the age of smartphones, artificial intelligence, and information overload, the act of “deep reading,” or really getting lost in a book, can be difficult to practice.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>딥 리딩은 피드를 멈춤 없이 훑는 것과 달리 속도를 늦추고 비판적·분석적으로 읽는 것이다</b>
+          <q>“Deep reading, on the other hand, isn’t just passively scrolling whatever our feeds throw at us without scrutiny or pause. It’s slowing down enough to approach what you’re reading in a critical and analytical manner.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소설을 읽을 때 딥 리딩은 등장인물의 입장이 되어 보는 것이다</b>
+          <q>“It’s putting yourself in a character’s shoes, if you’re reading fiction.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국의 독해 점수가 계속 떨어지고 있다</b>
+          <q>“Everyone has something to say about the state of reading in 2026: Reading comprehension scores in the U.S. have continued to decline.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>많은 대학생이 책 한 권을 끝까지 읽지 못한다</b>
+          <q>“Many college students cannot make it through an entire book.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스스로 독서가라고 밝히는 Gen Z가 늘고 있다</b>
+          <q>“Yet, at the same time, a growing number of Gen Zers are identifying as readers.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기사는 얼마나 읽느냐보다 깊이 읽고 있느냐가 진짜 질문이라고 본다</b>
+          <q>“Whether we are reading more or less than ever shouldn’t be the main concern. The real question is: How are we reading—and are we reading deeply enough?”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국인 다수가 지난해 책 5권 이하를 읽었다고 답했다 (2025 퓨리서치)</b>
+          <q>“The majority of Americans reported reading five or fewer books the previous year, according to a 2025 Pew Research survey.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>알고리즘 피드를 돌고 나면 정신적으로 지치는 경우가 많다</b>
+          <q>“This spin through the algorithmic meat grinder often leaves us feeling mentally exhausted.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="11d26a925bb5">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91635666/how-deep-reading-can-cure-your-brain-rot?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">How ‘deep reading’ can cure your brain rot</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-e4a5df2d2b23">
+    <div class="head">
+      <h2>S2. AI 해고 불안 - 메타 소송과 직장인 설문</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 19
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-e4a5df2d2b23">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 직장생활</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: AI가 직접 자르느냐보다 회사가 내 데이터를 어떻게 쓰는지 안 보인다는, 직장인 누구나 느낄 불안을 메타 소송 사례로 풀어주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">&#39;AI가 나를 자르나?&#39;가 아니라 &#39;회사가 AI를 어디에 쓰는지 안 보인다&#39;가 진짜 문제라는 기사가 나옴
+
+5년 내내 우수 평가였던 메타 직원이 올봄 해고됐는데, 평가표 속사정이 좀 이상했음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">152/500자</span></div>
+      <p class="tp-text">1/ 이 직원은 5년 동안 평가가 &#39;기대 이상&#39; 밑으로 떨어진 적이 없었대. 근데 2025년 말 병가를 다녀온 뒤 평가가 내려갔고, AI 활용 점수를 보여주는 내부 대시보드가 보호 휴직 중이었다는 걸 반영하지 않았다는 걸 알게 됐다고 함.
+
+이게 어떻게 소송으로 번졌을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">157/500자</span></div>
+      <p class="tp-text">2/ 메타 직원 26명(익명)이 7월에 소송을 냈어. 메타가 AI 기반 시스템으로 해고 대상을 정했고, 그 결과 장애 편의가 필요했거나 육아휴직을 쓴 사람이 많이 걸렸다는 주장임.
+
+메타는 사람이 선정 과정 내내 관여했다며 강하게 부인 중이야. 그럼 AI가 해고에 진짜 쓰이긴 해?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">146/500자</span></div>
+      <p class="tp-text">3/ 대형 회사가 AI로 해고 명단을 만든다는 증거는 아직 제한적이래. 하버드 경영대 교수 말로는 개인 성과를 AI로 분석해서가 아니라, AI 때문에 기존 직무가 얼마나 오래갈지 판단해서 인력을 조정하는 쪽이라고 함.
+
+그럼 챗봇에 해고 대상을 물어보면 어떨까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">154/500자</span></div>
+      <p class="tp-text">4/ 럿거스대 연구진이 중소·중견 회사 상황을 보려고 ChatGPT, Gemini 같은 챗봇에게 해고 대상을 고르게 해봤대. 프롬프트를 다듬어도 결과가 일관되지 않았고, 여성과 유색인종을 과하게 해고 쪽으로 잡는 &#39;빨간불&#39;도 보였다고 함.
+
+그럼 직장인들은 얼마나 불안해할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">192/500자</span></div>
+      <p class="tp-text">5/ 설문과 제도 요약 정리
+- 패스트컴퍼니 링크드인 설문: 응답자 3분의 2 이상이 회사가 AI로 해고 대상을 고를까 걱정
+- 480명 넘는 응답자 중 37%는 &#39;매우&#39; 걱정
+- 일리노이·콜로라도: AI가 해고 결정을 좌우하면 회사가 밝혀야 함
+- 뉴욕: 대량해고 사전 통지서에 AI 도입 때문인지 밝혀야 함
+
+그래서 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">222/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 기사 요지는 &#39;AI가 직접 자르나&#39;보다, 어떤 데이터를 모으고 어떻게 쓰는지 직원이 잘 모른다는 점이야.
+
+너네 회사는 AI 쓰라고 압박하는 편이야, 아직 조용한 편이야?
+
+이런 해외 직장·AI 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;AI가 나를 자르나?&#39;가 아니라 &#39;회사가 AI를 어디에 쓰는지 안 보인다&#39;가 진짜 문제라는 기사가 나옴</li><li>5년 내내 &#39;기대 이상&#39; 평가였던 직원이 병가 다녀온 뒤 평가가 떨어지고 해고됐대</li><li>메타엔 직원의 AI 활용 점수를 보여주는 대시보드가 있었대. 근데 거기에 구멍이 있었다는 주장이 나옴</li><li>직장인 3명 중 2명 넘게 &#39;AI가 해고 대상 고를까 봐 걱정&#39;이라고 답한 링크드인 설문이 있대</li><li>&#39;AI가 해고했다&#39;는 증거는 아직 제한적인데도 소송까지 간 이유가 있대</li><li>&#39;성과만 좋으면 안 잘린다&#39;는 말, 이 메타 소송 보면 좀 달라짐</li><li>챗봇한테 &#39;누구 자를까&#39; 물어보게 했더니 결과가 들쭉날쭉이었다는 연구가 나옴</li><li>&#39;AI가 누구를 자를지 정한다&#39;가 아니라 &#39;이 직무가 AI 앞에서 얼마나 갈까&#39;를 먼저 본다는 전문가 말이 나옴</li><li>메타 직원 26명이 &#39;AI가 해고 대상 골랐다&#39;며 소송을 냈대</li><li>미국 일부 주에선 AI가 해고 결정을 좌우하면 회사가 밝혀야 한대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너네 회사는 AI 쓰라고 압박하는 편이야, 아직 조용한 편이야?</li><li>AI가 짠 해고 명단 vs 사람이 짠 명단, 너라면 어느 쪽이 더 공정할 것 같아?</li><li>회사가 AI 쓰는 방식을 직원한테 공개해야 한다, 찬성 반대?</li><li>챗봇한테 업무 고민 물어본 적 있는 사람?</li><li>성과 평가는 숫자파 vs 사람 판단파, 너는 어느 쪽?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>메타 소송, 이후 어떻게 흘러가는지</li><li>AI가 해고 결정을 좌우하면 공개하라는 미국 주 법들 정리</li><li>챗봇으로 해고 대상 고르면 생기는 편향 연구 후속</li><li>회사가 직원 데이터를 어디까지 모으고 있나</li><li>AI 때문에 사라질 직무를 가려낸다는 &#39;워크 인텔리전스 도구&#39; 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>메타 소송 내용은 원고 측 주장이고 메타가 부인 중이라, AI가 해고를 결정했다고 단정하는 문장으로 읽히지 않는지 확인 필요</li><li>링크드인 설문은 응답 480여 명 규모라 직장인 전체 의견으로 읽히지 않게 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>메타 전 직원이 5년간 관리자들에게 고성과자로 평가받았다</b>
+          <q>“For five years, the former Meta employee had been feted as a high performer by her managers.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그 직원은 올봄 해고됐다</b>
+          <q>“Imagine her surprise, then, when she was unceremoniously laid off this past spring.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기사는 진짜 문제가 AI가 해고를 하느냐보다 AI가 회사의 결정 방식을 바꾸는 과정이 안 보인다는 점일 수 있다고 본다</b>
+          <q>“Perhaps the real concern is not whether AI is conducting layoffs—but that there is so little visibility into how AI is radically transforming the way companies make decisions about their workforce.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그 직원의 평가는 &#39;기대 이상&#39; 밑으로 떨어진 적이 없었다</b>
+          <q>“She had even received a rare equity award in recognition of her performance, which had never fallen below an “exceeds expectations” rating.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2025년 말 병가 후 평가가 내려갔다</b>
+          <q>“After she took a medical leave in late 2025, her performance rating slipped.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복귀 후 점수가 떨어졌고 대시보드가 보호 휴직 중이었다는 점을 반영하지 않았다는 걸 알게 됐다</b>
+          <q>“But after returning, she noticed her scores had dropped and was startled to realize the dashboards had not taken into account that she was on protected leave.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>메타 직원들이 7월에 소송을 냈다</b>
+          <q>“Now, it seems, those fears may be realized, as captured by a novel lawsuit that the Meta employees brought in July, alongside a number of former colleagues who were also laid off this year.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>익명 원고 26명이 메타가 AI 기반 시스템으로 해고 대상을 정했고 장애 편의가 필요하거나 육아휴직을 쓴 사람이 더 많이 걸렸다고 주장했다</b>
+          <q>“The 26 anonymous plaintiffs made a bold claim: They accused Meta of using AI-enabled systems to determine which employees would be laid off in a major round of cuts this year—and that, as a result, the company had disproportionately targeted people who needed accommodations for disabilities or took parental leave.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>메타는 사람이 선정 과정 내내 관여했다며 소송 주장을 강하게 부인했다</b>
+          <q>“For months, Meta has strenuously denied the claims laid out in the lawsuit, insisting humans were involved throughout the layoff selection process.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대형 고용주가 AI로 해고 명단을 만든다는 증거는 제한적이다</b>
+          <q>“While there is limited evidence that large employers are explicitly using AI tools to generate lists of employees to lay off, the idea of productivity metrics or automated systems driving employment decisions is hardly new.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하버드 경영대 교수 Fuller는 개인 성과 분석이 아니라 AI 시대에 기존 직무가 얼마나 지속될지 판단해서 해고한다고 말했다</b>
+          <q>““It’s not so much that they’re doing the layoff because they’ve analyzed individual workers’ performance using AI. It’s because they’ve made a judgment about the durability of an existing job description in light of AI.””</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>럿거스대 연구진이 ChatGPT, Gemini 같은 챗봇이 해고 대상을 고를 때를 살펴봤고 프롬프트를 다듬어도 결과가 일관되지 않았다</b>
+          <q>“But even with an engineered prompt, the results were not consistent, according to TJ Raineri, a PhD candidate and one of the researchers working on the study.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 여성과 유색인종을 과하게 해고 대상으로 잡는 빨간불을 봤다</b>
+          <q>““There were some red flags that we saw, including overindexing on laying off women and people of color,” he says.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>럿거스대 연구는 중소·중견 회사에서 AI가 해고에 미치는 영향을 들여다본 것이다</b>
+          <q>“When researchers at Rutgers University in New Brunswick, New Jersey, started looking into how AI can shape layoffs at small and midsize companies, they hoped to better understand how reliably chatbots like ChatGPT and Gemini acted when selecting people for layoffs.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>링크드인 설문 응답자의 3분의 2 이상이 회사가 AI로 해고 대상을 고를까 걱정했다</b>
+          <q>“More than two-thirds of people surveyed said they were worried about their company deploying AI to select employees for layoffs.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>480명 넘는 응답자 중 37%가 매우 걱정한다고 답했다</b>
+          <q>“Of more than 480 respondents, 37% said they were “very” concerned about the prospect of AI being used to that end.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일리노이와 콜로라도는 AI가 해고 결정을 좌우하면 회사가 공개하도록 요구한다</b>
+          <q>“In addition to a new law in California that creates guardrails around how companies use AI to execute layoffs, both Illinois and Colorado now require companies to disclose when AI dictates a termination decision.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>뉴욕은 대량해고 사전 통지서 제출 시 해고가 AI 도입 때문인지 밝히도록 한다</b>
+          <q>“In New York, employers who submit WARN notices—federally mandated advance notifications of mass layoffs—must also disclose if a layoff is due to AI adoption.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>노스웨스턴대 교수는 어떤 데이터가 모이고 어떻게 처리·사용되는지에 대한 정보 비대칭을 지적했다</b>
+          <q>““It’s that information asymmetry for what data is being collected, how it is being processed, and how it is being used,” he says.”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="e4a5df2d2b23">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91626904/how-likely-are-you-to-be-fired-by-ai?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">Am I going to be fired by AI? How corporate America is being seduced by AI and algorithms in the ‘forever layoffs’ era</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-620c82b6a78f">
+    <div class="head">
+      <h2>S3. 피크 디자인 접이식 충전 스탠드, 폰 두 대 동시 충전</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-620c82b6a78f">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 세우면 스탠드, 눕히면 폰 두 대 동시 충전이라는 반전에 &#39;선물로 주고 싶다&#39;를 얹고, 어댑터가 따로라는 함정으로 끝까지 읽게 만든다</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "접이식 멀티 충전 스탠드 2대 동시충전" · 원문 제품: Peak Design Charging Station (Black, Moon 색상), 가격 $99.95, 어댑터 미포함, 100W USB-C 케이블 동봉. 판매처는 원문에 없음<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/620c82b6a78f/thread-photo-1105082519-01.jpg" alt="책상 위에 세워진 검은색 사각 패드형 충전 스탠드 단품, 기울어진 지지대와 받침 패드, 뒤쪽 모니터·키보드·오디오 기기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/620c82b6a78f/thread-photo-1105082519-02.jpg" alt="크림색 접이식 충전 스탠드 단품이 나무 원형 받침대 위에 놓여 있고, 상단 패드와 하단 충전 패드가 보이며 어두운 배경이다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261105-pm-24f7de481d32/620c82b6a78f/thread-photo-1105082519-03.jpg" alt="검은색 접이식 충전 스탠드 측면. 세워진 암에 폰이 기대어 있고 하단 충전 패드 위에 흰색 이어폰 케이스가 놓여 있으며, 옆에는 검은 전자기기 본체와 나무 탁자가 보인다." loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-620c82b6a78f">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">81/500자</span></div>
+      <p class="tp-text">충전 스탠드는 &#39;세워두는 물건&#39;인 줄 알았는데
+눕히면 폰 두 대가 나란히 충전되는 물건이 나왔대
+근데 사기 전에 따로 챙겨야 할 게 하나 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">129/500자</span></div>
+      <p class="tp-text">1/ 눕히면 폰 두 대가 자리 다툼 없이 같이 충전된대. 자석 패드 두 개 모두 Qi2.2, 최대 25W 동시 충전이 가능하다고 해. 단, 25W가 다 나오는지는 폰 자체의 충전 지원에 달렸대. 그럼 세워서 쓸 땐 어떻게 달라질까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">2/ 힌지가 두 개라서 팔이랑 위쪽 패드를 따로 조절할 수 있어. 폰은 세로·가로 둘 다 자석으로 붙고, 화상통화나 일정 볼 때 각도를 맞추면 된대. 이어폰 케이스는 아래 패드에 올려두면 되고. 그럼 접으면 얼마나 작아질까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">3/ 납작하게 접으면 6.3 x 2.7 x 0.6인치, 무게는 9.7온스래. 팔이 몸체 옆으로 들어가서 가방 안에서 튀어나오지 않는대. 그래서 가격은 얼마고, 뭐가 빠져 있을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">174/500자</span></div>
+      <p class="tp-text">4/ 요약 정리
+- 하는 일: 폰 두 대 무선 충전 (세우기·눕히기 가능)
+- 패드 2개 모두 Qi2.2, 동시 최대 25W
+- 별도 USB-C 출력 7.5W (유선)
+- 접으면 6.3 x 2.7 x 0.6인치, 9.7온스
+- 가격 $99.95, 어댑터는 따로
+- 어댑터는 45W 이상, 최대 속도는 75W 이상</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">194/500자</span></div>
+      <p class="tp-text">5/ 결국 살 때 볼 건 두 가지야. 내 폰이 얼마나 받을 수 있는지, 그리고 어댑터를 따로 챙겨야 한다는 거.
+
+이거 선물로 받으면 좋아할 사람 소환해봐.
+
+해외 신기한 물건 이런 거 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외 신기한 물건을 계속 배달한다는 계정 활동 설명</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>충전 스탠드는 &#39;세워두는 물건&#39;인 줄 알았는데 눕히면 폰 두 대가 나란히 충전된대</li><li>폰 충전 자리 다툼, 패드 두 개짜리 접이식 스탠드가 나왔대</li><li>충전기를 하나 더 사는 게 아니라 &#39;접어서 눕히는&#39; 스탠드로 푼 물건이 나옴</li><li>처음엔 그냥 폰 거치대인 줄 알았는데 눕히면 패드가 두 개 나란히 놓여</li><li>납작하게 접으면 6.3인치짜리가 되는 충전 스탠드가 있대</li><li>폰 두 대가 최대 25W로 동시에 충전된다는 스탠드가 나옴</li><li>99.95달러짜리 충전 스탠드인데 충전 어댑터는 따로 사야 한대</li><li>책상 위 폰 두 대, 충전기 하나로 정리하는 방법을 해외에서 이렇게 풀었대</li><li>커플이나 가족에게 충전 스탠드를 선물한다면 이런 게 눈에 들어올 듯</li><li>충전 스탠드 하나 더 사지 말고 패드 두 개 달린 접이식부터 보라는 식의 신제품이 나왔어</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해봐</li><li>책상에서 폰 두 대 쓰는 사람?</li><li>충전은 무선파 vs 선파?</li><li>이 가격이면 살 거야?</li><li>침대 옆 vs 책상 위, 이거 어디 둘 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>여행 가방에 넣기 좋은 접이식 충전 용품 또 뭐 있을까</li><li>충전기 살 때 와트 숫자 보는 법</li><li>다이아몬드 사이에서 눌린 물, 처음 관측된 변화</li><li>독일 원자로 실패 이유, 우라늄 큐브가 말해준다</li><li>휴스턴 고등학생 정비소 개업</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세우면 노트북 옆 스탠드, 눕히면 폰 두 대가 자리 다툼 없이 충전된다</b>
+          <q>“Stand it up beside your laptop, or lay it flat so two phones can recharge without competing for the better spot.”</q>
+          <small>post0, post1 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Peak Design 신제품 Charging Station은 똑같은 성능의 자석 패드 두 개와 힌지 달린 팔로 이뤄진다</b>
+          <q>“Peak Design’s new Charging Station addresses that problem with two equally capable magnetic pads and a hinged arm.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 패드 모두 Qi2.2, 동시에 최대 25W 충전</b>
+          <q>“Peak Design rates both Qi2.2 pads for up to 25W simultaneously, allowing two compatible phones to recharge at once without assigning one a slower accessory spot.”</q>
+          <small>post1, post4 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>25W가 다 나오는지는 폰 자체의 충전 지원에 달렸다</b>
+          <q>“The device’s own charging support still determines how much power it can accept.”</q>
+          <small>post1, post5 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>힌지 두 개로 팔과 위쪽 패드를 따로 조절하고, 화상통화나 일정 확인용으로 각도를 맞춘다</b>
+          <q>“Two hinges let you adjust the arm and upper pad separately, positioning a phone for a video call or a glance at your calendar.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폰은 세로·가로 모두 자석으로 붙는다</b>
+          <q>“Magnetic attachment supports portrait and landscape orientations, so changing what you’re doing doesn’t require another stand.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폰을 세워둔 채 이어폰 케이스를 아래 패드에 올릴 수 있다</b>
+          <q>“An earbud case can sit on the lower pad while the phone stays raised, keeping both devices within the same small desktop footprint.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>접으면 6.3 x 2.7 x 0.6인치이고 팔이 몸체 옆으로 들어간다</b>
+          <q>“Packed flat, it measures 6.3 by 2.7 by 0.6 inches, with the arm tucked alongside the body instead of projecting into your bag.”</q>
+          <small>post3, post4 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무게는 9.7온스</b>
+          <q>“At 9.7 ounces, it still adds weight to a travel kit, but you aren’t packing a rigid desktop stand just to keep a phone propped up in a hotel room.”</q>
+          <small>post3, post4 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>별도 USB-C 출력은 유선이고 7.5W</b>
+          <q>“A separate USB-C output makes room for a third device, although this connection is wired.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>USB-C 출력은 7.5W로 작은 액세서리용</b>
+          <q>“Its 7.5W output is suited to smaller accessories rather than replacing a laptop charger.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격은 $99.95이고 어댑터는 포함되지 않는다</b>
+          <q>“The $99.95 price also leaves out the wall adapter.”</q>
+          <small>post0, post4, post5 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>어댑터는 45W 이상 필요하고 최대 듀얼 충전 속도는 75W 이상이 필요하다</b>
+          <q>“Peak Design includes a fabric-wrapped USB-C cable rated for 100W, but specifies at least a 45W power supply to operate the station and 75W or more for maximum dual charging speed.”</q>
+          <small>post4, post5 · <a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="620c82b6a78f">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/04/peak-designs-charging-station-folds-flat-to-charge-two-phones/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peak-designs-charging-station-folds-flat-to-charge-two-phones" target="_blank" rel="noopener">Peak Design’s Charging Station Folds Flat to Charge Two Phones - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261105-pm";
+  const ORIGINAL = {"1fab8ae1ccc8": {"caption": "\ubbf8\uad6d \ud734\uc2a4\ud134 \ud53c\ud504\uc2a4 \uc6cc\ub4dc \uc9c0\uc5ed\uc5d0 \uc790\ub3d9\ucc28\uacf5\ud559\uc744 \ubc30\uc6b0\ub294 \uace0\ub4f1\ud559\uc0dd\ub4e4\uc774 \uc6b4\uc601\ud558\ub294 \uc815\ube44\uc18c\uac00 \ubb38\uc744 \uc5f4\uc5c8\ub2e4. \uc77c\ubc18 \uc190\ub2d8\ub3c4 \uc774\uc6a9\ud560 \uc218 \uc788\ub2e4.\n\n\uc815\ube44\uc18c\ub294 \ud734\uc2a4\ud134 ISD \uc0b0\ud558 \ubc14\ubc84\ub77c \uc870\ub358 \uc9c1\uc5c5\uc13c\ud130\ub97c \ud1b5\ud574 \uc5f4\ub838\ub2e4. \uc774 \uc13c\ud130\ub294 12\uac1c \ud559\uad50 \ucea0\ud37c\uc2a4, 1,200\uba85\uc774 \ub118\ub294 \ud559\uc0dd\uc744 \ub300\uc0c1\uc73c\ub85c \ud558\uba70, \uc218\uc694\uac00 \ub192\uc740 \uc9c1\uc885\uacfc \uae30\uc220\uc744 \ubc30\uc6b0\ub294 \ud559\uc0dd\ub4e4\uc5d0\uac8c \uc784\uae08\uc774 \uad1c\ucc2e\uc740 \uc2e4\ubb34\ud615 \uc77c\uc790\ub9ac\uc640 \uc778\ud134 \uae30\ud68c\ub97c \uc5f0\uacb0\ud574 \uc8fc\ub824 \ud55c\ub2e4. \ubc30\uacbd\uc5d0\ub294 \ud55c \uc9c0\uc5ed \uad50\uc721 \ub2e8\uccb4\uc758 \uc870\uc0ac\uac00 \uc788\ub2e4. \uc774 \uc870\uc0ac\uc5d0\uc11c \ud734\uc2a4\ud134 ISD \uc878\uc5c5\uc0dd \uc911 \uc878\uc5c5 6\ub144 \ub4a4 \uc0dd\ud65c\uc784\uae08\uc744 \ubc84\ub294 \ube44\uc728\uc774 20% \ubbf8\ub9cc\uc73c\ub85c \ub098\ud0c0\ub0ac\ub2e4\uace0 \ud55c\ub2e4.\n\n\uc6b4\uc601 \ubc29\uc2dd\ub3c4 \ub3c5\ud2b9\ud558\ub2e4. \ub9e4\uc8fc \uae08\uc694\uc77c \uc624\uc804 9\uc2dc\ubd80\ud130 \uc624\ud6c4 3\uc2dc\uae4c\uc9c0 \ud6c8\ub828\uc744 \ubc1b\uc740 \ud559\uc0dd\ub4e4\uc774 \uc624\uc77c \uad50\ud658, \ud0c0\uc774\uc5b4 \uc704\uce58 \uad50\ud658, \ub2e4\uc810 \uc810\uac80 \uac19\uc740 \uc815\ube44\ub97c \ud574 \uc900\ub2e4. \uc190\ub2d8\uc740 \ud544\uc694\ud55c \ubd80\ud488\uacfc \uc624\uc77c\ub958\ub97c \uc9c1\uc811 \uac00\uc838\uc624\uace0 \ud559\uc0dd \uc778\uac74\ube44\ub9cc \ub0b8\ub2e4. \ub2e4\uc18c \ubc88\uac70\ub85c\uc6b8 \uc218 \uc788\uc9c0\ub9cc, \uadf8\ub9cc\ud07c \ub2e4\uc74c \uc138\ub300 \uc815\ube44\uc0ac\ub97c \uc751\uc6d0\ud558\ub294 \uc148\uc774\ub2e4.\n\n\ud734\uc2a4\ud134 ISD\uc758 \uc9c1\uc5c5\uad50\uc721\uc740 \uc815\ube44 \ub9d0\uace0\ub3c4 \uc694\ub9ac, \uacf5\ud559, \ub85c\ubd07, \ud734\uba3c\uc11c\ube44\uc2a4 \ubd84\uc57c\ub97c \ub2e4\ub8ec\ub2e4. \ud559\uc0dd\ub4e4\uc774 \uc18c\ud504\ud2b8 \uc2a4\ud0ac\uacfc \uae30\uc220 \ub178\ud558\uc6b0\ub97c \ud568\uaed8 \uc313\uc544 \uc878\uc5c5 \ub4a4 \ucc44\uc6a9 \uac00\ub2a5\uc131\uc744 \ub192\uc774\ub294 \uac83\uc774 \ubaa9\ud45c\ub2e4.\n\n\ucd9c\ucc98: Good News Network (Houston Chronicle \ubcf4\ub3c4 \uc778\uc6a9)", "hashtags": ["#\ud574\uc678\uc774\uc288", "#\ubbf8\uad6d", "#\uc9c1\uc5c5\uad50\uc721", "#\uc790\ub3d9\ucc28\uc815\ube44", "#\ud734\uc2a4\ud134"], "slides": [["\uace0\ub4f1\ud559\uc0dd\uc774", "**\uc624\uc77c** \uac08\uc544\uc900\ub2e4?!", "---", "\ubbf8\uad6d \ud734\uc2a4\ud134 \ud53c\ud504\uc2a4 \uc6cc\ub4dc \uc9c0\uc5ed\uc5d0 \uc790\ub3d9\ucc28\uacf5\ud559\uc744 \ubc30\uc6b0\ub294 \uace0\ub4f1\ud559\uc0dd\ub4e4\uc774 \uc77c\ubc18 \uc190\ub2d8\uc744 \ubc1b\ub294 \uc815\ube44\uc18c\ub97c \uc5f4\uc5c8\ub2e4."], ["\uc878\uc5c5 6\ub144 \ub4a4", "**20%\ub3c4 \uc548 \ub3fc**", "---", "\uc9c0\uc5ed \uad50\uc721 \ub2e8\uccb4 \uc870\uc0ac\uc5d0\uc11c \ud734\uc2a4\ud134 ISD \uc878\uc5c5\uc0dd \uc911 \uc878\uc5c5 6\ub144 \ub4a4 \uc0dd\ud65c\uc784\uae08\uc744 \ubc84\ub294 \ube44\uc728\uc774 20% \ubbf8\ub9cc\uc73c\ub85c \ub098\ud0c0\ub0ac\ub2e4. \uc9c1\uc5c5\uc13c\ud130\ub294 \uc774\ud6c4 \uc2e4\ubb34 \uc911\uc2ec \uae30\ud68c\ub97c \ub113\ud788\ub294 \ub370 \ud798\uc368 \uc654\ub2e4."], ["\ud559\uc0dd **1,200\uba85**", "12\uac1c \ucea0\ud37c\uc2a4", "---", "\uc815\ube44\uc18c\ub97c \uc5f0 \uacf3\uc740 \ud734\uc2a4\ud134 ISD \uc0b0\ud558 \ubc14\ubc84\ub77c \uc870\ub358 \uc9c1\uc5c5\uc13c\ud130\ub2e4. \uc774\uacf3\uc740 12\uac1c \ud559\uad50 \ucea0\ud37c\uc2a4, 1,200\uba85\uc774 \ub118\ub294 \ud559\uc0dd\uc744 \ub300\uc0c1\uc73c\ub85c \ud55c\ub2e4. \uc815\ube44\uc18c \uac1c\uc124\uc740 \uc5ec\ub984\ubd80\ud130 \uc900\ube44\ud574 \uc654\ub2e4."], ["\ub9e4\uc8fc **\uae08\uc694\uc77c**", "\uc624\uc804 9\uc2dc~3\uc2dc", "---", "\ud559\uc0dd\ub4e4\uc740 \uc624\uc77c \uad50\ud658, \ud0c0\uc774\uc5b4 \uc704\uce58 \uad50\ud658, \ub2e4\uc810 \uc810\uac80 \uac19\uc740 \uc815\ube44\ub97c \uc77c\ubc18 \uc190\ub2d8\uc5d0\uac8c \ud574 \uc900\ub2e4. \uc190\ub2d8\uc740 \ud544\uc694\ud55c \ubd80\ud488\uacfc \uc624\uc77c\ub958\ub97c \uc9c1\uc811 \uac00\uc838\uc624\uace0 \ud559\uc0dd \uc778\uac74\ube44\ub9cc \ub0b8\ub2e4."], ["\uc2e4\ub825\ub3c4 \uc313\uace0", "**\ucde8\uc5c5**\ub3c4 \ub178\ub9b0\ub2e4", "---", "\uc790\ub3d9\ucc28 \uad50\uc721 \ud504\ub85c\uadf8\ub7a8\uc740 \uc624\ub798\uc804\ubd80\ud130 \ud559\uc0dd\ub4e4\uc774 \uc18c\ud504\ud2b8 \uc2a4\ud0ac\uacfc \uae30\uc220 \ub178\ud558\uc6b0\ub97c \ud568\uaed8 \uc313\uc744 \uae30\ud68c\ub97c \ucc3e\uc544 \uc654\ub2e4. \uc878\uc5c5\uc0dd\uc774 \ub354 \uc27d\uac8c \ucc44\uc6a9\ub418\ub3c4\ub85d \ud558\ub824\ub294 \ucde8\uc9c0\ub2e4."], ["\ucc28 \ub9cc\uc9c0\ub294 \uce5c\uad6c\ud55c\ud14c", "\ubcf4\ub0b4\uc8fc\uae30", "---", "\uc190\ub2d8\uc740 \ud559\uc0dd \uc778\uac74\ube44\ub97c \ub0b4\uba70 \ub2e4\uc74c \uc138\ub300 \uc815\ube44\uc0ac\ub97c \uc751\uc6d0\ud558\uac8c \ub418\ub294 \uad6c\uc870\ub77c, \uc790\ub3d9\ucc28\uc5d0 \uad00\uc2ec \uc788\ub294 \uce5c\uad6c\uc5d0\uac8c \ubcf4\uc5ec\uc904 \ub9cc\ud55c \uc18c\uc2dd"]]}, "c0ab3688f166": {"caption": "\ub450 \ub2e4\uc774\uc544\ubaac\ub4dc \ub05d \uc0ac\uc774\uc5d0 \ubb3c\ubc29\uc6b8\uc744 \ub07c\uc6b0\uace0 \ub20c\ub800\ub354\ub2c8, \uc2e4\ud5d8\uc2e4\uc5d0\uc11c \ucc98\uc74c \uad00\uce21\ub41c \uac83\uc73c\ub85c \ubcf4\uc774\ub294 \ubcc0\ud654\uac00 \ub098\ud0c0\ub0ac\ub2e4. \ubbf8\uad6d \uc5f0\uad6c\ud300\uc740 \ucc9c\uc655\uc131\uc774\ub098 \ud574\uc655\uc131 \uac19\uc740 \ud589\uc131\uc5d0\uc11c \ubb3c\uc774 \ubc1b\uc744 \ub9cc\ud55c \uc555\ub825\uc744 \uc7ac\ud604\ud588\uace0, \ubb3c\uc758 \uc6d0\uc790 \uad6c\uc870\uac00 \ubcc0\ud558\ub294 \uac83\uc744 \ud655\uc778\ud588\ub2e4. \uc555\ub825\uc740 222\uae30\uac00\ud30c\uc2a4\uce7c\uc744 \ub118\uacbc\uace0, \uc774\ub294 \uc9c0\uad6c\uc5d0\uc11c \uac78\uc5b4 \ub2e4\ub2d0 \ub54c \ub290\ub07c\ub294 \uc555\ub825\uc758 \uc57d 220\ub9cc \ubc30\ub2e4.\n\n\ubcf4\ud1b5\uc740 \uc6d0\uc790\uac00 \ucd18\ucd18\ud788 \ubaa8\uc774\uba74 \ub354 \ub300\uce6d\uc801\uc774 \ub420 \uac70\ub77c \uc608\uc0c1\ud558\uc9c0\ub9cc, \uc774\ubc88\uc5d0\ub294 \uc5bc\uc74c\uc758 \uacb0\uc815 \uad6c\uc870\uac00 \ud55c\ucabd\uc73c\ub85c \uae30\uc6b8\uace0 \ub298\uc5b4\ub0ac\ub2e4. \uc774\ub7f0 \ubcc0\ud654\ub294 \uc804\uc5d0 \uc2dc\ubbac\ub808\uc774\uc158\uc73c\ub85c \uc608\uce21\ub41c \uc801\uc740 \uc788\uc5c8\ub2e4. \uc5f0\uad6c\ud300\uc740 \uc54c\ub824\uc9c4 \uc5bc\uc74c \uc885\ub958\uac00 20\uac00\uc9c0 \ub118\ub294 \uac00\uc6b4\ub370 \ud558\ub098\uc778 ice-X\ub97c \uae30\uc874 \ud55c\uacc4 \ub108\uba38\ub85c \ubc00\uc5b4\ubd99\uc600\uace0, \uc0c8\ub85c\uc6b4 \ubb34\uc5b8\uac00\uac00 \ub9cc\ub4e4\uc5b4\uc9c4 \uac83\ucc98\ub7fc \ubcf4\uc774\uc9c0\ub9cc \ud655\uc2e4\ud788 \uc54c\ub824\uba74 \ucd94\uac00 \uc5f0\uad6c\uac00 \ud544\uc694\ud558\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\ub124\ubc14\ub2e4\ub300 \ub77c\uc2a4\ubca0\uc774\uac70\uc2a4 \ucea0\ud37c\uc2a4\uc758 \ubb3c\ub9ac\ud559\uc790 \uc544\uc288\uce78 \uc0b4\ub77c\ub9c8\ud2b8\ub294 \"\uc9c0\uad6c\uc640 \ube44\uc2b7\ud55c \uc870\uac74\uc744 \ubc97\uc5b4\ub09c \ubb3c\uc740 \uc6b0\ub9ac\uac00 \uc0c1\uc0c1\ud55c \uac83\ubcf4\ub2e4 \ud6e8\uc52c \ubcf5\uc7a1\ud558\uac8c \ud589\ub3d9\ud55c\ub2e4\"\uace0 \ub9d0\ud588\ub2e4. \ub2e4\ub9cc \uc774\ubc88 \uc2e4\ud5d8\uc740 \uc555\ub825\ub9cc \ub2e4\ub978 \ud589\uc131\uacfc \uac19\uc558\uace0 \uc628\ub3c4\ub294 \ub2ec\ub790\ub2e4\ub294 \uc810\uc740 \uae30\uc5b5\ud574 \ub458 \ub9cc\ud558\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uacfc\ud559", "#\uc6b0\uc8fc", "#\ub2e4\uc774\uc544\ubaac\ub4dc", "#\ud574\uc655\uc131", "#\ubb3c\ub9ac\ud559"], "slides": [["\ub2e4\uc774\uc544 \uc0ac\uc774\uc5d0", "\ubb3c\uc744 **\ub20c\ub800\ub354\ub2c8**???", "---", "\ubbf8\uad6d \uc5f0\uad6c\ud300\uc774 \ub450 \ub2e4\uc774\uc544\ubaac\ub4dc \ub05d \uc0ac\uc774\uc5d0 \ubb3c\ubc29\uc6b8\uc744 \ub123\uace0 \uc555\ub825\uc744 \ub192\uc600\ub354\ub2c8, \uc2e4\ud5d8\uc2e4\uc5d0\uc11c \ucc98\uc74c \uad00\uce21\ub41c \uac83\uc73c\ub85c \ubcf4\uc774\ub294 \ubcc0\ud654\uac00 \ub098\ud0c0\ub0ac\ub2e4."], ["\ub2e4\uc774\uc544 \ub05d \uc0ac\uc774\uc5d0", "**\ubb3c\ubc29\uc6b8** \ud558\ub098", "---", "\uc5f0\uad6c\ud300\uc740 \uc791\uc740 \ubb3c\ubc29\uc6b8\uc744 \ub2e4\uc774\uc544\ubaac\ub4dc \ub05d \ub450 \uac1c \uc0ac\uc774\uc5d0 \ub193\uace0 \ub20c\ub800\ub2e4. \uc555\ub825\uc740 222\uae30\uac00\ud30c\uc2a4\uce7c\uc744 \ub118\uc744 \ub54c\uae4c\uc9c0 \ub04c\uc5b4\uc62c\ub838\ub2e4. \ubb3c\uc18d \ubcc0\ud654\ub294 X\uc120\uc774 \ud37c\uc9c0\ub294 \ubc29\uc2dd\uc73c\ub85c \ud655\uc778\ud588\ub2e4."], ["\uc9c0\uad6c\uc758 **220\ub9cc \ubc30**", "\uc555\ub825\uc774\uc5c8\ub2e4", "---", "\uc774 \uc555\ub825\uc740 \uc6b0\ub9ac\uac00 \uc9c0\uad6c\uc5d0\uc11c \uac78\uc5b4 \ub2e4\ub2c8\uba70 \ub290\ub07c\ub294 \uc555\ub825\uc758 \uc57d 220\ub9cc \ubc30\uc5d0 \ud574\ub2f9\ud55c\ub2e4. \ucc9c\uc655\uc131\uc774\ub098 \ud574\uc655\uc131 \uac19\uc740 \ud589\uc131\uc774 \uacaa\uc744 \ub9cc\ud55c \uc218\uc900\uc758 \uc555\ub825\uc774\ub2e4."], ["\ub300\uce6d\uc774 \uc544\ub2c8\ub77c", "\uc624\ud788\ub824 **\ucc0c\uadf8\ub7ec\uc9d0**", "---", "\ubcf4\ud1b5\uc740 \uc6d0\uc790\uac00 \ucd18\ucd18\ud788 \ubaa8\uc77c\uc218\ub85d \ub354 \ub300\uce6d\uc801\uc774 \ub420 \uac70\ub77c \uc608\uc0c1\ud55c\ub2e4. \uadf8\ub7f0\ub370 \uc774\ubc88\uc5d4 \uc5bc\uc74c\uc758 \uacb0\uc815 \uad6c\uc870\uac00 \ud55c\ucabd\uc73c\ub85c \uae30\uc6b8\uace0 \uae38\uac8c \ub298\uc5b4\ub0ac\ub2e4."], ["\uba3c \ud589\uc131 \uc18d\uc744", "\uc5ff\ubcf8 \uc148", "---", "\ubb3c\uc758 \uad6c\uc870\uac00 \uc774\ub807\uac8c \ubc14\ub00c\uba74 \uc5f4 \uc804\ub3c4\uc640 \uc790\uae30\uc7a5, \ud589\uc131\uc758 \ubc00\ub3c4 \ud574\uc11d\uc5d0\ub3c4 \uc601\ud5a5\uc774 \uac04\ub2e4. \ub2e4\ub9cc \uc774\ubc88 \uc2e4\ud5d8\uc740 \uc555\ub825\ub9cc \ub2e4\ub978 \ud589\uc131\uacfc \uac19\uc558\uace0 \uc628\ub3c4\ub294 \ub2ec\ub790\ub2e4."], ["\uc6b0\uc8fc \ub355\ud6c4 \uce5c\uad6c", "\ubc14\ub85c **\ud0dc\uadf8**", "---", "\ub2e4\uc774\uc544\ubaac\ub4dc \uc0ac\uc774\uc5d0\uc11c \ubb3c\uc744 \ub204\ub978 \uc2e4\ud5d8\uc73c\ub85c \uba3c \ud589\uc131 \uc18d \ubb3c\uc758 \ubaa8\uc2b5\uc744 \uc5ff\ubd24\ub2e4. \uc6b0\uc8fc\ub098 \uacfc\ud559\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc624\ub298 \uac00\uc7a5 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "e9262ebde8d5": {"caption": "\uc6b0\ub77c\ub284 \ud050\ube0c\uac00 2\ucc28 \ub300\uc804 \ub3c5\uc77c \uc6d0\uc790\ub85c \ud504\ub85c\uc81d\ud2b8\uc758 \uc2e4\ud328 \uc774\uc720\ub97c \ubcf4\uc5ec\uc92c\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4.\n\n2\ucc28 \ub300\uc804 \uc911 \ub9e8\ud574\ud2bc \ud504\ub85c\uc81d\ud2b8\uc758 \ubb3c\ub9ac\ud559\uc790\ub4e4\uc740 \ub098\uce58 \ub3c5\uc77c\uc774 \uba3c\uc800 \ud575\ud3ed\ud0c4\uc744 \ub9cc\ub4e4\uc9c0 \ubaa8\ub978\ub2e4\uace0 \uac71\uc815\ud588\ub2e4. \uacb0\uacfc\ub294 \uadf8\ub807\uc9c0 \uc54a\uc558\uc9c0\ub9cc, \ub3c5\uc77c\uc774 \ub9c8\uc9c0\ub9c9 \uc6d0\uc790\ub85c \uc2dc\ub3c4\uc778 B8 \ud30c\uc77c\uc5d0\uc11c \uc784\uacc4\uc5d0 \uc5bc\ub9c8\ub098 \uac00\uae4c\uc774 \uac14\ub294\uc9c0\ub294 \uc5ed\uc0ac\uac00\ub4e4 \uc0ac\uc774\uc5d0\uc11c \ub17c\uc7c1\uac70\ub9ac\uc600\ub2e4. \uc774 \uc2dc\ub3c4\ub97c \uc774\ub048 \ubca0\ub974\ub108 \ud558\uc774\uc820\ubca0\ub974\ud06c\ub294 \uac70\uc758 \ub2e4 \uc654\uace0 \uc6b0\ub77c\ub284\ub9cc \uc870\uae08 \ub354 \uc788\uc5c8\uc73c\uba74 \ub410\ub2e4\uace0 \uc8fc\uc7a5\ud588\ub2e4.\n\n\ubbf8\uad6d \uad6d\ub9bd\uacfc\ud559\uc6d0\ud68c\ubcf4(PNAS) \ub125\uc11c\uc2a4\uc5d0 \uc2e4\ub9b0 \uc0c8 \ub17c\ubb38\uc758 \uacb0\ub860\uc740 \ub2ec\ub790\ub2e4. \ub2f9\uc2dc \uc4f0\ub358 \uc124\uacc4\ub85c\ub294 \uc6b0\ub77c\ub284\uacfc \uc911\uc218\uac00 \ucda9\ubd84\ud558\uc9c0 \uc54a\uc558\ub2e4\ub294 \uac83\uc774\ub2e4.\n\n\uc774 \uc5f0\uad6c\uc758 \ucd9c\ubc1c\uc740 2013\ub144\uc774\ub2e4. \uba54\ub9b4\ub79c\ub4dc\ub300 \ubb3c\ub9ac\ud559\uc790 \ud2f0\uba38\uc2dc \ucfa8\ud2b8\uac00 \uce5c\uad6c\uc5d0\uac8c \uc815\uccb4 \ubaa8\ub97c \ubb35\uc9c1\ud55c \uae08\uc18d \ud050\ube0c\ub97c \uc120\ubb3c\ub85c \ubc1b\uc558\uace0, \uadf8\ub294 \uc774\uac83\uc774 \ub3c5\uc77c \uacfc\ud559\uc790\ub4e4\uc774 \uc6d0\uc790\ub85c \uc2dc\ub3c4\uc5d0 \uc4f4 \uc6b0\ub77c\ub284 \ud050\ube0c \uc911 \ud558\ub098\uc784\uc744 \ubc14\ub85c \uc54c\uc544\ubd24\ub2e4. \uc774\ub7f0 \ud050\ube0c\ub294 \uc9c0\uae08 14\uac1c\ub9cc \uc54c\ub824\uc838 \uc788\ub2e4. 2019\ub144 \ubcf4\ub3c4 \ub2f9\uc2dc \ucfa8\ud2b8\uc640 \ub300\ud559\uc6d0\uc0dd\uc774\ub358 \ubbf8\ub9ac\uc5c4 \ud788\ubc84\ud2b8\ub294 \ubbf8\uad6d \uacf3\uacf3\uc5d0\uc11c \ud050\ube0c 10\uac1c\ub97c \ucc3e\uc544\ub0c8\ub2e4. \uc2a4\ubbf8\uc2a4\uc18c\ub2c8\uc5b8\uc774 \ud558\ub098\ub97c \ubcf4\uad00 \uc911\uc774\uc5c8\uace0, \ud558\ubc84\ub4dc\uc758 \ud55c \ud050\ube0c\ub294 \uc785\ubb38 \ubb3c\ub9ac \uc218\uc5c5\uc5d0\uc11c \ud559\uc0dd\ub4e4 \uc0ac\uc774\ub97c \ub3cc\uc544\ub2e4\ub154\ub2e4.\n\n\uc5ed\uc0ac\ub098 \ubb3c\ub9ac\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4 \uc8fc\uba74 \uc88b\uc744 \uc18c\uc2dd\uc774\ub2e4.\n\n\ucd9c\ucc98: Ars Technica", "hashtags": ["#\uc6b0\ub77c\ub284", "#\ud558\uc774\uc820\ubca0\ub974\ud06c", "#\uc6d0\uc790\ub85c", "#\ubb3c\ub9ac\ud559", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\uc6b0\ub77c\ub284 \ud050\ube0c\uac00", "\uc2e4\ud328 \uc774\uc720 **\ud3ed\ub85c?!**", "---", "2\ucc28 \ub300\uc804 \uc911 \ub3c5\uc77c\uc758 \ub9c8\uc9c0\ub9c9 \uc6d0\uc790\ub85c \uc2dc\ub3c4\uac00 \uc65c \uc2e4\ud328\ud588\ub294\uc9c0\ub97c \uc6b0\ub77c\ub284 \ud050\ube0c \uc5f0\uad6c\uac00 \ubcf4\uc5ec\uc92c\ub2e4\ub294 \ub17c\ubb38\uc774 \ub098\uc654\ub2e4."], ["\ubbf8\uad6d\uc774 \uac71\uc815\ud55c", "**\ub098\uce58**\uc758 \uc6d0\uc790\ud3ed\ud0c4", "---", "2\ucc28 \ub300\uc804 \uc911 \ub9e8\ud574\ud2bc \ud504\ub85c\uc81d\ud2b8\uc758 \ubb3c\ub9ac\ud559\uc790\ub4e4\uc740 \ub098\uce58 \ub3c5\uc77c\uc774 \uba3c\uc800 \ud575\ud3ed\ud0c4\uc744 \ub9cc\ub4e4\uc9c0 \ubaa8\ub978\ub2e4\uace0 \uac71\uc815\ud588\ub2e4. \uacb0\uacfc\ub294 \uadf8\ub807\uc9c0 \uc54a\uc558\uc9c0\ub9cc, \ub3c5\uc77c\uc774 \uc5bc\ub9c8\ub098 \uadfc\uc811\ud588\ub294\uc9c0\ub294 \uc5ed\uc0ac\uac00\ub4e4 \uc0ac\uc774\uc5d0\uc11c \ub17c\uc7c1\uac70\ub9ac\uc600\ub2e4."], ["\ub9c8\uc9c0\ub9c9 \uc2dc\ub3c4\ub294", "**B8** \uc6d0\uc790\ub85c", "---", "\ub3c5\uc77c\uc758 \ub9c8\uc9c0\ub9c9 \uc6d0\uc790\ub85c \uc2dc\ub3c4\ub294 B8 \ud30c\uc77c\uc774\ub77c \ubd88\ub838\uace0, \uc774\ub97c \uc774\ub048 \uc0ac\ub78c\uc740 \ubca0\ub974\ub108 \ud558\uc774\uc820\ubca0\ub974\ud06c\uc600\ub2e4. \uadf8\ub294 \uac70\uc758 \ub2e4 \uc654\uace0 \uc6b0\ub77c\ub284\ub9cc \uc870\uae08 \ub354 \uc788\uc5c8\uc73c\uba74 \ub410\ub2e4\uace0 \uc8fc\uc7a5\ud588\ub2e4."], ["\uc6b0\ub77c\ub284\ub3c4 \uc911\uc218\ub3c4", "**\ubaa8\uc790\ub790\ub2e4**", "---", "\ubbf8\uad6d \uad6d\ub9bd\uacfc\ud559\uc6d0\ud68c\ubcf4(PNAS) \ub125\uc11c\uc2a4\uc5d0 \uc2e4\ub9b0 \ub17c\ubb38\uc740 \ub2e4\ub978 \uacb0\ub860\uc744 \ub0c8\ub2e4. \ub2f9\uc2dc \uc4f0\ub358 \uc124\uacc4\ub85c\ub294 \ud504\ub85c\uc81d\ud2b8\uc5d0 \uc6b0\ub77c\ub284\uacfc \uc911\uc218\uac00 \ucda9\ubd84\ud558\uc9c0 \uc54a\uc558\ub2e4\ub294 \uac83\uc774\ub2e4."], ["\uce5c\uad6c\uac00 \uc900", "\uc218\uc0c1\ud55c **\uae08\uc18d**", "---", "2013\ub144 \uba54\ub9b4\ub79c\ub4dc\ub300 \ubb3c\ub9ac\ud559\uc790 \ud2f0\uba38\uc2dc \ucfa8\ud2b8\ub294 \uce5c\uad6c\uc5d0\uac8c \uc815\uccb4 \ubaa8\ub97c \ubb35\uc9c1\ud55c \uae08\uc18d \ud050\ube0c\ub97c \uc120\ubb3c\ubc1b\uc558\ub2e4. \uadf8\ub294 \uace7\ubc14\ub85c \ub3c5\uc77c \uc6d0\uc790\ub85c \uc2dc\ub3c4\uc5d0 \uc4f0\uc778 \uc6b0\ub77c\ub284 \ud050\ube0c\uc784\uc744 \uc54c\uc544\ubd24\uace0, \uc774\ub7f0 \ud050\ube0c\ub294 \uc9c0\uae08 14\uac1c\ub9cc \uc54c\ub824\uc838 \uc788\ub2e4."], ["\ubbf8\uad6d \uacf3\uacf3\uc5d0\uc11c", "**10\uac1c**\ub97c \ucc3e\uc558\ub2e4", "---", "2019\ub144 \ubcf4\ub3c4 \ub2f9\uc2dc \ucfa8\ud2b8\uc640 \ub300\ud559\uc6d0\uc0dd\uc774\ub358 \ubbf8\ub9ac\uc5c4 \ud788\ubc84\ud2b8\ub294 \ubbf8\uad6d \uacf3\uacf3\uc5d0\uc11c \ud050\ube0c 10\uac1c\ub97c \ucc3e\uc544\ub0c8\ub2e4. \uc2a4\ubbf8\uc2a4\uc18c\ub2c8\uc5b8\uc740 \ud558\ub098\ub97c \ubcf4\uad00 \uc911\uc774\uc5c8\uace0, \ud558\ubc84\ub4dc\uc758 \ud55c \ud050\ube0c\ub294 \uc785\ubb38 \ubb3c\ub9ac \uc218\uc5c5 \ud559\uc0dd\ub4e4 \uc190\uc744 \ub3cc\uc544\ub2e4\ub154\ub2e4."], ["\ubb3c\ub9ac \ub355\ud6c4 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \ubcf4\ub0b4\uae30", "---", "\ud558\uc774\uc820\ubca0\ub974\ud06c\uc758 \uc8fc\uc7a5\uc744 \ub4a4\uc9d1\uc740 \uc5f0\uad6c\uc640, \ud559\uc0dd\ub4e4 \uc190\uc744 \ub3cc\ub358 \uc6b0\ub77c\ub284 \ud050\ube0c \uc774\uc57c\uae30\uae4c\uc9c0 \ub2f4\uacbc\ub2e4. \uc5ed\uc0ac\ub098 \ubb3c\ub9ac\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

@@ -1,0 +1,1754 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.25 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.25 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-d6de15b06418" data-jump="d6de15b06418">1</a><a href="#post-3e029a53d667" data-jump="3e029a53d667">2</a><a href="#post-5be90b8ed799" data-jump="5be90b8ed799">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-d6de15b06418" data-id="d6de15b06418">
+    <div class="head">
+      <h2>1. 고흐 별이 빛나는 밤 속 하늘은 진짜였다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/29 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>고흐 그림 속 하늘이 진짜였다는 연구가 나왔어. 별이 빛나는 밤의 하늘이 1889년 7월 새벽 하늘과 맞아떨어진다는 거야.
+
+이 그림은 그동안 고흐가 동생 테오에게 쓴 6월 18일경 편지를 근거로 6월 작품으로 여겨졌어. 그런데 전문가들은 그 시기의 하현 이후 볼록한 달로는 그림 속 가느다란 초승달을 설명할 수 없다고 말해.
+
+새 연구는 그림 속 하늘이 1889년 7월 22일 무렵 고흐가 살던 프랑스 생레미의 동트기 전 하늘과 관측으로나 모양으로나 일치한다고 봤어. 그 하늘에는 그믐 쪽 초승달, 금성, 히아데스 성단이 화가의 시야 안에 함께 있었대. 그림 속 별 무리가 양자리라는 예전 해석과 달리, 연구진은 황소자리의 히아데스라고 봤어. 이전의 천문학적 해석은 1984년 보임, 1986년 휘트니가 시작했지만 결론이 서로 엇갈렸어.
+
+연구팀은 현장 사진으로 시야를 복원했고, 프로크루스테스 형태 분석으로 그림 속 중심부 별 다섯 개와 히아데스의 대응을 확인했어. 연구진은 그림 속 하늘이 순전한 상상이 아니라 실제 관측에 바탕을 뒀다고 말해.
+
+이 연구는 우주과학 기업 SLLAB과 한국 경희대 우주탐사학과가 함께 했고, 학술지 Scientific Reports에 실렸어.
+
+출처: Good News Network, Scientific Reports
+
+배경 사진: rkarkowski, Kanenori, Pexels, cowins, WikiImages / Pixabay
+표지 이미지: Obelisk Art History
+
+#고흐 #별이빛나는밤 #천문학 #미술사 #해외이슈</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-d6de15b06418">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 명화 속 하늘이 상상이 아니라 실제 새벽 하늘이었다는 반전. 6월 그림이라는 통설이 달 모양 하나 때문에 흔들린다는 점이 미술 관심 없는 사람도 끌어당긴다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 연구가 그림 속 하늘과 일치한다고 본 정확한 날짜는 1889년 7월 22일 새벽 (카드 5장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">고흐 &#39;별이 빛나는 밤&#39;, 상상으로 그린 하늘이 아니라 실제 새벽 하늘이었다는 연구가 나옴
+근데 그동안 알려진 6월 그림이라는 설명이랑은 안 맞는대. 문제는 그림 속 달이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">1/ 연구진 결론부터 말하면 이거야. 그림 속 하늘은 순전한 상상이 아니라 실제 관측에 바탕을 뒀다는 거.
+1989년이 아니라 1889년 7월, 고흐가 살던 프랑스 생레미의 동트기 전 하늘이랑 맞아떨어진대. 그럼 왜 6월 그림으로 알려졌을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">2/ 그동안은 고흐가 동생 테오에게 쓴 6월 18일경 편지가 근거라 6월 작품으로 여겨졌어.
+근데 전문가들은 그 시기의 하현 이후 볼록한 달로는 그림 속 가느다란 초승달을 설명할 수 없다고 말해. 그럼 7월 새벽 하늘엔 뭐가 있었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">3/ 그 하늘에는 그믐 쪽 초승달, 금성, 히아데스 성단이 화가의 시야 안에 같이 있었대. 한 화면에 셋이 다 들어온 거지.
+그림 속 별 무리도 예전엔 양자리라는 해석이 있었는데, 연구진은 황소자리의 히아데스라고 봤어. 어떻게 확인한 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">163/500자</span></div>
+      <p class="tp-text">4/ 연구팀은 현장 사진으로 시야를 복원했고, 프로크루스테스 형태 분석으로 그림 속 중심부 별 다섯 개와 히아데스가 대응하는지 확인했대.
+이 연구는 우주과학 기업 SLLAB과 한국 경희대 우주탐사학과가 같이 했고 Scientific Reports에 실렸어. 바뀐 내용은 아래에 한 번에 정리함</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">167/500자</span></div>
+      <p class="tp-text">5/ 한눈에 정리
+- 기존: 6월 작품 (테오에게 쓴 6월 18일경 편지가 근거)
+- 문제: 6월 달 모양으로는 그림 속 초승달 설명이 안 됨
+- 새 연구: 1889년 7월 새벽 하늘과 일치
+- 하늘 구성: 초승달 + 금성 + 히아데스 성단
+- 별 무리: 양자리 → 황소자리 히아데스 (연구진 해석)</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">214/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 별이 빛나는 밤 속 하늘이 순전한 상상이 아니라 실제 관측에 바탕을 뒀다는 거야.
+너는 이 반전 듣고 나면 고흐 그림, 상상파야 실제 관찰파야?
+이런 해외 과학 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 정확히 며칠 새벽 하늘인지까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>고흐 &#39;별이 빛나는 밤&#39;, 상상으로 그린 하늘이 아니라 실제 새벽 하늘이었다는 연구가 나옴</li><li>&#39;별이 빛나는 밤&#39;은 6월 그림이 아니었을 수도 있대. 이유는 그림 속 달 모양</li><li>고흐가 상상으로 그렸다던 하늘, 달력 맞춰보니 진짜 있던 하늘이었음</li><li>미술관에서 이 그림 앞에 서면 꼭 해줄 얘기가 생김. 그림 속 하늘이 실존했대</li><li>그림 속 초승달 하나 때문에 고흐 대표작의 제작 시기가 의심받고 있어</li><li>달, 금성, 히아데스 성단이 한 화면에 들어온 날이 있었대. 고흐 그림이랑 똑같이</li><li>&#39;별이 빛나는 밤&#39; 속 별 무리, 양자리가 아니라 황소자리일 수 있다는 연구</li><li>명화 속 하늘은 화가의 상상이 아니라 관찰이었다는 연구가 나옴</li><li>6월 그림이라던 고흐의 별 밤, 달 모양이 안 맞는다는 전문가들 말이 나옴</li><li>고흐 그림 속 하늘이 진짜였다는데, 한국 대학도 이 연구에 참여했대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이 반전 듣고 나면 고흐 그림, 상상파야 실제 관찰파야?</li><li>미술관 같이 가면 이 얘기 해줄 친구 한 명 떠올랐어?</li><li>&#39;별이 빛나는 밤&#39; 실물로 본 적 있는 사람?</li><li>명화 중에 이 그림 속 장면도 실제였을까 싶은 거 있어?</li><li>그림 속 하늘이 진짜였다는 거, 더 낭만적이야 덜 낭만적이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>고흐 말고 다른 명화 속 하늘도 실제 하늘이었을까</li><li>별이 빛나는 밤 속 소용돌이 하늘은 어떻게 해석됐을까</li><li>현장 사진으로 그림 속 시야를 복원하는 연구 방법</li><li>고흐가 생레미에서 보낸 시기 이야기</li><li>명화와 천문학을 엮은 해외 연구 소식</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;증명됐다&#39;로 읽히지 않게 연구진 해석·주장이라는 표현 유지 (양자리→황소자리, 7월 일치 모두 연구진 판단)</li><li>1889년을 1989년으로 잘못 쓰지 않았는지 1/ 숫자 재확인 필요 (오타 수정 필요)</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-01.jpg" alt="1장: 고흐 그림 속 하늘이 실존???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-02.jpg" alt="2장: 별이 빛나는 밤은 6월 그림이라 알려졌어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-03.jpg" alt="3장: 근데 그림 속 달은 가느다란 초승달" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-04.jpg" alt="4장: 6월 달 모양이랑 안 맞았다는 거지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-05.jpg" alt="5장: 1889년 7월 22일 새벽 하늘이 딱 맞음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-06.jpg" alt="6장: 달, 금성, 히아데스 성단이 한 화면에" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-07.jpg" alt="7장: 미술관 같이 갈 친구한테 보내기 이 반전 얘기해줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/d6de15b06418/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">고흐 그림 속 하늘이 진짜였다는 연구가 나왔어. 별이 빛나는 밤의 하늘이 1889년 7월 새벽 하늘과 맞아떨어진다는 거야.
+
+이 그림은 그동안 고흐가 동생 테오에게 쓴 6월 18일경 편지를 근거로 6월 작품으로 여겨졌어. 그런데 전문가들은 그 시기의 하현 이후 볼록한 달로는 그림 속 가느다란 초승달을 설명할 수 없다고 말해.
+
+새 연구는 그림 속 하늘이 1889년 7월 22일 무렵 고흐가 살던 프랑스 생레미의 동트기 전 하늘과 관측으로나 모양으로나 일치한다고 봤어. 그 하늘에는 그믐 쪽 초승달, 금성, 히아데스 성단이 화가의 시야 안에 함께 있었대. 그림 속 별 무리가 양자리라는 예전 해석과 달리, 연구진은 황소자리의 히아데스라고 봤어. 이전의 천문학적 해석은 1984년 보임, 1986년 휘트니가 시작했지만 결론이 서로 엇갈렸어.
+
+연구팀은 현장 사진으로 시야를 복원했고, 프로크루스테스 형태 분석으로 그림 속 중심부 별 다섯 개와 히아데스의 대응을 확인했어. 연구진은 그림 속 하늘이 순전한 상상이 아니라 실제 관측에 바탕을 뒀다고 말해.
+
+이 연구는 우주과학 기업 SLLAB과 한국 경희대 우주탐사학과가 함께 했고, 학술지 Scientific Reports에 실렸어.
+
+출처: Good News Network, Scientific Reports</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#고흐 #별이빛나는밤 #천문학 #미술사 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처로 Good News Network를 표기했으나 원문 근거에서 확인되는 매체 출처 표기는 없다</li><li>근거 등록 안 된 주장: 그림 속 별 무리를 양자리로 본 예전 해석이 있었다는 주장(원문에는 있으나 claims 목록에 별도 항목이 없음)</li>
+          <li>연구 결과는 연구진의 해석으로, 그림이 실제 7월 하늘을 그린 것이라는 주장은 아직 가설 단계</li><li>보도일과 논문 게재일이 2026년으로 표기되어 있어 확인 필요</li><li>고흐 작품은 저작권 만료지만 원작 사진 사용 시 소장처 이용 조건 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-d6de15b06418-0">1장</label>
+          <textarea id="s-d6de15b06418-0" rows="2" data-slide="0">고흐 그림 속
+하늘이 **실존**???</textarea>
+          
+          <label class="f" for="s-d6de15b06418-1">2장</label>
+          <textarea id="s-d6de15b06418-1" rows="2" data-slide="1">별이 빛나는 밤은
+**6월** 그림이라 알려졌어</textarea>
+          
+          <label class="f" for="s-d6de15b06418-2">3장</label>
+          <textarea id="s-d6de15b06418-2" rows="2" data-slide="2">근데 그림 속 달은
+가느다란 **초승달**</textarea>
+          
+          <label class="f" for="s-d6de15b06418-3">4장</label>
+          <textarea id="s-d6de15b06418-3" rows="2" data-slide="3">6월 달 모양이랑
+**안 맞았다**는 거지</textarea>
+          
+          <label class="f" for="s-d6de15b06418-4">5장</label>
+          <textarea id="s-d6de15b06418-4" rows="2" data-slide="4">1889년 **7월 22일**
+새벽 하늘이 딱 맞음</textarea>
+          
+          <label class="f" for="s-d6de15b06418-5">6장</label>
+          <textarea id="s-d6de15b06418-5" rows="2" data-slide="5">달, 금성, **히아데스**
+성단이 한 화면에</textarea>
+          
+          <label class="f" for="s-d6de15b06418-6">7장</label>
+          <textarea id="s-d6de15b06418-6" rows="3" data-slide="6">미술관 같이 갈
+친구한테 보내기
+이 **반전** 얘기해줘</textarea>
+          
+          <label class="f" for="c-d6de15b06418">본문 (캡션)</label>
+          <textarea id="c-d6de15b06418" class="caption">고흐 그림 속 하늘이 진짜였다는 연구가 나왔어. 별이 빛나는 밤의 하늘이 1889년 7월 새벽 하늘과 맞아떨어진다는 거야.
+
+이 그림은 그동안 고흐가 동생 테오에게 쓴 6월 18일경 편지를 근거로 6월 작품으로 여겨졌어. 그런데 전문가들은 그 시기의 하현 이후 볼록한 달로는 그림 속 가느다란 초승달을 설명할 수 없다고 말해.
+
+새 연구는 그림 속 하늘이 1889년 7월 22일 무렵 고흐가 살던 프랑스 생레미의 동트기 전 하늘과 관측으로나 모양으로나 일치한다고 봤어. 그 하늘에는 그믐 쪽 초승달, 금성, 히아데스 성단이 화가의 시야 안에 함께 있었대. 그림 속 별 무리가 양자리라는 예전 해석과 달리, 연구진은 황소자리의 히아데스라고 봤어. 이전의 천문학적 해석은 1984년 보임, 1986년 휘트니가 시작했지만 결론이 서로 엇갈렸어.
+
+연구팀은 현장 사진으로 시야를 복원했고, 프로크루스테스 형태 분석으로 그림 속 중심부 별 다섯 개와 히아데스의 대응을 확인했어. 연구진은 그림 속 하늘이 순전한 상상이 아니라 실제 관측에 바탕을 뒀다고 말해.
+
+이 연구는 우주과학 기업 SLLAB과 한국 경희대 우주탐사학과가 함께 했고, 학술지 Scientific Reports에 실렸어.
+
+출처: Good News Network, Scientific Reports</textarea>
+          <label class="f" for="t-d6de15b06418">해시태그</label>
+          <input id="t-d6de15b06418" type="text" class="tagsin" value="#고흐 #별이빛나는밤 #천문학 #미술사 #해외이슈" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>별이 빛나는 밤 속 하늘이 1889년 7월 하늘과 일치한다는 연구 결과</b>
+            <q>“The sky painted by Vincent Van Gogh in The Starry Night matches the sky in July of 1889, the year he immortalized the French horizon.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그림은 6월 18일경 테오에게 쓴 편지를 근거로 6월 작품으로 여겨졌고, 당시 달로는 그림 속 초승달이 설명되지 않는다</b>
+            <q>“The iconic painting has conventionally been dated from a letter the artist wrote to his brother, Theo, around June 18th that year, but experts say the waning gibbous moon of that period can’t account for the slender crescent in the painting.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그림 속 하늘이 1889년 7월 22일경 생레미의 새벽 하늘과 일치한다</b>
+            <q>“The new research bridging art and astronomy found that the sky in the painting matches—in both observation and shape—the pre-dawn sky over Van Gogh’s home in Saint-Rémy, France, around July 22, 1889.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그 하늘에 초승달, 금성, 히아데스 성단이 시야 안에 있었다</b>
+            <q>“It featured a waning crescent moon, Venus, and the Hyades star cluster, all within the painter’s field of view, according to the first astronomical re-examination of the painting in four decades.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 SLLAB과 경희대 우주탐사학과가 공동으로 수행해 Scientific Reports에 실렸다</b>
+            <q>“The study, published in the journal Scientific Reports, was conducted jointly by space-science company SLLAB and the School of Space Research at Kyung Hee University in South Korea.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1984년 보임, 1986년 휘트니의 천문학적 해석은 결론이 엇갈렸다</b>
+            <q>“Astronomical readings of The Starry Night began with American scientists Albert Boime, in 1984, and Charles Whitney in 1986. But, because the two reached conflicting conclusions, neither displaced the prevailing religious and symbolic interpretations of the painting.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 그림 속 별 무리가 양자리가 아닌 황소자리 히아데스라고 본다</b>
+            <q>““To an observational astronomer, the cluster of stars in The Starry Night is the Hyades in Taurus,” said study first author Elijah Jeong-hyun Kim.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>프로크루스테스 형태 분석으로 중심부 별 다섯 개와 히아데스의 대응을 확인했다</b>
+            <q>“Procrustes shape analysis, a statistical method for comparing and aligning shapes, then confirmed the correspondence between the five central stars of The Starry Night and the Hyades, with an even closer match in the pen drawing Van Gogh made after the painting.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 그림 속 하늘이 순전한 상상이 아니라 실제 관측에 바탕을 뒀다고 본다</b>
+            <q>“The researchers say their results suggest that the sky in the painting was grounded in actual observation rather than pure imagination.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>생레미에서 고흐가 풍경을 그린 지점을 찾아 그의 시야를 복원했다</b>
+            <q>“In Saint-Rémy, they located the spot from which Van Gogh drew the landscape on canvas before adding paint to The Starry Night and reconstructed his view from there.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/stars-in-van-gogh-starry-night-matches-sky-in-july-1889/" target="_blank" rel="noopener">Star Clusters in Van Gogh’s Starry Night Matches Taurus Sky From July 1889, Shows Study</a> (기사)</li><li><a href="https://www.nature.com/articles/s41598-026-73025-5" target="_blank" rel="noopener">The actual sky of Van Gogh’s Starry Night: a multidisciplinary reconstruction - Scientific Reports</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.arthistoryproject.com/artists/vincent-van-gogh/the-starry-night/" target="_blank" rel="noopener">Obelisk Art History / </a> — "https://arthistoryproject.com/site/assets/files/11573/vincent-van-gogh-the-starry-night-1889-trivium-art-history.jpg"</li><li>2장: <a href="https://pixabay.com/photos/moon-full-moon-sky-night-sky-lunar-1859616/" target="_blank" rel="noopener">rkarkowski / Pixabay</a> — "night sky"</li><li>3장: <a href="https://pixabay.com/photos/moon-crescent-moon-universe-crater-7362632/" target="_blank" rel="noopener">Kanenori / Pixabay</a> — "crescent moon"</li><li>4장: <a href="https://pixabay.com/photos/full-moon-night-sky-luna-moon-1869760/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "full moon"</li><li>5장: <a href="https://pixabay.com/photos/prairie-river-stream-curved-sunset-679014/" target="_blank" rel="noopener">cowins / Pixabay</a> — "dawn sky"</li><li>6장: <a href="https://pixabay.com/photos/star-clusters-globular-clusters-11027/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "star cluster"</li><li>7장: <a href="https://pixabay.com/photos/woman-art-creative-relaxation-girl-1283009/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "art museum"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-3e029a53d667" data-id="3e029a53d667">
+    <div class="head">
+      <h2>2. 오징어 RNA 편집 외계인급 (Cell 연구)</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/28 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>오징어 RNA가 외계인급이라는 소식이야. 과학 매체 ScienceAlert는 오징어 같은 두족류가 우리가 알 수 있는 가장 외계 지능에 가까운 존재일지도 모른다고 소개했어.
+
+핵심은 RNA 편집이야. 사람을 포함한 동물도 ADAR이라는 효소를 통한 RNA 편집을 겪는데, 오징어·문어·갑오징어 같은 두족류는 이걸 다른 생물과 비교가 안 될 만큼 잘한다고 해. 기사는 레시피를 인쇄해 놓고 제빵사에게 넘기기 직전에 재료를 바꿔치기하는 것과 비슷하다고 설명했어.
+
+미국 UCSF 연구팀은 학술지 Cell에 실린 연구에서 롱핀 오징어(Doryteuthis pealeii)의 단백질 편집을 들여다봤어. 시각엽과 아가미에서 편집된 자리는 8,000곳 가까이, 관련 단백질은 2,000개가 넘었고, 시각엽 쪽이 편집이 더 잦고 복잡했대.
+
+연구 1저자 Jack Moen은 단백질의 활동, 안정성, 위치, 다른 단백질과의 상호작용까지 영향이 나타났다고 말했어. 오징어는 DNA를 건드리지 않고 RNA 지시문만 고쳐서 성질이 다른 단백질을 만들 수 있다는 거야. 기존 참조 단백질체에 없던 짧은 단백질도 5,000개 찾았어.
+
+이론상 가능한 단백질 변이는 10의 248제곱에 가까운 추정치까지 나오지만, 동물이 실제로 그중 얼마나 만드는지는 아직 몰라.
+
+출처: ScienceAlert, Cell
+
+배경 사진: Edgar117, Kost9n4, oakdog, EddieKphoto, zhuwei06191973 / Pixabay
+사진: Andres Gomez-Colunga / Wikimedia Commons, CC0 (편집)
+
+#오징어 #과학뉴스 #두족류 #RNA편집 #생물학</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-3e029a53d667">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 오징어가 &#39;외계 지능&#39; 소리를 듣는 이유를 &#39;DNA가 아니라 RNA를 고쳐 쓴다&#39;는 반전으로 풀면 팔린다. 8,000곳, 5,000개 같은 숫자가 받쳐준다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 이론상 가능한 단백질 변이 추정치는 10의 248제곱에 가깝지만, 동물이 실제로 그중 얼마나 만드는지는 아직 모른다는 연구의 한계 (본문 마지막 문단(카드 원고에 정리해 넣을 것))</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">ScienceAlert가 오징어를 &#39;우리가 알 수 있는 가장 외계 지능에 가까운 존재&#39;일지도 모른다고 소개했어
+이유는 오징어 RNA야. DNA는 건드리지 않고 단백질 설계도를 중간에 고친다는데, 그 규모가 어느 정도냐면 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">1/ 롱핀 오징어 한 종에서 RNA 편집 자리가 8,000곳 가까이 나왔어. 관련된 단백질만 2,000개가 넘고.
+그럼 이게 정확히 어떤 편집이길래 외계인 소리까지 나왔을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">2/ 오징어는 DNA를 건드리지 않고 RNA 지시문만 고쳐서 성질이 다른 단백질을 만들 수 있대.
+기사 비유로는 레시피를 인쇄해 놓고 제빵사한테 넘기기 직전에 재료를 바꿔치기하는 거야.
+근데 이런 편집, 사람한테도 있어 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">3/ 사람을 포함한 동물도 ADAR이라는 효소로 RNA 편집을 겪어.
+차이는 정도야. 오징어·문어·갑오징어 같은 두족류는 다른 생물과 비교가 안 될 만큼 잘한대.
+그럼 편집이 실제로 단백질에 뭘 바꿔놨을까 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">4/ 연구 1저자 Jack Moen 말로는 편집이 단백질의 활동, 안정성, 위치, 다른 단백질과의 상호작용까지 영향을 줬대.
+여기에 기존 참조 목록에 없던 것도 나왔어 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 저장각</span>
+        <span class="len">160/500자</span></div>
+      <p class="tp-text">5/ 저장용 정리
+- 연구: 미국 UCSF, 학술지 Cell
+- 대상: 롱핀 오징어
+- 편집 자리: 8,000곳 가까이
+- 관련 단백질: 2,000개 넘게
+- 편집이 더 잦고 복잡한 곳: 아가미보다 시각엽
+- 기존 참조 단백질체에 없던 짧은 단백질: 5,000개
+그래서 결론이 뭐냐면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">230/500자</span></div>
+      <p class="tp-text">6/ 결국 이 연구가 보여준 건, 오징어가 DNA는 그대로 두고 RNA 단계에서 단백질 성질을 바꿔 만들 수 있다는 거야.
+외계 지능 후보 하나만 고른다면 오징어 vs 문어, 어느 쪽이야?
+이런 해외 과학 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 이론상 가능한 단백질 변이 추정치까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>ScienceAlert가 오징어를 &#39;우리가 알 수 있는 가장 외계 지능에 가까운 존재&#39;일지도 모른다고 소개했어</li><li>오징어는 DNA가 아니라 RNA를 고쳐서 단백질 성질을 바꾼대</li><li>오징어는 설계도(DNA)를 바꾸는 게 아니라 제빵사한테 넘기기 직전에 재료를 바꿔치기한대</li><li>오징어 한 종에서 RNA 편집 자리가 8,000곳 가까이 나왔대</li><li>사람도 하는 RNA 편집을 오징어는 다른 생물과 비교가 안 될 만큼 잘한대</li><li>기존 단백질 목록에 없던 짧은 단백질이 오징어에서 5,000개나 나왔어</li><li>우리 몸에도 있는 ADAR 효소, 오징어는 이걸로 대체 뭘 하는 걸까</li><li>오징어는 DNA가 정해준 대로만 단백질을 만드는 게 아니래</li><li>레시피는 그대로인데 결과물이 달라진다? 오징어 RNA 얘기</li><li>생물 덕후 친구한테 조용히 던져볼 만한 오징어 얘기가 나왔어</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>외계 지능 후보 하나만 고른다면 오징어 vs 문어, 어느 쪽이야?</li><li>오징어가 외계 생명체급이라는 말, 과장 같아 vs 그럴 만해?</li><li>오징어·문어·갑오징어 중에 제일 똑똑해 보이는 건?</li><li>이 얘기 생물 덕후 친구한테 던져볼 사람?</li><li>해산물로 먹을 땐 오징어파 vs 문어파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>문어·갑오징어 같은 두족류는 왜 RNA 편집을 이렇게 잘할까</li><li>사람 몸의 ADAR 효소는 RNA 편집으로 무슨 일을 할까</li><li>두족류가 &#39;외계 지능&#39; 소리를 듣는 이유 정리</li><li>오징어 시각엽이 아가미보다 편집이 더 잦고 복잡한 이유</li><li>고흐 별이 빛나는 밤 속 하늘은 진짜였다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;외계 지능&#39;은 ScienceAlert의 표현이라 출처를 밝힌 채 소개한 것인데, 단정으로 읽히지 않는지 확인</li><li>롱핀 오징어 한 종의 연구라서 두족류 전체로 일반화된 문장이 없는지 확인</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/3e029a53d667/v2-01.jpg" alt="1장: 오징어가 사실 외계생명체?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/3e029a53d667/v2-02.jpg" alt="2장: ScienceAlert 왈 오징어 같은 두족류가 사실은 외계 지능" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/3e029a53d667/v2-03.jpg" alt="3장: Rna 편집 자리가 8,000곳 가까이 단백질 2천 개 넘게" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/3e029a53d667/v2-04.jpg" alt="4장: 오징어는 DNA를 건드리지 않고 RNA 지시문만 고쳐서 성질이 다른 단백질을 만들 수 있대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/3e029a53d667/v2-05.jpg" alt="5장: 기존 목록에 없던 짧은 단백질이 5,000개 발견" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/3e029a53d667/v2-06.jpg" alt="6장: 생물 덕후 친구한테 이 오징어 얘기 조용히 던지기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/3e029a53d667/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">오징어 RNA가 외계인급이라는 소식이야. 과학 매체 ScienceAlert는 오징어 같은 두족류가 우리가 알 수 있는 가장 외계 지능에 가까운 존재일지도 모른다고 소개했어.
+
+핵심은 RNA 편집이야. 사람을 포함한 동물도 ADAR이라는 효소를 통한 RNA 편집을 겪는데, 오징어·문어·갑오징어 같은 두족류는 이걸 다른 생물과 비교가 안 될 만큼 잘한다고 해. 기사는 레시피를 인쇄해 놓고 제빵사에게 넘기기 직전에 재료를 바꿔치기하는 것과 비슷하다고 설명했어.
+
+미국 UCSF 연구팀은 학술지 Cell에 실린 연구에서 롱핀 오징어(Doryteuthis pealeii)의 단백질 편집을 들여다봤어. 시각엽과 아가미에서 편집된 자리는 8,000곳 가까이, 관련 단백질은 2,000개가 넘었고, 시각엽 쪽이 편집이 더 잦고 복잡했대.
+
+연구 1저자 Jack Moen은 단백질의 활동, 안정성, 위치, 다른 단백질과의 상호작용까지 영향이 나타났다고 말했어. 오징어는 DNA를 건드리지 않고 RNA 지시문만 고쳐서 성질이 다른 단백질을 만들 수 있다는 거야. 기존 참조 단백질체에 없던 짧은 단백질도 5,000개 찾았어.
+
+이론상 가능한 단백질 변이는 10의 248제곱에 가까운 추정치까지 나오지만, 동물이 실제로 그중 얼마나 만드는지는 아직 몰라.
+
+출처: ScienceAlert, Cell</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#오징어 #과학뉴스 #두족류 #RNA편집 #생물학</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: Jack Moen이 이 연구의 제1저자라는 사실</li><li>근거 등록 안 된 주장: ScienceAlert가 과학 매체라는 설명</li>
+          <li>&#39;외계 생명체&#39; 표현은 기사의 비유일 뿐 과학적 주장이 아님</li><li>10의 248제곱은 이론상 추정치이며 실제 생성량은 불명</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-3e029a53d667-0">1장</label>
+          <textarea id="s-3e029a53d667-0" rows="2" data-slide="0">오징어가 사실
+**외계생명체**?!</textarea>
+          
+          <label class="f" for="s-3e029a53d667-1">2장</label>
+          <textarea id="s-3e029a53d667-1" rows="3" data-slide="1">**ScienceAlert** 왈
+오징어 같은 두족류가
+사실은 **외계 지능**</textarea>
+          
+          <label class="f" for="s-3e029a53d667-2">3장</label>
+          <textarea id="s-3e029a53d667-2" rows="3" data-slide="2">Rna 편집 자리가
+**8,000곳** 가까이
+단백질 2천 개 넘게</textarea>
+          
+          <label class="f" for="s-3e029a53d667-3">4장</label>
+          <textarea id="s-3e029a53d667-3" rows="3" data-slide="3">**오징어**는 DNA를 건드리지 않고
+**RNA 지시문**만 고쳐서 성질이
+**다른 단백질**을 만들 수 있대</textarea>
+          
+          <label class="f" for="s-3e029a53d667-4">5장</label>
+          <textarea id="s-3e029a53d667-4" rows="3" data-slide="4">기존 목록에 없던
+짧은 단백질이
+**5,000개** 발견</textarea>
+          
+          <label class="f" for="s-3e029a53d667-5">6장</label>
+          <textarea id="s-3e029a53d667-5" rows="3" data-slide="5">**생물 덕후** 친구한테
+이 오징어 얘기
+조용히 던지기</textarea>
+          
+          <label class="f" for="c-3e029a53d667">본문 (캡션)</label>
+          <textarea id="c-3e029a53d667" class="caption">오징어 RNA가 외계인급이라는 소식이야. 과학 매체 ScienceAlert는 오징어 같은 두족류가 우리가 알 수 있는 가장 외계 지능에 가까운 존재일지도 모른다고 소개했어.
+
+핵심은 RNA 편집이야. 사람을 포함한 동물도 ADAR이라는 효소를 통한 RNA 편집을 겪는데, 오징어·문어·갑오징어 같은 두족류는 이걸 다른 생물과 비교가 안 될 만큼 잘한다고 해. 기사는 레시피를 인쇄해 놓고 제빵사에게 넘기기 직전에 재료를 바꿔치기하는 것과 비슷하다고 설명했어.
+
+미국 UCSF 연구팀은 학술지 Cell에 실린 연구에서 롱핀 오징어(Doryteuthis pealeii)의 단백질 편집을 들여다봤어. 시각엽과 아가미에서 편집된 자리는 8,000곳 가까이, 관련 단백질은 2,000개가 넘었고, 시각엽 쪽이 편집이 더 잦고 복잡했대.
+
+연구 1저자 Jack Moen은 단백질의 활동, 안정성, 위치, 다른 단백질과의 상호작용까지 영향이 나타났다고 말했어. 오징어는 DNA를 건드리지 않고 RNA 지시문만 고쳐서 성질이 다른 단백질을 만들 수 있다는 거야. 기존 참조 단백질체에 없던 짧은 단백질도 5,000개 찾았어.
+
+이론상 가능한 단백질 변이는 10의 248제곱에 가까운 추정치까지 나오지만, 동물이 실제로 그중 얼마나 만드는지는 아직 몰라.
+
+출처: ScienceAlert, Cell</textarea>
+          <label class="f" for="t-3e029a53d667">해시태그</label>
+          <input id="t-3e029a53d667" type="text" class="tagsin" value="#오징어 #과학뉴스 #두족류 #RNA편집 #생물학" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오징어 같은 두족류는 우리가 알 수 있는 가장 외계 지능에 가까운 존재일지 모른다고 소개됐다</b>
+            <q>“Cephalopods like squids may be as close to an alien intelligence as we&#39;ll ever know, with a diverse evolutionary lineage from a wholly different world beneath the waves.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사람을 포함한 동물도 ADAR 매개 RNA 편집을 겪는다</b>
+            <q>“Humans and other animals constantly undergo an ephemeral, reversible transcriptomic remixing through what&#39;s known as &#39;adenosine deaminase acting on RNA&#39; or ADAR-mediated RNA editing.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>RNA 편집은 레시피를 인쇄한 뒤 제빵사에게 넘기기 직전 재료를 바꾸는 것에 비유된다</b>
+            <q>“In simplified terms, this is like printing a recipe but changing raisins to chocolate chips right before handing it to the baker.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두족류는 이 RNA 편집을 다른 생물과 비교가 안 될 만큼 잘한다</b>
+            <q>“No other creatures may do this as well as coleoid cephalopods – which include the smart and squishy squid, octopus, and cuttlefish – and it&#39;s not even close.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>UCSF 연구팀이 Cell에 실린 연구에서 롱핀 오징어의 단백질체를 살펴봤다</b>
+            <q>“In a study published in the journal Cell, a research team led by bioscientists from the University of California, San Francisco (UCSF), explored the proteome – the complete complement of approximately 24,000 proteins – of the longfin inshore squid (Doryteuthis pealeii), to ascertain what these edits actually do.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오징어는 DNA를 바꾸지 않고 RNA 지시문을 편집해 성질이 다른 단백질을 만든다</b>
+            <q>“By editing the RNA instructions used to make proteins, these animals can generate proteins with different properties, all without changing their DNA.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>편집은 단백질 활동, 안정성, 위치, 다른 단백질과의 상호작용에 영향을 줬다</b>
+            <q>“We found effects on protein activity, stability, localization, and even how they interact with other proteins.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시각엽과 아가미에서 8,000곳 가까운 편집 자리, 2,000개 넘는 단백질을 살폈다</b>
+            <q>“To discover extra effects, they explored nearly 8,000 sites where proteins were edited across more than 2,000 different proteins in the squid optic lobe and the gills.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시각을 담당하는 시각엽은 편집이 더 잦고 복잡하다</b>
+            <q>“The optic lobe, responsible for seeing things and responding to them, comprises a sizable part of a squid&#39;s central nervous system, and it displays frequent, more complex editing activity.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기존 참조 단백질체와 Swiss-Prot에 없던 짧은 단백질 5,000개를 찾았다</b>
+            <q>“&#34;Another result that struck us was the potential to create new protein sequences,&#34; Moen adds, as they identified 5,000 short proteins that were not in the reference squid proteome or in the gold-standard Swiss-Prot database of 14,000 organisms.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이론상 단백질 변이 추정치는 10의 248제곱에 가깝다</b>
+            <q>“&#34;If we look at all of the sites identified in the RNA sequencing data, it brings the theoretical estimate closer to 10²⁴⁸,&#34; Moen told ScienceAlert.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>동물이 실제로 얼마나 만드는지는 아직 알려지지 않았다</b>
+            <q>“How much of it the animals actually produce remains unknown.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/squid-are-even-more-alien-like-than-we-thought-with-an-unmatched-ability-to-change-genetic-expression" target="_blank" rel="noopener">Squid Are Even More Alien-Like Than We Thought, With an Unmatched Ability to Change Genetic Expression</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Doryteuthis_pealeii_(YPM_IZ_073992).jpeg" target="_blank" rel="noopener">Andres Gomez-Colunga / Wikimedia Commons · CC0</a> — "Doryteuthis pealeii"</li><li>2장: <a href="https://pixabay.com/photos/octopus-glow-bioluminescence-8562474/" target="_blank" rel="noopener">Edgar117 / Pixabay</a> — "octopus underwater"</li><li>3장: <a href="https://pixabay.com/photos/analysis-biochemistry-biologist-2030261/" target="_blank" rel="noopener">Kost9n4 / Pixabay</a> — "laboratory microscope"</li><li>4장: <a href="https://pixabay.com/photos/squid-fish-oktopus-seafood-market-5392679/" target="_blank" rel="noopener">oakdog / Pixabay</a> — "squid ocean"</li><li>5장: <a href="https://pixabay.com/photos/jellyfish-underwater-ocean-aquarium-6653502/" target="_blank" rel="noopener">EddieKphoto / Pixabay</a> — "ocean deep"</li><li>6장: <a href="https://pixabay.com/photos/men-friends-chatting-afternoon-8364267/" target="_blank" rel="noopener">zhuwei06191973 / Pixabay</a> — "friends chatting"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-5be90b8ed799" data-id="5be90b8ed799">
+    <div class="head">
+      <h2>3. 도쿄 야키니쿠 가게 촬영·라이브 전용석</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 7
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-01.jpg" alt="1장: 고깃집에 촬영 전용석???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-02.jpg" alt="2장: 원래 모든 좌석이 1인 그릴 카운터" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-03.jpg" alt="3장: 신주쿠점에 스튜디오 좌석 등장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-04.jpg" alt="4장: 조명 거울에 촬영 거치대까지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-05.jpg" alt="5장: 라이브 방송도 가게가 공식 허용" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-06.jpg" alt="6장: 한 타임 60분 예약은 필수" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-07.jpg" alt="7장: 인증샷에 진심인 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-am-a1cb637461aa/5be90b8ed799/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">고깃집에 촬영 전용석이 생겼다는 소식이야. 도쿄의 야키니쿠 체인 야키니쿠 라이크 얘기인데, 원래 이 가게는 모든 좌석이 카운터석이고 손님마다 1인용 그릴이 하나씩 있대. 소스도 개인별로 고르고 불 세기도 직접 조절하는 구조라 혼자 고기 먹으러 오기 딱 좋은 곳이야.
+
+여기서 한 걸음 더 나간 곳이 신주쿠 미나미구치점이야. 가게 한쪽 구석에 &#39;스튜디오 라이크&#39;라는 특별 좌석을 만들었어. 헤어와 메이크업을 확인하는 조명 달린 화장 거울, 위에서 찍을 수 있는 카메라 거치대, 그리고 배경막과 벽이 갖춰져 있어. 벽과 배경막은 개인 공간을 확보해 주고, 남의 사진이나 영상에 찍히기 싫은 다른 손님들을 배려하는 용도이기도 하대. 그리고 이 자리에서 라이브 방송을 하는 것도 가게가 공식적으로 허용한다고 밝혔어.
+
+그릴은 하나지만 두 명이 쓸 수 있을 만큼 커서 친구나 공동 진행자랑 같이 앉을 수도 있어.
+
+이용 방법도 정리해 줄게. 한 타임은 60분이고, 가게는 오전 11시부터 밤 11시까지 열지만 이 좌석은 오전 11시부터 오후 9시 30분까지만 이용할 수 있어. 예약은 필수이고, 신주쿠 미나미구치점 공식 라인 계정으로 할 수 있고 지금 가능해.
+
+출처: SoraNews24 (PR Times 보도 기반)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#도쿄맛집 #야키니쿠 #일본여행 #신주쿠 #일본문화</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 야키니쿠 라이크가 도쿄에 있는 체인이라는 점</li><li>근거 등록 안 된 주장: 소스 선택과 불 세기를 손님이 직접 조절한다는 점</li><li>근거 등록 안 된 주장: 벽과 배경막이 다른 손님을 배려하기 위한 용도라는 점</li><li>근거 등록 안 된 주장: 출처가 SoraNews24이며 PR Times 보도에 기반했다는 점</li>
+          <li>원문이 PR Times 보도자료 기반이라 홍보성 내용일 수 있음</li><li>영업시간·예약 방식은 변경될 수 있어 게시 전 확인 필요</li><li>원문의 SNS 게시물·사진은 사용하지 않음 (저작권)</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-5be90b8ed799-0">1장</label>
+          <textarea id="s-5be90b8ed799-0" rows="2" data-slide="0">고깃집에
+**촬영 전용석**???</textarea>
+          
+          <label class="f" for="s-5be90b8ed799-1">2장</label>
+          <textarea id="s-5be90b8ed799-1" rows="2" data-slide="1">원래 모든 좌석이
+**1인 그릴** 카운터</textarea>
+          
+          <label class="f" for="s-5be90b8ed799-2">3장</label>
+          <textarea id="s-5be90b8ed799-2" rows="2" data-slide="2">신주쿠점에
+**스튜디오** 좌석 등장</textarea>
+          
+          <label class="f" for="s-5be90b8ed799-3">4장</label>
+          <textarea id="s-5be90b8ed799-3" rows="2" data-slide="3">조명 거울에
+촬영 **거치대**까지</textarea>
+          
+          <label class="f" for="s-5be90b8ed799-4">5장</label>
+          <textarea id="s-5be90b8ed799-4" rows="2" data-slide="4">**라이브 방송**도
+가게가 공식 허용</textarea>
+          
+          <label class="f" for="s-5be90b8ed799-5">6장</label>
+          <textarea id="s-5be90b8ed799-5" rows="2" data-slide="5">한 타임 **60분**
+예약은 필수</textarea>
+          
+          <label class="f" for="s-5be90b8ed799-6">7장</label>
+          <textarea id="s-5be90b8ed799-6" rows="3" data-slide="6">인증샷에 **진심인**
+친구한테
+조용히 보내기</textarea>
+          
+          <label class="f" for="c-5be90b8ed799">본문 (캡션)</label>
+          <textarea id="c-5be90b8ed799" class="caption">고깃집에 촬영 전용석이 생겼다는 소식이야. 도쿄의 야키니쿠 체인 야키니쿠 라이크 얘기인데, 원래 이 가게는 모든 좌석이 카운터석이고 손님마다 1인용 그릴이 하나씩 있대. 소스도 개인별로 고르고 불 세기도 직접 조절하는 구조라 혼자 고기 먹으러 오기 딱 좋은 곳이야.
+
+여기서 한 걸음 더 나간 곳이 신주쿠 미나미구치점이야. 가게 한쪽 구석에 &#39;스튜디오 라이크&#39;라는 특별 좌석을 만들었어. 헤어와 메이크업을 확인하는 조명 달린 화장 거울, 위에서 찍을 수 있는 카메라 거치대, 그리고 배경막과 벽이 갖춰져 있어. 벽과 배경막은 개인 공간을 확보해 주고, 남의 사진이나 영상에 찍히기 싫은 다른 손님들을 배려하는 용도이기도 하대. 그리고 이 자리에서 라이브 방송을 하는 것도 가게가 공식적으로 허용한다고 밝혔어.
+
+그릴은 하나지만 두 명이 쓸 수 있을 만큼 커서 친구나 공동 진행자랑 같이 앉을 수도 있어.
+
+이용 방법도 정리해 줄게. 한 타임은 60분이고, 가게는 오전 11시부터 밤 11시까지 열지만 이 좌석은 오전 11시부터 오후 9시 30분까지만 이용할 수 있어. 예약은 필수이고, 신주쿠 미나미구치점 공식 라인 계정으로 할 수 있고 지금 가능해.
+
+출처: SoraNews24 (PR Times 보도 기반)</textarea>
+          <label class="f" for="t-5be90b8ed799">해시태그</label>
+          <input id="t-5be90b8ed799" type="text" class="tagsin" value="#도쿄맛집 #야키니쿠 #일본여행 #신주쿠 #일본문화" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>야키니쿠 라이크는 모든 좌석이 카운터석이고 손님마다 1인용 그릴이 있다</b>
+            <q>“Whereas typical yakinuku places have their grills set into table for a group of dining companions to gather around, all of Yakiniku Like’s seats are at counters, with an individual-size grill for every customer.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>신주쿠 미나미구치점 한쪽 구석에 스튜디오 라이크라는 촬영용 특별 좌석이 있다</b>
+            <q>“Situated in a corner of Yakiniku Like’s Shinjuku Minamiguchi branch, just a short walk from bustling Shinjuku Station, Studio Like, as the special seat is called is equipped with handy self-photography equipment such as a lighted vanity mirror for checking hairstyling and makeup, camera mounts for overhead filming, and a backdrop and surrounding walls to guarantee some extra personal space and for the benefit of other customers who’d rather not be featured in someone else’s pics or video clips.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스튜디오 라이크에는 조명 화장 거울, 위에서 찍는 카메라 거치대, 배경막과 벽이 있다</b>
+            <q>“Situated in a corner of Yakiniku Like’s Shinjuku Minamiguchi branch, just a short walk from bustling Shinjuku Station, Studio Like, as the special seat is called is equipped with handy self-photography equipment such as a lighted vanity mirror for checking hairstyling and makeup, camera mounts for overhead filming, and a backdrop and surrounding walls to guarantee some extra personal space and for the benefit of other customers who’d rather not be featured in someone else’s pics or video clips.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가게는 이 좌석에서의 라이브 방송을 공식적으로 허용한다</b>
+            <q>“The restaurant also explicitly states that live-streaming from the booth is allowed.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스튜디오 라이크 그릴은 하나지만 두 명이 앉을 수 있을 만큼 크다</b>
+            <q>“Though there’s only one grill in the Studio Like booth, it is large enough to accommodate two people, so there’s room to squeeze in your BFF, co-host, or other social media sidekick.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 타임은 60분이며 가게 영업은 오전 11시~밤 11시, 이 좌석은 오전 11시~오후 9시 30분</b>
+            <q>“Studio Like seating sessions are 60 minutes long, and while the restaurant itself is open from 11 a.m. to 11 p.m., the social media-oriented booth’s availability is from 11 a.m. to 9:30 p.m.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>예약은 필수이며 신주쿠 미나미구치점 공식 라인 계정으로 지금 할 수 있다</b>
+            <q>“Reservations are required for Studio Like, and can be made through the official Yakiniku Like Shinjuku Minamiguchi branch account on mobile messaging app Line, and can be made now.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/25/tokyo-restaurant-adds-special-seat-for-live-streaming-and-social-media-posting-video/" target="_blank" rel="noopener">Tokyo restaurant adds special seat for live-streaming and social media posting [Video]</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/chef-cooking-street-costumer-4807317/" target="_blank" rel="noopener">binmassam / Pixabay</a> — "sunlit restaurant counter with small tabletop grill"</li><li>2장: <a href="https://pixabay.com/photos/alcoholic-beverages-bar-beer-1845295/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "restaurant counter"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Shinjuku_Station_2023-07-22.jpg" target="_blank" rel="noopener">Dick Thomas Johnson / Wikimedia Commons · CC BY 2.0</a> — "Shinjuku Station"</li><li>4장: <a href="https://pixabay.com/photos/chamber-chair-mirrors-mirror-image-5264172/" target="_blank" rel="noopener">Tama66 / Pixabay</a> — "vanity mirror"</li><li>5장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li><li>6장: <a href="https://pixabay.com/photos/clocks-time-idea-concept-257911/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "wall clock"</li><li>7장: <a href="https://pixabay.com/photos/wine-wine-glasses-vino-party-happy-6174460/" target="_blank" rel="noopener">elle_kh / Pixabay</a> — "friends dining"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-3e21251d5f8b">
+    <div class="head">
+      <h2>S1. 정치 뉴스 눈팅과 직장 몰입 연구(텍사스 A&amp;M)</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 6
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-3e21251d5f8b">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 직장인공감</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 회사에서 정치 얘기를 안 해도 퇴근 후 본 정치 정보가 일할 때의 불안·몰입과 이어진다는 점. 뉴스 양보다 어떻게 느꼈느냐에 따라 결과가 갈렸다는 반전이 팔린다.</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">회사에서 정치 얘기 안 하면 괜찮은 줄 알았지?
+퇴근하고 본 정치 뉴스가 일할 때 상태에도 영향을 준다는 텍사스 A&amp;M대 연구가 나옴
+근데 같은 뉴스라도 어떻게 느꼈느냐에 따라 결과가 정반대였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">79/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 정치 정보를 부정적으로 느낀 주에는 일할 때 불안이 더 높고 몰입은 더 낮다고 답했대.
+
+그럼 긍정적으로 느낀 주는 어땠을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">2/ 반대로 긍정적으로 느낀 정치 뉴스를 더 많이 본 주에는 몰입이 더 강해지고 동료를 도우려는 마음도 커졌다고 답함.
+
+그러니까 포인트는 뉴스 자체보다 그걸 어떻게 받아들였느냐야. 근데 왜 회사 밖 뉴스가 일터까지 오는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">3/ 연구 책임자 설명은 이래. 정치 정보는 주목을 끌고 감정 반응을 일으키도록 만들어져 있고, 앱을 닫거나 TV를 꺼도 그 반응이 꼭 사라지는 건 아니라는 거.
+
+그럼 이 연구는 어떻게 진행된 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">187/500자</span></div>
+      <p class="tp-text">4/ 연구 한눈에 보기
+- 텍사스 A&amp;M대 연구진
+- 직장인 300명 넘게, 9주 추적
+- 2024년 대선 예비선거 시즌
+- 정치 정보 접한 빈도, 긍정·부정 인식을 본인이 보고
+- 일할 때 몰입·불안·희망·도움 정도도 본인이 보고
+- 부정적으로 본 주: 불안 높고 몰입 낮음
+- 긍정적으로 본 주: 몰입 강하고 동료 도우려는 의지 큼</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">212/500자</span></div>
+      <p class="tp-text">5/ 결국 연구진 말은 회사에서 정치 얘기를 안 해도, 밖에서 접한 정치 환경이 일터에 영향을 준다는 거.
+
+너는 출근길에 뉴스 먼저 보는 파야, 일 시작하고 보는 파야?
+
+이런 해외 직장·자기계발 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>회사에서 정치 얘기 안 하면 괜찮은 줄 알았지? 퇴근 후 본 뉴스가 일할 때 상태에도 영향을 준다는 연구가 나옴</li><li>정치 얘기를 회사에서 안 해도 일터 분위기에 영향이 간다는 연구가 나왔어</li><li>텍사스 A&amp;M대 연구진이 직장인 300명 넘게 9주를 따라가 봤더니 정치 뉴스 본 주에 일할 때 상태가 달라졌대</li><li>뉴스를 얼마나 봤느냐가 아니라 어떻게 느꼈느냐에 따라 일할 때 몰입이 갈렸대</li><li>&#39;앱을 닫는다고 감정 반응까지 바로 사라지진 않는다&#39;는 연구진 말이 나옴</li><li>정치 뉴스 눈팅한 주에는 일터 컨디션도 달랐다는 연구가 있어</li><li>같은 정치 뉴스인데 어떤 주엔 몰입이 올라가고 어떤 주엔 불안이 올라갔대</li><li>정치 뉴스 보는 습관, 회사에서 안 떠들어도 업무 태도에 새어 나간다는 연구야</li><li>정치 정보는 애초에 감정 반응을 일으키도록 만들어진다는 연구진 말, 직장인이면 한번 봐</li><li>선거철 정치 불안이 일터까지 따라온다는 연구, 직장인 300명 넘게 9주 추적한 결과야</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>출근길에 뉴스 먼저 보는 파 vs 일 시작하고 보는 파, 너는 어디야?</li><li>점심시간에 뉴스 보는 사람 손?</li><li>일하다가 뉴스 탭 슬쩍 열어본 적 있는 사람?</li><li>너라면 업무 시간엔 뉴스 앱 알림을 꺼둘 거야?</li><li>뉴스 보고 나서 기분이 달라졌다고 느낀 적 있는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>정치 말고 SNS 눈팅은 일할 때 기분과 몰입에 어떤 영향을 줄까</li><li>직장에서 몰입을 떨어뜨리는 것들, 해외 연구로 정리</li><li>고흐 별이 빛나는 밤 속 하늘은 진짜였다</li><li>오징어 RNA 편집 외계인급 (Cell 연구)</li><li>도쿄 야키니쿠 가게 촬영·라이브 전용석</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>정치 소재라 특정 진영을 비난하거나 뉴스 소비를 탓하는 것처럼 읽히지 않게 확인 필요</li><li>편집자 메모의 &#39;업무 성과가 떨어진다&#39;는 원문 근거가 약함. 원문은 불안·몰입·동료 돕기에 대한 자가 보고 결과이며 성과 하락을 직접 말하지 않음</li><li>원문은 연구 대상 국가를 밝히지 않았고 &#39;출근길 검색·단톡방 정치 얘기&#39;의 한국 상황도 확인되지 않아 단정 금지</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>텍사스 A&amp;M대 연구에서 회사 밖에서 정치 뉴스와 SNS를 접하는 것이 직원의 감정 상태와 직장 내 행동에 영향을 주며, 회사에서 정치 얘기를 하지 않아도 그렇다</b>
+          <q>“A new study from researchers at Texas A&amp;M University shows that consuming political news and social media outside of work affects employees’ emotional states and workplace behavior, even if they aren’t discussing politics at the water cooler.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91628551/consuming-political-news-can-hurt-your-job-performance?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>부정적으로 인식한 정치 정보를 접한 주에 불안이 높고 몰입이 낮았다</b>
+          <q>“During weeks when workers consumed political information that they perceived as negative, they tended to report higher anxiety and lower engagement.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91628551/consuming-political-news-can-hurt-your-job-performance?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>긍정적으로 본 정치 뉴스를 더 많이 접한 주에 몰입이 강하고 동료를 도우려는 의지가 컸다</b>
+          <q>“During weeks when they consumed more political news that they saw as positive, they reported stronger engagement and greater willingness to help coworkers.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91628551/consuming-political-news-can-hurt-your-job-performance?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 책임자는 정치 정보가 주목을 끌고 감정 반응을 일으키도록 설계됐으며 앱이나 TV를 꺼도 그 반응이 반드시 사라지지 않는다고 말했다</b>
+          <q>““Political information is designed to capture attention and provoke emotional reactions,” the study’s lead author, Ian Hughes, an assistant professor of psychological and brain sciences, said in a statement. “Those reactions don’t necessarily disappear once people close an app or turn off the TV.””</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91628551/consuming-political-news-can-hurt-your-job-performance?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 2024년 대선 예비선거 시즌 동안 300명 넘는 직장인을 9주간 추적했고, 정치 정보 접촉 빈도와 긍정·부정 인식, 일할 때의 몰입·불안·희망·도움 정도를 보고하게 했다</b>
+          <q>“Researchers tracked more than 300 workers over nine weeks during the 2024 presidential primary season, asking them to report how often they consumed political information, whether they viewed it as positive or negative, and how engaged, anxious, hopeful, and helpful they felt at work.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91628551/consuming-political-news-can-hurt-your-job-performance?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구의 결론은 직장에서 정치를 직접 논하지 않아도 더 넓은 정치 환경이 일터에 영향을 준다는 것이다</b>
+          <q>“The takeaway is that the broader political environment affects the workplace even when politics aren’t directly discussed at the office.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91628551/consuming-political-news-can-hurt-your-job-performance?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="3e21251d5f8b">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91628551/consuming-political-news-can-hurt-your-job-performance?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">Consuming political news can hurt your job performance</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-edb223a80edd">
+    <div class="head">
+      <h2>S2. 염증성 장질환 진단 10년 전 혈액 항체 패턴 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-edb223a80edd">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;내 피 검사로 10년 뒤 장 질환을 알 수 있나&#39;라는 궁금증으로 들어가서, 숫자(10년, 2,000개 샘플, AUC)와 &#39;아직 검진용은 아니다&#39;라는 반전을 함께 보여주는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">장 질환은 증상이 아니라 피에서 먼저 티가 날 수도 있대
+크론병·궤양성 대장염 진단 10년 전 혈액에서 항체 패턴이 달랐다는 연구가 나왔음
+근데 내 피로 바로 확인할 수 있냐면... 연구진 답은 아래에 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 진단 최대 10년 전 혈액 항체 패턴으로 머신러닝 모델이 미래의 크론병 환자와 건강한 사람을 구분한 점수(AUC)가 0.90, 궤양성 대장염은 0.84였대. 1.0이 완벽, 0.5가 찍기 수준인 점수야. 그럼 뭘 어떻게 본 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">2/ UEG Week 2026에서 발표된 연구야. 500명에게서 모은 혈액 샘플 2,000개를 분석했대. 크론병 환자 200명, 궤양성 대장염 환자 200명, 건강한 사람 100명. 진단 시점과 약 2년·4년·10년 전 샘플을 거슬러 봤음. 그래서 뭐가 달랐을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">3/ 가장 눈에 띈 건 항체 다양성이야. 나중에 크론병이나 궤양성 대장염이 생긴 사람들은 건강한 사람보다 항체 반응의 폭이 눈에 띄게 좁았대. 이런 변화가 진단 10년 전부터 잡혔고. 근데 두 병의 신호가 똑같진 않았음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 저장각</span>
+        <span class="len">172/500자</span></div>
+      <p class="tp-text">4/ 저장해두는 비교표
+
+크론병
+- 헤르페스바이러스, 세균 편모(flagellin) 항체 반응 상승
+- 캡슐 세균 항체 반응은 진단이 다가올수록 감소
+
+궤양성 대장염
+- 헤르페스바이러스, 자가항원 항체 반응 상승
+- 캡슐 세균류 항체 반응은 감소
+
+(편모 = 세균이 움직일 때 쓰는 꼬리 같은 구조의 단백질)</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">5/ 하나 더. 나중에 합병증 있는 복잡한 크론병이 될 사람과 덜 복잡하게 갈 사람도 약 10년 전 항체 패턴으로 구분됐대. 이때 AUC는 0.85. 그래서 어떤 환자가 더 집중적인 치료가 필요한지 가려낼 가능성도 거론됐음. 근데 이게 지금 쓸 수 있는 검사일까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">145/500자</span></div>
+      <p class="tp-text">6/ 여기서 브레이크. 연구진은 아직 일반 검진에 쓸 단계는 아니라고 강조했어. 더 다양한 집단에서 예측이 맞는지 확인해야 하고, 검사가 정확하고 값싸고 재현 가능해야 하고, 결국 환자 결과가 좋아진다는 것까지 보여야 한대. 한국에서 어떨지는 확인된 게 없음.</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">243/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 장 질환은 진단 훨씬 전부터 면역계에 흔적이 남을 수 있고, 혈액 항체가 그 단서가 될 가능성이 보였다는 연구야. 검증은 더 필요함.
+10년 뒤 장 질환 위험을 알려주는 피검사가 생기면 받아볼래, 모르는 게 약일까?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 한국에서 이 검사가 어떨지는 확인된 것이 없다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>장 질환은 증상이 아니라 피에서 먼저 티가 날 수도 있대</li><li>크론병·궤양성 대장염, 진단 10년 전 혈액에서 신호가 잡혔다는 연구가 나옴</li><li>혈액 샘플 2,000개를 거꾸로 거슬러 봤더니 병 진단 10년 전부터 달랐대</li><li>장 건강 신경 쓰는 사람 주목. 진단 전부터 &#39;항체 종류&#39;가 먼저 줄어 있었다는 연구</li><li>&#39;아직 검진엔 못 쓴다&#39;고 연구진이 직접 선 그은 장 질환 혈액 검사 얘기</li><li>내 피로 10년 뒤 장 질환을 알 수 있을까? 연구진의 답은 &#39;아직&#39;</li><li>크론병은 0.90, 궤양성 대장염은 0.84. 피 속 항체만 봤는데 나온 점수래</li><li>장 질환은 진단받는 날 시작되는 게 아니라는 연구가 나옴</li><li>크론병이랑 궤양성 대장염, 진단 전 피 속 신호가 서로 다르게 나왔대</li><li>병이 생길 사람은 건강한 사람보다 항체 종류가 적었대. 진단 10년 전부터</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>10년 뒤 장 질환 위험을 알려주는 피검사가 생기면 받아볼래, 모르는 게 약일까?</li><li>이런 건강 연구 기사, 끝까지 읽는 편이야 제목만 보는 편이야?</li><li>미리 알려주는 검사 vs 증상 생길 때까지 모르는 게 마음 편함, 어느 쪽이야?</li><li>검진 결과지 펼쳐서 꼼꼼히 읽는 파야, 이상 없음만 보는 파야?</li><li>10년 전에 미리 알 수 있다면 너라면 알고 싶어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>크론병이랑 궤양성 대장염, 뭐가 다른 병일까</li><li>항체 다양성이 줄어든다는 건 면역계에 무슨 일이 생긴 걸까</li><li>진단 전에 장 질환 위험을 미리 가려내려는 다른 연구들</li><li>장내 미생물과 장 염증, 면역세포는 어떻게 얽혀 있나</li><li>혈액으로 병을 미리 잡아내려는 해외 연구 모음</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문은 UEG Week 2026 학회 발표 내용이라 논문 게재·동료 검토 여부가 확인되지 않음. &#39;연구가 나왔다&#39;는 표현까지만 쓰고 확정 진단 도구처럼 읽히지 않게 확인할 것</li><li>AUC 0.90, 0.84, 0.85를 &#39;정확도&#39;처럼 단순화했으니 건강한 사람과 구분한 모델 점수라는 뜻이 맞게 전달됐는지 확인할 것. 독자가 이 검사를 지금 받을 수 있다고 오해할 소지가 있음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>염증성 장질환 진단 최대 10년 전부터 면역계에 숨은 변화가 나타날 수 있다</b>
+          <q>“Scientists have identified hidden changes in the immune system that can appear up to 10 years before a person is diagnosed with inflammatory bowel disease (IBD).”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 이 결과가 아직 일반 검진에 쓸 단계는 아니라고 강조했다</b>
+          <q>“Although the results offer compelling evidence that IBD has a detectable early immune signature, the researchers emphasize that the findings are not yet ready for use in routine medical screening.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>진단 최대 10년 전 항체 패턴으로 모델이 미래 크론병 사례를 건강한 대조군과 AUC 0.90, 궤양성 대장염은 0.84로 구분했다</b>
+          <q>“Using blood antibody patterns from up to 10 years before diagnosis, the models distinguished future Crohn&#39;s disease cases from healthy controls with an area under the curve (AUC) of 0.90. For ulcerative colitis, the corresponding value was 0.84.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AUC 0.5는 우연 수준, 1.0은 완벽한 구분을 뜻한다</b>
+          <q>“A score of 0.5 indicates performance equivalent to chance, while 1.0 represents perfect discrimination.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>500명에게서 모은 혈청 샘플 2,000개를 분석했고 크론병 200명, 궤양성 대장염 200명, 건강한 사람 100명이 포함됐다</b>
+          <q>“To investigate what happens before IBD is diagnosed, researchers examined 2,000 blood serum samples collected from 500 people. The participants included 200 who eventually developed Crohn&#39;s disease, 200 who developed ulcerative colitis, and 100 healthy individuals of comparable age and sex.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>진단 시점과 약 2년, 4년, 10년 전 혈액 샘플이 있었다</b>
+          <q>“Blood samples were available from the time of diagnosis and from approximately two, four, and 10 years earlier.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 결과가 UEG Week 2026에서 발표됐다</b>
+          <q>“The findings, presented at UEG Week 2026, suggest that certain antibody patterns in the blood could eventually help doctors identify people at risk of developing the condition and even predict how severe their disease might become.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나중에 IBD가 생긴 사람은 건강한 사람보다 항체 다양성이 적었고 두 병 모두 진단 10년 전부터 변화가 잡혔다</b>
+          <q>“People who later developed Crohn&#39;s disease or ulcerative colitis had significantly less antibody diversity than healthy participants, meaning their immune systems showed a narrower range of antibody responses. Distinctive changes could be detected in both diseases as far back as 10 years before diagnosis.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>크론병이 생긴 사람은 헤르페스바이러스와 세균 편모 항체 반응이 높았다</b>
+          <q>“Among people who later developed Crohn&#39;s disease, antibody responses to herpesviruses and bacterial flagellin were elevated.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>캡슐 세균에 대한 항체 반응은 진단이 가까워질수록 점차 감소했다</b>
+          <q>“At the same time, antibody responses to encapsulated bacteria gradually decreased as diagnosis approached.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>궤양성 대장염이 생긴 사람은 헤르페스바이러스와 자가항원 항체 반응이 늘고 캡슐 병원체 반응은 줄었다</b>
+          <q>“People who later developed ulcerative colitis showed a somewhat different pattern. Their antibody responses to herpesviruses and autoantigens increased, while responses to encapsulated pathogens declined.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>편모는 일부 세균이 움직일 때 쓰는 꼬리 같은 구조의 일부를 이루는 단백질이다</b>
+          <q>“Flagellin is a protein that forms part of the tail-like structures some bacteria use to move.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복잡한 크론병이 될 사람과 덜 복잡한 사람을 약 10년 전 AUC 0.85로 구분할 수 있었다</b>
+          <q>“The researchers also discovered that antibody patterns could help distinguish people who would develop complicated Crohn&#39;s disease from those whose disease would remain less complicated. This distinction was possible approximately 10 years before diagnosis, with an AUC of 0.85.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈액 항체 검사가 더 집중적인 치료가 필요한 환자를 가려내는 데 도움이 될 가능성이 거론됐다</b>
+          <q>“These findings raise the possibility that blood antibody testing could eventually help identify not only who is at increased risk of IBD, but also which patients may need more intensive treatment.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 넓은 집단에서 이 항체 패턴이 질병을 안정적으로 예측하는지 추가 연구가 필요하다</b>
+          <q>“The study establishes an important proof of principle, but additional research is necessary to determine whether these antibody patterns can reliably predict disease in broader populations.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>검진용 검사가 되려면 정확하고 값싸고 재현 가능해야 하며 환자 결과 개선까지 입증돼야 한다</b>
+          <q>“Any potential screening test would need to be accurate, affordable, reproducible, and ultimately shown to improve patient outcomes.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>IBD 진단 훨씬 전부터 면역계에 측정 가능한 변화가 생긴다는 시사점이 나왔다</b>
+          <q>“Together, these findings suggest that the immune system undergoes measurable changes many years before inflammatory bowel disease is diagnosed.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="edb223a80edd">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261023023713.htm" target="_blank" rel="noopener">Your blood could reveal inflammatory bowel disease 10 years before diagnosis</a></li><li><a href="https://www.nature.com/articles/s41575-023-00871-3" target="_blank" rel="noopener">Neutrophils: from IBD to the gut microbiota - Nature Reviews Gastroenterology &amp; Hepatology</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261025-am";
+  const ORIGINAL = {"3e029a53d667": {"caption": "\uc624\uc9d5\uc5b4 RNA\uac00 \uc678\uacc4\uc778\uae09\uc774\ub77c\ub294 \uc18c\uc2dd\uc774\uc57c. \uacfc\ud559 \ub9e4\uccb4 ScienceAlert\ub294 \uc624\uc9d5\uc5b4 \uac19\uc740 \ub450\uc871\ub958\uac00 \uc6b0\ub9ac\uac00 \uc54c \uc218 \uc788\ub294 \uac00\uc7a5 \uc678\uacc4 \uc9c0\ub2a5\uc5d0 \uac00\uae4c\uc6b4 \uc874\uc7ac\uc77c\uc9c0\ub3c4 \ubaa8\ub978\ub2e4\uace0 \uc18c\uac1c\ud588\uc5b4.\n\n\ud575\uc2ec\uc740 RNA \ud3b8\uc9d1\uc774\uc57c. \uc0ac\ub78c\uc744 \ud3ec\ud568\ud55c \ub3d9\ubb3c\ub3c4 ADAR\uc774\ub77c\ub294 \ud6a8\uc18c\ub97c \ud1b5\ud55c RNA \ud3b8\uc9d1\uc744 \uacaa\ub294\ub370, \uc624\uc9d5\uc5b4\u00b7\ubb38\uc5b4\u00b7\uac11\uc624\uc9d5\uc5b4 \uac19\uc740 \ub450\uc871\ub958\ub294 \uc774\uac78 \ub2e4\ub978 \uc0dd\ubb3c\uacfc \ube44\uad50\uac00 \uc548 \ub420 \ub9cc\ud07c \uc798\ud55c\ub2e4\uace0 \ud574. \uae30\uc0ac\ub294 \ub808\uc2dc\ud53c\ub97c \uc778\uc1c4\ud574 \ub193\uace0 \uc81c\ube75\uc0ac\uc5d0\uac8c \ub118\uae30\uae30 \uc9c1\uc804\uc5d0 \uc7ac\ub8cc\ub97c \ubc14\uafd4\uce58\uae30\ud558\ub294 \uac83\uacfc \ube44\uc2b7\ud558\ub2e4\uace0 \uc124\uba85\ud588\uc5b4.\n\n\ubbf8\uad6d UCSF \uc5f0\uad6c\ud300\uc740 \ud559\uc220\uc9c0 Cell\uc5d0 \uc2e4\ub9b0 \uc5f0\uad6c\uc5d0\uc11c \ub871\ud540 \uc624\uc9d5\uc5b4(Doryteuthis pealeii)\uc758 \ub2e8\ubc31\uc9c8 \ud3b8\uc9d1\uc744 \ub4e4\uc5ec\ub2e4\ubd24\uc5b4. \uc2dc\uac01\uc5fd\uacfc \uc544\uac00\ubbf8\uc5d0\uc11c \ud3b8\uc9d1\ub41c \uc790\ub9ac\ub294 8,000\uacf3 \uac00\uae4c\uc774, \uad00\ub828 \ub2e8\ubc31\uc9c8\uc740 2,000\uac1c\uac00 \ub118\uc5c8\uace0, \uc2dc\uac01\uc5fd \ucabd\uc774 \ud3b8\uc9d1\uc774 \ub354 \uc7a6\uace0 \ubcf5\uc7a1\ud588\ub300.\n\n\uc5f0\uad6c 1\uc800\uc790 Jack Moen\uc740 \ub2e8\ubc31\uc9c8\uc758 \ud65c\ub3d9, \uc548\uc815\uc131, \uc704\uce58, \ub2e4\ub978 \ub2e8\ubc31\uc9c8\uacfc\uc758 \uc0c1\ud638\uc791\uc6a9\uae4c\uc9c0 \uc601\ud5a5\uc774 \ub098\ud0c0\ub0ac\ub2e4\uace0 \ub9d0\ud588\uc5b4. \uc624\uc9d5\uc5b4\ub294 DNA\ub97c \uac74\ub4dc\ub9ac\uc9c0 \uc54a\uace0 RNA \uc9c0\uc2dc\ubb38\ub9cc \uace0\uccd0\uc11c \uc131\uc9c8\uc774 \ub2e4\ub978 \ub2e8\ubc31\uc9c8\uc744 \ub9cc\ub4e4 \uc218 \uc788\ub2e4\ub294 \uac70\uc57c. \uae30\uc874 \ucc38\uc870 \ub2e8\ubc31\uc9c8\uccb4\uc5d0 \uc5c6\ub358 \uc9e7\uc740 \ub2e8\ubc31\uc9c8\ub3c4 5,000\uac1c \ucc3e\uc558\uc5b4.\n\n\uc774\ub860\uc0c1 \uac00\ub2a5\ud55c \ub2e8\ubc31\uc9c8 \ubcc0\uc774\ub294 10\uc758 248\uc81c\uacf1\uc5d0 \uac00\uae4c\uc6b4 \ucd94\uc815\uce58\uae4c\uc9c0 \ub098\uc624\uc9c0\ub9cc, \ub3d9\ubb3c\uc774 \uc2e4\uc81c\ub85c \uadf8\uc911 \uc5bc\ub9c8\ub098 \ub9cc\ub4dc\ub294\uc9c0\ub294 \uc544\uc9c1 \ubab0\ub77c.\n\n\ucd9c\ucc98: ScienceAlert, Cell", "hashtags": ["#\uc624\uc9d5\uc5b4", "#\uacfc\ud559\ub274\uc2a4", "#\ub450\uc871\ub958", "#RNA\ud3b8\uc9d1", "#\uc0dd\ubb3c\ud559"], "slides": [["\uc624\uc9d5\uc5b4\uac00 \uc0ac\uc2e4", "**\uc678\uacc4\uc0dd\uba85\uccb4**?!"], ["**ScienceAlert** \uc648", "\uc624\uc9d5\uc5b4 \uac19\uc740 \ub450\uc871\ub958\uac00", "\uc0ac\uc2e4\uc740 **\uc678\uacc4 \uc9c0\ub2a5**"], ["Rna \ud3b8\uc9d1 \uc790\ub9ac\uac00", "**8,000\uacf3** \uac00\uae4c\uc774", "\ub2e8\ubc31\uc9c8 2\ucc9c \uac1c \ub118\uac8c"], ["**\uc624\uc9d5\uc5b4**\ub294 DNA\ub97c \uac74\ub4dc\ub9ac\uc9c0 \uc54a\uace0", "**RNA \uc9c0\uc2dc\ubb38**\ub9cc \uace0\uccd0\uc11c \uc131\uc9c8\uc774", "**\ub2e4\ub978 \ub2e8\ubc31\uc9c8**\uc744 \ub9cc\ub4e4 \uc218 \uc788\ub300"], ["\uae30\uc874 \ubaa9\ub85d\uc5d0 \uc5c6\ub358", "\uc9e7\uc740 \ub2e8\ubc31\uc9c8\uc774", "**5,000\uac1c** \ubc1c\uacac"], ["**\uc0dd\ubb3c \ub355\ud6c4** \uce5c\uad6c\ud55c\ud14c", "\uc774 \uc624\uc9d5\uc5b4 \uc598\uae30", "\uc870\uc6a9\ud788 \ub358\uc9c0\uae30"]]}, "5be90b8ed799": {"caption": "\uace0\uae43\uc9d1\uc5d0 \ucd2c\uc601 \uc804\uc6a9\uc11d\uc774 \uc0dd\uacbc\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. \ub3c4\ucfc4\uc758 \uc57c\ud0a4\ub2c8\ucfe0 \uccb4\uc778 \uc57c\ud0a4\ub2c8\ucfe0 \ub77c\uc774\ud06c \uc598\uae30\uc778\ub370, \uc6d0\ub798 \uc774 \uac00\uac8c\ub294 \ubaa8\ub4e0 \uc88c\uc11d\uc774 \uce74\uc6b4\ud130\uc11d\uc774\uace0 \uc190\ub2d8\ub9c8\ub2e4 1\uc778\uc6a9 \uadf8\ub9b4\uc774 \ud558\ub098\uc529 \uc788\ub300. \uc18c\uc2a4\ub3c4 \uac1c\uc778\ubcc4\ub85c \uace0\ub974\uace0 \ubd88 \uc138\uae30\ub3c4 \uc9c1\uc811 \uc870\uc808\ud558\ub294 \uad6c\uc870\ub77c \ud63c\uc790 \uace0\uae30 \uba39\uc73c\ub7ec \uc624\uae30 \ub531 \uc88b\uc740 \uacf3\uc774\uc57c.\n\n\uc5ec\uae30\uc11c \ud55c \uac78\uc74c \ub354 \ub098\uac04 \uacf3\uc774 \uc2e0\uc8fc\ucfe0 \ubbf8\ub098\ubbf8\uad6c\uce58\uc810\uc774\uc57c. \uac00\uac8c \ud55c\ucabd \uad6c\uc11d\uc5d0 \u0027\uc2a4\ud29c\ub514\uc624 \ub77c\uc774\ud06c\u0027\ub77c\ub294 \ud2b9\ubcc4 \uc88c\uc11d\uc744 \ub9cc\ub4e4\uc5c8\uc5b4. \ud5e4\uc5b4\uc640 \uba54\uc774\ud06c\uc5c5\uc744 \ud655\uc778\ud558\ub294 \uc870\uba85 \ub2ec\ub9b0 \ud654\uc7a5 \uac70\uc6b8, \uc704\uc5d0\uc11c \ucc0d\uc744 \uc218 \uc788\ub294 \uce74\uba54\ub77c \uac70\uce58\ub300, \uadf8\ub9ac\uace0 \ubc30\uacbd\ub9c9\uacfc \ubcbd\uc774 \uac16\ucdb0\uc838 \uc788\uc5b4. \ubcbd\uacfc \ubc30\uacbd\ub9c9\uc740 \uac1c\uc778 \uacf5\uac04\uc744 \ud655\ubcf4\ud574 \uc8fc\uace0, \ub0a8\uc758 \uc0ac\uc9c4\uc774\ub098 \uc601\uc0c1\uc5d0 \ucc0d\ud788\uae30 \uc2eb\uc740 \ub2e4\ub978 \uc190\ub2d8\ub4e4\uc744 \ubc30\ub824\ud558\ub294 \uc6a9\ub3c4\uc774\uae30\ub3c4 \ud558\ub300. \uadf8\ub9ac\uace0 \uc774 \uc790\ub9ac\uc5d0\uc11c \ub77c\uc774\ube0c \ubc29\uc1a1\uc744 \ud558\ub294 \uac83\ub3c4 \uac00\uac8c\uac00 \uacf5\uc2dd\uc801\uc73c\ub85c \ud5c8\uc6a9\ud55c\ub2e4\uace0 \ubc1d\ud614\uc5b4.\n\n\uadf8\ub9b4\uc740 \ud558\ub098\uc9c0\ub9cc \ub450 \uba85\uc774 \uc4f8 \uc218 \uc788\uc744 \ub9cc\ud07c \ucee4\uc11c \uce5c\uad6c\ub098 \uacf5\ub3d9 \uc9c4\ud589\uc790\ub791 \uac19\uc774 \uc549\uc744 \uc218\ub3c4 \uc788\uc5b4.\n\n\uc774\uc6a9 \ubc29\ubc95\ub3c4 \uc815\ub9ac\ud574 \uc904\uac8c. \ud55c \ud0c0\uc784\uc740 60\ubd84\uc774\uace0, \uac00\uac8c\ub294 \uc624\uc804 11\uc2dc\ubd80\ud130 \ubc24 11\uc2dc\uae4c\uc9c0 \uc5f4\uc9c0\ub9cc \uc774 \uc88c\uc11d\uc740 \uc624\uc804 11\uc2dc\ubd80\ud130 \uc624\ud6c4 9\uc2dc 30\ubd84\uae4c\uc9c0\ub9cc \uc774\uc6a9\ud560 \uc218 \uc788\uc5b4. \uc608\uc57d\uc740 \ud544\uc218\uc774\uace0, \uc2e0\uc8fc\ucfe0 \ubbf8\ub098\ubbf8\uad6c\uce58\uc810 \uacf5\uc2dd \ub77c\uc778 \uacc4\uc815\uc73c\ub85c \ud560 \uc218 \uc788\uace0 \uc9c0\uae08 \uac00\ub2a5\ud574.\n\n\ucd9c\ucc98: SoraNews24 (PR Times \ubcf4\ub3c4 \uae30\ubc18)", "hashtags": ["#\ub3c4\ucfc4\ub9db\uc9d1", "#\uc57c\ud0a4\ub2c8\ucfe0", "#\uc77c\ubcf8\uc5ec\ud589", "#\uc2e0\uc8fc\ucfe0", "#\uc77c\ubcf8\ubb38\ud654"], "slides": [["\uace0\uae43\uc9d1\uc5d0", "**\ucd2c\uc601 \uc804\uc6a9\uc11d**???"], ["\uc6d0\ub798 \ubaa8\ub4e0 \uc88c\uc11d\uc774", "**1\uc778 \uadf8\ub9b4** \uce74\uc6b4\ud130"], ["\uc2e0\uc8fc\ucfe0\uc810\uc5d0", "**\uc2a4\ud29c\ub514\uc624** \uc88c\uc11d \ub4f1\uc7a5"], ["\uc870\uba85 \uac70\uc6b8\uc5d0", "\ucd2c\uc601 **\uac70\uce58\ub300**\uae4c\uc9c0"], ["**\ub77c\uc774\ube0c \ubc29\uc1a1**\ub3c4", "\uac00\uac8c\uac00 \uacf5\uc2dd \ud5c8\uc6a9"], ["\ud55c \ud0c0\uc784 **60\ubd84**", "\uc608\uc57d\uc740 \ud544\uc218"], ["\uc778\uc99d\uc0f7\uc5d0 **\uc9c4\uc2ec\uc778**", "\uce5c\uad6c\ud55c\ud14c", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30"]]}, "d6de15b06418": {"caption": "\uace0\ud750 \uadf8\ub9bc \uc18d \ud558\ub298\uc774 \uc9c4\uc9dc\uc600\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\uc5b4. \ubcc4\uc774 \ube5b\ub098\ub294 \ubc24\uc758 \ud558\ub298\uc774 1889\ub144 7\uc6d4 \uc0c8\ubcbd \ud558\ub298\uacfc \ub9de\uc544\ub5a8\uc5b4\uc9c4\ub2e4\ub294 \uac70\uc57c.\n\n\uc774 \uadf8\ub9bc\uc740 \uadf8\ub3d9\uc548 \uace0\ud750\uac00 \ub3d9\uc0dd \ud14c\uc624\uc5d0\uac8c \uc4f4 6\uc6d4 18\uc77c\uacbd \ud3b8\uc9c0\ub97c \uadfc\uac70\ub85c 6\uc6d4 \uc791\ud488\uc73c\ub85c \uc5ec\uaca8\uc84c\uc5b4. \uadf8\ub7f0\ub370 \uc804\ubb38\uac00\ub4e4\uc740 \uadf8 \uc2dc\uae30\uc758 \ud558\ud604 \uc774\ud6c4 \ubcfc\ub85d\ud55c \ub2ec\ub85c\ub294 \uadf8\ub9bc \uc18d \uac00\ub290\ub2e4\ub780 \ucd08\uc2b9\ub2ec\uc744 \uc124\uba85\ud560 \uc218 \uc5c6\ub2e4\uace0 \ub9d0\ud574.\n\n\uc0c8 \uc5f0\uad6c\ub294 \uadf8\ub9bc \uc18d \ud558\ub298\uc774 1889\ub144 7\uc6d4 22\uc77c \ubb34\ub835 \uace0\ud750\uac00 \uc0b4\ub358 \ud504\ub791\uc2a4 \uc0dd\ub808\ubbf8\uc758 \ub3d9\ud2b8\uae30 \uc804 \ud558\ub298\uacfc \uad00\uce21\uc73c\ub85c\ub098 \ubaa8\uc591\uc73c\ub85c\ub098 \uc77c\uce58\ud55c\ub2e4\uace0 \ubd24\uc5b4. \uadf8 \ud558\ub298\uc5d0\ub294 \uadf8\ubbd0 \ucabd \ucd08\uc2b9\ub2ec, \uae08\uc131, \ud788\uc544\ub370\uc2a4 \uc131\ub2e8\uc774 \ud654\uac00\uc758 \uc2dc\uc57c \uc548\uc5d0 \ud568\uaed8 \uc788\uc5c8\ub300. \uadf8\ub9bc \uc18d \ubcc4 \ubb34\ub9ac\uac00 \uc591\uc790\ub9ac\ub77c\ub294 \uc608\uc804 \ud574\uc11d\uacfc \ub2ec\ub9ac, \uc5f0\uad6c\uc9c4\uc740 \ud669\uc18c\uc790\ub9ac\uc758 \ud788\uc544\ub370\uc2a4\ub77c\uace0 \ubd24\uc5b4. \uc774\uc804\uc758 \ucc9c\ubb38\ud559\uc801 \ud574\uc11d\uc740 1984\ub144 \ubcf4\uc784, 1986\ub144 \ud718\ud2b8\ub2c8\uac00 \uc2dc\uc791\ud588\uc9c0\ub9cc \uacb0\ub860\uc774 \uc11c\ub85c \uc5c7\uac08\ub838\uc5b4.\n\n\uc5f0\uad6c\ud300\uc740 \ud604\uc7a5 \uc0ac\uc9c4\uc73c\ub85c \uc2dc\uc57c\ub97c \ubcf5\uc6d0\ud588\uace0, \ud504\ub85c\ud06c\ub8e8\uc2a4\ud14c\uc2a4 \ud615\ud0dc \ubd84\uc11d\uc73c\ub85c \uadf8\ub9bc \uc18d \uc911\uc2ec\ubd80 \ubcc4 \ub2e4\uc12f \uac1c\uc640 \ud788\uc544\ub370\uc2a4\uc758 \ub300\uc751\uc744 \ud655\uc778\ud588\uc5b4. \uc5f0\uad6c\uc9c4\uc740 \uadf8\ub9bc \uc18d \ud558\ub298\uc774 \uc21c\uc804\ud55c \uc0c1\uc0c1\uc774 \uc544\ub2c8\ub77c \uc2e4\uc81c \uad00\uce21\uc5d0 \ubc14\ud0d5\uc744 \ub480\ub2e4\uace0 \ub9d0\ud574.\n\n\uc774 \uc5f0\uad6c\ub294 \uc6b0\uc8fc\uacfc\ud559 \uae30\uc5c5 SLLAB\uacfc \ud55c\uad6d \uacbd\ud76c\ub300 \uc6b0\uc8fc\ud0d0\uc0ac\ud559\uacfc\uac00 \ud568\uaed8 \ud588\uace0, \ud559\uc220\uc9c0 Scientific Reports\uc5d0 \uc2e4\ub838\uc5b4.\n\n\ucd9c\ucc98: Good News Network, Scientific Reports", "hashtags": ["#\uace0\ud750", "#\ubcc4\uc774\ube5b\ub098\ub294\ubc24", "#\ucc9c\ubb38\ud559", "#\ubbf8\uc220\uc0ac", "#\ud574\uc678\uc774\uc288"], "slides": [["\uace0\ud750 \uadf8\ub9bc \uc18d", "\ud558\ub298\uc774 **\uc2e4\uc874**???"], ["\ubcc4\uc774 \ube5b\ub098\ub294 \ubc24\uc740", "**6\uc6d4** \uadf8\ub9bc\uc774\ub77c \uc54c\ub824\uc84c\uc5b4"], ["\uadfc\ub370 \uadf8\ub9bc \uc18d \ub2ec\uc740", "\uac00\ub290\ub2e4\ub780 **\ucd08\uc2b9\ub2ec**"], ["6\uc6d4 \ub2ec \ubaa8\uc591\uc774\ub791", "**\uc548 \ub9de\uc558\ub2e4**\ub294 \uac70\uc9c0"], ["1889\ub144 **7\uc6d4 22\uc77c**", "\uc0c8\ubcbd \ud558\ub298\uc774 \ub531 \ub9de\uc74c"], ["\ub2ec, \uae08\uc131, **\ud788\uc544\ub370\uc2a4**", "\uc131\ub2e8\uc774 \ud55c \ud654\uba74\uc5d0"], ["\ubbf8\uc220\uad00 \uac19\uc774 \uac08", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "\uc774 **\ubc18\uc804** \uc598\uae30\ud574\uc918"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"3e029a53d667": "approve", "5be90b8ed799": "reject", "d6de15b06418": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 1;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

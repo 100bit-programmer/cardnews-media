@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.04 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.04 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-f44a94665f4f" data-jump="f44a94665f4f">1</a><a href="#post-a77bcc1c9e13" data-jump="a77bcc1c9e13">2</a><a href="#post-7e2083a34362" data-jump="7e2083a34362">3</a>
+      <a href="#threads">🧵 스레드 1</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-f44a94665f4f" data-id="f44a94665f4f">
+    <div class="head">
+      <h2>1. 콜린스 올해의 단어 mogging</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/f44a94665f4f/v1-01.jpg" alt="1장: 올해의 단어가 mogging???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/f44a94665f4f/v1-02.jpg" alt="2장: 남을 압도하고 능가한다는 뜻" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/f44a94665f4f/v1-03.jpg" alt="3장: 사용량이 210% 폭증" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/f44a94665f4f/v1-04.jpg" alt="4장: 뿌리는 AMOG" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/f44a94665f4f/v1-05.jpg" alt="5장: 놀림도 되고 칭찬도 된다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/f44a94665f4f/v1-06.jpg" alt="6장: 신조어 궁금한 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/f44a94665f4f/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">영국 콜린스 사전이 올해의 단어로 &#39;mogging(모깅)&#39;을 뽑았다. 장난스럽게 누군가를 앞지르고 능가하고 주목을 가로챈다는 뜻으로 쓰이는 말이다. Z세대와 알파 세대 사이에서 빠르게 퍼진 속어로, 온라인과 일상 대화 모두에서 쓰이며 2026년 사용량이 210% 늘었다. 콜린스 대표 알렉스 비크로프트는 이번 선정이 세대마다 언어에 흔적을 남긴다는 점을 보여준다고 말했다. 철자가 비슷한 mugging과는 다른 말이고, 주로 외모 면에서 누군가를 압도하는 것을 가리킨다. 흔히 AMOG, 곧 &#39;무리의 알파 남성&#39;이라는 줄임말에서 비롯됐다고 거론되며 2010년대 중반 보디빌딩 포럼과 연관돼 왔다. 지금은 맥락에 따라 장난스러운 핀잔도, 칭찬도 되고 외모를 가꾸는 조언을 나누는 루킹맥싱 커뮤니티에서도 보인다. 참고로 2025년 올해의 단어는 &#39;vibe coding&#39;이었다. 올해 최종 후보 10개에는 ghost job, hydration break, P(doom), Manchesterism 등도 올랐다. 출처: BBC News, Collins English Dictionary</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#모깅 #mogging #올해의단어 #Z세대 #신조어</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처가 BBC News와 Collins English Dictionary라는 점</li><li>근거 등록 안 된 주장: 콜린스가 소셜미디어 등 다양한 출처를 활용해 단어를 선정한다는 내용</li><li>근거 등록 안 된 주장: 콜린스 선정 방식으로 단어 사용 빈도와 사용 패턴을 분석한다는 내용</li><li>근거 등록 안 된 주장: manosphere 및 incels와도 연관돼 왔다는 내용</li><li>근거 등록 안 된 주장: ghost job의 뜻(채용 의사 없이 올리는 구인 공고)</li><li>근거 등록 안 된 주장: hydration break가 올해 FIFA 남자 월드컵으로 유명해졌다는 내용</li><li>근거 등록 안 된 주장: P(doom)의 뜻(AI로 인한 문명 붕괴 확률 추정)</li><li>근거 등록 안 된 주장: Manchesterism이 앤디 버넘 총리와 연관된 정치적 접근이라는 내용</li>
+          <li>mogging은 매노스피어·인셀 커뮤니티와 연관돼 온 말이라 소개 시 맥락 주의</li><li>루킹맥싱 등 외모 비교 문화를 조장하는 것처럼 읽히지 않도록 주의</li><li>기사 본문 내용은 번역이 아닌 재구성으로 작성했으며 원문 문장 인용은 claims에만 사용</li><li>기사 게재일이 2026년으로 표기돼 있어 날짜·연도 표기 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-f44a94665f4f-0">1장</label>
+          <textarea id="s-f44a94665f4f-0" rows="6" data-slide="0">올해의 단어가
+**mogging???**
+---
+영국 콜린스 사전이 남을 압도한다는 뜻의 신조어 &#39;모깅(mogging)&#39;을 올해의 단어로 뽑았다.</textarea>
+          
+          <label class="f" for="s-f44a94665f4f-1">2장</label>
+          <textarea id="s-f44a94665f4f-1" rows="6" data-slide="1">남을 **압도하고**
+능가한다는 뜻
+---
+장난스럽게 누군가를 앞지르거나 능가하거나 주목을 가로챈다는 의미로 쓰인다. 특히 외모 면에서 상대를 압도하는 상황을 가리키는 경우가 가장 많다.</textarea>
+          
+          <label class="f" for="s-f44a94665f4f-2">3장</label>
+          <textarea id="s-f44a94665f4f-2" rows="6" data-slide="2">사용량이
+**210%** 폭증
+---
+Z세대와 알파 세대 사이에서 빠르게 퍼진 속어로, 온라인과 일상 대화 모두에서 쓰인다. 2026년에는 사용량이 210% 늘며 주류로 올라섰다.</textarea>
+          
+          <label class="f" for="s-f44a94665f4f-3">4장</label>
+          <textarea id="s-f44a94665f4f-3" rows="6" data-slide="3">뿌리는
+**AMOG**
+---
+이 말은 &#39;무리의 알파 남성&#39;을 뜻하는 줄임말 AMOG에서 비롯됐다고 흔히 거론된다. 2010년대 중반 보디빌딩 포럼과도 연관돼 왔다고 한다.</textarea>
+          
+          <label class="f" for="s-f44a94665f4f-4">5장</label>
+          <textarea id="s-f44a94665f4f-4" rows="6" data-slide="4">놀림도 되고
+**칭찬도 된다**
+---
+지금은 맥락에 따라 장난스러운 핀잔이 되기도, 칭찬이 되기도 하는 폭넓은 말이 됐다. 외모를 가꾸는 조언을 나누는 루킹맥싱 커뮤니티에서도 쓰인다.</textarea>
+          
+          <label class="f" for="s-f44a94665f4f-5">6장</label>
+          <textarea id="s-f44a94665f4f-5" rows="6" data-slide="5">신조어 궁금한
+**친구한테** 보내기
+---
+Z세대와 알파 세대가 쓰던 속어가 영국 사전의 올해의 단어로 뽑혔다. 요즘 아이들 말이 낯설게 느껴지는 친구라면 궁금해할 소식</textarea>
+          
+          <label class="f" for="c-f44a94665f4f">본문 (캡션)</label>
+          <textarea id="c-f44a94665f4f" class="caption">영국 콜린스 사전이 올해의 단어로 &#39;mogging(모깅)&#39;을 뽑았다. 장난스럽게 누군가를 앞지르고 능가하고 주목을 가로챈다는 뜻으로 쓰이는 말이다. Z세대와 알파 세대 사이에서 빠르게 퍼진 속어로, 온라인과 일상 대화 모두에서 쓰이며 2026년 사용량이 210% 늘었다. 콜린스 대표 알렉스 비크로프트는 이번 선정이 세대마다 언어에 흔적을 남긴다는 점을 보여준다고 말했다. 철자가 비슷한 mugging과는 다른 말이고, 주로 외모 면에서 누군가를 압도하는 것을 가리킨다. 흔히 AMOG, 곧 &#39;무리의 알파 남성&#39;이라는 줄임말에서 비롯됐다고 거론되며 2010년대 중반 보디빌딩 포럼과 연관돼 왔다. 지금은 맥락에 따라 장난스러운 핀잔도, 칭찬도 되고 외모를 가꾸는 조언을 나누는 루킹맥싱 커뮤니티에서도 보인다. 참고로 2025년 올해의 단어는 &#39;vibe coding&#39;이었다. 올해 최종 후보 10개에는 ghost job, hydration break, P(doom), Manchesterism 등도 올랐다. 출처: BBC News, Collins English Dictionary</textarea>
+          <label class="f" for="t-f44a94665f4f">해시태그</label>
+          <input id="t-f44a94665f4f" type="text" class="tagsin" value="#모깅 #mogging #올해의단어 #Z세대 #신조어" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영국 콜린스 사전이 mogging을 올해의 단어로 선정했다</b>
+            <q>“&#34;Mogging&#34;, a word used playfully to mean outshining, outperforming or upstaging someone or something, has been named as word of the year by the Collins English Dictionary.”</q>
+            <small>slide1 · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mogging은 장난스럽게 남을 앞지르거나 능가하거나 주목을 가로챈다는 의미로 쓰인다</b>
+            <q>“&#34;Mogging&#34;, a word used playfully to mean outshining, outperforming or upstaging someone or something, has been named as word of the year by the Collins English Dictionary.”</q>
+            <small>slide2 · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mogging은 주로 외모 면에서 누군가를 압도하는 것을 가리킨다</b>
+            <q>“Mogging - not to be confused with mugging or mugging someone off - refers to outshining or dominating someone, most often in looks.”</q>
+            <small>slide2, caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mogging은 Z세대와 알파 세대 사이에서 빠르게 퍼진 속어로 온라인과 일상 대화에서 쓰인다</b>
+            <q>“A fast-growing slang word among members of Generations Z and Alpha - both online and in everyday conversation - mogging went mainstream in 2026 with a 210% increase in its usage.”</q>
+            <small>slide3, caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2026년 mogging 사용량이 210% 늘며 주류로 올라섰다</b>
+            <q>“A fast-growing slang word among members of Generations Z and Alpha - both online and in everyday conversation - mogging went mainstream in 2026 with a 210% increase in its usage.”</q>
+            <small>slide3, caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>콜린스 대표 알렉스 비크로프트는 이번 선정이 세대마다 언어에 흔적을 남긴다는 점을 보여준다고 말했다</b>
+            <q>“The selection of mogging as word of the year, he said, &#34;shows how each generation leaves its mark on language&#34;.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mogging은 흔히 AMOG(무리의 알파 남성)라는 줄임말에서 비롯됐다고 거론되며 2010년대 중반 보디빌딩 포럼과 연관돼 왔다</b>
+            <q>“The word is often traced back to the acronym AMOG, standing for Alpha Male of the Group, and has been variously associated with bodybuilding forums in the mid-2010s as well as the manosphere and Incels.”</q>
+            <small>slide4, caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지금은 맥락에 따라 장난스러운 핀잔이나 칭찬으로 쓰인다</b>
+            <q>“But it now has a much more mainstream usage, as a playful put-down or a compliment, depending on the context.”</q>
+            <small>slide5, caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mogging은 외모 향상 조언을 나누는 루킹맥싱 커뮤니티에서도 쓰인다</b>
+            <q>“It can be seen and heard in looksmaxxing communities - online groups where people swap advice on how to maximise their physical attractiveness.”</q>
+            <small>slide5, caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mogging은 mugging과 혼동하면 안 되는 다른 말이다</b>
+            <q>“Mogging - not to be confused with mugging or mugging someone off - refers to outshining or dominating someone, most often in looks.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2025년 콜린스 올해의 단어는 vibe coding이었다</b>
+            <q>“Its word of the year for 2025 was &#34;vibe coding&#34; - the art of making an app or website by describing it to artificial intelligence (AI) rather than by writing programming code manually.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 최종 후보 10개에 ghost job, hydration break, P(doom), Manchesterism 등이 포함됐다</b>
+            <q>“Other definitions that made the dictionary&#39;s 10-strong shortlist this year include ghost job, something frustrated jobseekers will be familiar with - when an employer posts a position with no intention of appointing someone.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">&#39;Mogging&#39; is Collins&#39; word of the year... but do you know what it means?</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.bbc.co.uk/news/articles/cve8rp085zzjo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">BBC / </a> — "https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/0a0b/live/0bfc2100-d46e-11f1-8228-c14a49713dc8.png"</li><li>2장: <a href="https://pixabay.com/photos/skull-mirror-horror-scary-4248008/" target="_blank" rel="noopener">creatifrankenstein / Pixabay</a> — "mirror"</li><li>3장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li><li>4장: <a href="https://pixabay.com/photos/physiotherapy-weight-training-595529/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "gym weights"</li><li>5장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li><li>6장: <a href="https://pixabay.com/photos/happy-holidays-women-talking-laugh-2567915/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "friends laughing"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-a77bcc1c9e13" data-id="a77bcc1c9e13">
+    <div class="head">
+      <h2>2. 카페 시럽 문화 전쟁</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 18
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-01.jpg" alt="1장: 카페 시럽이 레드플래그???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-02.jpg" alt="2장: 보이면 바로 나간다는 반응" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-03.jpg" alt="3장: 8달러 라떼에 기성 시럽?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-04.jpg" alt="4장: 안 한다던 시럽을 한다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-05.jpg" alt="5장: 호박 시럽에 이틀 걸림" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-06.jpg" alt="6장: 수제는 결국 마케팅이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-07.jpg" alt="7장: 카페 투어 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/a77bcc1c9e13/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">펜실베이니아 카페의 시럽 진열대를 찍은 틱톡 영상이 좋아요 8만 2천 개를 넘기며 화제가 됐다. 영상 자막은 &#39;내 라떼는 맛없을 게 뻔하다&#39;였고, 비슷한 반응이 SNS 곳곳에서 이어진다.
+
+일부 소비자에게 기성 시럽은 8달러에 팁까지 받는 전문점이 품질에서 손을 빼고 있다는 신호다. 반대로 독립 카페에는 수제 시럽이 기회가 되고 있다. 캘리포니아 벤투라의 룸서비스는 시럽 없는 정통 커피숍을 구상했지만, 지금은 직접 만든 시럽을 10~12종 내놓는다.
+
+오하이오주 베이 빌리지에서 트러스트 커피 컴퍼니를 연 마이클 스미스는 손님들이 메이플 로즈마리, 카라멜라이즈 바나나, 딸기 대황 같은 계절 시럽을 원했다고 말한다. 리틀 조이의 대표 코디 라슨은 대형 체인은 수제 시럽을 절대 하지 않을 테니 거기서 독립 카페가 앞설 수 있다고 했다.
+
+한편 조지아주 Bizarre Coffee의 세이브리나 케일러는 음료의 90%에 수제 시럽을 쓰면서도, 수제 시럽 논의의 상당 부분은 솔직히 마케팅이라고 말한다. 시럽 한 병이 카페의 정체성을 가르는 기준이 되고 있는 셈이다.
+
+출처: Eater</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#카페 #시럽 #틱톡화제 #커피문화 #해외반응</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 비슷한 반응이 SNS 곳곳에서 이어진다</li><li>근거 등록 안 된 주장: 독립 카페에는 수제 시럽이 기회가 되고 있다</li><li>근거 등록 안 된 주장: 출처는 Eater이다</li>
+          <li>특정 시럽 브랜드(토라니·모닌)에 대한 비판은 SNS 소비자 반응이며, 제품 품질 평가로 단정하면 안 됨</li><li>카드 속 반응·수치는 기사에 소개된 개별 사례로, 전체 소비자나 카페를 대표하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-a77bcc1c9e13-0">1장</label>
+          <textarea id="s-a77bcc1c9e13-0" rows="6" data-slide="0">카페 시럽이
+**레드플래그???**
+---
+펜실베이니아 카페의 시럽 진열대를 찍은 틱톡 영상이 좋아요 8만 2천 개를 넘기며 화제가 됐다.</textarea>
+          
+          <label class="f" for="s-a77bcc1c9e13-1">2장</label>
+          <textarea id="s-a77bcc1c9e13-1" rows="6" data-slide="1">보이면 바로
+**나간다는** 반응
+---
+영상 속 자막은 &#39;내 라떼는 맛없을 게 뻔하다&#39;였다. 트윗에는 카페에서 이걸 보면 바로 나가겠다는 글이 올라왔고, 많은 댓글이 같은 생각을 보탰다.</textarea>
+          
+          <label class="f" for="s-a77bcc1c9e13-2">3장</label>
+          <textarea id="s-a77bcc1c9e13-2" rows="6" data-slide="2">**8달러** 라떼에
+기성 시럽?
+---
+일부 소비자에게 기성 시럽은 라떼 한 잔에 8달러와 팁을 받는 전문점이 품질에서 손을 빼고 있다는 신호다. 체인점과 기업을 떠올리게 한다는 이유도 있다.</textarea>
+          
+          <label class="f" for="s-a77bcc1c9e13-3">4장</label>
+          <textarea id="s-a77bcc1c9e13-3" rows="6" data-slide="3">**안 한다던**
+시럽을 한다
+---
+캘리포니아 벤투라의 카페 룸서비스는 시럽도 특별 음료도 없는 정통 커피숍을 구상했다. 그러나 첫 주부터 손님마다 찾았고, 지금은 직접 만든 시럽을 10~12종 내놓는다.</textarea>
+          
+          <label class="f" for="s-a77bcc1c9e13-4">5장</label>
+          <textarea id="s-a77bcc1c9e13-4" rows="6" data-slide="4">호박 시럽에
+**이틀** 걸림
+---
+룸서비스의 PSL 시럽은 카보차 호박을 굽고 정향·계피 같은 향신료와 갈아 끓여 만든다. 이 과정에 이틀이 걸리며, 수제 메뉴 준비만 맡는 정규직 직원도 따로 뒀다.</textarea>
+          
+          <label class="f" for="s-a77bcc1c9e13-5">6장</label>
+          <textarea id="s-a77bcc1c9e13-5" rows="6" data-slide="5">수제는 결국
+**마케팅이래**
+---
+조지아주 Bizarre Coffee는 음료의 90%에 수제 시럽을 쓰지만, 인기 메뉴 하나는 여전히 병 시럽에 기댄다. 운영자 세이브리나 케일러는 수제 시럽 논쟁의 상당 부분이 솔직히 마케팅이라고 말한다.</textarea>
+          
+          <label class="f" for="s-a77bcc1c9e13-6">7장</label>
+          <textarea id="s-a77bcc1c9e13-6" rows="6" data-slide="6">카페 투어 좋아하는
+친구한테 보내기
+---
+수제 시럽이냐 기성 시럽이냐를 두고 소비자와 카페 운영자의 생각이 갈린다는 소식. 라떼를 즐겨 마시는 친구라면 흥미로워할 이야기</textarea>
+          
+          <label class="f" for="c-a77bcc1c9e13">본문 (캡션)</label>
+          <textarea id="c-a77bcc1c9e13" class="caption">펜실베이니아 카페의 시럽 진열대를 찍은 틱톡 영상이 좋아요 8만 2천 개를 넘기며 화제가 됐다. 영상 자막은 &#39;내 라떼는 맛없을 게 뻔하다&#39;였고, 비슷한 반응이 SNS 곳곳에서 이어진다.
+
+일부 소비자에게 기성 시럽은 8달러에 팁까지 받는 전문점이 품질에서 손을 빼고 있다는 신호다. 반대로 독립 카페에는 수제 시럽이 기회가 되고 있다. 캘리포니아 벤투라의 룸서비스는 시럽 없는 정통 커피숍을 구상했지만, 지금은 직접 만든 시럽을 10~12종 내놓는다.
+
+오하이오주 베이 빌리지에서 트러스트 커피 컴퍼니를 연 마이클 스미스는 손님들이 메이플 로즈마리, 카라멜라이즈 바나나, 딸기 대황 같은 계절 시럽을 원했다고 말한다. 리틀 조이의 대표 코디 라슨은 대형 체인은 수제 시럽을 절대 하지 않을 테니 거기서 독립 카페가 앞설 수 있다고 했다.
+
+한편 조지아주 Bizarre Coffee의 세이브리나 케일러는 음료의 90%에 수제 시럽을 쓰면서도, 수제 시럽 논의의 상당 부분은 솔직히 마케팅이라고 말한다. 시럽 한 병이 카페의 정체성을 가르는 기준이 되고 있는 셈이다.
+
+출처: Eater</textarea>
+          <label class="f" for="t-a77bcc1c9e13">해시태그</label>
+          <input id="t-a77bcc1c9e13" type="text" class="tagsin" value="#카페 #시럽 #틱톡화제 #커피문화 #해외반응" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>펜실베이니아 카페의 시럽 진열대를 찍은 틱톡 영상이 좋아요 8만 2천 개를 넘겼다.</b>
+            <q>“In a TikTok video with over 82,000 likes, the person behind the camera zooms into the shelves at a Pennsylvania coffee shop, three rows stacked with an array of Torani syrups in flavors like blueberry, brown-sugar cinnamon, English toffee, and salted caramel.”</q>
+            <small>slide1, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영상 자막은 &#39;내 라떼는 맛없을 게 뻔하다&#39;였다.</b>
+            <q>““I just know my latte isn’t going to be good,” the caption reads.”</q>
+            <small>slide2, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카페에서 이걸 보면 바로 나가겠다는 트윗에 많은 댓글이 동조했다.</b>
+            <q>““If I see these at a cafe, I’m walking out immediately,” says one tweet, co-signed by many commenters.”</q>
+            <small>slide2 · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일부 소비자에게 기성 시럽은 8달러와 팁을 받는 전문점이 품질에서 손을 빼고 있다는 신호다.</b>
+            <q>“For a certain sect of consumers, they’ve become a coffee shop red flag, a sign that a so-called “specialty” establishment asking them to fork over $8 plus tip for a latte is unfairly cutting corners when it comes to quality or craft.”</q>
+            <small>slide3, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기성 시럽은 체인점과 기업을 떠올리게 한다.</b>
+            <q>“For these consumers, mass-market syrups now symbolize exactly that: They’re synonymous with coffee chains and corporations, the kind of impersonal institutions that many people are trying to get away from when they patronize a small business.”</q>
+            <small>slide3 · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>캘리포니아 벤투라의 룸서비스는 처음에 시럽도 특별 음료도 없는 정통 커피숍을 구상했다.</b>
+            <q>““Very purist, with no syrups, no specialty drinks,” Dennis says.”</q>
+            <small>slide4, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>룸서비스는 캘리포니아 벤투라에 있는 카페다.</b>
+            <q>“When Carrie and Dennis Medina first envisioned their coffee shop, Room Service, in Ventura, California, they thought they would take an approach similar to the one at Sightglass Coffee, where they’d both gotten their start.”</q>
+            <small>slide4 · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>첫 주부터 손님마다 시럽 등을 찾았다.</b>
+            <q>“But in the first week alone, every customer was asking for them.”</q>
+            <small>slide4 · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>룸서비스는 직접 만든 시럽을 10~12종 내놓는다.</b>
+            <q>“Now, Room Service offers 10 to 12 different syrups at any given time (and six different cream tops), all of them made in-house.”</q>
+            <small>slide4, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>룸서비스의 PSL 시럽은 카보차 호박을 굽고 향신료와 갈아 끓이며 이틀이 걸린다.</b>
+            <q>“Room Service’s PSL, for example, starts with kabocha squash. It’s roasted, blended with spices such as cloves and cinnamon, and cooked into syrup, a process that takes two days.”</q>
+            <small>slide5 · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>룸서비스는 수제 메뉴 준비만 맡는 정규직 직원을 뒀다.</b>
+            <q>“The demand for syrups and other embellishments is so intense that the Medinas have brought on a full-time prep person who works exclusively on “all these things that we do in-house that make us special,” Carrie says.”</q>
+            <small>slide5 · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>조지아주 Bizarre Coffee는 음료의 90%에 수제 시럽을 쓰지만 인기 메뉴 하나는 병 시럽에 기댄다.</b>
+            <q>“Today, 90 percent of Bizarre’s drinks use house-made syrups, though one of its best-selling drinks still relies on the bottled stuff; Bizarre’s menu is extensive and making everything in-house would be a significant investment of labor.”</q>
+            <small>slide6, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>케일러는 수제 시럽 논의의 상당 부분이 솔직히 마케팅이라고 말한다.</b>
+            <q>“On the part of coffee shops, “I think a lot of [the house-made syrup conversation] is marketing, quite honestly,” Kaylor says.”</q>
+            <small>slide6, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세이브리나 케일러가 조지아주 캔턴에서 Bizarre Coffee 1호점을 열었다.</b>
+            <q>“When Sabrina Kaylor opened the first location of Bizarre Coffee in Canton, Georgia in 2020, the shop used bottled syrups.”</q>
+            <small>slide6, caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마이클 스미스가 오하이오주 베이 빌리지에서 트러스트 커피 컴퍼니를 열었다.</b>
+            <q>“In 2025, Michael Smith opened Trust Coffee Co. in Bay Village, Ohio, taking over, remodeling, and rebranding an older coffee shop.”</q>
+            <small>caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>트러스트의 손님들은 메이플 로즈마리, 카라멜라이즈 바나나, 딸기 대황 같은 계절 시럽을 원했다.</b>
+            <q>“His customers, it turned out, wanted seasonal syrups in niche flavors like maple rosemary, caramelized banana, and strawberry rhubarb.”</q>
+            <small>caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>리틀 조이 대표 코디 라슨은 대형 체인은 수제 시럽을 하지 않을 테니 독립 카페가 앞설 수 있다고 말했다.</b>
+            <q>““The big coffee chains, they’re never gonna do house-made syrups, so I think that’s where independent shops can get a leg up,” he said.”</q>
+            <small>caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>코디 라슨은 리틀 조이의 대표다.</b>
+            <q>“Yes, these might just be recipes for syrups and foams, but in an interview with Eater’s industry newsletter Pre Shift earlier this year, Little Joy owner Cody Larson described the system as a way to build solidarity among independent businesses.”</q>
+            <small>caption · <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">How Syrups Became a Coffee-Shop Culture War</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">Eater / </a> — "https://platform.eater.com/wp-content/uploads/sites/2/2026/11/syrup-header.jpg?quality=90&amp;strip=all&amp;crop=0%2C0%2C100%2C100&amp;w=2400"</li><li>2장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li><li>3장: <a href="https://pixabay.com/photos/coffee-pen-notebook-open-notebook-2306471/" target="_blank" rel="noopener">Engin_Akyurt / Pixabay</a> — "latte cup"</li><li>4장: <a href="https://pixabay.com/photos/coffee-cappuccino-latte-espresso-4334647/" target="_blank" rel="noopener">13027327 / Pixabay</a> — "barista"</li><li>5장: <a href="https://pixabay.com/photos/harvest-pumpkin-autumn-halloween-4454745/" target="_blank" rel="noopener">suju-foto / Pixabay</a> — "pumpkin"</li><li>6장: <a href="https://www.eater.com/dining-out/997706/house-made-syrup-coffee-shop-trend-torani-monin-backlash" target="_blank" rel="noopener">Eater / </a> — "https://platform.eater.com/wp-content/uploads/sites/2/2026/11/bizarre-coffee-syrup.jpeg?quality=90&amp;strip=all&amp;crop=5.7447265625%2C20.567970784505%2C93.873010253906%2C78.227508544922&amp;w=2400"</li><li>7장: <a href="https://pixabay.com/photos/coffee-coffee-cup-cup-drink-beans-2714970/" target="_blank" rel="noopener">cocoparisienne / Pixabay</a> — "coffee beans"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-7e2083a34362" data-id="7e2083a34362">
+    <div class="head">
+      <h2>3. 네스호 비버 방사 승인</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/7e2083a34362/v1-01.jpg" alt="1장: 네스호에 새 괴물???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/7e2083a34362/v1-02.jpg" alt="2장: 10월 30일 허가가 떨어졌다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/7e2083a34362/v1-03.jpg" alt="3장: 비버는 생태계 공학자" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/7e2083a34362/v1-04.jpg" alt="4장: 응답자 73%가 찬성했다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/7e2083a34362/v1-05.jpg" alt="5장: 이사 오는 비버는 농지 피해 지역 출신" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/7e2083a34362/v1-06.jpg" alt="6장: 네스호 괴물 믿는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-am-08b288915b8c/7e2083a34362/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">네스호에 새 괴물이 온다. 이번엔 이빨이 날카롭고 다 자란 나무도 쓰러뜨릴 수 있는 비버다.
+
+스코틀랜드 자연 당국 네이처스코트는 10월 30일, 비영리단체 트리스 포 라이프와 비버 트러스트에 네스강 유역 비버 방사 허가를 내줬다. 3년에 걸쳐 최대 15가족을 풀 수 있고, 이 유역에는 네스호도 포함된다. 이 일대에서 비버가 마지막으로 목격된 시기는 1526~1527년이라고 한다.
+
+심사에서는 비버가 이 유역의 생물 다양성을 크게 높일 수 있고, 비버 활동으로 인한 부정적 영향의 위험은 낮다고 결론 냈다. 네이처스코트 관계자는 비버가 연못과 습지를 만들어 다른 생물이 번성할 서식지를 만들고, 홍수나 물 부족 때 물의 흐름을 조절해 준다고 설명했다.
+
+의견 수렴에서는 응답자 73% 넘게 찬성했다. 다만 토지·어업 관리자와 주민 일부가 우려를 제기했고, 당국은 이를 심각하게 받아들이며 완화 계획을 검토했다고 밝혔다.
+
+방사될 비버는 우량 농지에 피해를 주는 지역에서 붙잡아 오며, 건강 검진을 거친 뒤 풀려난다. 단체들은 이동이 앞으로 몇 주 안에 시작될 수 있다고 했다. 스코틀랜드에서는 2009년 재도입 이후 비버가 다시 야생에서 살고 있다.
+
+다음에 호수 위로 길고 가는 물체가 움직이면, 네시가 아니라 통나무를 문 새 식구일지도 모른다.
+
+출처: NatureScot, Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#네스호 #비버 #스코틀랜드 #해외뉴스 #자연이야기</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 1526~1527년 이후 &#39;500년 전&#39;이라는 표현의 계산 (슬라이드1 본문)</li><li>근거 등록 안 된 주장: 비버를 &#39;생태계 공학자&#39;로 부른 표현 (슬라이드3)</li><li>근거 등록 안 된 주장: 당국이 방사 관련 완화 계획(monitoring and mitigation plans)을 검토했다는 내용 (캡션, 슬라이드4)</li><li>근거 등록 안 된 주장: 기존 비버 완화 계획(existing beaver mitigation scheme)을 근거로 갈등을 해결할 수 있다고 본 판단</li>
+          <li>일부 토지·어업 관리자와 주민이 우려를 제기한 사안이라 찬성 일변도로 읽히지 않게 주의</li><li>방사 시작 시점은 원문상 &#39;앞으로 몇 주 안에 시작될 수 있다&#39;는 가능성일 뿐 확정이 아님</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-7e2083a34362-0">1장</label>
+          <textarea id="s-7e2083a34362-0" rows="6" data-slide="0">네스호에
+**새 괴물**???
+---
+스코틀랜드 당국이 네스강 유역에 비버를 풀어놓는 계획을 승인했고, 이 일대에서 비버가 마지막으로 목격된 건 500년 전이다.</textarea>
+          
+          <label class="f" for="s-7e2083a34362-1">2장</label>
+          <textarea id="s-7e2083a34362-1" rows="6" data-slide="1">10월 30일
+**허가**가 떨어졌다
+---
+스코틀랜드 자연 당국 네이처스코트가 비영리단체 두 곳에 허가를 내줬다. 3년에 걸쳐 최대 15가족의 비버를 네스강 유역에 풀 수 있다.</textarea>
+          
+          <label class="f" for="s-7e2083a34362-2">3장</label>
+          <textarea id="s-7e2083a34362-2" rows="6" data-slide="2">비버는
+생태계 **공학자**
+---
+네이처스코트는 비버가 연못과 습지를 만들어 다른 생물이 살 환경을 만든다고 설명했다. 홍수나 물 부족 때 물의 흐름을 조절하는 효과도 꼽았다.</textarea>
+          
+          <label class="f" for="s-7e2083a34362-3">4장</label>
+          <textarea id="s-7e2083a34362-3" rows="6" data-slide="3">응답자 **73%**가
+찬성했다
+---
+비버 방사를 두고 진행된 의견 수렴에서 응답자의 73% 넘게 찬성했다. 다만 토지·어업 관리자와 주민 일부는 우려를 냈고, 당국은 이를 심각하게 받아들인다고 밝혔다.</textarea>
+          
+          <label class="f" for="s-7e2083a34362-4">5장</label>
+          <textarea id="s-7e2083a34362-4" rows="6" data-slide="4">이사 오는 비버는
+농지 피해 지역 출신
+---
+방사될 비버는 우량 농지에 피해를 주는 지역에서 붙잡아 옮겨 온다. 건강 검진을 거친 뒤에야 풀어 준다. 스코틀랜드에선 2009년 재도입 이후 비버가 다시 야생에서 살고 있다.</textarea>
+          
+          <label class="f" for="s-7e2083a34362-5">6장</label>
+          <textarea id="s-7e2083a34362-5" rows="6" data-slide="5">네스호 괴물 믿는
+**친구**한테 보내기
+---
+이제 호수 위에 길쭉한 물체가 지나가도 통나무를 문 비버일 수 있다. 네시 목격담을 좋아하는 친구가 웃을 소식</textarea>
+          
+          <label class="f" for="c-7e2083a34362">본문 (캡션)</label>
+          <textarea id="c-7e2083a34362" class="caption">네스호에 새 괴물이 온다. 이번엔 이빨이 날카롭고 다 자란 나무도 쓰러뜨릴 수 있는 비버다.
+
+스코틀랜드 자연 당국 네이처스코트는 10월 30일, 비영리단체 트리스 포 라이프와 비버 트러스트에 네스강 유역 비버 방사 허가를 내줬다. 3년에 걸쳐 최대 15가족을 풀 수 있고, 이 유역에는 네스호도 포함된다. 이 일대에서 비버가 마지막으로 목격된 시기는 1526~1527년이라고 한다.
+
+심사에서는 비버가 이 유역의 생물 다양성을 크게 높일 수 있고, 비버 활동으로 인한 부정적 영향의 위험은 낮다고 결론 냈다. 네이처스코트 관계자는 비버가 연못과 습지를 만들어 다른 생물이 번성할 서식지를 만들고, 홍수나 물 부족 때 물의 흐름을 조절해 준다고 설명했다.
+
+의견 수렴에서는 응답자 73% 넘게 찬성했다. 다만 토지·어업 관리자와 주민 일부가 우려를 제기했고, 당국은 이를 심각하게 받아들이며 완화 계획을 검토했다고 밝혔다.
+
+방사될 비버는 우량 농지에 피해를 주는 지역에서 붙잡아 오며, 건강 검진을 거친 뒤 풀려난다. 단체들은 이동이 앞으로 몇 주 안에 시작될 수 있다고 했다. 스코틀랜드에서는 2009년 재도입 이후 비버가 다시 야생에서 살고 있다.
+
+다음에 호수 위로 길고 가는 물체가 움직이면, 네시가 아니라 통나무를 문 새 식구일지도 모른다.
+
+출처: NatureScot, Good News Network</textarea>
+          <label class="f" for="t-7e2083a34362">해시태그</label>
+          <input id="t-7e2083a34362" type="text" class="tagsin" value="#네스호 #비버 #스코틀랜드 #해외뉴스 #자연이야기" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>네스호 일대에서 비버가 마지막으로 목격된 시기는 1526~1527년이다.</b>
+            <q>“Beavers were last sighted in the area around Scotland’s most famous lake between 1526 and 1527.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>네이처스코트가 두 비영리단체에 3년간 최대 15가족의 비버 방사를 허가했다.</b>
+            <q>“A licence has been granted to Trees for Life and the Beaver Trust to release up to 15 beaver families over three years.”</q>
+            <small>slide2, caption · <a href="https://presscentre.nature.scot/news/beaver-release-approved-in-the-river-ness-catchment" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 30일 네이처스코트가 허가를 냈고 대상 유역에 호수가 포함된다.</b>
+            <q>“The news came on October 30th, when the national conservation authority NatureScot granted a license to a pair of nonprofits, Trees for Life and the Beaver Trust, to release up to 15 beaver families over 3 years in the River Ness catchment area, which includes the lake.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>비버는 연못과 습지를 만들고 홍수·물 부족 때 물의 흐름을 조절한다.</b>
+            <q>“Beavers can bring many benefits for nature and people, creating habitats such as ponds and wetlands where other species thrive, as well as moderating water flows in times of flood and water scarcity.”</q>
+            <small>slide3, caption · <a href="https://presscentre.nature.scot/news/beaver-release-approved-in-the-river-ness-catchment" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>심사에서 비버가 생물 다양성을 크게 높일 수 있고 부정적 영향 위험은 낮다고 결론 냈다.</b>
+            <q>“The assessment concluded that beavers could significantly boost biodiversity in the catchment, with the landscape at low risk of negative impacts from beaver activity.”</q>
+            <small>caption · <a href="https://presscentre.nature.scot/news/beaver-release-approved-in-the-river-ness-catchment" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>의견 수렴 응답자의 73% 넘게 찬성했고, 토지·어업 관리자와 주민 일부는 우려를 제기했다.</b>
+            <q>“Overall responses to the applicants’ consultation process were positive, with more than 73% of respondents supportive. However, some concerns were raised by land and fisheries managers and residents within the catchment.”</q>
+            <small>slide4, summary, caption · <a href="https://presscentre.nature.scot/news/beaver-release-approved-in-the-river-ness-catchment" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>당국은 제기된 우려를 심각하게 받아들인다고 밝혔다.</b>
+            <q>“Some concerns have been raised by land managers and residents through the consultation process and we take these seriously.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>방사될 비버는 농지에 피해를 주는 지역에서 붙잡아 오며 건강 검진을 거친다.</b>
+            <q>“Any beavers released will be trapped and taken under licence from areas where they are having a negative impact on prime agricultural land and where mitigation measures have not been successful or are not possible. The beavers will undergo appropriate health screening before being released.”</q>
+            <small>slide5, caption · <a href="https://presscentre.nature.scot/news/beaver-release-approved-in-the-river-ness-catchment" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스코틀랜드에서는 2009년 재도입 이후 비버가 다시 야생에서 살고 있다.</b>
+            <q>“Beavers have again lived wild in Scotland since they were reintroduced in 2009.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>비버는 날카로운 이빨로 다 자란 나무도 쓰러뜨릴 수 있다.</b>
+            <q>“This beastie is not to be trifled with: it has razor-sharp teeth and can easily knock down a fully-grown tree.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>단체들은 이동이 앞으로 몇 주 안에 시작될 수 있다고 했다.</b>
+            <q>“The nonprofits have said that translocations could begin in the following weeks.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>호수 위 길쭉한 물체는 네시가 아니라 통나무를 문 비버일 수 있다는 농담이 있다.</b>
+            <q>“The next time you see a long, thin object moving over the lake and assume its Nessie, make sure to double check it isn’t a log in the jaws of the new kid on the loch.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/loch-ness-is-about-to-welcome-a-new-monster-the-beaver-500-years-since-it-last-lived-there/" target="_blank" rel="noopener">Loch Ness Is About to Welcome a New Monster Not Seen There in 500 Years–the Beaver!</a> (기사)</li><li><a href="https://presscentre.nature.scot/news/beaver-release-approved-in-the-river-ness-catchment" target="_blank" rel="noopener">Beaver release approved in the River Ness catchment</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:View-of-Loch-Ness-Scotland.jpg" target="_blank" rel="noopener">acediscovery / Wikimedia Commons · CC BY 4.0</a> — "Loch Ness"</li><li>2장: <a href="https://pixabay.com/photos/vineyards-vines-wine-moselle-flow-4336787/" target="_blank" rel="noopener">Tama66 / Pixabay</a> — "river valley"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Beaver_-_Eurasian_beaver_-_Castor_fiber.jpg" target="_blank" rel="noopener">Bouke ten Cate / Wikimedia Commons · CC BY 4.0</a> — "Eurasian beaver"</li><li>4장: <a href="https://pixabay.com/photos/hills-trees-fog-morning-fog-foggy-615429/" target="_blank" rel="noopener">jpeter2 / Pixabay</a> — "countryside village"</li><li>5장: <a href="https://www.aol.co.uk/articles/beavers-reintroduced-loch-ness-waters-133359000.html" target="_blank" rel="noopener">AOL / </a> — "https://hermes.media.static.aol.com/media/2026/10/30/59a6cdb3-0b38-3cb7-9ca5-4670fecdc224/4038a076-5110-4872-8839-26f9a449eec0.jpg"</li><li>6장: <a href="https://pixabay.com/photos/fountain-water-fountain-tree-trunk-7086464/" target="_blank" rel="noopener">NickyPe / Pixabay</a> — "wooden log water"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 1개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-819bc25ebf13">
+    <div class="head">
+      <h2>S1. 무릎 관절염 이눌린 임상시험 (장-통증-악력)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-819bc25ebf13">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 무릎 통증을 관절 밖 장 쪽에서 찾아본 임상시험. 운동 그룹 중도 탈락 21% 대 3.6%라는 대비와 뜬금없는 악력 변화가 눈에 띄는 각도. 특정 보충제 권유로는 읽히지 않게 연구 결과와 한계 위주로 전달.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">무릎 관절염 통증, 이번엔 &#39;장 속 세균&#39; 쪽에서 답을 찾아본 임상시험이 나왔대
+통증만 줄어든 게 아니라 엉뚱하게 &#39;악력&#39;까지 달라졌다는 결과
+근데 운동 그룹이랑 비교하니 숫자가 꽤 의외였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 이눌린이라는 프리바이오틱 섬유를 먹은 무릎 관절염 환자들은 통증이 의미 있게 줄고, 악력이 좋아지고, 통증 민감도도 낮아졌대. 6주 동안 성인 117명을 무작위로 나눠 비교한 연구야. 근데 섬유가 왜 장을 거쳐 통증이랑 이어질까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">2/ 이눌린은 치커리 뿌리 같은 식품에 들어 있는 섬유야. 소장의 소화효소로는 분해되지 않고 대장까지 가서 유익균의 먹이가 된대. 그럼 그 세균들이 뭘 만들어냈을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">3/ 이눌린을 먹은 사람들은 장내 세균이 만드는 부티르산 수치가 늘었어. GLP-1이라는 장 호르몬도 더 높았는데, 오젬픽·위고비가 겨냥하는 바로 그 호르몬이야. 다만 이번에 쓴 이눌린은 GLP-1 약이 아니래. 그럼 이 호르몬은 악력이랑 무슨 상관이었을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">4/ GLP-1 수치가 높을수록 악력이 좋은 것과 연관이 있었어. 다만 GLP-1이 원인이라고 확정할 수는 없다고 해. 장에서 시작된 변화가 통증뿐 아니라 근육 기능과도 이어져 있을 수 있다는 단서 정도야. 그럼 운동 프로그램이랑 비교하면 어땠을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">156/500자</span></div>
+      <p class="tp-text">5/ 연구는 네 그룹으로 나눴어. 이눌린만, 디지털 물리치료만, 둘 다, 위약. 무릎 통증은 이눌린도 물리치료도 각각 줄였고, 악력·통증 민감도 개선은 물리치료만 한 쪽에선 안 보였대. 중도 탈락은 이눌린만 3.6%, 물리치료만 21%. 그럼 이게 운동을 대신해도 된다는 뜻일까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">6/ 연구 요약 정리
+- 대상: 무릎 관절염 성인 117명, 6주, 무작위 대조
+- 이눌린·물리치료 모두 무릎 통증 감소
+- 이눌린 쪽에서만 악력 개선, 통증 민감도 감소
+- 중도 탈락 이눌린만 3.6% vs 물리치료만 21%
+- 한계: 규모 작고 6주뿐, 운동·기존 치료를 대체한다는 결과 아님</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">247/500자</span></div>
+      <p class="tp-text">7/ 결국 이번 연구는 장 건강이 통증·근육과 이어져 있을 수 있다는 첫 단서고, 연구진도 더 크고 긴 연구가 필요하다고 해. 자기한테 맞는지는 의사랑 상의가 먼저야.
+운동 루틴 지키기 vs 매일 뭔가 챙기기, 어느 쪽이 더 오래 갈 것 같아?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이눌린은 프리바이오틱 섬유이다(캡션·1/)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>무릎 관절염 통증, 이번엔 &#39;장 속 세균&#39; 쪽에서 답을 찾아본 임상시험이 나왔대</li><li>운동 프로그램은 5명 중 1명 넘게 그만뒀는데, 이쪽은 100명 중 3~4명만 그만뒀대</li><li>&#39;무릎 통증은 무릎만의 문제&#39;라는 말, 이 연구 보면 좀 달라짐</li><li>관절염 연구에서 갑자기 &#39;악력&#39; 얘기가 나온 이유</li><li>운동 꾸준히 하기 어렵다는 말, 이 탈락률 숫자 보면 이해됨</li><li>위고비로 유명한 그 호르몬 GLP-1이 관절염 연구에 등장했대</li><li>관절염 통증을 관절이 아니라 &#39;장&#39;에서 찾아본 연구가 나옴</li><li>무릎 관절염 117명을 6주 지켜봤더니 통증 말고 악력까지 달라졌대</li><li>관절염 통증, 약이나 운동 말고 &#39;소화 안 되는 섬유&#39;를 봤다는 연구</li><li>통증이 줄었는데 근육 힘 지표까지 같이 움직였다는 임상시험</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>운동 루틴 지키기 vs 매일 뭔가 챙기기, 어느 쪽이 더 오래 갈 것 같아?</li><li>운동 계획 세웠다가 3주 안에 포기해본 사람?</li><li>건강 뉴스에 &#39;6주짜리 작은 연구&#39;라고 나오면 믿는 편 vs 더 지켜보는 편?</li><li>&#39;장 건강&#39; 얘기, 유행이라고 느끼는 편 vs 진짜라고 느끼는 편?</li><li>GLP-1이 관절염 연구에 나올 줄 알았던 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>장 속 세균이 통증을 느끼는 방식에 영향을 준다는 연구들</li><li>GLP-1 호르몬과 근육·악력의 연관 연구</li><li>운동 프로그램을 꾸준히 못 지키는 이유를 다룬 연구</li><li>무릎 관절염 환자의 운동치료 효과 연구</li><li>노화와 근력 저하를 장 건강과 엮어 본 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>편집자 제외 기준(보충제 권유)에 걸린 소재. 글 전체가 특정 보충제 복용 권유로 읽히지 않는지 게시 전 확인 필요. 본문은 이눌린 제품·복용법·용량을 언급하지 않고 연구 결과와 한계 위주로 씀</li><li>GLP-1과 악력은 &#39;연관&#39;이고 원인이 아니라는 원문 단서가 있음. 인과로 읽히지 않는지 확인 필요</li><li>오젬픽·위고비를 GLP-1 약 맥락으로만 언급. 이눌린이 비슷한 효과라는 식으로 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이눌린을 먹은 무릎 관절염 환자들은 통증이 의미 있게 줄고 악력이 좋아지고 통증 민감도가 낮아졌다</b>
+          <q>“In a clinical trial led by researchers at the University of Nottingham, people with knee osteoarthritis (OA) who took a prebiotic fiber called inulin experienced significant reductions in pain, improved grip strength, and decreased sensitivity to pain.”</q>
+          <small>post0, post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>6주 무작위 대조 연구, 무릎 관절염 성인 117명</b>
+          <q>“To investigate these effects, the researchers conducted the INSPIRE trial, a six-week randomized controlled study involving 117 adults with knee osteoarthritis.”</q>
+          <small>post1, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이눌린은 치커리 뿌리 등에 들어 있는 섬유</b>
+          <q>“The supplement tested in the study was inulin, a naturally occurring fiber found in foods such as chicory root, Jerusalem artichokes, and certain other vegetables.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이눌린은 소장에서 분해되지 않고 대장에서 유익균의 먹이가 된다</b>
+          <q>“Unlike many nutrients, inulin is not broken down by digestive enzymes in the small intestine. Instead, it passes into the large intestine, where beneficial bacteria can use it as food.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이눌린을 먹은 참가자에서 부티르산 수치가 늘었다</b>
+          <q>“The researchers found that participants taking inulin had increased levels of butyrate, suggesting that the supplement was influencing activity within the gut microbiome.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>GLP-1 수치도 더 높았고 이 호르몬은 장에서 분비된다</b>
+          <q>“They also observed higher levels of glucagon-like peptide-1 (GLP-1), a hormone released by the gut that helps regulate blood sugar and appetite and has also been linked to pain regulation and muscle health.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>GLP-1은 오젬픽·위고비가 겨냥하는 호르몬이지만 이번 이눌린은 GLP-1 약이 아니다</b>
+          <q>“GLP-1 has attracted widespread attention because it is the hormone targeted by medications such as Ozempic and Wegovy. However, the inulin supplement used in this trial was not a GLP-1 medication.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>GLP-1 수치가 높을수록 악력이 좋은 것과 연관이 있었으나 원인이라고 확정할 수 없다</b>
+          <q>“One particularly interesting finding was that higher GLP-1 levels were associated with better grip strength. Although this does not establish that GLP-1 caused the improvement, it suggests that changes originating in the digestive system may be connected to muscle function as well as pain.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>네 그룹: 이눌린만, 디지털 물리치료만, 둘 다, 위약</b>
+          <q>“Participants were assigned to one of four treatment groups: a daily inulin supplement alone, digitally supported physical therapy exercises (PSE) alone, a combination of inulin and physical therapy, or a placebo.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이눌린도 물리치료도 각각 무릎 통증을 줄였다</b>
+          <q>“Both inulin and physical therapy independently reduced knee pain, indicating that each approach provided meaningful symptom relief.”</q>
+          <small>post5, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>악력과 통증 민감도 개선은 물리치료만 한 쪽에선 관찰되지 않았다</b>
+          <q>“However, the supplement produced additional improvements that were not observed with physical therapy alone. Participants taking inulin demonstrated better grip strength and reduced pain sensitivity.”</q>
+          <small>post5, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>중도 탈락률 이눌린만 3.6%, 물리치료만 21%</b>
+          <q>“Only 3.6% of those assigned to inulin alone dropped out of the study, compared with 21% of those assigned to physical therapy alone.”</q>
+          <small>post0, post5, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>규모가 비교적 작고 6주뿐인 연구라는 한계</b>
+          <q>“The findings are promising, but the trial was relatively small and lasted only six weeks.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>결과가 운동이나 기존 치료를 대체해야 한다는 뜻은 아니다</b>
+          <q>“The results also do not suggest that fiber supplements should replace exercise or other established arthritis treatments.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>효과가 지속되는지 등을 알려면 더 크고 긴 연구가 필요하다</b>
+          <q>“Larger studies with longer follow-up periods will be needed to establish whether the benefits persist, identify which patients are most likely to respond, and clarify the biological mechanisms responsible.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="819bc25ebf13">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261027230715.htm" target="_blank" rel="noopener">A simple daily fiber supplement reduced arthritis pain and improved strength</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261104-am";
+  const ORIGINAL = {"7e2083a34362": {"caption": "\ub124\uc2a4\ud638\uc5d0 \uc0c8 \uad34\ubb3c\uc774 \uc628\ub2e4. \uc774\ubc88\uc5d4 \uc774\ube68\uc774 \ub0a0\uce74\ub86d\uace0 \ub2e4 \uc790\ub780 \ub098\ubb34\ub3c4 \uc4f0\ub7ec\ub728\ub9b4 \uc218 \uc788\ub294 \ube44\ubc84\ub2e4.\n\n\uc2a4\ucf54\ud2c0\ub79c\ub4dc \uc790\uc5f0 \ub2f9\uad6d \ub124\uc774\ucc98\uc2a4\ucf54\ud2b8\ub294 10\uc6d4 30\uc77c, \ube44\uc601\ub9ac\ub2e8\uccb4 \ud2b8\ub9ac\uc2a4 \ud3ec \ub77c\uc774\ud504\uc640 \ube44\ubc84 \ud2b8\ub7ec\uc2a4\ud2b8\uc5d0 \ub124\uc2a4\uac15 \uc720\uc5ed \ube44\ubc84 \ubc29\uc0ac \ud5c8\uac00\ub97c \ub0b4\uc92c\ub2e4. 3\ub144\uc5d0 \uac78\uccd0 \ucd5c\ub300 15\uac00\uc871\uc744 \ud480 \uc218 \uc788\uace0, \uc774 \uc720\uc5ed\uc5d0\ub294 \ub124\uc2a4\ud638\ub3c4 \ud3ec\ud568\ub41c\ub2e4. \uc774 \uc77c\ub300\uc5d0\uc11c \ube44\ubc84\uac00 \ub9c8\uc9c0\ub9c9\uc73c\ub85c \ubaa9\uaca9\ub41c \uc2dc\uae30\ub294 1526~1527\ub144\uc774\ub77c\uace0 \ud55c\ub2e4.\n\n\uc2ec\uc0ac\uc5d0\uc11c\ub294 \ube44\ubc84\uac00 \uc774 \uc720\uc5ed\uc758 \uc0dd\ubb3c \ub2e4\uc591\uc131\uc744 \ud06c\uac8c \ub192\uc77c \uc218 \uc788\uace0, \ube44\ubc84 \ud65c\ub3d9\uc73c\ub85c \uc778\ud55c \ubd80\uc815\uc801 \uc601\ud5a5\uc758 \uc704\ud5d8\uc740 \ub0ae\ub2e4\uace0 \uacb0\ub860 \ub0c8\ub2e4. \ub124\uc774\ucc98\uc2a4\ucf54\ud2b8 \uad00\uacc4\uc790\ub294 \ube44\ubc84\uac00 \uc5f0\ubabb\uacfc \uc2b5\uc9c0\ub97c \ub9cc\ub4e4\uc5b4 \ub2e4\ub978 \uc0dd\ubb3c\uc774 \ubc88\uc131\ud560 \uc11c\uc2dd\uc9c0\ub97c \ub9cc\ub4e4\uace0, \ud64d\uc218\ub098 \ubb3c \ubd80\uc871 \ub54c \ubb3c\uc758 \ud750\ub984\uc744 \uc870\uc808\ud574 \uc900\ub2e4\uace0 \uc124\uba85\ud588\ub2e4.\n\n\uc758\uacac \uc218\ub834\uc5d0\uc11c\ub294 \uc751\ub2f5\uc790 73% \ub118\uac8c \ucc2c\uc131\ud588\ub2e4. \ub2e4\ub9cc \ud1a0\uc9c0\u00b7\uc5b4\uc5c5 \uad00\ub9ac\uc790\uc640 \uc8fc\ubbfc \uc77c\ubd80\uac00 \uc6b0\ub824\ub97c \uc81c\uae30\ud588\uace0, \ub2f9\uad6d\uc740 \uc774\ub97c \uc2ec\uac01\ud558\uac8c \ubc1b\uc544\ub4e4\uc774\uba70 \uc644\ud654 \uacc4\ud68d\uc744 \uac80\ud1a0\ud588\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\ubc29\uc0ac\ub420 \ube44\ubc84\ub294 \uc6b0\ub7c9 \ub18d\uc9c0\uc5d0 \ud53c\ud574\ub97c \uc8fc\ub294 \uc9c0\uc5ed\uc5d0\uc11c \ubd99\uc7a1\uc544 \uc624\uba70, \uac74\uac15 \uac80\uc9c4\uc744 \uac70\uce5c \ub4a4 \ud480\ub824\ub09c\ub2e4. \ub2e8\uccb4\ub4e4\uc740 \uc774\ub3d9\uc774 \uc55e\uc73c\ub85c \uba87 \uc8fc \uc548\uc5d0 \uc2dc\uc791\ub420 \uc218 \uc788\ub2e4\uace0 \ud588\ub2e4. \uc2a4\ucf54\ud2c0\ub79c\ub4dc\uc5d0\uc11c\ub294 2009\ub144 \uc7ac\ub3c4\uc785 \uc774\ud6c4 \ube44\ubc84\uac00 \ub2e4\uc2dc \uc57c\uc0dd\uc5d0\uc11c \uc0b4\uace0 \uc788\ub2e4.\n\n\ub2e4\uc74c\uc5d0 \ud638\uc218 \uc704\ub85c \uae38\uace0 \uac00\ub294 \ubb3c\uccb4\uac00 \uc6c0\uc9c1\uc774\uba74, \ub124\uc2dc\uac00 \uc544\ub2c8\ub77c \ud1b5\ub098\ubb34\ub97c \ubb38 \uc0c8 \uc2dd\uad6c\uc77c\uc9c0\ub3c4 \ubaa8\ub978\ub2e4.\n\n\ucd9c\ucc98: NatureScot, Good News Network", "hashtags": ["#\ub124\uc2a4\ud638", "#\ube44\ubc84", "#\uc2a4\ucf54\ud2c0\ub79c\ub4dc", "#\ud574\uc678\ub274\uc2a4", "#\uc790\uc5f0\uc774\uc57c\uae30"], "slides": [["\ub124\uc2a4\ud638\uc5d0", "**\uc0c8 \uad34\ubb3c**???", "---", "\uc2a4\ucf54\ud2c0\ub79c\ub4dc \ub2f9\uad6d\uc774 \ub124\uc2a4\uac15 \uc720\uc5ed\uc5d0 \ube44\ubc84\ub97c \ud480\uc5b4\ub193\ub294 \uacc4\ud68d\uc744 \uc2b9\uc778\ud588\uace0, \uc774 \uc77c\ub300\uc5d0\uc11c \ube44\ubc84\uac00 \ub9c8\uc9c0\ub9c9\uc73c\ub85c \ubaa9\uaca9\ub41c \uac74 500\ub144 \uc804\uc774\ub2e4."], ["10\uc6d4 30\uc77c", "**\ud5c8\uac00**\uac00 \ub5a8\uc5b4\uc84c\ub2e4", "---", "\uc2a4\ucf54\ud2c0\ub79c\ub4dc \uc790\uc5f0 \ub2f9\uad6d \ub124\uc774\ucc98\uc2a4\ucf54\ud2b8\uac00 \ube44\uc601\ub9ac\ub2e8\uccb4 \ub450 \uacf3\uc5d0 \ud5c8\uac00\ub97c \ub0b4\uc92c\ub2e4. 3\ub144\uc5d0 \uac78\uccd0 \ucd5c\ub300 15\uac00\uc871\uc758 \ube44\ubc84\ub97c \ub124\uc2a4\uac15 \uc720\uc5ed\uc5d0 \ud480 \uc218 \uc788\ub2e4."], ["\ube44\ubc84\ub294", "\uc0dd\ud0dc\uacc4 **\uacf5\ud559\uc790**", "---", "\ub124\uc774\ucc98\uc2a4\ucf54\ud2b8\ub294 \ube44\ubc84\uac00 \uc5f0\ubabb\uacfc \uc2b5\uc9c0\ub97c \ub9cc\ub4e4\uc5b4 \ub2e4\ub978 \uc0dd\ubb3c\uc774 \uc0b4 \ud658\uacbd\uc744 \ub9cc\ub4e0\ub2e4\uace0 \uc124\uba85\ud588\ub2e4. \ud64d\uc218\ub098 \ubb3c \ubd80\uc871 \ub54c \ubb3c\uc758 \ud750\ub984\uc744 \uc870\uc808\ud558\ub294 \ud6a8\uacfc\ub3c4 \uaf3d\uc558\ub2e4."], ["\uc751\ub2f5\uc790 **73%**\uac00", "\ucc2c\uc131\ud588\ub2e4", "---", "\ube44\ubc84 \ubc29\uc0ac\ub97c \ub450\uace0 \uc9c4\ud589\ub41c \uc758\uacac \uc218\ub834\uc5d0\uc11c \uc751\ub2f5\uc790\uc758 73% \ub118\uac8c \ucc2c\uc131\ud588\ub2e4. \ub2e4\ub9cc \ud1a0\uc9c0\u00b7\uc5b4\uc5c5 \uad00\ub9ac\uc790\uc640 \uc8fc\ubbfc \uc77c\ubd80\ub294 \uc6b0\ub824\ub97c \ub0c8\uace0, \ub2f9\uad6d\uc740 \uc774\ub97c \uc2ec\uac01\ud558\uac8c \ubc1b\uc544\ub4e4\uc778\ub2e4\uace0 \ubc1d\ud614\ub2e4."], ["\uc774\uc0ac \uc624\ub294 \ube44\ubc84\ub294", "\ub18d\uc9c0 \ud53c\ud574 \uc9c0\uc5ed \ucd9c\uc2e0", "---", "\ubc29\uc0ac\ub420 \ube44\ubc84\ub294 \uc6b0\ub7c9 \ub18d\uc9c0\uc5d0 \ud53c\ud574\ub97c \uc8fc\ub294 \uc9c0\uc5ed\uc5d0\uc11c \ubd99\uc7a1\uc544 \uc62e\uaca8 \uc628\ub2e4. \uac74\uac15 \uac80\uc9c4\uc744 \uac70\uce5c \ub4a4\uc5d0\uc57c \ud480\uc5b4 \uc900\ub2e4. \uc2a4\ucf54\ud2c0\ub79c\ub4dc\uc5d0\uc120 2009\ub144 \uc7ac\ub3c4\uc785 \uc774\ud6c4 \ube44\ubc84\uac00 \ub2e4\uc2dc \uc57c\uc0dd\uc5d0\uc11c \uc0b4\uace0 \uc788\ub2e4."], ["\ub124\uc2a4\ud638 \uad34\ubb3c \ubbff\ub294", "**\uce5c\uad6c**\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc774\uc81c \ud638\uc218 \uc704\uc5d0 \uae38\ucb49\ud55c \ubb3c\uccb4\uac00 \uc9c0\ub098\uac00\ub3c4 \ud1b5\ub098\ubb34\ub97c \ubb38 \ube44\ubc84\uc77c \uc218 \uc788\ub2e4. \ub124\uc2dc \ubaa9\uaca9\ub2f4\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc6c3\uc744 \uc18c\uc2dd"]]}, "a77bcc1c9e13": {"caption": "\ud39c\uc2e4\ubca0\uc774\ub2c8\uc544 \uce74\ud398\uc758 \uc2dc\ub7fd \uc9c4\uc5f4\ub300\ub97c \ucc0d\uc740 \ud2f1\ud1a1 \uc601\uc0c1\uc774 \uc88b\uc544\uc694 8\ub9cc 2\ucc9c \uac1c\ub97c \ub118\uae30\uba70 \ud654\uc81c\uac00 \ub410\ub2e4. \uc601\uc0c1 \uc790\ub9c9\uc740 \u0027\ub0b4 \ub77c\ub5bc\ub294 \ub9db\uc5c6\uc744 \uac8c \ubed4\ud558\ub2e4\u0027\uc600\uace0, \ube44\uc2b7\ud55c \ubc18\uc751\uc774 SNS \uacf3\uacf3\uc5d0\uc11c \uc774\uc5b4\uc9c4\ub2e4.\n\n\uc77c\ubd80 \uc18c\ube44\uc790\uc5d0\uac8c \uae30\uc131 \uc2dc\ub7fd\uc740 8\ub2ec\ub7ec\uc5d0 \ud301\uae4c\uc9c0 \ubc1b\ub294 \uc804\ubb38\uc810\uc774 \ud488\uc9c8\uc5d0\uc11c \uc190\uc744 \ube7c\uace0 \uc788\ub2e4\ub294 \uc2e0\ud638\ub2e4. \ubc18\ub300\ub85c \ub3c5\ub9bd \uce74\ud398\uc5d0\ub294 \uc218\uc81c \uc2dc\ub7fd\uc774 \uae30\ud68c\uac00 \ub418\uace0 \uc788\ub2e4. \uce98\ub9ac\ud3ec\ub2c8\uc544 \ubca4\ud22c\ub77c\uc758 \ub8f8\uc11c\ube44\uc2a4\ub294 \uc2dc\ub7fd \uc5c6\ub294 \uc815\ud1b5 \ucee4\ud53c\uc20d\uc744 \uad6c\uc0c1\ud588\uc9c0\ub9cc, \uc9c0\uae08\uc740 \uc9c1\uc811 \ub9cc\ub4e0 \uc2dc\ub7fd\uc744 10~12\uc885 \ub0b4\ub193\ub294\ub2e4.\n\n\uc624\ud558\uc774\uc624\uc8fc \ubca0\uc774 \ube4c\ub9ac\uc9c0\uc5d0\uc11c \ud2b8\ub7ec\uc2a4\ud2b8 \ucee4\ud53c \ucef4\ud37c\ub2c8\ub97c \uc5f0 \ub9c8\uc774\ud074 \uc2a4\ubbf8\uc2a4\ub294 \uc190\ub2d8\ub4e4\uc774 \uba54\uc774\ud50c \ub85c\uc988\ub9c8\ub9ac, \uce74\ub77c\uba5c\ub77c\uc774\uc988 \ubc14\ub098\ub098, \ub538\uae30 \ub300\ud669 \uac19\uc740 \uacc4\uc808 \uc2dc\ub7fd\uc744 \uc6d0\ud588\ub2e4\uace0 \ub9d0\ud55c\ub2e4. \ub9ac\ud2c0 \uc870\uc774\uc758 \ub300\ud45c \ucf54\ub514 \ub77c\uc2a8\uc740 \ub300\ud615 \uccb4\uc778\uc740 \uc218\uc81c \uc2dc\ub7fd\uc744 \uc808\ub300 \ud558\uc9c0 \uc54a\uc744 \ud14c\ub2c8 \uac70\uae30\uc11c \ub3c5\ub9bd \uce74\ud398\uac00 \uc55e\uc124 \uc218 \uc788\ub2e4\uace0 \ud588\ub2e4.\n\n\ud55c\ud3b8 \uc870\uc9c0\uc544\uc8fc Bizarre Coffee\uc758 \uc138\uc774\ube0c\ub9ac\ub098 \ucf00\uc77c\ub7ec\ub294 \uc74c\ub8cc\uc758 90%\uc5d0 \uc218\uc81c \uc2dc\ub7fd\uc744 \uc4f0\uba74\uc11c\ub3c4, \uc218\uc81c \uc2dc\ub7fd \ub17c\uc758\uc758 \uc0c1\ub2f9 \ubd80\ubd84\uc740 \uc194\uc9c1\ud788 \ub9c8\ucf00\ud305\uc774\ub77c\uace0 \ub9d0\ud55c\ub2e4. \uc2dc\ub7fd \ud55c \ubcd1\uc774 \uce74\ud398\uc758 \uc815\uccb4\uc131\uc744 \uac00\ub974\ub294 \uae30\uc900\uc774 \ub418\uace0 \uc788\ub294 \uc148\uc774\ub2e4.\n\n\ucd9c\ucc98: Eater", "hashtags": ["#\uce74\ud398", "#\uc2dc\ub7fd", "#\ud2f1\ud1a1\ud654\uc81c", "#\ucee4\ud53c\ubb38\ud654", "#\ud574\uc678\ubc18\uc751"], "slides": [["\uce74\ud398 \uc2dc\ub7fd\uc774", "**\ub808\ub4dc\ud50c\ub798\uadf8???**", "---", "\ud39c\uc2e4\ubca0\uc774\ub2c8\uc544 \uce74\ud398\uc758 \uc2dc\ub7fd \uc9c4\uc5f4\ub300\ub97c \ucc0d\uc740 \ud2f1\ud1a1 \uc601\uc0c1\uc774 \uc88b\uc544\uc694 8\ub9cc 2\ucc9c \uac1c\ub97c \ub118\uae30\uba70 \ud654\uc81c\uac00 \ub410\ub2e4."], ["\ubcf4\uc774\uba74 \ubc14\ub85c", "**\ub098\uac04\ub2e4\ub294** \ubc18\uc751", "---", "\uc601\uc0c1 \uc18d \uc790\ub9c9\uc740 \u0027\ub0b4 \ub77c\ub5bc\ub294 \ub9db\uc5c6\uc744 \uac8c \ubed4\ud558\ub2e4\u0027\uc600\ub2e4. \ud2b8\uc717\uc5d0\ub294 \uce74\ud398\uc5d0\uc11c \uc774\uac78 \ubcf4\uba74 \ubc14\ub85c \ub098\uac00\uaca0\ub2e4\ub294 \uae00\uc774 \uc62c\ub77c\uc654\uace0, \ub9ce\uc740 \ub313\uae00\uc774 \uac19\uc740 \uc0dd\uac01\uc744 \ubcf4\ud0f0\ub2e4."], ["**8\ub2ec\ub7ec** \ub77c\ub5bc\uc5d0", "\uae30\uc131 \uc2dc\ub7fd?", "---", "\uc77c\ubd80 \uc18c\ube44\uc790\uc5d0\uac8c \uae30\uc131 \uc2dc\ub7fd\uc740 \ub77c\ub5bc \ud55c \uc794\uc5d0 8\ub2ec\ub7ec\uc640 \ud301\uc744 \ubc1b\ub294 \uc804\ubb38\uc810\uc774 \ud488\uc9c8\uc5d0\uc11c \uc190\uc744 \ube7c\uace0 \uc788\ub2e4\ub294 \uc2e0\ud638\ub2e4. \uccb4\uc778\uc810\uacfc \uae30\uc5c5\uc744 \ub5a0\uc62c\ub9ac\uac8c \ud55c\ub2e4\ub294 \uc774\uc720\ub3c4 \uc788\ub2e4."], ["**\uc548 \ud55c\ub2e4\ub358**", "\uc2dc\ub7fd\uc744 \ud55c\ub2e4", "---", "\uce98\ub9ac\ud3ec\ub2c8\uc544 \ubca4\ud22c\ub77c\uc758 \uce74\ud398 \ub8f8\uc11c\ube44\uc2a4\ub294 \uc2dc\ub7fd\ub3c4 \ud2b9\ubcc4 \uc74c\ub8cc\ub3c4 \uc5c6\ub294 \uc815\ud1b5 \ucee4\ud53c\uc20d\uc744 \uad6c\uc0c1\ud588\ub2e4. \uadf8\ub7ec\ub098 \uccab \uc8fc\ubd80\ud130 \uc190\ub2d8\ub9c8\ub2e4 \ucc3e\uc558\uace0, \uc9c0\uae08\uc740 \uc9c1\uc811 \ub9cc\ub4e0 \uc2dc\ub7fd\uc744 10~12\uc885 \ub0b4\ub193\ub294\ub2e4."], ["\ud638\ubc15 \uc2dc\ub7fd\uc5d0", "**\uc774\ud2c0** \uac78\ub9bc", "---", "\ub8f8\uc11c\ube44\uc2a4\uc758 PSL \uc2dc\ub7fd\uc740 \uce74\ubcf4\ucc28 \ud638\ubc15\uc744 \uad7d\uace0 \uc815\ud5a5\u00b7\uacc4\ud53c \uac19\uc740 \ud5a5\uc2e0\ub8cc\uc640 \uac08\uc544 \ub053\uc5ec \ub9cc\ub4e0\ub2e4. \uc774 \uacfc\uc815\uc5d0 \uc774\ud2c0\uc774 \uac78\ub9ac\uba70, \uc218\uc81c \uba54\ub274 \uc900\ube44\ub9cc \ub9e1\ub294 \uc815\uaddc\uc9c1 \uc9c1\uc6d0\ub3c4 \ub530\ub85c \ub480\ub2e4."], ["\uc218\uc81c\ub294 \uacb0\uad6d", "**\ub9c8\ucf00\ud305\uc774\ub798**", "---", "\uc870\uc9c0\uc544\uc8fc Bizarre Coffee\ub294 \uc74c\ub8cc\uc758 90%\uc5d0 \uc218\uc81c \uc2dc\ub7fd\uc744 \uc4f0\uc9c0\ub9cc, \uc778\uae30 \uba54\ub274 \ud558\ub098\ub294 \uc5ec\uc804\ud788 \ubcd1 \uc2dc\ub7fd\uc5d0 \uae30\ub304\ub2e4. \uc6b4\uc601\uc790 \uc138\uc774\ube0c\ub9ac\ub098 \ucf00\uc77c\ub7ec\ub294 \uc218\uc81c \uc2dc\ub7fd \ub17c\uc7c1\uc758 \uc0c1\ub2f9 \ubd80\ubd84\uc774 \uc194\uc9c1\ud788 \ub9c8\ucf00\ud305\uc774\ub77c\uace0 \ub9d0\ud55c\ub2e4."], ["\uce74\ud398 \ud22c\uc5b4 \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc218\uc81c \uc2dc\ub7fd\uc774\ub0d0 \uae30\uc131 \uc2dc\ub7fd\uc774\ub0d0\ub97c \ub450\uace0 \uc18c\ube44\uc790\uc640 \uce74\ud398 \uc6b4\uc601\uc790\uc758 \uc0dd\uac01\uc774 \uac08\ub9b0\ub2e4\ub294 \uc18c\uc2dd. \ub77c\ub5bc\ub97c \uc990\uaca8 \ub9c8\uc2dc\ub294 \uce5c\uad6c\ub77c\uba74 \ud765\ubbf8\ub85c\uc6cc\ud560 \uc774\uc57c\uae30"]]}, "f44a94665f4f": {"caption": "\uc601\uad6d \ucf5c\ub9b0\uc2a4 \uc0ac\uc804\uc774 \uc62c\ud574\uc758 \ub2e8\uc5b4\ub85c \u0027mogging(\ubaa8\uae45)\u0027\uc744 \ubf51\uc558\ub2e4. \uc7a5\ub09c\uc2a4\ub7fd\uac8c \ub204\uad70\uac00\ub97c \uc55e\uc9c0\ub974\uace0 \ub2a5\uac00\ud558\uace0 \uc8fc\ubaa9\uc744 \uac00\ub85c\ucc48\ub2e4\ub294 \ub73b\uc73c\ub85c \uc4f0\uc774\ub294 \ub9d0\uc774\ub2e4. Z\uc138\ub300\uc640 \uc54c\ud30c \uc138\ub300 \uc0ac\uc774\uc5d0\uc11c \ube60\ub974\uac8c \ud37c\uc9c4 \uc18d\uc5b4\ub85c, \uc628\ub77c\uc778\uacfc \uc77c\uc0c1 \ub300\ud654 \ubaa8\ub450\uc5d0\uc11c \uc4f0\uc774\uba70 2026\ub144 \uc0ac\uc6a9\ub7c9\uc774 210% \ub298\uc5c8\ub2e4. \ucf5c\ub9b0\uc2a4 \ub300\ud45c \uc54c\ub809\uc2a4 \ube44\ud06c\ub85c\ud504\ud2b8\ub294 \uc774\ubc88 \uc120\uc815\uc774 \uc138\ub300\ub9c8\ub2e4 \uc5b8\uc5b4\uc5d0 \ud754\uc801\uc744 \ub0a8\uae34\ub2e4\ub294 \uc810\uc744 \ubcf4\uc5ec\uc900\ub2e4\uace0 \ub9d0\ud588\ub2e4. \ucca0\uc790\uac00 \ube44\uc2b7\ud55c mugging\uacfc\ub294 \ub2e4\ub978 \ub9d0\uc774\uace0, \uc8fc\ub85c \uc678\ubaa8 \uba74\uc5d0\uc11c \ub204\uad70\uac00\ub97c \uc555\ub3c4\ud558\ub294 \uac83\uc744 \uac00\ub9ac\ud0a8\ub2e4. \ud754\ud788 AMOG, \uace7 \u0027\ubb34\ub9ac\uc758 \uc54c\ud30c \ub0a8\uc131\u0027\uc774\ub77c\ub294 \uc904\uc784\ub9d0\uc5d0\uc11c \ube44\ub86f\ub410\ub2e4\uace0 \uac70\ub860\ub418\uba70 2010\ub144\ub300 \uc911\ubc18 \ubcf4\ub514\ube4c\ub529 \ud3ec\ub7fc\uacfc \uc5f0\uad00\ub3fc \uc654\ub2e4. \uc9c0\uae08\uc740 \ub9e5\ub77d\uc5d0 \ub530\ub77c \uc7a5\ub09c\uc2a4\ub7ec\uc6b4 \ud540\uc794\ub3c4, \uce6d\ucc2c\ub3c4 \ub418\uace0 \uc678\ubaa8\ub97c \uac00\uafb8\ub294 \uc870\uc5b8\uc744 \ub098\ub204\ub294 \ub8e8\ud0b9\ub9e5\uc2f1 \ucee4\ubba4\ub2c8\ud2f0\uc5d0\uc11c\ub3c4 \ubcf4\uc778\ub2e4. \ucc38\uace0\ub85c 2025\ub144 \uc62c\ud574\uc758 \ub2e8\uc5b4\ub294 \u0027vibe coding\u0027\uc774\uc5c8\ub2e4. \uc62c\ud574 \ucd5c\uc885 \ud6c4\ubcf4 10\uac1c\uc5d0\ub294 ghost job, hydration break, P(doom), Manchesterism \ub4f1\ub3c4 \uc62c\ub790\ub2e4. \ucd9c\ucc98: BBC News, Collins English Dictionary", "hashtags": ["#\ubaa8\uae45", "#mogging", "#\uc62c\ud574\uc758\ub2e8\uc5b4", "#Z\uc138\ub300", "#\uc2e0\uc870\uc5b4"], "slides": [["\uc62c\ud574\uc758 \ub2e8\uc5b4\uac00", "**mogging???**", "---", "\uc601\uad6d \ucf5c\ub9b0\uc2a4 \uc0ac\uc804\uc774 \ub0a8\uc744 \uc555\ub3c4\ud55c\ub2e4\ub294 \ub73b\uc758 \uc2e0\uc870\uc5b4 \u0027\ubaa8\uae45(mogging)\u0027\uc744 \uc62c\ud574\uc758 \ub2e8\uc5b4\ub85c \ubf51\uc558\ub2e4."], ["\ub0a8\uc744 **\uc555\ub3c4\ud558\uace0**", "\ub2a5\uac00\ud55c\ub2e4\ub294 \ub73b", "---", "\uc7a5\ub09c\uc2a4\ub7fd\uac8c \ub204\uad70\uac00\ub97c \uc55e\uc9c0\ub974\uac70\ub098 \ub2a5\uac00\ud558\uac70\ub098 \uc8fc\ubaa9\uc744 \uac00\ub85c\ucc48\ub2e4\ub294 \uc758\ubbf8\ub85c \uc4f0\uc778\ub2e4. \ud2b9\ud788 \uc678\ubaa8 \uba74\uc5d0\uc11c \uc0c1\ub300\ub97c \uc555\ub3c4\ud558\ub294 \uc0c1\ud669\uc744 \uac00\ub9ac\ud0a4\ub294 \uacbd\uc6b0\uac00 \uac00\uc7a5 \ub9ce\ub2e4."], ["\uc0ac\uc6a9\ub7c9\uc774", "**210%** \ud3ed\uc99d", "---", "Z\uc138\ub300\uc640 \uc54c\ud30c \uc138\ub300 \uc0ac\uc774\uc5d0\uc11c \ube60\ub974\uac8c \ud37c\uc9c4 \uc18d\uc5b4\ub85c, \uc628\ub77c\uc778\uacfc \uc77c\uc0c1 \ub300\ud654 \ubaa8\ub450\uc5d0\uc11c \uc4f0\uc778\ub2e4. 2026\ub144\uc5d0\ub294 \uc0ac\uc6a9\ub7c9\uc774 210% \ub298\uba70 \uc8fc\ub958\ub85c \uc62c\ub77c\uc130\ub2e4."], ["\ubfcc\ub9ac\ub294", "**AMOG**", "---", "\uc774 \ub9d0\uc740 \u0027\ubb34\ub9ac\uc758 \uc54c\ud30c \ub0a8\uc131\u0027\uc744 \ub73b\ud558\ub294 \uc904\uc784\ub9d0 AMOG\uc5d0\uc11c \ube44\ub86f\ub410\ub2e4\uace0 \ud754\ud788 \uac70\ub860\ub41c\ub2e4. 2010\ub144\ub300 \uc911\ubc18 \ubcf4\ub514\ube4c\ub529 \ud3ec\ub7fc\uacfc\ub3c4 \uc5f0\uad00\ub3fc \uc654\ub2e4\uace0 \ud55c\ub2e4."], ["\ub180\ub9bc\ub3c4 \ub418\uace0", "**\uce6d\ucc2c\ub3c4 \ub41c\ub2e4**", "---", "\uc9c0\uae08\uc740 \ub9e5\ub77d\uc5d0 \ub530\ub77c \uc7a5\ub09c\uc2a4\ub7ec\uc6b4 \ud540\uc794\uc774 \ub418\uae30\ub3c4, \uce6d\ucc2c\uc774 \ub418\uae30\ub3c4 \ud558\ub294 \ud3ed\ub113\uc740 \ub9d0\uc774 \ub410\ub2e4. \uc678\ubaa8\ub97c \uac00\uafb8\ub294 \uc870\uc5b8\uc744 \ub098\ub204\ub294 \ub8e8\ud0b9\ub9e5\uc2f1 \ucee4\ubba4\ub2c8\ud2f0\uc5d0\uc11c\ub3c4 \uc4f0\uc778\ub2e4."], ["\uc2e0\uc870\uc5b4 \uad81\uae08\ud55c", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "Z\uc138\ub300\uc640 \uc54c\ud30c \uc138\ub300\uac00 \uc4f0\ub358 \uc18d\uc5b4\uac00 \uc601\uad6d \uc0ac\uc804\uc758 \uc62c\ud574\uc758 \ub2e8\uc5b4\ub85c \ubf51\ud614\ub2e4. \uc694\uc998 \uc544\uc774\ub4e4 \ub9d0\uc774 \ub0af\uc124\uac8c \ub290\uaef4\uc9c0\ub294 \uce5c\uad6c\ub77c\uba74 \uad81\uae08\ud574\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

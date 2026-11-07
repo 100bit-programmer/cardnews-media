@@ -1,0 +1,1983 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.25 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.25 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-ff8afa8649e5" data-jump="ff8afa8649e5">1</a><a href="#post-75bc16666fa7" data-jump="75bc16666fa7">2</a><a href="#post-1a04324965a9" data-jump="1a04324965a9">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-ff8afa8649e5" data-id="ff8afa8649e5">
+    <div class="head">
+      <h2>1. 옛날 노래가 차트·스트리밍을 장악한 이유</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/29 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>듣는 노래의 약 60%가 5년 넘은 곡이라니, 신곡은 다 어디로 간 걸까?
+
+BBC 보도에 따르면 지금은 역사상 음악이 가장 많이 만들어지는 시대다. 스트리밍 서비스에는 매일 10만 곡이 넘는 노래가 올라온다. 그런데도 사람들은 옛 노래를 더 많이 찾는다. 음악 데이터 회사 루미네이트 기록으로는 2026년 상반기에 재생된 음악의 약 60%가 발매 5년 이상 된 곡이었다.
+
+영국 올해 판매 TOP20 중 18곡은 발매된 지 1년 이상 된 곡이다. 마이클 잭슨의 Billie Jean(1983)은 22위, 플리트우드 맥의 Dreams(1977)는 30위에 올라 있다. 미국에서도 가장 많이 재생되는 두 장르인 R&amp;B와 힙합은 스트리밍의 약 60%가 예전 히트곡이라고 한다.
+
+쏠림도 있다. 영국 경쟁시장청(CMA)에 따르면 스트리밍의 거의 3분의 2가 상위 0.4% 아티스트의 곡이다. 또 런던의 DJ 팀 가르시아는 추천 기능이 모두의 청취 데이터를 바탕으로 해서, 이미 듣던 가수와 비슷한 곡을 받게 될 가능성이 크다고 말했다.
+
+AI 곡이 스트리밍을 뒤덮은 건 아니다. Deezer는 자사 플랫폼 스트리밍에서 AI 곡 비중이 0.5%라고 밝혔다. 한편 Apple Music 책임자는 큐레이션에서 &#39;내일의 아티스트&#39;를 밀겠다고 했고, Sofar Sounds는 신인 뮤지션과 함께 작은 팝업 공연을 열고 있다.
+
+출처: BBC News
+
+배경 사진: Firmbee, Bru-nO, Pexels, whoalice-moore, Foundry / Pixabay
+표지 이미지: AI 생성
+
+#음악스트리밍 #올드팝 #음악차트 #스포티파이 #해외이슈</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-ff8afa8649e5">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 음악이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 신곡이 넘치는 시대에 정작 다들 옛 노래만 듣는 반전과, 내 플리가 맨날 비슷한 이유를 연결하는 각도</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 영국 올해 순위에 오른 옛 곡 실제 사례(1983년 곡 22위, 1977년 곡 30위) (카드 4장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">하루에 신곡이 10만 곡 넘게 올라오는데
+다들 듣는 노래의 약 60%는 5년 넘은 곡이래
+플리가 맨날 비슷하다 싶었다면, 런던 DJ가 한 말이 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">1/ 영국 올해 판매 TOP20 중 18곡이 발매 1년 넘은 곡이래. 차트도 신곡보다 이미 나온 곡이 차지하고 있는 거지. 그럼 스트리밍 쪽은 어떨까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">145/500자</span></div>
+      <p class="tp-text">2/ 음악 데이터 회사 루미네이트 기록으로는 2026년 상반기에 재생된 음악의 약 60%가 발매 5년 이상 된 곡이었대. 미국에서도 R&amp;B와 힙합은 스트리밍의 약 60%가 예전 히트곡이라고 해. 근데 듣는 쪽이 한곳으로 쏠려 있다는 수치도 있음. 얼마나였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">3/ 영국 경쟁시장청(CMA)에 따르면 스트리밍의 거의 3분의 2가 상위 0.4% 아티스트의 곡이래. 신곡도 옛 곡도 결국 소수 가수에게 몰린다는 거야. 그럼 추천 기능은 여기에 어떻게 작용할까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">4/ 런던 DJ 팀 가르시아 말로는, 추천 기능이 모두의 청취 데이터를 바탕으로 해서 이미 듣던 가수와 비슷한 곡을 받게 될 가능성이 크대. 그럼 AI 곡이 신곡 자리를 다 차지해버린 건 아닐까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">5/ 그건 아니래. Deezer는 자사 플랫폼 스트리밍에서 AI 곡 비중이 0.5%라고 밝혔어. 한편 Apple Music 책임자는 큐레이션에서 &#39;내일의 아티스트&#39;를 밀겠다고 했고, Sofar Sounds는 신인 뮤지션과 작은 팝업 공연을 열고 있대.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">174/500자</span></div>
+      <p class="tp-text">6/ 오늘 내용 요약 정리
+- 하루 신곡 10만 곡 넘게
+- 2026년 상반기 재생의 약 60%가 5년 넘은 곡 (루미네이트)
+- 영국 올해 판매 TOP20 중 18곡이 1년 넘은 곡
+- 스트리밍 3분의 2가 상위 0.4% 아티스트 곡 (영국 CMA)
+- AI 곡 비중 0.5% (Deezer 자사 플랫폼 기준)</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">200/500자</span></div>
+      <p class="tp-text">7/ 결국 BBC가 짚은 건 신곡은 넘치는데 듣는 건 옛 곡과 소수 아티스트에 몰려 있다는 거야.
+
+너는 요즘 신곡파야, 옛날 노래파야?
+
+이런 해외 트렌드 소식 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 영국 올해 순위에 오른 옛 곡 실제 사례까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 신곡도 옛 곡도 결국 소수 가수에게 몰린다는 거야 <small>참고 원고는 스트리밍의 3분의 2가 상위 0.4% 아티스트 곡이라고만 했고, 신곡과 옛 곡 각각이 소수에게 몰린다는 내용은 없다. 원고에 없는 일반화다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>듣는 노래의 60%가 5년 넘은 곡이래. 신곡은 다 어디 간 거야?</li><li>하루에 신곡이 10만 곡 넘게 올라오는데 다들 옛날 노래만 듣고 있대</li><li>영국 올해 TOP20 중 18곡이 1년 넘은 곡이라는 거 알아?</li><li>신곡이 없어서가 아니라 추천 기능 때문일 수도 있다는 얘기가 나옴</li><li>플리가 맨날 똑같다 싶었다면 런던 DJ가 한 말을 봐야 함</li><li>스트리밍의 3분의 2가 상위 0.4% 가수 곡이라는 영국 기관 집계</li><li>음악이 역사상 가장 많이 만들어지는 시대인데 사람들은 옛 노래를 찾는대</li><li>새 노래 찾아 듣지 말라는 게 아니라, 왜 다들 안 찾는지부터 보자는 얘기</li><li>미국에서도 R&amp;B랑 힙합은 스트리밍의 약 60%가 예전 히트곡이래</li><li>AI 곡이 스트리밍을 뒤덮었다고? 실제 비중은 0.5%라는 발표가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>요즘 신곡파야, 옛날 노래파야?</li><li>내 플리는 5년 넘은 곡이 절반 넘는다 하는 사람?</li><li>추천 말고 직접 새 노래 찾아 듣는 편이야?</li><li>처음 듣는 가수 노래, 끝까지 듣는 편이야 넘기는 편이야?</li><li>너라면 신인 가수 작은 팝업 공연 가볼 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>괴상한 신발이 주류가 된 흐름</li><li>1600년 된 로마 유리컵의 색이 바뀌는 원리 재현</li><li>스트리밍 추천 기능이 듣던 곡만 계속 주는 방식</li><li>스트리밍에서 AI 곡이 차지하는 비중</li><li>신인 뮤지션을 밀어주는 작은 팝업 공연 이야기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;1년 넘은 곡&#39;(TOP20)과 &#39;5년 넘은 곡&#39;(스트리밍 60%) 기준이 달라서 섞어 쓰지 않았는지 확인 필요</li><li>AI 곡 0.5%는 Deezer 자사 플랫폼 기준이라 전체 스트리밍 수치처럼 읽히면 안 됨</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-01.jpg" alt="1장: 듣는 노래 60%가 5년 넘은 곡???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-02.jpg" alt="2장: 하루에 신곡이 10만 곡 넘게 올라오는데" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-03.jpg" alt="3장: 영국 올해 TOP20 18곡이 1년 넘은 곡이야" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-04.jpg" alt="4장: 영국 올해 순위에 1983년 곡은 22위 1977년 곡은 30위" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-05.jpg" alt="5장: 스트리밍 3분의 2는 상위 0.4% 가수 곡 영국 기관 집계" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-06.jpg" alt="6장: 런던 DJ 말로는 추천이 듣던 곡이랑 비슷하게 나온대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-07.jpg" alt="7장: 플리 맨날 똑같은 친구한테 보내주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/ff8afa8649e5/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">듣는 노래의 약 60%가 5년 넘은 곡이라니, 신곡은 다 어디로 간 걸까?
+
+BBC 보도에 따르면 지금은 역사상 음악이 가장 많이 만들어지는 시대다. 스트리밍 서비스에는 매일 10만 곡이 넘는 노래가 올라온다. 그런데도 사람들은 옛 노래를 더 많이 찾는다. 음악 데이터 회사 루미네이트 기록으로는 2026년 상반기에 재생된 음악의 약 60%가 발매 5년 이상 된 곡이었다.
+
+영국 올해 판매 TOP20 중 18곡은 발매된 지 1년 이상 된 곡이다. 마이클 잭슨의 Billie Jean(1983)은 22위, 플리트우드 맥의 Dreams(1977)는 30위에 올라 있다. 미국에서도 가장 많이 재생되는 두 장르인 R&amp;B와 힙합은 스트리밍의 약 60%가 예전 히트곡이라고 한다.
+
+쏠림도 있다. 영국 경쟁시장청(CMA)에 따르면 스트리밍의 거의 3분의 2가 상위 0.4% 아티스트의 곡이다. 또 런던의 DJ 팀 가르시아는 추천 기능이 모두의 청취 데이터를 바탕으로 해서, 이미 듣던 가수와 비슷한 곡을 받게 될 가능성이 크다고 말했다.
+
+AI 곡이 스트리밍을 뒤덮은 건 아니다. Deezer는 자사 플랫폼 스트리밍에서 AI 곡 비중이 0.5%라고 밝혔다. 한편 Apple Music 책임자는 큐레이션에서 &#39;내일의 아티스트&#39;를 밀겠다고 했고, Sofar Sounds는 신인 뮤지션과 함께 작은 팝업 공연을 열고 있다.
+
+출처: BBC News</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#음악스트리밍 #올드팝 #음악차트 #스포티파이 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: AI 곡이 스트리밍을 뒤덮은 건 아니다라는 결론(Deezer 0.5% 수치에서 도출된 주장)</li>
+          <li>BBC 기사 한 건에만 의존한 내용</li><li>통계는 루미네이트·CMA 등 기사 인용 수치</li><li>AI 추천 편향 관련 내용은 인터뷰 속 의견</li><li>기사 날짜가 2026년으로 표기됨</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-ff8afa8649e5-0">1장</label>
+          <textarea id="s-ff8afa8649e5-0" rows="2" data-slide="0">듣는 노래 **60%**가
+5년 넘은 곡???</textarea>
+          
+          <label class="f" for="s-ff8afa8649e5-1">2장</label>
+          <textarea id="s-ff8afa8649e5-1" rows="3" data-slide="1">하루에 신곡이
+**10만 곡** 넘게
+올라오는데</textarea>
+          
+          <label class="f" for="s-ff8afa8649e5-2">3장</label>
+          <textarea id="s-ff8afa8649e5-2" rows="3" data-slide="2">영국 올해 TOP20
+**18곡이**
+1년 넘은 곡이야</textarea>
+          
+          <label class="f" for="s-ff8afa8649e5-3">4장</label>
+          <textarea id="s-ff8afa8649e5-3" rows="3" data-slide="3">영국 올해 순위에
+1983년 곡은 **22위**
+1977년 곡은 30위</textarea>
+          
+          <label class="f" for="s-ff8afa8649e5-4">5장</label>
+          <textarea id="s-ff8afa8649e5-4" rows="3" data-slide="4">스트리밍 3분의 2는
+상위 **0.4%** 가수 곡
+영국 기관 집계</textarea>
+          
+          <label class="f" for="s-ff8afa8649e5-5">6장</label>
+          <textarea id="s-ff8afa8649e5-5" rows="3" data-slide="5">런던 DJ 말로는
+추천이 듣던 곡이랑
+**비슷하게** 나온대</textarea>
+          
+          <label class="f" for="s-ff8afa8649e5-6">7장</label>
+          <textarea id="s-ff8afa8649e5-6" rows="3" data-slide="6">플리 맨날 똑같은
+**친구한테**
+보내주기</textarea>
+          
+          <label class="f" for="c-ff8afa8649e5">본문 (캡션)</label>
+          <textarea id="c-ff8afa8649e5" class="caption">듣는 노래의 약 60%가 5년 넘은 곡이라니, 신곡은 다 어디로 간 걸까?
+
+BBC 보도에 따르면 지금은 역사상 음악이 가장 많이 만들어지는 시대다. 스트리밍 서비스에는 매일 10만 곡이 넘는 노래가 올라온다. 그런데도 사람들은 옛 노래를 더 많이 찾는다. 음악 데이터 회사 루미네이트 기록으로는 2026년 상반기에 재생된 음악의 약 60%가 발매 5년 이상 된 곡이었다.
+
+영국 올해 판매 TOP20 중 18곡은 발매된 지 1년 이상 된 곡이다. 마이클 잭슨의 Billie Jean(1983)은 22위, 플리트우드 맥의 Dreams(1977)는 30위에 올라 있다. 미국에서도 가장 많이 재생되는 두 장르인 R&amp;B와 힙합은 스트리밍의 약 60%가 예전 히트곡이라고 한다.
+
+쏠림도 있다. 영국 경쟁시장청(CMA)에 따르면 스트리밍의 거의 3분의 2가 상위 0.4% 아티스트의 곡이다. 또 런던의 DJ 팀 가르시아는 추천 기능이 모두의 청취 데이터를 바탕으로 해서, 이미 듣던 가수와 비슷한 곡을 받게 될 가능성이 크다고 말했다.
+
+AI 곡이 스트리밍을 뒤덮은 건 아니다. Deezer는 자사 플랫폼 스트리밍에서 AI 곡 비중이 0.5%라고 밝혔다. 한편 Apple Music 책임자는 큐레이션에서 &#39;내일의 아티스트&#39;를 밀겠다고 했고, Sofar Sounds는 신인 뮤지션과 함께 작은 팝업 공연을 열고 있다.
+
+출처: BBC News</textarea>
+          <label class="f" for="t-ff8afa8649e5">해시태그</label>
+          <input id="t-ff8afa8649e5" type="text" class="tagsin" value="#음악스트리밍 #올드팝 #음악차트 #스포티파이 #해외이슈" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스트리밍 서비스에는 매일 10만 곡이 넘는 노래가 올라온다</b>
+            <q>“Every day, more than 100,000 songs, external are being submitted to streaming services.”</q>
+            <small>slide2, caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지금은 역사상 음악이 가장 많이 만들어지는 시대다</b>
+            <q>“More music is being created than at any other time in human history.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2026년 상반기 재생된 음악의 약 60%가 발매 5년 이상 된 곡이었다</b>
+            <q>“In the first half of 2026, almost two thirds of the music played (about 60%) was released five or more years ago.”</q>
+            <small>slide1, caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루미네이트는 음악·영화·TV 소비를 추적하는 독립 데이터 회사다</b>
+            <q>“Luminate, an independent entertainment data and analytics company that tracks music, film, and television consumption first started tracking music streaming in 2008.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영국 올해 판매 TOP20 중 18곡은 발매 1년 이상 된 곡이다</b>
+            <q>“Eighteen of the year&#39;s top 20 bestselling songs, external were released 12 months ago, or earlier.”</q>
+            <small>slide3, caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Billie Jean(1983)은 22위, Dreams(1977)는 30위다</b>
+            <q>“Michael Jackson&#39;s Billie Jean (1983) is in 22nd place. Fleetwood Mac&#39;s Dreams (1977) is 30th.”</q>
+            <small>slide4, caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>미국에서 R&amp;B와 힙합 스트리밍의 약 60%는 예전 히트곡이다</b>
+            <q>“There, in the two most-played genres, R&amp;B and Hip-Hop, external, about 60% of streams are old-school catalogue hits.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영국 경쟁시장청에 따르면 스트리밍의 거의 3분의 2가 상위 0.4% 아티스트의 곡이다</b>
+            <q>“But according to the UK&#39;s Competition and Markets Authority, nearly two thirds of streams are of music recorded by &#34;only the top 0.4% of artists, external&#34;.”</q>
+            <small>slide5, caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>DJ 팀 가르시아는 추천이 이미 듣던 가수와 비슷하게 나올 가능성이 크다고 말했다</b>
+            <q>“&#34;They&#39;re based on everyone&#39;s listening behaviour and data, right? So, you&#39;re probably going to get given a very similar recommendation to an artist you&#39;re already listening to.&#34;”</q>
+            <small>slide6, caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Deezer는 AI 곡이 자사 스트리밍의 0.5%라고 밝혔다</b>
+            <q>“The streaming service Deezer says AI accounts for just 0.5% of streams on its platform.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Apple Music 책임자는 큐레이션에서 &#39;내일의 아티스트&#39;를 밀겠다고 했다</b>
+            <q>“Oliver Schusser, the Head of Apple Music, says his streaming service is working to champion &#34;tomorrow&#39;s artists&#34; in its curation.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Sofar Sounds는 신인 뮤지션과 함께 도시에서 작은 팝업 공연을 연다</b>
+            <q>“Other organisations like Sofar Sounds work exclusively with grassroots musicians, putting on intimate pop-up gigs in cities across the globe.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.bbc.co.uk/news/articles/c6kg50nnj0x4o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Music streaming: Why we&#39;re listening to so many old songs</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "vintage vinyl records and headphones on sunlit table"</li><li>2장: <a href="https://pixabay.com/photos/mobile-phone-samsung-music-605422/" target="_blank" rel="noopener">Firmbee / Pixabay</a> — "smartphone music"</li><li>3장: <a href="https://pixabay.com/photos/vinyl-record-plate-vinyl-hub-4043223/" target="_blank" rel="noopener">Bru-nO / Pixabay</a> — "record player"</li><li>4장: <a href="https://pixabay.com/photos/music-cassette-tape-cassette-retro-1285165/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "cassette tape"</li><li>5장: <a href="https://pixabay.com/photos/girl-music-fashion-listen-1990347/" target="_blank" rel="noopener">whoalice-moore / Pixabay</a> — "headphones"</li><li>6장: <a href="https://pixabay.com/photos/mobile-phone-iphone-music-616012/" target="_blank" rel="noopener">Firmbee / Pixabay</a> — "playlist phone"</li><li>7장: <a href="https://pixabay.com/photos/girl-music-headphones-young-happy-869213/" target="_blank" rel="noopener">Foundry / Pixabay</a> — "friends listening music"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-75bc16666fa7" data-id="75bc16666fa7">
+    <div class="head">
+      <h2>2. 괴상한 신발이 주류가 된 흐름</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9 · 애매 1
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/30 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>못생긴 신발이 주류가 됐다는 얘기, 영국 가디언이 정리했어. 예전엔 출퇴근 열차에 무난한 신발이 가득했는데, 이제는 일부러 낯설게 만든 디자인의 인기가 갈수록 높아지고 있대.
+
+숫자로 보면 패션 검색 플랫폼 리스트(Lyst) 기준으로 발가락이 갈라진 타비 스타일 수요는 2022년 이후 4배로 늘었고, 발가락을 하나씩 나눈 핑거슈즈는 1년 새 57% 올랐어.
+
+브랜드들도 가세했어. 시몬 로샤는 초대형 크록스에 진주와 보석을 잔뜩 얹었고, 스니커와 페니 로퍼를 합친 &#39;스노퍼&#39; 같은 합체 신발도 나왔어. 영국 M&amp;S에서 45파운드에 파는 뭉툭한 스웨이드 신발은 가을 최고 인기 상품 중 하나가 됐다고 해.
+
+이 흐름의 배경으로는 2023년 스타일리스트 앨리슨 본스타인이 만든 &#39;틀린 신발 이론&#39;도 꼽혀. 일부러 예상 밖의 신발을 신어서 룩에 개성을 더하는 스타일링 방법이야.
+
+그다음은 뭘까? 샤넬은 4월 프랑스 비아리츠 런웨이에서 굽 캡만 달린 &#39;신발 없는 신발&#39;을 선보였어. 리스트의 바바라 야네첵은 모두가 이상한 것에 익숙해지면 더 이상한 걸 찾게 된다고 말했대.
+
+너라면 이 중에 어디까지 신어볼 수 있을 것 같아?
+
+출처: 가디언(The Guardian)
+
+배경 사진: sdg_Rai, Pexels, Cloud1902, FeeLoona / Pixabay
+표지 이미지: AI 생성
+
+#신발 #패션트렌드 #핑거슈즈 #타비 #해외트렌드</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-75bc16666fa7">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 패션트렌드</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;못생긴 신발이 주류&#39;라는 반전에 내 신발장과 &#39;너라면 어디까지 신어볼래?&#39;를 붙이면 팔린다. 패션 용어 설명으로 가면 묻힌다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 스니커와 로퍼를 합친 &#39;스노퍼&#39; 같은 합체 신발 사례 (카드 4장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">요즘 신발 유행은 &#39;예쁜 신발&#39;이 아니라 &#39;일부러 낯선 신발&#39;이래
+무난한 신발이 가득하던 출퇴근 열차가 달라지고 있다고 가디언이 정리함
+근데 이 흐름의 다음 단계가 더 황당했음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">1/ 샤넬은 4월 프랑스 비아리츠 런웨이에서 굽 캡만 달린 &#39;신발 없는 신발&#39;을 선보였어. 신발이 거의 사라지는 데까지 온 건데, 이 흐름이 숫자로는 어느 정도일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">2/ 패션 검색 플랫폼 리스트(Lyst) 기준으로 발가락이 갈라진 타비 스타일 수요는 2022년 이후 4배로 늘었어. 발가락을 하나씩 나눈 핑거슈즈도 1년 새 57% 올랐고. 브랜드들은 여기에 어떻게 가세했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">3/ 시몬 로샤는 초대형 크록스에 진주와 보석을 잔뜩 얹었어. 영국 M&amp;S에서 45파운드에 파는 뭉툭한 스웨이드 신발은 가을 최고 인기 상품 중 하나가 됐대. 이 흐름에는 이름 붙은 이론도 있다는데, 뭘까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">4/ 2023년 스타일리스트 앨리슨 본스타인이 만든 &#39;틀린 신발 이론&#39;이야. 일부러 예상 밖의 신발을 신어서 룩에 개성을 더하는 스타일링 방법이래. 그럼 업계 사람은 이 흐름이 어디로 갈 거라고 봤을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">5/ 리스트의 바바라 야네첵은 모두가 이상한 것에 익숙해지면 더 이상한 걸 찾게 된다고 말했대. 샤넬의 굽 캡 신발이 바로 그 &#39;더 이상한 것&#39; 쪽이라는 거지. 여기까지 나온 숫자랑 사례를 한 번에 보면?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">145/500자</span></div>
+      <p class="tp-text">6/ 신발 유행 요약 정리
+- 타비: 2022년 이후 수요 4배
+- 핑거슈즈: 1년 새 57%↑
+- 시몬 로샤: 초대형 크록스에 진주·보석
+- M&amp;S: 45파운드 스웨이드 신발, 가을 인기 상품 중 하나
+- 샤넬: 굽 캡만 단 신발
+- 키워드: 틀린 신발 이론</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">202/500자</span></div>
+      <p class="tp-text">7/ 결국 가디언이 말하는 건, 무난한 신발이 차지하던 자리에 일부러 낯선 신발이 들어오고 있다는 거야.
+타비 vs 핑거슈즈, 하나만 신어야 한다면 어느 쪽?
+이런 해외 패션·문화 트렌드 소식 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 합체 신발 사례까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 샤넬의 굽 캡 신발이 바로 그 &#39;더 이상한 것&#39; 쪽이라는 거지 <small>참고 원고에는 야네첵의 발언과 샤넬 런웨이 소식이 따로 나올 뿐, 샤넬 신발이 그 발언의 &#39;더 이상한 것&#39;에 해당한다는 연결은 없다. 스레드가 원고에 없는 해석을 사실처럼 덧붙였다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>요즘 신발 유행은 &#39;예쁜 신발&#39;이 아니라 &#39;일부러 낯선 신발&#39;이래</li><li>무난한 신발이 가득하던 출퇴근 열차가 달라지고 있다고 가디언이 정리함</li><li>발가락 갈라진 신발 수요가 2022년 이후 4배가 됐대</li><li>핑거슈즈가 1년 새 57%나 올랐다는데, 이게 진짜 주류라고?</li><li>샤넬이 굽 캡만 남긴 &#39;신발 없는 신발&#39;을 런웨이에 올림</li><li>&#39;모두가 이상한 것에 익숙해지면 더 이상한 걸 찾게 된다&#39;는 업계 사람 말</li><li>신발은 &#39;무난한 게 안전하다&#39;가 아니라 &#39;튀는 게 개성이다&#39;로 흐름이 넘어갔대</li><li>45파운드짜리 뭉툭한 스웨이드 신발이 가을 최고 인기 상품 중 하나가 됐대</li><li>시몬 로샤는 초대형 크록스에 진주와 보석을 잔뜩 얹었음</li><li>일부러 &#39;틀린 신발&#39;을 신는 게 스타일링 방법이라는 거 알아?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>타비 vs 핑거슈즈, 하나만 신어야 한다면 어느 쪽?</li><li>샤넬 굽 캡 신발, 신어볼 사람?</li><li>무난한 신발파 vs 튀는 신발파, 너는 어느 쪽?</li><li>발가락 갈라진 신발 신어본 사람?</li><li>너라면 이 중에 어디까지 신어볼 수 있을 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>샤넬 굽 캡 &#39;신발 없는 신발&#39; 런웨이 얘기</li><li>&#39;틀린 신발 이론&#39;, 신발 말고 다른 패션에도 통할까?</li><li>시몬 로샤의 진주 크록스 얘기</li><li>영국 M&amp;S 뭉툭한 스웨이드 신발이 가을 인기 상품이 된 얘기</li><li>1600년 된 로마 유리컵의 색이 바뀌는 원리 재현</li></ol>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/75bc16666fa7/v2-01.jpg" alt="1장: 못생긴 신발이 주류라고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/75bc16666fa7/v2-02.jpg" alt="2장: 핑거슈즈 1년 새 57%↑" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/75bc16666fa7/v2-03.jpg" alt="3장: 발가락 갈라진 타비는 2022년 대비 4배" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/75bc16666fa7/v2-04.jpg" alt="4장: 스니커+로퍼 합친 &#39;스노퍼&#39; 까지 등장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/75bc16666fa7/v2-05.jpg" alt="5장: 샤넬은 굽 캡만 남긴 신발 공개" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/75bc16666fa7/v2-06.jpg" alt="6장: 신발 취향이 독특한 친구 태그해서 보여주기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/75bc16666fa7/v2-07.jpg" alt="7장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    <div class="body">
+      <p class="cap">못생긴 신발이 주류가 됐다는 얘기, 영국 가디언이 정리했어. 예전엔 출퇴근 열차에 무난한 신발이 가득했는데, 이제는 일부러 낯설게 만든 디자인의 인기가 갈수록 높아지고 있대.
+
+숫자로 보면 패션 검색 플랫폼 리스트(Lyst) 기준으로 발가락이 갈라진 타비 스타일 수요는 2022년 이후 4배로 늘었고, 발가락을 하나씩 나눈 핑거슈즈는 1년 새 57% 올랐어.
+
+브랜드들도 가세했어. 시몬 로샤는 초대형 크록스에 진주와 보석을 잔뜩 얹었고, 스니커와 페니 로퍼를 합친 &#39;스노퍼&#39; 같은 합체 신발도 나왔어. 영국 M&amp;S에서 45파운드에 파는 뭉툭한 스웨이드 신발은 가을 최고 인기 상품 중 하나가 됐다고 해.
+
+이 흐름의 배경으로는 2023년 스타일리스트 앨리슨 본스타인이 만든 &#39;틀린 신발 이론&#39;도 꼽혀. 일부러 예상 밖의 신발을 신어서 룩에 개성을 더하는 스타일링 방법이야.
+
+그다음은 뭘까? 샤넬은 4월 프랑스 비아리츠 런웨이에서 굽 캡만 달린 &#39;신발 없는 신발&#39;을 선보였어. 리스트의 바바라 야네첵은 모두가 이상한 것에 익숙해지면 더 이상한 걸 찾게 된다고 말했대.
+
+너라면 이 중에 어디까지 신어볼 수 있을 것 같아?
+
+출처: 가디언(The Guardian)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#신발 #패션트렌드 #핑거슈즈 #타비 #해외트렌드</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>리스트의 야네첵은 모두가 이상한 것에 익숙해지면 더 이상한 것을 찾아야 한다고 말했다 <small>애매 · 발언 내용(&#39;이상한 것에 익숙해지면 더 이상한 걸 찾아야 한다&#39;)은 원문과 일치한다. 다만 야네첵이 리스트 소속이라는 부분은 제공된 근거 범위에서 확인되지 않으니, 소속 근거를 확인하거나 소속 표현을 빼야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 예전에는 출퇴근 열차에 무난한 신발이 가득했다</li><li>근거 등록 안 된 주장: 이 기사는 영국 가디언이 정리한 내용이다(출처 표기)</li><li>근거 등록 안 된 주장: 핑거슈즈는 발가락을 하나씩 나눈 신발이다</li><li>근거 등록 안 된 주장: 타비는 발가락이 갈라진 신발이다</li><li>근거 등록 안 된 주장: 틀린 신발 이론은 룩에 개성을 더하는 스타일링 방법이다</li>
+          <li>기사에 정치(MAGA)·성적 맥락 언급이 있으나 카드와 본문에서는 제외함</li><li>샤넬·크록스·M&amp;S 등 브랜드명이 본문에 언급됨(이미지에는 사용 금지)</li><li>순위·수치는 Lyst 플랫폼 기준이며 영국 기사 중심의 흐름임</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-75bc16666fa7-0">1장</label>
+          <textarea id="s-75bc16666fa7-0" rows="2" data-slide="0">못생긴 신발이
+**주류**라고???</textarea>
+          
+          <label class="f" for="s-75bc16666fa7-1">2장</label>
+          <textarea id="s-75bc16666fa7-1" rows="2" data-slide="1">핑거슈즈
+1년 새 **57%**↑</textarea>
+          
+          <label class="f" for="s-75bc16666fa7-2">3장</label>
+          <textarea id="s-75bc16666fa7-2" rows="3" data-slide="2">발가락 갈라진
+타비는
+2022년 대비 **4배**</textarea>
+          
+          <label class="f" for="s-75bc16666fa7-3">4장</label>
+          <textarea id="s-75bc16666fa7-3" rows="3" data-slide="3">스니커+로퍼
+합친 &#39;**스노퍼**&#39;
+까지 등장</textarea>
+          
+          <label class="f" for="s-75bc16666fa7-4">5장</label>
+          <textarea id="s-75bc16666fa7-4" rows="3" data-slide="4">샤넬은
+**굽 캡만** 남긴
+신발 공개</textarea>
+          
+          <label class="f" for="s-75bc16666fa7-5">6장</label>
+          <textarea id="s-75bc16666fa7-5" rows="3" data-slide="5">신발 취향이
+**독특한 친구**
+태그해서 보여주기</textarea>
+          
+          <label class="f" for="c-75bc16666fa7">본문 (캡션)</label>
+          <textarea id="c-75bc16666fa7" class="caption">못생긴 신발이 주류가 됐다는 얘기, 영국 가디언이 정리했어. 예전엔 출퇴근 열차에 무난한 신발이 가득했는데, 이제는 일부러 낯설게 만든 디자인의 인기가 갈수록 높아지고 있대.
+
+숫자로 보면 패션 검색 플랫폼 리스트(Lyst) 기준으로 발가락이 갈라진 타비 스타일 수요는 2022년 이후 4배로 늘었고, 발가락을 하나씩 나눈 핑거슈즈는 1년 새 57% 올랐어.
+
+브랜드들도 가세했어. 시몬 로샤는 초대형 크록스에 진주와 보석을 잔뜩 얹었고, 스니커와 페니 로퍼를 합친 &#39;스노퍼&#39; 같은 합체 신발도 나왔어. 영국 M&amp;S에서 45파운드에 파는 뭉툭한 스웨이드 신발은 가을 최고 인기 상품 중 하나가 됐다고 해.
+
+이 흐름의 배경으로는 2023년 스타일리스트 앨리슨 본스타인이 만든 &#39;틀린 신발 이론&#39;도 꼽혀. 일부러 예상 밖의 신발을 신어서 룩에 개성을 더하는 스타일링 방법이야.
+
+그다음은 뭘까? 샤넬은 4월 프랑스 비아리츠 런웨이에서 굽 캡만 달린 &#39;신발 없는 신발&#39;을 선보였어. 리스트의 바바라 야네첵은 모두가 이상한 것에 익숙해지면 더 이상한 걸 찾게 된다고 말했대.
+
+너라면 이 중에 어디까지 신어볼 수 있을 것 같아?
+
+출처: 가디언(The Guardian)</textarea>
+          <label class="f" for="t-75bc16666fa7">해시태그</label>
+          <input id="t-75bc16666fa7" type="text" class="tagsin" value="#신발 #패션트렌드 #핑거슈즈 #타비 #해외트렌드" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>리스트의 야네첵은 모두가 이상한 것에 익숙해지면 더 이상한 것을 찾아야 한다고 말했다</b>
+            <q>““Once everyone gets comfortable with the weird thing, you have to find something weirder,” says Janeczek, who credits “fashion’s one-upmanship” for playing a role in fuelling the trend for weird shoes.”</q>
+            <small>caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일부러 낯설게 만든 디자인이 갈수록 인기를 얻고 있다</b>
+            <q>“Deliberately strange designs are reaching new heights of desirability.”</q>
+            <small>slide1, caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>리스트 기준 핑거슈즈는 1년 새 57% 올랐다</b>
+            <q>“Meanwhile, FiveFingers are up 57% year on year.”</q>
+            <small>slide2, caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>리스트 기준 타비 스타일 수요는 2022년 이후 4배로 늘었다</b>
+            <q>“According to the fashion search platform Lyst, demand for cloven hoof-like Tabi styles, designed to split the hallux (big toe) from the rest of the toes, has increased fourfold since 2022.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스니커와 페니 로퍼를 합친 스노퍼가 있다</b>
+            <q>“These new cross-breeds include the snoafer, a marriage between a sneaker and a penny loafer.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시몬 로샤가 초대형 크록스에 진주와 보석을 얹었다</b>
+            <q>“Simone Rocha has created supersized Crocs and smothered them in pearls and gemstones, while Etro joins Dior and Valentino in reimagining Birkenstocks’ “anti‑fashion” cork footbed clogs.”</q>
+            <small>caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>M&amp;S의 45파운드 뭉툭한 스웨이드 신발이 가을 최고 인기 상품 중 하나다</b>
+            <q>“A £45 bulbous, soft suede pair has become one of its fastest-selling options for autumn.”</q>
+            <small>caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>틀린 신발 이론은 2023년 스타일리스트 앨리슨 본스타인이 만든 용어다</b>
+            <q>“The popularity of the trend can be pegged to the “wrong shoe theory”, a term coined by stylist Allison Bornstein in 2023.”</q>
+            <small>caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>틀린 신발 이론은 일부러 예상 밖의 신발을 신어 룩을 흥미롭게 만드는 방법이다</b>
+            <q>“This styling trick involves purposely wearing an unexpected shoe (think a kitten heel with tracksuit bottoms, or flip-flops with tailored trousers) to make a look more interesting.”</q>
+            <small>caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>샤넬의 신발 없는 신발은 4월 비아리츠 런웨이에서 처음 공개됐고 굽 캡만 있다</b>
+            <q>“Its “shoeless shoe”, first seen during its catwalk show in Biarritz in France in April and later worn by Margaret Qualley to a London film premiere, features just a heel cap, bearing its double CC logo, leaving the bare foot to walk without any protection at all.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/fashion/2026/oct/25/ugly-shoes-mainstream-freaky-footwear" target="_blank" rel="noopener">From five-fingered trainers to the shoeless shoe: what’s with all the freaky footwear?</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: AI 생성 — "quirky flat shoes on a sunlit city sidewalk"</li><li>2장: <a href="https://pixabay.com/photos/vietnam-woman-everyday-life-8420600/" target="_blank" rel="noopener">sdg_Rai / Pixabay</a> — "barefoot"</li><li>3장: <a href="https://pixabay.com/photos/footwear-leather-shoes-oxfords-1838767/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "shoe shop"</li><li>4장: <a href="https://pixabay.com/photos/couple-love-cafe-drinks-romance-6112296/" target="_blank" rel="noopener">Cloud1902 / Pixabay</a> — "loafers"</li><li>5장: <a href="https://pixabay.com/photos/catwalk-models-women-fashion-1840941/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "fashion runway"</li><li>6장: <a href="https://pixabay.com/photos/feet-childrens-feet-baby-barefoot-619399/" target="_blank" rel="noopener">FeeLoona / Pixabay</a> — "feet walking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-1a04324965a9" data-id="1a04324965a9">
+    <div class="head">
+      <h2>3. 1600년 된 로마 유리컵의 색이 바뀌는 원리 재현</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 9
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 10/30 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>1600년 된 컵이 색을 바꾼다고?! 영국박물관에 있는 리쿠르고스 컵 얘기야. 이 컵은 빛을 어디에 두느냐에 따라 색이 달라져. 평소 조명에서는 옥빛 초록인데, 뒤에서 빛을 비추면 루비빛 빨강으로 바뀌어. 수백 년 동안 역사학자와 유리 장인들이 풀지 못한 광학 기술이었대.
+
+이번에 영국 셰필드대 연구진이 이 컵의 색 변화를 재현했어. 컵 조각에서 얻은 고대 제조법을 바탕으로 했다고 해. 비결은 금과 은 나노입자를 유리에 넣는 거야. 크기가 모래알보다 천 배 작은 입자야. 1,000도를 훨씬 넘는 뜨거운 유리가 식는 동안 금과 은 나노결정이 자라났다고 해.
+
+원리는 이래. 빛을 통과시키면 금과 은 입자가 파랑과 초록을 막아서 빨강과 주황만 지나가. 표면에서 반사되는 빛은 입자가 산란시켜서 불투명한 초록으로 보여.
+
+유리 전문가 이언 프리스톤은 1960년대에도 비슷한 색의 유리를 재현한 적이 있지만, 이번 결과가 실제 컵의 초록과 빨강에 훨씬 가깝다고 말했어. 색이 가마 안 위치에 아주 민감해서 로마 장인들도 색을 통제하기 어려웠을 거라는 거야. 그래서 리쿠르고스 유리로 &#39;대박을 쳤다&#39;고 표현했어.
+
+이 기술을 담은 현대 유리 조각은 11월 6~15일 밀레니엄 갤러리에서 열리는 셰필드대 마음 축제에서 공개되고, 이후 터너 유리 박물관에 상설 전시될 예정이야.
+
+출처: The Guardian
+
+배경 사진: jarmoluk, Hans, r-q, ignartonosbg, PublicCo / Pixabay
+사진: Unknown artistUnknown artist / Wikimedia Commons, CC BY 2.5 (편집)
+사진: Vassil / Wikimedia Commons, CC0 (편집)
+
+#로마유리 #리쿠르고스컵 #나노입자 #과학뉴스 #고대과학</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-1a04324965a9">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 1600년 전 유리컵이 보는 방향에 따라 초록에서 빨강으로 바뀐다는 시각적 반전과, 그 비밀이 모래알보다 천 배 작은 금·은 입자였다는 대비로 팔린다.</p>
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 셰필드대가 이 기술을 담은 현대 유리 조각을 11월 6~15일 밀레니엄 갤러리 마음 축제에서 공개하고, 이후 터너 유리 박물관에 상설 전시할 예정 (본문 마지막 문단)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">1600년 된 로마 유리컵이 뒤에서 빛을 비추면 초록에서 루비빛 빨강으로 변한대
+역사학자들도 오래 못 풀던 비밀을 셰필드대 연구진이 재현해냈어
+그 컵 안에 대체 뭘 넣었길래?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">1/ 정답은 금과 은이야. 모래알보다 천 배 작은 나노입자가 유리 속에 들어 있어. 1,000도를 훨씬 넘는 뜨거운 유리가 식는 동안 금과 은 나노결정이 자라난 거래. 그럼 이 입자가 빛을 어떻게 바꿀까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">2/ 빛을 통과시키면 금과 은 입자가 파랑과 초록을 막아서 빨강과 주황만 지나가. 그래서 뒤에서 비추면 루비빛 빨강이 되는 거야. 그럼 평소에 볼 땐 왜 초록일까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">3/ 색 변화 요약 정리
+- 평소 조명(반사): 입자가 빛을 산란시켜서 불투명한 초록
+- 뒤에서 비춤(투과): 파랑·초록 차단, 빨강·주황만 통과해서 루비빛 빨강
+- 주인공: 금·은 나노입자 (모래알보다 1000배 작음)
+근데 이걸 예전엔 아무도 못 만들어봤을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">4/ 1960년대에도 비슷한 색의 유리를 재현한 적은 있대. 근데 유리 전문가 이언 프리스톤은 이번 결과가 실제 컵의 초록과 빨강에 훨씬 가깝다고 말했어. 그럼 왜 이렇게 재현이 까다로웠을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">5/ 색이 가마 안 위치에 아주 민감하기 때문이래. 그래서 로마 장인들도 색을 통제하기 어려웠을 거라는 거야. 프리스톤은 이 유리로 로마 사람들이 &#39;대박을 쳤다&#39;고 표현했어.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">226/500자</span></div>
+      <p class="tp-text">6/ 결국 이 컵 색이 바뀌는 건 금과 은 나노입자가 빛을 거르기 때문이고, 로마 장인들도 그걸 완벽하게 다루긴 어려웠을 거라는 얘기야.
+너라면 이 컵을 앞에서 볼래, 뒤에서 비춰볼래?
+이런 해외 과학 소식, 밤사이 터진 것만 새벽에 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 전시 일정과 장소까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 프리스톤은 이 유리로 로마 사람들이 &#39;대박을 쳤다&#39;고 표현했어. <small>참고 원고에는 &#39;대박을 쳤다&#39;는 표현을 누가 했는지 특정되어 있지 않다. 스레드는 이를 이언 프리스톤의 발언으로 단정해 원문에 없는 인물 행동을 붙였다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>1600년 된 로마 유리컵이 뒤에서 빛을 비추면 초록에서 루비빛 빨강으로 변해</li><li>이 컵 색은 하나가 아니라 두 개래, 빛을 어디서 비추느냐에 따라 입자가 색을 거르는 거라고</li><li>역사학자도 유리 장인도 수백 년 동안 못 푼 컵의 비밀이 드디어 풀렸대</li><li>같은 컵인데 앞에서 보면 초록, 뒤에서 비추면 빨강. 이게 진짜 1600년 전 유리라고?</li><li>모래알보다 천 배 작은 입자 때문에 1600년 된 컵 색이 바뀌는 거였어</li><li>로마 장인들도 색을 통제하기 어려웠을 거래, 그래서 &#39;대박&#39;이었다는 말까지 나온 컵</li><li>1960년대에도 따라 만들어봤는데 이번 재현이 실제 컵에 훨씬 가깝다는 평가가 나옴</li><li>영국박물관 유리컵이 초록이면서 빨강이래. 어떻게 가능한지 아는 사람?</li><li>1600년 전 로마 유리컵에 금과 은이 들어 있었다는 거, 알고 있었어?</li><li>평소엔 옥빛 초록, 뒤에서 비추면 루비빛 빨강. 이 컵의 비밀이 21세기에 재현됐대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너라면 이 컵을 앞에서 볼래, 뒤에서 비춰볼래?</li><li>초록 컵 vs 빨강 컵, 하나만 갖는다면 어느 쪽?</li><li>박물관 가면 유리 전시 먼저 보는 편이야, 그냥 지나치는 편이야?</li><li>1600년 전 기술이 지금보다 앞선 게 또 있을 것 같아?</li><li>이 컵 실물로 본다면 뒤에서 비추는 순간 제일 기대될 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>나노입자가 색을 만드는 원리, 다른 유리·유물 사례</li><li>고대 유물 제조법을 재현한 해외 연구 소식</li><li>박물관 소장품에서 새로 밝혀진 비밀 이야기</li><li>금속 입자로 색을 내는 유리 기술 이야기</li><li>옛 장인들이 만든 기술을 현대 과학이 풀어낸 소식</li></ol>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-01.jpg" alt="1장: 1600년 된 컵의 색이 바뀐다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-02.jpg" alt="2장: 평소엔 옥빛 초록 뒤에서 비추면 루비빛 빨강" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-03.jpg" alt="3장: 셰필드대 연구진이 드디어 재현" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-04.jpg" alt="4장: 비밀은 금이랑 은 모래알보다 1000배 작은 입자" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-05.jpg" alt="5장: 투과하면 빨강 반사하면 초록 입자가 색을 거름" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-06.jpg" alt="6장: 가마 위치에 따라 색이 달라져서 로마도 대박이었대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-07.jpg" alt="7장: 역사 덕후 친구 태그해서 같이 놀라기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261025-pm-05899fd03f86/1a04324965a9/v2-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">1600년 된 컵이 색을 바꾼다고?! 영국박물관에 있는 리쿠르고스 컵 얘기야. 이 컵은 빛을 어디에 두느냐에 따라 색이 달라져. 평소 조명에서는 옥빛 초록인데, 뒤에서 빛을 비추면 루비빛 빨강으로 바뀌어. 수백 년 동안 역사학자와 유리 장인들이 풀지 못한 광학 기술이었대.
+
+이번에 영국 셰필드대 연구진이 이 컵의 색 변화를 재현했어. 컵 조각에서 얻은 고대 제조법을 바탕으로 했다고 해. 비결은 금과 은 나노입자를 유리에 넣는 거야. 크기가 모래알보다 천 배 작은 입자야. 1,000도를 훨씬 넘는 뜨거운 유리가 식는 동안 금과 은 나노결정이 자라났다고 해.
+
+원리는 이래. 빛을 통과시키면 금과 은 입자가 파랑과 초록을 막아서 빨강과 주황만 지나가. 표면에서 반사되는 빛은 입자가 산란시켜서 불투명한 초록으로 보여.
+
+유리 전문가 이언 프리스톤은 1960년대에도 비슷한 색의 유리를 재현한 적이 있지만, 이번 결과가 실제 컵의 초록과 빨강에 훨씬 가깝다고 말했어. 색이 가마 안 위치에 아주 민감해서 로마 장인들도 색을 통제하기 어려웠을 거라는 거야. 그래서 리쿠르고스 유리로 &#39;대박을 쳤다&#39;고 표현했어.
+
+이 기술을 담은 현대 유리 조각은 11월 6~15일 밀레니엄 갤러리에서 열리는 셰필드대 마음 축제에서 공개되고, 이후 터너 유리 박물관에 상설 전시될 예정이야.
+
+출처: The Guardian</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#로마유리 #리쿠르고스컵 #나노입자 #과학뉴스 #고대과학</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>프리스톤 교수의 의견(대박, 통제 어려움)은 본문에서 출처를 밝혀 서술함</li><li>전시 일정은 기사 기준이라 변경 가능성 있음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-1a04324965a9-0">1장</label>
+          <textarea id="s-1a04324965a9-0" rows="2" data-slide="0">**1600년** 된 컵의
+색이 바뀐다???</textarea>
+          
+          <label class="f" for="s-1a04324965a9-1">2장</label>
+          <textarea id="s-1a04324965a9-1" rows="3" data-slide="1">평소엔 옥빛 초록
+뒤에서 비추면
+**루비빛 빨강**</textarea>
+          
+          <label class="f" for="s-1a04324965a9-2">3장</label>
+          <textarea id="s-1a04324965a9-2" rows="2" data-slide="2">셰필드대 연구진이
+드디어 **재현**</textarea>
+          
+          <label class="f" for="s-1a04324965a9-3">4장</label>
+          <textarea id="s-1a04324965a9-3" rows="3" data-slide="3">비밀은 **금이랑 은**
+모래알보다
+1000배 작은 입자</textarea>
+          
+          <label class="f" for="s-1a04324965a9-4">5장</label>
+          <textarea id="s-1a04324965a9-4" rows="3" data-slide="4">투과하면 **빨강**
+반사하면 초록
+입자가 색을 거름</textarea>
+          
+          <label class="f" for="s-1a04324965a9-5">6장</label>
+          <textarea id="s-1a04324965a9-5" rows="3" data-slide="5">가마 위치에 따라
+색이 달라져서
+로마도 **대박**이었대</textarea>
+          
+          <label class="f" for="s-1a04324965a9-6">7장</label>
+          <textarea id="s-1a04324965a9-6" rows="3" data-slide="6">**역사 덕후** 친구
+태그해서
+같이 놀라기</textarea>
+          
+          <label class="f" for="c-1a04324965a9">본문 (캡션)</label>
+          <textarea id="c-1a04324965a9" class="caption">1600년 된 컵이 색을 바꾼다고?! 영국박물관에 있는 리쿠르고스 컵 얘기야. 이 컵은 빛을 어디에 두느냐에 따라 색이 달라져. 평소 조명에서는 옥빛 초록인데, 뒤에서 빛을 비추면 루비빛 빨강으로 바뀌어. 수백 년 동안 역사학자와 유리 장인들이 풀지 못한 광학 기술이었대.
+
+이번에 영국 셰필드대 연구진이 이 컵의 색 변화를 재현했어. 컵 조각에서 얻은 고대 제조법을 바탕으로 했다고 해. 비결은 금과 은 나노입자를 유리에 넣는 거야. 크기가 모래알보다 천 배 작은 입자야. 1,000도를 훨씬 넘는 뜨거운 유리가 식는 동안 금과 은 나노결정이 자라났다고 해.
+
+원리는 이래. 빛을 통과시키면 금과 은 입자가 파랑과 초록을 막아서 빨강과 주황만 지나가. 표면에서 반사되는 빛은 입자가 산란시켜서 불투명한 초록으로 보여.
+
+유리 전문가 이언 프리스톤은 1960년대에도 비슷한 색의 유리를 재현한 적이 있지만, 이번 결과가 실제 컵의 초록과 빨강에 훨씬 가깝다고 말했어. 색이 가마 안 위치에 아주 민감해서 로마 장인들도 색을 통제하기 어려웠을 거라는 거야. 그래서 리쿠르고스 유리로 &#39;대박을 쳤다&#39;고 표현했어.
+
+이 기술을 담은 현대 유리 조각은 11월 6~15일 밀레니엄 갤러리에서 열리는 셰필드대 마음 축제에서 공개되고, 이후 터너 유리 박물관에 상설 전시될 예정이야.
+
+출처: The Guardian</textarea>
+          <label class="f" for="t-1a04324965a9">해시태그</label>
+          <input id="t-1a04324965a9" type="text" class="tagsin" value="#로마유리 #리쿠르고스컵 #나노입자 #과학뉴스 #고대과학" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1600년 된 컵이 영국박물관에 있다</b>
+            <q>“The Romans’ proficiency in the art of glass-making has produced some of the wonders of antiquity, but few of their creations better a 1,600-year-old masterpiece which sits in the British Museum.”</q>
+            <small>slide1, caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>리쿠르고스 컵은 빛 위치에 따라 평소엔 옥빛 초록, 뒤에서 비추면 루비빛 빨강으로 바뀌며 수백 년간 역사학자와 유리 장인들을 당혹시켰다</b>
+            <q>“Depending on where a light source is positioned, the Lycurgus Cup changes colour, from jade green under normal lighting to ruby red when lit from behind – an astonishing feat of optical engineering that has confounded historians and glass-makers for centuries.”</q>
+            <small>slide2, caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>셰필드대 과학자들이 로마 원본 조각에서 얻은 고대 제조법으로 광학적 특성을 재현했다</b>
+            <q>“Now scientists from the University of Sheffield have replicated its remarkable optical behaviour, using an ancient recipe derived from a fragment of the Roman “dichroic” (two-coloured) original.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>금과 은 나노입자는 모래알보다 천 배 작다</b>
+            <q>“Then came the challenge of embedding into glass nanoparticles of gold and silver – each a thousand times smaller than a grain of sand.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1,000도를 훨씬 넘는 온도에서 식는 동안 금과 은 나노결정이 자라났다</b>
+            <q>“A thick molten glass was created and, as it cooled from well over 1,000C, gold and silver nanocrystals started to grow around particles within it.”</q>
+            <small>caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빛을 통과시키면 파랑·초록이 막혀 빨강·주황이 지나가고, 표면 반사 시 입자가 빛을 산란시켜 불투명한 초록으로 보인다</b>
+            <q>“So, for this glass, if light is shone through it, the gold and silver particles block blue and green light, only allowing reds and oranges to pass through. If light is reflected off the surface, the particles have the effect of scattering the light, giving the opaque green colour we see.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>프리스톤 교수는 1960년대에도 비슷한 색 유리가 재현됐지만 이번 프로젝트가 실제 컵의 초록과 빨강에 훨씬 가깝다고 말했다</b>
+            <q>“Ian Freestone, emeritus professor of archaeological materials at University College London, said that, although a similar-coloured glass was replicated in the 1960s, Sheffield’s project is much closer to the actual green and red shades of the Lycurgus Cup.”</q>
+            <small>caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>프리스톤 교수는 색이 가마 안 위치에 민감해 로마인이 통제하기 어려웠을 것이며 리쿠르고스 유리로 대박을 쳤다고 생각한다고 말했다</b>
+            <q>“The fact that the colour is so sensitive to the position in the furnace suggests that it would have been very difficult for the Romans to control the colour. It makes me think that, with the Lycurgus glass, they hit the jackpot.”</q>
+            <small>slide6, caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>현대 유리 조각이 11월 6~15일 밀레니엄 갤러리 마음 축제에서 공개된 뒤 터너 유리 박물관에 상설 전시된다</b>
+            <q>“It will be unveiled at the Millennium Gallery, as part of the university’s Festival of the Mind from 6-15 November, before a permanent display at the Turner Museum of Glass.”</q>
+            <small>caption · <a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/science/2026/oct/25/scientists-rediscover-ancient-roman-colour-changing-glass" target="_blank" rel="noopener">‘It’s magic’: scientists rediscover how to make ancient Roman colour-changing glass</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Lycurgus_Cup_red_BM_MME1958.12-2.1.jpg" target="_blank" rel="noopener">Unknown artistUnknown artist / Wikimedia Commons · CC BY 2.5</a> — "Lycurgus Cup"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:British_Museum_The_Lycurgus_Cup_07_15022019_4359.jpg" target="_blank" rel="noopener">Vassil / Wikimedia Commons · CC0</a> — "Lycurgus Cup"</li><li>3장: <a href="https://pixabay.com/photos/chemist-laboratory-analysis-2815640/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "chemistry lab"</li><li>4장: <a href="https://pixabay.com/photos/gold-gold-nugget-nugget-4333036/" target="_blank" rel="noopener">Hans / Pixabay</a> — "gold nugget"</li><li>5장: <a href="https://pixabay.com/photos/hangzhou-technology-design-high-end-8398789/" target="_blank" rel="noopener">r-q / Pixabay</a> — "light prism"</li><li>6장: <a href="https://pixabay.com/photos/fire-furnace-gamelan-metalurgy-8387748/" target="_blank" rel="noopener">ignartonosbg / Pixabay</a> — "furnace fire"</li><li>7장: <a href="https://pixabay.com/photos/natural-history-museum-london-2203648/" target="_blank" rel="noopener">PublicCo / Pixabay</a> — "museum hall"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-ffd95a99aad8">
+    <div class="head">
+      <h2>S1. 하루 2잔 음주, 평생 알코올 관련 사망 위험 25명 중 1명 추정 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ffd95a99aad8">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;적당히 마시면 괜찮다&#39;는 통념을 &#39;주 14잔=하루 2잔꼴=25명 중 1명&#39;이라는 숫자로 뒤집어, 누구나 자기 술자리 기준을 떠올리게 하는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">&#39;적당히 마시면 괜찮다&#39;는 말, 이 연구 보면 좀 달라짐
+주 14잔(하루 2잔꼴) 마시면 평생 알코올 관련 사망 위험이 25명 중 1명꼴로 추정됐대
+근데 딱 절반인 주 7잔은 결과가 꽤 달랐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 미국인 기준으로 일주일 평균 14잔, 하루 2잔꼴로 마시면 평생 알코올 관련 원인으로 사망할 위험이 25명 중 1명꼴이라고 추정했대.
+그럼 절반인 주 7잔은 괜찮을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">143/500자</span></div>
+      <p class="tp-text">2/ 주 7잔까지는 대부분 질환에서 위험 증가가 작은 편이었대.
+근데 &#39;이득&#39;은 못 찾았음. 소량이면 허혈성 심장질환이랑 뇌졸중 위험이 낮을 수는 있는데, 암까지 전체를 같이 보면 주 7잔에서도 위험이 그 이득보다 크다는 거야.
+이 숫자는 어떻게 뽑았을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">154/500자</span></div>
+      <p class="tp-text">3/ 방법은 이래. 알코올 관련 질병·부상 논문을 7,200편 넘게 검토해서 질환별 위험을 추정하고, 국가 건강 데이터랑 합쳐서 통계 모델로 계산했대.
+원래 미국 연방정부가 식단 지침 만드는 데 참고하라고 의뢰한 연구야.
+그래서 기준선은 어디쯤일까? 다음 글에 한눈에 정리해둠</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">4/ 요약 정리
+- 주 14잔(하루 2잔꼴): 평생 알코올 관련 사망 위험 25명 중 1명꼴 추정
+- 주 7잔까지: 대부분 질환에서 위험 증가는 작은 편
+- 하루 1잔을 넘기면 위험이 더 뚜렷해짐 (남녀 모두)
+- 어느 수준에서도 뚜렷한 건강 이득은 못 찾음
+근데 이게 나한테도 똑같이 적용될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">174/500자</span></div>
+      <p class="tp-text">5/ 연구진도 선을 그었어. 이 숫자는 집단 전체의 위험 추정이지, 한 사람한테 무슨 일이 생길지 맞히는 게 아니래.
+생활습관, 유전, 마시는 패턴에 따라 개인차가 있고 췌장암 연관은 아직 더 연구 중이라고 함.
+자기한테 맞는 기준은 의사랑 상의해보고, 한국 사람한테 그대로 맞는지는 이 글만으로는 알 수 없어.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">210/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 &#39;적당히&#39;를 느낌으로 말고 숫자로 보라는 거고, 적게 마실수록 술 관련 위험에 덜 노출된다는 거야.
+연구 보기 전엔 &#39;적당히&#39;가 하루 몇 잔이라고 생각했어?
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구진은 &#39;적당히&#39;를 느낌이 아니라 숫자로 보라고 말했다는 주장</li><li>근거 등록 안 된 주장: 한국 사람에게 이 수치가 그대로 맞는지는 이 글만으로는 알 수 없다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;적당히 마시면 괜찮다&#39;는 말, 이 연구 보면 좀 달라짐</li><li>하루 2잔이면 평생 알코올 관련 사망 위험이 25명 중 1명꼴이라는 연구가 나옴</li><li>&#39;적당히&#39; 마신다는 사람들, 그 &#39;적당히&#39;를 숫자로 따져보라는 연구가 나옴</li><li>술은 &#39;적당히&#39;가 아니라 &#39;몇 잔&#39;이 중요하다는 연구, 느낌 말고 숫자부터 보라고 함</li><li>소량 음주는 몸에 이득이라던 말, 연구진은 &#39;어느 수준에서도 뚜렷한 효과 못 봤다&#39;고 함</li><li>주 14잔과 주 7잔, 딱 두 배 차이인데 결과가 이렇게 달랐음</li><li>회식 때 &#39;두 잔은 기본이지&#39; 하던 사람들 주목, 하루 2잔이 연구에서 이렇게 나옴</li><li>&#39;순수하게 사회적으로는 적당한 양&#39;이 하루 2잔이라는데, 연구진 반응이 이거였음</li><li>술 마실 때 &#39;나는 적당히 마시는 편&#39;이라고 생각했다면 이 연구부터 보고 와</li><li>원래 미국 정부가 식단 지침 만들려고 의뢰한 연구인데, 하루 2잔 결과가 꽤 세게 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>연구 보기 전엔 &#39;적당히&#39;가 하루 몇 잔이라고 생각했어?</li><li>술자리 첫 잔, 원샷파 vs 천천히파?</li><li>&#39;하루 2잔은 적당하다&#39;는 말, 동의했던 편 vs 아니었던 편?</li><li>&#39;한 잔 더?&#39; 거절 잘하는 편 vs 못하는 편?</li><li>주 7잔 vs 주 14잔, 이 차이를 알고 나면 술자리에서 뭐가 달라질 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>술과 암 위험이 이어지는 연구, 어떤 암이 거론됐나</li><li>소량 음주가 심장에 좋다는 말은 어디서 나왔을까</li><li>술을 줄이면 위험이 어떻게 달라지나 하는 해외 연구</li><li>췌장암과 술의 연관성, 연구가 어디까지 왔나</li><li>나라마다 다른 음주 가이드라인 비교</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문은 &#39;주 평균 14잔&#39;이며 1잔의 기준량이 원문에 없음. 소주·맥주·소맥 잔수로 환산하는 표현 금지</li><li>25명 중 1명은 미국인 대상 평생 위험 추정치. 한국인이나 개인에게 그대로 적용되는 것처럼 읽히지 않게 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국인 대상으로 평생 음주와 질병·조기 사망의 관계를 조사했다</b>
+          <q>“To better understand the long-term consequences of drinking, Shield and his colleagues in the United States and Canada investigated how alcohol consumption over a lifetime contributes to disease and premature death among Americans.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 평균 14잔 마시는 사람은 알코올 관련 원인으로 사망할 평생 위험이 25명 중 1명꼴로 추정됐다</b>
+          <q>“Researchers estimated that people who consume an average of 14 alcoholic drinks per week face a 1 in 25 lifetime risk of dying from alcohol-related causes.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 7잔까지는 대부분 건강 문제에서 위험 증가가 작았다</b>
+          <q>“By comparison, consuming up to seven drinks weekly was linked to only small increases in risk for most health conditions.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소량이면 허혈성 심장질환과 뇌졸중 위험이 낮아질 수 있으나 암 등 전체를 보면 주 7잔에서도 위험이 이득을 넘는다</b>
+          <q>“At low levels, alcohol may be associated with a reduced risk of ischemic heart disease and stroke. But when you look across the full range of health outcomes, including cancer and other chronic diseases, those potential benefits are outweighed by the risks even at 7 drinks per week.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 어떤 음주 수준에서도 건강에 대한 뚜렷한 보호 효과를 관찰하지 못했다</b>
+          <q>“&#34;We did not observe a significant protective effect of alcohol on health at any level of consumption,&#34; says Shield.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>7,200편이 넘는 논문을 검토했다</b>
+          <q>“Medical experts first examined more than 7,200 scientific publications covering illnesses and injuries associated with alcohol.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>질환별 위험을 추정해 국가 건강 데이터와 결합하고 통계 모델로 계산했다</b>
+          <q>“Using this evidence, they estimated the risks for individual health conditions and combined those findings with large national health data sets.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 원래 미국 연방정부가 식단 권고 마련을 돕도록 의뢰한 것이다</b>
+          <q>“The research, known as the Alcohol Intake and Health Study, was originally commissioned by the U.S. federal government to help shape updated national dietary recommendations.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 1잔을 넘으면 알코올 관련 위험이 더 뚜렷해지며 남녀 모두 해당된다</b>
+          <q>“The results suggest that alcohol-related health risks become more pronounced when consumption exceeds one drink per day, regardless of whether the person is male or female.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추정치는 집단 전체의 위험이지 특정 개인에게 일어날 일을 정확히 예측하는 것이 아니다</b>
+          <q>“Although the analysis drew on extensive scientific evidence, the researchers emphasize that its estimates describe risks across populations rather than predicting precisely what will happen to any particular person.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>개인의 위험은 생활습관, 유전, 음주 패턴 등에 따라 다르다</b>
+          <q>“However, we can&#39;t assume that means one person&#39;s individual health risk is the same as what is reported here -- that depends on other factors like lifestyle, genetics, drinking patterns, and other choices that differ person to person.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>췌장암과 음주의 연관성은 아직 연구 중이다</b>
+          <q>“However, scientists are continuing to investigate additional possible consequences of drinking, including emerging evidence connecting alcohol consumption to pancreatic cancer.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>적게 마실수록 알코올 관련 위해에 대한 노출이 일반적으로 줄어든다</b>
+          <q>“Rather than suggesting that any particular amount is completely safe, the findings show how risks increase with greater consumption and why drinking less generally reduces exposure to alcohol-related harm.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ffd95a99aad8">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261024222030.htm" target="_blank" rel="noopener">Just two drinks a day may be far riskier than you think</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-82a3baaa4f75">
+    <div class="head">
+      <h2>S2. 4살 때 배운 &#39;거북이 하기&#39;, 20년 뒤 성인 웰빙 추적 결과</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-82a3baaa4f75">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 심리학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 글자·언어 효과는 초등 때 사라졌는데 감정 다루는 법 효과는 20년 가까이 남았다는 대비로, 어른이 된 나를 돌아보게 하는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">행복한 어른은 4살 때 &#39;거북이 하기&#39;를 배운 쪽일지도 모른대
+감정 다루는 수업을 더 받은 아이들을 20년 가까이 따라가 봤더니
+근데 두 항목에선 효과가 더 크게 나타난 아이들이 따로 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 펜실베이니아 저소득 가정 아이 356명을 따라간 연구인데, 4살 때 감정 수업을 더 받은 쪽이 21~22살에 웰빙 11개 항목 중 7개에서 더 나았음. 우울 증상·외로움은 덜하고 공감, 삶 만족도는 더 높았대. 근데 그 수업이 뭐였냐면 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">2/ 거기서 배운 게 &#39;거북이 하기&#39;라는 연습이었음. 멈추고, 심호흡하고, 문제랑 지금 기분에 이름 붙이기. 2003년 4살 아이들이 인형극·역할극으로 배웠고, 매일 읽기 프로그램도 같이 붙은 패키지였대. 근데 공부 쪽 효과는 어땠냐면 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">3/ 공부 쪽 효과는 먼저 사라졌대. 같은 아이들에서 언어·문해력 향상은 초등 저학년 무렵 사라졌는데, 감정·사회성 효과는 고등학교까지 행동 문제와 정서적 힘듦이 덜한 모습으로 남았음. 그럼 형편이 힘들었던 아이들은 어땠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">4/ 어릴 때 힘든 일(폭력 목격, 가정 불안정 같은)을 더 겪은 아이들은 대체로 성인 초반에도 더 힘들었음. 근데 공감이랑 사교성 두 항목은 반대로, 그런 아이들에게 수업 효과가 더 컸대. 나머지 9개는 뚜렷한 차이가 없었고. 근데 읽을 때 주의할 점이 있음 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">200/500자</span></div>
+      <p class="tp-text">5/ 이 연구 읽을 때 알아둘 3가지
+- 21~22살이 전화 인터뷰로 직접 답한 자기 보고라 기억이나 좋게 보이고 싶은 마음이 섞일 수 있음
+- 펜실베이니아 3개 카운티 아이들이라 다른 지역엔 안 맞을 수도 있음
+- 효과 크기는 연구진도 &#39;작은~중간 정도&#39;라 했고, 비교 대상은 일반 헤드스타트 반(유아교육을 안 받은 아이가 아님)
+
+그래서 결론이 뭐냐면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">231/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 설명은 이거야. 어릴 때 감정 다루는 법을 익히면 또래·선생님이랑 관계가 좋아지고, 그 관계가 어른이 돼서도 이어진다는 것.
+
+유치원에서 글자 먼저 vs 감정 먼저, 너라면 뭐부터 가르칠래?
+
+이런 해외 심리·성장 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>행복한 어른은 4살 때 &#39;거북이 하기&#39;를 배운 쪽일지도 모른대</li><li>외로움이 성격 탓만이 아니라 4살 때 받은 수업과 연결돼 있을 수 있다는 연구가 나옴</li><li>언어·문해력 효과는 초등 저학년 무렵 사라졌는데 감정 수업 효과는 고등학교까지 갔대</li><li>4살한테 가르친 &#39;멈추고, 숨 쉬고, 감정에 이름 붙이기&#39;가 21살 때 결과에서 차이를 냈대</li><li>11개 항목 중 7개에서 앞섰어. 4살 때 인형극으로 감정 수업 더 받은 아이들이</li><li>유아 교육 하면 글자부터 떠올리는데, 20년 뒤까지 남은 건 감정 다루는 법이었다는 연구가 나옴</li><li>외로운 20대 많잖아. 이 연구는 해법이 어른 때가 아니라 4살 교실에서 시작될 수 있다고 봤어</li><li>어릴 때 힘든 일을 더 겪은 아이일수록 감정 수업 효과가 더 컸던 항목이 있었대</li><li>연구진은 효과가 &#39;작은~중간 정도&#39;라고 했는데, 그게 20년 뒤에도 남았다는 게 포인트야</li><li>너 어릴 때 감정 다루는 법 배운 적 있어? 4살 때 배운 게 21살에 남았다는 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>어릴 때 감정 다루는 법 배운 기억 있는 사람?</li><li>유치원에서 글자 먼저 vs 감정 먼저, 너라면 뭐부터 가르칠래?</li><li>화나면 멈추고 숨부터 쉬는 파 vs 바로 말부터 나오는 파?</li><li>&#39;멈추고, 숨 쉬고, 감정에 이름 붙이기&#39; 이 3단계 어른한테도 먹힐 것 같아?</li><li>4살 때 인형극에서 배운 게 20년 갔다는데, 너한테 아직 남은 어릴 적 교육 하나 꼽자면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>어릴 때 배운 감정 조절, 어른이 돼서도 바꿀 수 있을까 하는 연구</li><li>청년 외로움이 늘고 있다는 해외 조사</li><li>유아 교육에서 학업 효과는 왜 사라질까</li><li>옛날 노래가 차트·스트리밍을 장악한 이유</li><li>괴상한 신발이 주류가 된 흐름</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문의 life satisfaction을 &#39;행복&#39;으로 옮겼음. 본글 첫 줄이 인과 단정처럼 읽히지 않는지 확인 필요</li><li>효과 크기가 small-to-moderate이고 비교 대상이 일반 헤드스타트라는 점이 5/에 들어 있음. 과장해서 고치지 말 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>어려움을 더 겪은 아이들에게서 공감과 사교성 두 항목의 수업 효과가 더 컸다</b>
+          <q>“But one pattern stood out: for two specific outcomes, empathy and sociability, the preschool program’s benefits were actually stronger among kids who had experienced more early hardship, not weaker.”</q>
+          <small>post0 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>4살 때 배운 &#39;거북이 하기&#39;가 거의 20년 뒤 청년기까지 이어져 나타났다</b>
+          <q>“A simple preschool lesson in managing emotions still showed up in young adults nearly 20 years later. Back in 2003, a group of four-year-olds in Head Start classrooms learned a calming exercise called “doing turtle”: stop, take a deep breath, and name the problem and the feeling.”</q>
+          <small>post0 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>저소득 아이 356명을 청년기까지 따라갔고 웰빙 11개 항목 중 7개에서 더 나았다</b>
+          <q>“That is seven out of eleven measures of well-being, according to a new study that followed 356 low-income children into their early twenties.”</q>
+          <small>post1 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>우울 증상·외로움은 덜하고 공감과 삶 만족도는 더 높았다</b>
+          <q>“Of the eleven well-being measures, the group that received the enriched preschool program scored clearly better on seven of them as young adults. That included fewer conduct problems, fewer symptoms of depression, less loneliness, more empathy, stronger emotional support systems, more healthy days per month, and greater overall life satisfaction.”</q>
+          <small>post1 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 유아기부터 21~22세까지 아이들을 따라갔다</b>
+          <q>“Researchers followed the group from preschool to ages 21 and 22, comparing kids who attended Head Start classrooms with an extra program teaching emotional skills and language to those in standard classrooms.”</q>
+          <small>post1 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2003년 4살 아이들이 멈추고 심호흡하고 문제와 감정에 이름 붙이는 &#39;거북이 하기&#39;를 배웠다</b>
+          <q>“Back in 2003, a group of four-year-olds in Head Start classrooms learned a calming exercise called “doing turtle”: stop, take a deep breath, and name the problem and the feeling.”</q>
+          <small>post2 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수업은 이야기, 인형극, 역할극으로 진행됐다</b>
+          <q>“The PATHS lessons used stories, puppet shows, and role-play to teach four-year-olds how to manage their emotions, solve problems with other kids, and be kind.”</q>
+          <small>post2 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>감정 수업 패키지에 매일 하는 읽기 프로그램이 함께 들어갔다</b>
+          <q>“Others added an enrichment program called REDI, which layered in a curriculum called Preschool PATHS along with a daily interactive reading program.”</q>
+          <small>post2 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>언어·문해력 향상은 초등 저학년 무렵 사라졌지만 감정·사회성 효과는 고등학교까지 이어졌다</b>
+          <q>“Earlier findings from this same group of children showed that language and literacy gains from the program faded by early elementary school, a pattern seen in a lot of preschool research. But the emotional and social skills stuck around, showing up as fewer behavior problems and less emotional distress all the way through high school.”</q>
+          <small>post3 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>어릴 때 어려움이 컸던 아이들은 대체로 청년기에도 더 힘들었다</b>
+          <q>“As expected, kids who faced more early hardship generally had a tougher time as young adults, showing up as higher rates of conduct problems, hyperactivity, depression, and lower life satisfaction.”</q>
+          <small>post4 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>어려움은 폭력 목격, 가정 불안정 같은 상황을 뜻한다</b>
+          <q>“Researchers also tracked hardship from early childhood, meaning stressful situations like witnessing violence, frequent harsh punishment, family instability, or a parent struggling with depression.”</q>
+          <small>post4 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나머지 9개 항목에서는 어려움에 따라 효과가 달라진다는 뚜렷한 증거가 없었다</b>
+          <q>“For the other nine measures, researchers found no clear evidence that early hardship changed how children responded to the program, suggesting its benefits weren’t limited to kids with less difficult childhoods.”</q>
+          <small>post4 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>청년기 결과는 전화 인터뷰에서 본인이 직접 답한 자기 보고였다</b>
+          <q>“It relied on young adults reporting on their own mental health and relationships, which can be shaped by memory or a desire to look good.”</q>
+          <small>post5 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추적 조사는 전화 인터뷰로 이뤄졌다</b>
+          <q>“For this study, the main follow-up occurred in early adulthood through phone interviews when participants were 18 to 19 and again at 21 to 22.”</q>
+          <small>post5 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>표본이 펜실베이니아 3개 카운티에서 나와 다른 지역에는 안 맞을 수 있다</b>
+          <q>“The sample came from three Pennsylvania counties, so the results might not hold up elsewhere.”</q>
+          <small>post5 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 효과 크기를 작은~중간 정도로 설명했고 비교 대상은 유아교육을 안 받은 아이가 아니라 일반 헤드스타트였다</b>
+          <q>“Researchers described the size of these effects as “small-to-moderate,” which they considered worth noting given the time between the preschool program and the young adult check-in and the comparison against standard Head Start rather than no preschool at all.”</q>
+          <small>post5 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 감정 다루기 능력이 또래·선생님과의 관계를 좋게 하고 그 관계가 성인기까지 이어진다는 연쇄 반응을 설명했다</b>
+          <q>“The researchers described a chain reaction: early gains in managing emotions help kids build better relationships with peers and teachers through elementary and high school, and those relationships carry forward into healthier adult functioning.”</q>
+          <small>post6 · <a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="82a3baaa4f75">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/kids-who-learned-this-in-preschool-became-happier-adults/" target="_blank" rel="noopener">Kids Who Learned This in Preschool Became Happier Adults</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261025-pm";
+  const ORIGINAL = {"1a04324965a9": {"caption": "1600\ub144 \ub41c \ucef5\uc774 \uc0c9\uc744 \ubc14\uafbc\ub2e4\uace0?! \uc601\uad6d\ubc15\ubb3c\uad00\uc5d0 \uc788\ub294 \ub9ac\ucfe0\ub974\uace0\uc2a4 \ucef5 \uc598\uae30\uc57c. \uc774 \ucef5\uc740 \ube5b\uc744 \uc5b4\ub514\uc5d0 \ub450\ub290\ub0d0\uc5d0 \ub530\ub77c \uc0c9\uc774 \ub2ec\ub77c\uc838. \ud3c9\uc18c \uc870\uba85\uc5d0\uc11c\ub294 \uc625\ube5b \ucd08\ub85d\uc778\ub370, \ub4a4\uc5d0\uc11c \ube5b\uc744 \ube44\ucd94\uba74 \ub8e8\ube44\ube5b \ube68\uac15\uc73c\ub85c \ubc14\ub00c\uc5b4. \uc218\ubc31 \ub144 \ub3d9\uc548 \uc5ed\uc0ac\ud559\uc790\uc640 \uc720\ub9ac \uc7a5\uc778\ub4e4\uc774 \ud480\uc9c0 \ubabb\ud55c \uad11\ud559 \uae30\uc220\uc774\uc5c8\ub300.\n\n\uc774\ubc88\uc5d0 \uc601\uad6d \uc170\ud544\ub4dc\ub300 \uc5f0\uad6c\uc9c4\uc774 \uc774 \ucef5\uc758 \uc0c9 \ubcc0\ud654\ub97c \uc7ac\ud604\ud588\uc5b4. \ucef5 \uc870\uac01\uc5d0\uc11c \uc5bb\uc740 \uace0\ub300 \uc81c\uc870\ubc95\uc744 \ubc14\ud0d5\uc73c\ub85c \ud588\ub2e4\uace0 \ud574. \ube44\uacb0\uc740 \uae08\uacfc \uc740 \ub098\ub178\uc785\uc790\ub97c \uc720\ub9ac\uc5d0 \ub123\ub294 \uac70\uc57c. \ud06c\uae30\uac00 \ubaa8\ub798\uc54c\ubcf4\ub2e4 \ucc9c \ubc30 \uc791\uc740 \uc785\uc790\uc57c. 1,000\ub3c4\ub97c \ud6e8\uc52c \ub118\ub294 \ub728\uac70\uc6b4 \uc720\ub9ac\uac00 \uc2dd\ub294 \ub3d9\uc548 \uae08\uacfc \uc740 \ub098\ub178\uacb0\uc815\uc774 \uc790\ub77c\ub0ac\ub2e4\uace0 \ud574.\n\n\uc6d0\ub9ac\ub294 \uc774\ub798. \ube5b\uc744 \ud1b5\uacfc\uc2dc\ud0a4\uba74 \uae08\uacfc \uc740 \uc785\uc790\uac00 \ud30c\ub791\uacfc \ucd08\ub85d\uc744 \ub9c9\uc544\uc11c \ube68\uac15\uacfc \uc8fc\ud669\ub9cc \uc9c0\ub098\uac00. \ud45c\uba74\uc5d0\uc11c \ubc18\uc0ac\ub418\ub294 \ube5b\uc740 \uc785\uc790\uac00 \uc0b0\ub780\uc2dc\ucf1c\uc11c \ubd88\ud22c\uba85\ud55c \ucd08\ub85d\uc73c\ub85c \ubcf4\uc5ec.\n\n\uc720\ub9ac \uc804\ubb38\uac00 \uc774\uc5b8 \ud504\ub9ac\uc2a4\ud1a4\uc740 1960\ub144\ub300\uc5d0\ub3c4 \ube44\uc2b7\ud55c \uc0c9\uc758 \uc720\ub9ac\ub97c \uc7ac\ud604\ud55c \uc801\uc774 \uc788\uc9c0\ub9cc, \uc774\ubc88 \uacb0\uacfc\uac00 \uc2e4\uc81c \ucef5\uc758 \ucd08\ub85d\uacfc \ube68\uac15\uc5d0 \ud6e8\uc52c \uac00\uae5d\ub2e4\uace0 \ub9d0\ud588\uc5b4. \uc0c9\uc774 \uac00\ub9c8 \uc548 \uc704\uce58\uc5d0 \uc544\uc8fc \ubbfc\uac10\ud574\uc11c \ub85c\ub9c8 \uc7a5\uc778\ub4e4\ub3c4 \uc0c9\uc744 \ud1b5\uc81c\ud558\uae30 \uc5b4\ub824\uc6e0\uc744 \uac70\ub77c\ub294 \uac70\uc57c. \uadf8\ub798\uc11c \ub9ac\ucfe0\ub974\uace0\uc2a4 \uc720\ub9ac\ub85c \u0027\ub300\ubc15\uc744 \ucce4\ub2e4\u0027\uace0 \ud45c\ud604\ud588\uc5b4.\n\n\uc774 \uae30\uc220\uc744 \ub2f4\uc740 \ud604\ub300 \uc720\ub9ac \uc870\uac01\uc740 11\uc6d4 6~15\uc77c \ubc00\ub808\ub2c8\uc5c4 \uac24\ub7ec\ub9ac\uc5d0\uc11c \uc5f4\ub9ac\ub294 \uc170\ud544\ub4dc\ub300 \ub9c8\uc74c \ucd95\uc81c\uc5d0\uc11c \uacf5\uac1c\ub418\uace0, \uc774\ud6c4 \ud130\ub108 \uc720\ub9ac \ubc15\ubb3c\uad00\uc5d0 \uc0c1\uc124 \uc804\uc2dc\ub420 \uc608\uc815\uc774\uc57c.\n\n\ucd9c\ucc98: The Guardian", "hashtags": ["#\ub85c\ub9c8\uc720\ub9ac", "#\ub9ac\ucfe0\ub974\uace0\uc2a4\ucef5", "#\ub098\ub178\uc785\uc790", "#\uacfc\ud559\ub274\uc2a4", "#\uace0\ub300\uacfc\ud559"], "slides": [["**1600\ub144** \ub41c \ucef5\uc758", "\uc0c9\uc774 \ubc14\ub010\ub2e4???"], ["\ud3c9\uc18c\uc5d4 \uc625\ube5b \ucd08\ub85d", "\ub4a4\uc5d0\uc11c \ube44\ucd94\uba74", "**\ub8e8\ube44\ube5b \ube68\uac15**"], ["\uc170\ud544\ub4dc\ub300 \uc5f0\uad6c\uc9c4\uc774", "\ub4dc\ub514\uc5b4 **\uc7ac\ud604**"], ["\ube44\ubc00\uc740 **\uae08\uc774\ub791 \uc740**", "\ubaa8\ub798\uc54c\ubcf4\ub2e4", "1000\ubc30 \uc791\uc740 \uc785\uc790"], ["\ud22c\uacfc\ud558\uba74 **\ube68\uac15**", "\ubc18\uc0ac\ud558\uba74 \ucd08\ub85d", "\uc785\uc790\uac00 \uc0c9\uc744 \uac70\ub984"], ["\uac00\ub9c8 \uc704\uce58\uc5d0 \ub530\ub77c", "\uc0c9\uc774 \ub2ec\ub77c\uc838\uc11c", "\ub85c\ub9c8\ub3c4 **\ub300\ubc15**\uc774\uc5c8\ub300"], ["**\uc5ed\uc0ac \ub355\ud6c4** \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c", "\uac19\uc774 \ub180\ub77c\uae30"]]}, "75bc16666fa7": {"caption": "\ubabb\uc0dd\uae34 \uc2e0\ubc1c\uc774 \uc8fc\ub958\uac00 \ub410\ub2e4\ub294 \uc598\uae30, \uc601\uad6d \uac00\ub514\uc5b8\uc774 \uc815\ub9ac\ud588\uc5b4. \uc608\uc804\uc5d4 \ucd9c\ud1f4\uadfc \uc5f4\ucc28\uc5d0 \ubb34\ub09c\ud55c \uc2e0\ubc1c\uc774 \uac00\ub4dd\ud588\ub294\ub370, \uc774\uc81c\ub294 \uc77c\ubd80\ub7ec \ub0af\uc124\uac8c \ub9cc\ub4e0 \ub514\uc790\uc778\uc758 \uc778\uae30\uac00 \uac08\uc218\ub85d \ub192\uc544\uc9c0\uace0 \uc788\ub300.\n\n\uc22b\uc790\ub85c \ubcf4\uba74 \ud328\uc158 \uac80\uc0c9 \ud50c\ub7ab\ud3fc \ub9ac\uc2a4\ud2b8(Lyst) \uae30\uc900\uc73c\ub85c \ubc1c\uac00\ub77d\uc774 \uac08\ub77c\uc9c4 \ud0c0\ube44 \uc2a4\ud0c0\uc77c \uc218\uc694\ub294 2022\ub144 \uc774\ud6c4 4\ubc30\ub85c \ub298\uc5c8\uace0, \ubc1c\uac00\ub77d\uc744 \ud558\ub098\uc529 \ub098\ub208 \ud551\uac70\uc288\uc988\ub294 1\ub144 \uc0c8 57% \uc62c\ub790\uc5b4.\n\n\ube0c\ub79c\ub4dc\ub4e4\ub3c4 \uac00\uc138\ud588\uc5b4. \uc2dc\ubaac \ub85c\uc0e4\ub294 \ucd08\ub300\ud615 \ud06c\ub85d\uc2a4\uc5d0 \uc9c4\uc8fc\uc640 \ubcf4\uc11d\uc744 \uc794\ub729 \uc5b9\uc5c8\uace0, \uc2a4\ub2c8\ucee4\uc640 \ud398\ub2c8 \ub85c\ud37c\ub97c \ud569\uce5c \u0027\uc2a4\ub178\ud37c\u0027 \uac19\uc740 \ud569\uccb4 \uc2e0\ubc1c\ub3c4 \ub098\uc654\uc5b4. \uc601\uad6d M\u0026S\uc5d0\uc11c 45\ud30c\uc6b4\ub4dc\uc5d0 \ud30c\ub294 \ubb49\ud22d\ud55c \uc2a4\uc6e8\uc774\ub4dc \uc2e0\ubc1c\uc740 \uac00\uc744 \ucd5c\uace0 \uc778\uae30 \uc0c1\ud488 \uc911 \ud558\ub098\uac00 \ub410\ub2e4\uace0 \ud574.\n\n\uc774 \ud750\ub984\uc758 \ubc30\uacbd\uc73c\ub85c\ub294 2023\ub144 \uc2a4\ud0c0\uc77c\ub9ac\uc2a4\ud2b8 \uc568\ub9ac\uc2a8 \ubcf8\uc2a4\ud0c0\uc778\uc774 \ub9cc\ub4e0 \u0027\ud2c0\ub9b0 \uc2e0\ubc1c \uc774\ub860\u0027\ub3c4 \uaf3d\ud600. \uc77c\ubd80\ub7ec \uc608\uc0c1 \ubc16\uc758 \uc2e0\ubc1c\uc744 \uc2e0\uc5b4\uc11c \ub8e9\uc5d0 \uac1c\uc131\uc744 \ub354\ud558\ub294 \uc2a4\ud0c0\uc77c\ub9c1 \ubc29\ubc95\uc774\uc57c.\n\n\uadf8\ub2e4\uc74c\uc740 \ubb58\uae4c? \uc0e4\ub12c\uc740 4\uc6d4 \ud504\ub791\uc2a4 \ube44\uc544\ub9ac\uce20 \ub7f0\uc6e8\uc774\uc5d0\uc11c \uad7d \ucea1\ub9cc \ub2ec\ub9b0 \u0027\uc2e0\ubc1c \uc5c6\ub294 \uc2e0\ubc1c\u0027\uc744 \uc120\ubcf4\uc600\uc5b4. \ub9ac\uc2a4\ud2b8\uc758 \ubc14\ubc14\ub77c \uc57c\ub124\uccb5\uc740 \ubaa8\ub450\uac00 \uc774\uc0c1\ud55c \uac83\uc5d0 \uc775\uc219\ud574\uc9c0\uba74 \ub354 \uc774\uc0c1\ud55c \uac78 \ucc3e\uac8c \ub41c\ub2e4\uace0 \ub9d0\ud588\ub300.\n\n\ub108\ub77c\uba74 \uc774 \uc911\uc5d0 \uc5b4\ub514\uae4c\uc9c0 \uc2e0\uc5b4\ubcfc \uc218 \uc788\uc744 \uac83 \uac19\uc544?\n\n\ucd9c\ucc98: \uac00\ub514\uc5b8(The Guardian)", "hashtags": ["#\uc2e0\ubc1c", "#\ud328\uc158\ud2b8\ub80c\ub4dc", "#\ud551\uac70\uc288\uc988", "#\ud0c0\ube44", "#\ud574\uc678\ud2b8\ub80c\ub4dc"], "slides": [["\ubabb\uc0dd\uae34 \uc2e0\ubc1c\uc774", "**\uc8fc\ub958**\ub77c\uace0???"], ["\ud551\uac70\uc288\uc988", "1\ub144 \uc0c8 **57%**\u2191"], ["\ubc1c\uac00\ub77d \uac08\ub77c\uc9c4", "\ud0c0\ube44\ub294", "2022\ub144 \ub300\ube44 **4\ubc30**"], ["\uc2a4\ub2c8\ucee4+\ub85c\ud37c", "\ud569\uce5c \u0027**\uc2a4\ub178\ud37c**\u0027", "\uae4c\uc9c0 \ub4f1\uc7a5"], ["\uc0e4\ub12c\uc740", "**\uad7d \ucea1\ub9cc** \ub0a8\uae34", "\uc2e0\ubc1c \uacf5\uac1c"], ["\uc2e0\ubc1c \ucde8\ud5a5\uc774", "**\ub3c5\ud2b9\ud55c \uce5c\uad6c**", "\ud0dc\uadf8\ud574\uc11c \ubcf4\uc5ec\uc8fc\uae30"]]}, "ff8afa8649e5": {"caption": "\ub4e3\ub294 \ub178\ub798\uc758 \uc57d 60%\uac00 5\ub144 \ub118\uc740 \uace1\uc774\ub77c\ub2c8, \uc2e0\uace1\uc740 \ub2e4 \uc5b4\ub514\ub85c \uac04 \uac78\uae4c?\n\nBBC \ubcf4\ub3c4\uc5d0 \ub530\ub974\uba74 \uc9c0\uae08\uc740 \uc5ed\uc0ac\uc0c1 \uc74c\uc545\uc774 \uac00\uc7a5 \ub9ce\uc774 \ub9cc\ub4e4\uc5b4\uc9c0\ub294 \uc2dc\ub300\ub2e4. \uc2a4\ud2b8\ub9ac\ubc0d \uc11c\ube44\uc2a4\uc5d0\ub294 \ub9e4\uc77c 10\ub9cc \uace1\uc774 \ub118\ub294 \ub178\ub798\uac00 \uc62c\ub77c\uc628\ub2e4. \uadf8\ub7f0\ub370\ub3c4 \uc0ac\ub78c\ub4e4\uc740 \uc61b \ub178\ub798\ub97c \ub354 \ub9ce\uc774 \ucc3e\ub294\ub2e4. \uc74c\uc545 \ub370\uc774\ud130 \ud68c\uc0ac \ub8e8\ubbf8\ub124\uc774\ud2b8 \uae30\ub85d\uc73c\ub85c\ub294 2026\ub144 \uc0c1\ubc18\uae30\uc5d0 \uc7ac\uc0dd\ub41c \uc74c\uc545\uc758 \uc57d 60%\uac00 \ubc1c\ub9e4 5\ub144 \uc774\uc0c1 \ub41c \uace1\uc774\uc5c8\ub2e4.\n\n\uc601\uad6d \uc62c\ud574 \ud310\ub9e4 TOP20 \uc911 18\uace1\uc740 \ubc1c\ub9e4\ub41c \uc9c0 1\ub144 \uc774\uc0c1 \ub41c \uace1\uc774\ub2e4. \ub9c8\uc774\ud074 \uc7ad\uc2a8\uc758 Billie Jean(1983)\uc740 22\uc704, \ud50c\ub9ac\ud2b8\uc6b0\ub4dc \ub9e5\uc758 Dreams(1977)\ub294 30\uc704\uc5d0 \uc62c\ub77c \uc788\ub2e4. \ubbf8\uad6d\uc5d0\uc11c\ub3c4 \uac00\uc7a5 \ub9ce\uc774 \uc7ac\uc0dd\ub418\ub294 \ub450 \uc7a5\ub974\uc778 R\u0026B\uc640 \ud799\ud569\uc740 \uc2a4\ud2b8\ub9ac\ubc0d\uc758 \uc57d 60%\uac00 \uc608\uc804 \ud788\ud2b8\uace1\uc774\ub77c\uace0 \ud55c\ub2e4.\n\n\uc3e0\ub9bc\ub3c4 \uc788\ub2e4. \uc601\uad6d \uacbd\uc7c1\uc2dc\uc7a5\uccad(CMA)\uc5d0 \ub530\ub974\uba74 \uc2a4\ud2b8\ub9ac\ubc0d\uc758 \uac70\uc758 3\ubd84\uc758 2\uac00 \uc0c1\uc704 0.4% \uc544\ud2f0\uc2a4\ud2b8\uc758 \uace1\uc774\ub2e4. \ub610 \ub7f0\ub358\uc758 DJ \ud300 \uac00\ub974\uc2dc\uc544\ub294 \ucd94\ucc9c \uae30\ub2a5\uc774 \ubaa8\ub450\uc758 \uccad\ucde8 \ub370\uc774\ud130\ub97c \ubc14\ud0d5\uc73c\ub85c \ud574\uc11c, \uc774\ubbf8 \ub4e3\ub358 \uac00\uc218\uc640 \ube44\uc2b7\ud55c \uace1\uc744 \ubc1b\uac8c \ub420 \uac00\ub2a5\uc131\uc774 \ud06c\ub2e4\uace0 \ub9d0\ud588\ub2e4.\n\nAI \uace1\uc774 \uc2a4\ud2b8\ub9ac\ubc0d\uc744 \ub4a4\ub36e\uc740 \uac74 \uc544\ub2c8\ub2e4. Deezer\ub294 \uc790\uc0ac \ud50c\ub7ab\ud3fc \uc2a4\ud2b8\ub9ac\ubc0d\uc5d0\uc11c AI \uace1 \ube44\uc911\uc774 0.5%\ub77c\uace0 \ubc1d\ud614\ub2e4. \ud55c\ud3b8 Apple Music \ucc45\uc784\uc790\ub294 \ud050\ub808\uc774\uc158\uc5d0\uc11c \u0027\ub0b4\uc77c\uc758 \uc544\ud2f0\uc2a4\ud2b8\u0027\ub97c \ubc00\uaca0\ub2e4\uace0 \ud588\uace0, Sofar Sounds\ub294 \uc2e0\uc778 \ubba4\uc9c0\uc158\uacfc \ud568\uaed8 \uc791\uc740 \ud31d\uc5c5 \uacf5\uc5f0\uc744 \uc5f4\uace0 \uc788\ub2e4.\n\n\ucd9c\ucc98: BBC News", "hashtags": ["#\uc74c\uc545\uc2a4\ud2b8\ub9ac\ubc0d", "#\uc62c\ub4dc\ud31d", "#\uc74c\uc545\ucc28\ud2b8", "#\uc2a4\ud3ec\ud2f0\ud30c\uc774", "#\ud574\uc678\uc774\uc288"], "slides": [["\ub4e3\ub294 \ub178\ub798 **60%**\uac00", "5\ub144 \ub118\uc740 \uace1???"], ["\ud558\ub8e8\uc5d0 \uc2e0\uace1\uc774", "**10\ub9cc \uace1** \ub118\uac8c", "\uc62c\ub77c\uc624\ub294\ub370"], ["\uc601\uad6d \uc62c\ud574 TOP20", "**18\uace1\uc774**", "1\ub144 \ub118\uc740 \uace1\uc774\uc57c"], ["\uc601\uad6d \uc62c\ud574 \uc21c\uc704\uc5d0", "1983\ub144 \uace1\uc740 **22\uc704**", "1977\ub144 \uace1\uc740 30\uc704"], ["\uc2a4\ud2b8\ub9ac\ubc0d 3\ubd84\uc758 2\ub294", "\uc0c1\uc704 **0.4%** \uac00\uc218 \uace1", "\uc601\uad6d \uae30\uad00 \uc9d1\uacc4"], ["\ub7f0\ub358 DJ \ub9d0\ub85c\ub294", "\ucd94\ucc9c\uc774 \ub4e3\ub358 \uace1\uc774\ub791", "**\ube44\uc2b7\ud558\uac8c** \ub098\uc628\ub300"], ["\ud50c\ub9ac \ub9e8\ub0a0 \ub611\uac19\uc740", "**\uce5c\uad6c\ud55c\ud14c**", "\ubcf4\ub0b4\uc8fc\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"1a04324965a9": "approve", "75bc16666fa7": "approve", "ff8afa8649e5": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 1;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  let sent = "";
+  {
+    const raw = store.get(SENT_KEY);
+    try { const v = JSON.parse(raw); if (v && v.rev === REV && v.done === DONE_N) sent = v.when; }
+    catch { if (raw && !DONE_N) sent = raw; }   // 예전 형식
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); }
+      } catch {}
+      if (n >= 40) clearInterval(t);   // 10분까지만
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

@@ -1,0 +1,1589 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.10.27 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.10.27 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-6e4a871eda5b" data-jump="6e4a871eda5b">1</a><a href="#post-1b7711bdb3e5" data-jump="1b7711bdb3e5">2</a><a href="#post-2d5383be71ff" data-jump="2d5383be71ff">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-6e4a871eda5b" data-id="6e4a871eda5b">
+    <div class="head">
+      <h2>1. 군마현 포켓몬 맨홀 뚜껑 5종 신규 설치</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-01.jpg" alt="1장: 포켓몬 맨홀이 5개나 또???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-02.jpg" alt="2장: 도쿄에서 북쪽으로 두 시간 거리 군마현이 무대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-03.jpg" alt="3장: 지역 특산물이 맨홀에 그려짐 파 포켓몬도 있음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-04.jpg" alt="4장: 댐 앞엔 전기 포켓몬이 놀고 있대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-05.jpg" alt="5장: 폭포 가는 길엔 텐구 닮은 포켓몬 등장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-06.jpg" alt="6장: 로프웨이 역엔 전설의 새가 마중 나옴" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-07.jpg" alt="7장: 포켓몬 덕후 친구 군마 여행 가자고 태그해서 꼬시기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/6e4a871eda5b/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">포켓몬 맨홀 뚜껑이 5개나 새로 생긴대. 무대는 도쿄에서 북쪽으로 두 시간쯤 떨어진 군마현이야.
+
+포케후타(Pokéfuta)는 지역 풍경이나 특산물을 포켓몬과 함께 담은 하나뿐인 맨홀 뚜껑 프로젝트야. 잘 알려지지 않았지만 매력적인 지역으로 사람들을 불러 모으는 게 목적이라고 해.
+
+이번 5곳을 정리하면 이래.
+- 시모니타: 대파 품질이 자랑인 동네라서 파를 든 포켓몬들이 등장. 시모니타역 옆 코코니타 건물 앞에 설치돼.
+- 나가노하라: 얌바 댐 앞에서 전기 타입 포켓몬이 놀고 있는 디자인. 얌바 후루사토칸 휴게소(미치노에키)에 놓여.
+- 다테바야시: 츠츠지가오카 공원 안 후레아이 센터에 설치. 공원에 철쭉이 약 1만 그루라서 봄에 가는 게 더 좋을 수도 있대.
+- 누마타: 후키와레 폭포로 이어지는 등산로 입구, 주차장 옆. 텐구 전설과 연결된 포켓몬이 나와.
+- 시부카와: 이카호 로프웨이 호토토기스역에서 비행 타입 전설의 포켓몬이 맞아줘.
+
+5개 모두 11월 말까지 설치될 예정이야. 군마는 가을 단풍과 온천으로도 유명하니까 여행 코스로 짜기 좋아 보여.
+
+출처: SoraNews24, 군마현, Jiji</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">포켓몬 포켓몬맨홀 군마현 일본여행 포케후타</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 다테바야시 맨홀이 츠츠지가오카 공원 안 후레아이 센터에 설치된다는 주장</li><li>근거 등록 안 된 주장: 군마가 가을 단풍과 온천으로 유명하다는 주장</li><li>근거 등록 안 된 주장: 파를 든 포켓몬들이 등장한다는 주장(원문은 파 관련 포켓몬만 명시)</li><li>근거 등록 안 된 주장: 출처가 SoraNews24, 군마현, Jiji라는 주장</li>
+          <li>포켓몬 캐릭터 저작권: 이미지에 캐릭터를 직접 쓰지 말 것</li><li>원문 기사 사진 사용 불가</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-6e4a871eda5b-0">1장</label>
+          <textarea id="s-6e4a871eda5b-0" rows="2" data-slide="0">포켓몬 맨홀이
+**5개나** 또???</textarea>
+          
+          <label class="f" for="s-6e4a871eda5b-1">2장</label>
+          <textarea id="s-6e4a871eda5b-1" rows="3" data-slide="1">도쿄에서 북쪽으로
+두 시간 거리
+**군마현**이 무대</textarea>
+          
+          <label class="f" for="s-6e4a871eda5b-2">3장</label>
+          <textarea id="s-6e4a871eda5b-2" rows="3" data-slide="2">지역 특산물이
+맨홀에 그려짐
+**파** 포켓몬도 있음</textarea>
+          
+          <label class="f" for="s-6e4a871eda5b-3">4장</label>
+          <textarea id="s-6e4a871eda5b-3" rows="3" data-slide="3">**댐** 앞엔
+전기 포켓몬이
+놀고 있대</textarea>
+          
+          <label class="f" for="s-6e4a871eda5b-4">5장</label>
+          <textarea id="s-6e4a871eda5b-4" rows="3" data-slide="4">폭포 가는 길엔
+**텐구** 닮은
+포켓몬 등장</textarea>
+          
+          <label class="f" for="s-6e4a871eda5b-5">6장</label>
+          <textarea id="s-6e4a871eda5b-5" rows="3" data-slide="5">로프웨이 역엔
+**전설의 새**가
+마중 나옴</textarea>
+          
+          <label class="f" for="s-6e4a871eda5b-6">7장</label>
+          <textarea id="s-6e4a871eda5b-6" rows="3" data-slide="6">포켓몬 덕후 친구
+**군마 여행** 가자고
+태그해서 꼬시기</textarea>
+          
+          <label class="f" for="c-6e4a871eda5b">본문 (캡션)</label>
+          <textarea id="c-6e4a871eda5b" class="caption">포켓몬 맨홀 뚜껑이 5개나 새로 생긴대. 무대는 도쿄에서 북쪽으로 두 시간쯤 떨어진 군마현이야.
+
+포케후타(Pokéfuta)는 지역 풍경이나 특산물을 포켓몬과 함께 담은 하나뿐인 맨홀 뚜껑 프로젝트야. 잘 알려지지 않았지만 매력적인 지역으로 사람들을 불러 모으는 게 목적이라고 해.
+
+이번 5곳을 정리하면 이래.
+- 시모니타: 대파 품질이 자랑인 동네라서 파를 든 포켓몬들이 등장. 시모니타역 옆 코코니타 건물 앞에 설치돼.
+- 나가노하라: 얌바 댐 앞에서 전기 타입 포켓몬이 놀고 있는 디자인. 얌바 후루사토칸 휴게소(미치노에키)에 놓여.
+- 다테바야시: 츠츠지가오카 공원 안 후레아이 센터에 설치. 공원에 철쭉이 약 1만 그루라서 봄에 가는 게 더 좋을 수도 있대.
+- 누마타: 후키와레 폭포로 이어지는 등산로 입구, 주차장 옆. 텐구 전설과 연결된 포켓몬이 나와.
+- 시부카와: 이카호 로프웨이 호토토기스역에서 비행 타입 전설의 포켓몬이 맞아줘.
+
+5개 모두 11월 말까지 설치될 예정이야. 군마는 가을 단풍과 온천으로도 유명하니까 여행 코스로 짜기 좋아 보여.
+
+출처: SoraNews24, 군마현, Jiji</textarea>
+          <label class="f" for="t-6e4a871eda5b">해시태그</label>
+          <input id="t-6e4a871eda5b" type="text" class="tagsin" value="포켓몬 포켓몬맨홀 군마현 일본여행 포케후타" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>군마현이 새 포켓몬 맨홀 뚜껑 5개를 받는다</b>
+            <q>“Well, five actually, as the prefecture is getting five new Pokémon manhole covers!”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>군마는 도쿄에서 북쪽으로 약 두 시간 거리다</b>
+            <q>“Located about two hours north of Tokyo, Gunma gets some beautiful autumn foliage and it also boasts some of east Japan’s finest hot springs, making for a great combo of crisp afternoon walks followed by a rejuvenatingly warm soak.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포케후타는 지역 풍경이나 특산물을 담은 하나뿐인 맨홀 뚜껑 프로젝트이며 덜 알려진 지역으로 방문객을 끄는 것이 목적이다</b>
+            <q>“The Pokéfuta/Poké Lids project is a series of artistic one-of-a-kind manhole covers highlighting local communities, helping to draw visitors to lesser-known but still charming parts of Japan.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시모니타는 대파 품질을 자랑하며, 코코니타 건물 앞 맨홀에 파 관련 포켓몬이 나온다</b>
+            <q>“For example, the Gunma town of Shimonita takes great pride in the quality of the green onions that its farmers grow, so naturally its Pokéfuta, installed in front of the Coconita building next to Shimonita Station, features Farfetch’d, Galarian Farfetch’d, and Sirfetch’d.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>나가노하라 얌바 댐 앞 맨홀에 전기 타입 포켓몬이 등장하고 얌바 후루사토칸에 설치된다</b>
+            <q>“Boltund naturally feels at home playing in front of Yamba Dam, a towering hydroelectric facility in the town of Naganohara.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다테바야시 공원에는 철쭉 약 1만 그루가 있어 봄 방문이 더 좋을 수 있다</b>
+            <q>“This one might actually be best to wait until spring to visit, as tsutsuji is the Japanese word for azalea, and the park contains some 10,000 bushes on which the seasonal flowers bloom.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>누마타 후키와레 폭포 등산로 입구에 맨홀이 있고 텐구를 닮은 포켓몬이 나온다</b>
+            <q>“Shiftry is here because his design is based on the tengu (crow spirits) of Japanese folklore, who are often depicted using giant leaves or fans to create strong gusts of wind.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시부카와 이카호 로프웨이 호토토기스역에서 비행 타입 포켓몬이 맞이한다</b>
+            <q>“And finally, as you board or exit the Shibukawa Ikaho Ropeway at Hototogisu Station in the town of Shibukawa, you’ll be able to say hi to Zapdos, who, being a Flying-type Pokémon, can enjoy expansive views and mountain scenery without having to ride one of the ropeway’s gondolas.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>5개 모두 11월 말까지 설치될 예정이다</b>
+            <q>“All five new Pokémon manhole covers are scheduled to be installed by the end of November.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/10/27/japan-getting-a-brand-new-batch-of-pokemon-manhole-covers-in-eastern-prefecture-this-fall/" target="_blank" rel="noopener">Japan getting a brand-new batch of Pokémon manhole covers in eastern prefecture this fall</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/manhole-cover-cobblestones-road-3678303/" target="_blank" rel="noopener">pixel2013 / Pixabay</a> — "colorful manhole cover on a sunlit autumn street"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Shima_Spring,_Gunma_Prefecture;_May_2011_(08).jpg" target="_blank" rel="noopener">bm.iphone / Wikimedia Commons · CC BY 2.0</a> — "Gunma Prefecture"</li><li>3장: <a href="https://pixabay.com/photos/green-flower-nature-onion-1544793/" target="_blank" rel="noopener">chanduwagh / Pixabay</a> — "green onion field"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:%E5%85%AB%E3%83%83%E5%A0%B4%E3%83%80%E3%83%A0%E3%81%AB%E6%B2%88%E3%82%80%E7%94%BA_20130310_-_panoramio.jpg" target="_blank" rel="noopener">690 Noda / Wikimedia Commons · CC BY 3.0</a> — "Yamba Dam"</li><li>5장: <a href="https://commons.wikimedia.org/wiki/File:Fukiware_Falls_01.jpg" target="_blank" rel="noopener">Σ64 / Wikimedia Commons · CC BY 3.0</a> — "Fukiware Falls"</li><li>6장: <a href="https://pixabay.com/photos/cable-car-dare-rope-fall-mountains-8357178/" target="_blank" rel="noopener">Leonhard_Niederwimmer / Pixabay</a> — "mountain ropeway"</li><li>7장: <a href="https://pixabay.com/photos/geyser-spring-strokkur-iceland-3242008/" target="_blank" rel="noopener">Hans / Pixabay</a> — "hot spring"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-1b7711bdb3e5" data-id="1b7711bdb3e5">
+    <div class="head">
+      <h2>2. 바다에서만 산 장갑 양서류 화석</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-01.jpg" alt="1장: 바다에서만 산 양서류 화석???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-02.jpg" alt="2장: 양서류는 원래 바다에 못 살아" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-03.jpg" alt="3장: 새로 발견된 종 게로토락스 마리티무스" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-04.jpg" alt="4장: 몸이 통째로 갑옷 판으로 덮여 있었어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-05.jpg" alt="5장: 가까운 섬에서도 30km 넘게 떨어진 곳에서 나옴" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-06.jpg" alt="6장: 뼈 속 스트론튬이 당시 바닷물과 일치 묻힌 바위와는 달랐어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-07.jpg" alt="7장: 고생물 덕후 친구한테 이 화석 얘기 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/1b7711bdb3e5/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">바다에서만 평생 산 양서류 화석이 나왔대. 지금 지구에는 바다에 사는 양서류가 없거든. 피부에 작은 구멍이 많아서 가스랑 물을 주고받는 데는 좋지만, 소금기는 대체로 잘 못 견디기 때문이야.
+
+그런데 중국의 후기 트라이아스기 지층에서 나온 화석 두 점이 이 상식을 흔들었어. 구이저우성 관링현에서 현지 농부들이 발견했고, 암석층의 나이는 약 2억 3,700만 년이야. 연구팀은 이 새 종에 게로토락스 마리티무스(Gerrothorax maritimus)라는 이름을 붙였고, 연구는 학술지 네이처 생태·진화(Nature Ecology &amp; Evolution)에 실렸어.
+
+단서는 크게 두 가지야. 첫째, 두 표본 모두 가까운 섬이 있다 해도 30km 넘게 떨어진 곳에서 나왔어. 뼈대도 거의 온전하게 남아 있어서, 연구팀은 죽은 뒤 바다로 떠내려왔을 가능성은 낮다고 봤어. 둘째, 뼈 속 스트론튬 동위원소 비율이 묻혀 있던 암석이 아니라 트라이아스기 바닷물과 맞았어.
+
+생김새도 독특해. 납작한 몸이 단단한 갑옷 판으로 덮여 있었어. 연구팀은 이 갑옷이 피부를 통한 수분 흡수를 막았을 거라고 설명해. 더 온전한 표본은 보존된 중심선 기준으로 길이가 최소 73.7cm야. 공동 저자 모타니 교수는 몸무게만 보면 자이언트 도롱뇽 정도지만 체형은 훨씬 통통하다고 말했어.
+
+출처: ScienceAlert, Nature Ecology &amp; Evolution</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#고생물 #양서류 #화석 #과학뉴스 #트라이아스기</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 모타니 교수가 공동 저자이며 캘리포니아대 데이비스 소속 고생물학자라는 점</li><li>근거 등록 안 된 주장: 출처가 ScienceAlert라는 점</li><li>근거 등록 안 된 주장: 납작하고 통통한 체형, 약한 다리, 무거운 갑옷 때문에 육지 이동이 어려웠을 것이라는 연구팀 추정</li><li>근거 등록 안 된 주장: 두 표본이 바다에서 평생을 살았다는 것이 연구 결과로 제시된 해석이라는 점(캡션은 이를 확정된 사실처럼 말함)</li><li>근거 등록 안 된 주장: 연구팀이 두 개체가 바닷물을 마시며 자랐을 가능성이 가장 크다고 본 점</li><li>근거 등록 안 된 주장: 게로토락스가 화석 산지에서 어룡, 바다나리, 거북과 함께 해양 생태계에 살았을 것이라는 내용</li>
+          <li>학술 논문 본문은 유료라 초록과 ScienceAlert 기사 기준으로만 작성함</li><li>&#39;바다에서 평생 살았다&#39;는 화석 위치와 스트론튬 분석에 근거한 연구팀의 해석이며 확정 사실이 아님</li><li>학명·인명 한글 표기(게로토락스 마리티무스, 모타니) 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-1b7711bdb3e5-0">1장</label>
+          <textarea id="s-1b7711bdb3e5-0" rows="2" data-slide="0">바다에서만 산
+양서류 **화석**???</textarea>
+          
+          <label class="f" for="s-1b7711bdb3e5-1">2장</label>
+          <textarea id="s-1b7711bdb3e5-1" rows="2" data-slide="1">양서류는 원래
+**바다**에 못 살아</textarea>
+          
+          <label class="f" for="s-1b7711bdb3e5-2">3장</label>
+          <textarea id="s-1b7711bdb3e5-2" rows="2" data-slide="2">새로 발견된 종
+게로토락스 **마리티무스**</textarea>
+          
+          <label class="f" for="s-1b7711bdb3e5-3">4장</label>
+          <textarea id="s-1b7711bdb3e5-3" rows="3" data-slide="3">몸이 통째로
+**갑옷** 판으로
+덮여 있었어</textarea>
+          
+          <label class="f" for="s-1b7711bdb3e5-4">5장</label>
+          <textarea id="s-1b7711bdb3e5-4" rows="3" data-slide="4">가까운 섬에서도
+**30km** 넘게 떨어진
+곳에서 나옴</textarea>
+          
+          <label class="f" for="s-1b7711bdb3e5-5">6장</label>
+          <textarea id="s-1b7711bdb3e5-5" rows="3" data-slide="5">뼈 속 스트론튬이
+당시 **바닷물**과 일치
+묻힌 바위와는 달랐어</textarea>
+          
+          <label class="f" for="s-1b7711bdb3e5-6">7장</label>
+          <textarea id="s-1b7711bdb3e5-6" rows="3" data-slide="6">**고생물** 덕후 친구한테
+이 화석 얘기
+조용히 보내기</textarea>
+          
+          <label class="f" for="c-1b7711bdb3e5">본문 (캡션)</label>
+          <textarea id="c-1b7711bdb3e5" class="caption">바다에서만 평생 산 양서류 화석이 나왔대. 지금 지구에는 바다에 사는 양서류가 없거든. 피부에 작은 구멍이 많아서 가스랑 물을 주고받는 데는 좋지만, 소금기는 대체로 잘 못 견디기 때문이야.
+
+그런데 중국의 후기 트라이아스기 지층에서 나온 화석 두 점이 이 상식을 흔들었어. 구이저우성 관링현에서 현지 농부들이 발견했고, 암석층의 나이는 약 2억 3,700만 년이야. 연구팀은 이 새 종에 게로토락스 마리티무스(Gerrothorax maritimus)라는 이름을 붙였고, 연구는 학술지 네이처 생태·진화(Nature Ecology &amp; Evolution)에 실렸어.
+
+단서는 크게 두 가지야. 첫째, 두 표본 모두 가까운 섬이 있다 해도 30km 넘게 떨어진 곳에서 나왔어. 뼈대도 거의 온전하게 남아 있어서, 연구팀은 죽은 뒤 바다로 떠내려왔을 가능성은 낮다고 봤어. 둘째, 뼈 속 스트론튬 동위원소 비율이 묻혀 있던 암석이 아니라 트라이아스기 바닷물과 맞았어.
+
+생김새도 독특해. 납작한 몸이 단단한 갑옷 판으로 덮여 있었어. 연구팀은 이 갑옷이 피부를 통한 수분 흡수를 막았을 거라고 설명해. 더 온전한 표본은 보존된 중심선 기준으로 길이가 최소 73.7cm야. 공동 저자 모타니 교수는 몸무게만 보면 자이언트 도롱뇽 정도지만 체형은 훨씬 통통하다고 말했어.
+
+출처: ScienceAlert, Nature Ecology &amp; Evolution</textarea>
+          <label class="f" for="t-1b7711bdb3e5">해시태그</label>
+          <input id="t-1b7711bdb3e5" type="text" class="tagsin" value="#고생물 #양서류 #화석 #과학뉴스 #트라이아스기" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지구상에 바다에 사는 양서류는 없고, 구멍 많은 피부가 소금기를 대체로 견디지 못한다</b>
+            <q>“No amphibian on Earth lives in the ocean. Their porous skin – crucial for gas and water exchange – generally can&#39;t cope with the salt.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>중국 후기 트라이아스기 지층에서 나온 화석 두 점이 바다에서 평생을 산 고대 양서류를 시사한다</b>
+            <q>“But two fossils unearthed from a Late Triassic deposit in China suggest an ancient amphibian species not only inhabited saltwater – it made a proper return to the ocean, living its whole life at sea.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>화석 두 점은 구이저우성 관링현에서 현지 농부들이 발견했고 암석층은 약 2억 3,700만 년 전의 것이다</b>
+            <q>“The two fossils were discovered by local farmers in Guanling County, in a layer of rock about 237 million years old, right in the middle of the Guizhou Triassic Fossil Sites.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀이 새 종 게로토락스 마리티무스를 네이처 생태·진화에 발표했다</b>
+            <q>“Geologist Lipin Diao and colleagues present the strange new amphibian, Gerrothorax maritimus, in the journal Nature Ecology &amp; Evolution.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 표본은 가까운 섬에서 30km 넘게 떨어진 곳에서 발견됐다</b>
+            <q>“Both specimens were found more than 30 km [18.6 miles] from any possible nearby islands, which means it&#39;s possible they never even left the water.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 죽은 뒤 바다로 떠내려왔을 가능성을 검토했지만 두 뼈대가 거의 온전해 그럴 가능성은 낮아 보인다</b>
+            <q>“The researchers did consider whether these Gerrothorax specimens could have drifted out to sea after death, but with both skeletons almost fully intact, that seems doubtful.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뼈 속 스트론튬은 묻힌 암석이 아니라 트라이아스기 바닷물과 일치했다</b>
+            <q>“The strontium in these bones matched Triassic seawater, not the rock they were buried in.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>게로토락스의 납작한 몸은 단단한 갑옷 판으로 덮여 있었다</b>
+            <q>“Unlike any living amphibian, Gerrothorax&#39;s flat body was covered in plates of hard armor, which are well preserved in the fossil specimens.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 갑옷이 피부를 통한 수분 흡수를 막았다고 설명한다</b>
+            <q>“&#34;It is unknown if stem amphibians all had permeable skin as in [modern amphibians], but even if they did, the body armor of Gerrothorax prevented water absorption through the skin, mandating water drinking and absorption from the digestive tract unlike in most extant amphibians,&#34; Diao and team write.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>더 온전한 표본은 보존된 중심선 기준 길이가 최소 73.7cm다</b>
+            <q>“The more complete specimen of the two fossils measures at least 73.7 cm (2.4 feet) along its preserved midline, though a handful of its tail bones are missing.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>모타니는 몸무게는 자이언트 도롱뇽과 비슷하지만 체형은 훨씬 통통하다고 말했다</b>
+            <q>“It&#39;s probably, body mass-wise, about the same as the giant salamander, but what&#39;s different is that giant salamanders are elongated whereas this animal is really chunky”</q>
+            <small>caption · <a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/an-armored-amphibian-that-lived-its-whole-life-at-sea-its-a-fossil-first" target="_blank" rel="noopener">An Armored Amphibian That Lived Its Whole Life at Sea? It&#39;s a Fossil First</a> (기사)</li><li><a href="https://www.nature.com/articles/s41559-026-03209-9" target="_blank" rel="noopener">A fully marine stem amphibian from the Late Triassic of China - Nature Ecology &amp; Evolution</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/nature-sea-waves-ocean-water-aqua-2384/" target="_blank" rel="noopener">PublicDomainPictures / Pixabay</a> — "sunlit shallow sea with rocky seabed and ancient fossil"</li><li>2장: <a href="https://pixabay.com/photos/frog-amphibian-animal-tree-frog-111179/" target="_blank" rel="noopener">zdenet / Pixabay</a> — "frog"</li><li>3장: <a href="https://pixabay.com/photos/antelope-united-states-nature-4840335/" target="_blank" rel="noopener">Henkb67 / Pixabay</a> — "rock layer"</li><li>4장: <a href="https://pixabay.com/photos/armor-knight-armor-protection-2925348/" target="_blank" rel="noopener">Momentmal / Pixabay</a> — "armor plate"</li><li>5장: <a href="https://pixabay.com/photos/whale-sea-ocean-fin-tail-blue-10467525/" target="_blank" rel="noopener">suju-foto / Pixabay</a> — "open ocean"</li><li>6장: <a href="https://pixabay.com/photos/sea-waves-water-seawater-ocean-7205366/" target="_blank" rel="noopener">Reagan_Yip / Pixabay</a> — "seawater"</li><li>7장: <a href="https://pixabay.com/photos/national-history-museum-4314035/" target="_blank" rel="noopener">just-pics / Pixabay</a> — "museum fossil"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-2d5383be71ff" data-id="2d5383be71ff">
+    <div class="head">
+      <h2>3. 제이지 슈퍼볼 하프타임 무대 출연</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-01.jpg" alt="1장: 제이지가 슈퍼볼 무대 선다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-02.jpg" alt="2장: 제이지 회사가 2019년부터 하프타임 제작" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-03.jpg" alt="3장: 근데 본인은 한 번도 무대에 안 섰음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-04.jpg" alt="4장: 날짜는 2월 14일 LA 근처" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-05.jpg" alt="5장: 발표 직전 그 경기장에서 공연 2번 했음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-06.jpg" alt="6장: 켄드릭 라마의 2025년 무대는 역대 최다 시청" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-07.jpg" alt="7장: 제이지 팬 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261027-pm-29754af5ef81/2d5383be71ff/v1-08.jpg" alt="8장: 마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    <div class="body">
+      <p class="cap">제이지가 슈퍼볼 하프타임 무대에 선다는 소식이야. NFL이 직접 발표했고, 공연은 2월에 열려.
+
+제이지의 회사 록네이션은 2019년부터 하프타임 쇼를 제작해왔어. 매년 누가 무대에 설지 고르는 데도 제이지가 중요한 역할을 해왔는데, 정작 본인이 슈퍼볼 무대에 선 적은 한 번도 없었대.
+
+대회는 슈퍼볼 LXI로, 2월 14일 로스앤젤레스 근처에서 열려. 발표는 제이지가 지난 주말 슈퍼볼이 열릴 그 경기장에서 공연을 두 번 한 직후에 나왔어. 이 공연들은 데뷔 앨범 Reasonable Doubt 30주년을 기념하는 투어의 일부였어.
+
+NFL 커미셔너 로저 구델은 록네이션과 쇼 제작에 합의했을 때 딱 하나만 요청했다고 말했어. 제이지가 본인이 적절하다고 느끼는 때에 언젠가 직접 무대에 서달라는 거였대. 제이지는 30년간의 음악과 작업, 문화를 세계에서 가장 큰 무대에서 보여주게 됐다며 이번 여정이 꿈이 이루어지는 일이라고 말했어.
+
+참고로 켄드릭 라마의 2025년 공연은 역대 가장 많이 본 하프타임 쇼였고 에미상 음악 연출상도 받았어. 최근 하프타임 무대에는 배드 버니, 켄드릭 라마, 어셔, 리아나, 위켄드가 올랐고.
+
+NFL은 성명에서 제이지가 게스트로 누구를 부를지에 대한 기대가 이제 시작될 거라고 했고, 아내 비욘세가 그 명단 맨 위에 오를 거라고 덧붙였어.
+
+출처: BBC News</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#제이지 #슈퍼볼 #하프타임쇼 #JayZ #SuperBowl</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처가 BBC News라는 주장</li><li>근거 등록 안 된 주장: 로저 구델이 NFL 커미셔너라는 신분 정보</li>
+          <li>실존 인물(제이지, 켄드릭 라마 등) 관련 내용이므로 인물 사진·초상 이미지는 사용하지 말 것</li><li>공연 내용과 게스트는 미정이며 비욘세 언급은 NFL 성명 인용에 한정됨</li><li>기사 기준 날짜(2월 14일, 슈퍼볼 LXI)는 이후 변경될 수 있음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta"><b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞게 새로 찾아요 (표지는 AI로 새로 그림).</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-2d5383be71ff-0">1장</label>
+          <textarea id="s-2d5383be71ff-0" rows="3" data-slide="0">제이지가
+**슈퍼볼** 무대
+선다고???</textarea>
+          
+          <label class="f" for="s-2d5383be71ff-1">2장</label>
+          <textarea id="s-2d5383be71ff-1" rows="3" data-slide="1">제이지 회사가
+**2019년부터**
+하프타임 제작</textarea>
+          
+          <label class="f" for="s-2d5383be71ff-2">3장</label>
+          <textarea id="s-2d5383be71ff-2" rows="3" data-slide="2">근데 본인은
+**한 번도**
+무대에 안 섰음</textarea>
+          
+          <label class="f" for="s-2d5383be71ff-3">4장</label>
+          <textarea id="s-2d5383be71ff-3" rows="3" data-slide="3">날짜는
+**2월 14일**
+LA 근처</textarea>
+          
+          <label class="f" for="s-2d5383be71ff-4">5장</label>
+          <textarea id="s-2d5383be71ff-4" rows="3" data-slide="4">발표 직전
+그 경기장에서
+공연 **2번** 했음</textarea>
+          
+          <label class="f" for="s-2d5383be71ff-5">6장</label>
+          <textarea id="s-2d5383be71ff-5" rows="3" data-slide="5">켄드릭 라마의
+2025년 무대는
+**역대 최다 시청**</textarea>
+          
+          <label class="f" for="s-2d5383be71ff-6">7장</label>
+          <textarea id="s-2d5383be71ff-6" rows="3" data-slide="6">**제이지 팬 친구**
+태그해서
+알려줘</textarea>
+          
+          <label class="f" for="c-2d5383be71ff">본문 (캡션)</label>
+          <textarea id="c-2d5383be71ff" class="caption">제이지가 슈퍼볼 하프타임 무대에 선다는 소식이야. NFL이 직접 발표했고, 공연은 2월에 열려.
+
+제이지의 회사 록네이션은 2019년부터 하프타임 쇼를 제작해왔어. 매년 누가 무대에 설지 고르는 데도 제이지가 중요한 역할을 해왔는데, 정작 본인이 슈퍼볼 무대에 선 적은 한 번도 없었대.
+
+대회는 슈퍼볼 LXI로, 2월 14일 로스앤젤레스 근처에서 열려. 발표는 제이지가 지난 주말 슈퍼볼이 열릴 그 경기장에서 공연을 두 번 한 직후에 나왔어. 이 공연들은 데뷔 앨범 Reasonable Doubt 30주년을 기념하는 투어의 일부였어.
+
+NFL 커미셔너 로저 구델은 록네이션과 쇼 제작에 합의했을 때 딱 하나만 요청했다고 말했어. 제이지가 본인이 적절하다고 느끼는 때에 언젠가 직접 무대에 서달라는 거였대. 제이지는 30년간의 음악과 작업, 문화를 세계에서 가장 큰 무대에서 보여주게 됐다며 이번 여정이 꿈이 이루어지는 일이라고 말했어.
+
+참고로 켄드릭 라마의 2025년 공연은 역대 가장 많이 본 하프타임 쇼였고 에미상 음악 연출상도 받았어. 최근 하프타임 무대에는 배드 버니, 켄드릭 라마, 어셔, 리아나, 위켄드가 올랐고.
+
+NFL은 성명에서 제이지가 게스트로 누구를 부를지에 대한 기대가 이제 시작될 거라고 했고, 아내 비욘세가 그 명단 맨 위에 오를 거라고 덧붙였어.
+
+출처: BBC News</textarea>
+          <label class="f" for="t-2d5383be71ff">해시태그</label>
+          <input id="t-2d5383be71ff" type="text" class="tagsin" value="#제이지 #슈퍼볼 #하프타임쇼 #JayZ #SuperBowl" autocapitalize="off">
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NFL이 제이지가 2월 슈퍼볼 하프타임 쇼에서 공연한다고 발표했다</b>
+            <q>“Rapper Jay-Z will perform at the Super Bowl half-time show in February, the NFL has announced.”</q>
+            <small>slide1, caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제이지의 회사 록네이션은 2019년부터 하프타임 쇼를 제작해왔다</b>
+            <q>“Jay-Z&#39;s company Roc Nation has produced the half-time show since 2019, and he plays a key role in selecting each year&#39;s performer but he has not performed before at the NFL championship game.”</q>
+            <small>slide2, caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제이지는 매년 공연자를 고르는 데 중요한 역할을 하지만 슈퍼볼에서 공연한 적은 없다</b>
+            <q>“Jay-Z&#39;s company Roc Nation has produced the half-time show since 2019, and he plays a key role in selecting each year&#39;s performer but he has not performed before at the NFL championship game.”</q>
+            <small>slide3, caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>슈퍼볼 LXI는 2월 14일 로스앤젤레스 근처에서 열린다</b>
+            <q>“Next year&#39;s Super Bowl LXI will take place on 14 February near Los Angeles.”</q>
+            <small>slide4, caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제이지는 발표 직전 주말 슈퍼볼이 열릴 LA 경기장에서 두 번 공연했다</b>
+            <q>“The announcement was made after Jay-Z, whose real name is Shawn Carter, performed two shows last weekend at the Los Angeles stadium where the Super Bowl will be played.”</q>
+            <small>slide5, caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>LA 공연은 데뷔 앨범 Reasonable Doubt 30주년 기념 투어의 일부였다</b>
+            <q>“The LA shows were part of a tour to celebrate the 30th anniversary of his debut album Reasonable Doubt.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>켄드릭 라마의 2025년 공연은 역대 가장 많이 본 하프타임 쇼였고 에미상 음악 연출상을 받았다</b>
+            <q>“Kendrick Lamar&#39;s 2025 performance was the most watched Super Bowl half-time show in history and won the Emmy award for outstanding music direction.”</q>
+            <small>slide6, caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>최근 하프타임 공연자로 배드 버니, 켄드릭 라마, 어셔, 리아나, 위켄드가 있다</b>
+            <q>“The hip-hop star will follow in the footsteps of other recent half-time performers including Bad Bunny, Kendrick Lamar, Usher, Rihanna and The Weeknd.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구델 커미셔너는 록네이션과 합의할 때 제이지가 언젠가 본인이 적절하다고 느낄 때 직접 무대에 서달라는 요청 하나만 했다고 말했다</b>
+            <q>“&#34;When we first reached an agreement with Roc Nation to produce the show, I had just one request: that Jay-Z take the stage himself one day, whenever the moment felt right to him,&#34; Goodell said.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제이지는 30년의 음악과 작업, 문화를 세계에서 가장 큰 무대에서 보여주게 됐고 꿈이 이루어지는 일이라고 말했다</b>
+            <q>“&#34;Thirty years of music, work, and culture on the world&#39;s biggest stage. This run continues to be a dream come true.&#34;”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NFL은 성명에서 제이지의 게스트 기대가 시작될 것이며 아내 비욘세가 명단 맨 위에 오를 것이라고 밝혔다</b>
+            <q>“&#34;Anticipation as to who Jay-Z might have guest star at halftime for the big game will now kick off,&#34; the NFL said in a statement. &#34;Of course, his wife, Beyoncé, will be atop the list.&#34;”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.bbc.co.uk/news/articles/cq8ezg4364epo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Super Bowl 2027: Jay-Z to perform at half-time show</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (승인하면 표지는 AI 이미지로 바뀌어요)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/stadium-olympic-stadium-structure-1590576/" target="_blank" rel="noopener">3093594 / Pixabay</a> — "empty football stadium stage under bright sky"</li><li>2장: <a href="https://pixabay.com/photos/mic-microphone-sound-check-sing-1132528/" target="_blank" rel="noopener">ClickerHappy / Pixabay</a> — "recording studio"</li><li>3장: <a href="https://pixabay.com/photos/movie-theater-curtain-theatre-movie-4609877/" target="_blank" rel="noopener">onkelglocke / Pixabay</a> — "empty stage"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:Los_Angeles_CA_20230910_(16).jpg" target="_blank" rel="noopener">Sony 1992 / Wikimedia Commons · CC0</a> — "Los Angeles"</li><li>5장: <a href="https://pixabay.com/photos/stadium-sports-fans-arena-soccer-931975/" target="_blank" rel="noopener">tookapic / Pixabay</a> — "stadium crowd"</li><li>6장: <a href="https://pixabay.com/photos/press-conference-journalist-average-1166343/" target="_blank" rel="noopener">ivanacoi / Pixabay</a> — "television audience"</li><li>7장: <a href="https://pixabay.com/photos/happy-holidays-women-talking-laugh-2567915/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "friends laughing"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-a8608da7ca9d">
+    <div class="head">
+      <h2>S1. 벽 스쿼트 주 1~3회 혈압 유지 연구</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-a8608da7ca9d">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 헬스장도 기구도 없이 집 벽 하나로 해본 운동인데, 주 1번으로 줄여도 일부는 유지되고 주 3번과는 숫자로 차이가 났다는 비교가 팔린다</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">96/500자</span></div>
+      <p class="tp-text">헬스장 없이 집 벽 앞에서 버티는 운동만 했는데 혈압이 내려갔다는 연구가 나옴
+주 1번으로 줄여도 일부는 유지됐대
+근데 &#39;일부&#39;가 정확히 뭔지, 단서가 하나 붙어 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 연구 시작 때보다 수축기 혈압이 내려간 폭이 주 3번 그룹은 평균 13.73 mmHg, 주 2번 그룹은 6.95, 주 1번 그룹은 6.56이었어
+그럼 아예 멈춘 그룹은 어떻게 됐을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">90/500자</span></div>
+      <p class="tp-text">2/ 4주 하고 아예 멈춘 그룹은 혈압 개선이 도로 되돌아갔대
+연구가 끝날 때쯤엔 운동 안 한 대조군이랑 통계적으로 차이가 없었다고
+그럼 실제로 뭘 시킨 건지 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">3/ 연구에서 시킨 방식 정리
+- 집에서 벽 스쿼트 자세로 버티기 4번
+- 버티기 사이엔 앉아서 2분 쉬기
+- 처음 4주는 주 3번
+- 다음 4주는 주 3번 / 2번 / 1번 / 중단, 4그룹으로 나눔
+그럼 누가 참여한 연구인지가 중요함 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">4/ 참가자는 성인 100명, 평균 나이 37.4세
+수축기 혈압이 120~140 수준에 평소 정해진 운동은 안 하던 사람들이고, 고혈압 진단이나 혈압약 복용 경험은 없었어
+그래서 한계도 있음 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">5/ 연구진도 짚은 게, 유지 기간이 4주뿐이라 몇 달, 몇 년 뒤에도 그런지는 더 연구가 필요하대
+그리고 주 1~2번 그룹은 이완기 혈압 개선은 통계적으로 유지하지 못했어
+자기한테 맞는 운동인지는 의사랑 상의해봐
+그래서 결론이 뭐냐면 ↓</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">216/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은, 주 1~2번으로도 단기간엔 혈압 감소를 어느 정도 유지할 수 있지만 더 큰 효과는 주 3번 한 쪽에서 나왔다는 거
+주 3번 vs 주 1번, 너라면 어느 쪽 해볼래?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>혈압 운동, 매일 헬스장 가는 게 아니라 집 벽 앞에서 버티는 거였다는 연구가 나옴</li><li>혈압 관리, 매일 운동이 아니라 주 1~2번 벽 스쿼트로도 일부 유지됐다는 연구가 나옴</li><li>벽 스쿼트 주 3번 계속한 사람은 수축기 혈압이 평균 13.73 mmHg 내려갔대</li><li>4주 하다 그만두면 혈압이 어떻게 되는지 직접 해본 연구가 있음</li><li>운동할 시간 없다는 사람들한테 나온 연구: 주 1번만 해도 혈압 개선이 일부 남았대</li><li>성인 100명이 집 벽 앞에서 버틴 결과, 4주 만에 혈압이 달라졌대</li><li>&#39;주 1번만 해도 효과 있다&#39;는 말, 반만 맞았음</li><li>평균 37세, 고혈압 진단도 없던 사람들이 벽 스쿼트를 했더니 생긴 일</li><li>벽에 기대 앉은 자세로 버티는 이 운동, 헬스장 기구 없이 혈압을 건드렸대</li><li>주 3번 vs 주 1번, 혈압 내려간 폭이 얼마나 차이 났는지 숫자로 봄</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>주 3번 vs 주 1번, 너라면 어느 쪽 해볼래?</li><li>벽 스쿼트 해본 적 있는 사람?</li><li>집 운동파 vs 헬스장파, 너는 어느 쪽이야?</li><li>버티기 운동 중에 벽 스쿼트 vs 플랭크, 어느 쪽이 더 해볼 만해?</li><li>운동 사이 2분씩 쉬는 거, 이 정도면 너는 할 수 있을 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>벽 스쿼트 말고 플랭크, 악력 운동 같은 버티기 운동 연구</li><li>버티기 운동이 혈압약만큼 효과를 냈다는 이전 연구들</li><li>&#39;높은 정상 혈압&#39; 기준이 뭔지, 생활습관 권고 얘기</li><li>운동을 멈추면 혈압 효과가 얼마나 빨리 사라지는지</li><li>바쁜 사람도 운동 습관을 이어갈 수 있게 한 해외 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>13.73 / 6.95 / 6.56 mmHg는 &#39;연구 시작 대비&#39; 감소폭이고 대조군 대비 수치가 아님. 글에서 시작 대비로 표기됐는지 확인</li><li>주 1~2번 유지 효과는 4주 단기 결과이고 이완기 혈압은 유의하게 유지되지 않았음. 수정 과정에서 &#39;주 1번이면 충분하다&#39;는 단정으로 바뀌지 않게 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들은 집에서 하체 등척성 운동 4주 프로그램을 시작했다</b>
+          <q>“Participants were randomly assigned to five groups. One served as a control group, while the other four began the same four-week exercise program at home, focusing on isometric movements involving the lower body.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처음 4주 뒤 모든 운동 그룹이 대조군보다 유의하게 개선됐다</b>
+          <q>“After the first four weeks, all four exercise groups showed significant improvements compared with the control group.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 1~2번 운동한 참가자들은 8주 끝에 수축기 혈압과 평균동맥압의 유의한 감소를 유지했다</b>
+          <q>“By the end of the eight-week study, participants exercising just once or twice weekly had maintained significant reductions in systolic blood pressure and mean arterial pressure compared with the control group.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 3번 그룹은 수축기 혈압이 시작 대비 평균 13.73 mmHg 감소했다</b>
+          <q>“Their systolic blood pressure fell by an average of 13.73 mmHg (-13.73 mmHg) from the beginning of the study.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 2번 그룹은 평균 6.95 mmHg, 주 1번 그룹은 6.56 mmHg 감소했다</b>
+          <q>“By comparison, the twice-weekly group experienced an average reduction of 6.95 mmHg, while participants exercising once a week recorded a decrease of 6.56 mmHg.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>4주 뒤 운동을 중단한 그룹은 혈압 개선이 되돌아갔고 끝에는 대조군과 통계적 차이가 없었다</b>
+          <q>“Those who discontinued wall squats after the initial four weeks experienced a reversal of their earlier blood pressure improvements. By the end of the study, their readings were no longer statistically different from those of the control group.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한 번에 벽 스쿼트 버티기 4번, 사이에 앉아서 2분 휴식, 처음 4주는 주 3회</b>
+          <q>“The training consisted of four wall squat holds per session, with two minutes of seated recovery between each hold. Participants completed this routine three times weekly during the first four weeks.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이후 4주는 주 3회, 주 2회, 주 1회, 중단의 네 그룹으로 나뉘었다</b>
+          <q>“One continued with three weekly sessions, another reduced its frequency to twice weekly, and a third performed the exercises only once a week. The fourth group stopped training altogether.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 평균 나이 37.4세의 성인 100명이다</b>
+          <q>“To investigate, researchers enrolled 100 adults whose average age was 37.4 years.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수축기 혈압은 정상~높은 정상(120-140)이었고 정해진 운동 프로그램에 규칙적으로 참여하지 않았다</b>
+          <q>“Participants had systolic blood pressure ranging from normal to high-normal levels (120-140 mmHg) and did not regularly participate in structured exercise programs.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>고혈압 진단을 받은 참가자는 없었다</b>
+          <q>“None of the participants had been diagnosed with hypertension.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈압약을 현재나 과거에 쓴 사람은 참가 자격이 없었다</b>
+          <q>“To qualify, volunteers had to be free of injuries and illnesses, have no current or previous use of blood pressure medication, and be nonsmokers.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>유지 단계는 4주뿐이었고 더 긴 추적 연구가 필요하다</b>
+          <q>“However, the researchers emphasized that the maintenance phase lasted only four weeks. Additional studies following participants for longer periods will be needed to determine whether less frequent training can preserve these benefits over months or years.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 1~2번 그룹은 이완기 혈압의 통계적으로 유의한 개선을 유지하지 못했다</b>
+          <q>“Neither schedule maintained a statistically significant improvement in diastolic blood pressure.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 낮은 빈도로 단기 혈압 감소를 유지할 수 있지만 더 높은 빈도가 필요하다고 밝혔다</b>
+          <q>“The study demonstrates that while lower frequency isometric exercise training may be sufficient to maintain blood pressure reductions over the short term, higher frequencies are required to preserve these benefits and the associated vascular and cardiac autonomic adaptations,”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="a8608da7ca9d">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261025073045.htm" target="_blank" rel="noopener">The surprisingly simple exercise that could lower your blood pressure</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-96eebfa4e6b8">
+    <div class="head">
+      <h2>S2. 생일 하루 차이로 학교 1년 더 다닌 영국인들의 60대 치매 진단 차이</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-96eebfa4e6b8">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 생일 하루 차이로 학교를 1년 더 다닌 사람들의 50년 뒤 치매 기록과, 유전 위험 격차가 줄어든 결과를 &#39;교육이 유전 위험을 누그러뜨릴 수 있나&#39;로 푸는 각도</p>
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">생일이 하루 차이라서 누구는 15살에, 누구는 16살에 학교를 떠났대
+그 1년 차이가 60대 치매 진단 기록에서 차이로 나타났다는 연구가 나옴
+근데 유전적으로 위험한 사람들 사이에선 더 신기한 결과가 나왔음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 1957년 기준일 이후에 태어나 학교를 1년 더 다녀야 했던 사람들이 60대에 치매 진단을 받은 비율이 더 낮았음. 근데 어떻게 &#39;생일 하루 차이&#39;로 공정하게 비교가 됐을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">162/500자</span></div>
+      <p class="tp-text">2/ 1972년 법 덕분이야. 영국(잉글랜드·스코틀랜드·웨일스)이 학교를 떠날 수 있는 최소 나이를 15세에서 16세로 올렸는데, 1957년 9월 1일 이후 출생자만 해당이었음. 8월 31일생은 15살에 떠날 수 있었고 다음 날 태어난 친구는 못 떠났대. 그럼 실제로 얼마나 차이가 났을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">3/ 2022년 12월 기준, 법 적용을 받은 첫 세대가 65세가 됐을 때 기준일 이후 출생자는 치매 진단 가능성이 0.2%포인트 낮았음. 풀어 쓰면 1,000명당 약 2명 덜 진단받은 정도야. 작아 보여도 진짜 신기한 건 유전 위험 쪽이었음.</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">153/500자</span></div>
+      <p class="tp-text">4/ 기준일 이전 출생자 중에선 유전 위험이 높은 쪽이 낮은 쪽보다 진단률이 높았음. 그런데 기준일 이후 출생자에선 그 격차가 0.18%포인트에서 0.02로 줄었어. 1만 명당 18명 차이가 약 2명 차이로 줄어든 거야. 그럼 유전 위험 높은 사람이 교육 덕을 더 본 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">168/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+확인된 쪽
+- 학교 1년 더 다닌 쪽이 60대 치매 진단 적은 방향
+- 유전 위험 높은/낮은 그룹 격차 축소
+아직 모르는 쪽
+- 정확한 효과 크기 (연구진도 못 박기 어렵다고 함)
+- 유전 위험 높은 사람이 더 득 본 건지
+- 왜 그런지 (더 머리 쓰는 직업, 소득 같은 가설만 있음)</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">263/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 영국에서 학교를 1년 더 다닌 세대가 60대에 치매 진단이 덜 나왔고, 교육은 치매 예방 얘기에 이미 들어간다는 정도로 기억하면 돼. 크기는 연구진도 못 박지 못했음.
+이 연구에서 뭐가 더 신기했어? 하루 차이 생일 실험 vs 유전 위험 격차 줄어든 거
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>생일이 하루 차이라서 누구는 15살에, 누구는 16살에 학교를 떠났대</li><li>8월 31일생은 15살에 학교를 떠났고 9월 1일생은 못 떠났음. 50년 뒤 치매 기록에서 차이가 보였다는 연구</li><li>치매 위험, 유전자로만 정해지는 게 아니라 &#39;학교를 얼마나 다녔나&#39;에서도 차이가 보였다는 연구가 나옴</li><li>1만 명당 18명이던 치매 진단 격차가 2명으로 줄었대. 계기는 학교 1년이었음</li><li>치매 얘기하면 유전부터 떠올리지? 이 연구는 학교 얘기부터 꺼냈음</li><li>유전자는 못 바꿔도 살아온 환경으로 위험이 달라질 수 있다는 힌트가 나온 연구</li><li>치매 진단 0.2%포인트 차이, 작아 보이지? 1,000명당 2명이라고 풀면 느낌이 달라짐</li><li>하루 차이 생일이 50년 뒤 치매 기록까지 따라갔다는 연구인데, 연구진 스스로도 &#39;정확한 크기는 모르겠다&#39;고 함</li><li>공부 1년 더 하는 게 억울해 보여도, 수십 년 뒤 병원 기록엔 차이가 남아 있었대</li><li>&#39;유전 탓&#39;으로만 끝내기엔 이상한 결과가 나왔음. 15살에 졸업한 사람과 16살에 졸업한 사람의 60대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이 연구에서 뭐가 더 신기했어? 하루 차이 생일 실험 vs 유전 위험 격차 줄어든 거</li><li>15살에 일찍 사회로 나가기 vs 1년 더 학교 다니기, 고르라면 어느 쪽이야?</li><li>&#39;생일 하루 차이로 갈리는 제도&#39;, 이런 거 또 알고 있는 사례 있어?</li><li>치매 예방 얘기에 교육이 들어간다는 거, 의외였어 당연했어?</li><li>너라면 이 연구에서 &#39;유전 위험 높은 사람이 더 득 봤는지&#39;가 밝혀질 때까지 기다릴 거야, 이미 믿을 만하다고 볼 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>2편: 학교 1년 더 다닌 쪽이 소득은 더 높고 뇌졸중·심장마비는 적었다는 결과, 내일 새벽 배달</li><li>같은 연구에서 초기 고혈압은 오히려 더 많았다는 반전 결과</li><li>스웨덴 의무교육 개혁 연구는 치매 효과가 없었다는데, 왜 결과가 갈렸을까</li><li>유전 위험 점수와 APOE 유전자, 쉽게 풀어보기</li><li>영국 바이오뱅크 50만 명 데이터가 건강 연구에 이렇게 쓰이는 이유</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;학교 오래 다니면 치매 안 걸린다&#39;로 읽히지 않게 주의: 원문도 효과 방향만 믿을 만하고 정확한 크기는 불확실하다고 함</li><li>대상이 영국의 특정 세대(1957년 전후 출생, 낮은 교육 수준 층)라 한국이나 다른 집단에 그대로 적용된다고 단정할 수 없음</li><li>유전 위험이 높은 사람이 더 큰 혜택을 봤는지는 입증되지 않았는데 그렇게 읽히지 않도록 표현 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국에서 생일 하루 차이로 15세에 학교를 떠날 수도, 16세까지 다녀야 할 수도 있었다</b>
+          <q>“A single day on the calendar decided whether a British teenager could leave school at 15 or had to stay until 16.”</q>
+          <small>post0 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1957년 기준일 이후 출생해 학교를 1년 더 다닌 사람들이 60대에 치매 진단을 받을 가능성이 낮았다</b>
+          <q>“Researchers writing in the Proceedings of the National Academy of Sciences found that people born just after a 1957 cutoff, who were required to stay in school a year longer, were less likely to have a dementia diagnosis in their 60s.”</q>
+          <small>post1 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1972년 법으로 영국 3개 지역이 최소 학교 졸업 나이를 15세에서 16세로 올렸고 1957년 9월 1일 이후 출생자만 해당이었다</b>
+          <q>“England, Scotland, and Wales raised the minimum school-leaving age from 15 to 16, but only for students born on or after September 1, 1957.”</q>
+          <small>post2 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>8월 31일생은 15세에 떠날 수 있었고 다음 날 태어난 친구는 그럴 수 없었다</b>
+          <q>“A student born August 31 could leave at 15. A classmate born the next day could not.”</q>
+          <small>post2 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>65세가 된 2022년 12월 기준 기준일 이후 출생자는 치매 진단 가능성이 0.2%포인트 낮았다</b>
+          <q>“By December 2022, when the first group affected by the law turned 65, people born after the cutoff were 0.2 percentage points less likely to have a dementia diagnosis.”</q>
+          <small>post3 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>0.2%포인트는 1,000명당 약 2명 덜 진단받는 정도에 해당한다</b>
+          <q>“That sounds tiny, but only about half a percent of those born before the cutoff had been diagnosed, so 0.2 points amounts to roughly two fewer diagnoses for every 1,000 people.”</q>
+          <small>post3 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기준일 이전 출생자 중 유전 위험이 높은 사람이 낮은 사람보다 진단률이 높았다</b>
+          <q>“Among people born before the cutoff, those with high genetic risk were diagnosed at higher rates than those with low genetic risk.”</q>
+          <small>post4 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기준일 이후 출생자에서는 유전 위험 높은 쪽과 낮은 쪽의 격차가 0.18%포인트에서 0.02로 줄었고, 1만 명당 약 18명 차이가 약 2명으로 줄었다</b>
+          <q>“Among people born after it, that gap shrank from 0.18 percentage points to 0.02. In everyday terms, high-risk people went from about 18 extra diagnoses per 10,000 compared with low-risk people to about 2.”</q>
+          <small>post4 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>유전 위험이 높은 사람이 교육에서 더 많은 혜택을 봤는지는 입증되지 않았다</b>
+          <q>“Whether people with risky genes gained more from schooling than people with low genetic risk remains unproven.”</q>
+          <small>post5 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 효과의 방향은 데이터가 뒷받침하지만 정확한 크기는 아니라고 썼다</b>
+          <q>“The data support the direction of the effect, they wrote, but not its exact size.”</q>
+          <small>post5 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>학교 교육이 뇌를 어떻게 보호하는지는 알려져 있지 않고, 더 머리 쓰는 직업이나 소득 상승 같은 가능성이 제시됐다</b>
+          <q>“How schooling protects the brain remains unknown. Extra schooling could have opened doors to more mentally demanding jobs, raised income, or surrounded students with healthier peers.”</q>
+          <small>post5 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>교육은 이미 치매 예방 논의에 포함된다</b>
+          <q>“Education already belongs in the conversation about preventing dementia.”</q>
+          <small>post6 · <a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="96eebfa4e6b8">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/more-school-lower-dementia-risk/" target="_blank" rel="noopener">Keeping Teens In School Lowered Dementia Risk Decades Later</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261027-pm";
+  const ORIGINAL = {"1b7711bdb3e5": {"caption": "\ubc14\ub2e4\uc5d0\uc11c\ub9cc \ud3c9\uc0dd \uc0b0 \uc591\uc11c\ub958 \ud654\uc11d\uc774 \ub098\uc654\ub300. \uc9c0\uae08 \uc9c0\uad6c\uc5d0\ub294 \ubc14\ub2e4\uc5d0 \uc0ac\ub294 \uc591\uc11c\ub958\uac00 \uc5c6\uac70\ub4e0. \ud53c\ubd80\uc5d0 \uc791\uc740 \uad6c\uba4d\uc774 \ub9ce\uc544\uc11c \uac00\uc2a4\ub791 \ubb3c\uc744 \uc8fc\uace0\ubc1b\ub294 \ub370\ub294 \uc88b\uc9c0\ub9cc, \uc18c\uae08\uae30\ub294 \ub300\uccb4\ub85c \uc798 \ubabb \uacac\ub514\uae30 \ub54c\ubb38\uc774\uc57c.\n\n\uadf8\ub7f0\ub370 \uc911\uad6d\uc758 \ud6c4\uae30 \ud2b8\ub77c\uc774\uc544\uc2a4\uae30 \uc9c0\uce35\uc5d0\uc11c \ub098\uc628 \ud654\uc11d \ub450 \uc810\uc774 \uc774 \uc0c1\uc2dd\uc744 \ud754\ub4e4\uc5c8\uc5b4. \uad6c\uc774\uc800\uc6b0\uc131 \uad00\ub9c1\ud604\uc5d0\uc11c \ud604\uc9c0 \ub18d\ubd80\ub4e4\uc774 \ubc1c\uacac\ud588\uace0, \uc554\uc11d\uce35\uc758 \ub098\uc774\ub294 \uc57d 2\uc5b5 3,700\ub9cc \ub144\uc774\uc57c. \uc5f0\uad6c\ud300\uc740 \uc774 \uc0c8 \uc885\uc5d0 \uac8c\ub85c\ud1a0\ub77d\uc2a4 \ub9c8\ub9ac\ud2f0\ubb34\uc2a4(Gerrothorax maritimus)\ub77c\ub294 \uc774\ub984\uc744 \ubd99\uc600\uace0, \uc5f0\uad6c\ub294 \ud559\uc220\uc9c0 \ub124\uc774\ucc98 \uc0dd\ud0dc\u00b7\uc9c4\ud654(Nature Ecology \u0026 Evolution)\uc5d0 \uc2e4\ub838\uc5b4.\n\n\ub2e8\uc11c\ub294 \ud06c\uac8c \ub450 \uac00\uc9c0\uc57c. \uccab\uc9f8, \ub450 \ud45c\ubcf8 \ubaa8\ub450 \uac00\uae4c\uc6b4 \uc12c\uc774 \uc788\ub2e4 \ud574\ub3c4 30km \ub118\uac8c \ub5a8\uc5b4\uc9c4 \uacf3\uc5d0\uc11c \ub098\uc654\uc5b4. \ubf08\ub300\ub3c4 \uac70\uc758 \uc628\uc804\ud558\uac8c \ub0a8\uc544 \uc788\uc5b4\uc11c, \uc5f0\uad6c\ud300\uc740 \uc8fd\uc740 \ub4a4 \ubc14\ub2e4\ub85c \ub5a0\ub0b4\ub824\uc654\uc744 \uac00\ub2a5\uc131\uc740 \ub0ae\ub2e4\uace0 \ubd24\uc5b4. \ub458\uc9f8, \ubf08 \uc18d \uc2a4\ud2b8\ub860\ud2ac \ub3d9\uc704\uc6d0\uc18c \ube44\uc728\uc774 \ubb3b\ud600 \uc788\ub358 \uc554\uc11d\uc774 \uc544\ub2c8\ub77c \ud2b8\ub77c\uc774\uc544\uc2a4\uae30 \ubc14\ub2f7\ubb3c\uacfc \ub9de\uc558\uc5b4.\n\n\uc0dd\uae40\uc0c8\ub3c4 \ub3c5\ud2b9\ud574. \ub0a9\uc791\ud55c \ubab8\uc774 \ub2e8\ub2e8\ud55c \uac11\uc637 \ud310\uc73c\ub85c \ub36e\uc5ec \uc788\uc5c8\uc5b4. \uc5f0\uad6c\ud300\uc740 \uc774 \uac11\uc637\uc774 \ud53c\ubd80\ub97c \ud1b5\ud55c \uc218\ubd84 \ud761\uc218\ub97c \ub9c9\uc558\uc744 \uac70\ub77c\uace0 \uc124\uba85\ud574. \ub354 \uc628\uc804\ud55c \ud45c\ubcf8\uc740 \ubcf4\uc874\ub41c \uc911\uc2ec\uc120 \uae30\uc900\uc73c\ub85c \uae38\uc774\uac00 \ucd5c\uc18c 73.7cm\uc57c. \uacf5\ub3d9 \uc800\uc790 \ubaa8\ud0c0\ub2c8 \uad50\uc218\ub294 \ubab8\ubb34\uac8c\ub9cc \ubcf4\uba74 \uc790\uc774\uc5b8\ud2b8 \ub3c4\ub871\ub1fd \uc815\ub3c4\uc9c0\ub9cc \uccb4\ud615\uc740 \ud6e8\uc52c \ud1b5\ud1b5\ud558\ub2e4\uace0 \ub9d0\ud588\uc5b4.\n\n\ucd9c\ucc98: ScienceAlert, Nature Ecology \u0026 Evolution", "hashtags": ["#\uace0\uc0dd\ubb3c", "#\uc591\uc11c\ub958", "#\ud654\uc11d", "#\uacfc\ud559\ub274\uc2a4", "#\ud2b8\ub77c\uc774\uc544\uc2a4\uae30"], "slides": [["\ubc14\ub2e4\uc5d0\uc11c\ub9cc \uc0b0", "\uc591\uc11c\ub958 **\ud654\uc11d**???"], ["\uc591\uc11c\ub958\ub294 \uc6d0\ub798", "**\ubc14\ub2e4**\uc5d0 \ubabb \uc0b4\uc544"], ["\uc0c8\ub85c \ubc1c\uacac\ub41c \uc885", "\uac8c\ub85c\ud1a0\ub77d\uc2a4 **\ub9c8\ub9ac\ud2f0\ubb34\uc2a4**"], ["\ubab8\uc774 \ud1b5\uc9f8\ub85c", "**\uac11\uc637** \ud310\uc73c\ub85c", "\ub36e\uc5ec \uc788\uc5c8\uc5b4"], ["\uac00\uae4c\uc6b4 \uc12c\uc5d0\uc11c\ub3c4", "**30km** \ub118\uac8c \ub5a8\uc5b4\uc9c4", "\uacf3\uc5d0\uc11c \ub098\uc634"], ["\ubf08 \uc18d \uc2a4\ud2b8\ub860\ud2ac\uc774", "\ub2f9\uc2dc **\ubc14\ub2f7\ubb3c**\uacfc \uc77c\uce58", "\ubb3b\ud78c \ubc14\uc704\uc640\ub294 \ub2ec\ub790\uc5b4"], ["**\uace0\uc0dd\ubb3c** \ub355\ud6c4 \uce5c\uad6c\ud55c\ud14c", "\uc774 \ud654\uc11d \uc598\uae30", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30"]]}, "2d5383be71ff": {"caption": "\uc81c\uc774\uc9c0\uac00 \uc288\ud37c\ubcfc \ud558\ud504\ud0c0\uc784 \ubb34\ub300\uc5d0 \uc120\ub2e4\ub294 \uc18c\uc2dd\uc774\uc57c. NFL\uc774 \uc9c1\uc811 \ubc1c\ud45c\ud588\uace0, \uacf5\uc5f0\uc740 2\uc6d4\uc5d0 \uc5f4\ub824.\n\n\uc81c\uc774\uc9c0\uc758 \ud68c\uc0ac \ub85d\ub124\uc774\uc158\uc740 2019\ub144\ubd80\ud130 \ud558\ud504\ud0c0\uc784 \uc1fc\ub97c \uc81c\uc791\ud574\uc654\uc5b4. \ub9e4\ub144 \ub204\uac00 \ubb34\ub300\uc5d0 \uc124\uc9c0 \uace0\ub974\ub294 \ub370\ub3c4 \uc81c\uc774\uc9c0\uac00 \uc911\uc694\ud55c \uc5ed\ud560\uc744 \ud574\uc654\ub294\ub370, \uc815\uc791 \ubcf8\uc778\uc774 \uc288\ud37c\ubcfc \ubb34\ub300\uc5d0 \uc120 \uc801\uc740 \ud55c \ubc88\ub3c4 \uc5c6\uc5c8\ub300.\n\n\ub300\ud68c\ub294 \uc288\ud37c\ubcfc LXI\ub85c, 2\uc6d4 14\uc77c \ub85c\uc2a4\uc564\uc824\ub808\uc2a4 \uadfc\ucc98\uc5d0\uc11c \uc5f4\ub824. \ubc1c\ud45c\ub294 \uc81c\uc774\uc9c0\uac00 \uc9c0\ub09c \uc8fc\ub9d0 \uc288\ud37c\ubcfc\uc774 \uc5f4\ub9b4 \uadf8 \uacbd\uae30\uc7a5\uc5d0\uc11c \uacf5\uc5f0\uc744 \ub450 \ubc88 \ud55c \uc9c1\ud6c4\uc5d0 \ub098\uc654\uc5b4. \uc774 \uacf5\uc5f0\ub4e4\uc740 \ub370\ubdd4 \uc568\ubc94 Reasonable Doubt 30\uc8fc\ub144\uc744 \uae30\ub150\ud558\ub294 \ud22c\uc5b4\uc758 \uc77c\ubd80\uc600\uc5b4.\n\nNFL \ucee4\ubbf8\uc154\ub108 \ub85c\uc800 \uad6c\ub378\uc740 \ub85d\ub124\uc774\uc158\uacfc \uc1fc \uc81c\uc791\uc5d0 \ud569\uc758\ud588\uc744 \ub54c \ub531 \ud558\ub098\ub9cc \uc694\uccad\ud588\ub2e4\uace0 \ub9d0\ud588\uc5b4. \uc81c\uc774\uc9c0\uac00 \ubcf8\uc778\uc774 \uc801\uc808\ud558\ub2e4\uace0 \ub290\ub07c\ub294 \ub54c\uc5d0 \uc5b8\uc820\uac00 \uc9c1\uc811 \ubb34\ub300\uc5d0 \uc11c\ub2ec\ub77c\ub294 \uac70\uc600\ub300. \uc81c\uc774\uc9c0\ub294 30\ub144\uac04\uc758 \uc74c\uc545\uacfc \uc791\uc5c5, \ubb38\ud654\ub97c \uc138\uacc4\uc5d0\uc11c \uac00\uc7a5 \ud070 \ubb34\ub300\uc5d0\uc11c \ubcf4\uc5ec\uc8fc\uac8c \ub410\ub2e4\uba70 \uc774\ubc88 \uc5ec\uc815\uc774 \uafc8\uc774 \uc774\ub8e8\uc5b4\uc9c0\ub294 \uc77c\uc774\ub77c\uace0 \ub9d0\ud588\uc5b4.\n\n\ucc38\uace0\ub85c \ucf04\ub4dc\ub9ad \ub77c\ub9c8\uc758 2025\ub144 \uacf5\uc5f0\uc740 \uc5ed\ub300 \uac00\uc7a5 \ub9ce\uc774 \ubcf8 \ud558\ud504\ud0c0\uc784 \uc1fc\uc600\uace0 \uc5d0\ubbf8\uc0c1 \uc74c\uc545 \uc5f0\ucd9c\uc0c1\ub3c4 \ubc1b\uc558\uc5b4. \ucd5c\uadfc \ud558\ud504\ud0c0\uc784 \ubb34\ub300\uc5d0\ub294 \ubc30\ub4dc \ubc84\ub2c8, \ucf04\ub4dc\ub9ad \ub77c\ub9c8, \uc5b4\uc154, \ub9ac\uc544\ub098, \uc704\ucf04\ub4dc\uac00 \uc62c\ub790\uace0.\n\nNFL\uc740 \uc131\uba85\uc5d0\uc11c \uc81c\uc774\uc9c0\uac00 \uac8c\uc2a4\ud2b8\ub85c \ub204\uad6c\ub97c \ubd80\ub97c\uc9c0\uc5d0 \ub300\ud55c \uae30\ub300\uac00 \uc774\uc81c \uc2dc\uc791\ub420 \uac70\ub77c\uace0 \ud588\uace0, \uc544\ub0b4 \ube44\uc698\uc138\uac00 \uadf8 \uba85\ub2e8 \ub9e8 \uc704\uc5d0 \uc624\ub97c \uac70\ub77c\uace0 \ub367\ubd99\uc600\uc5b4.\n\n\ucd9c\ucc98: BBC News", "hashtags": ["#\uc81c\uc774\uc9c0", "#\uc288\ud37c\ubcfc", "#\ud558\ud504\ud0c0\uc784\uc1fc", "#JayZ", "#SuperBowl"], "slides": [["\uc81c\uc774\uc9c0\uac00", "**\uc288\ud37c\ubcfc** \ubb34\ub300", "\uc120\ub2e4\uace0???"], ["\uc81c\uc774\uc9c0 \ud68c\uc0ac\uac00", "**2019\ub144\ubd80\ud130**", "\ud558\ud504\ud0c0\uc784 \uc81c\uc791"], ["\uadfc\ub370 \ubcf8\uc778\uc740", "**\ud55c \ubc88\ub3c4**", "\ubb34\ub300\uc5d0 \uc548 \uc130\uc74c"], ["\ub0a0\uc9dc\ub294", "**2\uc6d4 14\uc77c**", "LA \uadfc\ucc98"], ["\ubc1c\ud45c \uc9c1\uc804", "\uadf8 \uacbd\uae30\uc7a5\uc5d0\uc11c", "\uacf5\uc5f0 **2\ubc88** \ud588\uc74c"], ["\ucf04\ub4dc\ub9ad \ub77c\ub9c8\uc758", "2025\ub144 \ubb34\ub300\ub294", "**\uc5ed\ub300 \ucd5c\ub2e4 \uc2dc\uccad**"], ["**\uc81c\uc774\uc9c0 \ud32c \uce5c\uad6c**", "\ud0dc\uadf8\ud574\uc11c", "\uc54c\ub824\uc918"]]}, "6e4a871eda5b": {"caption": "\ud3ec\ucf13\ubaac \ub9e8\ud640 \ub69c\uaed1\uc774 5\uac1c\ub098 \uc0c8\ub85c \uc0dd\uae34\ub300. \ubb34\ub300\ub294 \ub3c4\ucfc4\uc5d0\uc11c \ubd81\ucabd\uc73c\ub85c \ub450 \uc2dc\uac04\ucbe4 \ub5a8\uc5b4\uc9c4 \uad70\ub9c8\ud604\uc774\uc57c.\n\n\ud3ec\ucf00\ud6c4\ud0c0(Pok\u00e9futa)\ub294 \uc9c0\uc5ed \ud48d\uacbd\uc774\ub098 \ud2b9\uc0b0\ubb3c\uc744 \ud3ec\ucf13\ubaac\uacfc \ud568\uaed8 \ub2f4\uc740 \ud558\ub098\ubfd0\uc778 \ub9e8\ud640 \ub69c\uaed1 \ud504\ub85c\uc81d\ud2b8\uc57c. \uc798 \uc54c\ub824\uc9c0\uc9c0 \uc54a\uc558\uc9c0\ub9cc \ub9e4\ub825\uc801\uc778 \uc9c0\uc5ed\uc73c\ub85c \uc0ac\ub78c\ub4e4\uc744 \ubd88\ub7ec \ubaa8\uc73c\ub294 \uac8c \ubaa9\uc801\uc774\ub77c\uace0 \ud574.\n\n\uc774\ubc88 5\uacf3\uc744 \uc815\ub9ac\ud558\uba74 \uc774\ub798.\n- \uc2dc\ubaa8\ub2c8\ud0c0: \ub300\ud30c \ud488\uc9c8\uc774 \uc790\ub791\uc778 \ub3d9\ub124\ub77c\uc11c \ud30c\ub97c \ub4e0 \ud3ec\ucf13\ubaac\ub4e4\uc774 \ub4f1\uc7a5. \uc2dc\ubaa8\ub2c8\ud0c0\uc5ed \uc606 \ucf54\ucf54\ub2c8\ud0c0 \uac74\ubb3c \uc55e\uc5d0 \uc124\uce58\ub3fc.\n- \ub098\uac00\ub178\ud558\ub77c: \uc58c\ubc14 \ub310 \uc55e\uc5d0\uc11c \uc804\uae30 \ud0c0\uc785 \ud3ec\ucf13\ubaac\uc774 \ub180\uace0 \uc788\ub294 \ub514\uc790\uc778. \uc58c\ubc14 \ud6c4\ub8e8\uc0ac\ud1a0\uce78 \ud734\uac8c\uc18c(\ubbf8\uce58\ub178\uc5d0\ud0a4)\uc5d0 \ub193\uc5ec.\n- \ub2e4\ud14c\ubc14\uc57c\uc2dc: \uce20\uce20\uc9c0\uac00\uc624\uce74 \uacf5\uc6d0 \uc548 \ud6c4\ub808\uc544\uc774 \uc13c\ud130\uc5d0 \uc124\uce58. \uacf5\uc6d0\uc5d0 \ucca0\ucb49\uc774 \uc57d 1\ub9cc \uadf8\ub8e8\ub77c\uc11c \ubd04\uc5d0 \uac00\ub294 \uac8c \ub354 \uc88b\uc744 \uc218\ub3c4 \uc788\ub300.\n- \ub204\ub9c8\ud0c0: \ud6c4\ud0a4\uc640\ub808 \ud3ed\ud3ec\ub85c \uc774\uc5b4\uc9c0\ub294 \ub4f1\uc0b0\ub85c \uc785\uad6c, \uc8fc\ucc28\uc7a5 \uc606. \ud150\uad6c \uc804\uc124\uacfc \uc5f0\uacb0\ub41c \ud3ec\ucf13\ubaac\uc774 \ub098\uc640.\n- \uc2dc\ubd80\uce74\uc640: \uc774\uce74\ud638 \ub85c\ud504\uc6e8\uc774 \ud638\ud1a0\ud1a0\uae30\uc2a4\uc5ed\uc5d0\uc11c \ube44\ud589 \ud0c0\uc785 \uc804\uc124\uc758 \ud3ec\ucf13\ubaac\uc774 \ub9de\uc544\uc918.\n\n5\uac1c \ubaa8\ub450 11\uc6d4 \ub9d0\uae4c\uc9c0 \uc124\uce58\ub420 \uc608\uc815\uc774\uc57c. \uad70\ub9c8\ub294 \uac00\uc744 \ub2e8\ud48d\uacfc \uc628\ucc9c\uc73c\ub85c\ub3c4 \uc720\uba85\ud558\ub2c8\uae4c \uc5ec\ud589 \ucf54\uc2a4\ub85c \uc9dc\uae30 \uc88b\uc544 \ubcf4\uc5ec.\n\n\ucd9c\ucc98: SoraNews24, \uad70\ub9c8\ud604, Jiji", "hashtags": ["\ud3ec\ucf13\ubaac", "\ud3ec\ucf13\ubaac\ub9e8\ud640", "\uad70\ub9c8\ud604", "\uc77c\ubcf8\uc5ec\ud589", "\ud3ec\ucf00\ud6c4\ud0c0"], "slides": [["\ud3ec\ucf13\ubaac \ub9e8\ud640\uc774", "**5\uac1c\ub098** \ub610???"], ["\ub3c4\ucfc4\uc5d0\uc11c \ubd81\ucabd\uc73c\ub85c", "\ub450 \uc2dc\uac04 \uac70\ub9ac", "**\uad70\ub9c8\ud604**\uc774 \ubb34\ub300"], ["\uc9c0\uc5ed \ud2b9\uc0b0\ubb3c\uc774", "\ub9e8\ud640\uc5d0 \uadf8\ub824\uc9d0", "**\ud30c** \ud3ec\ucf13\ubaac\ub3c4 \uc788\uc74c"], ["**\ub310** \uc55e\uc5d4", "\uc804\uae30 \ud3ec\ucf13\ubaac\uc774", "\ub180\uace0 \uc788\ub300"], ["\ud3ed\ud3ec \uac00\ub294 \uae38\uc5d4", "**\ud150\uad6c** \ub2ee\uc740", "\ud3ec\ucf13\ubaac \ub4f1\uc7a5"], ["\ub85c\ud504\uc6e8\uc774 \uc5ed\uc5d4", "**\uc804\uc124\uc758 \uc0c8**\uac00", "\ub9c8\uc911 \ub098\uc634"], ["\ud3ec\ucf13\ubaac \ub355\ud6c4 \uce5c\uad6c", "**\uad70\ub9c8 \uc5ec\ud589** \uac00\uc790\uace0", "\ud0dc\uadf8\ud574\uc11c \uaf2c\uc2dc\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

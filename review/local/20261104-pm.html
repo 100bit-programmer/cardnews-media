@@ -1,0 +1,1868 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.04 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.04 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-c047f79d9b63" data-jump="c047f79d9b63">1</a><a href="#post-39f6558b019b" data-jump="39f6558b019b">2</a><a href="#post-602163eef992" data-jump="602163eef992">3</a>
+      <a href="#threads">🧵 스레드 3</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-c047f79d9b63" data-id="c047f79d9b63">
+    <div class="head">
+      <h2>1. 박각시나방 생식기 초음파 진화 연구</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/c047f79d9b63/v1-01.jpg" alt="1장: 나방이 생식기로 비명?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/c047f79d9b63/v1-02.jpg" alt="2장: 목소리 대신 문질러서 소리" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/c047f79d9b63/v1-03.jpg" alt="3장: 소리 내는 법은 최소 세 가지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/c047f79d9b63/v1-04.jpg" alt="4장: 서로 따로 일곱 번 진화" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/c047f79d9b63/v1-05.jpg" alt="5장: 다 통하진 않았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/c047f79d9b63/v1-06.jpg" alt="6장: 생물 덕후 친구한테 이거 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/c047f79d9b63/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">나방이 생식기로 박쥐에게 소리를 지른다는 연구가 나왔다. 박쥐는 초음파로 먹잇감의 위치를 찾는데, 일부 박각시나방은 이 탐지를 흐트러뜨릴 수 있는 소리를 스스로 내도록 진화했다. 나방에게는 후두가 없어서, 수컷은 생식기 구조의 비늘을 복부 표면에 문질러 초음파를 낸다.
+
+연구진이 수컷 박각시나방의 생식기를 살펴보니 소리를 내는 방식은 최소 세 가지였다. 비늘끼리 긋거나, 작은 가시에 문지르거나, 작은 돌기 위를 긋는 방식이다. 이 능력은 한 조상에게서 물려받은 것이 아니라 3000만 년에 걸쳐 최대 일곱 번 따로 생겨난 것으로 보인다.
+
+모든 소리가 같은 효과를 내는 건 아니다. 길게 이어지는 소리가 음파 탐지 교란에 가장 가까운 특성을 보였고, 짧은 소리는 다가오는 박쥐를 놀라게 할 수 있다고 연구진은 추정한다. 박쥐의 초음파를 감지하는 청각 기관이 있는 종도 있고, 아예 듣지 못하는 종도 있다. 소리가 가장 다양한 종에서는 짝짓기 때 같은 종끼리 알아보는 데 쓰일 가능성도 나오지만, 아직 검증되지 않았다.
+
+연구는 학술지 Proceedings of the Royal Society B에 실렸다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#나방 #박쥐 #과학 #진화 #생물학</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>소리가 다양한 종에서는 짝짓기 때 같은 종을 알아보는 데 쓰일 가능성이 있으나 아직 검증되지 않았다 <small>애매 · 원문은 짝짓기 중 같은 종 인식 가능성을 제기하며 아직 검증되지 않았다고 한다. 다만 원문은 &#39;종&#39;이 아니라 scale-on-nodule 메커니즘 집단이 소리 다양성이 가장 크다고 설명하므로 &#39;가장 다양한 종&#39;은 &#39;가장 다양한 방식(집단)&#39;으로 고치는 것이 정확하다.</small></li>
+          <li>근거 등록 안 된 주장: 박쥐는 초음파 반향정위(echolocation)로 먹잇감의 위치를 찾는다</li><li>근거 등록 안 된 주장: 박각시나방은 박쥐에게 쫓기는 포식 대상이다</li><li>근거 등록 안 된 주장: 이 기사의 출처는 ScienceAlert이다</li>
+          <li>편집자 메모의 &#39;암컷·수컷&#39;과 달리 원문은 수컷 박각시나방의 생식기 구조만 다룸 (암컷 언급 없음)</li><li>소리의 교란 효과는 연구진의 추정이며 짧은 소리의 효과와 짝짓기 용도는 검증되지 않음</li><li>연구 대상은 박각시나방과(hawkmoth)이며 모든 나방에 해당하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-c047f79d9b63-0">1장</label>
+          <textarea id="s-c047f79d9b63-0" rows="6" data-slide="0">나방이
+생식기로 **비명?!**
+---
+박쥐에게 쫓기는 박각시나방 일부가 생식기 구조를 문질러 초음파를 내도록 진화했다는 연구 결과가 나왔다.</textarea>
+          
+          <label class="f" for="s-c047f79d9b63-1">2장</label>
+          <textarea id="s-c047f79d9b63-1" rows="6" data-slide="1">목소리 대신
+문질러서 소리
+---
+나방에게는 후두가 없다. 대신 두 몸 부위를 비벼 소리를 내는 방식을 쓴다. 수컷 박각시나방은 생식기 구조의 비늘을 복부 표면에 문질러 초음파를 낸다.</textarea>
+          
+          <label class="f" for="s-c047f79d9b63-2">3장</label>
+          <textarea id="s-c047f79d9b63-2" rows="6" data-slide="2">소리 내는 법은
+최소 **세 가지**
+---
+연구진은 수컷 박각시나방의 생식기를 정밀 촬영해 살폈다. 비늘끼리 긋는 종, 작은 가시에 문지르는 종, 작은 돌기 위를 긋는 종이 있었다.</textarea>
+          
+          <label class="f" for="s-c047f79d9b63-3">4장</label>
+          <textarea id="s-c047f79d9b63-3" rows="6" data-slide="3">서로 따로
+**일곱 번** 진화
+---
+계통수에 소리 내는 구조를 대조해 보니 이 능력은 한 조상에게서 물려받은 게 아니었다. 지난 3000만 년 동안 최대 일곱 번 독립적으로 생겨난 것으로 보인다.</textarea>
+          
+          <label class="f" for="s-c047f79d9b63-4">5장</label>
+          <textarea id="s-c047f79d9b63-4" rows="6" data-slide="4">다 통하진
+않았다
+---
+모든 소리가 박쥐의 음파 탐지를 교란할 만한 건 아니었다. 길게 이어지는 소리가 교란 특성에 가장 가까웠고, 짧은 소리는 다가오는 박쥐를 놀라게 할 수 있다고 연구진은 추정한다.</textarea>
+          
+          <label class="f" for="s-c047f79d9b63-5">6장</label>
+          <textarea id="s-c047f79d9b63-5" rows="6" data-slide="5">생물 덕후 친구한테
+이거 보내기
+---
+나방의 기묘한 생존법에 눈이 번쩍 뜨일 생물 덕후 친구라면 신기해할 소식. 같은 능력이 최대 일곱 번 따로 진화했다는 점이 이야기 거리가 된다.</textarea>
+          
+          <label class="f" for="c-c047f79d9b63">본문 (캡션)</label>
+          <textarea id="c-c047f79d9b63" class="caption">나방이 생식기로 박쥐에게 소리를 지른다는 연구가 나왔다. 박쥐는 초음파로 먹잇감의 위치를 찾는데, 일부 박각시나방은 이 탐지를 흐트러뜨릴 수 있는 소리를 스스로 내도록 진화했다. 나방에게는 후두가 없어서, 수컷은 생식기 구조의 비늘을 복부 표면에 문질러 초음파를 낸다.
+
+연구진이 수컷 박각시나방의 생식기를 살펴보니 소리를 내는 방식은 최소 세 가지였다. 비늘끼리 긋거나, 작은 가시에 문지르거나, 작은 돌기 위를 긋는 방식이다. 이 능력은 한 조상에게서 물려받은 것이 아니라 3000만 년에 걸쳐 최대 일곱 번 따로 생겨난 것으로 보인다.
+
+모든 소리가 같은 효과를 내는 건 아니다. 길게 이어지는 소리가 음파 탐지 교란에 가장 가까운 특성을 보였고, 짧은 소리는 다가오는 박쥐를 놀라게 할 수 있다고 연구진은 추정한다. 박쥐의 초음파를 감지하는 청각 기관이 있는 종도 있고, 아예 듣지 못하는 종도 있다. 소리가 가장 다양한 종에서는 짝짓기 때 같은 종끼리 알아보는 데 쓰일 가능성도 나오지만, 아직 검증되지 않았다.
+
+연구는 학술지 Proceedings of the Royal Society B에 실렸다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-c047f79d9b63">해시태그</label>
+          <input id="t-c047f79d9b63" type="text" class="tagsin" value="#나방 #박쥐 #과학 #진화 #생물학" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>소리가 다양한 종에서는 짝짓기 때 같은 종을 알아보는 데 쓰일 가능성이 있으나 아직 검증되지 않았다</b>
+            <q>“The variety of sounds produced by the scale-on-nodule mechanism raises the possibility that the sounds could also help moths recognize members of their own species during courtship.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일부 나방이 생식기 구조로 박쥐에게 소리를 내도록 진화했다</b>
+            <q>“Some moths have evolved the ability to make noise at bats using their genital structures.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>나방에게는 후두가 없다</b>
+            <q>“But moths don&#39;t have larynxes. So they have to get a little bit more creative.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 몸 부위를 비벼 소리를 내는 방식을 쓴다</b>
+            <q>“The trick is a process called stridulation – producing sound by rubbing two body parts together, like the chirps of crickets rubbing their wings, or the hissing of spiders rubbing their legs against each other.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>수컷 박각시나방은 생식기 구조의 비늘을 복부 표면에 문질러 초음파를 낸다</b>
+            <q>“In male hawkmoths, the instruments are specialized scales on a pair of genital structures called valvae. By moving these structures against modified surfaces on their abdomens, the moths can produce bursts of ultrasound.”</q>
+            <small>slide2, caption, summary · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 수컷 박각시나방의 생식기를 정밀 촬영해 살폈다</b>
+            <q>“Masonick and his colleagues examined the genital structures of male hawkmoths from across the family, using detailed imaging to identify the surfaces responsible for producing their ultrasonic calls.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>비늘끼리 긋는 종, 작은 가시에 문지르는 종, 작은 돌기 위를 긋는 종이 있다</b>
+            <q>“In some species, specialized scales on the genital structures scrape against other scales on the abdomen. In others, they rub against tiny spines. And in a third group, the scales scrape across little bumps called nodules.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소리를 내는 방식은 최소 세 가지이다</b>
+            <q>“In fact, there are at least three.”</q>
+            <small>slide3, summary, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세 가지 방식은 한 조상에게서 모두 물려받은 것이 아니었다</b>
+            <q>“And, amazingly, these three distinct mechanisms for yelling from the gonads weren&#39;t all inherited from a single, acoustically gifted ancestor.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 능력은 지난 3000만 년 동안 최대 일곱 번 독립적으로 생겨난 것으로 보인다</b>
+            <q>“When the researchers mapped the sound-producing structures and behaviors onto the hawkmoth family tree, they found that the ability to sing an ultrasonic genital song in response to hunting bats appears to have repeatedly evolved independently, as many as seven times over the past 30 million years.”</q>
+            <small>slide4, slide6, summary, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>모든 소리가 박쥐 음파 탐지 교란에 적합한 건 아니었다</b>
+            <q>“And not all the strange moth songs were up to the task.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>길게 이어지는 소리가 음파 탐지 교란 특성에 가장 가까웠다</b>
+            <q>“The more sustained sounds were most likely to have the acoustic characteristics associated with disrupting bat sonar in a way that could help the moth evade a toothy capture.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 짧은 소리가 다가오는 박쥐를 놀라게 할 수 있다고 추정한다</b>
+            <q>“The researchers suggest that shorter bursts might startle a bat as it closes in for the kill, potentially giving the moth a chance to escape.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>박쥐의 초음파를 감지하는 청각 기관이 있는 종이 있다</b>
+            <q>“Some hawkmoths have hearing organs that allow them to detect the ultrasonic calls of approaching bats, giving them time to respond with a barrage of noise.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>박쥐가 다가오는 소리를 듣지 못하는 종도 있다</b>
+            <q>“Others, however, are deaf. They can&#39;t hear the bats coming, so they can&#39;t respond to approaching predators in the same way.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 Proceedings of the Royal Society B에 실렸다</b>
+            <q>“The research has been published in Proceedings of the Royal Society B: Biological Sciences.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">Moths Keep Evolving Their Genitals Into Anti-Bat Weapons, Again And Again</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/hawkmoth.png"</li><li>2장: <a href="https://pixabay.com/photos/macro-shadows-bug-insect-8322755/" target="_blank" rel="noopener">Storme22k / Pixabay</a> — "insect macro"</li><li>3장: <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/moth-valvae.png"</li><li>4장: <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/moth-tree.png"</li><li>5장: <a href="https://www.sciencealert.com/moths-have-repeatedly-evolved-a-bizarre-way-to-scream-at-bats-using-their-genitals" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/bat-hunting.png"</li><li>6장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-39f6558b019b" data-id="39f6558b019b">
+    <div class="head">
+      <h2>2. EloElo 8천만 달러 투자, 인도 숏드라마</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/39f6558b019b/v1-01.jpg" alt="1장: 숏드라마에 8천만 달러???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/39f6558b019b/v1-02.jpg" alt="2장: 매달 1.18억 명이 숏드라마 본다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/39f6558b019b/v1-03.jpg" alt="3장: 스토리TV 사용자 3,300만 명 넘어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/39f6558b019b/v1-04.jpg" alt="4장: 하루 평균 95분 머문다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/39f6558b019b/v1-05.jpg" alt="5장: 돈 내는 사람은 아직 소수" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/39f6558b019b/v1-06.jpg" alt="6장: 숏폼 덕후 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/39f6558b019b/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">인도 숏드라마 앱 EloElo가 시리즈 C로 8천만 달러를 유치했다. Hornbill Capital과 NBCUniversal이 이번 투자에 참여했고, 누적 투자금은 1억 3,000만 달러, 기업가치는 5억 달러가 됐다.
+
+배경에는 숏드라마 시장의 성장이 있다. 인도에서는 매달 1억 1,800만 명이 넘는 사람이 숏드라마를 본다. EloElo의 Story TV는 분석가들에 따르면 활성 사용자가 3,300만 명을 넘는 상위권 앱이다. 2020년 창업해 6개 언어로 5,000편이 넘는 작품을 갖췄고, 창업자에 따르면 이용자는 하루 여러 번 접속해 평균 95분을 쓴다.
+
+다만 과제도 있다. Redseer에 따르면 숏드라마에 한 번이라도 결제한 사람은 4천만 명이 넘지만, 매달 결제하는 사람은 1,500만~1,700만 명이다. Ormax Media 조사에서는 72%가 한 번도 결제한 적이 없다고 나왔다.
+
+회사는 Dolphin AI 플랫폼도 운영하고 있고, 직원은 현재 240명이다. 조달한 자금의 상당 부분은 오리지널 작품 제작에 쓸 계획이라고 한다.
+
+출처: TechCrunch</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#숏드라마 #인도 #EloElo #NBCUniversal #해외소식</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>편집자 메모는 &#39;NBCUniversal로부터 8천만 달러&#39;라고 했으나 원문은 Hornbill Capital과 NBCUniversal이 함께 참여한 시리즈 C 8천만 달러라고 밝혀, 카드에는 참여 투자자로 표기함</li><li>월간 사용자 3,300만 명은 EloElo 전체가 아니라 Story TV 활성 사용자 수이며 분석가 추정치임 (회사는 전체 앱 합산 월 4,000만 명 이상이라고 밝힘)</li><li>원문 수치 중 시장 규모·결제 비율은 Redseer, Ormax Media 등 외부 조사 기준이라 출처 명시 필요</li><li>원문은 영문이므로 달러 금액을 원화로 환산하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-39f6558b019b-0">1장</label>
+          <textarea id="s-39f6558b019b-0" rows="6" data-slide="0">숏드라마에
+**8천만 달러**???
+---
+인도 숏드라마 앱 EloElo가 NBCUniversal과 Hornbill Capital이 참여한 시리즈 C 투자로 8천만 달러를 유치했다.</textarea>
+          
+          <label class="f" for="s-39f6558b019b-1">2장</label>
+          <textarea id="s-39f6558b019b-1" rows="6" data-slide="1">매달 **1.18억 명**이
+숏드라마 본다
+---
+인도에서 숏드라마를 매달 보는 사람은 1억 1,800만 명이 넘는다. 세로형 영상을 보는 시간이 늘면서 연재 형식 콘텐츠가 미국, 중국, 인도 등에서 인기를 얻었다.</textarea>
+          
+          <label class="f" for="s-39f6558b019b-2">3장</label>
+          <textarea id="s-39f6558b019b-2" rows="6" data-slide="2">스토리TV 사용자
+**3,300만 명** 넘어
+---
+EloElo의 Story TV는 분석가들에 따르면 활성 사용자가 3,300만 명을 넘는 상위권 숏드라마 앱이다. 2020년 창업해 6개 언어로 5,000편 넘는 작품을 갖췄다.</textarea>
+          
+          <label class="f" for="s-39f6558b019b-3">4장</label>
+          <textarea id="s-39f6558b019b-3" rows="6" data-slide="3">하루 평균
+**95분** 머문다
+---
+창업자는 짧게 끊어 보는 형식 덕에 이용자가 하루 여러 번 접속해 평균 95분을 쓴다고 밝혔다. 월·분기·연 단위 구독이 있고 광고 기반 무료 콘텐츠도 있다.</textarea>
+          
+          <label class="f" for="s-39f6558b019b-4">5장</label>
+          <textarea id="s-39f6558b019b-4" rows="6" data-slide="4">돈 내는 사람은
+아직 **소수**
+---
+분석 업체 Redseer에 따르면 한 번이라도 결제한 사람은 4천만 명이 넘지만 매달 내는 사람은 1,500만~1,700만 명이다. Ormax Media 조사에서는 72%가 한 번도 결제한 적이 없었다.</textarea>
+          
+          <label class="f" for="s-39f6558b019b-5">6장</label>
+          <textarea id="s-39f6558b019b-5" rows="6" data-slide="5">숏폼 덕후 친구한테
+조용히 **보내기**
+---
+세로 영상으로 드라마를 챙겨 보는 친구라면 신기해할 소식. 인도에서 숏드라마가 얼마나 커졌는지 숫자로 담았다.</textarea>
+          
+          <label class="f" for="c-39f6558b019b">본문 (캡션)</label>
+          <textarea id="c-39f6558b019b" class="caption">인도 숏드라마 앱 EloElo가 시리즈 C로 8천만 달러를 유치했다. Hornbill Capital과 NBCUniversal이 이번 투자에 참여했고, 누적 투자금은 1억 3,000만 달러, 기업가치는 5억 달러가 됐다.
+
+배경에는 숏드라마 시장의 성장이 있다. 인도에서는 매달 1억 1,800만 명이 넘는 사람이 숏드라마를 본다. EloElo의 Story TV는 분석가들에 따르면 활성 사용자가 3,300만 명을 넘는 상위권 앱이다. 2020년 창업해 6개 언어로 5,000편이 넘는 작품을 갖췄고, 창업자에 따르면 이용자는 하루 여러 번 접속해 평균 95분을 쓴다.
+
+다만 과제도 있다. Redseer에 따르면 숏드라마에 한 번이라도 결제한 사람은 4천만 명이 넘지만, 매달 결제하는 사람은 1,500만~1,700만 명이다. Ormax Media 조사에서는 72%가 한 번도 결제한 적이 없다고 나왔다.
+
+회사는 Dolphin AI 플랫폼도 운영하고 있고, 직원은 현재 240명이다. 조달한 자금의 상당 부분은 오리지널 작품 제작에 쓸 계획이라고 한다.
+
+출처: TechCrunch</textarea>
+          <label class="f" for="t-39f6558b019b">해시태그</label>
+          <input id="t-39f6558b019b" type="text" class="tagsin" value="#숏드라마 #인도 #EloElo #NBCUniversal #해외소식" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>EloElo가 Hornbill Capital과 NBCUniversal로부터 시리즈 C로 8천만 달러를 유치했다</b>
+            <q>“Banking on that scale, the company has raised $80 million in Series C from Hornbill Capital and NBCUniversal.”</q>
+            <small>slide1, caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 투자로 누적 투자금은 1억 3,000만 달러, 기업가치는 5억 달러가 됐다</b>
+            <q>“This round brings its total fundraising to $130 million, with a valuation of $500 million.”</q>
+            <small>caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>인도에서 매달 1억 1,800만 명이 넘는 사람이 숏드라마를 본다</b>
+            <q>“More than 118 million users watch microdramas every month as the serialized format has taken off in India.”</q>
+            <small>slide2, summary, caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세로형 영상 시청이 늘면서 연재 형식 콘텐츠가 미국, 중국, 인도 등에서 인기를 얻었다</b>
+            <q>“As people spend more time on platforms hosting verticalized videos, serialized content has become popular in multiple geographies, including the U.S., China, and India, with Hollywood celebrities like Issa Rae, James Franco, and Kim Kardashian investing in and starring in the format.”</q>
+            <small>slide2 · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Story TV는 분석가들에 따르면 활성 사용자가 3,300만 명을 넘는 상위권 숏드라마 앱이다</b>
+            <q>“EloElo’s Story TV is one of the top apps for microdramas, with over 33 million active users, according to analysts.”</q>
+            <small>slide3, summary, caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2020년 창업했고 6개 언어로 5,000편 넘는 작품을 갖췄다</b>
+            <q>“Founded in 2020 by former Flipkart exec Saurabh Pandey, the Story TV platform has taken off in the last few years with a catalog of over 5,000 titles in six languages.”</q>
+            <small>slide3, slide4, caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이용자는 하루 여러 번 접속해 평균 95분을 쓴다고 창업자가 밝혔다</b>
+            <q>“Pandey told TechCrunch that because of the snackable content format, users log 95 minutes on the app on average through multiple sessions in a day.”</q>
+            <small>slide4, summary, caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>월·분기·연 단위 구독이 있고 광고 기반 무료 콘텐츠도 있다</b>
+            <q>“The company offers different kinds of subscriptions ranging from monthly, quarterly, and yearly to unlock content. It also offers some free content supported by ads, which might not be as lucrative a medium to make money as subscriptions, according to reports.”</q>
+            <small>slide4 · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Redseer에 따르면 한 번이라도 결제한 사람은 4천만 명이 넘고 매달 결제하는 사람은 1,500만~1,700만 명이다</b>
+            <q>“A report from analyst firm Redseer indicates that more than 40 million people have paid for microdrama at least once, but only 15-17 million users pay for it on a monthly basis.”</q>
+            <small>slide5, summary, caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Ormax Media 조사에서 72%가 한 번도 결제한 적이 없다고 나왔다</b>
+            <q>“A separate survey by Ormax Media suggested that 72% of people haven’t ever paid while consuming microdrama.”</q>
+            <small>slide5, caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Story TV는 Dolphin AI 플랫폼을 운영한다</b>
+            <q>“At the moment, StoryTV falls into the first camp with its Dolphin AI platform.”</q>
+            <small>caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>EloElo의 직원은 현재 240명이다</b>
+            <q>“EloElo currently has 240 people and wants to hire to increase the size of its AI and machine learning research team.”</q>
+            <small>caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>조달한 자금의 상당 부분을 오리지널 작품 제작에 쓸 계획이다</b>
+            <q>“The company is also deploying a good chunk of its capital to produce more original titles.”</q>
+            <small>caption · <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">India&#39;s EloElo nabs $80M from NBCUniversal to bet on the country&#39;s rising microdrama market | TechCrunch</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://techcrunch.com/2026/11/03/indias-eloelo-nabs-80m-from-nbc-universal-to-bet-on-the-countrys-rising-microdrama-market/" target="_blank" rel="noopener">EloElo (TechCrunch 게재) / </a> — "https://techcrunch.com/wp-content/uploads/2026/11/WhatsApp-Image-2026-11-03-at-2.32.22-PM.jpeg"</li><li>2장: <a href="https://pixabay.com/photos/iphone-smartphone-apps-apple-inc-410324/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "mobile phone"</li><li>3장: <a href="https://www.techjuice.pk/eloelo-80m-nbcuniversal-india-microdrama/" target="_blank" rel="noopener">TechJuice / </a> — "https://www.techjuice.pk/wp-content/uploads/2026/11/eloelo-the-indian-app-that-keeps-users-hooked-for-95-minutes-daily-techjuice-260923.jpg"</li><li>4장: <a href="https://pixabay.com/photos/mobile-phone-video-smartphone-pair-5431597/" target="_blank" rel="noopener">claudid / Pixabay</a> — "watching phone"</li><li>5장: <a href="https://pixabay.com/photos/credit-cards-denim-jeans-blue-jeans-1583534/" target="_blank" rel="noopener">TheDigitalWay / Pixabay</a> — "credit card"</li><li>6장: <a href="https://pixabay.com/photos/selfie-smartphone-cellphone-465563/" target="_blank" rel="noopener">wilkernet / Pixabay</a> — "friends phone"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-602163eef992" data-id="602163eef992">
+    <div class="head">
+      <h2>3. 호주 헌혈센터 85곳 완주, 희귀 혈액 545번 기증</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-01.jpg" alt="1장: 헌혈센터 85곳 전부 돌았다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-02.jpg" alt="2장: 멜버른 사는 59세 경찰관" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-03.jpg" alt="3장: 이 혈액이 아기를 지킨다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-04.jpg" alt="4장: 휴가 중 떠올린 헌혈 여행" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-05.jpg" alt="5장: 동부 해안부터 다윈까지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-06.jpg" alt="6장: 마지막은 캔버라 함께 헌혈했다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-07.jpg" alt="7장: 헌혈 좋아하는 친구에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/602163eef992/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">헌혈센터 85곳을 전부 돌았다는 이 소식, 알고 보면 더 놀랍다. 호주 멜버른에 사는 59세 경찰관 트레버 버그먼은 호주의 모든 헌혈센터 85곳에서 희귀 혈액을 기증했고, 그렇게 쌓인 기증이 545번에 이른다. 그는 항D 항체를 가진 것으로 알려진 호주인 150명 중 한 명이다. 항D는 신생아 용혈성 질환 위험이 있는 아기를 둔 임신부에게 투여된다.
+
+아이디어는 서부 퍼스로 휴가를 갔을 때 나왔다. 그곳 헌혈센터를 지나며 휴가 중에 호주를 보기에 좋은 방법이겠다고 생각했다고 ABC 뉴스 호주판에 말했다. 그는 동부 해안을 따라 올라가고, 서호주를 거쳐 다윈까지 갔다. 헌혈이 아니었다면 아마 가 보지 못했을 곳들이라고 한다.
+
+가장 기억에 남는 방문은 앨버니였다. 코를 훌쩍인다는 이유로 헌혈을 거절당했기 때문이다. 마지막 헌혈은 캔버라의 호주 적십자 라이프블러드 센터에서 했고, 국왕을 대표하는 샘 모스틴이 함께 헌혈했다. 라이프블러드는 호주인 3명 중 1명이 살면서 수혈이 필요해진다고 밝혔다.
+
+출처: Good News Network, ABC News AU</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#헌혈 #호주 #해외뉴스 #희귀혈액 #미담</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처 표기인 Good News Network는 근거 목록에 포함되지 않았다</li>
+          <li>ABC News AU 인터뷰 발언을 Good News Network 기사 경유로 인용함</li><li>&#39;국왕을 대표하는 호주 인사&#39;는 원문 &#39;representative to the crown&#39;을 풀어 쓴 표현이라 직함 확인 필요</li><li>기사 발행일(2026-11-03) 및 545회 기록의 독립 검증 없음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-602163eef992-0">1장</label>
+          <textarea id="s-602163eef992-0" rows="6" data-slide="0">헌혈센터 **85곳**
+전부 돌았다???
+---
+호주의 59세 경찰관 트레버 버그먼이 희귀 혈액을 545번 기증하며 호주 헌혈센터 85곳을 모두 방문했다.</textarea>
+          
+          <label class="f" for="s-602163eef992-1">2장</label>
+          <textarea id="s-602163eef992-1" rows="6" data-slide="1">멜버른 사는
+**59세** 경찰관
+---
+버그먼은 멜버른에 사는 59세 경찰관이다. 호주에서 항D 항체를 가진 것으로 알려진 사람은 150명뿐인데, 그가 그중 한 명이다.</textarea>
+          
+          <label class="f" for="s-602163eef992-2">3장</label>
+          <textarea id="s-602163eef992-2" rows="6" data-slide="2">이 혈액이
+**아기**를 지킨다
+---
+항D는 신생아 용혈성 질환 위험이 있는 아기를 둔 임신부에게 투여된다. 엄마와 아기의 혈액이 맞지 않을 때 엄마의 면역계가 태아의 혈액을 공격하며 생기는 병이다.</textarea>
+          
+          <label class="f" for="s-602163eef992-3">4장</label>
+          <textarea id="s-602163eef992-3" rows="6" data-slide="3">**휴가** 중 떠올린
+헌혈 여행
+---
+버그먼은 서부 퍼스로 휴가를 갔다가 헌혈센터에 들렀다. 휴가 중이니 호주를 구경하기 좋은 방법이겠다고 생각했다고 ABC 뉴스 호주판에 말했다.</textarea>
+          
+          <label class="f" for="s-602163eef992-4">5장</label>
+          <textarea id="s-602163eef992-4" rows="6" data-slide="4">동부 해안부터
+**다윈까지**
+---
+그는 동부 해안을 따라 올라갔고, 서호주를 거쳐 다윈까지 갔다. 헌혈이 아니었다면 아마 가 보지 못했을 곳들이라고 직접 말했다.</textarea>
+          
+          <label class="f" for="s-602163eef992-5">6장</label>
+          <textarea id="s-602163eef992-5" rows="6" data-slide="5">마지막은 **캔버라**
+함께 헌혈했다
+---
+마지막 헌혈은 캔버라의 호주 적십자 라이프블러드 센터에서 했다. 국왕을 대표하는 호주 인사 샘 모스틴이 그와 동행해 함께 헌혈했다.</textarea>
+          
+          <label class="f" for="s-602163eef992-6">7장</label>
+          <textarea id="s-602163eef992-6" rows="6" data-slide="6">헌혈 좋아하는
+**친구에게** 보내기
+---
+여행하듯 헌혈센터 85곳을 돌며 545번 기증한 사연이다. 희귀 혈액으로 아기를 지키는 일이라 헌혈 경험이 있는 친구라면 뭉클해할 소식</textarea>
+          
+          <label class="f" for="c-602163eef992">본문 (캡션)</label>
+          <textarea id="c-602163eef992" class="caption">헌혈센터 85곳을 전부 돌았다는 이 소식, 알고 보면 더 놀랍다. 호주 멜버른에 사는 59세 경찰관 트레버 버그먼은 호주의 모든 헌혈센터 85곳에서 희귀 혈액을 기증했고, 그렇게 쌓인 기증이 545번에 이른다. 그는 항D 항체를 가진 것으로 알려진 호주인 150명 중 한 명이다. 항D는 신생아 용혈성 질환 위험이 있는 아기를 둔 임신부에게 투여된다.
+
+아이디어는 서부 퍼스로 휴가를 갔을 때 나왔다. 그곳 헌혈센터를 지나며 휴가 중에 호주를 보기에 좋은 방법이겠다고 생각했다고 ABC 뉴스 호주판에 말했다. 그는 동부 해안을 따라 올라가고, 서호주를 거쳐 다윈까지 갔다. 헌혈이 아니었다면 아마 가 보지 못했을 곳들이라고 한다.
+
+가장 기억에 남는 방문은 앨버니였다. 코를 훌쩍인다는 이유로 헌혈을 거절당했기 때문이다. 마지막 헌혈은 캔버라의 호주 적십자 라이프블러드 센터에서 했고, 국왕을 대표하는 샘 모스틴이 함께 헌혈했다. 라이프블러드는 호주인 3명 중 1명이 살면서 수혈이 필요해진다고 밝혔다.
+
+출처: Good News Network, ABC News AU</textarea>
+          <label class="f" for="t-602163eef992">해시태그</label>
+          <input id="t-602163eef992" type="text" class="tagsin" value="#헌혈 #호주 #해외뉴스 #희귀혈액 #미담" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버그먼이 호주 헌혈센터 85곳 모두에서 희귀 혈액을 기증했다</b>
+            <q>“Pictured here enjoying jokes and a juice box, Trevor Bergman has now successfully donated his ultra-rare blood at all 85 Australian donation centers.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버그먼이 헌혈을 545번 했다</b>
+            <q>“While on his journey, Bergman donated blood 545 times, helping patients from virtually every corner of the land down under.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버그먼은 59세 경찰관이며 항D 항체를 가진 것으로 알려진 호주인 150명 중 한 명이다</b>
+            <q>“The 59-year-old police officer is one of 150 Australians known to carry the anti-D antibody in their blood.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>항D는 신생아 용혈성 질환 위험이 있는 아기를 둔 임신부에게 투여되며, 이 병은 엄마의 면역계가 태아의 혈액을 공격하며 생긴다</b>
+            <q>“Anti-D is given to pregnant mothers whose newborns are at risk of hemolytic disease of the newborn, which arises when the mother’s immune system attacks the developing infant’s blood if the two aren’t compatible.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버그먼은 멜버른에 살고 서부 퍼스로 휴가를 갔을 때 헌혈 여행 아이디어를 얻었다</b>
+            <q>“Bergman, who lives in Melbourne, got the idea for the hemo-marathon while on vacation in Perth, Western Australia.”</q>
+            <small>slide2, slide4, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버그먼은 휴가 중 호주를 보기에 좋은 방법이라고 생각했다고 ABC 뉴스 호주판에 말했다</b>
+            <q>““When I went past the blood bank there and donated there, I just thought ‘well I’m on holiday here, what a good way to see Australia,&#39;” he told ABC News AU.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버그먼은 동부 해안을 따라 올라가 서호주를 거쳐 다윈까지 갔고, 헌혈이 아니었다면 가 보지 못했을 곳들이라고 했다</b>
+            <q>““I’ve been able to go all the way up the east coast, all the way over to Western Australia, up to Darwin — places that I probably never would have gotten to see.””</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가장 기억에 남는 방문은 앨버니에서 코를 훌쩍인다는 이유로 헌혈을 거절당한 때였다</b>
+            <q>“He later said that it was “nice to know” that he’s done a small part in helping the national community, and that his most memorable donation visit came when he arrived in Albany, only to be turned away because he had “a sniffle.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마지막 헌혈은 캔버라의 호주 적십자 라이프블러드 센터에서 했고, 국왕을 대표하는 샘 모스틴이 동행해 함께 헌혈했다</b>
+            <q>“His final blood donation came in Canberra, where the nation’s representative to the crown, Sam Mostyn, accompanied him to the Australian Red Cross Lifeblood center and gave blood in tandem.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>라이프블러드는 호주인 3명 중 1명이 살면서 수혈이 필요해진다고 밝혔다</b>
+            <q>“Lifeblood says that 1 in 3 Australians will require donated blood at some point in their life, meaning that donations never cease being important.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">He Donated His Ultra-rare Blood 545 Times While Visiting Every Blood Bank in Australia</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.goodnewsnetwork.org/ultra-rare-blood-carrier-finishes-grand-tour-around-australia-to-donate-at-all-85-blood-banks/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/supplied-to-ABC-News-by-Trevor-Bergman.jpg"</li><li>2장: <a href="https://www.3aw.com.au/rumour-confirmed-melburnian-makes-donation-at-every-blood-bank-in-australia/" target="_blank" rel="noopener">3AW / </a> — "https://www.3aw.com.au/wp-content/uploads/sites/12/2026/10/RC_TREVOR_DONOR_THUMB.jpg"</li><li>3장: <a href="https://pixabay.com/photos/feet-baby-birth-child-blanket-718146/" target="_blank" rel="noopener">kelin / Pixabay</a> — "newborn baby"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:Light_painting_gnangarra-1.jpg" target="_blank" rel="noopener">Gnangarra / Wikimedia Commons · CC BY 2.5 au</a> — "Perth"</li><li>5장: <a href="https://commons.wikimedia.org/wiki/File:Charles_Darwin_01.jpg" target="_blank" rel="noopener">Julia Margaret Cameron / Wikimedia Commons · Public domain</a> — "Darwin"</li><li>6장: <a href="https://pixabay.com/photos/hallway-hospital-clean-rooms-doors-5979689/" target="_blank" rel="noopener">mspark0 / Pixabay</a> — "hospital corridor"</li><li>7장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 3개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-bc6228db8ab5">
+    <div class="head">
+      <h2>S1. 추운 날 술 마시면 따뜻해진다는 통념 뒤집기</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 9
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-bc6228db8ab5">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;술 마시면 몸이 데워진다&#39;는 익숙한 통념이 사실은 피가 피부로 몰린 느낌일 뿐이고, 추운 날 술자리 행동에 바로 이어진다는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">추운 날 술 마시면 몸이 따뜻해진다는 말, 독성학 교수는 &#39;실제론 일어나지 않는다&#39;고 함
+뜨끈해진 느낌은 진짜인데, 몸속에선 반대 일이 벌어질 수 있대
+그게 뭔지가 좀 소름이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">1/ 결론부터. 술 마시고 따뜻해지는 건 &#39;느낌&#39;이고, 실제로는 열이 몸 밖으로 빠져서 몸속 체온이 내려갈 수 있대. 그럼 왜 뜨끈하게 느껴지는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">75/500자</span></div>
+      <p class="tp-text">2/ 원래 몸은 추우면 피부 쪽 혈관을 좁혀서 열을 지킴. 체온은 뇌의 시상하부가 관리하고. 술은 바로 이 시스템을 건드린대. 어떻게?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">3/ 술은 몸속 체온이 오르지도 않았는데 피부 근처 혈관을 넓힘. 따뜻한 피가 피부로 몰려서 덥게 느끼고, 옷까지 벗고 싶어질 수 있대. 근데 그렇게 몰린 열은 어떻게 될까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">141/500자</span></div>
+      <p class="tp-text">4/ 요약 정리
+- 느낌: 피부로 피가 몰려서 따뜻하게 느낌
+- 실제: 열이 더 빠져나가 몸속 체온이 낮아질 수 있음
+- 위험: 충분히 추운 곳에선 저체온증 위험이 커질 수 있고, 옷을 벗기 시작하면 특히 그럼
+- 교수 말: 몸은 피를 돌려놓고 있을 뿐</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">213/500자</span></div>
+      <p class="tp-text">5/ 챙겨갈 한 줄: 추운 환경에선 술을 많이 마시고 싶지 않을 거라는 게 교수 말. 따뜻해진 느낌에 속지 말자는 거
+겨울 야외 술자리, 몸 녹이려고 마시는 파 vs 안 마시는 파?
+이런 해외 건강·몸 상식 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 술이 몸의 체온 조절 시스템(시상하부 기반)을 건드린다(본문 2번)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>추운 날 술 마시면 몸이 따뜻해진다? 독성학 교수는 &#39;실제론 일어나지 않는다&#39;고 함</li><li>술 마시면 몸 데워진다는 말, 알고 보니 &#39;피가 피부로 몰린 것&#39;뿐이래</li><li>겨울 술자리에서 몸 녹이려는 사람들, &#39;따뜻해진 게&#39; 아니라 &#39;따뜻하다고 느끼는 거&#39;래</li><li>추운 곳에선 술로 몸 녹이려 하지 말라는 전문가 말이 나옴</li><li>핫토디, 레드와인, 위스키. 겨울마다 찾는 이 술들이 몸속에선 반대로 일할 수 있대</li><li>술 마시고 &#39;덥다&#39; 싶어서 옷 벗기 전에 이거 먼저 보라는 얘기</li><li>&#39;술 마시니까 좀 따뜻하네&#39; 그 느낌, 몸속 체온은 오히려 내려갈 수 있대</li><li>겨울 야외 술자리, 몸이 뜨끈해지는 느낌에 속고 있는 걸 수도 있음</li><li>술기운에 후끈한 거, 몸이 열을 만드는 게 아니라 피를 옮기는 거라는데</li><li>추운 날 마신 술 한 잔, 시간이 지나면 몸속이 더 차가워질 수 있다는 설명이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>겨울 야외 술자리, 몸 녹이려고 마시는 파 vs 안 마시는 파?</li><li>술 마시고 더워서 옷 벗어본 적 있는 사람?</li><li>추운 날 술자리, 실내파 vs 포장마차 야외파?</li><li>&#39;술 마시면 몸 따뜻해진다&#39; 진짜라고 믿었던 사람?</li><li>너라면 겨울 2차는 따뜻한 데로 갈 거야, 그냥 마시던 데서 계속 마실 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>추위에 우리 몸이 열을 지키는 방식</li><li>술이 몸의 온도 조절 말고 또 건드리는 것들</li><li>겨울철 몸속 체온이 떨어질 때 생기는 일</li><li>술 마시면 얼굴이 붉어지는 이유</li><li>해외에서 연구한 술과 수면의 관계</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>독성학 교수가 술을 마시면 따뜻하다는 인식은 있지만 실제로는 일어나지 않는다고 말했다</b>
+          <q>““There’s a perception of warmth, but in reality, it doesn’t occur,” says Winston Morgan, professor of toxicology, equity and inclusive practice at the University of East London.”</q>
+          <small>post0 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>술이 피부로 가는 혈류를 늘려 열이 몸 밖으로 빠지게 하고 몸속 체온을 낮출 수 있다</b>
+          <q>“In fact, by increasing blood flow to the skin, alcohol encourages heat to escape from the body, potentially lowering core temperature.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체온은 뇌의 시상하부가 관리한다</b>
+          <q>“Our core body temperature is controlled by the hypothalamus, a region of the brain that helps regulate how we respond to changes in temperature.”</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추우면 피부 쪽 혈관이 좁아져 혈류가 줄고 열이 보존된다</b>
+          <q>“When we get too cold, the opposite happens. The blood vessels narrow, or constrict, reducing blood flow to the skin and helping to conserve heat.”</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>술은 몸속 체온이 오르지 않았는데도 피부 근처 혈관을 넓힌다</b>
+          <q>“It causes blood vessels near the skin to widen, even when our core body temperature has not risen.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>따뜻한 피가 피부 표면에 더 몰려 덥게 느끼고 옷을 벗고 싶어질 수 있다</b>
+          <q>“More warm blood reaches the skin’s surface, which can make us feel hot, and even leave us reaching to take off clothing.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>충분히 추운 환경에서 특히 옷을 벗기 시작하면 저체온증 위험이 커질 수 있다</b>
+          <q>“That can increase the risk of hypothermia in sufficiently cold conditions, particularly if you start removing clothing.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>교수는 몸이 피를 돌려놓고 있을 뿐이라고 말했다</b>
+          <q>““But actually you’re not. Your body’s just moving around the blood.””</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>교수는 추운 환경에서는 술을 많이 마시고 싶지 않을 것이라고 말했다</b>
+          <q>““So, in a cold environment, you don’t really want to be drinking a lot of alcohol.””</q>
+          <small>post5 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="bc6228db8ab5">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.theguardian.com/lifeandstyle/2026/nov/02/is-it-true-that-drinking-alcohol-warm-you-up" target="_blank" rel="noopener">Is it true that … drinking alcohol warms you up?</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-3ea44e14e871">
+    <div class="head">
+      <h2>S2. 낮잠 잦으면 치매 위험? 65세 이상 995명 추적 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-3ea44e14e871">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 낮잠은 무조건 좋다는 통념을 뒤집는다. 다만 낮잠이 치매의 원인이 아니라 뇌 변화의 신호일 수 있다는 점까지 같이 보여줘야 팔린다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">129/500자</span></div>
+      <p class="tp-text">낮잠은 무조건 꿀이 아니라 &#39;뇌 변화의 신호&#39;일 수도 있다는 연구가 나옴
+미국 65세 이상 995명을 따라가 봤더니 낮잠 잦은 쪽 치매 위험이 확 높았음
+근데 &#39;낮잠이 치매를 만든다&#39;는 얘기는 아니래. 연구진 해석이 따로 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">1/ 매일 또는 거의 매일 낮잠을 잔다고 답한 사람은, 낮잠을 안 자거나 거의 안 자는 사람보다 치매 발생률이 48% 높았음. 그럼 낮잠 자주 자면 치매 온다는 얘기일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">2/ 자기도 모르게 깜빡 존 낮잠은 낮잠 안 자는 사람보다 39%, 30분 이하의 짧은 낮잠은 40% 높았음. 근데 연구진은 이걸 낮잠 탓이라고 보지 않았음. 왜일까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">3/ 관찰 연구라서 낮잠이 치매를 일으킨다고 해석할 순 없대. 존스홉킨스 연구자 말로는 낮잠이 치매로 이어지는 뇌 변화의 원인이 아니라 뇌 변화의 표지일 수 있다는 거. 그럼 순서가 거꾸로일 수도 있는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">4/ 연구진도 그 가능성을 얘기함. 인지 기능을 해치는 신경학적 변화가 낮잠을 늘렸을 수도 있다는 거. 그래도 밤잠 시간, 낮 졸림, 수면무호흡 위험을 감안해 보정해도 잦은 낮잠, 의도 없는 낮잠, 30분 이하 낮잠은 연관이 남았음. 한눈에 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">202/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 대상: 미국 65세 이상 995명 (시작 때 치매 없음)
+- 추적 중앙값 5년, 417명(41.9%)이 치매 가능성 있음·유력으로 분류
+- 매일·거의 매일 낮잠: 48% 높음
+- 의도 없는 낮잠: 39% 높음
+- 30분 이하 낮잠: 40% 높음
+- 잦은·의도 없는·짧은 낮잠은 기억력 저하 위험과도 연관
+- 관찰 연구라 인과는 아님</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">230/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은, 낮잠이 원인인지는 더 연구가 필요하지만 잦은 낮잠이 앞으로의 치매 위험을 가늠하는 표지가 될 수 있다는 거. 걱정되면 의사와 상의.
+점심 먹고 낮잠 잘 수 있다면 자는 파 vs 버티는 파?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>관찰 연구라 낮잠이 치매를 일으킨다고 해석할 수 없음 <small>애매 · 원문은 관찰 연구라 낮잠이 치매를 일으킨다고 해석할 수 없다는 것이다. &#39;인과는 아님&#39;으로 단정하면 과장이니 &#39;인과를 입증할 수 없음&#39;으로 고쳐야 한다.</small></li>
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>낮잠은 무조건 꿀이 아니라 &#39;뇌 변화의 신호&#39;일 수도 있다는 연구가 나옴</li><li>매일 낮잠 자는 사람, 치매 발생률이 48% 높았다는 연구가 나옴</li><li>점심 먹고 꾸벅꾸벅 졸던 거, 그냥 졸음이 아닐 수도 있대</li><li>&#39;낮잠은 건강한 습관&#39;이라는 말, 이 연구 보면 좀 달라짐</li><li>낮잠 30분 이하가 오히려 치매 발생률 40% 높았다는 연구</li><li>낮잠이 치매의 &#39;원인&#39;이 아니라 &#39;표지&#39;일 수 있다는 연구가 나옴</li><li>&#39;낮잠은 뇌 변화의 표지일 수 있다&#39;는 존스홉킨스 연구자의 말</li><li>자기도 모르게 깜빡 드는 낮잠, 따로 봐야 한대</li><li>낮잠 자주 자는 65세 이상 995명을 따라가 봤더니</li><li>낮잠 안 자는 사람이랑 매일 자는 사람, 치매 발생률 차이가 48%였대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>점심 먹고 낮잠 잘 수 있다면 자는 파 vs 버티는 파?</li><li>주말에 낮잠으로 하루 다 보내본 사람?</li><li>낮잠은 책상에서 vs 침대에서, 어느 쪽이야?</li><li>낮잠 자고 일어났더니 더 피곤했던 적 있는 사람?</li><li>너라면 낮잠 알람 맞춰두고 잘 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>낮잠 시간이 30분 넘으면 어땠는지 연구 속 나머지 결과</li><li>밤잠 부족과 치매 위험 연구</li><li>수면무호흡과 낮 졸림 이야기</li><li>치매 위험요인 해외 연구 정리</li><li>다음 배송: 호주 헌혈센터 85곳 완주, 희귀 혈액 545번 기증한 사람 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문 도입부는 &#39;다음 10년&#39;이라고 쓰고 본문은 추적 중앙값 5년이라 서로 어긋남. 글에는 5년만 썼으니 &#39;10년&#39;으로 바꾸지 말 것</li><li>치매 &#39;가능성 있음·유력(possible or probable)&#39; 분류는 확진이 아님. &#39;치매 진단&#39;으로 고쳐 쓰면 사실과 달라짐</li><li>낮잠이 치매 원인이라는 인과로 읽히면 안 됨. 관찰 연구이고 방향이 반대일 수도 있다는 점이 유지되는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>관찰 연구라 낮잠이 치매를 일으킨다고 해석할 수 없음</b>
+          <q>“Due to the observational nature of the new study, the findings can&#39;t be interpreted as evidence that frequent, unintentional, or short naps cause dementia, and the researchers acknowledge that the links they&#39;ve found are complicated.”</q>
+          <small>post3, post5 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 65세 이상 대상 조사 자료를 분석한 연구</b>
+          <q>“In their study, Spira and fellow researchers analyzed data from the National Health and Aging Trends Study (NHATS), a longitudinal survey of Medicare beneficiaries in the US aged 65 years and older.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>995명, 시작 때 치매 없음</b>
+          <q>“The team examined data from 995 of the NHATS participants, all of whom answered questions about their napping habits as part of the research, and none of whom had probable or possible dementia at the outset of the study.”</q>
+          <small>post0, post5 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낮잠이 잦은 노인이 치매에 걸릴 가능성이 더 높았음</b>
+          <q>“In a new study, researchers found seniors who napped frequently were significantly more likely to develop dementia over the next decade, compared to people who rarely or never napped.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낮잠이 치매를 일으킨다는 뜻은 아님</b>
+          <q>“The findings, published in The Journals of Gerontology, Series A: Biological Sciences and Medical Sciences, don&#39;t mean that napping is driving cognitive decline, but they identify napping as a risk factor for dementia that we should pay more attention to.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>매일·거의 매일 낮잠 자는 사람은 치매 발생률 48% 높음</b>
+          <q>“Frequent nappers – people who said they napped every day or most days – had a 48 percent higher rate of dementia than people who never or rarely had naps.”</q>
+          <small>post1, post5 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>의도 없는 낮잠은 39% 높음</b>
+          <q>“Unintentional napping was also associated with a greater risk of dementia (39 percent higher rate than non-nappers).”</q>
+          <small>post2, post5 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>30분 이하 낮잠은 40% 높음</b>
+          <q>“Length of naps was also a factor, with people who napped for 30 minutes or less having a 40 percent higher rate of dementia than non-nappers in the study period.”</q>
+          <small>post2, post5 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>존스홉킨스 연구자: 낮잠은 뇌 변화의 원인이 아니라 표지일 수 있음</b>
+          <q>“&#34;More frequent napping could be a marker of changes in the brain, rather than a cause of brain changes that lead to dementia,&#34; says psychologist and sleep researcher Adam Spira from Johns Hopkins University.”</q>
+          <small>post0, post3 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>신경학적 변화가 낮잠을 늘릴 수도 있음(양방향 가능성)</b>
+          <q>“&#34;As with sleep disturbances, the association between napping and dementia may be bidirectional,&#34; they write in their paper, &#34;such that neurological changes that adversely affect cognitive function may also lead to increased daytime napping.&#34;”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>밤잠 시간·낮 졸림·수면무호흡 위험을 보정해도 연관이 남음</b>
+          <q>“In the study, the researchers accounted for this by adjusting for other sleep-related factors (nighttime sleep duration, daytime sleepiness, and sleep apnea risk), and the results suggest that frequent napping, unintentional napping, and naps lasting 30 minutes or less remain significantly associated with an increased risk of dementia, even after accounting for these other sleep characteristics.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추적 중앙값 5년, 417명(41.9%)이 치매 가능성 있음 또는 유력으로 분류</b>
+          <q>“Over a median follow-up period of five years, 417 (41.9 percent) of the participants were classified as having developed possible or probable dementia since the commencement of the study.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>잦은·의도 없는·짧은 낮잠은 기억력 저하 위험과도 연관</b>
+          <q>“Frequent, unintentional, and shorter (30 minutes or less) napping were also found to be associated with higher risks of developing impairment in memory during follow-up, the researchers found.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인과가 아니더라도 낮잠은 앞으로의 치매 위험을 가늠하는 표지가 될 수 있음</b>
+          <q>“&#34;Even if this association is not causal, napping may be a useful marker of future dementia risk to guide subsequent prevention studies among high-risk populations.&#34;”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="3ea44e14e871">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/the-links-between-napping-and-dementia-may-go-further-than-we-realized" target="_blank" rel="noopener">The Links Between Napping And Dementia May Go Further Than We Realized</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-d97dc3ac468f">
+    <div class="head">
+      <h2>S3. GTA6 x 트래비스 스콧 x 나이키 에어포스1 로우 유출</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-d97dc3ac468f">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 그냥 에어포스1이 아니라 GTA 6 출시일에 맞춰 풀린다는 소문의 콜라보 운동화라, &#39;언제 나와? 얼마야? 살 수 있어?&#39;로 이어지는 각도</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "나이키 에어포스1 로우 운동화" · 원문 제품: Nike Air Force 1 Low &#39;Grand Theft Auto&#39; (Travis Scott x Rockstar Games x Nike), 소문 가격 $130, 11월 19일 발매설, 판매처는 원문에 없음<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: soleretriever.com, yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/d97dc3ac468f/thread-photo-1104082012-01.jpg" alt="검은색 로우탑 운동화 한 켤레의 측면과 밑창이 보이고, 분홍색 지폐 모양 띠가 감겨 있으며 분홍 여분 끈이 비닐 봉투에 담겨 있음. 배경은 분홍 그라데이션." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/d97dc3ac468f/thread-photo-1104082012-02.jpg" alt="검은색 로우탑 운동화 한 켤레의 측면 사진. 신발 옆면에 핑크색 &#39;grand theft auto&#39; 머니밴드가 둘러져 있고, 검은 가죽 질감과 나이키 스우시 로고가 보이며 배경은 핑크-오렌지 그라데이션." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261104-pm-21b74d7cdb31/d97dc3ac468f/thread-photo-1104082012-03.jpg" alt="분홍색 &#39;grand theft auto&#39; 띠지가 감긴 검은 엠보싱 로우탑 운동화 한 켤레가 비스듬히 떠 있고, 뒤에는 보라·분홍 노을 빛의 도시 야경과 야자수 일러스트가 보인다" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-d97dc3ac468f">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">그냥 검은 에어포스1인 줄 알았는데 밑창에 &#39;별 여섯 개&#39;가 있대
+GTA 6 출시에 맞춰 트래비스 스콧, 나이키가 만든 콜라보 운동화 유출 이미지임
+그럼 가격은 얼마로 돌고 있을까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">81/500자</span></div>
+      <p class="tp-text">1/ 밑창에는 GTA의 &#39;6성 수배&#39; 그래픽이 들어간다고 함. 검은색 모델은 앞코에 분홍색 고무 돈다발 띠까지 둘렀대. 그럼 옆면엔 뭐가 있을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">2/ 옆면엔 트래비스 스콧 x 나이키의 상징이라는 &#39;거꾸로 달린 스우시&#39;가 있대. 밑창 중간층의 &#39;AIR&#39; 글자 자리에 GTA가 들어간다는 보도도 있음. 그럼 색은 몇 가지로 나올까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">159/500자</span></div>
+      <p class="tp-text">3/ 유출 정보 요약 정리
+- 협업: 나이키 x 트래비스 스콧 x 락스타 게임즈
+- 모델: 에어포스1 로우, 가죽 소재
+- 색: 화이트·핑크 / 블랙·핑크 / 멀티컬러 (보도 기준)
+- 디테일: 거꾸로 스우시, 6성 수배 그래픽, 분홍 여분 끈
+- 소문: $130, 11월 19일 발매</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">98/500자</span></div>
+      <p class="tp-text">4/ 소문으로는 가격이 $130이고, 발매일은 게임 출시와 같은 11월 19일이래. 근데 한정 수량으로 나오는지는 아직 확인된 게 없다고 함. 그럼 해외 매체는 뭐라고 봤을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">5/ 해외 매체는 게임 열기가 이미 엄청나서 이 신발도 쉽게 사긴 어려울 거라고 봤어. 나이키·트래비스 스콧 협업이 한정 판매로 유명했다는 점도 짚음. 다만 안쪽 사진은 유출된 게 없어서 코멘트는 보류한대. 그럼 지금 확실한 건 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">6/ 결국 지금 나온 건 유출 이미지와 소문뿐이라 가격·발매일은 공식 확인 전이야.
+이거 $130이면 살 거야, 말 거야?
+해외에서 난리 난 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외에서 난리 난 물건이라 계속 가져온다는 계정 소개 문장(근거 기사에 없는 자체 주장)</li><li>근거 등록 안 된 주장: 검은 에어포스1이라는 기본 모델 설명(원문에는 에어포스1 로우 기반이라는 정보만 있고 검은 바탕이라는 직접 표현은 없음)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>그냥 검은 에어포스1인 줄 알았는데 밑창에 &#39;별 여섯 개&#39;가 있대</li><li>GTA 6 나오는 날, 같이 풀린다는 소문의 운동화가 있음</li><li>&#39;AIR&#39; 자리에 &#39;GTA&#39;가 박힌 에어포스1이 유출됐대</li><li>게임 하나 나오는데 나이키까지 올라탔다는 운동화 얘기</li><li>앞코에 분홍 돈다발 띠를 두른 에어포스1, 이게 진짜 나온대?</li><li>소문 가격은 $130인데, 문제는 살 수 있느냐라는 그 운동화</li><li>게임 좋아하는 친구 선물 고민이면 이 운동화부터 봐</li><li>해외 매체가 &#39;쉽게 사긴 어렵겠다&#39;고 한 GTA 운동화</li><li>신발 옆면에 거꾸로 달린 스우시, 보면 누구 콜라보인지 안대</li><li>소문대로면 11월 19일이 발매일인 에어포스1이 있음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 $130이면 살 거야, 말 거야?</li><li>블랙파 vs 화이트·핑크파, 너는 어느 쪽?</li><li>이거 선물로 받으면 좋아할 사람 소환</li><li>게임 콜라보 신발 사본 사람?</li><li>GTA 6 나오는 날 바로 할 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>게임 출시에 맞춰 나오는 콜라보 굿즈 또 뭐가 있나</li><li>해외에서 줄 서서 산다는 한정판 운동화 이야기</li><li>나이키 콜라보 운동화는 왜 구하기 어렵다고 할까</li><li>해외에서 화제가 된 다른 콜라보 물건</li><li>발매일 맞춰 풀리는 한정 콜라보 신발 반응 모음</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>가격 $130, 11월 19일 발매, 색상 3종, &#39;AIR&#39;→GTA 교체는 모두 유출·소문·보도 기반이라 본문에서 &#39;소문&#39;, &#39;대래&#39;, &#39;보도&#39;로 유지됐는지 확인 필요</li><li>한국 발매 여부·판매처는 원문에 없어 글에서 단정하지 않았음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>GTA 6는 11월 19일 락스타 게임즈가 출시한다</b>
+          <q>“It’s 19 November, to be precise, when Rockstar Games will release Grand Theft Auto VI, and everyone, including Nike, wants to tap into the fanfare building up to the launch.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나이키가 트래비스 스콧, 락스타 게임즈와 게임을 테마로 한 에어포스1 로우를 만들었다</b>
+          <q>“No wonder then, the footwear giant has teamed up with rapper Travis Scott and Rockstar Games for a pair of Nike Air Force 1 Low themed after the upcoming game.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>밑창에 6성 수배 아이콘이 들어간다</b>
+          <q>“As a nod to Grand Theft Auto VI, the Travis Scott x Rockstar Games x Nike Air Force 1 Low features the six-star wanted level iconography in the outsole.”</q>
+          <small>post0, post1 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>검은색 모델 앞코에 분홍색 고무 돈다발 띠가 둘러져 있다</b>
+          <q>“In addition to the star motif, the black sneaker in the pictures is highlighted with the pink rubber money band wrapped around the toe box.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>옆면에 트래비스 스콧 x 나이키의 시그니처인 리버스 스우시가 있다</b>
+          <q>“Anyway, we do not have that information at the moment, what we know from leaked images is that the shoes will have the reverse swoosh logo on their lateral side, which is a signature of Travis Scott x Nike sneakers.”</q>
+          <small>post2, post3 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미드솔의 AIR 글자가 GTA로 바뀐다고 보도됐다</b>
+          <q>“For a more intriguing change, it’s reported that the collaborative Air Force 1 replaces the “AIR” lettering on the midsole with GTA, which is an evident reference to the upcoming game.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가죽 소재이고 화이트·핑크, 블랙·핑크, 멀티컬러 3가지 색으로 나올 것으로 보도됐다</b>
+          <q>“The Nike Air Force 1 Low “Grand Theft Auto” features a leather upper and will reportedly be available in three colorways: White and Pink, Black and Pink, and a Multicolored option.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분홍색 여분 끈이 함께 들어온다</b>
+          <q>“It features branding for all involved parties in the collaborative Air Force 1 Low, and comes with an extra set of laces in pink color to contrast with the black all-over look of the sneaker.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격 $130, 발매일 11월 19일이라는 소문이 있다</b>
+          <q>“It is rumored that the sneaker will retail for $130 and will be available for purchase starting 19 November, the same day as the game’s release.”</q>
+          <small>post0, post3, post4, post6 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한정 수량 여부는 아직 확인된 정보가 없다</b>
+          <q>“If the leaked Travis Scott’s Cactus Jack x Rockstar Games x Nike Air Force 1 Low “Grand Theft Auto” is released in limited quantity, there is going to be a fight to get them.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>게임 열기가 이미 높아 이 신발도 쉽게 사기 어려울 거라고 매체가 봤다</b>
+          <q>“Considering this one is based on a game whose fanfare is already blowing out of the roof, these won’t be an easy buy either.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나이키와 트래비스 스콧 협업은 한정 판매가 잦았다</b>
+          <q>“The usual obvious with their releases has been their limited availability.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>안쪽 사진은 유출된 게 없어 매체가 코멘트를 보류했다</b>
+          <q>“Since there are very limited images that have leaked, we don’t have a picture of what’s on the inside of these sneakers, so we’ll reserve our comment for now, until more information comes in.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="d97dc3ac468f">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/03/first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=first-look-of-rockstar-games-x-travis-scott-x-nike-air-force-1-low-grand-theft-auto-in-black-dropped" target="_blank" rel="noopener">First look of Rockstar Games x Travis Scott x Nike Air Force 1 Low “Grand Theft Auto” in Black dropped - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261104-pm";
+  const ORIGINAL = {"39f6558b019b": {"caption": "\uc778\ub3c4 \uc20f\ub4dc\ub77c\ub9c8 \uc571 EloElo\uac00 \uc2dc\ub9ac\uc988 C\ub85c 8\ucc9c\ub9cc \ub2ec\ub7ec\ub97c \uc720\uce58\ud588\ub2e4. Hornbill Capital\uacfc NBCUniversal\uc774 \uc774\ubc88 \ud22c\uc790\uc5d0 \ucc38\uc5ec\ud588\uace0, \ub204\uc801 \ud22c\uc790\uae08\uc740 1\uc5b5 3,000\ub9cc \ub2ec\ub7ec, \uae30\uc5c5\uac00\uce58\ub294 5\uc5b5 \ub2ec\ub7ec\uac00 \ub410\ub2e4.\n\n\ubc30\uacbd\uc5d0\ub294 \uc20f\ub4dc\ub77c\ub9c8 \uc2dc\uc7a5\uc758 \uc131\uc7a5\uc774 \uc788\ub2e4. \uc778\ub3c4\uc5d0\uc11c\ub294 \ub9e4\ub2ec 1\uc5b5 1,800\ub9cc \uba85\uc774 \ub118\ub294 \uc0ac\ub78c\uc774 \uc20f\ub4dc\ub77c\ub9c8\ub97c \ubcf8\ub2e4. EloElo\uc758 Story TV\ub294 \ubd84\uc11d\uac00\ub4e4\uc5d0 \ub530\ub974\uba74 \ud65c\uc131 \uc0ac\uc6a9\uc790\uac00 3,300\ub9cc \uba85\uc744 \ub118\ub294 \uc0c1\uc704\uad8c \uc571\uc774\ub2e4. 2020\ub144 \ucc3d\uc5c5\ud574 6\uac1c \uc5b8\uc5b4\ub85c 5,000\ud3b8\uc774 \ub118\ub294 \uc791\ud488\uc744 \uac16\ucdc4\uace0, \ucc3d\uc5c5\uc790\uc5d0 \ub530\ub974\uba74 \uc774\uc6a9\uc790\ub294 \ud558\ub8e8 \uc5ec\ub7ec \ubc88 \uc811\uc18d\ud574 \ud3c9\uade0 95\ubd84\uc744 \uc4f4\ub2e4.\n\n\ub2e4\ub9cc \uacfc\uc81c\ub3c4 \uc788\ub2e4. Redseer\uc5d0 \ub530\ub974\uba74 \uc20f\ub4dc\ub77c\ub9c8\uc5d0 \ud55c \ubc88\uc774\ub77c\ub3c4 \uacb0\uc81c\ud55c \uc0ac\ub78c\uc740 4\ucc9c\ub9cc \uba85\uc774 \ub118\uc9c0\ub9cc, \ub9e4\ub2ec \uacb0\uc81c\ud558\ub294 \uc0ac\ub78c\uc740 1,500\ub9cc~1,700\ub9cc \uba85\uc774\ub2e4. Ormax Media \uc870\uc0ac\uc5d0\uc11c\ub294 72%\uac00 \ud55c \ubc88\ub3c4 \uacb0\uc81c\ud55c \uc801\uc774 \uc5c6\ub2e4\uace0 \ub098\uc654\ub2e4.\n\n\ud68c\uc0ac\ub294 Dolphin AI \ud50c\ub7ab\ud3fc\ub3c4 \uc6b4\uc601\ud558\uace0 \uc788\uace0, \uc9c1\uc6d0\uc740 \ud604\uc7ac 240\uba85\uc774\ub2e4. \uc870\ub2ec\ud55c \uc790\uae08\uc758 \uc0c1\ub2f9 \ubd80\ubd84\uc740 \uc624\ub9ac\uc9c0\ub110 \uc791\ud488 \uc81c\uc791\uc5d0 \uc4f8 \uacc4\ud68d\uc774\ub77c\uace0 \ud55c\ub2e4.\n\n\ucd9c\ucc98: TechCrunch", "hashtags": ["#\uc20f\ub4dc\ub77c\ub9c8", "#\uc778\ub3c4", "#EloElo", "#NBCUniversal", "#\ud574\uc678\uc18c\uc2dd"], "slides": [["\uc20f\ub4dc\ub77c\ub9c8\uc5d0", "**8\ucc9c\ub9cc \ub2ec\ub7ec**???", "---", "\uc778\ub3c4 \uc20f\ub4dc\ub77c\ub9c8 \uc571 EloElo\uac00 NBCUniversal\uacfc Hornbill Capital\uc774 \ucc38\uc5ec\ud55c \uc2dc\ub9ac\uc988 C \ud22c\uc790\ub85c 8\ucc9c\ub9cc \ub2ec\ub7ec\ub97c \uc720\uce58\ud588\ub2e4."], ["\ub9e4\ub2ec **1.18\uc5b5 \uba85**\uc774", "\uc20f\ub4dc\ub77c\ub9c8 \ubcf8\ub2e4", "---", "\uc778\ub3c4\uc5d0\uc11c \uc20f\ub4dc\ub77c\ub9c8\ub97c \ub9e4\ub2ec \ubcf4\ub294 \uc0ac\ub78c\uc740 1\uc5b5 1,800\ub9cc \uba85\uc774 \ub118\ub294\ub2e4. \uc138\ub85c\ud615 \uc601\uc0c1\uc744 \ubcf4\ub294 \uc2dc\uac04\uc774 \ub298\uba74\uc11c \uc5f0\uc7ac \ud615\uc2dd \ucf58\ud150\uce20\uac00 \ubbf8\uad6d, \uc911\uad6d, \uc778\ub3c4 \ub4f1\uc5d0\uc11c \uc778\uae30\ub97c \uc5bb\uc5c8\ub2e4."], ["\uc2a4\ud1a0\ub9acTV \uc0ac\uc6a9\uc790", "**3,300\ub9cc \uba85** \ub118\uc5b4", "---", "EloElo\uc758 Story TV\ub294 \ubd84\uc11d\uac00\ub4e4\uc5d0 \ub530\ub974\uba74 \ud65c\uc131 \uc0ac\uc6a9\uc790\uac00 3,300\ub9cc \uba85\uc744 \ub118\ub294 \uc0c1\uc704\uad8c \uc20f\ub4dc\ub77c\ub9c8 \uc571\uc774\ub2e4. 2020\ub144 \ucc3d\uc5c5\ud574 6\uac1c \uc5b8\uc5b4\ub85c 5,000\ud3b8 \ub118\ub294 \uc791\ud488\uc744 \uac16\ucdc4\ub2e4."], ["\ud558\ub8e8 \ud3c9\uade0", "**95\ubd84** \uba38\ubb38\ub2e4", "---", "\ucc3d\uc5c5\uc790\ub294 \uc9e7\uac8c \ub04a\uc5b4 \ubcf4\ub294 \ud615\uc2dd \ub355\uc5d0 \uc774\uc6a9\uc790\uac00 \ud558\ub8e8 \uc5ec\ub7ec \ubc88 \uc811\uc18d\ud574 \ud3c9\uade0 95\ubd84\uc744 \uc4f4\ub2e4\uace0 \ubc1d\ud614\ub2e4. \uc6d4\u00b7\ubd84\uae30\u00b7\uc5f0 \ub2e8\uc704 \uad6c\ub3c5\uc774 \uc788\uace0 \uad11\uace0 \uae30\ubc18 \ubb34\ub8cc \ucf58\ud150\uce20\ub3c4 \uc788\ub2e4."], ["\ub3c8 \ub0b4\ub294 \uc0ac\ub78c\uc740", "\uc544\uc9c1 **\uc18c\uc218**", "---", "\ubd84\uc11d \uc5c5\uccb4 Redseer\uc5d0 \ub530\ub974\uba74 \ud55c \ubc88\uc774\ub77c\ub3c4 \uacb0\uc81c\ud55c \uc0ac\ub78c\uc740 4\ucc9c\ub9cc \uba85\uc774 \ub118\uc9c0\ub9cc \ub9e4\ub2ec \ub0b4\ub294 \uc0ac\ub78c\uc740 1,500\ub9cc~1,700\ub9cc \uba85\uc774\ub2e4. Ormax Media \uc870\uc0ac\uc5d0\uc11c\ub294 72%\uac00 \ud55c \ubc88\ub3c4 \uacb0\uc81c\ud55c \uc801\uc774 \uc5c6\uc5c8\ub2e4."], ["\uc20f\ud3fc \ub355\ud6c4 \uce5c\uad6c\ud55c\ud14c", "\uc870\uc6a9\ud788 **\ubcf4\ub0b4\uae30**", "---", "\uc138\ub85c \uc601\uc0c1\uc73c\ub85c \ub4dc\ub77c\ub9c8\ub97c \ucc59\uaca8 \ubcf4\ub294 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd. \uc778\ub3c4\uc5d0\uc11c \uc20f\ub4dc\ub77c\ub9c8\uac00 \uc5bc\ub9c8\ub098 \ucee4\uc84c\ub294\uc9c0 \uc22b\uc790\ub85c \ub2f4\uc558\ub2e4."]]}, "602163eef992": {"caption": "\ud5cc\ud608\uc13c\ud130 85\uacf3\uc744 \uc804\ubd80 \ub3cc\uc558\ub2e4\ub294 \uc774 \uc18c\uc2dd, \uc54c\uace0 \ubcf4\uba74 \ub354 \ub180\ub78d\ub2e4. \ud638\uc8fc \uba5c\ubc84\ub978\uc5d0 \uc0ac\ub294 59\uc138 \uacbd\ucc30\uad00 \ud2b8\ub808\ubc84 \ubc84\uadf8\uba3c\uc740 \ud638\uc8fc\uc758 \ubaa8\ub4e0 \ud5cc\ud608\uc13c\ud130 85\uacf3\uc5d0\uc11c \ud76c\uadc0 \ud608\uc561\uc744 \uae30\uc99d\ud588\uace0, \uadf8\ub807\uac8c \uc313\uc778 \uae30\uc99d\uc774 545\ubc88\uc5d0 \uc774\ub978\ub2e4. \uadf8\ub294 \ud56dD \ud56d\uccb4\ub97c \uac00\uc9c4 \uac83\uc73c\ub85c \uc54c\ub824\uc9c4 \ud638\uc8fc\uc778 150\uba85 \uc911 \ud55c \uba85\uc774\ub2e4. \ud56dD\ub294 \uc2e0\uc0dd\uc544 \uc6a9\ud608\uc131 \uc9c8\ud658 \uc704\ud5d8\uc774 \uc788\ub294 \uc544\uae30\ub97c \ub454 \uc784\uc2e0\ubd80\uc5d0\uac8c \ud22c\uc5ec\ub41c\ub2e4.\n\n\uc544\uc774\ub514\uc5b4\ub294 \uc11c\ubd80 \ud37c\uc2a4\ub85c \ud734\uac00\ub97c \uac14\uc744 \ub54c \ub098\uc654\ub2e4. \uadf8\uacf3 \ud5cc\ud608\uc13c\ud130\ub97c \uc9c0\ub098\uba70 \ud734\uac00 \uc911\uc5d0 \ud638\uc8fc\ub97c \ubcf4\uae30\uc5d0 \uc88b\uc740 \ubc29\ubc95\uc774\uaca0\ub2e4\uace0 \uc0dd\uac01\ud588\ub2e4\uace0 ABC \ub274\uc2a4 \ud638\uc8fc\ud310\uc5d0 \ub9d0\ud588\ub2e4. \uadf8\ub294 \ub3d9\ubd80 \ud574\uc548\uc744 \ub530\ub77c \uc62c\ub77c\uac00\uace0, \uc11c\ud638\uc8fc\ub97c \uac70\uccd0 \ub2e4\uc708\uae4c\uc9c0 \uac14\ub2e4. \ud5cc\ud608\uc774 \uc544\ub2c8\uc5c8\ub2e4\uba74 \uc544\ub9c8 \uac00 \ubcf4\uc9c0 \ubabb\ud588\uc744 \uacf3\ub4e4\uc774\ub77c\uace0 \ud55c\ub2e4.\n\n\uac00\uc7a5 \uae30\uc5b5\uc5d0 \ub0a8\ub294 \ubc29\ubb38\uc740 \uc568\ubc84\ub2c8\uc600\ub2e4. \ucf54\ub97c \ud6cc\uca4d\uc778\ub2e4\ub294 \uc774\uc720\ub85c \ud5cc\ud608\uc744 \uac70\uc808\ub2f9\ud588\uae30 \ub54c\ubb38\uc774\ub2e4. \ub9c8\uc9c0\ub9c9 \ud5cc\ud608\uc740 \uce94\ubc84\ub77c\uc758 \ud638\uc8fc \uc801\uc2ed\uc790 \ub77c\uc774\ud504\ube14\ub7ec\ub4dc \uc13c\ud130\uc5d0\uc11c \ud588\uace0, \uad6d\uc655\uc744 \ub300\ud45c\ud558\ub294 \uc0d8 \ubaa8\uc2a4\ud2f4\uc774 \ud568\uaed8 \ud5cc\ud608\ud588\ub2e4. \ub77c\uc774\ud504\ube14\ub7ec\ub4dc\ub294 \ud638\uc8fc\uc778 3\uba85 \uc911 1\uba85\uc774 \uc0b4\uba74\uc11c \uc218\ud608\uc774 \ud544\uc694\ud574\uc9c4\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\ucd9c\ucc98: Good News Network, ABC News AU", "hashtags": ["#\ud5cc\ud608", "#\ud638\uc8fc", "#\ud574\uc678\ub274\uc2a4", "#\ud76c\uadc0\ud608\uc561", "#\ubbf8\ub2f4"], "slides": [["\ud5cc\ud608\uc13c\ud130 **85\uacf3**", "\uc804\ubd80 \ub3cc\uc558\ub2e4???", "---", "\ud638\uc8fc\uc758 59\uc138 \uacbd\ucc30\uad00 \ud2b8\ub808\ubc84 \ubc84\uadf8\uba3c\uc774 \ud76c\uadc0 \ud608\uc561\uc744 545\ubc88 \uae30\uc99d\ud558\uba70 \ud638\uc8fc \ud5cc\ud608\uc13c\ud130 85\uacf3\uc744 \ubaa8\ub450 \ubc29\ubb38\ud588\ub2e4."], ["\uba5c\ubc84\ub978 \uc0ac\ub294", "**59\uc138** \uacbd\ucc30\uad00", "---", "\ubc84\uadf8\uba3c\uc740 \uba5c\ubc84\ub978\uc5d0 \uc0ac\ub294 59\uc138 \uacbd\ucc30\uad00\uc774\ub2e4. \ud638\uc8fc\uc5d0\uc11c \ud56dD \ud56d\uccb4\ub97c \uac00\uc9c4 \uac83\uc73c\ub85c \uc54c\ub824\uc9c4 \uc0ac\ub78c\uc740 150\uba85\ubfd0\uc778\ub370, \uadf8\uac00 \uadf8\uc911 \ud55c \uba85\uc774\ub2e4."], ["\uc774 \ud608\uc561\uc774", "**\uc544\uae30**\ub97c \uc9c0\ud0a8\ub2e4", "---", "\ud56dD\ub294 \uc2e0\uc0dd\uc544 \uc6a9\ud608\uc131 \uc9c8\ud658 \uc704\ud5d8\uc774 \uc788\ub294 \uc544\uae30\ub97c \ub454 \uc784\uc2e0\ubd80\uc5d0\uac8c \ud22c\uc5ec\ub41c\ub2e4. \uc5c4\ub9c8\uc640 \uc544\uae30\uc758 \ud608\uc561\uc774 \ub9de\uc9c0 \uc54a\uc744 \ub54c \uc5c4\ub9c8\uc758 \uba74\uc5ed\uacc4\uac00 \ud0dc\uc544\uc758 \ud608\uc561\uc744 \uacf5\uaca9\ud558\uba70 \uc0dd\uae30\ub294 \ubcd1\uc774\ub2e4."], ["**\ud734\uac00** \uc911 \ub5a0\uc62c\ub9b0", "\ud5cc\ud608 \uc5ec\ud589", "---", "\ubc84\uadf8\uba3c\uc740 \uc11c\ubd80 \ud37c\uc2a4\ub85c \ud734\uac00\ub97c \uac14\ub2e4\uac00 \ud5cc\ud608\uc13c\ud130\uc5d0 \ub4e4\ub800\ub2e4. \ud734\uac00 \uc911\uc774\ub2c8 \ud638\uc8fc\ub97c \uad6c\uacbd\ud558\uae30 \uc88b\uc740 \ubc29\ubc95\uc774\uaca0\ub2e4\uace0 \uc0dd\uac01\ud588\ub2e4\uace0 ABC \ub274\uc2a4 \ud638\uc8fc\ud310\uc5d0 \ub9d0\ud588\ub2e4."], ["\ub3d9\ubd80 \ud574\uc548\ubd80\ud130", "**\ub2e4\uc708\uae4c\uc9c0**", "---", "\uadf8\ub294 \ub3d9\ubd80 \ud574\uc548\uc744 \ub530\ub77c \uc62c\ub77c\uac14\uace0, \uc11c\ud638\uc8fc\ub97c \uac70\uccd0 \ub2e4\uc708\uae4c\uc9c0 \uac14\ub2e4. \ud5cc\ud608\uc774 \uc544\ub2c8\uc5c8\ub2e4\uba74 \uc544\ub9c8 \uac00 \ubcf4\uc9c0 \ubabb\ud588\uc744 \uacf3\ub4e4\uc774\ub77c\uace0 \uc9c1\uc811 \ub9d0\ud588\ub2e4."], ["\ub9c8\uc9c0\ub9c9\uc740 **\uce94\ubc84\ub77c**", "\ud568\uaed8 \ud5cc\ud608\ud588\ub2e4", "---", "\ub9c8\uc9c0\ub9c9 \ud5cc\ud608\uc740 \uce94\ubc84\ub77c\uc758 \ud638\uc8fc \uc801\uc2ed\uc790 \ub77c\uc774\ud504\ube14\ub7ec\ub4dc \uc13c\ud130\uc5d0\uc11c \ud588\ub2e4. \uad6d\uc655\uc744 \ub300\ud45c\ud558\ub294 \ud638\uc8fc \uc778\uc0ac \uc0d8 \ubaa8\uc2a4\ud2f4\uc774 \uadf8\uc640 \ub3d9\ud589\ud574 \ud568\uaed8 \ud5cc\ud608\ud588\ub2e4."], ["\ud5cc\ud608 \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c\uc5d0\uac8c** \ubcf4\ub0b4\uae30", "---", "\uc5ec\ud589\ud558\ub4ef \ud5cc\ud608\uc13c\ud130 85\uacf3\uc744 \ub3cc\uba70 545\ubc88 \uae30\uc99d\ud55c \uc0ac\uc5f0\uc774\ub2e4. \ud76c\uadc0 \ud608\uc561\uc73c\ub85c \uc544\uae30\ub97c \uc9c0\ud0a4\ub294 \uc77c\uc774\ub77c \ud5cc\ud608 \uacbd\ud5d8\uc774 \uc788\ub294 \uce5c\uad6c\ub77c\uba74 \ubb49\ud074\ud574\ud560 \uc18c\uc2dd"]]}, "c047f79d9b63": {"caption": "\ub098\ubc29\uc774 \uc0dd\uc2dd\uae30\ub85c \ubc15\uc950\uc5d0\uac8c \uc18c\ub9ac\ub97c \uc9c0\ub978\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4. \ubc15\uc950\ub294 \ucd08\uc74c\ud30c\ub85c \uba39\uc787\uac10\uc758 \uc704\uce58\ub97c \ucc3e\ub294\ub370, \uc77c\ubd80 \ubc15\uac01\uc2dc\ub098\ubc29\uc740 \uc774 \ud0d0\uc9c0\ub97c \ud750\ud2b8\ub7ec\ub728\ub9b4 \uc218 \uc788\ub294 \uc18c\ub9ac\ub97c \uc2a4\uc2a4\ub85c \ub0b4\ub3c4\ub85d \uc9c4\ud654\ud588\ub2e4. \ub098\ubc29\uc5d0\uac8c\ub294 \ud6c4\ub450\uac00 \uc5c6\uc5b4\uc11c, \uc218\ucef7\uc740 \uc0dd\uc2dd\uae30 \uad6c\uc870\uc758 \ube44\ub298\uc744 \ubcf5\ubd80 \ud45c\uba74\uc5d0 \ubb38\uc9c8\ub7ec \ucd08\uc74c\ud30c\ub97c \ub0b8\ub2e4.\n\n\uc5f0\uad6c\uc9c4\uc774 \uc218\ucef7 \ubc15\uac01\uc2dc\ub098\ubc29\uc758 \uc0dd\uc2dd\uae30\ub97c \uc0b4\ud3b4\ubcf4\ub2c8 \uc18c\ub9ac\ub97c \ub0b4\ub294 \ubc29\uc2dd\uc740 \ucd5c\uc18c \uc138 \uac00\uc9c0\uc600\ub2e4. \ube44\ub298\ub07c\ub9ac \uae0b\uac70\ub098, \uc791\uc740 \uac00\uc2dc\uc5d0 \ubb38\uc9c0\ub974\uac70\ub098, \uc791\uc740 \ub3cc\uae30 \uc704\ub97c \uae0b\ub294 \ubc29\uc2dd\uc774\ub2e4. \uc774 \ub2a5\ub825\uc740 \ud55c \uc870\uc0c1\uc5d0\uac8c\uc11c \ubb3c\ub824\ubc1b\uc740 \uac83\uc774 \uc544\ub2c8\ub77c 3000\ub9cc \ub144\uc5d0 \uac78\uccd0 \ucd5c\ub300 \uc77c\uacf1 \ubc88 \ub530\ub85c \uc0dd\uaca8\ub09c \uac83\uc73c\ub85c \ubcf4\uc778\ub2e4.\n\n\ubaa8\ub4e0 \uc18c\ub9ac\uac00 \uac19\uc740 \ud6a8\uacfc\ub97c \ub0b4\ub294 \uac74 \uc544\ub2c8\ub2e4. \uae38\uac8c \uc774\uc5b4\uc9c0\ub294 \uc18c\ub9ac\uac00 \uc74c\ud30c \ud0d0\uc9c0 \uad50\ub780\uc5d0 \uac00\uc7a5 \uac00\uae4c\uc6b4 \ud2b9\uc131\uc744 \ubcf4\uc600\uace0, \uc9e7\uc740 \uc18c\ub9ac\ub294 \ub2e4\uac00\uc624\ub294 \ubc15\uc950\ub97c \ub180\ub77c\uac8c \ud560 \uc218 \uc788\ub2e4\uace0 \uc5f0\uad6c\uc9c4\uc740 \ucd94\uc815\ud55c\ub2e4. \ubc15\uc950\uc758 \ucd08\uc74c\ud30c\ub97c \uac10\uc9c0\ud558\ub294 \uccad\uac01 \uae30\uad00\uc774 \uc788\ub294 \uc885\ub3c4 \uc788\uace0, \uc544\uc608 \ub4e3\uc9c0 \ubabb\ud558\ub294 \uc885\ub3c4 \uc788\ub2e4. \uc18c\ub9ac\uac00 \uac00\uc7a5 \ub2e4\uc591\ud55c \uc885\uc5d0\uc11c\ub294 \uc9dd\uc9d3\uae30 \ub54c \uac19\uc740 \uc885\ub07c\ub9ac \uc54c\uc544\ubcf4\ub294 \ub370 \uc4f0\uc77c \uac00\ub2a5\uc131\ub3c4 \ub098\uc624\uc9c0\ub9cc, \uc544\uc9c1 \uac80\uc99d\ub418\uc9c0 \uc54a\uc558\ub2e4.\n\n\uc5f0\uad6c\ub294 \ud559\uc220\uc9c0 Proceedings of the Royal Society B\uc5d0 \uc2e4\ub838\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\ub098\ubc29", "#\ubc15\uc950", "#\uacfc\ud559", "#\uc9c4\ud654", "#\uc0dd\ubb3c\ud559"], "slides": [["\ub098\ubc29\uc774", "\uc0dd\uc2dd\uae30\ub85c **\ube44\uba85?!**", "---", "\ubc15\uc950\uc5d0\uac8c \ucad3\uae30\ub294 \ubc15\uac01\uc2dc\ub098\ubc29 \uc77c\ubd80\uac00 \uc0dd\uc2dd\uae30 \uad6c\uc870\ub97c \ubb38\uc9c8\ub7ec \ucd08\uc74c\ud30c\ub97c \ub0b4\ub3c4\ub85d \uc9c4\ud654\ud588\ub2e4\ub294 \uc5f0\uad6c \uacb0\uacfc\uac00 \ub098\uc654\ub2e4."], ["\ubaa9\uc18c\ub9ac \ub300\uc2e0", "\ubb38\uc9c8\ub7ec\uc11c \uc18c\ub9ac", "---", "\ub098\ubc29\uc5d0\uac8c\ub294 \ud6c4\ub450\uac00 \uc5c6\ub2e4. \ub300\uc2e0 \ub450 \ubab8 \ubd80\uc704\ub97c \ube44\ubcbc \uc18c\ub9ac\ub97c \ub0b4\ub294 \ubc29\uc2dd\uc744 \uc4f4\ub2e4. \uc218\ucef7 \ubc15\uac01\uc2dc\ub098\ubc29\uc740 \uc0dd\uc2dd\uae30 \uad6c\uc870\uc758 \ube44\ub298\uc744 \ubcf5\ubd80 \ud45c\uba74\uc5d0 \ubb38\uc9c8\ub7ec \ucd08\uc74c\ud30c\ub97c \ub0b8\ub2e4."], ["\uc18c\ub9ac \ub0b4\ub294 \ubc95\uc740", "\ucd5c\uc18c **\uc138 \uac00\uc9c0**", "---", "\uc5f0\uad6c\uc9c4\uc740 \uc218\ucef7 \ubc15\uac01\uc2dc\ub098\ubc29\uc758 \uc0dd\uc2dd\uae30\ub97c \uc815\ubc00 \ucd2c\uc601\ud574 \uc0b4\ud3c8\ub2e4. \ube44\ub298\ub07c\ub9ac \uae0b\ub294 \uc885, \uc791\uc740 \uac00\uc2dc\uc5d0 \ubb38\uc9c0\ub974\ub294 \uc885, \uc791\uc740 \ub3cc\uae30 \uc704\ub97c \uae0b\ub294 \uc885\uc774 \uc788\uc5c8\ub2e4."], ["\uc11c\ub85c \ub530\ub85c", "**\uc77c\uacf1 \ubc88** \uc9c4\ud654", "---", "\uacc4\ud1b5\uc218\uc5d0 \uc18c\ub9ac \ub0b4\ub294 \uad6c\uc870\ub97c \ub300\uc870\ud574 \ubcf4\ub2c8 \uc774 \ub2a5\ub825\uc740 \ud55c \uc870\uc0c1\uc5d0\uac8c\uc11c \ubb3c\ub824\ubc1b\uc740 \uac8c \uc544\ub2c8\uc5c8\ub2e4. \uc9c0\ub09c 3000\ub9cc \ub144 \ub3d9\uc548 \ucd5c\ub300 \uc77c\uacf1 \ubc88 \ub3c5\ub9bd\uc801\uc73c\ub85c \uc0dd\uaca8\ub09c \uac83\uc73c\ub85c \ubcf4\uc778\ub2e4."], ["\ub2e4 \ud1b5\ud558\uc9c4", "\uc54a\uc558\ub2e4", "---", "\ubaa8\ub4e0 \uc18c\ub9ac\uac00 \ubc15\uc950\uc758 \uc74c\ud30c \ud0d0\uc9c0\ub97c \uad50\ub780\ud560 \ub9cc\ud55c \uac74 \uc544\ub2c8\uc5c8\ub2e4. \uae38\uac8c \uc774\uc5b4\uc9c0\ub294 \uc18c\ub9ac\uac00 \uad50\ub780 \ud2b9\uc131\uc5d0 \uac00\uc7a5 \uac00\uae4c\uc6e0\uace0, \uc9e7\uc740 \uc18c\ub9ac\ub294 \ub2e4\uac00\uc624\ub294 \ubc15\uc950\ub97c \ub180\ub77c\uac8c \ud560 \uc218 \uc788\ub2e4\uace0 \uc5f0\uad6c\uc9c4\uc740 \ucd94\uc815\ud55c\ub2e4."], ["\uc0dd\ubb3c \ub355\ud6c4 \uce5c\uad6c\ud55c\ud14c", "\uc774\uac70 \ubcf4\ub0b4\uae30", "---", "\ub098\ubc29\uc758 \uae30\ubb18\ud55c \uc0dd\uc874\ubc95\uc5d0 \ub208\uc774 \ubc88\uca4d \ub728\uc77c \uc0dd\ubb3c \ub355\ud6c4 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd. \uac19\uc740 \ub2a5\ub825\uc774 \ucd5c\ub300 \uc77c\uacf1 \ubc88 \ub530\ub85c \uc9c4\ud654\ud588\ub2e4\ub294 \uc810\uc774 \uc774\uc57c\uae30 \uac70\ub9ac\uac00 \ub41c\ub2e4."]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>
