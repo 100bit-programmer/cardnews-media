@@ -1,0 +1,1594 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.02 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.02 오전 검수</span> <span id="progress">0 / 2 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-3914fce3868e" data-jump="3914fce3868e">1</a><a href="#post-939d9d980b4b" data-jump="939d9d980b4b">2</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-3914fce3868e" data-id="3914fce3868e">
+    <div class="head">
+      <h2>1. 사우나 30분과 면역세포 변화</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 17 · 애매 1
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-01.jpg" alt="1장: 사우나 30분에 면역세포 급증?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-02.jpg" alt="2장: 51명이 직접 사우나에 앉았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-03.jpg" alt="3장: 백혈구가 확 늘었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-04.jpg" alt="4장: 30분 뒤엔 거의 원상복구" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-05.jpg" alt="5장: 자주 가면 폐렴도 덜?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-06.jpg" alt="6장: 그래도 확답은 아직" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-07.jpg" alt="7장: 사우나 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/3914fce3868e/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">사우나 30분만으로 면역세포가 늘어난다는 연구가 나왔다. 핀란드 투르쿠대 연구진은 중년 남녀 51명에게 전통 핀란드식 사우나를 하게 했다. 약 73도의 방에서 30분을 보냈고, 중간에 찬물 샤워를 한 번 했다. 사우나 직후 혈액에서는 가장 먼저 대응하는 호중구와 면역 기억 형성을 돕는 림프구가 늘었다. 단핵구, 호산구, 호염기구를 합친 수치도 증가했다. 반면 면역 신호 단백질인 사이토카인은 평균적으로 거의 변하지 않았다. 하지만 사우나 후 30분이 지나자 이 증가는 대부분 사라졌다. 혈액 분석이 사우나 후 30분까지만 이뤄져서 더 긴 시간의 변화나 질병 위험에 미치는 영향은 알 수 없다. 연구진은 T세포와 자연살해세포 같은 세부 세포도 측정하지 않았다. 과거 중년 남성 2264명을 추적한 연구에서는 주 2~7회 사우나를 하는 쪽이 폐렴 위험이 낮은 것과 연관됐다. 다만 이번 실험이 그 이유를 증명한 것은 아니다. 지금 말할 수 있는 건 열이 면역세포에 일시적 변화를 일으키는 것으로 보인다는 점뿐이다. 출처: ScienceAlert, Journal of Cardiopulmonary Rehabilitation and Prevention</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#사우나 #면역력 #핀란드 #과학 #건강</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>연구진은 핀란드 투르쿠대 소속 운동과학자가 참여했다 <small>애매 · 원문은 투르쿠대 운동과학자 Ilkka Heinonen이 추측을 말했다고만 인용한다. 연구 공저자인지는 명시되지 않으므로 &#39;연구진 참여&#39;로 단정하지 말고 &#39;해당 분야 과학자의 논평&#39; 등으로 고치는 것이 좋다.</small></li>
+          <li>근거 등록 안 된 주장: 사우나 실험 결과가 Temperature 저널에 게재되었다는 내용은 본문 출처 표기와 맞지 않으므로 확인이 필요하다</li><li>근거 등록 안 된 주장: 출처로 적힌 Journal of Cardiopulmonary Rehabilitation and Prevention 및 ScienceAlert는 원문 근거와 대응 관계가 명확하지 않다</li><li>근거 등록 안 된 주장: 폐렴 관찰 연구가 사우나와 폐렴 위험 감소의 이유를 증명하지 않았다는 주장</li><li>근거 등록 안 된 주장: 폐렴 관찰 연구는 이번 실험과 별개의 근거라는 주장</li>
+          <li>소규모 실험(51명)이라 일반화에 한계가 있음</li><li>면역세포 증가가 건강 이점으로 이어지는지는 불확실함</li><li>과거 연구는 관찰 연구라 인과관계를 단정할 수 없음</li><li>극단적 열은 위험할 수 있어 건강 조언처럼 읽히지 않게 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-3914fce3868e-0">1장</label>
+          <textarea id="s-3914fce3868e-0" rows="6" data-slide="0">사우나 30분에
+**면역세포** 급증?!
+---
+핀란드 연구진이 핀란드식 사우나를 30분 한 참가자들의 혈액에서 백혈구가 크게 늘어난 것을 확인했다.</textarea>
+          
+          <label class="f" for="s-3914fce3868e-1">2장</label>
+          <textarea id="s-3914fce3868e-1" rows="6" data-slide="1">**51명**이 직접
+사우나에 앉았다
+---
+중년 남녀 51명이 약 73도의 사우나 방에서 30분을 보냈다. 중간에는 찬물 샤워를 한 번 했다. 전통 핀란드식 세션을 그대로 따른 실험이다.</textarea>
+          
+          <label class="f" for="s-3914fce3868e-2">3장</label>
+          <textarea id="s-3914fce3868e-2" rows="6" data-slide="2">**백혈구가**
+확 늘었다
+---
+사우나 직후 혈액에서는 가장 먼저 대응에 나서는 호중구와 면역 기억을 만드는 림프구가 늘었다. 사우나 전과 비교한 결과다.</textarea>
+          
+          <label class="f" for="s-3914fce3868e-3">4장</label>
+          <textarea id="s-3914fce3868e-3" rows="6" data-slide="3">30분 뒤엔
+거의 **원상복구**
+---
+사우나 후 30분이 지나자 증가분은 대부분 사라졌고 일부 단핵구만 남았다. 혈액 분석이 그 시점까지만 이뤄져 더 긴 변화는 알 수 없다.</textarea>
+          
+          <label class="f" for="s-3914fce3868e-4">5장</label>
+          <textarea id="s-3914fce3868e-4" rows="6" data-slide="4">자주 가면
+**폐렴도** 덜?
+---
+과거 중년 남성 2264명을 추적한 연구에서 주 2~7회 사우나를 하는 쪽은 폐렴 위험이 낮은 것과 연관됐다. 다만 이는 관찰 연구로, 이번 실험과는 별개의 근거이다.</textarea>
+          
+          <label class="f" for="s-3914fce3868e-5">6장</label>
+          <textarea id="s-3914fce3868e-5" rows="6" data-slide="5">그래도
+**확답은** 아직
+---
+연구진은 T세포나 자연살해세포 같은 세부 면역세포를 측정하지 않았다. 지금 말할 수 있는 것은 열이 면역세포에 일시적 변화를 일으키는 것으로 보인다는 점뿐이다.</textarea>
+          
+          <label class="f" for="s-3914fce3868e-6">7장</label>
+          <textarea id="s-3914fce3868e-6" rows="6" data-slide="6">사우나 좋아하는
+친구한테 보내기
+---
+사우나 직후엔 면역세포가 늘지만 30분 뒤엔 대부분 가라앉는다는 점까지 함께 알려 주기 좋다. 땀 빼는 시간을 즐기는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-3914fce3868e">본문 (캡션)</label>
+          <textarea id="c-3914fce3868e" class="caption">사우나 30분만으로 면역세포가 늘어난다는 연구가 나왔다. 핀란드 투르쿠대 연구진은 중년 남녀 51명에게 전통 핀란드식 사우나를 하게 했다. 약 73도의 방에서 30분을 보냈고, 중간에 찬물 샤워를 한 번 했다. 사우나 직후 혈액에서는 가장 먼저 대응하는 호중구와 면역 기억 형성을 돕는 림프구가 늘었다. 단핵구, 호산구, 호염기구를 합친 수치도 증가했다. 반면 면역 신호 단백질인 사이토카인은 평균적으로 거의 변하지 않았다. 하지만 사우나 후 30분이 지나자 이 증가는 대부분 사라졌다. 혈액 분석이 사우나 후 30분까지만 이뤄져서 더 긴 시간의 변화나 질병 위험에 미치는 영향은 알 수 없다. 연구진은 T세포와 자연살해세포 같은 세부 세포도 측정하지 않았다. 과거 중년 남성 2264명을 추적한 연구에서는 주 2~7회 사우나를 하는 쪽이 폐렴 위험이 낮은 것과 연관됐다. 다만 이번 실험이 그 이유를 증명한 것은 아니다. 지금 말할 수 있는 건 열이 면역세포에 일시적 변화를 일으키는 것으로 보인다는 점뿐이다. 출처: ScienceAlert, Journal of Cardiopulmonary Rehabilitation and Prevention</textarea>
+          <label class="f" for="t-3914fce3868e">해시태그</label>
+          <input id="t-3914fce3868e" type="text" class="tagsin" value="#사우나 #면역력 #핀란드 #과학 #건강" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>연구진은 핀란드 투르쿠대 소속 운동과학자가 참여했다</b>
+            <q>“&#34;This may indicate that sauna bathing mobilizes additional white blood cells into the bloodstream from tissues, where they are then redeposited after the session,&#34; speculates exercise scientist Ilkka Heinonen from the University of Turku in Finland.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>핀란드 연구진이 30분간 핀란드식 사우나를 한 참가자들의 혈액에서 백혈구가 크게 늘었다</b>
+            <q>“In a small experiment, just 30 minutes in a Finnish sauna – with hot yet dry heat – triggered a significant increase in circulating white blood cells.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>중년 남녀 51명이 전통 핀란드식 사우나 세션에 참여했다</b>
+            <q>“In the experiment, 51 middle-aged men and women took part in a traditional Finnish sauna session.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약 73도의 방에서 30분을 보냈고 중간에 찬물 샤워를 했다</b>
+            <q>“This included sitting in a room at around 73° Celsius (163° Fahrenheit) for 30 minutes, with a cold shower halfway through.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사우나 직후 호중구와 림프구가 늘었다</b>
+            <q>“This included an increase in neutrophils, which are first responders, and lymphocytes, which help build immune memory.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사우나 직후 참가자들의 혈액에서 사우나 전과 비교해 여러 백혈구가 동원된 것으로 보였다</b>
+            <q>“Immediately after the session, a whole host of white blood cells appeared to be mobilized in the blood of participants compared to before the sauna session.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사우나 30분 뒤 면역 증가는 대부분 사라졌다</b>
+            <q>“Thirty minutes after the sauna session, however, this apparent immune surge had mostly dropped off again.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>백혈구 증가는 대부분 사라졌고 일부 단핵구만 남았다</b>
+            <q>“Most of the white blood cell increases had disappeared, but some monocytes lingered.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>혈액 분석이 사우나 후 30분까지만 이뤄져 더 긴 변화와 질병 위험 영향은 불확실하다</b>
+            <q>“Researchers only analyzed participants&#39; bloodwork up to 30 minutes after the sauna session, so it is unclear how their immune cells might change over longer periods of time or how that might impact their risk of getting sick.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>과거 연구에서 중년 남성 2264명을 대상으로 사우나 습관을 조사했다</b>
+            <q>“Serum hsCRP as an inflammatory marker was measured using an immunometric assay and FSB was assessed by self-reported sauna bathing habits at baseline in 2264 men aged 42-61 yr.”</q>
+            <small>slide5, caption · <a href="https://www.ovid.com/jnls/jcrjournal/abstract/10.1097/hcr.0000000000000598~attenuated-risk-of-pneumonia-due-to-inflammation-by-frequent?redirectionsource=fulltextview" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사우나를 자주 하는 쪽은 주 2~7회로 정의되었다</b>
+            <q>“Serum hsCRP was categorized as normal and high (≤3 and &gt;3 mg/L, respectively) and FSB as low and high (defined as ≤1 and 2-7 sessions/wk, respectively).”</q>
+            <small>slide5, caption · <a href="https://www.ovid.com/jnls/jcrjournal/abstract/10.1097/hcr.0000000000000598~attenuated-risk-of-pneumonia-due-to-inflammation-by-frequent?redirectionsource=fulltextview" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사우나를 자주 하는 쪽이 적은 쪽보다 폐렴 위험이 낮은 것과 연관됐다</b>
+            <q>“The corresponding risk was HR = 0.79 (95% CI, 0.66-0.95) comparing high versus low FSB.”</q>
+            <small>slide5, caption · <a href="https://www.ovid.com/jnls/jcrjournal/abstract/10.1097/hcr.0000000000000598~attenuated-risk-of-pneumonia-due-to-inflammation-by-frequent?redirectionsource=fulltextview" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>과거 관찰 연구에서 잦은 사우나는 폐렴 같은 일부 질병의 낮은 위험과 연관되었다</b>
+            <q>“But some observational studies in the past have found that frequent sauna bathing is associated with a lower risk of some illnesses, like pneumonia.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 T세포나 자연살해세포 같은 세부 면역세포를 측정하지 않았다</b>
+            <q>“Researchers did not measure specific immune cell subsets, like T cells or natural killer cells, which could have provided more insight into how a sauna actually impacts immune function.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>열이 면역세포에 일시적 변화를 일으키는 것으로 보인다는 점만 말할 수 있다</b>
+            <q>“For now, all we can say is that it looks increasingly like bathing in heat can trigger a temporary change to immune cells.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그 외의 건강 영향은 추측의 영역이다</b>
+            <q>“Beyond that, it&#39;s all guesswork.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>단핵구, 호산구, 호염기구를 합친 수치도 증가했다</b>
+            <q>“There was also an increase in the combined count of monocytes, which engulf pathogens and debris, and eosinophils and basophils, which are both linked to inflammatory responses.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사이토카인은 평균적으로 거의 변하지 않았다</b>
+            <q>“Levels of immune messenger proteins called cytokines, on the other hand, barely shifted, on average, although a few did increase with body temperature.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/just-30-minutes-in-a-sauna-triggers-an-immediate-immune-response" target="_blank" rel="noopener">Just 30 Minutes in a Sauna Triggers an Immediate Immune Response</a> (기사)</li><li><a href="https://www.ovid.com/jnls/jcrjournal/abstract/10.1097/hcr.0000000000000598~attenuated-risk-of-pneumonia-due-to-inflammation-by-frequent?redirectionsource=fulltextview" target="_blank" rel="noopener">Attenuated Risk of Pneumonia Due to Inflammation... : Journal of Cardiopulmonary Rehabilitation and Prevention</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://health.yahoo.com/conditions/immune-system/articles/researchers-30-minutes-sauna-rapidly-175528896.html" target="_blank" rel="noopener">Yahoo Health / </a> — "https://s.yimg.com/lo/mysterio/api/0cba400b853e5c0566a3a558bab2932146eb78df9538f3981fb1b46e6d4af3b3/lightyear_networkapi/resizefill_w1200%3Bquality_80%3Bformat_jpg/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fgadget_review_articles_822%2F11ccecf4f6b240548d678bd4158f40f1"</li><li>2장: <a href="https://pixabay.com/photos/sauna-sauna-heater-sauna-stones-9863851/" target="_blank" rel="noopener">huumsauna / Pixabay</a> — "sauna stones"</li><li>3장: <a href="https://pixabay.com/photos/analysis-biochemistry-biologist-2030265/" target="_blank" rel="noopener">Kost9n4 / Pixabay</a> — "microscope"</li><li>4장: <a href="https://pixabay.com/photos/clocks-time-idea-concept-257911/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "wall clock"</li><li>5장: <a href="https://pixabay.com/photos/hallway-hospital-clean-rooms-doors-5979689/" target="_blank" rel="noopener">mspark0 / Pixabay</a> — "hospital corridor"</li><li>6장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>7장: <a href="https://pixabay.com/photos/stones-rocks-stack-pebbles-2040340/" target="_blank" rel="noopener">Schäferle / Pixabay</a> — "relaxing spa"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-939d9d980b4b" data-id="939d9d980b4b">
+    <div class="head">
+      <h2>2. 아판타시아, 깨어서는 못 그려도 꿈에선 보인다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/6 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>깨어 있을 땐 머릿속에 장면을 그리지 못하는 사람들이 잠들면 꿈에서 얼굴과 장소를 본다는 연구가 나왔다. 원하는 대로 이미지를 떠올리지 못하는 상태를 아판타시아라고 한다.
+
+연구는 Scientific Reports에 실렸다. 호주 퀸즐랜드대의 데릭 아널드, 로렌 부이어 등 연구진은 스스로 평생 아판타시아를 겪어 왔다고 밝혔다. 두 사람은 꿈이 서로 다르지만 각자 꿈속 감각이 낮에 상상할 수 있는 감각과 닮았다고 느꼈고, 이것이 연구의 출발점이었다. 아널드는 소리를, 부이어는 촉각을 상상할 수 있지만 둘 다 의지로 그림을 만들지는 못한다.
+
+연구진은 온라인 설문에 응한 205명을 분석했다. 아판타시아 집단은 84명, 비교 집단은 121명이었다. 아판타시아 집단의 46%는 꿈에서 시각 경험을 늘 한다고 답했고 약 8%는 전혀 없다고 답했다. 깨어 있을 때 시각화가 강할수록 시각적 꿈이 잦다는 증거는 찾지 못했다. 반면 소리와 속말은 꿈에서 자주 겪는 사람이 깨어 있을 때도 자주 겪는 경향이 있었다. 다만 연관성은 대체로 약함에서 중간 정도였다.
+
+한계도 있다. 이 연구는 뇌 활동을 측정하지 않아 연구진이 제시한 설명은 아직 검증되지 않았고, 결과는 참가자가 자신의 경험과 꿈을 기억해 설명한 내용에 의존한다. 앞으로는 꿈 직후 참가자를 깨워 기억을 묻는 수면 연구가 도움이 될 수 있다고 한다.
+
+출처: ScienceAlert, Scientific Reports
+
+배경 사진: creatifrankenstein, 377053, rkarkowski, whoalice-moore, manbob86 / Pixabay
+표지 이미지: ScienceAlert
+
+#아판타시아 #꿈 #뇌과학 #심리학 #과학뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-939d9d980b4b">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;눈 감고 떠올리기&#39;가 안 되는 사람도 꿈에선 얼굴과 장소를 본다는 반전. 꿈 얘기를 좋아하는 사람이면 누구나 &#39;나는 어때?&#39;를 떠올리게 된다.</p>
+    
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 설문 참가자를 시각 상상력 점수로 아판타시아 집단 84명, 비교 집단 121명으로 나눈 구성 (카드 3장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">눈 감고 아는 사람 얼굴을 떠올려도 아무 그림이 안 나오는 사람들이 있대
+근데 이 사람들이 잠들면 꿈에서 얼굴이랑 장소를 보기도 한다는 연구가 나옴
+꿈에서 얼마나 보이는지 비율이 나왔음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">1/ 아판타시아 집단의 46%가 꿈에서 시각 경험을 늘 한다고 답했음. 전혀 없다고 답한 사람은 약 8%뿐이었음.
+그럼 낮에 머릿속 그림을 잘 그리는 사람일수록 꿈도 더 잘 보일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">73/500자</span></div>
+      <p class="tp-text">2/ 그런 증거는 못 찾았대. 깨어 있을 때 시각화가 강하다고 시각적인 꿈이 더 잦다는 건 확인이 안 됐음.
+그럼 소리는 어땠을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">3/ 소리랑 속말은 달랐음. 꿈에서 이걸 자주 겪는다는 사람은 깨어 있을 때도 자주 겪는 경향이 있었음. 다만 연관성은 대체로 약함에서 중간 정도.
+낮엔 안 되고 꿈엔 되는 이유는 아직 분명하지 않대.</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">181/500자</span></div>
+      <p class="tp-text">4/ 이 연구, 시작이 좀 특이했음. 연구진이 스스로 평생 아판타시아를 겪어 왔다고 밝혔거든.
+두 사람은 꿈이 서로 달라도 꿈속 감각이 낮에 상상할 수 있는 감각과 닮았다고 느꼈고, 그게 출발점이었대. 아널드는 소리를, 부이어는 촉각을 상상할 수 있지만 둘 다 의지로 그림은 못 만든다고.
+그럼 설문 결과를 한눈에 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">176/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 아판타시아: 의지로 머릿속 그림을 못 떠올리는 상태
+- 온라인 설문 205명 분석
+- 아판타시아 집단 46%: 꿈에서 시각 경험 늘 있음 / 약 8%: 전혀 없음
+- 낮의 시각화 강도와 꿈의 시각 경험 빈도, 연관 증거 못 찾음
+- 소리·속말은 낮밤이 비슷한 경향 (연관성 약함~중간)</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">219/500자</span></div>
+      <p class="tp-text">6/ 결국 깨어 있을 땐 머릿속 그림이 안 그려져도 꿈에선 시각 경험을 하는 사람이 꽤 많다는 얘기야.
+
+너는 꿈 깨고 나면 장면이 더 기억나, 소리가 더 기억나?
+
+이런 해외 과학 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 205명을 어떻게 나눠서 비교했는지까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>눈 감고 아는 사람 얼굴 떠올려도 깜깜한 사람들, 잠들면 꿈에선 얼굴이 보인대</li><li>깨어서 상상이 &#39;안 되는&#39; 사람이 꿈에선 &#39;보인다&#39;는 연구가 나옴</li><li>머릿속에 그림이 안 그려지는 사람들의 꿈은 어떨까? 205명이 답한 결과가 나왔음</li><li>&#39;상상을 못 하면 꿈도 못 본다&#39;는 생각, 이 연구 보면 좀 달라짐</li><li>눈 감고 장면 떠올리기가 안 되는 사람 중 46%가 꿈에선 늘 본다고 답함</li><li>연구한 사람들도 직접 아판타시아였대. 그래서 꿈이 궁금해졌다는데</li><li>&#39;눈 감고 떠올리기&#39;는 안 되는데 &#39;눈 감고 자면&#39; 보이는 사람들이 있대</li><li>꿈에서 얼굴 본 적 있어? 깨어서는 못 떠올리는 사람도 그걸 본대</li><li>머릿속 그림은 낮밤이 따로 놀고 소리는 낮밤이 닮았다는 연구</li><li>엄마 얼굴을 떠올려도 아무 그림이 안 나오는 사람들, 꿈에서는 어떨까?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>꿈 깨고 나면 장면이 더 기억나, 소리가 더 기억나?</li><li>눈 감고 아는 사람 얼굴 떠올리면 바로 그려지는 파 vs 잘 안 그려지는 파?</li><li>꿈에서 본 얼굴이 또렷한 편이야, 흐릿한 편이야?</li><li>꿈 얘기 제일 먼저 해주고 싶은 친구 있어?</li><li>꿈 내용 아침에 기억나는 편이야, 금방 잊는 편이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>꿈속 소리와 속말, 낮에 하는 경험과 얼마나 닮았을까</li><li>머릿속 그림이 안 그려지는 아판타시아, 평소 일상은 어떨까</li><li>반대로 머릿속 이미지가 아주 생생한 사람들 이야기</li><li>꿈 직후에 깨워서 기억을 묻는 수면 연구가 알려줄 것</li><li>꿈을 더 잘 기억하게 하는 요인을 다룬 연구</li></ol>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/939d9d980b4b/v2-01.jpg" alt="1장: 상상은 못 하는데 꿈엔 보인다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/939d9d980b4b/v2-02.jpg" alt="2장: 의지로 그림을 못 떠올리는 증상" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/939d9d980b4b/v2-03.jpg" alt="3장: 205명에게 꿈을 물어봤다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/939d9d980b4b/v2-04.jpg" alt="4장: 절반 가까이 꿈에선 늘 보였다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/939d9d980b4b/v2-05.jpg" alt="5장: 소리와 속말은 낮밤이 비슷했다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/939d9d980b4b/v2-06.jpg" alt="6장: 꿈 얘기 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-am-df8f43d03480/939d9d980b4b/v2-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">깨어 있을 땐 머릿속에 장면을 그리지 못하는 사람들이 잠들면 꿈에서 얼굴과 장소를 본다는 연구가 나왔다. 원하는 대로 이미지를 떠올리지 못하는 상태를 아판타시아라고 한다.
+
+연구는 Scientific Reports에 실렸다. 호주 퀸즐랜드대의 데릭 아널드, 로렌 부이어 등 연구진은 스스로 평생 아판타시아를 겪어 왔다고 밝혔다. 두 사람은 꿈이 서로 다르지만 각자 꿈속 감각이 낮에 상상할 수 있는 감각과 닮았다고 느꼈고, 이것이 연구의 출발점이었다. 아널드는 소리를, 부이어는 촉각을 상상할 수 있지만 둘 다 의지로 그림을 만들지는 못한다.
+
+연구진은 온라인 설문에 응한 205명을 분석했다. 아판타시아 집단은 84명, 비교 집단은 121명이었다. 아판타시아 집단의 46%는 꿈에서 시각 경험을 늘 한다고 답했고 약 8%는 전혀 없다고 답했다. 깨어 있을 때 시각화가 강할수록 시각적 꿈이 잦다는 증거는 찾지 못했다. 반면 소리와 속말은 꿈에서 자주 겪는 사람이 깨어 있을 때도 자주 겪는 경향이 있었다. 다만 연관성은 대체로 약함에서 중간 정도였다.
+
+한계도 있다. 이 연구는 뇌 활동을 측정하지 않아 연구진이 제시한 설명은 아직 검증되지 않았고, 결과는 참가자가 자신의 경험과 꿈을 기억해 설명한 내용에 의존한다. 앞으로는 꿈 직후 참가자를 깨워 기억을 묻는 수면 연구가 도움이 될 수 있다고 한다.
+
+출처: ScienceAlert, Scientific Reports</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#아판타시아 #꿈 #뇌과학 #심리학 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 아는 사람의 얼굴을 떠올리려 해도 그림이 만들어지지 않는다는 예시(슬라이드2)</li><li>근거 등록 안 된 주장: 보도 출처가 ScienceAlert라는 표기(출처 줄)</li>
+          <li>온라인 설문 기반 자기보고 연구라 참가자의 기억과 응답에 의존함</li><li>뇌 활동을 측정하지 않아 원인 설명은 검증되지 않음</li><li>원문 기사에서 비교 집단의 시각적 꿈 응답 수치 서술이 모호해 카드에 쓰지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-939d9d980b4b-0">1장</label>
+          <textarea id="s-939d9d980b4b-0" rows="6" data-slide="0">상상은 못 하는데
+**꿈엔** 보인다고???
+---
+깨어 있을 땐 머릿속에 장면을 그리지 못하는 사람들이 잠들면 꿈에서 얼굴과 장소를 보기도 한다는 연구가 나왔다.</textarea>
+          
+          <label class="f" for="s-939d9d980b4b-1">2장</label>
+          <textarea id="s-939d9d980b4b-1" rows="6" data-slide="1">의지로 그림을
+**못 떠올리는 증상**
+---
+원하는 대로 머릿속에 이미지를 만들지 못하는 상태를 아판타시아라고 한다. 아는 사람의 얼굴을 떠올리려 해도 그림이 되지 않는다. 그런데 잠들면 얼굴과 장소가 꿈에 나타나기도 한다.</textarea>
+          
+          <label class="f" for="s-939d9d980b4b-2">3장</label>
+          <textarea id="s-939d9d980b4b-2" rows="6" data-slide="2">**205명에게**
+꿈을 물어봤다
+---
+연구진은 온라인 설문에 응한 205명의 답을 분석했다. 시각 상상력 점수로 아판타시아 집단 84명, 비교 집단 121명으로 나눴다. 시각뿐 아니라 소리, 냄새, 촉각 등도 함께 물었다.</textarea>
+          
+          <label class="f" for="s-939d9d980b4b-3">4장</label>
+          <textarea id="s-939d9d980b4b-3" rows="6" data-slide="3">절반 가까이
+꿈에선 **늘 보였다**
+---
+아판타시아 집단의 46%는 꿈에서 시각 경험을 늘 한다고 답했다. 전혀 없다는 응답은 약 8%였다. 깨어 있을 때 시각화가 강할수록 꿈도 더 자주 보인다는 증거는 찾지 못했다.</textarea>
+          
+          <label class="f" for="s-939d9d980b4b-4">5장</label>
+          <textarea id="s-939d9d980b4b-4" rows="6" data-slide="4">소리와 **속말**은
+낮밤이 비슷했다
+---
+꿈에서 소리와 속말을 더 자주 경험한다고 답한 사람은 깨어 있을 때도 그런 경험이 잦은 경향이 있었다. 다만 연관성은 대체로 약함에서 중간 정도였다. 낮엔 안 되고 꿈엔 되는 이유는 아직 분명하지 않다.</textarea>
+          
+          <label class="f" for="s-939d9d980b4b-5">6장</label>
+          <textarea id="s-939d9d980b4b-5" rows="6" data-slide="5">꿈 얘기 좋아하는
+**친구한테** 보내기
+---
+깨어 있을 땐 머릿속 그림이 안 그려져도 꿈에선 보일 수 있다는 연구 내용을 담았다. 꿈 얘기를 좋아하는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-939d9d980b4b">본문 (캡션)</label>
+          <textarea id="c-939d9d980b4b" class="caption">깨어 있을 땐 머릿속에 장면을 그리지 못하는 사람들이 잠들면 꿈에서 얼굴과 장소를 본다는 연구가 나왔다. 원하는 대로 이미지를 떠올리지 못하는 상태를 아판타시아라고 한다.
+
+연구는 Scientific Reports에 실렸다. 호주 퀸즐랜드대의 데릭 아널드, 로렌 부이어 등 연구진은 스스로 평생 아판타시아를 겪어 왔다고 밝혔다. 두 사람은 꿈이 서로 다르지만 각자 꿈속 감각이 낮에 상상할 수 있는 감각과 닮았다고 느꼈고, 이것이 연구의 출발점이었다. 아널드는 소리를, 부이어는 촉각을 상상할 수 있지만 둘 다 의지로 그림을 만들지는 못한다.
+
+연구진은 온라인 설문에 응한 205명을 분석했다. 아판타시아 집단은 84명, 비교 집단은 121명이었다. 아판타시아 집단의 46%는 꿈에서 시각 경험을 늘 한다고 답했고 약 8%는 전혀 없다고 답했다. 깨어 있을 때 시각화가 강할수록 시각적 꿈이 잦다는 증거는 찾지 못했다. 반면 소리와 속말은 꿈에서 자주 겪는 사람이 깨어 있을 때도 자주 겪는 경향이 있었다. 다만 연관성은 대체로 약함에서 중간 정도였다.
+
+한계도 있다. 이 연구는 뇌 활동을 측정하지 않아 연구진이 제시한 설명은 아직 검증되지 않았고, 결과는 참가자가 자신의 경험과 꿈을 기억해 설명한 내용에 의존한다. 앞으로는 꿈 직후 참가자를 깨워 기억을 묻는 수면 연구가 도움이 될 수 있다고 한다.
+
+출처: ScienceAlert, Scientific Reports</textarea>
+          <label class="f" for="t-939d9d980b4b">해시태그</label>
+          <input id="t-939d9d980b4b" type="text" class="tagsin" value="#아판타시아 #꿈 #뇌과학 #심리학 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>원하는 대로 이미지를 떠올리지 못하는 상태를 아판타시아라고 한다</b>
+            <q>“The inability to picture things at will is known as aphantasia.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아판타시아가 있는 사람도 잠들면 꿈에서 얼굴과 장소가 나타날 수 있다</b>
+            <q>“Faces and places may appear in their dreams, even though they cannot deliberately picture them during the day.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 Scientific Reports에 실렸다</b>
+            <q>“A study published in Scientific Reports explored the dreams of people who have it and found that the relationship between waking imagination and dreaming varies considerably from person to person.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 시각뿐 아니라 소리, 냄새, 맛, 촉각, 움직임의 느낌, 속말에 대해서도 물었다</b>
+            <q>“The researchers looked beyond images, asking about sounds, smells, tastes, touch, the feeling of movement, and inner speech, the experience of hearing words in your mind.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>데릭 아널드와 로렌 부이어는 호주 퀸즐랜드대 소속으로 평생 아판타시아를 겪어 왔다</b>
+            <q>“Two of the researchers, Derek Arnold and Loren Bouyer of the University of Queensland in Australia, describe having lifelong aphantasia.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 사람의 꿈은 서로 다르지만 각자 꿈속 감각이 낮에 상상할 수 있는 감각과 닮았다고 느꼈다</b>
+            <q>“Their dreams are not alike, and each felt that the sensations in their dreams reflected those they could imagine during the day.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아널드는 소리를, 부이어는 촉각을 상상할 수 있지만 둘 다 의지로 그림을 만들지 못한다</b>
+            <q>“Arnold can imagine sounds, while Bouyer can imagine sensations of touch. Neither can voluntarily form mental pictures.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 온라인 설문 응답 205명을 분석했고 아판타시아 집단 84명, 비교 집단 121명으로 나뉘었다</b>
+            <q>“The team analyzed online questionnaire responses from 205 people. Scores measuring visual imagination placed 84 participants in a visual aphantasia group and 121 in a comparison group.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아판타시아 집단의 46%는 꿈에서 시각 경험을 늘 한다고 답했고 약 8%는 전혀 없다고 답했다</b>
+            <q>“Within the aphantasia group, 46 percent reported always having visual experiences in their dreams. About 8 percent reported never having them.”</q>
+            <small>slide4, summary, caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아판타시아 집단에서 깨어 있을 때 시각화가 강할수록 시각적 꿈이 잦다는 증거는 없었다</b>
+            <q>“Among participants in the aphantasia group, the researchers found no evidence that stronger waking visualization went along with more frequent visual dreaming.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>꿈에서 소리와 속말을 자주 경험한다고 답한 사람은 깨어 있을 때도 더 자주 경험하는 경향이 있었고 연관성은 대체로 약함에서 중간이었다</b>
+            <q>“Participants who reported these experiences more often in dreams also tended to report them more often while awake, although the associations were generally weak to moderate.”</q>
+            <small>slide5, summary, caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>깨어 있을 땐 안 되는데 잠잘 때는 가능한 이유는 아직 분명하지 않다</b>
+            <q>“Why a sensation would be available during sleep but not on demand while awake is still unclear.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 연구는 뇌 활동을 측정하지 않았다</b>
+            <q>“The study did not measure brain activity, so that explanation remains untested.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>결과는 참가자가 경험을 설명하고 꿈을 기억하는 것에 의존한다</b>
+            <q>“The findings rely on participants describing their experiences and remembering their dreams.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>향후 연구에서 꿈 직후 참가자를 깨워 기억을 묻는 방법이 가능하다</b>
+            <q>“Future sleep studies could bring researchers closer to the experience itself by waking participants immediately after dreams and asking what they remember.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">Aphantasia: Some People Can&#39;t Picture Things While Awake, But See Them in Dreams</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/aphantasia-some-people-cant-picture-things-while-awake-but-see-them-in-dreams" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/10/Aphantasia.png"</li><li>2장: <a href="https://pixabay.com/photos/skull-mirror-horror-scary-4248008/" target="_blank" rel="noopener">creatifrankenstein / Pixabay</a> — "mirror"</li><li>3장: <a href="https://pixabay.com/photos/macbook-laptop-google-display-459196/" target="_blank" rel="noopener">377053 / Pixabay</a> — "laptop"</li><li>4장: <a href="https://pixabay.com/photos/moon-full-moon-sky-night-sky-lunar-1859616/" target="_blank" rel="noopener">rkarkowski / Pixabay</a> — "night sky"</li><li>5장: <a href="https://pixabay.com/photos/headsets-music-pink-background-1971383/" target="_blank" rel="noopener">whoalice-moore / Pixabay</a> — "headphones"</li><li>6장: <a href="https://pixabay.com/photos/bedroom-cupboard-bed-room-sofa-1872196/" target="_blank" rel="noopener">manbob86 / Pixabay</a> — "bedroom"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-930f0c25668c">
+    <div class="head">
+      <h2>S1. 차 48.6만 명 연구: 6~8잔·홍차·적당한 농도, 아주 뜨겁게는 반대 연관</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 10
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-930f0c25668c">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 차는 몸에 좋다는 통념에 &#39;몇 잔, 어떤 차, 얼마나 뜨겁게&#39;라는 구체적 기준과 의외의 반전(아주 뜨거운 차는 반대 연관)을 붙여서 내 매일 습관과 연결한다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">차는 몸에 좋다는 말, 약 48.6만 명 따라간 연구에선 &#39;마시느냐&#39;만이 아니라 &#39;어떻게 마시느냐&#39;도 같이 나왔대
+위험이 제일 낮았던 구간도 있었는데
+근데 아주 뜨겁게 마신 사람은 결과가 반대 쪽이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">1/ 중국 성인 485,934명을 중앙값 9.05년 따라간 결과, 차를 꾸준히 마신 사람은 혈관 질환 위험이 11% 낮게 나왔대. 근데 마실수록 계속 좋아지는 건 아니었음. 그럼 가장 낮은 구간은 하루 몇 잔이었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">2/ 주 1회 이상 마시는 사람 중에선 하루 약 6~8잔에서 추정 위험이 가장 낮았대. 다만 관찰 연구라 연관성만 본 거고, 차가 원인이라거나 다들 그만큼 마셔야 한다는 뜻은 아니래. 그럼 차 종류는 상관없었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">3/ 차 종류도 달랐음. 홍차가 녹차보다 혈관 질환 위험 감소와의 연관성이 더 일관되게 나왔대. 진하기는 적당한 농도에서 위험이 가장 낮았고, 진하다고 꼭 더 좋은 건 아니었음. 근데 제일 의외였던 건 따로 있었음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">4/ 가장 의외였던 건 온도. 아주 뜨겁게 마신 경우는 위험 증가와 연관됐대. 다만 왜 그런지 원리도, 몇 도부터 문제인지도 이 연구에선 밝히지 못했음. 그럼 이 결과, 어디까지 믿어도 될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">215/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 대상: 중국 성인 485,934명, 중앙값 9.05년 추적
+- 차 꾸준히 마신 사람: 혈관 질환 위험 11% 낮음
+- 주 1회 이상 마신 사람 중 위험 최저: 하루 약 6~8잔
+- 홍차가 녹차보다 연관성 더 일관됨
+- 적당한 진하기에서 위험 최저
+- 아주 뜨겁게 마시면 반대 연관
+- 차+비흡연+높은 신체활동 조합이 가장 낮음
+- 관찰 연구라 인과는 아님</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">244/500자</span></div>
+      <p class="tp-text">6/ 결국 차 하나만 보지 말고 전체 생활습관을 같이 보라는 얘기야. 차를 꾸준히 마시고, 비흡연에, 신체활동이 높은 조합이 위험이 제일 낮았대.
+뜨거운 차 vs 미지근한 차, 너는 어느 파야?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸. 다음 배송: 사우나 30분과 면역세포 얘기
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>차는 몸에 좋다는 말, 약 48.6만 명 따라간 연구에선 &#39;마시느냐&#39;만이 아니라 &#39;어떻게 마시느냐&#39;도 같이 나왔대</li><li>매일 마시는 차, 하루 6~8잔에서 위험이 가장 낮았다는 연구가 나옴</li><li>차는 &#39;진할수록 좋은 게&#39; 아니라 &#39;적당한 농도&#39;에서 위험이 가장 낮았다는 연구가 나옴</li><li>차는 &#39;뭘 마시냐&#39;가 아니라 &#39;얼마나 뜨겁게 마시냐&#39;도 따져볼 만하다는 연구가 나옴</li><li>차 마시는 사람 혈관 질환 위험이 11% 낮다는데, 이 연구엔 함정이 하나 있음</li><li>홍차 vs 녹차, 48만 명 연구에선 한쪽이 더 일관된 결과가 나왔대</li><li>&#39;차는 좋다&#39;는 결과 속에서 아주 뜨겁게 마신 사람만 반대 쪽이었대</li><li>차 한 잔만 보면 안 된다는 연구, 비흡연에 운동까지 겹친 사람이 위험이 제일 낮았대</li><li>하루 6~8잔에서 제일 낮았다는데, 이걸 그대로 따라 하면 안 되는 이유</li><li>매일 마시는 차, 48만 명을 9년 가까이 따라갔더니 습관별로 이런 차이가 나왔대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>뜨거운 차 vs 미지근한 차, 너는 어느 파야?</li><li>홍차파 vs 녹차파, 너는 어디야?</li><li>하루에 차 몇 잔까지 마셔봤어?</li><li>차 대신 커피파인 사람?</li><li>진하게 우려 마시는 파 vs 연하게 마시는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>사우나 30분과 면역세포 변화</li><li>홍차와 녹차, 같은 식물인데 뭐가 다를까</li><li>비흡연·운동·차, 생활습관 조합 연구 더 보기</li><li>뜨거운 음료와 몸 연구</li><li>아판타시아, 깨어서는 못 그려도 꿈에선 보인다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;하루 6~8잔&#39;이 권장량처럼 읽히지 않게 확인 필요 (원문은 관찰 연구, 인과·권장 아님)</li><li>연구 대상이 중국 성인이라 한국 상황으로 일반화해 읽히지 않는지 확인 필요</li><li>아주 뜨거운 차 결과는 기전과 기준 온도가 불명확해 위험을 단정하는 표현으로 읽히지 않게 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약 48.6만 명(485,934명)을 따라간 연구</b>
+          <q>“The study included 485,934 adults in China who were followed for a median of 9.05 years.”</q>
+          <small>post0, post1, post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>차를 꾸준히 마신 사람은 혈관 질환 위험이 11% 낮게 나왔다</b>
+          <q>“When the researchers compared tea drinking habits with the incidence of these diseases, they found that regular tea consumption was associated with an 11% lower risk of the combined vascular outcomes.”</q>
+          <small>post1, post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 1회 이상 마시는 사람 중 하루 약 6~8잔에서 추정 위험이 가장 낮았다</b>
+          <q>“Among people who drank tea at least weekly, the lowest estimated risk occurred at approximately six to eight cups per day.”</q>
+          <small>post2, post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰 연구라 연관성만 확인했고 차가 원인이라고 입증하지 못했다</b>
+          <q>“Because the research was observational, it could identify connections between tea drinking and health outcomes but could not establish that tea itself was responsible for the differences.”</q>
+          <small>post2, post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>홍차가 녹차보다 혈관 질환 위험 감소와의 연관성이 더 일관됐다</b>
+          <q>“Black tea showed more consistent associations with a reduced risk of vascular disease than green tea.”</q>
+          <small>post3, post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>적당한 진하기의 차를 마신 사람에서 위험이 가장 낮았고 더 진하다고 꼭 더 좋은 건 아니었다</b>
+          <q>“Participants who drank tea of moderate strength had the lowest associated vascular disease risk, suggesting that stronger tea was not necessarily linked to greater benefits.”</q>
+          <small>post3, post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>아주 뜨거운 온도로 마신 차는 반대 방향의 연관(위험 증가)을 보였다</b>
+          <q>“While certain tea drinking habits were linked to a lower risk of disease, drinking tea at extremely high temperatures appeared to have the opposite association.”</q>
+          <small>post0, post4, post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>뜨거운 차와 위험의 생물학적 기전도, 해로워지는 특정 온도도 밝혀내지 못했다</b>
+          <q>“Very hot beverages can expose tissues in the mouth and digestive tract to high temperatures, but the study did not establish the biological mechanism behind the observed vascular risk. It also did not identify a specific temperature at which tea becomes harmful.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>차를 꾸준히 마시고 현재 비흡연이며 신체활동이 높은 사람의 혈관 질환 위험이 가장 낮았다</b>
+          <q>“Their analysis showed that people who regularly drank tea, were not current smokers, and maintained high levels of physical activity had the lowest vascular disease risk.”</q>
+          <small>post5, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단일 음식·음료보다 전체 생활습관을 함께 봐야 한다는 점이 강조된다</b>
+          <q>“These results highlight the importance of considering overall lifestyle rather than looking at a single food or beverage in isolation.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="930f0c25668c">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261031221203.htm" target="_blank" rel="noopener">Drinking tea may help protect your heart, but there’s a surprising catch</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-ec75af9f3deb">
+    <div class="head">
+      <h2>S2. 매일 땅콩 60g 16주, 기억 관련 뇌 부위 인슐린 반응 연구</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ec75af9f3deb">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 매일 먹는 간식 하나가 기억 관련 뇌 부위의 인슐린 반응과 연결됐다는 연구로 풀면 팔림. 혈당 얘기로만 알던 인슐린이 뇌에서도 일한다는 반전을 앞에 두고, 땅콩재단 후원과 31명 규모라는 한계도 같이 밝혀야 함.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">간식으로 땅콩 매일 먹으면 기억 쪽 뇌가 달라진대
+60~75세 31명이 16주 동안 땅콩을 매일 60g씩 먹어본 연구인데
+뇌에서 바뀐 건 혈당 얘기로만 알던 &#39;인슐린&#39; 쪽이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 16주 동안 매일 땅콩을 먹은 뒤 오른쪽 뇌의 몇몇 부위에서 인슐린 반응이 좋아졌대. 해마도 그중 하나였고, 다 기억 관련 부위라고 함. 근데 인슐린은 혈당 얘기 아니었나?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">2/ 인슐린은 혈당 조절로 유명하지만 뇌에서도 중요하대. 신경세포가 자라고 살아남고 서로 신호 주고받는 걸 돕는다고. 나이 들면 뇌가 인슐린에 덜 반응할 수 있고, 그게 나이 관련 인지 저하와 연결돼 왔다는 설명. 그럼 실험은 어떻게 했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">3/ 실험 요약 정리
+- 대상: 건강한 60~75세 31명
+- 땅콩: 껍질째 볶은 무염 땅콩 60g(약 2인분), 매일
+- 기간: 16주
+- 방식: 땅콩 먹는 기간 vs 안 먹는 기간을 비교하는 무작위 교차시험
+- 먹는 시간: 아침이나 오후
+그런데 같은 연구진의 이전 연구에선 다른 수치도 나왔음</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">4/ 같은 연구진이 2025년에 낸 이전 연구에선 16주 땅콩 섭취 후 뇌 전체 혈류가 3.6%, 언어 기억 수행이 5.8% 올랐다고 함. 그럼 연구진은 땅콩의 뭐가 영향을 줬을 거라고 볼까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">5/ 연구진은 한 성분이 아니라 불포화지방, 식이섬유, 비타민·미네랄, 식물성 화합물이 함께 작용했을 수 있다고 봄. 땅콩에 많은 아르기닌은 일산화질소의 재료인데, 이게 학습·기억을 돕는다는 보고가 있대. 그럼 결국 이 연구가 말하는 건?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">280/500자</span></div>
+      <p class="tp-text">6/ 결국 건강한 60~75세 31명이 껍질째 볶은 무염 땅콩을 매일 60g, 16주 먹었더니 기억 관련 뇌 부위의 인슐린 반응이 좋아졌다는 연구야. 후원은 땅콩재단이지만 설계·분석엔 관여 안 했다고 함.
+
+간식 땅콩파 vs 다른 견과류파, 너는 어느 쪽?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸. 다음 배송: 사우나 30분과 면역세포 얘기
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>간식으로 땅콩 매일 먹으면 기억 쪽 뇌가 달라진대</li><li>인슐린은 &#39;혈당 호르몬&#39;만이 아니라 뇌에서도 일한대, 땅콩 매일 먹었더니 반응이 달라졌다는 연구가 나옴</li><li>매일 땅콩 60g, 16주 했더니 뇌 스캔에 잡힌 변화가 있었대</li><li>60~75세 31명이 땅콩 먹는 기간, 안 먹는 기간을 번갈아 해봤더니</li><li>그냥 한 줌이 아니라 &#39;매일 60g&#39;이 포인트였던 뇌 연구</li><li>나이 들면 뇌가 인슐린에 덜 반응할 수 있다는데, 땅콩 간식은 여기서 뭘 바꿨을까</li><li>해외에선 땅콩 간식을 뇌 MRI로 찍어봤대</li><li>간식을 &#39;입이 심심해서&#39;가 아니라 &#39;뇌 실험&#39;으로 돌려본 연구가 나옴</li><li>기억력 걱정되는 사람은 이 땅콩 연구가 뭘 쟀는지부터 봐</li><li>땅콩 16주 먹고 뇌 혈류 3.6%, 언어 기억 5.8%… 이게 진짜야?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>간식 땅콩파 vs 다른 견과류파, 너는 어느 쪽?</li><li>땅콩 간식, 껍질째 먹는 파 vs 까서 먹는 파?</li><li>땅콩 60g을 매일 먹는 거, 너라면 16주 할 수 있어?</li><li>간식으로 제일 자주 손 가는 건 땅콩 vs 과자?</li><li>견과류 한 봉지를 한 번에 먹는 파 vs 나눠 먹는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>사우나 30분과 면역세포 변화</li><li>아판타시아, 깨어서는 못 그려도 꿈에선 보인다</li><li>땅콩 연구 2편: 뇌 혈류와 언어 기억 이전 연구 자세히</li><li>뇌 인슐린 반응, 나이 들면 왜 떨어질 수 있을까</li><li>기억력 관련 해외 식습관 연구 모아보기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>출처가 땅콩협회(The Peanut Institute) 보도자료이고 연구 후원도 땅콩재단이라 홍보성으로 읽힐 수 있음. 재단이 설계·분석에 관여 안 했다는 문장을 빼지 말 것</li><li>이번 연구가 확인한 건 뇌 부위의 인슐린 반응 변화이고, 기억력 향상은 이전 연구 수치(언어 기억 5.8%)라 두 연구를 섞어 &#39;기억력이 좋아진다&#39;로 단정하면 안 됨</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 대상은 60~75세 건강한 성인 31명</b>
+          <q>“The study included 31 healthy adults between the ages of 60 and 75.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>땅콩을 하루 60g씩 16주 먹음</b>
+          <q>“During the peanut consumption phase, participants ate 60 grams (approximately two servings) of peanuts each day for 16 weeks.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>16주 땅콩 섭취 후 오른쪽 뇌 일부 영역에서 인슐린 반응이 개선됨</b>
+          <q>“After participants consumed peanuts daily for 16 weeks, researchers observed improved insulin responsiveness in a group of brain regions in the right hemisphere.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인슐린 반응이 개선된 부위에 해마가 포함되고 모두 기억 관련 과정에 기여함</b>
+          <q>“These included portions of the lingual gyrus, hippocampus, parahippocampal gyrus, and posterior cingulate gyrus, all of which contribute to memory-related processes.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인슐린은 혈당 조절로 유명하지만 뇌에서도 신경세포 성장·생존·소통을 도움</b>
+          <q>“Although insulin is best known for regulating blood sugar, it also plays an essential role in the brain. It helps nerve cells grow, survive, and communicate with one another, supporting memory and other cognitive abilities.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나이 들면 뇌가 인슐린에 덜 반응할 수 있고 이는 나이 관련 인지 저하와 연결돼 왔음</b>
+          <q>“As people age, the brain may become less responsive to insulin, which has been linked to age-related cognitive decline,”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>껍질째 볶은 무염 땅콩이 고령자의 특정 뇌 영역 인슐린 반응을 개선할 수 있다는 결과</b>
+          <q>“Researchers at Maastricht University Medical Center in the Netherlands have found that regularly consuming unsalted, skin-roasted peanuts can improve how certain brain regions respond to insulin in older adults.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무작위 대조 교차시험으로 땅콩 섭취와 회피 효과를 비교함</b>
+          <q>“Researchers used a randomized, controlled crossover trial, a rigorous study design that allowed them to compare the effects of eating peanuts with those of avoiding them.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 땅콩을 아침이나 오후에 먹도록 안내받음</b>
+          <q>“Participants were instructed to eat their peanuts in the morning or afternoon, but they could choose how to incorporate them into their daily routine.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2025년 이전 연구에서 16주 땅콩 섭취 후 뇌 전체 혈류 3.6% 증가, 언어 기억 수행 5.8% 향상</b>
+          <q>“That investigation found that consuming peanuts for 16 weeks increased overall cerebral blood flow (CBF) by 3.6% and improved verbal memory performance by 5.8%.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>새 연구는 Joris의 2025년 이전 연구를 토대로 함</b>
+          <q>“The new findings build on earlier research by Joris published in 2025.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 단일 성분이 아니라 여러 성분이 기여했을 수 있다고 봄</b>
+          <q>“Researchers believe several components of peanuts may contribute to their observed effects on brain health, rather than any single nutrient being responsible.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>불포화지방, 식이섬유, 비타민·미네랄, 식물성 화합물이 뇌 효과에 기여했을 가능성</b>
+          <q>“Multiple nutrients present in peanuts, including unsaturated fats, dietary fiber, vitamins and minerals and bioactive phytochemicals, could potentially contribute to the observed brain benefits,”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>아르기닌은 일산화질소의 전구체이고 일산화질소는 학습·기억을 돕는다고 보고됨</b>
+          <q>“L-arginine is a key precursor of nitric oxide (NO), which has been reported to facilitate learning and memory performance.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 후원은 땅콩재단이었고 재단은 설계·분석·원고 작성에 관여하지 않았다고 함</b>
+          <q>“Funding was provided by The Peanut Institute Foundation. According to the researchers, the foundation had no involvement in designing or conducting the study, analyzing or interpreting the results, or preparing the manuscript.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ec75af9f3deb">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261030003001.htm" target="_blank" rel="noopener">Scientists discover a surprising brain benefit of eating peanuts every day</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261102-am";
+  const ORIGINAL = {"3914fce3868e": {"caption": "\uc0ac\uc6b0\ub098 30\ubd84\ub9cc\uc73c\ub85c \uba74\uc5ed\uc138\ud3ec\uac00 \ub298\uc5b4\ub09c\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4. \ud540\ub780\ub4dc \ud22c\ub974\ucfe0\ub300 \uc5f0\uad6c\uc9c4\uc740 \uc911\ub144 \ub0a8\ub140 51\uba85\uc5d0\uac8c \uc804\ud1b5 \ud540\ub780\ub4dc\uc2dd \uc0ac\uc6b0\ub098\ub97c \ud558\uac8c \ud588\ub2e4. \uc57d 73\ub3c4\uc758 \ubc29\uc5d0\uc11c 30\ubd84\uc744 \ubcf4\ub0c8\uace0, \uc911\uac04\uc5d0 \ucc2c\ubb3c \uc0e4\uc6cc\ub97c \ud55c \ubc88 \ud588\ub2e4. \uc0ac\uc6b0\ub098 \uc9c1\ud6c4 \ud608\uc561\uc5d0\uc11c\ub294 \uac00\uc7a5 \uba3c\uc800 \ub300\uc751\ud558\ub294 \ud638\uc911\uad6c\uc640 \uba74\uc5ed \uae30\uc5b5 \ud615\uc131\uc744 \ub3d5\ub294 \ub9bc\ud504\uad6c\uac00 \ub298\uc5c8\ub2e4. \ub2e8\ud575\uad6c, \ud638\uc0b0\uad6c, \ud638\uc5fc\uae30\uad6c\ub97c \ud569\uce5c \uc218\uce58\ub3c4 \uc99d\uac00\ud588\ub2e4. \ubc18\uba74 \uba74\uc5ed \uc2e0\ud638 \ub2e8\ubc31\uc9c8\uc778 \uc0ac\uc774\ud1a0\uce74\uc778\uc740 \ud3c9\uade0\uc801\uc73c\ub85c \uac70\uc758 \ubcc0\ud558\uc9c0 \uc54a\uc558\ub2e4. \ud558\uc9c0\ub9cc \uc0ac\uc6b0\ub098 \ud6c4 30\ubd84\uc774 \uc9c0\ub098\uc790 \uc774 \uc99d\uac00\ub294 \ub300\ubd80\ubd84 \uc0ac\ub77c\uc84c\ub2e4. \ud608\uc561 \ubd84\uc11d\uc774 \uc0ac\uc6b0\ub098 \ud6c4 30\ubd84\uae4c\uc9c0\ub9cc \uc774\ub904\uc838\uc11c \ub354 \uae34 \uc2dc\uac04\uc758 \ubcc0\ud654\ub098 \uc9c8\ubcd1 \uc704\ud5d8\uc5d0 \ubbf8\uce58\ub294 \uc601\ud5a5\uc740 \uc54c \uc218 \uc5c6\ub2e4. \uc5f0\uad6c\uc9c4\uc740 T\uc138\ud3ec\uc640 \uc790\uc5f0\uc0b4\ud574\uc138\ud3ec \uac19\uc740 \uc138\ubd80 \uc138\ud3ec\ub3c4 \uce21\uc815\ud558\uc9c0 \uc54a\uc558\ub2e4. \uacfc\uac70 \uc911\ub144 \ub0a8\uc131 2264\uba85\uc744 \ucd94\uc801\ud55c \uc5f0\uad6c\uc5d0\uc11c\ub294 \uc8fc 2~7\ud68c \uc0ac\uc6b0\ub098\ub97c \ud558\ub294 \ucabd\uc774 \ud3d0\ub834 \uc704\ud5d8\uc774 \ub0ae\uc740 \uac83\uacfc \uc5f0\uad00\ub410\ub2e4. \ub2e4\ub9cc \uc774\ubc88 \uc2e4\ud5d8\uc774 \uadf8 \uc774\uc720\ub97c \uc99d\uba85\ud55c \uac83\uc740 \uc544\ub2c8\ub2e4. \uc9c0\uae08 \ub9d0\ud560 \uc218 \uc788\ub294 \uac74 \uc5f4\uc774 \uba74\uc5ed\uc138\ud3ec\uc5d0 \uc77c\uc2dc\uc801 \ubcc0\ud654\ub97c \uc77c\uc73c\ud0a4\ub294 \uac83\uc73c\ub85c \ubcf4\uc778\ub2e4\ub294 \uc810\ubfd0\uc774\ub2e4. \ucd9c\ucc98: ScienceAlert, Journal of Cardiopulmonary Rehabilitation and Prevention", "hashtags": ["#\uc0ac\uc6b0\ub098", "#\uba74\uc5ed\ub825", "#\ud540\ub780\ub4dc", "#\uacfc\ud559", "#\uac74\uac15"], "slides": [["\uc0ac\uc6b0\ub098 30\ubd84\uc5d0", "**\uba74\uc5ed\uc138\ud3ec** \uae09\uc99d?!", "---", "\ud540\ub780\ub4dc \uc5f0\uad6c\uc9c4\uc774 \ud540\ub780\ub4dc\uc2dd \uc0ac\uc6b0\ub098\ub97c 30\ubd84 \ud55c \ucc38\uac00\uc790\ub4e4\uc758 \ud608\uc561\uc5d0\uc11c \ubc31\ud608\uad6c\uac00 \ud06c\uac8c \ub298\uc5b4\ub09c \uac83\uc744 \ud655\uc778\ud588\ub2e4."], ["**51\uba85**\uc774 \uc9c1\uc811", "\uc0ac\uc6b0\ub098\uc5d0 \uc549\uc558\ub2e4", "---", "\uc911\ub144 \ub0a8\ub140 51\uba85\uc774 \uc57d 73\ub3c4\uc758 \uc0ac\uc6b0\ub098 \ubc29\uc5d0\uc11c 30\ubd84\uc744 \ubcf4\ub0c8\ub2e4. \uc911\uac04\uc5d0\ub294 \ucc2c\ubb3c \uc0e4\uc6cc\ub97c \ud55c \ubc88 \ud588\ub2e4. \uc804\ud1b5 \ud540\ub780\ub4dc\uc2dd \uc138\uc158\uc744 \uadf8\ub300\ub85c \ub530\ub978 \uc2e4\ud5d8\uc774\ub2e4."], ["**\ubc31\ud608\uad6c\uac00**", "\ud655 \ub298\uc5c8\ub2e4", "---", "\uc0ac\uc6b0\ub098 \uc9c1\ud6c4 \ud608\uc561\uc5d0\uc11c\ub294 \uac00\uc7a5 \uba3c\uc800 \ub300\uc751\uc5d0 \ub098\uc11c\ub294 \ud638\uc911\uad6c\uc640 \uba74\uc5ed \uae30\uc5b5\uc744 \ub9cc\ub4dc\ub294 \ub9bc\ud504\uad6c\uac00 \ub298\uc5c8\ub2e4. \uc0ac\uc6b0\ub098 \uc804\uacfc \ube44\uad50\ud55c \uacb0\uacfc\ub2e4."], ["30\ubd84 \ub4a4\uc5d4", "\uac70\uc758 **\uc6d0\uc0c1\ubcf5\uad6c**", "---", "\uc0ac\uc6b0\ub098 \ud6c4 30\ubd84\uc774 \uc9c0\ub098\uc790 \uc99d\uac00\ubd84\uc740 \ub300\ubd80\ubd84 \uc0ac\ub77c\uc84c\uace0 \uc77c\ubd80 \ub2e8\ud575\uad6c\ub9cc \ub0a8\uc558\ub2e4. \ud608\uc561 \ubd84\uc11d\uc774 \uadf8 \uc2dc\uc810\uae4c\uc9c0\ub9cc \uc774\ub904\uc838 \ub354 \uae34 \ubcc0\ud654\ub294 \uc54c \uc218 \uc5c6\ub2e4."], ["\uc790\uc8fc \uac00\uba74", "**\ud3d0\ub834\ub3c4** \ub35c?", "---", "\uacfc\uac70 \uc911\ub144 \ub0a8\uc131 2264\uba85\uc744 \ucd94\uc801\ud55c \uc5f0\uad6c\uc5d0\uc11c \uc8fc 2~7\ud68c \uc0ac\uc6b0\ub098\ub97c \ud558\ub294 \ucabd\uc740 \ud3d0\ub834 \uc704\ud5d8\uc774 \ub0ae\uc740 \uac83\uacfc \uc5f0\uad00\ub410\ub2e4. \ub2e4\ub9cc \uc774\ub294 \uad00\ucc30 \uc5f0\uad6c\ub85c, \uc774\ubc88 \uc2e4\ud5d8\uacfc\ub294 \ubcc4\uac1c\uc758 \uadfc\uac70\uc774\ub2e4."], ["\uadf8\ub798\ub3c4", "**\ud655\ub2f5\uc740** \uc544\uc9c1", "---", "\uc5f0\uad6c\uc9c4\uc740 T\uc138\ud3ec\ub098 \uc790\uc5f0\uc0b4\ud574\uc138\ud3ec \uac19\uc740 \uc138\ubd80 \uba74\uc5ed\uc138\ud3ec\ub97c \uce21\uc815\ud558\uc9c0 \uc54a\uc558\ub2e4. \uc9c0\uae08 \ub9d0\ud560 \uc218 \uc788\ub294 \uac83\uc740 \uc5f4\uc774 \uba74\uc5ed\uc138\ud3ec\uc5d0 \uc77c\uc2dc\uc801 \ubcc0\ud654\ub97c \uc77c\uc73c\ud0a4\ub294 \uac83\uc73c\ub85c \ubcf4\uc778\ub2e4\ub294 \uc810\ubfd0\uc774\ub2e4."], ["\uc0ac\uc6b0\ub098 \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc0ac\uc6b0\ub098 \uc9c1\ud6c4\uc5d4 \uba74\uc5ed\uc138\ud3ec\uac00 \ub298\uc9c0\ub9cc 30\ubd84 \ub4a4\uc5d4 \ub300\ubd80\ubd84 \uac00\ub77c\uc549\ub294\ub2e4\ub294 \uc810\uae4c\uc9c0 \ud568\uaed8 \uc54c\ub824 \uc8fc\uae30 \uc88b\ub2e4. \ub540 \ube7c\ub294 \uc2dc\uac04\uc744 \uc990\uae30\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "939d9d980b4b": {"caption": "\uae68\uc5b4 \uc788\uc744 \ub550 \uba38\ub9bf\uc18d\uc5d0 \uc7a5\uba74\uc744 \uadf8\ub9ac\uc9c0 \ubabb\ud558\ub294 \uc0ac\ub78c\ub4e4\uc774 \uc7a0\ub4e4\uba74 \uafc8\uc5d0\uc11c \uc5bc\uad74\uacfc \uc7a5\uc18c\ub97c \ubcf8\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4. \uc6d0\ud558\ub294 \ub300\ub85c \uc774\ubbf8\uc9c0\ub97c \ub5a0\uc62c\ub9ac\uc9c0 \ubabb\ud558\ub294 \uc0c1\ud0dc\ub97c \uc544\ud310\ud0c0\uc2dc\uc544\ub77c\uace0 \ud55c\ub2e4.\n\n\uc5f0\uad6c\ub294 Scientific Reports\uc5d0 \uc2e4\ub838\ub2e4. \ud638\uc8fc \ud038\uc990\ub79c\ub4dc\ub300\uc758 \ub370\ub9ad \uc544\ub110\ub4dc, \ub85c\ub80c \ubd80\uc774\uc5b4 \ub4f1 \uc5f0\uad6c\uc9c4\uc740 \uc2a4\uc2a4\ub85c \ud3c9\uc0dd \uc544\ud310\ud0c0\uc2dc\uc544\ub97c \uacaa\uc5b4 \uc654\ub2e4\uace0 \ubc1d\ud614\ub2e4. \ub450 \uc0ac\ub78c\uc740 \uafc8\uc774 \uc11c\ub85c \ub2e4\ub974\uc9c0\ub9cc \uac01\uc790 \uafc8\uc18d \uac10\uac01\uc774 \ub0ae\uc5d0 \uc0c1\uc0c1\ud560 \uc218 \uc788\ub294 \uac10\uac01\uacfc \ub2ee\uc558\ub2e4\uace0 \ub290\uaf08\uace0, \uc774\uac83\uc774 \uc5f0\uad6c\uc758 \ucd9c\ubc1c\uc810\uc774\uc5c8\ub2e4. \uc544\ub110\ub4dc\ub294 \uc18c\ub9ac\ub97c, \ubd80\uc774\uc5b4\ub294 \ucd09\uac01\uc744 \uc0c1\uc0c1\ud560 \uc218 \uc788\uc9c0\ub9cc \ub458 \ub2e4 \uc758\uc9c0\ub85c \uadf8\ub9bc\uc744 \ub9cc\ub4e4\uc9c0\ub294 \ubabb\ud55c\ub2e4.\n\n\uc5f0\uad6c\uc9c4\uc740 \uc628\ub77c\uc778 \uc124\ubb38\uc5d0 \uc751\ud55c 205\uba85\uc744 \ubd84\uc11d\ud588\ub2e4. \uc544\ud310\ud0c0\uc2dc\uc544 \uc9d1\ub2e8\uc740 84\uba85, \ube44\uad50 \uc9d1\ub2e8\uc740 121\uba85\uc774\uc5c8\ub2e4. \uc544\ud310\ud0c0\uc2dc\uc544 \uc9d1\ub2e8\uc758 46%\ub294 \uafc8\uc5d0\uc11c \uc2dc\uac01 \uacbd\ud5d8\uc744 \ub298 \ud55c\ub2e4\uace0 \ub2f5\ud588\uace0 \uc57d 8%\ub294 \uc804\ud600 \uc5c6\ub2e4\uace0 \ub2f5\ud588\ub2e4. \uae68\uc5b4 \uc788\uc744 \ub54c \uc2dc\uac01\ud654\uac00 \uac15\ud560\uc218\ub85d \uc2dc\uac01\uc801 \uafc8\uc774 \uc7a6\ub2e4\ub294 \uc99d\uac70\ub294 \ucc3e\uc9c0 \ubabb\ud588\ub2e4. \ubc18\uba74 \uc18c\ub9ac\uc640 \uc18d\ub9d0\uc740 \uafc8\uc5d0\uc11c \uc790\uc8fc \uacaa\ub294 \uc0ac\ub78c\uc774 \uae68\uc5b4 \uc788\uc744 \ub54c\ub3c4 \uc790\uc8fc \uacaa\ub294 \uacbd\ud5a5\uc774 \uc788\uc5c8\ub2e4. \ub2e4\ub9cc \uc5f0\uad00\uc131\uc740 \ub300\uccb4\ub85c \uc57d\ud568\uc5d0\uc11c \uc911\uac04 \uc815\ub3c4\uc600\ub2e4.\n\n\ud55c\uacc4\ub3c4 \uc788\ub2e4. \uc774 \uc5f0\uad6c\ub294 \ub1cc \ud65c\ub3d9\uc744 \uce21\uc815\ud558\uc9c0 \uc54a\uc544 \uc5f0\uad6c\uc9c4\uc774 \uc81c\uc2dc\ud55c \uc124\uba85\uc740 \uc544\uc9c1 \uac80\uc99d\ub418\uc9c0 \uc54a\uc558\uace0, \uacb0\uacfc\ub294 \ucc38\uac00\uc790\uac00 \uc790\uc2e0\uc758 \uacbd\ud5d8\uacfc \uafc8\uc744 \uae30\uc5b5\ud574 \uc124\uba85\ud55c \ub0b4\uc6a9\uc5d0 \uc758\uc874\ud55c\ub2e4. \uc55e\uc73c\ub85c\ub294 \uafc8 \uc9c1\ud6c4 \ucc38\uac00\uc790\ub97c \uae68\uc6cc \uae30\uc5b5\uc744 \ubb3b\ub294 \uc218\uba74 \uc5f0\uad6c\uac00 \ub3c4\uc6c0\uc774 \ub420 \uc218 \uc788\ub2e4\uace0 \ud55c\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert, Scientific Reports", "hashtags": ["#\uc544\ud310\ud0c0\uc2dc\uc544", "#\uafc8", "#\ub1cc\uacfc\ud559", "#\uc2ec\ub9ac\ud559", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\uc0c1\uc0c1\uc740 \ubabb \ud558\ub294\ub370", "**\uafc8\uc5d4** \ubcf4\uc778\ub2e4\uace0???", "---", "\uae68\uc5b4 \uc788\uc744 \ub550 \uba38\ub9bf\uc18d\uc5d0 \uc7a5\uba74\uc744 \uadf8\ub9ac\uc9c0 \ubabb\ud558\ub294 \uc0ac\ub78c\ub4e4\uc774 \uc7a0\ub4e4\uba74 \uafc8\uc5d0\uc11c \uc5bc\uad74\uacfc \uc7a5\uc18c\ub97c \ubcf4\uae30\ub3c4 \ud55c\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4."], ["\uc758\uc9c0\ub85c \uadf8\ub9bc\uc744", "**\ubabb \ub5a0\uc62c\ub9ac\ub294 \uc99d\uc0c1**", "---", "\uc6d0\ud558\ub294 \ub300\ub85c \uba38\ub9bf\uc18d\uc5d0 \uc774\ubbf8\uc9c0\ub97c \ub9cc\ub4e4\uc9c0 \ubabb\ud558\ub294 \uc0c1\ud0dc\ub97c \uc544\ud310\ud0c0\uc2dc\uc544\ub77c\uace0 \ud55c\ub2e4. \uc544\ub294 \uc0ac\ub78c\uc758 \uc5bc\uad74\uc744 \ub5a0\uc62c\ub9ac\ub824 \ud574\ub3c4 \uadf8\ub9bc\uc774 \ub418\uc9c0 \uc54a\ub294\ub2e4. \uadf8\ub7f0\ub370 \uc7a0\ub4e4\uba74 \uc5bc\uad74\uacfc \uc7a5\uc18c\uac00 \uafc8\uc5d0 \ub098\ud0c0\ub098\uae30\ub3c4 \ud55c\ub2e4."], ["**205\uba85\uc5d0\uac8c**", "\uafc8\uc744 \ubb3c\uc5b4\ubd24\ub2e4", "---", "\uc5f0\uad6c\uc9c4\uc740 \uc628\ub77c\uc778 \uc124\ubb38\uc5d0 \uc751\ud55c 205\uba85\uc758 \ub2f5\uc744 \ubd84\uc11d\ud588\ub2e4. \uc2dc\uac01 \uc0c1\uc0c1\ub825 \uc810\uc218\ub85c \uc544\ud310\ud0c0\uc2dc\uc544 \uc9d1\ub2e8 84\uba85, \ube44\uad50 \uc9d1\ub2e8 121\uba85\uc73c\ub85c \ub098\ub234\ub2e4. \uc2dc\uac01\ubfd0 \uc544\ub2c8\ub77c \uc18c\ub9ac, \ub0c4\uc0c8, \ucd09\uac01 \ub4f1\ub3c4 \ud568\uaed8 \ubb3c\uc5c8\ub2e4."], ["\uc808\ubc18 \uac00\uae4c\uc774", "\uafc8\uc5d0\uc120 **\ub298 \ubcf4\uc600\ub2e4**", "---", "\uc544\ud310\ud0c0\uc2dc\uc544 \uc9d1\ub2e8\uc758 46%\ub294 \uafc8\uc5d0\uc11c \uc2dc\uac01 \uacbd\ud5d8\uc744 \ub298 \ud55c\ub2e4\uace0 \ub2f5\ud588\ub2e4. \uc804\ud600 \uc5c6\ub2e4\ub294 \uc751\ub2f5\uc740 \uc57d 8%\uc600\ub2e4. \uae68\uc5b4 \uc788\uc744 \ub54c \uc2dc\uac01\ud654\uac00 \uac15\ud560\uc218\ub85d \uafc8\ub3c4 \ub354 \uc790\uc8fc \ubcf4\uc778\ub2e4\ub294 \uc99d\uac70\ub294 \ucc3e\uc9c0 \ubabb\ud588\ub2e4."], ["\uc18c\ub9ac\uc640 **\uc18d\ub9d0**\uc740", "\ub0ae\ubc24\uc774 \ube44\uc2b7\ud588\ub2e4", "---", "\uafc8\uc5d0\uc11c \uc18c\ub9ac\uc640 \uc18d\ub9d0\uc744 \ub354 \uc790\uc8fc \uacbd\ud5d8\ud55c\ub2e4\uace0 \ub2f5\ud55c \uc0ac\ub78c\uc740 \uae68\uc5b4 \uc788\uc744 \ub54c\ub3c4 \uadf8\ub7f0 \uacbd\ud5d8\uc774 \uc7a6\uc740 \uacbd\ud5a5\uc774 \uc788\uc5c8\ub2e4. \ub2e4\ub9cc \uc5f0\uad00\uc131\uc740 \ub300\uccb4\ub85c \uc57d\ud568\uc5d0\uc11c \uc911\uac04 \uc815\ub3c4\uc600\ub2e4. \ub0ae\uc5d4 \uc548 \ub418\uace0 \uafc8\uc5d4 \ub418\ub294 \uc774\uc720\ub294 \uc544\uc9c1 \ubd84\uba85\ud558\uc9c0 \uc54a\ub2e4."], ["\uafc8 \uc598\uae30 \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uae68\uc5b4 \uc788\uc744 \ub550 \uba38\ub9bf\uc18d \uadf8\ub9bc\uc774 \uc548 \uadf8\ub824\uc838\ub3c4 \uafc8\uc5d0\uc120 \ubcf4\uc77c \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c \ub0b4\uc6a9\uc744 \ub2f4\uc558\ub2e4. \uafc8 \uc598\uae30\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 2;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"3914fce3868e": "reject", "939d9d980b4b": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 2;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

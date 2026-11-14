@@ -1,0 +1,2068 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.01 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.01 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-1f593d7c4af5" data-jump="1f593d7c4af5">1</a><a href="#post-66bc0ddd9810" data-jump="66bc0ddd9810">2</a><a href="#post-2eca43195b5e" data-jump="2eca43195b5e">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-1f593d7c4af5" data-id="1f593d7c4af5">
+    <div class="head">
+      <h2>1. 동굴 흙에서 복원한 2만 2천 년 전 인간 DNA</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 14
+      </span>
+    </div>
+
+    
+    <div class="final rej"><b>반려됨</b><p>마음이 바뀌면 '다시 승인'을 누르고 보내면 새로 예약돼요.</p></div>
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/1f593d7c4af5/v1-01.jpg" alt="1장: 흙에서 인간 DNA???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/1f593d7c4af5/v1-02.jpg" alt="2장: 쌀 몇 톨 무게의 흙" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/1f593d7c4af5/v1-03.jpg" alt="3장: 피부, 머리카락, 피에서 나왔을 듯" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/1f593d7c4af5/v1-04.jpg" alt="4장: 서쪽 계통, 남성이 더 많아" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/1f593d7c4af5/v1-05.jpg" alt="5장: 큰 교체는 없었던 듯" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/1f593d7c4af5/v1-06.jpg" alt="6장: 고고학 덕후 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/1f593d7c4af5/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">뼈도, 치아도, 화석도 없었다. 스페인 엘 미론 동굴의 흙 한 줌에서 약 2만 2천 년 전 사람들의 DNA가 나왔다.
+
+이 층에는 인류 유해가 남아 있지 않다. 연구에 쓴 퇴적물은 쌀 몇 톨을 넘지 않는 무게였고, 쓸 만한 데이터를 얻으려면 100번 해독해야 했다. 10억 개가 넘는 DNA 조각 속에서 사람의 흔적을 찾아내고, 현대의 오염까지 따져야 했다.
+
+오스트리아 빈 대학 연구진이 이끈 이 연구는 Science Advances에 실렸다. 남은 유전 정보는 유럽 마지막 빙하기 가장 추운 시기에 동굴에서 지낸 사람들의 피부, 머리카락, 피에서 떨어져 나왔을 가능성이 있다. 이 시기의 인류 유해는 매우 드물다.
+
+분석 결과 이 동굴 사람들은 피부·머리카락·눈이 짙은 서쪽 계통이었을 가능성이 있고, DNA에는 여성보다 남성이 더 많이 섞여 있었다. 연구진은 3만~2만 년 전 유럽 남서부 인구가 비교적 이어졌던 것으로 보인다고 밝혔다.
+
+흙 속 DNA 기술이 이 시기의 증거를 사실상 두 배로 늘렸다는 점이 눈에 띈다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#고고학 #고대DNA #과학뉴스 #빙하기 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 큰 인구 교체나 단절이 없었다는 주장 (slide5 제목, 본문 outro &#39;큰 인구 교체는 없었다&#39;; 원문은 저자 주장으로 &#39;argue against a major population replacement&#39;라고 표현)</li><li>근거 등록 안 된 주장: 슬라이드 1 &#39;약 2만 2천 년 전&#39; 시점이 빙하기 가장 추운 시기와 연결된다는 시점 연결 주장</li>
+          <li>연구 결과는 &#39;가능성이 있다&#39;, &#39;추정된다&#39; 수준의 표현이라 단정하지 않도록 주의</li><li>원문은 ScienceAlert 기사 한 건이며 논문 원문은 확인하지 않음</li><li>슬라이드 5의 &#39;두 배&#39; 표현은 이 시기·지역의 고대 인간 DNA 증거에 한정된 내용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-1f593d7c4af5-0">1장</label>
+          <textarea id="s-1f593d7c4af5-0" rows="6" data-slide="0">흙에서
+인간 **DNA???**
+---
+스페인 엘 미론 동굴의 퇴적물에서 약 2만 2천 년 전 여러 사람의 DNA가 확인됐다. 뼈나 치아는 하나도 없었다.</textarea>
+          
+          <label class="f" for="s-1f593d7c4af5-1">2장</label>
+          <textarea id="s-1f593d7c4af5-1" rows="6" data-slide="1">**쌀 몇 톨**
+무게의 흙
+---
+엘 미론 동굴에서 채취한 퇴적물은 무게가 쌀 몇 톨을 넘지 않았다. 쓸 만한 데이터를 얻으려고 100번 해독해야 했다. 10억 개가 넘는 DNA 조각 속에서 사람의 흔적을 골라내야 했다.</textarea>
+          
+          <label class="f" for="s-1f593d7c4af5-2">3장</label>
+          <textarea id="s-1f593d7c4af5-2" rows="6" data-slide="2">피부, 머리카락,
+피에서 나왔을 듯
+---
+남은 유전 정보는 아주 오래전 동굴에서 지낸 사람들의 피부나 머리카락, 피에서 떨어져 나왔을 것으로 추정된다. 유럽의 마지막 빙하기 중 가장 추웠던 시기의 일이다.</textarea>
+          
+          <label class="f" for="s-1f593d7c4af5-3">4장</label>
+          <textarea id="s-1f593d7c4af5-3" rows="6" data-slide="3">**서쪽 계통**,
+남성이 더 많아
+---
+DNA는 여러 사람이 섞인 것으로 보이며 여성보다 남성이 더 많았다. 이 동굴에 살던 사람들은 피부·머리카락·눈이 짙은 서쪽 계통 집단에 속했을 가능성이 있다.</textarea>
+          
+          <label class="f" for="s-1f593d7c4af5-4">5장</label>
+          <textarea id="s-1f593d7c4af5-4" rows="6" data-slide="4">**큰 교체는**
+없었던 듯
+---
+이 동굴의 2만 2천 년 전 DNA에는 서쪽 계통의 흔적만 나타났다. 3만~2만 년 전 유럽 남서부 집단은 비교적 이어졌던 것으로 보인다. 흙 속 DNA 기술은 이 시기 증거를 사실상 두 배로 늘렸다.</textarea>
+          
+          <label class="f" for="s-1f593d7c4af5-5">6장</label>
+          <textarea id="s-1f593d7c4af5-5" rows="6" data-slide="5">고고학 덕후 친구
+**태그해서** 알려줘
+---
+뼈 한 조각 없이 흙에서 고대 인류의 DNA를 읽어낸 연구라 역사나 과학을 좋아하는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-1f593d7c4af5">본문 (캡션)</label>
+          <textarea id="c-1f593d7c4af5" class="caption">뼈도, 치아도, 화석도 없었다. 스페인 엘 미론 동굴의 흙 한 줌에서 약 2만 2천 년 전 사람들의 DNA가 나왔다.
+
+이 층에는 인류 유해가 남아 있지 않다. 연구에 쓴 퇴적물은 쌀 몇 톨을 넘지 않는 무게였고, 쓸 만한 데이터를 얻으려면 100번 해독해야 했다. 10억 개가 넘는 DNA 조각 속에서 사람의 흔적을 찾아내고, 현대의 오염까지 따져야 했다.
+
+오스트리아 빈 대학 연구진이 이끈 이 연구는 Science Advances에 실렸다. 남은 유전 정보는 유럽 마지막 빙하기 가장 추운 시기에 동굴에서 지낸 사람들의 피부, 머리카락, 피에서 떨어져 나왔을 가능성이 있다. 이 시기의 인류 유해는 매우 드물다.
+
+분석 결과 이 동굴 사람들은 피부·머리카락·눈이 짙은 서쪽 계통이었을 가능성이 있고, DNA에는 여성보다 남성이 더 많이 섞여 있었다. 연구진은 3만~2만 년 전 유럽 남서부 인구가 비교적 이어졌던 것으로 보인다고 밝혔다.
+
+흙 속 DNA 기술이 이 시기의 증거를 사실상 두 배로 늘렸다는 점이 눈에 띈다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-1f593d7c4af5">해시태그</label>
+          <input id="t-1f593d7c4af5" type="text" class="tagsin" value="#고고학 #고대DNA #과학뉴스 #빙하기 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스페인 동굴의 퇴적물에서 약 2만 2천 년 전 여러 사람의 DNA가 나왔다</b>
+            <q>“A small scoop of sediment from a cave in Spain has now offered up ancient DNA from several individuals who lived roughly 22,000 years ago.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뼈나 치아, 화석이 없었다</b>
+            <q>“No bones, no teeth, no fossils.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>엘 미론 동굴 이 층에는 인류 유해가 없다</b>
+            <q>“No human remains exist in this layer of the El Mirón Cave, but that hasn&#39;t stopped scientists.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>퇴적물은 쌀 몇 톨을 넘지 않는 무게였고 100번 해독해야 했다</b>
+            <q>“The sediment taken from the El Mirón Cave weighed no more than a few grains of rice and had to be sequenced 100 times to yield enough usable data.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10억 개가 넘는 DNA 조각 속에서 사람의 흔적을 찾아야 했다</b>
+            <q>“The team had to sift through more than a billion DNA fragments in the sample to find any human traces.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>현대 오염도 고려해야 했다</b>
+            <q>“Plus, modern contamination had to be accounted for as well.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빈 대학 연구진이 이끌었고 Science Advances에 실렸다</b>
+            <q>“The findings from the study, led by researchers at the University of Vienna in Austria, are published in Science Advances.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유전 정보는 빙하기 가장 추운 시기에 동굴에 머문 사람들의 피부, 머리카락, 피에서 나왔을 가능성이 있다</b>
+            <q>“What little genetic information the team found was probably shed long, long ago, possibly from the skin, hair, or blood of ancient humans sheltering in the cave during the coldest time of Europe&#39;s last ice age.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 시기의 유골은 매우 드물다</b>
+            <q>“Skeletons from this period are extremely rare.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>동굴 사람들은 피부·머리카락·눈이 짙은 서쪽 계통 집단에 속했을 가능성이 있다</b>
+            <q>“This ancient human DNA suggests that the people who once inhabited this cave probably belonged to a western ancestry group with dark skin, hair, and eyes.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>DNA는 여러 사람이 섞인 것으로 보이며 여성보다 남성이 더 많다</b>
+            <q>“The DNA seems to have come from a mix of individuals, including more males than females.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>엘 미론 동굴의 약 2만 2천 년 전 DNA에는 서쪽 계통의 흔적만 나타난다</b>
+            <q>“Human DNA from the El Mirón cave, which is roughly 22,000 years old, only shows signs of western ancestry.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>3만~2만 년 전 유럽 남서부 인구는 비교적 이어졌던 것으로 보인다</b>
+            <q>“Instead, the population in southwest Europe between 30,000 and 20,000 years ago seems to have remained relatively continuous.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>흙 속 DNA 기술이 이 시기 증거를 사실상 두 배로 늘렸다</b>
+            <q>“The samples of ancient human DNA that scientists are working with from this time and place are still scarce, but sedaDNA techniques have already contributed greatly, practically doubling the evidence at hand.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">Scientists Recovered 22,000-Year-Old Human DNA From Cave Dirt</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Omoplato_o_esc%C3%A1pula_con_la_silueta_de_una_cabeza_de_cierva,_procedente_de_las_excavaciones_de_la_Cueva_del_Mir%C3%B3n_02.jpg" target="_blank" rel="noopener">Jesús Munguía / Gobierno de Cantabria / Wikimedia Commons · CC BY 3.0</a> — "El Mirón Cave"</li><li>2장: <a href="https://www.sciencealert.com/scientists-recovered-22000-year-old-human-dna-from-cave-dirt" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/10/MigrationLGM.png"</li><li>3장: <a href="https://pixabay.com/photos/fantasy-sculpture-monument-giant-2925250/" target="_blank" rel="noopener">KELLEPICS / Pixabay</a> — "frozen landscape"</li><li>4장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>5장: <a href="https://pixabay.com/photos/africa-growth-development-plant-9904004/" target="_blank" rel="noopener">Joa70 / Pixabay</a> — "europe map"</li><li>6장: <a href="https://pixabay.com/photos/pyramids-egypt-egyptian-ancient-2371501/" target="_blank" rel="noopener">TheDigitalArtist / Pixabay</a> — "archaeology"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-66bc0ddd9810" data-id="66bc0ddd9810">
+    <div class="head">
+      <h2>2. 플러그 핀 구멍의 정체</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 16
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/5 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 7장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>플러그 핀에 뚫린 작은 구멍, 한 번쯤 궁금했을 것이다. 흔히 콘센트가 플러그를 더 단단히 붙잡게 해 준다는 설명을 들어 봤겠지만, 지금은 주로 제조 과정에서 쓸모가 있는 구멍이라고 한다.
+
+공장에서는 작업자가 구멍에 정렬용 막대를 끼워 금속 날의 위치를 고정한 뒤 플라스틱을 성형한다. 물론 모든 제조사가 같은 공정을 쓰는 것은 아니다. 일반 청소기 플러그부터 스마트 플러그까지 모두 해당되는 이야기이고, 스마트 플러그에 멀티탭을 다시 꽂지는 말라는 당부도 곁들여졌다.
+
+원래는 콘센트 안쪽의 작은 돌기가 구멍에 걸리는 디텐트 구조가 있었다. 이후 UL이 구멍 없이도 플러그를 잡도록 콘센트 기준을 고치면서 돌기는 사라졌지만, 구멍은 대부분의 제조사가 계속 쓰는 선택 사항으로 남았다.
+
+구멍이 없는 플러그도 결함이 아니다. 플러그가 쉽게 빠진다면 플러그보다 콘센트가 닳았을 가능성이 크고, 이때는 콘센트를 새것으로 바꾸면 된다. 다만 교체할 때는 차단기에서 전원을 끈 뒤에 작업해야 한다. 구멍 없는 핀에 직접 구멍을 뚫을 필요도 없다.
+
+출처: Engadget
+
+배경 사진: jwvein, 3844328, Couleur / Pixabay
+표지 이미지: Engadget
+3장 이미지: SlashGear
+5장 이미지: SlashGear
+
+#생활상식 #콘센트 #플러그 #과학상식 #해외이슈</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-66bc0ddd9810">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 매일 꽂는 플러그의 구멍을 &#39;콘센트 잡아주는 용도&#39;로 알았던 통념을 뒤집고, 플러그가 자꾸 빠지면 콘센트부터 보라는 실용 포인트로 연결</p>
+    
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 구멍과 짝이던 콘센트 안쪽 돌기 구조의 이름(디텐트) (카드 3장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">플러그가 자꾸 빠질 때, 플러그가 아니라 &#39;콘센트&#39;부터 의심하라는 설명이 나옴
+핀에 뚫린 그 작은 구멍, 콘센트가 잡아주는 용도로만 알았다면 반만 맞음
+지금은 다른 데서 더 쓸모가 있대 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">82/500자</span></div>
+      <p class="tp-text">1/ 지금 그 구멍이 제일 쓸모 있는 곳은 공장이래. 작업자가 구멍에 정렬용 막대를 끼워서 금속 날 위치를 고정함. 그럼 원래는 무슨 역할이었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">81/500자</span></div>
+      <p class="tp-text">2/ 원래는 콘센트 안쪽의 작은 돌기가 이 구멍에 딸깍 걸려서 플러그를 붙잡았대. NEMA에 따르면 그렇다고 함. 근데 그 돌기는 왜 사라졌을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">3/ UL이 구멍 없이도 플러그를 잡도록 콘센트 기준을 고쳤대. 대부분의 제조사는 기준 맞추는 데 도움 안 되고 뽑기만 어렵게 하는 돌기를 더 달지 않았음. 그럼 구멍은 왜 아직 남아 있을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">4/ 콘센트의 돌기는 사라졌지만 플러그 날의 구멍은 그대로 남았고, 지금은 있어도 없어도 되는 선택 사항이래. 구멍 없는 플러그도 결함이 아니고, 구멍 없는 핀에 직접 뚫을 필요도 없음. 그럼 플러그가 자꾸 빠지는 집은 뭘 봐야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">78/500자</span></div>
+      <p class="tp-text">5/ 구멍보다 콘센트가 닳았을 가능성이 크대. 이럴 땐 콘센트를 새것으로 바꾸면 되는데, 교체할 때는 차단기에서 전원부터 끄고 작업해야 함.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">6/ 플러그 구멍 요약 정리
+- 지금 쓸모: 제조할 때 금속 날 위치 잡는 용도
+- 원래 역할: 콘센트 안쪽 돌기와 짝
+- 지금: 없어도 되는 선택 사항 (구멍 없어도 결함 아님)
+- 플러그가 자꾸 빠지면: 콘센트 마모부터 의심</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">218/500자</span></div>
+      <p class="tp-text">7/ 결국 구멍은 제조할 때 쓰는 자리고, 플러그가 자꾸 빠지면 콘센트 상태부터 보라는 얘기.
+플러그 구멍, 콘센트 잡으라고 있는 건 줄 알았던 사람?
+이런 생활 속 물건의 숨은 이유, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+카드엔 구멍과 짝이던 돌기 구조를 부르는 이름까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>플러그가 자꾸 빠질 때, 플러그가 아니라 &#39;콘센트&#39;부터 의심하라는 설명이 나옴</li><li>플러그 핀 구멍, 콘센트를 꽉 잡아주려고 있는 줄 알았지? 지금은 공장에서 더 쓸모 있대</li><li>매일 꽂는 플러그의 그 작은 구멍, 쓸모는 콘센트 속이 아니라 공장 안에 있대</li><li>구멍 없는 플러그 보면 불량 같지? 결함이 아니래</li><li>플러그 구멍의 원래 짝꿍은 콘센트 안쪽 작은 돌기였는데, 그 돌기가 사라졌대</li><li>콘센트가 헐거우면 플러그 핀에 구멍부터 뚫어야 할 것 같지? 그럴 필요 없대</li><li>플러그 구멍, 지금은 있어도 없어도 되는 &#39;선택 사항&#39;이래</li><li>&#39;플러그 구멍은 콘센트가 꽉 잡으라고 있는 것&#39;, 이 말 반만 맞음</li><li>플러그 핀 구멍의 정체, 공장에서 정렬용 막대 끼우는 자리였대</li><li>플러그가 헐겁게 빠지는 집, 구멍 탓이 아니라 콘센트가 닳은 걸 수 있대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>플러그 구멍, 콘센트 잡으라고 있는 건 줄 알았던 사람?</li><li>플러그 구멍 정체 알고 있었다 vs 오늘 처음 안다?</li><li>구멍 없는 플러그 써본 적 있는 사람?</li><li>플러그가 헐거우면 플러그부터 바꾼다 vs 콘센트부터 본다, 어느 쪽이야?</li><li>이런 사소한 물건의 숨은 이유, 더 알고 싶은 거 뭐 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>콘센트가 닳으면 왜 플러그가 헐거워질까</li><li>콘센트 교체할 때 차단기부터 끄라는 이유</li><li>스마트 플러그에 멀티탭을 다시 꽂지 말라는 당부</li><li>플러그 날 모양이 나라마다 다른 이유</li><li>이탈리아 농부의 다락방 씨앗과 기적의 밀</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>5/의 콘센트 교체 언급은 전기 안전과 연결되므로 &#39;차단기에서 전원부터 끄기&#39; 문구가 빠지지 않았는지 확인</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/66bc0ddd9810/v1-01.jpg" alt="1장: 플러그 구멍의 정체가 이거???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/66bc0ddd9810/v1-02.jpg" alt="2장: 공장에서 쓰는 위치 고정용" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/66bc0ddd9810/v1-03.jpg" alt="3장: 원래는 콘센트를 붙잡는 용도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/66bc0ddd9810/v1-04.jpg" alt="4장: 규격이 바뀌자 돌기가 사라짐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/66bc0ddd9810/v1-05.jpg" alt="5장: 구멍은 남았지만 이제 선택 사항" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/66bc0ddd9810/v1-06.jpg" alt="6장: 콘센트 헐거운 집 저장해 두기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/66bc0ddd9810/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">플러그 핀에 뚫린 작은 구멍, 한 번쯤 궁금했을 것이다. 흔히 콘센트가 플러그를 더 단단히 붙잡게 해 준다는 설명을 들어 봤겠지만, 지금은 주로 제조 과정에서 쓸모가 있는 구멍이라고 한다.
+
+공장에서는 작업자가 구멍에 정렬용 막대를 끼워 금속 날의 위치를 고정한 뒤 플라스틱을 성형한다. 물론 모든 제조사가 같은 공정을 쓰는 것은 아니다. 일반 청소기 플러그부터 스마트 플러그까지 모두 해당되는 이야기이고, 스마트 플러그에 멀티탭을 다시 꽂지는 말라는 당부도 곁들여졌다.
+
+원래는 콘센트 안쪽의 작은 돌기가 구멍에 걸리는 디텐트 구조가 있었다. 이후 UL이 구멍 없이도 플러그를 잡도록 콘센트 기준을 고치면서 돌기는 사라졌지만, 구멍은 대부분의 제조사가 계속 쓰는 선택 사항으로 남았다.
+
+구멍이 없는 플러그도 결함이 아니다. 플러그가 쉽게 빠진다면 플러그보다 콘센트가 닳았을 가능성이 크고, 이때는 콘센트를 새것으로 바꾸면 된다. 다만 교체할 때는 차단기에서 전원을 끈 뒤에 작업해야 한다. 구멍 없는 핀에 직접 구멍을 뚫을 필요도 없다.
+
+출처: Engadget</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#생활상식 #콘센트 #플러그 #과학상식 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 슬라이드·본문의 &#39;구멍은 제조 시 위치를 잡는 용도&#39; 요약은 claim 0과 중복이나 &#39;플러그 핀의 구멍은 콘센트 전기 통로가 아니다&#39; 등 원문의 부정 설명은 별도 claim으로 없음</li><li>근거 등록 안 된 주장: UL이 플러그 제거 난이도를 제한하는 다른 테스트 게이지를 도입했다는 내용은 claim에 없음</li><li>근거 등록 안 된 주장: 원문의 &#39;구멍은 잠금 태그(lockout tags) 역할을 하는 안전장치&#39;라는 내용은 claim에 없음</li><li>근거 등록 안 된 주장: 플러그에 구멍이 있다면 제조사는 규격 크기와 진입부 형태를 따라야 한다는 내용은 claim에 없음</li><li>근거 등록 안 된 주장: 15~20A 전류와 손가락이 위험하다는 경고는 claim에 없음</li><li>근거 등록 안 된 주장: &#39;Engadget&#39; 출처 표기 및 본문 인용 내용은 claim으로 다뤄지지 않음</li>
+          <li>원문 한 건에 의존한 내용</li><li>제조 공정은 제조사마다 다를 수 있음</li><li>콘센트 교체는 전원 차단 등 안전 주의 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-66bc0ddd9810-0">1장</label>
+          <textarea id="s-66bc0ddd9810-0" rows="6" data-slide="0">플러그 구멍의
+**정체가** 이거???
+---
+플러그 핀에 뚫린 작은 구멍은 오늘날 콘센트 속 역할보다 제조 과정에서 더 쓸모가 있다고 한다.</textarea>
+          
+          <label class="f" for="s-66bc0ddd9810-1">2장</label>
+          <textarea id="s-66bc0ddd9810-1" rows="6" data-slide="1">공장에서 쓰는
+**위치 고정용**
+---
+작업자는 구멍에 정렬용 막대를 끼워 금속 날의 위치를 고정한다. 그 상태에서 조립품 둘레에 플라스틱을 성형하는 방식이다. 다만 모든 제조사가 같은 공정을 쓰지는 않는다.</textarea>
+          
+          <label class="f" for="s-66bc0ddd9810-2">3장</label>
+          <textarea id="s-66bc0ddd9810-2" rows="6" data-slide="2">원래는 콘센트를
+**붙잡는 용도**
+---
+NEMA에 따르면 구멍은 원래 콘센트 안쪽의 작은 돌기와 짝을 이뤘다. 돌기가 구멍에 딸깍 걸려 플러그를 붙잡았고, 이 구조를 디텐트라고 부른다.</textarea>
+          
+          <label class="f" for="s-66bc0ddd9810-3">4장</label>
+          <textarea id="s-66bc0ddd9810-3" rows="6" data-slide="3">규격이 바뀌자
+**돌기가 사라짐**
+---
+이후 UL이 구멍 없이도 플러그를 잡도록 콘센트 기준을 고쳤다. 대부분의 제조사는 기준을 맞추는 데 도움이 안 되고 뽑기만 어렵게 하는 돌기를 더 달지 않았다.</textarea>
+          
+          <label class="f" for="s-66bc0ddd9810-4">5장</label>
+          <textarea id="s-66bc0ddd9810-4" rows="6" data-slide="4">구멍은 남았지만
+이제 **선택 사항**
+---
+콘센트의 돌기는 사라졌지만 플러그 날의 구멍은 그대로 남았고, 지금은 있어도 없어도 되는 선택 사항이다. 구멍 없는 플러그도 결함이 아니며 알맞은 콘센트에선 전기도 통한다.</textarea>
+          
+          <label class="f" for="s-66bc0ddd9810-5">6장</label>
+          <textarea id="s-66bc0ddd9810-5" rows="6" data-slide="5">콘센트 헐거운 집
+**저장해 두기**
+---
+플러그가 자꾸 빠지는 집이라면 나중에 다시 꺼내 볼 이야기. 원인은 플러그 핀의 구멍이 아니라 콘센트의 마모일 가능성이 크다는 설명.</textarea>
+          
+          <label class="f" for="c-66bc0ddd9810">본문 (캡션)</label>
+          <textarea id="c-66bc0ddd9810" class="caption">플러그 핀에 뚫린 작은 구멍, 한 번쯤 궁금했을 것이다. 흔히 콘센트가 플러그를 더 단단히 붙잡게 해 준다는 설명을 들어 봤겠지만, 지금은 주로 제조 과정에서 쓸모가 있는 구멍이라고 한다.
+
+공장에서는 작업자가 구멍에 정렬용 막대를 끼워 금속 날의 위치를 고정한 뒤 플라스틱을 성형한다. 물론 모든 제조사가 같은 공정을 쓰는 것은 아니다. 일반 청소기 플러그부터 스마트 플러그까지 모두 해당되는 이야기이고, 스마트 플러그에 멀티탭을 다시 꽂지는 말라는 당부도 곁들여졌다.
+
+원래는 콘센트 안쪽의 작은 돌기가 구멍에 걸리는 디텐트 구조가 있었다. 이후 UL이 구멍 없이도 플러그를 잡도록 콘센트 기준을 고치면서 돌기는 사라졌지만, 구멍은 대부분의 제조사가 계속 쓰는 선택 사항으로 남았다.
+
+구멍이 없는 플러그도 결함이 아니다. 플러그가 쉽게 빠진다면 플러그보다 콘센트가 닳았을 가능성이 크고, 이때는 콘센트를 새것으로 바꾸면 된다. 다만 교체할 때는 차단기에서 전원을 끈 뒤에 작업해야 한다. 구멍 없는 핀에 직접 구멍을 뚫을 필요도 없다.
+
+출처: Engadget</textarea>
+          <label class="f" for="t-66bc0ddd9810">해시태그</label>
+          <input id="t-66bc0ddd9810" type="text" class="tagsin" value="#생활상식 #콘센트 #플러그 #과학상식 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>플러그 핀의 구멍은 한때 일상적인 용도가 있었지만 오늘날에는 주로 제조 과정에서 쓸모가 있다</b>
+            <q>“The truth is, while these enigmatic holes once served an everyday purpose (more on that below), they are mainly useful in the manufacturing process today.”</q>
+            <small>slide1 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>작업자는 구멍에 정렬용 막대를 끼워 금속 날을 고정한 뒤 그 주위로 플라스틱을 성형한다</b>
+            <q>“Basically, a worker passes an alignment rod through the holes to hold the blades in position before plastic is molded around the assembly.”</q>
+            <small>slide2 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>모든 제조사가 같은 공정을 쓰는 것은 아니다</b>
+            <q>“Of course, not every manufacturer uses the same process.”</q>
+            <small>slide2 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NEMA에 따르면 구멍은 원래 콘센트 안쪽의 작은 돌기와 함께 작동했다</b>
+            <q>“According to the National Electrical Manufacturers Association (NEMA), the holes originally worked with a small raised feature inside the receptacle.”</q>
+            <small>slide3 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그 돌기가 구멍에 딸깍 걸려 플러그를 붙잡았고 이 구조를 디텐트라고 부른다</b>
+            <q>“That feature basically clicked into the hole to help retain the plug. The mechanism is known as a &#34;detent.&#34;”</q>
+            <small>slide3 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>UL이 구멍 없이도 플러그를 고정하도록 콘센트 기준을 고쳤다</b>
+            <q>“Later, Underwriters Laboratories (UL) revised the standards on receptacles to hold plugs in place without the holes.”</q>
+            <small>slide4 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>대부분의 제조사는 최소 요건 충족에 도움이 안 되고 뽑기 어렵게 만드는 돌기를 더 달지 않게 되었다</b>
+            <q>“Most manufacturers stopped adding the matching raised features because they did nothing to help meet minimum requirements and made the plugs more difficult to withdraw.”</q>
+            <small>slide4 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>콘센트의 돌기는 사라졌지만 플러그 날의 구멍은 남아 선택 사항이 되었고 대부분의 제조사가 계속 쓴다</b>
+            <q>“The detent design in wall outlets went away accordingly, but the holes in plug blades did not, leaving the design feature entirely optional, with most manufacturers continuing to use them.”</q>
+            <small>slide5 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구멍 없는 플러그도 결함이 아니다</b>
+            <q>“A plug without any holes isn&#39;t defective or anything, and it&#39;s not missing the required safety features, though some plugs, like extension cords, shouldn&#39;t be plugged in at all times for safety.”</q>
+            <small>slide5 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구멍 없는 날도 알맞은 콘센트에서 전기가 통한다</b>
+            <q>“A solid, hole-free blade will still make electrical contact and close the circuit in an appropriate outlet (including those with retractable prongs).”</q>
+            <small>slide5 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>플러그가 쉽게 빠지면 플러그 핀보다 콘센트 마모일 가능성이 크다</b>
+            <q>“If your plug is sliding back out with little resistance, it&#39;s probably wear and tear in the receptacle, not the plug prongs.”</q>
+            <small>slide6 · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>콘센트가 플러그를 붙잡게 해 준다는 설명이 흔히 알려져 있다</b>
+            <q>“You&#39;ve probably come across the &#34;holes help an outlet grip the plug&#34; explanation.”</q>
+            <small>caption · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일반 청소기 플러그부터 스마트 플러그까지 해당되며 스마트 플러그에 멀티탭을 꽂지 말라는 당부가 있다</b>
+            <q>“That goes for ordinary plugs on a vacuum cleaner to smart plugs for smart home integration (just don&#39;t plug a power strip into your smart plug).”</q>
+            <small>caption · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구멍 있는 플러그를 찾을 필요 없이 새 콘센트를 구하면 된다</b>
+            <q>“You don&#39;t need to go out and hunt for a plug with holes. Instead, go find a new receptacle.”</q>
+            <small>caption · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>콘센트 교체 시 차단기에서 전원을 꺼야 한다</b>
+            <q>“Changing them out isn&#39;t too difficult; just make sure the power is cut off at the breaker.”</q>
+            <small>caption · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구멍 없는 핀에 직접 구멍을 뚫을 필요가 없다</b>
+            <q>“Also, don&#39;t drill holes in the prongs if you have a plug with solid blades. The holes really aren&#39;t necessary.”</q>
+            <small>caption · <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">The reason most electrical plug prongs have holes in them - Engadget</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.engadget.com/2300248/reason-most-electrical-plug-prongs-have-holes/" target="_blank" rel="noopener">Engadget / </a> — "https://www.engadget.com/img/gallery/the-reason-most-electrical-plug-prongs-have-holes-in-them/l-intro-1792780954.jpg"</li><li>2장: <a href="https://pixabay.com/photos/power-station-chimneys-factory-smog-6579092/" target="_blank" rel="noopener">jwvein / Pixabay</a> — "factory"</li><li>3장: <a href="https://www.slashgear.com/1850521/electrical-plug-prongs-holes-use-explained-what-for/" target="_blank" rel="noopener">SlashGear / </a> — "https://www.slashgear.com/img/gallery/what-are-the-holes-in-electrical-plug-prongs-for/other-incidental-uses-of-the-holes-in-electrical-plug-prongs-1746218514.jpg"</li><li>4장: <a href="https://pixabay.com/photos/floor-plan-construction-building-1857175/" target="_blank" rel="noopener">3844328 / Pixabay</a> — "blueprint"</li><li>5장: <a href="https://www.slashgear.com/1850521/electrical-plug-prongs-holes-use-explained-what-for/" target="_blank" rel="noopener">SlashGear / </a> — "https://www.slashgear.com/img/gallery/what-are-the-holes-in-electrical-plug-prongs-for/l-intro-1746218513.jpg"</li><li>6장: <a href="https://pixabay.com/photos/lightbulb-pear-electricity-energy-1640351/" target="_blank" rel="noopener">Couleur / Pixabay</a> — "light switch"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-2eca43195b5e" data-id="2eca43195b5e">
+    <div class="head">
+      <h2>3. 이탈리아 농부의 다락방 씨앗과 기적의 밀</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 18 · 애매 2
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/5 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>다락방에서 나온 낡은 씨앗 자루가 기적의 밀이 된 이야기. 1990년대 초 이탈리아 파르마의 농부 클라우디오 그로시는 정체를 알 수 없는 씨앗을 거름 더미에 쏟아 두고 잊어버렸다. 그런데 싹튼 밀 가운데 하나는 키가 6피트로 상업용 밀의 약 두 배였고, 이삭이 일곱 개씩 달렸다. 낟알도 노랑, 검정, 빨강, 흰색, 초록 등 여러 색이었다. 성경 창세기의 이삭 일곱 개 구절을 떠올린 그는 이 곡물이 아주 오래된 것이라고 생각했다. 직접 빻아 구운 빵은 반죽이 잘 부풀지 않았지만 구수하고 맛있는 향이 부엌을 채웠다고 한다. 이후 파르마대 연구진은 이 곡물이 Triticum turgidum이라고 밝혔고, 현대 밀보다 인과 철이 풍부하고 글루텐은 적다는 결과도 내놓았다. 그로시는 이 밀이 가뭄에 더 잘 버티고 비료와 제초제도 필요 없다는 점을 확인했다. 시칠리아의 한 전문가는 2024년 극심한 가뭄 때 고대 곡물을 키운 농가 대부분이 수확할 수 있었다고 전했다.
+
+출처: Smithsonian Magazine
+
+배경 사진: PublicDomainPictures, congerdesign, jarmoluk, lehuudat / Pixabay
+표지 이미지: Smithsonian
+3장 이미지: Smithsonian
+7장 이미지: Smithsonian
+
+#신기한뉴스 #이탈리아 #고대곡물 #밀 #해외뉴스</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-2eca43195b5e">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">이야기형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 버린 거름 더미에서 자란 정체불명 밀이 성경 구절과 겹치고, 알고 보니 비료·제초제 없이도 크는 진짜 고대 밀이었다는 반전 사연</p>
+    
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 이삭이 일곱 개씩 달린 모양: 긴 것 하나를 짧은 여섯 개가 둘러싼 구조 (카드 3장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">밀은 비료·제초제가 있어야 큰다는 생각, 이 밀 앞에선 좀 흔들림
+다락방에서 나온 정체불명 씨앗을 거름 더미에 쏟았더니 키가 상업용 밀의 두 배인 밀이 자랐대
+근데 이 씨앗의 정체가 의외였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면 이 밀의 정체는 진짜 고대 밀이었음. 이탈리아에서도 재배되다 밀려난 Triticum turgidum이고, 파르마대 연구진이 밝혀냈대. 그럼 이게 처음엔 어떻게 자라난 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">2/ 1990년대 초 파르마의 농부 그로시는 증조부가 남긴 거라고 확신한 자루를 거름 더미에 쏟고 잊어버렸대. 씨앗이 말라 갈라져서 싹이 틀 거라곤 기대도 안 했고. 근데 여러 종류의 밀이 싹텄는데, 그중 하나가 유난히 컸음. 얼마나 컸을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">3/ 키가 6피트로 상업용 밀의 약 두 배였고, 이삭은 일곱 개씩 달렸대. 낟알도 노랑, 검정, 빨강, 흰색, 초록으로 제각각. 이걸 본 그로시가 교회에서 성경을 넘기다 뭘 발견했을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">4/ 창세기에 줄기 하나에 이삭 일곱 개가 달린 꿈 이야기가 있었음. 그로시는 이 곡물이 아주 오래된 거라고 생각했고, 그 직감은 맞았던 거지. 그럼 이 고대 밀은 키우기가 어땠을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">200/500자</span></div>
+      <p class="tp-text">5/ 기적의 밀 요약 정리
+- 정체: Triticum turgidum (풀라드 밀)
+- 수확량 높은 상업용 품종으로 농가가 옮겨 가며 밀려났던 밀
+- 가뭄에 더 잘 버팀
+- 키가 커서 잡초를 눌러버림
+- 비료·제초제 필요 없었음
+- 시칠리아 전문가는 2024년 극심한 가뭄 때 고대 곡물 키운 농가 대부분이 수확했다고 전함
+그럼 이 밀로 구운 빵은 어땠을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">6/ 직접 빻아 구운 빵은 반죽이 잘 부풀지 않았지만, 구수하고 맛있는 향이 부엌을 채웠다고 해. 연구진은 현대 밀보다 인과 철이 풍부하고 글루텐은 적다는 결과도 내놨대. 그로시는 이 밀에 grano del miracolo, 기적의 곡물이라는 이름을 붙였음.</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">218/500자</span></div>
+      <p class="tp-text">7/ 결국 다락방 자루 하나가 이탈리아에서 밀려났던 고대 밀, 그것도 가뭄에 강한 밀을 다시 꺼내 보인 셈임.
+너라면 다락방에서 정체불명 씨앗 자루가 나오면 심어볼 거야, 버릴 거야?
+이런 해외 신기한 소식, 새벽마다 계속 배달함. 팔로우해두면 피드에 뜸.
+카드엔 이삭이 달린 모양까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>밀은 비료·제초제가 있어야 큰다는 생각, 이 밀 앞에선 좀 흔들림</li><li>다락방에서 나온 씨앗 자루를 거름 더미에 쏟았더니 벌어진 일</li><li>빵의 재료는 &#39;현대 밀&#39;이 전부가 아니라는 얘기, 이탈리아 농부가 우연히 보여줬대</li><li>&#39;기적의 곡물&#39;이라는 이름까지 붙은 밀, 시작은 버려진 씨앗 자루였음</li><li>키가 상업용 밀의 두 배인데 비료도 제초제도 필요 없었대</li><li>잡초 막으려면 제초제부터? 이 밀은 키로 잡초를 눌러버렸대</li><li>이삭이 7개씩 달린 밀이 나왔는데, 농부가 성경을 펼쳤대</li><li>빵 좋아하면 이거 신기할걸. 이탈리아에서 밀려났던 밀이 다락방에서 돌아옴</li><li>가뭄에 강한 밀은 신품종이 아니라 증조부 다락방에 있었음</li><li>&#39;싹이 틀 거라곤 기대도 안 했다&#39;던 말라 갈라진 씨앗의 정체</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>다락방에서 정체불명 씨앗 자루가 나오면 심어볼 거야, 버릴 거야?</li><li>빵 vs 밥, 하나만 평생 먹어야 하면 어느 쪽이야?</li><li>화분이든 텃밭이든 식물 키워본 사람?</li><li>반죽이 덜 부풀어도 구수한 빵 vs 빵빵하게 부푼 빵, 어느 파야?</li><li>성경 구절 보고 &#39;어, 이거다&#39; 하고 무릎 친 적 있는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>가뭄에 강한 고대 곡물, 어떤 게 또 있을까</li><li>현대 밀이 수확량 위주로 바뀐 이야기</li><li>글루텐 적은 고대 밀, 빵 맛은 어떻게 다를까</li><li>시칠리아 농가가 2024년 가뭄을 버틴 방법</li><li>버려진 씨앗이 되살린 옛 작물 이야기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>가뭄 내성·비료 불필요는 그로시의 확인과 시칠리아 전문가 전언이라 &#39;~대&#39; 식으로 출처를 드러내고 단정하지 않기</li><li>그로시가 자루를 증조부 것이라 &#39;확신&#39;했다는 건 본인 생각이라 사실처럼 쓰지 않기</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-01.jpg" alt="1장: 다락방 씨앗이 기적의 밀???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-02.jpg" alt="2장: 거름 더미에 던져 놓고 잊었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-03.jpg" alt="3장: 키 2배에 이삭이 7개" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-04.jpg" alt="4장: 성경 속 이삭과 똑같잖아?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-05.jpg" alt="5장: 알고 보니 진짜 고대 밀" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-06.jpg" alt="6장: 가뭄에도 알아서 큰다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-07.jpg" alt="7장: 빵 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/2eca43195b5e/v2-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">다락방에서 나온 낡은 씨앗 자루가 기적의 밀이 된 이야기. 1990년대 초 이탈리아 파르마의 농부 클라우디오 그로시는 정체를 알 수 없는 씨앗을 거름 더미에 쏟아 두고 잊어버렸다. 그런데 싹튼 밀 가운데 하나는 키가 6피트로 상업용 밀의 약 두 배였고, 이삭이 일곱 개씩 달렸다. 낟알도 노랑, 검정, 빨강, 흰색, 초록 등 여러 색이었다. 성경 창세기의 이삭 일곱 개 구절을 떠올린 그는 이 곡물이 아주 오래된 것이라고 생각했다. 직접 빻아 구운 빵은 반죽이 잘 부풀지 않았지만 구수하고 맛있는 향이 부엌을 채웠다고 한다. 이후 파르마대 연구진은 이 곡물이 Triticum turgidum이라고 밝혔고, 현대 밀보다 인과 철이 풍부하고 글루텐은 적다는 결과도 내놓았다. 그로시는 이 밀이 가뭄에 더 잘 버티고 비료와 제초제도 필요 없다는 점을 확인했다. 시칠리아의 한 전문가는 2024년 극심한 가뭄 때 고대 곡물을 키운 농가 대부분이 수확할 수 있었다고 전했다.
+
+출처: Smithsonian Magazine</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#신기한뉴스 #이탈리아 #고대곡물 #밀 #해외뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>파르마대 연구진은 이 곡물이 Triticum turgidum임을 밝혀냈다. <small>애매 · 원문에서 Triticum turgidum을 밝힌 주체는 파르마대 Perobelli 학생이 Vamerali 교수 연구실과 함께 한 작업이다. 파르마대 연구진이라는 표현은 대체로 맞지만 학부 연구 성격이 빠져 있다.</small></li><li>2024년 시칠리아에서 고대 곡물을 키운 농가 대부분이 수확할 수 있었다고 전문가 소티레가 말했다. <small>애매 · 소티레가 고대 곡물을 재배한 농가 대부분이 수확할 수 있었다고 말한 부분은 원문과 일치한다. 다만 시칠리아와 2024년이라는 세부 내용은 제시된 인용문 범위에서 확인되지 않으므로 원문 앞부분을 확인해 보완해야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 그로시가 평생 곡물 농사를 지은 농부라는 사실</li><li>근거 등록 안 된 주장: 출처가 Smithsonian Magazine이라는 사실</li><li>근거 등록 안 된 주장: 그로시의 농장을 1915년경 증조부가 시작했다는 내용</li><li>근거 등록 안 된 주장: 그로시의 할아버지가 헤리티지 곡물을 일부 보관해 두었다는 내용</li><li>근거 등록 안 된 주장: 파르마대 식품과학과 학생 Perobelli가 지역 농산물 직판장에서 빵을 맛보고 학부 논문을 썼다는 내용</li><li>근거 등록 안 된 주장: 그로시가 가톨릭 신자라는 사실</li><li>근거 등록 안 된 주장: 2024년 시칠리아 극심한 가뭄으로 많은 상업용 밀 재배자가 4월에 밭을 포기했다는 내용</li>
+          <li>종교(성경) 관련 내용이 포함되나 그로시 개인의 해석임을 전제로 서술함</li><li>원문 내에서 씨앗을 남긴 인물이 증조부와 할아버지로 혼재되어 있어 증조부 표현만 사용함</li><li>원문은 매체 단독 인터뷰 기반이라 그로시 발언의 독립 검증은 불가</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-2eca43195b5e-0">1장</label>
+          <textarea id="s-2eca43195b5e-0" rows="6" data-slide="0">다락방 씨앗이
+**기적의 밀**???
+---
+1990년대 초 이탈리아 파르마의 농부가 다락방에서 나온 정체불명의 씨앗 자루를 거름 더미에 쏟았더니 특이한 밀이 자라났다.</textarea>
+          
+          <label class="f" for="s-2eca43195b5e-1">2장</label>
+          <textarea id="s-2eca43195b5e-1" rows="6" data-slide="1">거름 더미에
+던져 놓고 **잊었다**
+---
+그로시는 자루가 증조부가 남긴 것이라고 확신했다. 씨앗은 말라 갈라진 상태라 싹이 틀 거라곤 기대하지 않았고, 자루는 거름 더미에 쏟은 뒤 잊혔다.</textarea>
+          
+          <label class="f" for="s-2eca43195b5e-2">3장</label>
+          <textarea id="s-2eca43195b5e-2" rows="6" data-slide="2">키 2배에
+**이삭이 7개**
+---
+씨앗에서 여러 종류의 밀이 싹텄는데, 그중 하나는 키가 6피트로 상업용 밀의 약 두 배였다. 이삭은 긴 것 하나를 짧은 여섯 개가 둘러싼 모양으로 모두 일곱 개씩 달렸다.</textarea>
+          
+          <label class="f" for="s-2eca43195b5e-3">4장</label>
+          <textarea id="s-2eca43195b5e-3" rows="6" data-slide="3">성경 속 이삭과
+**똑같잖아?**
+---
+교회에서 성경을 넘기던 그로시는 창세기에서 줄기 하나에 이삭 일곱 개가 달린 꿈 이야기를 발견했다. 그는 이 곡물이 아주 오래된 것이라고 생각했다.</textarea>
+          
+          <label class="f" for="s-2eca43195b5e-4">5장</label>
+          <textarea id="s-2eca43195b5e-4" rows="6" data-slide="4">알고 보니
+진짜 **고대 밀**
+---
+파르마대 연구진은 이 곡물이 영어로 풀라드 밀이라 불리는 Triticum turgidum임을 밝혀냈다. 이탈리아에서도 재배되다 수확량 높은 상업용 품종으로 농가가 옮겨 가며 밀려난 밀이었다.</textarea>
+          
+          <label class="f" for="s-2eca43195b5e-5">6장</label>
+          <textarea id="s-2eca43195b5e-5" rows="6" data-slide="5">**가뭄에도**
+알아서 큰다
+---
+이 밀은 가뭄에 더 잘 버텼고, 키가 커서 잡초를 눌러 버렸다. 비료와 제초제도 필요하지 않았다. 그로시는 이 밀에 기적의 곡물이라는 뜻의 grano del miracolo라는 이름을 붙였다.</textarea>
+          
+          <label class="f" for="s-2eca43195b5e-6">7장</label>
+          <textarea id="s-2eca43195b5e-6" rows="6" data-slide="6">**빵 좋아하는 친구**한테
+보내기
+---
+다락방 자루에서 시작해 성경 속 이삭을 닮은 고대 밀로 밝혀지기까지의 과정이라, 빵이나 농사 이야기를 좋아하는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-2eca43195b5e">본문 (캡션)</label>
+          <textarea id="c-2eca43195b5e" class="caption">다락방에서 나온 낡은 씨앗 자루가 기적의 밀이 된 이야기. 1990년대 초 이탈리아 파르마의 농부 클라우디오 그로시는 정체를 알 수 없는 씨앗을 거름 더미에 쏟아 두고 잊어버렸다. 그런데 싹튼 밀 가운데 하나는 키가 6피트로 상업용 밀의 약 두 배였고, 이삭이 일곱 개씩 달렸다. 낟알도 노랑, 검정, 빨강, 흰색, 초록 등 여러 색이었다. 성경 창세기의 이삭 일곱 개 구절을 떠올린 그는 이 곡물이 아주 오래된 것이라고 생각했다. 직접 빻아 구운 빵은 반죽이 잘 부풀지 않았지만 구수하고 맛있는 향이 부엌을 채웠다고 한다. 이후 파르마대 연구진은 이 곡물이 Triticum turgidum이라고 밝혔고, 현대 밀보다 인과 철이 풍부하고 글루텐은 적다는 결과도 내놓았다. 그로시는 이 밀이 가뭄에 더 잘 버티고 비료와 제초제도 필요 없다는 점을 확인했다. 시칠리아의 한 전문가는 2024년 극심한 가뭄 때 고대 곡물을 키운 농가 대부분이 수확할 수 있었다고 전했다.
+
+출처: Smithsonian Magazine</textarea>
+          <label class="f" for="t-2eca43195b5e">해시태그</label>
+          <input id="t-2eca43195b5e" type="text" class="tagsin" value="#신기한뉴스 #이탈리아 #고대곡물 #밀 #해외뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>파르마대 연구진은 이 곡물이 Triticum turgidum임을 밝혀냈다.</b>
+            <q>“Working with the lab of Teofilo Vamerali, then a professor at the University of Parma, Perobelli determined that the grain was Triticum turgidum—literally “swollen wheat” in Latin.”</q>
+            <small>slide5, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>2024년 시칠리아에서 고대 곡물을 키운 농가 대부분이 수확할 수 있었다고 전문가 소티레가 말했다.</b>
+            <q>““Most of the farmers who were adopting ancient grains, they were able to collect, to harvest,” Sottile says.”</q>
+            <small>caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1990년대 초 이탈리아 파르마의 40세 농부 클라우디오 그로시가 다락방을 청소하다 정체불명의 씨앗 자루를 발견했다.</b>
+            <q>“Sometime in the early 1990s, Claudio Grossi, a 40-year-old farmer in Parma, in northern Italy, was cleaning his attic when he turned up an old sack full of seeds that he couldn’t identify.”</q>
+            <small>slide1, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그로시는 씨앗을 거름 더미에 쏟아 둔 뒤 잊어버렸다.</b>
+            <q>“He carried the bag down the stairs, shook the seeds out into a pile of manure and then forgot about them.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그로시는 자루가 돌아가신 증조부가 남긴 것이라고 확신했다.</b>
+            <q>“The bag, he was sure, had been left by his late great-grandfather, who’d started the farmstead around 1915.”</q>
+            <small>slide2 · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>씨앗은 말라 갈라져 있어 그로시는 싹이 틀 거라 기대하지 않았다.</b>
+            <q>“Dry and cracked, the kernels looked so old in the palm of his hand that he doubted anything would ever sprout from them.”</q>
+            <small>slide2 · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>씨앗에서 여러 종류의 밀이 싹텄다.</b>
+            <q>“To his surprise, the seeds soon sprouted a few different types of wheat.”</q>
+            <small>slide1, slide3 · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그중 한 밀은 키가 6피트로 상업용 밀의 약 두 배였다.</b>
+            <q>“At six feet high, its plants were about twice as tall as commercial wheat.”</q>
+            <small>slide3, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>키 큰 밀은 긴 이삭 하나를 짧은 이삭 여섯 개가 둘러싼 모양으로 이삭 일곱 개가 달렸다.</b>
+            <q>“But the tall wheat grew a full seven ears, always in the same pattern: a long one with six shorties bunched up around it like little fingers.”</q>
+            <small>slide3, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>낟알은 노랑, 검정, 빨강, 흰색, 초록 등 여러 색이었다.</b>
+            <q>“And unlike the typical pale-yellow wheat kernels, they came in a rainbow of colors—yellow, black, red, white and even green, sometimes all on the same stem.”</q>
+            <small>caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그로시는 교회에서 성경을 넘기다 창세기에서 줄기 하나에 이삭 일곱 개가 달린 꿈 구절을 발견했다.</b>
+            <q>“Leafing through a Bible at church one Sunday, he found a passage in the Book of Genesis describing a stalk with seven ears, in a dream that Joseph interprets for the Pharaoh:”</q>
+            <small>slide4, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그로시는 이 곡물이 아주 오래된 것이라고 생각했다.</b>
+            <q>“That grain must be really ancient, he thought.”</q>
+            <small>slide4, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그로시가 구운 빵은 반죽이 잘 부풀지 않았지만 구수하고 맛있는 향이 부엌을 채웠다.</b>
+            <q>“Compared with commercial wheat, the dough didn’t rise well, but as the loaf sat in the oven, it filled the kitchen with a surprisingly nutty and delicious aroma.”</q>
+            <small>caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 밀은 영어로 풀라드 밀이라 불린다.</b>
+            <q>“Known in English as “poulard wheat,” it had originally evolved in what today are Turkey, Egypt and other nearby Mediterranean countries.”</q>
+            <small>slide5 · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 밀은 이탈리아에서도 재배되다 농부들이 수확량 높은 상업용 품종으로 옮겨 가며 밀려났다.</b>
+            <q>“And searching agricultural references, Perobelli found that it had been grown in Italy, too, until farmers shifted toward higher-yield commercial varieties.”</q>
+            <small>slide5, summary · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 밀은 가뭄에 더 잘 버텼고 키가 커서 잡초를 눌렀다.</b>
+            <q>“It fared better during droughts, growing so tall that it overshadowed the weeds.”</q>
+            <small>slide6, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 밀은 비료와 제초제가 필요하지 않았다.</b>
+            <q>“It didn’t need fertilizer or herbicides.”</q>
+            <small>slide6, caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그로시는 이 밀에 grano del miracolo, 즉 기적의 곡물이라는 이름을 붙였다.</b>
+            <q>“He dubbed it grano del miracolo—“miracle grain” or “miracle wheat.””</q>
+            <small>slide6, summary · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 이 밀이 현대 밀보다 인과 철이 풍부하다는 것을 발견했다.</b>
+            <q>“The food scientists found that, compared with modern wheats, grano del miracolo was richer in phosphorus and iron.”</q>
+            <small>caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 이 밀이 현대 밀보다 글루텐이 적다는 것을 발견했다.</b>
+            <q>“Moreover, to their surprise, they found that T. turgidum had less gluten than modern wheat.”</q>
+            <small>caption · <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">An Italian Farmer Found Some Unknown Seeds in His Attic and, With Nothing to Lose, Planted Them. The Result Was Almost Biblical</a> (기사)</li>
+            <li><a href="https://news.ycombinator.com/item?id=50320963" target="_blank" rel="noopener">해외 반응 (Hacker News)</a></li>
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">Smithsonian / </a> — "https://th-thumbnailer.cdn-si-edu.com/r1H2iX5288YkTulSGgz89zNqN8o=/fit-in/1072x0/filters:focal(655x986:656x987)/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer_public/8c/57/8c575784-4d94-44d3-a83b-1f65f4f0454e/l2190314.jpg"</li><li>2장: <a href="https://pixabay.com/photos/lantern-old-lantern-brush-sack-316689/" target="_blank" rel="noopener">PublicDomainPictures / Pixabay</a> — "old sack"</li><li>3장: <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">Smithsonian / </a> — "https://th-thumbnailer.cdn-si-edu.com/o2Sj6JHbNPgZisrRICpFsVB_V2I=/fit-in/1072x0/filters:focal(1181x787:1182x788)/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer_public/9c/3f/9c3f24a3-7ca6-4ffb-85e5-ee71a11c5991/l2190993_copy.jpg"</li><li>4장: <a href="https://pixabay.com/photos/a-book-book-gift-heart-gift-read-1760998/" target="_blank" rel="noopener">congerdesign / Pixabay</a> — "open book"</li><li>5장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>6장: <a href="https://pixabay.com/photos/nature-tree-landscape-environment-7038455/" target="_blank" rel="noopener">lehuudat / Pixabay</a> — "dry field"</li><li>7장: <a href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/" target="_blank" rel="noopener">Smithsonian / </a> — "https://th-thumbnailer.cdn-si-edu.com/acd70ZI6cuAHJYPA3baLUhZWWW8=/1026x684/filters:focal(1181x787:1182x788)/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer_public/37/95/3795362b-64a6-4d5f-b7df-67aa18192521/l2190910.jpg"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-ffa777b78b3b">
+    <div class="head">
+      <h2>S1. AI로 해고된 뒤 복귀 제안 받았을 때 대처법</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-ffa777b78b3b">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 자기계발</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: AI로 잘린 자리에 회사가 다시 부를 때 &#39;바로 수락 말고 돈·AI 계획·계약 조건부터 따져라&#39;는 협상 체크리스트로 팔린다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">AI 때문에 잘렸는데 회사가 다시 오라고 하면?
+바로 &#39;네&#39; 하지 말고 조건부터 보라는 조언이 나옴
+AI로 없앤 자리에 다시 사람을 뽑는 회사들이 있대
+근데 뭘 요구하라는 건지가 꽤 구체적이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">1/ 일단 실제로 이런 일이 있대. AI가 기대만큼 못 해서 해고했던 사람을 다시 쓰는 회사들이 있고, 이걸 &#39;AI 부메랑&#39;이라 부른대. 얼마나 흔한지는 불분명하다고 함. 그럼 회사들은 왜 다시 사람을 찾았을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">2/ 채용 업체 로버트 하프에 따르면 자리를 되살린 이유 중에는 AI가 예상보다 사람의 감독이 더 필요했다는 게 있었대. 조직에 쌓인 업무 노하우를 AI가 따라 하지 못했다는 이유도 자주 나왔다고 함. 실제 사례는 어디였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">146/500자</span></div>
+      <p class="tp-text">3/ 스웨덴 핀테크 클라르나는 비용을 줄이려고 AI 챗봇에 기댄 게 너무 갔다고 CEO가 인정하고 상담원을 다시 뽑기 시작했대. 포드는 AI 품질관리 도구가 기대에 못 미치자 베테랑 엔지니어 350명을 채용하거나 승진시켰다고 함. 그럼 AI가 놓친 건 뭐였을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">164/500자</span></div>
+      <p class="tp-text">4/ 포레스터 분석가 서머스는 회사가 AI에 일을 넘길 때 직무기술서 밖에서 직원이 하던 &#39;보이지 않는 일&#39;을 놓친다고 봄. 분위기와 감정 파악, 즉석 회의 같은 것들. 그래서 사람을 빼고 AI한테 똑같은 결과를 기대하면 자주 틀린다는 거. 그럼 돌아오라는 제안을 받으면 뭘 요구하라고 했을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">211/500자</span></div>
+      <p class="tp-text">5/ 복귀 제안 받았을 때 요약 정리
+- 복귀하는 사람들은 더 많은 급여, AI가 앞으로 인력에 미칠 영향 설명을 요구한다고 함
+- 추가 교육, 승진 기회에 대한 명확한 설명도 논의 거리
+- AI와 내 전문성을 같이 쓰는 새 직무 설명서를 제안
+- 수락 전에 &#39;1년 갱신 계약 + 1년 안에 해고되면 바이아웃 조항&#39; 같은 보장을 구하라는 제안
+그럼 협상 때 내세울 무기는 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">6/ 조지타운대 홀텀 교수는 &#39;인간으로서 내 가치가 뭔지 말로 설명해 보라&#39;고 함. 감성 지능이나 판단력처럼 기술을 보완하는 능력을 내세우라는 거. AI를 두려워하지 말고 기계가 잘하는 것과 나를 어떻게 차별화할지 이해하라는 말도 있었음.</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">241/500자</span></div>
+      <p class="tp-text">7/ 결국 전문가들 말은, 돌아오라는 제안을 받으면 바로 수락하기보다 돈·AI 계획·계약 조건부터 챙기고 사람으로서 내 가치를 설명하라는 거.
+
+너라면 AI 때문에 잘린 회사가 다시 부르면 돌아갈 거야, 안 돌아갈 거야?
+
+이런 해외 일자리·자기계발 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 홀텀 교수가 조지타운대 소속이라는 내용은 원문 발췌에 없다</li><li>근거 등록 안 된 주장: 서머스가 포레스터 분석가라는 내용은 claims 목록에 없다</li><li>근거 등록 안 된 주장: 클라르나가 스웨덴 핀테크 기업이라는 내용은 claims 목록에 없다</li><li>근거 등록 안 된 주장: AI 부메랑을 채용 업체 로버트 하프가 집계했다는 출처 연결은 claims 목록에 명시되어 있지 않다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>AI 때문에 잘렸는데 회사가 다시 오라고 하면? 바로 &#39;네&#39; 하지 말고 조건부터 보라는 조언이 나옴</li><li>AI가 대체했다던 자리에 회사가 다시 사람을 뽑는 경우가 있대</li><li>&#39;AI 부메랑&#39;이라는 말까지 생겼대</li><li>복귀 제안은 &#39;감사합니다&#39;가 아니라 &#39;조건이 뭔가요&#39;로 받으라는 조언이 나옴</li><li>AI한테 밀린 자리에 다시 불려가면 더 높은 자리에 앉을 수도 있다는 말이 나옴</li><li>AI로 해고된 사람들이 복귀 제안 받고 요구한다는 것 두 가지</li><li>AI를 피하지 말고 &#39;AI 쓰는 나&#39;부터 설명하라는 조언이 나옴</li><li>포드가 AI 품질관리 쓰다 베테랑 엔지니어 350명을 채용하거나 승진시켰대</li><li>AI 구조조정, 회사가 조용히 U턴하는 경우도 있다는 말이 나옴</li><li>클라르나 CEO가 &#39;AI 챗봇에 너무 의존했다&#39;고 인정했대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>AI 때문에 잘린 회사가 다시 부르면 돌아갈 거야, 안 돌아갈 거야?</li><li>복귀 제안 받으면 연봉 vs 계약 안정성, 뭐부터 요구할래?</li><li>회사 일 중에 AI한테 못 맡길 것 같은 일 하나만 꼽자면?</li><li>AI 챗봇 상담이 답답해서 사람 연결해달라고 해본 사람?</li><li>AI 잘 쓰는 동료 vs 사람 챙기는 동료, 같이 일한다면 누구?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>AI가 못 따라 하는 &#39;보이지 않는 일&#39;은 뭘까</li><li>AI 시대에 내 가치를 면접에서 설명하는 법</li><li>동굴 흙에서 복원한 2만 2천 년 전 인간 DNA</li><li>플러그 핀 구멍의 정체</li><li>이탈리아 농부의 다락방 씨앗과 기적의 밀</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;AI 부메랑&#39;이 얼마나 흔한지 원문도 불분명하다고 했으니 흔한 현상처럼 읽히지 않는지 확인</li><li>클라르나 재채용 시점이 원문에 &#39;last year&#39;로만 나와 있어 시점 표현은 쓰지 않았음. 포드 대변인은 AI가 품질 향상에 중요했다고도 말했으므로 AI 실패로만 읽히는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI로 자리를 없앴다가 AI 성능이 기대에 못 미쳐 해고했던 사람을 다시 채용하는 회사들이 있다</b>
+          <q>“Some companies, after discovering that AI models, applications and agents don’t perform as well as expected, end up rehiring laid-off workers to fill eliminated positions.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수락 전에 1년 갱신 계약과 바이아웃 조항 같은 보장을 구하라는 제안이 있다</b>
+          <q>“Before accepting an offer, seek a commitment such as a one-year renewable contract that includes a buyout clause if the job is terminated in less than a year, Holtom suggested.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI로 자리를 되살린 사례가 &#39;AI 부메랑&#39;이라는 별명을 얻었고 얼마나 흔한지는 불분명하다</b>
+          <q>“It’s unclear how common such reversals are, but they are happening often enough to acquire a nickname: the “AI boomerang.””</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일부 회사는 AI 성능이 기대에 못 미쳐 해고했던 직원을 다시 채용한다</b>
+          <q>“Some companies, after discovering that AI models, applications and agents don’t perform as well as expected, end up rehiring laid-off workers to fill eliminated positions.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자리를 되살린 이유로 AI가 예상보다 사람의 감독이 더 필요했다는 점과 조직 내부 노하우를 복제하지 못한다는 점이 자주 꼽혔다</b>
+          <q>“The most frequently cited reasons for restoring dropped jobs included the technology needing more human oversight than anticipated and its inability to replicate institutional knowledge, the firm said.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>클라르나는 AI 챗봇 의존이 너무 갔다는 CEO의 인정 뒤 상담원을 다시 채용하기 시작했다</b>
+          <q>“Klarna, the Swedish provider of buy now, pay later services, began recruiting human customer service representatives again last year. CEO Sebastian Siemiatkowski acknowledged in an interview with Bloomberg News that the company’s reliance on an AI chatbot to cut costs had gone too far.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>포드는 AI 품질관리 도구가 기대 수준에 못 미친 뒤 베테랑 엔지니어 350명을 채용하거나 승진시켰다</b>
+          <q>“In June, Ford said it had hired or promoted 350 veteran engineers after AI tools the automaker deployed to do quality control work did not perform at the expected level.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>회사는 AI에 일을 넘길 때 직무기술서 밖에서 직원이 하는 보이지 않는 일을 놓치곤 한다</b>
+          <q>“When companies use AI to perform tasks previously done by people, they often miss the invisible work employees do beyond their formal job descriptions, said Betsy Summers, a principal analyst on the Future of Work team at market research and advisory firm Forrester.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보이지 않는 일에는 감정과 분위기 파악, 즉석 회의가 포함될 수 있다</b>
+          <q>“That might include sensing emotions and moods, holding impromptu meetings and putting in extra effort when feeling inspired or otherwise motivated, Summers said.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람을 빼고 에이전트에게 같은 결과를 기대하면 자주 틀린다</b>
+          <q>“So when you rip out humans who are doing that work and then expect agents to be able to then deliver exactly what humans have delivered, they are frequently mistaken.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>옛 일자리를 제안받은 사람들은 더 많은 급여와 AI가 앞으로 인력에 미칠 영향에 대한 설명을 요구한다</b>
+          <q>“Workers offered their old jobs back are asking for more money and to know how AI might impact future staffing, Beaumont said.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추가 교육과 승진 기회에 대한 명확한 설명 요청이 논의에 포함될 수 있다</b>
+          <q>“Requesting additional training and a clear explanation of your opportunities for advancement could be part of the discussion, she said.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복귀 직원으로서 기술과 전문성을 함께 쓰는 새 직무 설명서를 제시하라는 조언이 있다</b>
+          <q>“Communicate ways you would contribute value as a returning employee, outlining a new job description “that leverages the technology but also your expertise,” Holtom said.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1년 갱신 계약과 1년 미만 해고 시 바이아웃 조항 같은 약속을 수락 전에 구하라는 제안이 있다</b>
+          <q>“Before accepting an offer, seek a commitment such as a one-year renewable contract that includes a buyout clause if the job is terminated in less than a year, Holtom suggested.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>홀텀 교수는 인간으로서의 가치 제안을 말로 설명해 보라고 했다</b>
+          <q>“Really try to be able to articulate, what’s your value proposition as a human?”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복귀를 요청받은 직원은 감성 지능과 판단력처럼 기술을 보완하는 능력을 강조할 만하다</b>
+          <q>“As companies redirect resources toward AI, current employees and those asked to come back might want to emphasize skills that complement the technology, such as emotional intelligence and sound judgment, Holtom said.”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기술을 두려워하지 말고 기계가 잘하는 것과 나를 차별화하는 법을 이해하라는 조언이 있다</b>
+          <q>“Don’t be afraid to lean into the technology as well, and understand how to differentiate yourself from what machines do well.”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="ffa777b78b3b">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91632973/lose-your-job-ai-heres-what-do-company-wants-you-back?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">Lose your job to AI? Here’s what to do if a company wants you back</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-41eb88da8b9a">
+    <div class="head">
+      <h2>S2. 레고 테크닉 닷지 차저 R/T 42231 - 엔진과 조향이 되는 영화 속 머슬카</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-41eb88da8b9a">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 영화 속 검은 머슬카가 장식품이 아니라 엔진·조향·서스펜션이 움직이는 레고로 나왔고, 가격($159.99)과 판매 상태가 확인된 선물 후보라는 각도</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "레고 테크닉 닷지 차저" · 원문 제품: LEGO Technic Fast and Furious Dodge Charger R/T, 세트 42231, 1,516피스, 18+, 미국 $159.99, 판매 중 (Yanko Design 2026-10-31 기사, 판매처는 명시되지 않음)<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: shop-newyork.legoland.com, yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/41eb88da8b9a/thread-photo-1101103628-01.jpg" alt="검은색 레고 테크닉 머슬카 모형, 닷지 차저 스타일 전면 그릴과 듀얼 헤드라이트, 엔진룸이 보이는 상품 사진" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/41eb88da8b9a/thread-photo-1101103628-02.jpg" alt="빨간 테이블 위에 놓인 검은색 레고 테크닉 머슬카 모형. 엔진 블록과 열린 보닛, 노출된 샤프트 구조가 보이고 실내에 롤케이지 형태의 흰색 프레임이 있다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261101-pm-215522716d53/41eb88da8b9a/thread-photo-1101103628-03.jpg" alt="검은색 LEGO 머슬카 모형이 나무 탁자 위에 놓여 있고, 사람 손이 열린 보닛을 잡고 있으며 엔진 블록과 V8 느낌의 실린더, 헤드라이트가 보인다." loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-41eb88da8b9a">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">87/500자</span></div>
+      <p class="tp-text">처음엔 그냥 영화 속 자동차 모형인 줄 알았는데
+레고 테크닉으로 나온 이 차, V8 엔진에 압축기까지 달렸대
+근데 가격이랑 크기가 꽤 부담스러운 편이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">1/ 주인공은 레고 테크닉 &#39;분노의 질주&#39; 닷지 차저 R/T, 세트번호 42231
+V8 엔진에는 체인으로 돌아가는 압축기가 있음
+근데 차 뒤쪽 손잡이는 뭘 하는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">86/500자</span></div>
+      <p class="tp-text">2/ 뒤쪽 손잡이로 조향을 하고, 서스펜션도 작동하는 요소로 들어감
+뒷바퀴굴림은 카던 샤프트와 디퍼렌셜로 만들었대
+그럼 이걸 혼자서만 만들어야 하는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">3/ 같이 만드는 모드도 있음
+레고 빌더의 Build Together 모드로 여러 명이 각자 기기로 부분을 나눠 만들 수 있대
+NOS 병 두 개와 소화기가 영화 느낌을 내줌
+그럼 가격이랑 크기는 어느 정도일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">159/500자</span></div>
+      <p class="tp-text">4/ 닷지 차저 R/T 요약 정리
+- 42231, 1,516피스, 18세 이상
+- 미국 가격 $159.99, 지금 판매 중
+- 길이 16인치 넘고 폭 7인치 넘음
+- 좋은 점: 조향·서스펜션·구동계를 살펴볼 수 있음
+- 아쉬운 점: 가격은 고민하고 사는 수준, 놓을 자리가 넉넉해야 함</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">179/500자</span></div>
+      <p class="tp-text">5/ 결국 레고는 박스 크기보다 &#39;다 만들고 나서 뭘 즐길지&#39;랑 &#39;둘 자리&#39;부터 보라는 얘기
+이거 선물로 받으면 좋아할 사람 소환해봐
+해외에서 화제 된 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외에서 화제 된 물건이라 계속 가져온다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>처음엔 그냥 영화 속 자동차 모형인 줄 알았는데 V8 엔진이 달린 레고였음</li><li>레고 선물, &#39;박스 큰 거&#39;가 아니라 &#39;다 만들고 뭘 할지&#39;부터 고르라는 글이 나옴</li><li>장식용 레고 말고, 조립이 끝나도 만지작거릴 게 있는 레고가 있대</li><li>차 좋아하는 사람한테 선물한다면 1,516피스짜리 이 레고가 있음</li><li>레고 하나에 엔진·구동계·조향·서스펜션이 다 들어갔다는 소식</li><li>영화 속 검은 머슬카가 레고 테크닉으로 나왔는데 길이가 16인치가 넘는대</li><li>&#39;이 레고 뭐야, 어디서 사?&#39; 소리 나올 만한 테크닉 신상이 나옴</li><li>레고는 혼자 만드는 거라는 생각, 이 세트는 좀 다름</li><li>159.99달러짜리 레고가 &#39;고민하고 사는 물건&#39;으로 꼽힌 이유</li><li>레고 고를 때 가장 큰 박스 말고 &#39;둘 자리&#39;부터 보라는 말이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해봐</li><li>엔진·조향 되는 레고 vs 그냥 예쁜 전시용 레고, 어느 파?</li><li>이 레고 있으면 살 거야?</li><li>레고 혼자 조립하는 파 vs 같이 만드는 파?</li><li>다 만들고 나서 책상에 올려둔다면 어떤 레고가 좋아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>마블 스카이라인 레고(67006) - 1,261피스 마이크로스케일 도시</li><li>다프트 펑크 콘서트 레고, 정식 제품 개발이 승인된 소식</li><li>모네의 풍경을 입체로 옮긴 레고 팬 제안작</li><li>돌려서 보는 할로윈 스노글로브 레고 팬 제안작</li><li>레고 팬 제안과 실제 판매 제품, 어떻게 다른지 구분하는 법</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>가격 $159.99는 미국 가격이고 한국 판매 여부·가격은 원문에 없음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>V8 엔진에 체인으로 구동되는 압축기가 있다</b>
+          <q>“Its V8 has a chain-driven compressor, while a cardan shaft and differential form the rear-wheel-drive system.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격과 크기가 부담스러운 편이다 (159.99달러는 고민하고 사는 가격)</b>
+          <q>“At $159.99, it’s a considered purchase.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>길이가 길어 놓을 자리가 필요하다</b>
+          <q>“The 16-inch length demands proper display space.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>레고 테크닉 Fast and Furious 닷지 차저 R/T는 세트번호 42231이다</b>
+          <q>“LEGO Technic’s Fast and Furious Dodge Charger R/T, set 42231, is the pick here for builders who want mechanisms beneath the bodywork.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>V8 엔진에 체인으로 돌아가는 압축기가 있다</b>
+          <q>“Its V8 has a chain-driven compressor, while a cardan shaft and differential form the rear-wheel-drive system.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조향은 뒤쪽 손잡이로 하고 서스펜션도 작동 요소로 들어간다</b>
+          <q>“Steering is operated through a knob at the rear, and suspension adds another working element.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>뒷바퀴굴림은 카던 샤프트와 디퍼렌셜로 구성된다</b>
+          <q>“Its V8 has a chain-driven compressor, while a cardan shaft and differential form the rear-wheel-drive system.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Build Together 모드로 여러 명이 각자 기기로 부분을 나눠 만들 수 있다</b>
+          <q>“LEGO Builder’s Build Together mode lets several people construct portions using their own devices, which makes more sense for this franchise than another decorative slogan about family.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>NOS 병 두 개와 소화기가 영화 요소를 담당한다</b>
+          <q>“Two NOS bottles and a fire extinguisher supply the film references, but the practical consideration is its footprint.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1,516피스, 18세 이상, 미국 가격 $159.99, 지금 판매 중</b>
+          <q>“The 1,516-piece, 18+ model costs $159.99 in the US and is available now.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>길이 16인치 넘고 폭 7인치 넘는다</b>
+          <q>“At over 16 inches long and 7 inches wide, this is a substantial shelf commitment.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조향·서스펜션·구동계를 살펴볼 수 있다는 점이 장점으로 꼽혔다</b>
+          <q>“Steering, suspension, and drivetrain give you mechanisms to explore.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>159.99달러는 고민하고 사는 가격이다</b>
+          <q>“At $159.99, it’s a considered purchase.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>16인치 길이 때문에 전시 공간이 필요하다</b>
+          <q>“The 16-inch length demands proper display space.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>완성품을 놓을 수 있는 공간부터 따져보라는 조언</b>
+          <q>“The best place to start is the space you can actually give a finished build.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가장 큰 박스나 유명한 이름보다 완성 후 무엇을 원하는지가 더 중요하다는 조언</b>
+          <q>“That choice matters more than picking the largest box or the most recognizable name in the collection.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="41eb88da8b9a">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/10/31/the-5-best-lego-sets-of-october-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-lego-sets-of-october-2026" target="_blank" rel="noopener">The 5 Best LEGO Sets of October 2026 - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261101-pm";
+  const ORIGINAL = {"1f593d7c4af5": {"caption": "\ubf08\ub3c4, \uce58\uc544\ub3c4, \ud654\uc11d\ub3c4 \uc5c6\uc5c8\ub2e4. \uc2a4\ud398\uc778 \uc5d8 \ubbf8\ub860 \ub3d9\uad74\uc758 \ud759 \ud55c \uc90c\uc5d0\uc11c \uc57d 2\ub9cc 2\ucc9c \ub144 \uc804 \uc0ac\ub78c\ub4e4\uc758 DNA\uac00 \ub098\uc654\ub2e4.\n\n\uc774 \uce35\uc5d0\ub294 \uc778\ub958 \uc720\ud574\uac00 \ub0a8\uc544 \uc788\uc9c0 \uc54a\ub2e4. \uc5f0\uad6c\uc5d0 \uc4f4 \ud1f4\uc801\ubb3c\uc740 \uc300 \uba87 \ud1a8\uc744 \ub118\uc9c0 \uc54a\ub294 \ubb34\uac8c\uc600\uace0, \uc4f8 \ub9cc\ud55c \ub370\uc774\ud130\ub97c \uc5bb\uc73c\ub824\uba74 100\ubc88 \ud574\ub3c5\ud574\uc57c \ud588\ub2e4. 10\uc5b5 \uac1c\uac00 \ub118\ub294 DNA \uc870\uac01 \uc18d\uc5d0\uc11c \uc0ac\ub78c\uc758 \ud754\uc801\uc744 \ucc3e\uc544\ub0b4\uace0, \ud604\ub300\uc758 \uc624\uc5fc\uae4c\uc9c0 \ub530\uc838\uc57c \ud588\ub2e4.\n\n\uc624\uc2a4\ud2b8\ub9ac\uc544 \ube48 \ub300\ud559 \uc5f0\uad6c\uc9c4\uc774 \uc774\ub048 \uc774 \uc5f0\uad6c\ub294 Science Advances\uc5d0 \uc2e4\ub838\ub2e4. \ub0a8\uc740 \uc720\uc804 \uc815\ubcf4\ub294 \uc720\ub7fd \ub9c8\uc9c0\ub9c9 \ube59\ud558\uae30 \uac00\uc7a5 \ucd94\uc6b4 \uc2dc\uae30\uc5d0 \ub3d9\uad74\uc5d0\uc11c \uc9c0\ub0b8 \uc0ac\ub78c\ub4e4\uc758 \ud53c\ubd80, \uba38\ub9ac\uce74\ub77d, \ud53c\uc5d0\uc11c \ub5a8\uc5b4\uc838 \ub098\uc654\uc744 \uac00\ub2a5\uc131\uc774 \uc788\ub2e4. \uc774 \uc2dc\uae30\uc758 \uc778\ub958 \uc720\ud574\ub294 \ub9e4\uc6b0 \ub4dc\ubb3c\ub2e4.\n\n\ubd84\uc11d \uacb0\uacfc \uc774 \ub3d9\uad74 \uc0ac\ub78c\ub4e4\uc740 \ud53c\ubd80\u00b7\uba38\ub9ac\uce74\ub77d\u00b7\ub208\uc774 \uc9d9\uc740 \uc11c\ucabd \uacc4\ud1b5\uc774\uc5c8\uc744 \uac00\ub2a5\uc131\uc774 \uc788\uace0, DNA\uc5d0\ub294 \uc5ec\uc131\ubcf4\ub2e4 \ub0a8\uc131\uc774 \ub354 \ub9ce\uc774 \uc11e\uc5ec \uc788\uc5c8\ub2e4. \uc5f0\uad6c\uc9c4\uc740 3\ub9cc~2\ub9cc \ub144 \uc804 \uc720\ub7fd \ub0a8\uc11c\ubd80 \uc778\uad6c\uac00 \ube44\uad50\uc801 \uc774\uc5b4\uc84c\ub358 \uac83\uc73c\ub85c \ubcf4\uc778\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\ud759 \uc18d DNA \uae30\uc220\uc774 \uc774 \uc2dc\uae30\uc758 \uc99d\uac70\ub97c \uc0ac\uc2e4\uc0c1 \ub450 \ubc30\ub85c \ub298\ub838\ub2e4\ub294 \uc810\uc774 \ub208\uc5d0 \ub748\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uace0\uace0\ud559", "#\uace0\ub300DNA", "#\uacfc\ud559\ub274\uc2a4", "#\ube59\ud558\uae30", "#\ud574\uc678\uc774\uc288"], "slides": [["\ud759\uc5d0\uc11c", "\uc778\uac04 **DNA???**", "---", "\uc2a4\ud398\uc778 \uc5d8 \ubbf8\ub860 \ub3d9\uad74\uc758 \ud1f4\uc801\ubb3c\uc5d0\uc11c \uc57d 2\ub9cc 2\ucc9c \ub144 \uc804 \uc5ec\ub7ec \uc0ac\ub78c\uc758 DNA\uac00 \ud655\uc778\ub410\ub2e4. \ubf08\ub098 \uce58\uc544\ub294 \ud558\ub098\ub3c4 \uc5c6\uc5c8\ub2e4."], ["**\uc300 \uba87 \ud1a8**", "\ubb34\uac8c\uc758 \ud759", "---", "\uc5d8 \ubbf8\ub860 \ub3d9\uad74\uc5d0\uc11c \ucc44\ucde8\ud55c \ud1f4\uc801\ubb3c\uc740 \ubb34\uac8c\uac00 \uc300 \uba87 \ud1a8\uc744 \ub118\uc9c0 \uc54a\uc558\ub2e4. \uc4f8 \ub9cc\ud55c \ub370\uc774\ud130\ub97c \uc5bb\uc73c\ub824\uace0 100\ubc88 \ud574\ub3c5\ud574\uc57c \ud588\ub2e4. 10\uc5b5 \uac1c\uac00 \ub118\ub294 DNA \uc870\uac01 \uc18d\uc5d0\uc11c \uc0ac\ub78c\uc758 \ud754\uc801\uc744 \uace8\ub77c\ub0b4\uc57c \ud588\ub2e4."], ["\ud53c\ubd80, \uba38\ub9ac\uce74\ub77d,", "\ud53c\uc5d0\uc11c \ub098\uc654\uc744 \ub4ef", "---", "\ub0a8\uc740 \uc720\uc804 \uc815\ubcf4\ub294 \uc544\uc8fc \uc624\ub798\uc804 \ub3d9\uad74\uc5d0\uc11c \uc9c0\ub0b8 \uc0ac\ub78c\ub4e4\uc758 \ud53c\ubd80\ub098 \uba38\ub9ac\uce74\ub77d, \ud53c\uc5d0\uc11c \ub5a8\uc5b4\uc838 \ub098\uc654\uc744 \uac83\uc73c\ub85c \ucd94\uc815\ub41c\ub2e4. \uc720\ub7fd\uc758 \ub9c8\uc9c0\ub9c9 \ube59\ud558\uae30 \uc911 \uac00\uc7a5 \ucd94\uc6e0\ub358 \uc2dc\uae30\uc758 \uc77c\uc774\ub2e4."], ["**\uc11c\ucabd \uacc4\ud1b5**,", "\ub0a8\uc131\uc774 \ub354 \ub9ce\uc544", "---", "DNA\ub294 \uc5ec\ub7ec \uc0ac\ub78c\uc774 \uc11e\uc778 \uac83\uc73c\ub85c \ubcf4\uc774\uba70 \uc5ec\uc131\ubcf4\ub2e4 \ub0a8\uc131\uc774 \ub354 \ub9ce\uc558\ub2e4. \uc774 \ub3d9\uad74\uc5d0 \uc0b4\ub358 \uc0ac\ub78c\ub4e4\uc740 \ud53c\ubd80\u00b7\uba38\ub9ac\uce74\ub77d\u00b7\ub208\uc774 \uc9d9\uc740 \uc11c\ucabd \uacc4\ud1b5 \uc9d1\ub2e8\uc5d0 \uc18d\ud588\uc744 \uac00\ub2a5\uc131\uc774 \uc788\ub2e4."], ["**\ud070 \uad50\uccb4\ub294**", "\uc5c6\uc5c8\ub358 \ub4ef", "---", "\uc774 \ub3d9\uad74\uc758 2\ub9cc 2\ucc9c \ub144 \uc804 DNA\uc5d0\ub294 \uc11c\ucabd \uacc4\ud1b5\uc758 \ud754\uc801\ub9cc \ub098\ud0c0\ub0ac\ub2e4. 3\ub9cc~2\ub9cc \ub144 \uc804 \uc720\ub7fd \ub0a8\uc11c\ubd80 \uc9d1\ub2e8\uc740 \ube44\uad50\uc801 \uc774\uc5b4\uc84c\ub358 \uac83\uc73c\ub85c \ubcf4\uc778\ub2e4. \ud759 \uc18d DNA \uae30\uc220\uc740 \uc774 \uc2dc\uae30 \uc99d\uac70\ub97c \uc0ac\uc2e4\uc0c1 \ub450 \ubc30\ub85c \ub298\ub838\ub2e4."], ["\uace0\uace0\ud559 \ub355\ud6c4 \uce5c\uad6c", "**\ud0dc\uadf8\ud574\uc11c** \uc54c\ub824\uc918", "---", "\ubf08 \ud55c \uc870\uac01 \uc5c6\uc774 \ud759\uc5d0\uc11c \uace0\ub300 \uc778\ub958\uc758 DNA\ub97c \uc77d\uc5b4\ub0b8 \uc5f0\uad6c\ub77c \uc5ed\uc0ac\ub098 \uacfc\ud559\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "2eca43195b5e": {"caption": "\ub2e4\ub77d\ubc29\uc5d0\uc11c \ub098\uc628 \ub0a1\uc740 \uc528\uc557 \uc790\ub8e8\uac00 \uae30\uc801\uc758 \ubc00\uc774 \ub41c \uc774\uc57c\uae30. 1990\ub144\ub300 \ucd08 \uc774\ud0c8\ub9ac\uc544 \ud30c\ub974\ub9c8\uc758 \ub18d\ubd80 \ud074\ub77c\uc6b0\ub514\uc624 \uadf8\ub85c\uc2dc\ub294 \uc815\uccb4\ub97c \uc54c \uc218 \uc5c6\ub294 \uc528\uc557\uc744 \uac70\ub984 \ub354\ubbf8\uc5d0 \uc3df\uc544 \ub450\uace0 \uc78a\uc5b4\ubc84\ub838\ub2e4. \uadf8\ub7f0\ub370 \uc2f9\ud2bc \ubc00 \uac00\uc6b4\ub370 \ud558\ub098\ub294 \ud0a4\uac00 6\ud53c\ud2b8\ub85c \uc0c1\uc5c5\uc6a9 \ubc00\uc758 \uc57d \ub450 \ubc30\uc600\uace0, \uc774\uc0ad\uc774 \uc77c\uacf1 \uac1c\uc529 \ub2ec\ub838\ub2e4. \ub09f\uc54c\ub3c4 \ub178\ub791, \uac80\uc815, \ube68\uac15, \ud770\uc0c9, \ucd08\ub85d \ub4f1 \uc5ec\ub7ec \uc0c9\uc774\uc5c8\ub2e4. \uc131\uacbd \ucc3d\uc138\uae30\uc758 \uc774\uc0ad \uc77c\uacf1 \uac1c \uad6c\uc808\uc744 \ub5a0\uc62c\ub9b0 \uadf8\ub294 \uc774 \uace1\ubb3c\uc774 \uc544\uc8fc \uc624\ub798\ub41c \uac83\uc774\ub77c\uace0 \uc0dd\uac01\ud588\ub2e4. \uc9c1\uc811 \ube7b\uc544 \uad6c\uc6b4 \ube75\uc740 \ubc18\uc8fd\uc774 \uc798 \ubd80\ud480\uc9c0 \uc54a\uc558\uc9c0\ub9cc \uad6c\uc218\ud558\uace0 \ub9db\uc788\ub294 \ud5a5\uc774 \ubd80\uc5cc\uc744 \ucc44\uc6e0\ub2e4\uace0 \ud55c\ub2e4. \uc774\ud6c4 \ud30c\ub974\ub9c8\ub300 \uc5f0\uad6c\uc9c4\uc740 \uc774 \uace1\ubb3c\uc774 Triticum turgidum\uc774\ub77c\uace0 \ubc1d\ud614\uace0, \ud604\ub300 \ubc00\ubcf4\ub2e4 \uc778\uacfc \ucca0\uc774 \ud48d\ubd80\ud558\uace0 \uae00\ub8e8\ud150\uc740 \uc801\ub2e4\ub294 \uacb0\uacfc\ub3c4 \ub0b4\ub193\uc558\ub2e4. \uadf8\ub85c\uc2dc\ub294 \uc774 \ubc00\uc774 \uac00\ubb44\uc5d0 \ub354 \uc798 \ubc84\ud2f0\uace0 \ube44\ub8cc\uc640 \uc81c\ucd08\uc81c\ub3c4 \ud544\uc694 \uc5c6\ub2e4\ub294 \uc810\uc744 \ud655\uc778\ud588\ub2e4. \uc2dc\uce60\ub9ac\uc544\uc758 \ud55c \uc804\ubb38\uac00\ub294 2024\ub144 \uadf9\uc2ec\ud55c \uac00\ubb44 \ub54c \uace0\ub300 \uace1\ubb3c\uc744 \ud0a4\uc6b4 \ub18d\uac00 \ub300\ubd80\ubd84\uc774 \uc218\ud655\ud560 \uc218 \uc788\uc5c8\ub2e4\uace0 \uc804\ud588\ub2e4.\n\n\ucd9c\ucc98: Smithsonian Magazine", "hashtags": ["#\uc2e0\uae30\ud55c\ub274\uc2a4", "#\uc774\ud0c8\ub9ac\uc544", "#\uace0\ub300\uace1\ubb3c", "#\ubc00", "#\ud574\uc678\ub274\uc2a4"], "slides": [["\ub2e4\ub77d\ubc29 \uc528\uc557\uc774", "**\uae30\uc801\uc758 \ubc00**???", "---", "1990\ub144\ub300 \ucd08 \uc774\ud0c8\ub9ac\uc544 \ud30c\ub974\ub9c8\uc758 \ub18d\ubd80\uac00 \ub2e4\ub77d\ubc29\uc5d0\uc11c \ub098\uc628 \uc815\uccb4\ubd88\uba85\uc758 \uc528\uc557 \uc790\ub8e8\ub97c \uac70\ub984 \ub354\ubbf8\uc5d0 \uc3df\uc558\ub354\ub2c8 \ud2b9\uc774\ud55c \ubc00\uc774 \uc790\ub77c\ub0ac\ub2e4."], ["\uac70\ub984 \ub354\ubbf8\uc5d0", "\ub358\uc838 \ub193\uace0 **\uc78a\uc5c8\ub2e4**", "---", "\uadf8\ub85c\uc2dc\ub294 \uc790\ub8e8\uac00 \uc99d\uc870\ubd80\uac00 \ub0a8\uae34 \uac83\uc774\ub77c\uace0 \ud655\uc2e0\ud588\ub2e4. \uc528\uc557\uc740 \ub9d0\ub77c \uac08\ub77c\uc9c4 \uc0c1\ud0dc\ub77c \uc2f9\uc774 \ud2c0 \uac70\ub77c\uace4 \uae30\ub300\ud558\uc9c0 \uc54a\uc558\uace0, \uc790\ub8e8\ub294 \uac70\ub984 \ub354\ubbf8\uc5d0 \uc3df\uc740 \ub4a4 \uc78a\ud614\ub2e4."], ["\ud0a4 2\ubc30\uc5d0", "**\uc774\uc0ad\uc774 7\uac1c**", "---", "\uc528\uc557\uc5d0\uc11c \uc5ec\ub7ec \uc885\ub958\uc758 \ubc00\uc774 \uc2f9\ud144\ub294\ub370, \uadf8\uc911 \ud558\ub098\ub294 \ud0a4\uac00 6\ud53c\ud2b8\ub85c \uc0c1\uc5c5\uc6a9 \ubc00\uc758 \uc57d \ub450 \ubc30\uc600\ub2e4. \uc774\uc0ad\uc740 \uae34 \uac83 \ud558\ub098\ub97c \uc9e7\uc740 \uc5ec\uc12f \uac1c\uac00 \ub458\ub7ec\uc2fc \ubaa8\uc591\uc73c\ub85c \ubaa8\ub450 \uc77c\uacf1 \uac1c\uc529 \ub2ec\ub838\ub2e4."], ["\uc131\uacbd \uc18d \uc774\uc0ad\uacfc", "**\ub611\uac19\uc796\uc544?**", "---", "\uad50\ud68c\uc5d0\uc11c \uc131\uacbd\uc744 \ub118\uae30\ub358 \uadf8\ub85c\uc2dc\ub294 \ucc3d\uc138\uae30\uc5d0\uc11c \uc904\uae30 \ud558\ub098\uc5d0 \uc774\uc0ad \uc77c\uacf1 \uac1c\uac00 \ub2ec\ub9b0 \uafc8 \uc774\uc57c\uae30\ub97c \ubc1c\uacac\ud588\ub2e4. \uadf8\ub294 \uc774 \uace1\ubb3c\uc774 \uc544\uc8fc \uc624\ub798\ub41c \uac83\uc774\ub77c\uace0 \uc0dd\uac01\ud588\ub2e4."], ["\uc54c\uace0 \ubcf4\ub2c8", "\uc9c4\uc9dc **\uace0\ub300 \ubc00**", "---", "\ud30c\ub974\ub9c8\ub300 \uc5f0\uad6c\uc9c4\uc740 \uc774 \uace1\ubb3c\uc774 \uc601\uc5b4\ub85c \ud480\ub77c\ub4dc \ubc00\uc774\ub77c \ubd88\ub9ac\ub294 Triticum turgidum\uc784\uc744 \ubc1d\ud600\ub0c8\ub2e4. \uc774\ud0c8\ub9ac\uc544\uc5d0\uc11c\ub3c4 \uc7ac\ubc30\ub418\ub2e4 \uc218\ud655\ub7c9 \ub192\uc740 \uc0c1\uc5c5\uc6a9 \ud488\uc885\uc73c\ub85c \ub18d\uac00\uac00 \uc62e\uaca8 \uac00\uba70 \ubc00\ub824\ub09c \ubc00\uc774\uc5c8\ub2e4."], ["**\uac00\ubb44\uc5d0\ub3c4**", "\uc54c\uc544\uc11c \ud070\ub2e4", "---", "\uc774 \ubc00\uc740 \uac00\ubb44\uc5d0 \ub354 \uc798 \ubc84\ud17c\uace0, \ud0a4\uac00 \ucee4\uc11c \uc7a1\ucd08\ub97c \ub20c\ub7ec \ubc84\ub838\ub2e4. \ube44\ub8cc\uc640 \uc81c\ucd08\uc81c\ub3c4 \ud544\uc694\ud558\uc9c0 \uc54a\uc558\ub2e4. \uadf8\ub85c\uc2dc\ub294 \uc774 \ubc00\uc5d0 \uae30\uc801\uc758 \uace1\ubb3c\uc774\ub77c\ub294 \ub73b\uc758 grano del miracolo\ub77c\ub294 \uc774\ub984\uc744 \ubd99\uc600\ub2e4."], ["**\ube75 \uc88b\uc544\ud558\ub294 \uce5c\uad6c**\ud55c\ud14c", "\ubcf4\ub0b4\uae30", "---", "\ub2e4\ub77d\ubc29 \uc790\ub8e8\uc5d0\uc11c \uc2dc\uc791\ud574 \uc131\uacbd \uc18d \uc774\uc0ad\uc744 \ub2ee\uc740 \uace0\ub300 \ubc00\ub85c \ubc1d\ud600\uc9c0\uae30\uae4c\uc9c0\uc758 \uacfc\uc815\uc774\ub77c, \ube75\uc774\ub098 \ub18d\uc0ac \uc774\uc57c\uae30\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "66bc0ddd9810": {"caption": "\ud50c\ub7ec\uadf8 \ud540\uc5d0 \ub6ab\ub9b0 \uc791\uc740 \uad6c\uba4d, \ud55c \ubc88\ucbe4 \uad81\uae08\ud588\uc744 \uac83\uc774\ub2e4. \ud754\ud788 \ucf58\uc13c\ud2b8\uac00 \ud50c\ub7ec\uadf8\ub97c \ub354 \ub2e8\ub2e8\ud788 \ubd99\uc7a1\uac8c \ud574 \uc900\ub2e4\ub294 \uc124\uba85\uc744 \ub4e4\uc5b4 \ubd24\uaca0\uc9c0\ub9cc, \uc9c0\uae08\uc740 \uc8fc\ub85c \uc81c\uc870 \uacfc\uc815\uc5d0\uc11c \uc4f8\ubaa8\uac00 \uc788\ub294 \uad6c\uba4d\uc774\ub77c\uace0 \ud55c\ub2e4.\n\n\uacf5\uc7a5\uc5d0\uc11c\ub294 \uc791\uc5c5\uc790\uac00 \uad6c\uba4d\uc5d0 \uc815\ub82c\uc6a9 \ub9c9\ub300\ub97c \ub07c\uc6cc \uae08\uc18d \ub0a0\uc758 \uc704\uce58\ub97c \uace0\uc815\ud55c \ub4a4 \ud50c\ub77c\uc2a4\ud2f1\uc744 \uc131\ud615\ud55c\ub2e4. \ubb3c\ub860 \ubaa8\ub4e0 \uc81c\uc870\uc0ac\uac00 \uac19\uc740 \uacf5\uc815\uc744 \uc4f0\ub294 \uac83\uc740 \uc544\ub2c8\ub2e4. \uc77c\ubc18 \uccad\uc18c\uae30 \ud50c\ub7ec\uadf8\ubd80\ud130 \uc2a4\ub9c8\ud2b8 \ud50c\ub7ec\uadf8\uae4c\uc9c0 \ubaa8\ub450 \ud574\ub2f9\ub418\ub294 \uc774\uc57c\uae30\uc774\uace0, \uc2a4\ub9c8\ud2b8 \ud50c\ub7ec\uadf8\uc5d0 \uba40\ud2f0\ud0ed\uc744 \ub2e4\uc2dc \uaf42\uc9c0\ub294 \ub9d0\ub77c\ub294 \ub2f9\ubd80\ub3c4 \uacc1\ub4e4\uc5ec\uc84c\ub2e4.\n\n\uc6d0\ub798\ub294 \ucf58\uc13c\ud2b8 \uc548\ucabd\uc758 \uc791\uc740 \ub3cc\uae30\uac00 \uad6c\uba4d\uc5d0 \uac78\ub9ac\ub294 \ub514\ud150\ud2b8 \uad6c\uc870\uac00 \uc788\uc5c8\ub2e4. \uc774\ud6c4 UL\uc774 \uad6c\uba4d \uc5c6\uc774\ub3c4 \ud50c\ub7ec\uadf8\ub97c \uc7a1\ub3c4\ub85d \ucf58\uc13c\ud2b8 \uae30\uc900\uc744 \uace0\uce58\uba74\uc11c \ub3cc\uae30\ub294 \uc0ac\ub77c\uc84c\uc9c0\ub9cc, \uad6c\uba4d\uc740 \ub300\ubd80\ubd84\uc758 \uc81c\uc870\uc0ac\uac00 \uacc4\uc18d \uc4f0\ub294 \uc120\ud0dd \uc0ac\ud56d\uc73c\ub85c \ub0a8\uc558\ub2e4.\n\n\uad6c\uba4d\uc774 \uc5c6\ub294 \ud50c\ub7ec\uadf8\ub3c4 \uacb0\ud568\uc774 \uc544\ub2c8\ub2e4. \ud50c\ub7ec\uadf8\uac00 \uc27d\uac8c \ube60\uc9c4\ub2e4\uba74 \ud50c\ub7ec\uadf8\ubcf4\ub2e4 \ucf58\uc13c\ud2b8\uac00 \ub2f3\uc558\uc744 \uac00\ub2a5\uc131\uc774 \ud06c\uace0, \uc774\ub54c\ub294 \ucf58\uc13c\ud2b8\ub97c \uc0c8\uac83\uc73c\ub85c \ubc14\uafb8\uba74 \ub41c\ub2e4. \ub2e4\ub9cc \uad50\uccb4\ud560 \ub54c\ub294 \ucc28\ub2e8\uae30\uc5d0\uc11c \uc804\uc6d0\uc744 \ub048 \ub4a4\uc5d0 \uc791\uc5c5\ud574\uc57c \ud55c\ub2e4. \uad6c\uba4d \uc5c6\ub294 \ud540\uc5d0 \uc9c1\uc811 \uad6c\uba4d\uc744 \ub6ab\uc744 \ud544\uc694\ub3c4 \uc5c6\ub2e4.\n\n\ucd9c\ucc98: Engadget", "hashtags": ["#\uc0dd\ud65c\uc0c1\uc2dd", "#\ucf58\uc13c\ud2b8", "#\ud50c\ub7ec\uadf8", "#\uacfc\ud559\uc0c1\uc2dd", "#\ud574\uc678\uc774\uc288"], "slides": [["\ud50c\ub7ec\uadf8 \uad6c\uba4d\uc758", "**\uc815\uccb4\uac00** \uc774\uac70???", "---", "\ud50c\ub7ec\uadf8 \ud540\uc5d0 \ub6ab\ub9b0 \uc791\uc740 \uad6c\uba4d\uc740 \uc624\ub298\ub0a0 \ucf58\uc13c\ud2b8 \uc18d \uc5ed\ud560\ubcf4\ub2e4 \uc81c\uc870 \uacfc\uc815\uc5d0\uc11c \ub354 \uc4f8\ubaa8\uac00 \uc788\ub2e4\uace0 \ud55c\ub2e4."], ["\uacf5\uc7a5\uc5d0\uc11c \uc4f0\ub294", "**\uc704\uce58 \uace0\uc815\uc6a9**", "---", "\uc791\uc5c5\uc790\ub294 \uad6c\uba4d\uc5d0 \uc815\ub82c\uc6a9 \ub9c9\ub300\ub97c \ub07c\uc6cc \uae08\uc18d \ub0a0\uc758 \uc704\uce58\ub97c \uace0\uc815\ud55c\ub2e4. \uadf8 \uc0c1\ud0dc\uc5d0\uc11c \uc870\ub9bd\ud488 \ub458\ub808\uc5d0 \ud50c\ub77c\uc2a4\ud2f1\uc744 \uc131\ud615\ud558\ub294 \ubc29\uc2dd\uc774\ub2e4. \ub2e4\ub9cc \ubaa8\ub4e0 \uc81c\uc870\uc0ac\uac00 \uac19\uc740 \uacf5\uc815\uc744 \uc4f0\uc9c0\ub294 \uc54a\ub294\ub2e4."], ["\uc6d0\ub798\ub294 \ucf58\uc13c\ud2b8\ub97c", "**\ubd99\uc7a1\ub294 \uc6a9\ub3c4**", "---", "NEMA\uc5d0 \ub530\ub974\uba74 \uad6c\uba4d\uc740 \uc6d0\ub798 \ucf58\uc13c\ud2b8 \uc548\ucabd\uc758 \uc791\uc740 \ub3cc\uae30\uc640 \uc9dd\uc744 \uc774\ub918\ub2e4. \ub3cc\uae30\uac00 \uad6c\uba4d\uc5d0 \ub538\uae4d \uac78\ub824 \ud50c\ub7ec\uadf8\ub97c \ubd99\uc7a1\uc558\uace0, \uc774 \uad6c\uc870\ub97c \ub514\ud150\ud2b8\ub77c\uace0 \ubd80\ub978\ub2e4."], ["\uaddc\uaca9\uc774 \ubc14\ub00c\uc790", "**\ub3cc\uae30\uac00 \uc0ac\ub77c\uc9d0**", "---", "\uc774\ud6c4 UL\uc774 \uad6c\uba4d \uc5c6\uc774\ub3c4 \ud50c\ub7ec\uadf8\ub97c \uc7a1\ub3c4\ub85d \ucf58\uc13c\ud2b8 \uae30\uc900\uc744 \uace0\ucce4\ub2e4. \ub300\ubd80\ubd84\uc758 \uc81c\uc870\uc0ac\ub294 \uae30\uc900\uc744 \ub9de\ucd94\ub294 \ub370 \ub3c4\uc6c0\uc774 \uc548 \ub418\uace0 \ubf51\uae30\ub9cc \uc5b4\ub835\uac8c \ud558\ub294 \ub3cc\uae30\ub97c \ub354 \ub2ec\uc9c0 \uc54a\uc558\ub2e4."], ["\uad6c\uba4d\uc740 \ub0a8\uc558\uc9c0\ub9cc", "\uc774\uc81c **\uc120\ud0dd \uc0ac\ud56d**", "---", "\ucf58\uc13c\ud2b8\uc758 \ub3cc\uae30\ub294 \uc0ac\ub77c\uc84c\uc9c0\ub9cc \ud50c\ub7ec\uadf8 \ub0a0\uc758 \uad6c\uba4d\uc740 \uadf8\ub300\ub85c \ub0a8\uc558\uace0, \uc9c0\uae08\uc740 \uc788\uc5b4\ub3c4 \uc5c6\uc5b4\ub3c4 \ub418\ub294 \uc120\ud0dd \uc0ac\ud56d\uc774\ub2e4. \uad6c\uba4d \uc5c6\ub294 \ud50c\ub7ec\uadf8\ub3c4 \uacb0\ud568\uc774 \uc544\ub2c8\uba70 \uc54c\ub9de\uc740 \ucf58\uc13c\ud2b8\uc5d0\uc120 \uc804\uae30\ub3c4 \ud1b5\ud55c\ub2e4."], ["\ucf58\uc13c\ud2b8 \ud5d0\uac70\uc6b4 \uc9d1", "**\uc800\uc7a5\ud574 \ub450\uae30**", "---", "\ud50c\ub7ec\uadf8\uac00 \uc790\uafb8 \ube60\uc9c0\ub294 \uc9d1\uc774\ub77c\uba74 \ub098\uc911\uc5d0 \ub2e4\uc2dc \uaebc\ub0b4 \ubcfc \uc774\uc57c\uae30. \uc6d0\uc778\uc740 \ud50c\ub7ec\uadf8 \ud540\uc758 \uad6c\uba4d\uc774 \uc544\ub2c8\ub77c \ucf58\uc13c\ud2b8\uc758 \ub9c8\ubaa8\uc77c \uac00\ub2a5\uc131\uc774 \ud06c\ub2e4\ub294 \uc124\uba85."]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"1f593d7c4af5": "reject", "2eca43195b5e": "approve", "66bc0ddd9810": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 5;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

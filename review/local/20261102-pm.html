@@ -1,0 +1,2294 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.02 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.02 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-be611d2eb76d" data-jump="be611d2eb76d">1</a><a href="#post-08abd4fa1904" data-jump="08abd4fa1904">2</a><a href="#post-73cb91792d33" data-jump="73cb91792d33">3</a>
+      <a href="#threads">🧵 스레드 3</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-be611d2eb76d" data-id="be611d2eb76d">
+    <div class="head">
+      <h2>1. 펜더 재팬 포켓몬 30주년 8비트 기타</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 11
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/6 12:40 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>포켓몬 30주년을 기타 소리로 기념한다면 어떤 모습일까. 펜더 재팬이 포켓몬 빨강·초록 30주년을 맞아 8비트 사운드 모드가 들어간 기타 두 종을 선보였다.
+
+영어권에서는 1998년 게임보이로 나온 빨강·파랑이 시리즈의 시작으로 알려져 있지만, 일본에서는 2년 앞서 빨강·초록이 먼저 나왔다. 이번 협업 기타의 색도 이 조합을 따랐다. 모델은 메이드 인 재팬 포켓몬 레드 버전 스트라토캐스터와 그린 버전 텔레캐스터 두 가지다. 빨강은 불꽃 타입, 초록은 풀 타입과 연결되는 색이라 각 기타의 몸통에는 해당 타입 포켓몬의 픽셀 아트가 가득하다.
+
+넥에는 몬스터볼이 은근하게 흩뿌려져 있고 뒷면에는 포켓몬 30주년 기념 플레이트가 붙는다. 픽셀 아트 피크, 전용 하드케이스, 인증서도 함께 제공된다.
+
+핵심은 소리다. 볼륨 노브를 누르면 펜더가 &#39;8비트 사운드 시스템 모드&#39;라 이름 붙인 효과가 켜지고, 추억의 칩튠 같은 음색이 나온다. 소라뉴스24는 이 모드가 고전 포켓몬 게임 음악을 커버하는 데 잘 어울릴 것이라고 소개했다.
+
+가격은 각각 39만 6천 엔(약 2,490달러)이고, 수량 한정이라 포켓몬센터 온라인에서 추첨으로 판매한다. 응모는 일본 시간 기준 11월 19일 정오부터 11월 24일 오후 4시 59분까지 받는다.
+
+출처: SoraNews24, 포켓몬 공식 웹사이트, PR Times
+
+배경 사진: janeb13, wal_172619, Papafox, niro9 / Pixabay
+표지 이미지: 소라뉴스24
+3장 이미지: Guitar World
+7장 이미지: 소라뉴스24
+
+#포켓몬 #펜더 #일렉기타 #포켓몬30주년 #8비트</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-be611d2eb76d">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 일본문화</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 포켓몬 덕후와 기타리스트가 동시에 반응할 소재. 볼륨 노브 하나로 추억의 칩튠 소리가 켜진다는 점과 한 자루 39만 6천 엔 추첨 판매라는 가격이 포인트.</p>
+    
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 넥에 흩뿌려진 몬스터볼, 뒷면 30주년 기념 플레이트, 픽셀 아트 피크·전용 하드케이스·인증서 같은 구성과 디테일 (카드 4장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">90/500자</span></div>
+      <p class="tp-text">기타 볼륨 노브를 누르면 추억의 칩튠 소리로 바뀐대
+포켓몬 30주년 기념으로 펜더 재팬이 낸 기타 얘기인데
+근데 기준이 &#39;빨강·파랑&#39;이 아니라 다른 조합이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">1/ 펜더 재팬이 포켓몬 빨강·초록 30주년을 맞아 8비트 사운드 모드가 들어간 기타 두 종을 냈어. 한 자루에 39만 6천 엔(약 2,490달러)이고 추첨으로 팔아.
+
+근데 왜 하필 빨강·초록이 기준일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">2/ 영어권에서는 1998년 게임보이로 나온 빨강·파랑이 시작으로 통해. 근데 일본에서는 그보다 2년 앞서 빨강·초록이 먼저 나왔거든.
+
+이번 기타 색도 이 원조 조합을 따랐대. 그럼 두 기타는 뭐가 다를까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">3/ 레드 버전은 스트라토캐스터, 그린 버전은 텔레캐스터야. 포켓몬 본편에 비슷하면서 다른 짝 버전이 있듯이 기타도 두 종으로 냈대.
+
+몸통엔 불꽃·풀 타입 포켓몬 픽셀 아트가 입혀졌고. 그럼 소리는 어떻게 바뀔까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">4/ 볼륨 노브를 누르면 펜더가 &#39;8비트 사운드 시스템 모드&#39;라 부르는 효과가 켜져. 추억의 칩튠을 닮은 소리래.
+
+소라뉴스24는 고전 포켓몬 게임 음악 커버에 잘 어울릴 것 같다고 봤어. 그럼 한눈에 정리하면 어떻게 될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 모델: 레드 스트라토캐스터 / 그린 텔레캐스터
+- 기준: 포켓몬 빨강·초록 30주년
+- 특징: 볼륨 노브 누르면 8비트 모드 ON
+- 가격: 각 39만 6천 엔(약 2,490달러)
+- 판매: 수량 한정, 포켓몬센터 온라인 추첨</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">272/500자</span></div>
+      <p class="tp-text">6/ 결국 포켓몬 빨강·초록 30주년을 기타로 기념한 거고, 노브만 누르면 칩튠 음색이 켜지는 두 종이 추첨으로 풀린다는 얘기야.
+
+너라면 레드 스트라토캐스터 vs 그린 텔레캐스터, 하나 고른다면?
+
+이런 해외 문화·덕질 소식 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸. 다음 배송: 지브리 종이공작 디오라마 키트 3종 얘기
+
+카드엔 기타 디테일과 함께 들어 있는 구성품까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>기타 볼륨 노브를 누르면 추억의 칩튠 소리로 바뀐대</li><li>포켓몬 30주년 기념이 이번엔 굿즈가 아니라 &#39;기타&#39;로 나왔어</li><li>기타 한 자루에 39만 6천 엔인데 추첨까지 해야 살 수 있대</li><li>포켓몬 30주년 기준이 &#39;빨강·파랑&#39;이 아니라 &#39;빨강·초록&#39;인 나라가 있대</li><li>옛날 포켓몬 게임 음악 감성을 기타 노브 하나로 켠다는 소식</li><li>포켓몬 짝 버전 문화 그대로, 기타도 스트라토캐스터와 텔레캐스터 두 종으로 나왔어</li><li>기타 치는 포켓몬 덕후 친구한테 바로 보내줘야 할 소식</li><li>&#39;30주년&#39;은 영어권이랑 일본이 기준이 달랐다는 거 알고 있었어?</li><li>8비트 칩튠 소리 나는 기타가 나왔는데 가격이 약 2,490달러</li><li>&#39;8비트 사운드 시스템 모드&#39;라는 이름이 붙은 기타가 포켓몬 30주년에 나왔어</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>레드 스트라토캐스터 vs 그린 텔레캐스터, 하나 고른다면?</li><li>포켓몬 처음 접한 게 빨강·초록 시절이었던 사람?</li><li>너라면 39만 6천 엔짜리 기타 추첨에 응모해볼 거야?</li><li>기타로 커버해보고 싶은 포켓몬 BGM 하나만 꼽는다면?</li><li>8비트 칩튠 기타, 갖고 싶다 vs 구경만 해도 충분하다?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>지브리 종이공작 디오라마 키트 3종</li><li>도쿄 박물관 무료 족욕 공간 아시유 테라스</li><li>일본에서 나온 포켓몬 30주년 협업 소식</li><li>영어권과 일본의 포켓몬 출시 시기 차이 이야기</li><li>8비트 칩튠 음악 이야기</li></ol>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-01.jpg" alt="1장: 포켓몬 30주년 기념 기타 출시!!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-02.jpg" alt="2장: 30주년은 빨강·초록 기준" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-03.jpg" alt="3장: 두 가지 모델로 짝을 맞췄다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-04.jpg" alt="4장: 넥엔 몬스터볼 뒷면엔 기념판" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-05.jpg" alt="5장: 볼륨 노브 눌러 8비트 모드 ON" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-06.jpg" alt="6장: 한 자루에 39만 6천 엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-07.jpg" alt="7장: 기타 치는 포켓몬 덕후 태그" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/be611d2eb76d/v2-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">포켓몬 30주년을 기타 소리로 기념한다면 어떤 모습일까. 펜더 재팬이 포켓몬 빨강·초록 30주년을 맞아 8비트 사운드 모드가 들어간 기타 두 종을 선보였다.
+
+영어권에서는 1998년 게임보이로 나온 빨강·파랑이 시리즈의 시작으로 알려져 있지만, 일본에서는 2년 앞서 빨강·초록이 먼저 나왔다. 이번 협업 기타의 색도 이 조합을 따랐다. 모델은 메이드 인 재팬 포켓몬 레드 버전 스트라토캐스터와 그린 버전 텔레캐스터 두 가지다. 빨강은 불꽃 타입, 초록은 풀 타입과 연결되는 색이라 각 기타의 몸통에는 해당 타입 포켓몬의 픽셀 아트가 가득하다.
+
+넥에는 몬스터볼이 은근하게 흩뿌려져 있고 뒷면에는 포켓몬 30주년 기념 플레이트가 붙는다. 픽셀 아트 피크, 전용 하드케이스, 인증서도 함께 제공된다.
+
+핵심은 소리다. 볼륨 노브를 누르면 펜더가 &#39;8비트 사운드 시스템 모드&#39;라 이름 붙인 효과가 켜지고, 추억의 칩튠 같은 음색이 나온다. 소라뉴스24는 이 모드가 고전 포켓몬 게임 음악을 커버하는 데 잘 어울릴 것이라고 소개했다.
+
+가격은 각각 39만 6천 엔(약 2,490달러)이고, 수량 한정이라 포켓몬센터 온라인에서 추첨으로 판매한다. 응모는 일본 시간 기준 11월 19일 정오부터 11월 24일 오후 4시 59분까지 받는다.
+
+출처: SoraNews24, 포켓몬 공식 웹사이트, PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#포켓몬 #펜더 #일렉기타 #포켓몬30주년 #8비트</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>포켓몬 IP 관련 소재라 공식 이미지·로고는 사용하지 않고 스톡·AI 배경만 사용</li><li>가격의 달러 환산(US$2,490)은 원문 기준이며 환율에 따라 달라질 수 있음</li><li>응모 일정은 일본 시간 기준이고 추첨 판매라 한국에서 구매 가능한지는 원문에 없음</li><li>&#39;소리가 커버에 잘 어울릴 것&#39;은 소라뉴스24의 의견이므로 매체 평가로 표기함</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-be611d2eb76d-0">1장</label>
+          <textarea id="s-be611d2eb76d-0" rows="6" data-slide="0">**포켓몬** 30주년 기념
+**기타** 출시!!
+---
+펜더 재팬이 포켓몬 빨강·초록 30주년을 맞아 8비트 사운드 모드를 넣은 기타 두 종을 선보였다.</textarea>
+          
+          <label class="f" for="s-be611d2eb76d-1">2장</label>
+          <textarea id="s-be611d2eb76d-1" rows="6" data-slide="1">30주년은
+빨강·초록 기준
+---
+영어권에서는 1998년 게임보이로 나온 빨강·파랑이 시작으로 통하지만, 일본에서는 그보다 2년 앞서 빨강·초록이 먼저 나왔다. 이번 기타의 색도 이 원조 조합을 따랐다.</textarea>
+          
+          <label class="f" for="s-be611d2eb76d-2">3장</label>
+          <textarea id="s-be611d2eb76d-2" rows="6" data-slide="2">**두 가지 모델**로
+짝을 맞췄다
+---
+레드 버전은 스트라토캐스터, 그린 버전은 텔레캐스터다. 포켓몬 본편에 비슷하면서 다른 짝 버전이 있듯 기타도 두 종으로 냈고, 몸통에는 불꽃·풀 타입 포켓몬의 픽셀 아트가 입혀졌다.</textarea>
+          
+          <label class="f" for="s-be611d2eb76d-3">4장</label>
+          <textarea id="s-be611d2eb76d-3" rows="6" data-slide="3">넥엔 **몬스터볼**
+뒷면엔 **기념판**
+---
+넥에는 몬스터볼이 은근하게 흩뿌려져 있고, 뒷면에는 포켓몬 30주년 기념 플레이트가 붙었다. 픽셀 아트 피크와 전용 하드케이스, 인증서도 함께 들어 있다.</textarea>
+          
+          <label class="f" for="s-be611d2eb76d-4">5장</label>
+          <textarea id="s-be611d2eb76d-4" rows="6" data-slide="4">볼륨 노브 눌러
+**8비트** 모드 ON
+---
+볼륨 노브를 누르면 펜더가 &#39;8비트 사운드 시스템 모드&#39;라 부르는 효과가 켜진다. 추억의 칩튠을 닮은 소리라, 소라뉴스24는 고전 포켓몬 게임 음악 커버에 잘 어울릴 것이라고 봤다.</textarea>
+          
+          <label class="f" for="s-be611d2eb76d-5">6장</label>
+          <textarea id="s-be611d2eb76d-5" rows="6" data-slide="5">한 자루에
+**39만 6천 엔**
+---
+두 기타는 각각 39만 6천 엔(약 2,490달러)이며 수량이 한정돼 추첨으로 판매된다. 포켓몬센터 온라인에서 11월 19일 정오부터 24일 오후 4시 59분까지(일본 시간) 응모를 받는다.</textarea>
+          
+          <label class="f" for="s-be611d2eb76d-6">7장</label>
+          <textarea id="s-be611d2eb76d-6" rows="6" data-slide="6">기타 치는
+**포켓몬 덕후** 태그
+---
+8비트 칩튠 소리를 내는 기타라서 포켓몬을 좋아하는 기타리스트 친구가 특히 반가워할 소식. 픽셀 아트 디자인과 응모 일정은 앞 장에 담겨 있다.</textarea>
+          
+          <label class="f" for="c-be611d2eb76d">본문 (캡션)</label>
+          <textarea id="c-be611d2eb76d" class="caption">포켓몬 30주년을 기타 소리로 기념한다면 어떤 모습일까. 펜더 재팬이 포켓몬 빨강·초록 30주년을 맞아 8비트 사운드 모드가 들어간 기타 두 종을 선보였다.
+
+영어권에서는 1998년 게임보이로 나온 빨강·파랑이 시리즈의 시작으로 알려져 있지만, 일본에서는 2년 앞서 빨강·초록이 먼저 나왔다. 이번 협업 기타의 색도 이 조합을 따랐다. 모델은 메이드 인 재팬 포켓몬 레드 버전 스트라토캐스터와 그린 버전 텔레캐스터 두 가지다. 빨강은 불꽃 타입, 초록은 풀 타입과 연결되는 색이라 각 기타의 몸통에는 해당 타입 포켓몬의 픽셀 아트가 가득하다.
+
+넥에는 몬스터볼이 은근하게 흩뿌려져 있고 뒷면에는 포켓몬 30주년 기념 플레이트가 붙는다. 픽셀 아트 피크, 전용 하드케이스, 인증서도 함께 제공된다.
+
+핵심은 소리다. 볼륨 노브를 누르면 펜더가 &#39;8비트 사운드 시스템 모드&#39;라 이름 붙인 효과가 켜지고, 추억의 칩튠 같은 음색이 나온다. 소라뉴스24는 이 모드가 고전 포켓몬 게임 음악을 커버하는 데 잘 어울릴 것이라고 소개했다.
+
+가격은 각각 39만 6천 엔(약 2,490달러)이고, 수량 한정이라 포켓몬센터 온라인에서 추첨으로 판매한다. 응모는 일본 시간 기준 11월 19일 정오부터 11월 24일 오후 4시 59분까지 받는다.
+
+출처: SoraNews24, 포켓몬 공식 웹사이트, PR Times</textarea>
+          <label class="f" for="t-be611d2eb76d">해시태그</label>
+          <input id="t-be611d2eb76d" type="text" class="tagsin" value="#포켓몬 #펜더 #일렉기타 #포켓몬30주년 #8비트" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>펜더가 포켓몬 빨강·초록 30주년을 기념해 외형과 소리 모두 포켓몬 세계를 담은 기타를 내놓았다</b>
+            <q>“Fender celebrates Red and Green’s 30th anniversary with guitars saluting the Pokémon world in both looks and sound.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>펜더 재팬과 협업한 한 쌍의 맞춤 기타가 포켓몬 30주년을 기념한다</b>
+            <q>“Here in 2026, the global Poké-fan community has a more comprehensive picture of the franchise’s history, which brings us to the appropriate color schemes for the latest collaboration celebrating Pokémon’s 30th anniversary, a pair of customized guitars created in partnership with Fender Japan.”</q>
+            <small>slide1, slide2 · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영어권에서는 1998년 게임보이용 빨강·파랑이 시리즈의 시작이었다</b>
+            <q>“In the English-speaking world, the start of the Pokémon video game series were the paired releases of Pokémon Red and Blue for the Game Boy in 1998.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에서는 2년 앞서 빨강·초록이 먼저 나왔다</b>
+            <q>“However, unbeknownst to many young fans at the time, the real origins of the franchise had come out in Japan two years prior, and were titled Pokémon Red and Green.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기타 두 모델은 레드 버전 스트라토캐스터와 그린 버전 텔레캐스터이며, 본편 게임의 짝 버전 구성에 빗댄 선택이다</b>
+            <q>“In a parallel to how mainline Pokémon games customarily have a similar but still different sibling, so too has Fender chosen two different models of guitar for this team-up, the Made in Japan Pokémon “Red Version” Stratocaster and Made in Japan Pokémon “Green Version” Telecaster.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>빨강은 불꽃 타입, 초록은 풀 타입과 연결되며 각 기타 몸통에 해당 포켓몬의 픽셀 아트가 입혀졌다</b>
+            <q>“Within the series’ visual design language, the color red is often associated with Fire-type Pocket Monsters, and green with Grass-types, so the body of each guitar is covered in pixel art of species from those categories.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>넥에 몬스터볼이 은근하게 흩뿌려져 있다</b>
+            <q>“More fan-service flair can be found on the neck, where Poké Balls are subtly scattered about…”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뒷면에 포켓몬 30주년 기념 플레이트가 있다</b>
+            <q>“…and the backside features a Pokémon 30th anniversary plate.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>각 기타에 픽셀 아트 피크, 전용 하드케이스, 인증서가 함께 제공된다</b>
+            <q>“Each guitar also comes bundled with a selection of pixel art picks, plus a custom hardcase and certificate of authenticity.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>볼륨 노브를 누르면 펜더가 &#39;8비트 사운드 시스템 모드&#39;라 부르는 칩튠풍 효과가 켜지며, 매체는 고전 포켓몬 음악 커버에 잘 어울릴 것이라고 봤다</b>
+            <q>“Push in the volume knob, and you can activate what Fender has dubbed the instruments’ “8-Bit Sound System Mode,” a clever audio effect that gives the guitar’s sound a quality reminiscent of nostalgic chiptunes, which should lend itself really well to playing covers of classic Pokémon games’ soundtracks.”</q>
+            <small>slide5, slide7, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 기타는 각각 396,000엔(약 2,490달러)이고 수량 한정으로 포켓몬센터 온라인에서 추첨 판매되며, 일본 시간 11월 19일 정오부터 24일 오후 4시 59분까지 응모를 받는다</b>
+            <q>“Because they’ll be available in limited quantities, both guitars, priced at 396,000 yen (US$2,490) each, will be offered for sale through a lottery system from the Pokémon Center Online store, which will be accepting applications between noon on November 19 and 4:59 p.m. on November 24 (Japan time).”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">Pokémon guitars from Fender Japan come with 8-bit sound mode for covering retro game music [Vid]</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://musicplayers.com/wp-content/uploads/2026/10/Pokemon_Key-Visual_copyright-scaled.jpg"</li><li>2장: <a href="https://pixabay.com/photos/xbox-video-game-x-box-game-console-1200296/" target="_blank" rel="noopener">janeb13 / Pixabay</a> — "retro game console"</li><li>3장: <a href="https://www.guitarworld.com/gear/electric-guitars/fender-japan-pokemon-30th-anniversary" target="_blank" rel="noopener">Guitar World / </a> — "https://cdn.mos.cms.futurecdn.net/UqzKwGxmRxNDVzVro8qEcN-1200-80.jpg"</li><li>4장: <a href="https://pixabay.com/photos/guitar-music-strings-instrument-5187376/" target="_blank" rel="noopener">wal_172619 / Pixabay</a> — "guitar neck"</li><li>5장: <a href="https://pixabay.com/photos/monkey-music-concert-guitar-stage-3507317/" target="_blank" rel="noopener">Papafox / Pixabay</a> — "guitar amplifier"</li><li>6장: <a href="https://pixabay.com/photos/record-shop-vinyl-records-music-9180482/" target="_blank" rel="noopener">niro9 / Pixabay</a> — "music store"</li><li>7장: <a href="https://soranews24.com/2026/11/02/pokemon-guitars-from-fender-japan-come-with-8-bit-sound-mode-for-covering-retro-game-music-vid/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://musicplayers.com/wp-content/uploads/2026/10/1_1_Pokemon-Red-Version-Stratocaster_5_retouch_0305-scaled.jpg"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-08abd4fa1904" data-id="08abd4fa1904">
+    <div class="head">
+      <h2>2. 도쿄 박물관 무료 족욕 공간 아시유 테라스</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 15
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/6 20:50 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 8장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>도쿄 한복판, 박물관 건물 안에 돈 한 푼 안 내고 발을 담글 수 있는 공간이 있다. 야마노테선에서 가장 새로운 역인 다카나와 게이트웨이역 근처, MoN 다카나와 박물관 6층의 아시유 테라스다.
+
+박물관은 3월에 문을 열었다. 취재 당시에는 전시 구역에 들어가지 않아 입장권을 살 필요가 없었다. 테라스에는 초록 식물이 둘러싸고 있고, 그 너머로 도시 풍경이 넓게 열린다. 선로 옆에 자리한 데다 시나가와역과 가까운 덕분이라고 한다. 철도 팬이 기차를 구경하기에도 좋은 곳이라고 매체는 소개했다.
+
+따뜻한 물 구역과 차가운 물 구역이 있어 번갈아 오가며 쉴 수 있다. 다만 야외라서 한여름 낮이나 한겨울 저녁에는 쾌적하지 않을 수 있고, 수건이 없으니 손수건은 챙겨야 한다.
+
+같은 건물에는 옥상의 작은 신사와 4층 다다미 휴식 공간도 있다. 다다미 공간 역시 무료로 이용할 수 있다. 박물관 운영 시간은 오전 10시부터 오후 9시까지다.
+
+출처: SoraNews24
+
+사진: Dick Thomas Johnson from Tokyo, Japan / Wikimedia Commons, CC BY 2.0 (편집)
+표지 이미지: SoraNews24
+3장 이미지: SoraNews24
+4장 이미지: SoraNews24
+5장 이미지: SoraNews24
+6장 이미지: SoraNews24
+7장 이미지: SoraNews24
+
+#도쿄여행 #도쿄가볼만한곳 #족욕 #일본여행 #다카나와게이트웨이</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-08abd4fa1904">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 일본여행</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 도쿄 여행에서 걷다 지친 다리를 돈 안 들이고 쉬게 하는 곳이라는 점을 앞세우고, 수건을 직접 챙겨야 한다는 실용 정보로 저장하게 만든다.</p>
+    
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 같은 건물 4층에 있는 무료 다다미 휴식 공간 (카드 6장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">도쿄 걷다 다리 퍼질 때, 카페 말고 박물관 6층으로 가는 길이 있대
+돈 한 푼 안 내고 발 담글 수 있는 야외 족욕탕이라는데
+근데 빈손으로 가면 낭패일 수 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">1/ 결론부터, 도쿄 다카나와 게이트웨이역 근처 MoN 다카나와 박물관 6층에 무료 족욕 공간이 있어. 이름은 아시유 테라스, 아시유는 일본어로 족욕이라는 뜻이야. 그럼 이 역은 어떤 동네에 있을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">2/ 다카나와 게이트웨이는 야마노테선에서 가장 새로운 역이야. 복합 개발 지구와 이어져 있고, 그 일부가 박물관임. 박물관은 3월에 문 열었는데, 그럼 족욕하려고 해도 표부터 사야 할까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">132/500자</span></div>
+      <p class="tp-text">3/ 취재 당시엔 전시 구역에 안 들어가서 표 없이 바로 6층 테라스로 갔대. 초록 식물이 둘러싸고 그 너머로 도시 풍경이 펼쳐지고, 선로 옆에 시나가와역과 가까워서 철도 팬이 기차 구경하기에도 좋다고 함. 그럼 물은 어떻게 돼 있을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">192/500자</span></div>
+      <p class="tp-text">4/ 아시유 테라스 요약 정리
+- 위치: 다카나와 게이트웨이역 근처 MoN 다카나와 박물관 6층
+- 이용료: 무료
+- 물: 온수 구역 + 냉수 구역, 따뜻해지면 반대편에서 식히기
+- 주의: 야외라 한여름 낮이나 한겨울 저녁엔 쾌적하지 않을 수 있음
+- 준비물: 수건이 없어서 손수건 같은 걸 직접 챙기기
+- 박물관 운영: 오전 10시~오후 9시</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">222/500자</span></div>
+      <p class="tp-text">5/ 결국 도쿄에서 다리 쉴 곳 찾는다면 손수건만 챙겨서 6층으로 가면 된다는 얘기야.
+
+여행 가서 걷다 지치면 카페로 가는 편이야, 발 담그는 편이야?
+
+이런 해외 여행·문화 소식, 밤사이 터진 것만 새벽에 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 같은 건물 안 쉬어가는 공간 하나까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>도쿄 박물관은 &#39;표 사서 들어가는 곳&#39;이라고만 알았다면, 6층에 공짜 족욕탕이 있대</li><li>도쿄 걷다 다리 퍼질 때, 카페 말고 박물관 6층으로 가는 길이 있대</li><li>도쿄 여행 중 다리 쉬는 곳은 &#39;카페&#39;가 아니라 &#39;박물관 6층 족욕탕&#39;일 수도 있음</li><li>걷다 지친 다리, 돈 내고 쉬지 말고 박물관 6층부터 올라가보라는 소개가 나옴</li><li>도쿄 한복판에 공짜 족욕탕이 있다는데, 위치가 박물관 6층임</li><li>야마노테선에서 제일 새로운 역 바로 옆에 공짜 족욕탕이 있대</li><li>&#39;도쿄는 뭐든 비싸다&#39;는 말, 이 무료 족욕탕 보면 좀 달라짐</li><li>도쿄에서 하루 종일 걸었다면, 발은 여기서 풀라는 소개가 나옴</li><li>족욕탕인데 수건이 없대. 그래도 도쿄 여행자들이 눈여겨볼 이유가 있음</li><li>따뜻한 물과 차가운 물을 번갈아 담그는 도쿄 박물관 6층, 취재 땐 표도 안 샀대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>여행 가서 걷다 지치면 카페로 가는 편이야, 발 담그는 편이야?</li><li>도쿄 가면 여기 가보고 싶어, 아니면 패스할 거야?</li><li>족욕은 따뜻한 물 파야, 차가운 물 파야?</li><li>여행 중 다리 쉬려고 무료 쉼터 찾아본 적 있어?</li><li>여행 가방에 손수건 챙기는 편이야, 안 챙기는 편이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>지브리 종이공작 디오라마 키트 3종</li><li>일본 여행 중 알아두면 좋은 무료 쉼터 소식</li><li>도쿄에 새로 생긴 역 주변 볼거리</li><li>일본 박물관 이색 체험 소식</li><li>해외에서 화제가 된 여행지 쉼터 이야기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>표가 필요 없다는 내용은 &#39;취재 당시&#39; 기준이라 현재도 그렇다고 단정하지 않았는지 확인</li><li>무료 이용·운영 시간은 매체 보도 시점 정보라 변동 가능성이 있음</li></ul>
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-01.jpg" alt="1장: 도쿄 한복판에 공짜 족욕탕?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-02.jpg" alt="2장: 야마노테선 새 역 바로 옆" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-03.jpg" alt="3장: 티켓 없이 6층 테라스로" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-04.jpg" alt="4장: 초록 너머로 탁 트인 도심" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-05.jpg" alt="5장: 따뜻한 물과 차가운 물 둘 다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-06.jpg" alt="6장: 수건은 직접 챙기기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-07.jpg" alt="7장: 도쿄 가기 전에 저장해 두기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/08abd4fa1904/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">도쿄 한복판, 박물관 건물 안에 돈 한 푼 안 내고 발을 담글 수 있는 공간이 있다. 야마노테선에서 가장 새로운 역인 다카나와 게이트웨이역 근처, MoN 다카나와 박물관 6층의 아시유 테라스다.
+
+박물관은 3월에 문을 열었다. 취재 당시에는 전시 구역에 들어가지 않아 입장권을 살 필요가 없었다. 테라스에는 초록 식물이 둘러싸고 있고, 그 너머로 도시 풍경이 넓게 열린다. 선로 옆에 자리한 데다 시나가와역과 가까운 덕분이라고 한다. 철도 팬이 기차를 구경하기에도 좋은 곳이라고 매체는 소개했다.
+
+따뜻한 물 구역과 차가운 물 구역이 있어 번갈아 오가며 쉴 수 있다. 다만 야외라서 한여름 낮이나 한겨울 저녁에는 쾌적하지 않을 수 있고, 수건이 없으니 손수건은 챙겨야 한다.
+
+같은 건물에는 옥상의 작은 신사와 4층 다다미 휴식 공간도 있다. 다다미 공간 역시 무료로 이용할 수 있다. 박물관 운영 시간은 오전 10시부터 오후 9시까지다.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#도쿄여행 #도쿄가볼만한곳 #족욕 #일본여행 #다카나와게이트웨이</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>운영 시간과 무료 이용 여부는 바뀔 수 있으므로 방문 전 공식 안내 확인 필요</li><li>원문은 매체 취재 방문 기준이며 입장 조건은 방문 당시 경험에 근거함</li><li>야외 시설이라 계절과 날씨에 따라 이용 환경이 달라질 수 있음</li><li>기사 사진은 저작권이 있으므로 사용하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-08abd4fa1904-0">1장</label>
+          <textarea id="s-08abd4fa1904-0" rows="6" data-slide="0">도쿄 한복판에
+**공짜** 족욕탕?!
+---
+도쿄 다카나와 게이트웨이역 근처 박물관 건물 6층에 무료로 이용할 수 있는 야외 족욕 공간이 있다.</textarea>
+          
+          <label class="f" for="s-08abd4fa1904-1">2장</label>
+          <textarea id="s-08abd4fa1904-1" rows="6" data-slide="1">야마노테선
+**새 역** 바로 옆
+---
+다카나와 게이트웨이는 도심을 순환하는 야마노테선에서 가장 새로운 역이다. 이 역은 복합 개발 지구와 이어져 있고, 그 일부가 MoN 다카나와 박물관이다.</textarea>
+          
+          <label class="f" for="s-08abd4fa1904-2">3장</label>
+          <textarea id="s-08abd4fa1904-2" rows="6" data-slide="2">티켓 없이
+**6층** 테라스로
+---
+박물관은 3월에 문을 열었다. 취재 당시에는 전시 구역에 들어가지 않아 표를 살 필요가 없었고, 6층 야외 공간 아시유 테라스로 향했다. 아시유는 일본어로 족욕을 뜻한다.</textarea>
+          
+          <label class="f" for="s-08abd4fa1904-3">4장</label>
+          <textarea id="s-08abd4fa1904-3" rows="6" data-slide="3">초록 너머로
+**탁 트인** 도심
+---
+테라스는 초록 식물이 둘러싸고 있고, 그 너머로 도시 풍경이 넓게 펼쳐진다. 선로 옆에 있고 시나가와역과 가까운 덕분이며, 철도 팬이 기차를 구경하기에도 좋은 자리라고 한다.</textarea>
+          
+          <label class="f" for="s-08abd4fa1904-4">5장</label>
+          <textarea id="s-08abd4fa1904-4" rows="6" data-slide="4">따뜻한 물과
+차가운 물 **둘 다**
+---
+온수 구역과 냉수 구역이 함께 있어, 따뜻해지면 반대편 끝으로 가 식힐 수 있다. 매체는 야외라 한여름 낮이나 한겨울 저녁엔 쾌적하지 않을 수 있다고 짚었다.</textarea>
+          
+          <label class="f" for="s-08abd4fa1904-5">6장</label>
+          <textarea id="s-08abd4fa1904-5" rows="6" data-slide="5">**수건**은
+직접 챙기기
+---
+아시유 테라스에는 수건이 마련돼 있지 않아 손수건 같은 것을 가져가야 한다. 박물관은 오전 10시부터 오후 9시까지 문을 열고, 4층에는 역시 무료인 다다미 휴식 공간이 있다.</textarea>
+          
+          <label class="f" for="s-08abd4fa1904-6">7장</label>
+          <textarea id="s-08abd4fa1904-6" rows="6" data-slide="6">도쿄 가기 전에
+**저장**해 두기
+---
+걷다 지친 다리를 쉬게 해 줄 무료 공간을 찾는 사람이 다시 꺼내 볼 정보. 위치와 운영 시간, 준비물이 앞 장에 모두 있다.</textarea>
+          
+          <label class="f" for="c-08abd4fa1904">본문 (캡션)</label>
+          <textarea id="c-08abd4fa1904" class="caption">도쿄 한복판, 박물관 건물 안에 돈 한 푼 안 내고 발을 담글 수 있는 공간이 있다. 야마노테선에서 가장 새로운 역인 다카나와 게이트웨이역 근처, MoN 다카나와 박물관 6층의 아시유 테라스다.
+
+박물관은 3월에 문을 열었다. 취재 당시에는 전시 구역에 들어가지 않아 입장권을 살 필요가 없었다. 테라스에는 초록 식물이 둘러싸고 있고, 그 너머로 도시 풍경이 넓게 열린다. 선로 옆에 자리한 데다 시나가와역과 가까운 덕분이라고 한다. 철도 팬이 기차를 구경하기에도 좋은 곳이라고 매체는 소개했다.
+
+따뜻한 물 구역과 차가운 물 구역이 있어 번갈아 오가며 쉴 수 있다. 다만 야외라서 한여름 낮이나 한겨울 저녁에는 쾌적하지 않을 수 있고, 수건이 없으니 손수건은 챙겨야 한다.
+
+같은 건물에는 옥상의 작은 신사와 4층 다다미 휴식 공간도 있다. 다다미 공간 역시 무료로 이용할 수 있다. 박물관 운영 시간은 오전 10시부터 오후 9시까지다.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-08abd4fa1904">해시태그</label>
+          <input id="t-08abd4fa1904" type="text" class="tagsin" value="#도쿄여행 #도쿄가볼만한곳 #족욕 #일본여행 #다카나와게이트웨이" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>도쿄 도심, 야마노테선 다카나와 게이트웨이역 근처에 무료 족욕 공간이 있다</b>
+            <q>“They say there’s no such thing as a free lunch, but it turns out there is a free foot bath in Tokyo. It’s not some rinky-dink little tub in some obscure spot on the outskirts of the capital, either, but right in the middle of downtown, near Takanawa Gateway Station on the Yamanote train line that encircles the city center.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>족욕 공간은 박물관 6층의 야외 공간인 아시유 테라스다</b>
+            <q>“Instead, our destination was someplace on the sixth-floor, an exterior area that many people aren’t aware of called the Ashiyu Terrace.”</q>
+            <small>slide1, slide3, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다카나와 게이트웨이는 야마노테선에서 가장 새로운 역이며, 개발 지구의 일부가 MoN 다카나와 박물관이다</b>
+            <q>“Takanawa Gateway is the newest station on the line, and is connected to a shopping, entertainment, and cultural development called Takanawa Gateway City, part of which is MoN Takanawa: The Museum of Narratives.”</q>
+            <small>slide2, summary, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>박물관은 3월에 문을 열었고, 취재 당시 전시 구역에 들어가지 않아 표를 살 필요가 없었다</b>
+            <q>“The museum, which opened in March, hosts rotating artistic and cultural events, but on our visit, we didn’t need to purchase a ticket, because we weren’t heading inside the main exhibition areas.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아시유는 일본어로 족욕을 뜻한다</b>
+            <q>“Ashiyu is the Japanese word for “footbath,” and that’s exactly what you’ll find here!”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>테라스는 초록 식물이 둘러싸고 있고 그 너머로 도시 풍경이 탁 트여 보인다</b>
+            <q>“This outdoor urban oasis has an outer ring of greenery, and beyond that offers impressively open views of the surrounding cityscape, of a kind that’s not easy to come by this deep in downtown without going to a skyscraper’s upper floors.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>테라스가 선로 옆에 있고 시나가와역과 가까운 덕분에 시야가 트인다</b>
+            <q>“This is thanks to the terrace’s position adjacent to the train tracks, plus Takanawa Gateway’s proximity to the next station to the south, Shinagawa.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>철도 팬이 기차를 구경하기에도 좋은 자리다</b>
+            <q>“▼ This also makes the MoN Takanawa footbath a great place for trainspotting rail fans.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>온수 구역과 냉수 구역이 함께 있다</b>
+            <q>“…the Ashiyu Terrace also has a cold water area.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>따뜻한 구역에서 몸이 달아오르면 반대편 끝으로 가서 식힐 수 있다</b>
+            <q>“This means you can start off in the warm section until you’re feeling nice and toasty, and once you get a little too hot, you can mosey on over to the other end of the bath and cool down.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매체는 야외라 한여름 낮이나 한겨울 저녁에는 쾌적하지 않을 수 있다고 봤다</b>
+            <q>“Because the foot bath is open-air, it’s probably not the most pleasant place to spend a blisteringly hot summer day or a frigidly cold winter evening.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아시유 테라스에는 수건이 제공되지 않아 손수건을 가져가야 한다</b>
+            <q>“Really, the only possibly negative thing we could say about the Ashiyu Terrace is that no towels are provided, but we’re happy to bring our own handkerchief to dry off with when the rest of this experience is this awesome.”</q>
+            <small>slide6, summary, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>박물관 운영 시간은 오전 10시부터 오후 9시까지다</b>
+            <q>“Open 10 a.m.-9 p.m.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>4층에 무료로 이용할 수 있는 다다미 휴식 공간이 있다</b>
+            <q>“…and a tatami reed-floor relaxation room on the fourth floor with digital art displays, which is also free to access.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>옥상에 작은 신사가 있다</b>
+            <q>“If you’re looking for more ways to enjoy traditional Japanese culture on the free-to-access museum grounds, there’s a little Shinto shrine on the rooftop…”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">This semi-secret, totally free footbath in downtown Tokyo is completely awesome</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/4_6a3ede.jpg?w=640"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Takanawa_Gateway_Station_(52481320804).jpg" target="_blank" rel="noopener">Dick Thomas Johnson from Tokyo, Japan / Wikimedia Commons · CC BY 2.0</a> — "Takanawa Gateway Station"</li><li>3장: <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/3_62ef9e.jpg?w=640"</li><li>4장: <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/6_ff192a.jpg?w=640"</li><li>5장: <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/8_a06bf6.jpg?w=640"</li><li>6장: <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/10_c07f4d.jpg?w=640"</li><li>7장: <a href="https://soranews24.com/2026/11/01/this-semi-secret-totally-free-footbath-in-downtown-tokyo-is-completely-awesome/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/7_63e08a.jpg?w=640"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-73cb91792d33" data-id="73cb91792d33">
+    <div class="head">
+      <h2>3. 지브리 종이공작 디오라마 키트 3종</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    <div class="final">
+      <b>승인됨 · 11/7 08:10 예약</b>
+      <p>아래 카드와 캡션이 실제로 올라갈 완성본이에요. 아래 '문구 고치기'로 다시 고치거나 '예약 취소'할 수 있어요.</p>
+      <div class="final-btns">
+        <button class="save" type="button">카드 9장 저장</button>
+        <button class="copy" type="button">캡션 복사</button>
+        <button class="posted" type="button" aria-pressed="false">인스타에 직접 올렸어요</button>
+      </div>
+      <textarea class="final-cap" hidden>지브리 속 집을 책상 위에 올려 둘 수 있게 됐다. 일본 종이공작 업체 산케이가 Miniatuart Mini Plus 시리즈에 하울, 키키, 아리에티의 집을 재현한 신작 3종을 11월 3일 발매한다.
+
+키트는 벽과 내부를 만들 종이 시트가 담긴 상자로 시작하고, 조립이 끝나면 그 상자가 완성작의 받침이 된다. 상자 면마다 다른 일러스트가 있어 여러 각도에서 볼 이유가 하나 더 생긴다. 하울의 난롯가에는 마법 장식품과 참고 자료가 어지럽게 놓였고 불의 정령 칼시퍼도 등장한다. 키키의 방은 빨래, 빗자루, 지지까지 담았으며 세 키트 중 외관이 가장 정교하다. 아리에티 가족의 거실은 한 변이 6cm다.
+
+난이도는 모두 상급이다. 키키는 5시간 이상, 나머지는 10시간 이상 걸린다고 한다. 가격은 키키 4,290엔(약 27달러), 아리에티 6,160엔, 하울 6,600엔이며 산케이의 라쿠텐 온라인 매장에서 11월 3일부터 주문할 수 있다.
+
+지브리 덕질하는 친구에게 공유해 보자.
+
+출처: SoraNews24, Sankei
+
+배경 사진: Tama66, image4you / Pixabay
+표지 이미지: SoraNews24
+2장 이미지: SoraNews24
+3장 이미지: SoraNews24
+5장 이미지: SoraNews24
+6장 이미지: SoraNews24
+상품 사진: soranews24.com
+
+#지브리 #종이공작 #디오라마 #하울의움직이는성 #덕질</textarea>
+    </div>
+    
+  
+  <section class="thr" data-thread="card-73cb91792d33">
+    <div class="thr-head">
+      <b>🧵 짝꿍 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 지브리</span>
+    </div>
+    <p class="thr-note">인스타에 카드를 올린 뒤에 올려요. 본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 지브리 팬이 &#39;사서 올려두는&#39; 굿즈를 넘어 &#39;10시간 걸려 직접 짓는&#39; 키트가 나왔다는 대비와, 상자가 전시대가 되고 아리에티 거실이 6cm라는 구체적인 디테일</p>
+    
+    
+    <p class="thr-note">🎁 <b>카드에만 있는 보너스:</b> 세 키트의 엔화 가격 (키키 4,290엔, 아리에티 6,160엔, 하울 6,600엔) (카드 6장)</p>
+    <p class="thr-note">📎 <b>올리는 법:</b> 본글·이어지는 글엔 링크 없이 올리고(앞쪽 링크는 노출이 막혀요), <b>마지막 글</b>의 "카드엔 ○○까지 정리해 둠 👇" 바로 아래에 인스타 <b>게시물 링크</b>를 붙여넣기 → 카드가 뜨면 <b>표지와 마지막 장만 남기고</b> 나머지는 ✕ → 게시.</p>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">지브리 굿즈는 &#39;사서 올려두는&#39; 게 아니라 &#39;직접 짓는&#39; 시대가 왔나 봄
+일본 업체가 하울, 키키, 아리에티의 집을 종이로 만드는 키트 3종을 냈대
+근데 만드는 데 걸리는 시간이 꽤 충격이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">1/ 하울, 키키, 아리에티의 집을 종이로 짓는 디오라마 키트가 11월 3일에 나와. 일본 종이공작 업체 산케이 신작인데, 이 키트는 상자부터 좀 특이함. 상자가 어떻게 쓰일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">2/ 상자가 곧 전시대야. 조립을 다 끝내면 그 상자가 완성한 디오라마의 받침이 됨. 상자 면마다 다른 일러스트가 있어서 여러 각도에서 볼 맛도 있대. 그럼 집 안은 어떻게 꾸며져 있을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">3/ 하울 난롯가는 마법 장식품과 참고 자료로 어수선하고, 불의 정령 칼시퍼도 나와. 키키 방엔 널어 둔 빨래, 창가의 빗자루, 바닥 더럽히기 싫어하는 지지까지 담겼고, 세 키트 중 외관이 제일 정교하대. 그럼 아리에티 집은?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">98/500자</span></div>
+      <p class="tp-text">4/ 아리에티 가족의 거실은 한 변이 6cm야. 기사는 이 작은 크기가 사람 눈에 띄지 않던 소인 가족을 떠올리게 한다고 짚었대. 그럼 이 작은 걸 만드는 데는 얼마나 걸릴까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 발매: 11월 3일, 산케이 Miniatuart Mini Plus 시리즈
+- 구성: 하울, 키키, 아리에티의 집 3종
+- 난이도: 셋 다 상급
+- 소요 시간: 키키 5시간 이상, 하울·아리에티 10시간 이상
+- 상자는 조립 후 전시 받침이 됨
+- 아리에티 거실은 한 변 6cm</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">193/500자</span></div>
+      <p class="tp-text">6/ 결국 상급자용으로, 시간을 꽤 들여야 하는 지브리 집 키트고 상자까지 전시대가 되는 거
+
+하울, 키키, 아리에티 중에 하나만 만든다면 어느 집?
+
+이런 해외 덕질·굿즈 소식 계속 배달함. 팔로우해두면 피드에 뜸
+
+카드엔 키트별 가격까지 정리해 둠 👇
+
+더 많은 해외토픽들을 보고 싶다면 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        <li>카드에 없는 내용: 일본 업체가 하울, 키키, 아리에티의 집을 종이로 만드는 키트 3종을 냈대 <small>원고는 11월 3일 발매 예정(내놓는다)으로 적고 있어, 이미 출시된 것처럼 읽히는 시제 표현은 원고와 맞지 않는다.</small></li>
+        
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>지브리 굿즈는 &#39;사서 올려두는&#39; 게 아니라 &#39;직접 짓는&#39; 시대가 왔나 봄</li><li>책상 위 지브리 피규어 옆에, 이제 하울의 집을 종이로 지어 올릴 수 있대</li><li>아리에티 거실이 한 변 6cm라는데, 이게 진짜 종이로 만들어진다고?</li><li>지브리 집 키트, 조립만 10시간 이상 걸린다는데 그래도 난리일 듯</li><li>&#39;상자가 곧 전시대&#39;라는 지브리 종이공작 키트가 나옴</li><li>지브리 덕질은 &#39;보는 것&#39;이 아니라 &#39;집을 직접 짓는&#39; 단계까지 왔음</li><li>하울 난롯가에 칼시퍼까지 들어간 종이 디오라마가 나온대</li><li>주말 하루를 통째로 써야 하는 지브리 키트가 나옴</li><li>지브리 굿즈 좀 모아봤다면, 이번 신작은 &#39;만드는 데만&#39; 10시간이 걸림</li><li>키키 방에 빨래, 빗자루, 지지까지 담았다는데 이걸 종이로 만든다고?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>하울 vs 키키 vs 아리에티, 하나만 만든다면 어느 집?</li><li>10시간짜리 종이공작, 도전해볼 사람?</li><li>지브리 굿즈 중에 제일 오래 간직한 거 있어?</li><li>완성품 사는 파 vs 직접 만드는 파, 어디야?</li><li>지브리 덕후 친구 한 명 떠오르는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>일본 종이공작 디오라마, 이런 미니어처 키트 더 보기</li><li>지브리 굿즈, 해외에서 새로 나온 것들</li><li>하울의 움직이는 성 관련 해외 소식</li><li>미니어처 만들기 취미가 해외에서 인기라는 얘기</li><li>해외 캐릭터 굿즈 신작 모아보기</li></ol>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 9장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-01.jpg" alt="1장: 지브리 집을 종이로 구현?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-02.jpg" alt="2장: 상자가 곧 전시대가 돼" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-03.jpg" alt="3장: 하울의 방엔 칼시퍼도 있어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-04.jpg" alt="4장: 키키의 방은 외관까지 디테일" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-05.jpg" alt="5장: 아리에티 거실 고작 6cm?!" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-06.jpg" alt="6장: 상급자용 키트 5시간은 기본" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-07.jpg" alt="7장: 지브리 덕후 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/product-1102083113-01.jpg" alt="상품 사진: 빨간 정육면체 상자 위에 올려진 갈색 지붕의 작은 목조 집 모형, 상자 옆면에 키키 고양이 일러스트와 STUDIO GHIBLI 로고, &#39;魔女の宅急便&#39; 글자 (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/v2-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 9</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 1장이 카드 뒤에 같이 들어가요 (soranews24.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">지브리 속 집을 책상 위에 올려 둘 수 있게 됐다. 일본 종이공작 업체 산케이가 Miniatuart Mini Plus 시리즈에 하울, 키키, 아리에티의 집을 재현한 신작 3종을 11월 3일 발매한다.
+
+키트는 벽과 내부를 만들 종이 시트가 담긴 상자로 시작하고, 조립이 끝나면 그 상자가 완성작의 받침이 된다. 상자 면마다 다른 일러스트가 있어 여러 각도에서 볼 이유가 하나 더 생긴다. 하울의 난롯가에는 마법 장식품과 참고 자료가 어지럽게 놓였고 불의 정령 칼시퍼도 등장한다. 키키의 방은 빨래, 빗자루, 지지까지 담았으며 세 키트 중 외관이 가장 정교하다. 아리에티 가족의 거실은 한 변이 6cm다.
+
+난이도는 모두 상급이다. 키키는 5시간 이상, 나머지는 10시간 이상 걸린다고 한다. 가격은 키키 4,290엔(약 27달러), 아리에티 6,160엔, 하울 6,600엔이며 산케이의 라쿠텐 온라인 매장에서 11월 3일부터 주문할 수 있다.
+
+지브리 덕질하는 친구에게 공유해 보자.
+
+출처: SoraNews24, Sankei</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#지브리 #종이공작 #디오라마 #하울의움직이는성 #덕질</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 신작 시리즈명 &#39;Miniatuart Mini Plus&#39;(미니아추아트 미니 플러스) 라인에 속한다는 주장</li><li>근거 등록 안 된 주장: &#39;키키와 지지가 지내는 방&#39;이 빵집 주인 오소노에게 빌린 방이라는 세부 사항(원문에 있으나 본문에는 생략된 맥락으로, 근거상 확인 가능)</li>
+          <li>지브리 캐릭터·작품 저작권: 공식 사진·캐릭터 이미지를 쓰지 말고 일반 이미지로만 구성할 것</li><li>가격 달러 환산(27달러)은 원문 기준이며 환율에 따라 달라질 수 있음</li><li>발매일과 주문처는 원문 기사 기준이므로 게시 전 공식 안내 재확인 필요</li><li>해외 구매·배송 가능 여부는 원문에 없어 언급하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 뒤 '수정해서 승인'을 누르고 보내면 카드를 다시 그려요. 예약 시간은 그대로예요.</p>
+          
+          <label class="f" for="s-73cb91792d33-0">1장</label>
+          <textarea id="s-73cb91792d33-0" rows="6" data-slide="0">지브리 집을
+**종이로** 구현?!
+---
+일본 종이공작 업체 산케이가 하울, 키키, 아리에티의 집을 만드는 디오라마 키트 3종을 11월 3일 내놓는다.</textarea>
+          
+          <label class="f" for="s-73cb91792d33-1">2장</label>
+          <textarea id="s-73cb91792d33-1" rows="6" data-slide="1">상자가 곧
+**전시대**가 돼
+---
+키트는 벽과 내부를 만들 종이 시트가 든 상자로 시작한다. 조립을 끝내면 그 상자가 완성한 디오라마의 받침이 된다. 상자 면마다 다른 일러스트가 실려 있다.</textarea>
+          
+          <label class="f" for="s-73cb91792d33-2">3장</label>
+          <textarea id="s-73cb91792d33-2" rows="6" data-slide="2">하울의 방엔
+**칼시퍼**도 있어
+---
+하울의 난롯가는 온갖 마법 장식품과 참고 자료로 어수선하게 채워져 있다. 불의 정령 칼시퍼도 함께 등장한다.</textarea>
+          
+          <label class="f" for="s-73cb91792d33-3">4장</label>
+          <textarea id="s-73cb91792d33-3" rows="6" data-slide="3">키키의 방은
+**외관**까지 디테일
+---
+키키와 지지가 지내는 방에는 널어 둔 빨래, 창가에 기댄 빗자루, 바닥을 더럽히지 않으려는 지지가 담겼다. 세 키트 중 외관이 가장 정교하다.</textarea>
+          
+          <label class="f" for="s-73cb91792d33-4">5장</label>
+          <textarea id="s-73cb91792d33-4" rows="6" data-slide="4">아리에티 거실
+고작 **6cm**?!
+---
+아리에티 가족의 거실 디오라마는 한 변이 6cm다. 기사는 이 작은 크기가 사람 눈에 띄지 않던 소인 가족을 떠올리게 한다고 짚었다.</textarea>
+          
+          <label class="f" for="s-73cb91792d33-5">6장</label>
+          <textarea id="s-73cb91792d33-5" rows="6" data-slide="5">상급자용 키트
+**5시간**은 기본
+---
+산케이 사이트는 세 키트를 모두 상급 난이도로 분류한다. 키키는 5시간 이상, 나머지는 10시간 이상 걸린다. 가격은 키키 4,290엔, 아리에티 6,160엔, 하울 6,600엔이다.</textarea>
+          
+          <label class="f" for="s-73cb91792d33-6">7장</label>
+          <textarea id="s-73cb91792d33-6" rows="6" data-slide="6">지브리 덕후 친구
+**태그해서** 알려줘
+---
+하울, 키키, 아리에티의 집을 종이로 직접 짓는 키트 소식. 조립에 시간이 걸려도 즐길 지브리 팬 친구에게 딱 맞는 소식</textarea>
+          
+          <label class="f" for="c-73cb91792d33">본문 (캡션)</label>
+          <textarea id="c-73cb91792d33" class="caption">지브리 속 집을 책상 위에 올려 둘 수 있게 됐다. 일본 종이공작 업체 산케이가 Miniatuart Mini Plus 시리즈에 하울, 키키, 아리에티의 집을 재현한 신작 3종을 11월 3일 발매한다.
+
+키트는 벽과 내부를 만들 종이 시트가 담긴 상자로 시작하고, 조립이 끝나면 그 상자가 완성작의 받침이 된다. 상자 면마다 다른 일러스트가 있어 여러 각도에서 볼 이유가 하나 더 생긴다. 하울의 난롯가에는 마법 장식품과 참고 자료가 어지럽게 놓였고 불의 정령 칼시퍼도 등장한다. 키키의 방은 빨래, 빗자루, 지지까지 담았으며 세 키트 중 외관이 가장 정교하다. 아리에티 가족의 거실은 한 변이 6cm다.
+
+난이도는 모두 상급이다. 키키는 5시간 이상, 나머지는 10시간 이상 걸린다고 한다. 가격은 키키 4,290엔(약 27달러), 아리에티 6,160엔, 하울 6,600엔이며 산케이의 라쿠텐 온라인 매장에서 11월 3일부터 주문할 수 있다.
+
+지브리 덕질하는 친구에게 공유해 보자.
+
+출처: SoraNews24, Sankei</textarea>
+          <label class="f" for="t-73cb91792d33">해시태그</label>
+          <input id="t-73cb91792d33" type="text" class="tagsin" value="#지브리 #종이공작 #디오라마 #하울의움직이는성 #덕질" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/73cb91792d33/product-1102083113-01.jpg" alt="" width="56" height="56" loading="lazy"> 빨간 정육면체 상자 위에 올려진 갈색 지붕의 작은 목조 집 모형, 상자 옆면에 키키 고양이 일러스트와 STUDIO GHIBLI 로고, &#39;魔女の宅急便&#39; 글자 · soranews24.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>산케이는 일본의 종이공작 회사다</b>
+            <q>“but Japanese papercraft company Sankei does have a way to let you bring a little piece of the Ghibli world into your home.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하울, 키키, 아리에티를 재현한 신작 3종이 11월 3일 발매된다</b>
+            <q>“Going on sale November 3 are three new entries in Sankei’s Miniatuart Mini Plus line, recreating locations from Howl’s Moving Castle, Kiki’s Delivery Service, and Arrietty.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>키트는 벽과 내부를 만들 종이 시트가 든 상자로 시작하고, 조립 후 상자가 받침이 된다</b>
+            <q>“Each of them starts as a box filled with sheets of paper from which to build the walls and interior, and after you assemble everything the box then becomes a stand for the completed diorama.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>상자의 면마다 다른 일러스트가 있다</b>
+            <q>“▼ The kits’ boxes/bases bear different illustrations on different sides, too, giving you one more reason to view them from different angles”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하울의 난롯가는 마법 장식품과 참고 자료로 어수선하고 불의 정령 칼시퍼도 등장한다</b>
+            <q>“Howl’s hearth, for example, is cluttered with all sorts of magical baubles and reference materials, just as you’d expect the eccentric wizard’s living quarters to be, and even fire spirit Calcifer makes an appearance.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>키키의 방에는 빨래, 빗자루, 지지가 담겼다</b>
+            <q>“The room that Kiki and Jiji rent from bakery owner Osono is decidedly less chaotic, but still has a lived-in feel with the witch’s laundry hanging up to dry, her broom leaning against the windowsill, and Jiji making sure not to leave any dirty pawprints on the nice clean floor.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>키키 키트의 외관이 가장 정교하다</b>
+            <q>“The Kiki’s kit also has the most detailed exterior, which really helps create the atmosphere of it being a miniaturized loft that scaled-down version of the characters could live inside.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아리에티 거실 디오라마는 한 변 6cm이고 소인 가족을 떠올리게 한다</b>
+            <q>“This one comes with an extra dash of coolness because the scale of the diorama (6 centimeters [2.4 inches] square) works as a reminder that Arietty and her kin are all so tiny that most of the humans whose house they lived inside of never noticed them.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세 키트 모두 상급 난이도이며 키키는 5시간 이상, 나머지는 10시간 이상 걸린다</b>
+            <q>“All of the locations are filled with cozy vibes, but they are listed on Sankei’s website as being advanced-difficulty kits, with an estimated time of five hours or more to build Kiki’s room, and 10 hours or more for the others.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가격은 키키 4,290엔(약 27달러), 아리에티 6,160엔, 하울 6,600엔이다</b>
+            <q>“Kiki’s kit is also the lowest-priced of the bunch at 4,290 yen (US$27), followed by Arrietty’s (6,160 yen) and Howl’s (6,600 yen).”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세 키트는 11월 3일부터 산케이의 라쿠텐 온라인 매장에서 주문할 수 있다</b>
+            <q>“All three can be ordered starting November 3 through Sankei’s Rakuten online storefront (here, here, and here).”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">Beautiful Ghibli diorama kits lets you build anime characters’ homes inside yours [Photos]</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/0_8ae965.jpg"</li><li>2장: <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/4_a423ff.jpg?w=640"</li><li>3장: <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/7_9a1899.jpg?w=640"</li><li>4장: <a href="https://pixabay.com/photos/room-attic-old-old-room-space-5772311/" target="_blank" rel="noopener">Tama66 / Pixabay</a> — "attic room"</li><li>5장: <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/12_9c2726.jpg?w=640"</li><li>6장: <a href="https://soranews24.com/2026/11/02/beautiful-ghibli-diorama-kits-lets-you-build-anime-characters-homes-inside-yours-photos/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/10/3_5732d5.jpg?w=640"</li><li>7장: <a href="https://pixabay.com/photos/gift-present-wood-package-gift-box-1420830/" target="_blank" rel="noopener">image4you / Pixabay</a> — "gift box"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 3개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-9fa23b3a9002">
+    <div class="head">
+      <h2>S1. 기억력 전문가들의 공부 습관 조언 (잠·폰·복습·해마 연구)</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 18
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-9fa23b3a9002">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 밤샘 벼락치기 대신 잠, 폰 치우기, 간격 복습처럼 시험 공부에 바로 쓸 수 있는 기억력 습관을 전문가 말로 정리</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">시험 기억력은 &#39;밤샘&#39;이 아니라 &#39;잠&#39;부터 챙기래
+벼락치기하지 말고 잘 자라는 기억력 전문가들 조언이 나옴
+근데 폰은 꺼놔도 문제라는 얘기도 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">1/ 케임브리지대 교수 바바라 사하키안은 하루 최소 7시간은 자려고 한대. 낮에 배운 걸 밤에 자는 동안 기억으로 굳히기 때문이라고. 시험 앞두고 밤새 벼락치기하지 말라는 말도 했어. 그럼 낮에 집중을 깨는 건 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">96/500자</span></div>
+      <p class="tp-text">2/ 폰이었음. 수업 중 폰을 가진 학생들이 시험 성적이 더 낮았다는 실험들이 있대. 꺼져 있는 폰이 옆에 있어도 주의를 흩뜨린다는 거야. 그럼 외운 건 어떻게 붙잡아둘까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">3/ 기억력 챔피언 케이티 커모드가 권하는 건 &#39;간격 반복&#39;이야. 첫 주엔 첫날 두어 번, 다음 날, 며칠 뒤 복습하고 그다음 주엔 주 1회, 결국 월 1회로 늘려가는 식. 오래 기억하려면 정기적으로 복습해야 한대. 근데 플래시카드만 돌리면 뭐가 빠질까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">148/500자</span></div>
+      <p class="tp-text">4/ 커모드 말로는 플래시카드는 정해진 간격으로 복습하게 해줄 뿐이래. 처음 외울 때 기술을 써서 노력하는 게 먼저라는 거야. 예를 들면 아는 길을 떠올려 집 진입로에 첫 번째, 현관에 두 번째 식으로 외울 걸 놓아두는 방법. 그럼 이런 공부가 뇌에 흔적도 남길까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">156/500자</span></div>
+      <p class="tp-text">5/ 폴란드 의대 졸업반 40명을 20주 간격으로 MRI 두 번 찍은 연구가 있어. 오른쪽 해마가 커진 정도가 공부를 오래 한 학생, 시험 점수가 높은 학생과 연관됐대. 다만 대조군이 없는 관찰 연구라 &#39;공부하면 커진다&#39;고 단정은 못 해. 그래서 지금까지 내용을 한눈에 정리하면?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">6/ 기억력 습관 요약 정리
+- 잠: 하루 최소 7시간, 밤샘 벼락치기 말기
+- 폰: 꺼놔도 옆에 있으면 주의 분산
+- 복습: 간격을 점점 늘려가며
+- 암기: 플래시카드는 복습용, 처음엔 기술로 외우기
+- 일정: 약속 시간은 적어두기</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">231/500자</span></div>
+      <p class="tp-text">7/ 결국 전문가들 말은 잠 충분히 자고, 폰은 공부에서 떨어뜨리고, 복습 간격을 늘리라는 거야.
+
+공부할 때 폰 멀리 치우는 파 vs 옆에 두는 파?
+
+이런 해외 기억력·공부법 얘기, 쉽게 풀어서 계속 배달함. 2편: 시험 암기용 앞글자 암기법, 내일 새벽 배달. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>시험 기억력은 &#39;밤샘&#39;이 아니라 &#39;잠&#39;부터 챙기래
+벼락치기하지 말고 잘 자라는 전문가 조언이 나옴</li><li>플래시카드는 &#39;외우는 도구&#39;가 아니라 &#39;복습 도구&#39;래
+돌리기 전에 외우는 기술부터 쓰라는 기억력 챔피언 조언이 나옴</li><li>폰을 꺼놔도 옆에 있으면 집중이 깨진대, 이게 진짜?</li><li>공부하다 폰 무음으로 해두면 괜찮을 줄 알았지? 꺼놔도 방해된다는 얘기가 나옴</li><li>&#39;마법이 아니라 기술이다&#39;, 기억력 세계 챔피언이 한 말</li><li>의대 졸업반 40명 MRI 찍어봤더니, 공부 오래 한 쪽 해마에서 뭔가 달랐대</li><li>시험 전날 밤새면 뇌는 정작 쉬질 못해서 기억이 안 굳는대</li><li>복습은 몰아서 말고 간격을 점점 늘리래, 첫날 두 번에서 한 달에 한 번까지</li><li>&#39;리처드가 싸움에서 졌다&#39; 같은 문장으로 시험 범위 외우는 사람, 의외로 전문가 추천이래</li><li>전화번호도 못 외우는 시대, 기억력은 나이 탓만이 아니라는 얘기</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>공부할 때 폰 멀리 치우는 파 vs 옆에 두는 파?</li><li>시험 공부, 벼락치기파 vs 나눠서 하는파?</li><li>시험 전날 밤샘해본 사람?</li><li>외울 때 앞글자 따서 문장 만들어본 사람?</li><li>새로 배운다면 체스 vs 새 언어 vs 악기, 너라면 뭐 골라?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>시험 암기용 앞글자 암기법, 전문가는 이렇게 씀</li><li>기억의 궁전, 기억력 챔피언이 쓰는 길 따라 외우기</li><li>간격 반복 복습, 실제로 어떻게 짜는지</li><li>새로운 걸 배우면 뇌에 어떤 일이 생기나 (체스·언어·악기)</li><li>낮잠과 기억 정리, 전문가가 말하는 낮잠 타이밍</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>해마 연구는 대조군 없는 관찰 연구(40명)라 &#39;공부하면 해마가 커진다&#39;로 읽히지 않게 5/ 표현 확인 필요</li><li>폰 실험 언급은 수업 중 학생 대상 내용이라 공부 전반으로 과장되지 않았는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>잠자는 동안 낮에 배운 게 기억으로 굳고, 시험 전 밤새 벼락치기는 하지 말라는 조언</b>
+          <q>“You consolidate in your memory what you have learned during the day when you sleep at night. Therefore, it is important to sleep well and not to stay up all night cramming for exams.”</q>
+          <small>post0 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>꺼진 폰이 옆에 있어도 주의를 흩뜨리고 수업 중 폰을 가진 학생은 시험 성적이 낮았다</b>
+          <q>“Experiments have shown that students who have mobile phones in class do not perform as well in tests; even having a mobile phone that was off next to you acts as a distractor of your attention.”</q>
+          <small>post0 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>바바라 사하키안은 케임브리지대 정신의학 교수</b>
+          <q>“Barbara Sahakian, a professor of psychiatry at the University of Cambridge and co-author of Brain Boost: Healthy Habits for a Happier Life.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사하키안은 하루 최소 7시간은 잔다</b>
+          <q>“Sahakian ensures that she gets at least seven hours’ sleep a night.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사하키안은 시험 앞두고 밤새 벼락치기하지 말라고 했다</b>
+          <q>“Therefore, it is important to sleep well and not to stay up all night cramming for exams.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수업 중 폰을 가진 학생들이 시험 성적이 낮았다는 실험들, 꺼진 폰도 주의를 흩뜨림</b>
+          <q>“Experiments have shown that students who have mobile phones in class do not perform as well in tests; even having a mobile phone that was off next to you acts as a distractor of your attention.”</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>케이티 커모드는 기억력 챔피언이고 간격 반복을 권한다</b>
+          <q>“Katie Kermode, a memory champion from Manchester, who started competing in 2008 and set the world record for remembering names, and numerous other titles since.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>간격 반복은 점점 간격을 늘려가며 연습하는 것</b>
+          <q>“Kermode suggests trying “spaced repetition”, which means practising at increasing intervals.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>첫 주엔 첫날 두어 번, 다음 날, 며칠 뒤 복습하고 다음 주엔 주 1회, 결국 월 1회로 늘린다</b>
+          <q>“So the first week, you might go over it a couple of times on the first day, and the same the next day, and then a couple of days later. But then the next week you might be on to once a week, and eventually once a month.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>오래 기억하려면 정기적으로 복습하지 않으면 자연스럽게 잊는다</b>
+          <q>“If it is something you want to learn more long-term, then you need to review it regularly because otherwise we naturally forget.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>플래시카드는 간격 복습을 도울 뿐이고 처음 외울 때 기술을 쓰며 노력해야 한다</b>
+          <q>“But I think what people miss is using the techniques to help them memorise information in the first place, because flashcards just help you review things at certain intervals. You have to put in the effort to memorise it in the first place.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>아는 길을 떠올려 진입로, 현관 같은 장소에 외울 것을 놓는 방법</b>
+          <q>“You put the first item in your driveway, then the second item could go in your hallway, and you mentally walk through it and try to remember it.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폴란드 의대 졸업반 학생들을 20주 간격으로 MRI 두 번 촬영</b>
+          <q>“volunteer final-year medical students who underwent 2 volumetric 3D T1 magnetic resonance imaging scans with an interval of 20 weeks”</q>
+          <small>post5 · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9907159/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분석 대상은 40명</b>
+          <q>“Forty participants (25 women and 15 men; mean age 25 years) were included in the analysis.”</q>
+          <small>post5 · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9907159/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>오른쪽 해마 증가가 공부 시간·시험 점수와 연관됐다</b>
+          <q>“An increase in the volume of the right hippocampus correlated with longer study time (r = 0.371 in percentage and r = 0.397 in mm3) and better LEK exam results (r = 0.441 in percentage and r = 0.456 in mm3).”</q>
+          <small>post5 · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9907159/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대조군이 없었다</b>
+          <q>“No control group was used.”</q>
+          <small>post5 · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9907159/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폴란드 바르샤바 의대 졸업반 학생들이 대상</b>
+          <q>“The study was carried out on a group of 49 volunteers, who were final-year medical students at the Medical University of Warsaw, Warsaw, Poland.”</q>
+          <small>post5 · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9907159/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약속 시간은 항상 적어두라는 조언</b>
+          <q>“Gruneberg, who is 86, says to always make a note of appointment times.”</q>
+          <small>post6 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="9fa23b3a9002">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.theguardian.com/lifeandstyle/2026/nov/01/how-to-improve-your-memory-10-easy-enjoyable-expert-tips-from-reading-a-book-to-getting-more-sleep" target="_blank" rel="noopener">How to improve your memory: 10 easy, enjoyable expert tips – from reading a book to getting more sleep</a></li><li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9907159/" target="_blank" rel="noopener">The impact of studying on the hippocampal volume in medical students and its correlation with the results of the Final Medical Examination: a single-centre, prospective observational cohort study</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-bd771f8ad2f5">
+    <div class="head">
+      <h2>S2. 클로르피리포스 장기 노출과 파킨슨병 위험 (UCLA)</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-bd771f8ad2f5">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 농약 전체가 아니라 클로르피리포스라는 특정 성분 하나가 파킨슨병 위험요인으로 지목됐고, 쥐와 제브라피시 실험으로 작동 원리까지 보여줬다는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">&#39;농약은 다 똑같다&#39;가 아니라 이 성분 하나가 콕 찍혔대
+UCLA 연구에서 클로르피리포스에 오래 노출된 사람은 파킨슨병 위험이 2.5배 넘게 연관돼 나옴
+근데 연구진은 거기서 멈추지 않았음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">98/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 클로르피리포스라는 농약에 주거지에서 장기간 노출된 사람은 노출 안 된 사람보다 파킨슨병 위험이 2.5배 넘게 높게 나왔음. 그럼 이걸 어떻게 알아냈을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">2/ 파킨슨병 진단을 받은 829명과 받지 않은 824명의 살던 곳·일한 곳 주소 기록을 캘리포니아 농약 사용 기록과 맞춰서 노출을 추정했대. 근데 이 분석만으로는 농약이 직접 원인이라고 확정하지 못했음. 그래서 연구진이 뭘 더 해봤을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">3/ 쥐에게 클로르피리포스를 에어로졸 형태로 11주 동안 노출시켰더니, 움직임에 문제가 생기고 도파민을 만드는 신경세포가 줄었대. 뇌 염증이랑 알파시누클레인 단백질이 비정상적으로 쌓인 것도 확인됨. 그럼 세포 안에선 무슨 일이 벌어진 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">4/ 제브라피시 실험에서 세포 속 청소 시스템인 자가포식(autophagy)이 교란된다는 단서가 나왔대. 이 시스템이 막히니까 손상된 물질이 신경세포 안에 쌓여서 세포가 망가지는 쪽으로 갔다는 거. 그럼 이걸 되돌리면 어떻게 됐을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">5/ 실험에서 세포 청소 과정을 복구하거나 시누클레인 단백질을 없애니까 신경세포가 손상에서 보호됐대. 다만 이 보호 효과는 아직 실험실 모델에서만 확인된 거라 사람에게 통하는지는 더 연구가 필요함. 한 번에 정리해볼까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">164/500자</span></div>
+      <p class="tp-text">6/ 연구 요약 정리
+- 사람: 829명 vs 824명 비교, 장기 주거 노출 시 파킨슨병 위험 2.5배 넘게 연관
+- 쥐: 11주 노출 후 움직임 문제, 도파민 신경세포 손실
+- 세포: 자가포식(청소 시스템) 교란
+- 한계: 사람 분석만으로는 직접 원인 확정 못 함, 보호 효과는 실험실 단계</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">219/500자</span></div>
+      <p class="tp-text">7/ 결국 연구진 말은 &#39;농약 전체&#39;가 아니라 클로르피리포스라는 특정 성분이 파킨슨병의 환경 위험요인이라는 거야. 다만 보호 방법은 아직 실험실 단계고.
+장 볼 때 농약 걱정해본 적 있는 사람?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;농약은 다 똑같다&#39;가 아니라 이 성분 하나가 콕 찍혔대</li><li>파킨슨병 위험, &#39;농약 전체&#39;가 아니라 &#39;성분 하나&#39;를 따로 봐야 한다는 연구가 나옴</li><li>오래 노출된 농약 하나가 파킨슨병 위험 2.5배 넘게 연관돼 나왔대</li><li>UCLA 신경과 교수가 &#39;파킨슨병의 특정 환경 위험요인&#39;이라고 짚은 농약이 있대</li><li>829명 vs 824명을 비교했더니 농약 한 가지가 유독 튀었대</li><li>쥐에게 이 농약을 11주 노출시켰더니 움직임에 문제가 생겼대</li><li>뇌세포 안 &#39;재활용 시스템&#39;이 농약 때문에 막힌다는 연구가 나옴</li><li>살던 곳·일한 곳 주소 기록으로 농약 노출을 추정해 파킨슨병이랑 맞춰본 연구가 있대</li><li>미국에선 집 안 사용은 금지됐는데 작물에는 아직 쓰이는 농약이 파킨슨병 위험이랑 이어졌대</li><li>농약 노출 이력이 있는 사람은 뇌 상태를 더 지켜봐야 할 수도 있다는 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>장 볼 때 농약 걱정해본 적 있는 사람?</li><li>과일·채소 살 때 &#39;원산지 확인파&#39; vs &#39;그냥 눈에 보이는 거 사는파&#39;, 어느 쪽이야?</li><li>&#39;농약은 다 똑같다&#39;고 생각했던 사람? 이 연구 보고 좀 달라졌어?</li><li>건강 연구 기사 볼 때 &#39;쥐 실험&#39;이라고 하면 믿음이 떨어져, 아니면 참고는 해?</li><li>너라면 이런 연구 나오면 바로 찾아봐, 아니면 그냥 넘겨?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>다른 농약도 같은 세포 청소 시스템을 건드릴까? 연구진이 다음에 보려는 것</li><li>파킨슨병, 유전 말고 환경 요인은 어떤 게 연구되고 있을까</li><li>자가포식, 세포 안 재활용 시스템 쉽게 풀기</li><li>농약 노출 이력이 있는 사람의 뇌 상태를 더 지켜보자는 얘기</li><li>해외 뇌 건강 연구 모아서 배달</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>클로르피리포스에 장기간 주거지 노출된 사람은 파킨슨병 위험이 2.5배 넘게 높았다</b>
+          <q>“Researchers at UCLA Health found that people with long-term residential exposure to chlorpyrifos, a widely used pesticide, had more than 2.5 times the risk of developing Parkinson&#39;s disease compared with those who were not exposed.”</q>
+          <small>post0, post1 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 책임자는 농약 전체가 아니라 클로르피리포스를 특정 환경 위험요인으로 꼽았다</b>
+          <q>“This study establishes chlorpyrifos as a specific environmental risk factor for Parkinson&#39;s disease, not just pesticides as a general class”</q>
+          <small>post0, post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>파킨슨병 진단 829명과 비진단 824명을 조사했다</b>
+          <q>“To investigate the connection, UCLA scientists examined information from 829 people diagnosed with Parkinson&#39;s disease and 824 people without the condition.”</q>
+          <small>post2, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>캘리포니아 농약 사용 기록과 참가자의 거주지·직장 주소 이력을 결합해 노출을 추정했다</b>
+          <q>“The researchers combined California&#39;s detailed pesticide application records with participants&#39; residential and workplace address histories.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람 집단 분석만으로는 농약이 직접 파킨슨병을 일으켰다고 확정하지 못했다</b>
+          <q>“Although this population analysis could not establish that the pesticide directly caused Parkinson&#39;s, the researchers took an additional step to investigate whether chlorpyrifos could produce the kinds of brain damage seen in people with the disease.”</q>
+          <small>post2, post6, post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐에게 클로르피리포스를 에어로졸로 11주간 노출시켰다</b>
+          <q>“The team exposed mice to chlorpyrifos in aerosol form for 11 weeks.”</q>
+          <small>post3, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>노출된 쥐는 움직임 문제가 생기고 도파민을 만드는 신경세포를 잃었다</b>
+          <q>“The exposed mice developed movement difficulties and lost neurons responsible for producing dopamine.”</q>
+          <small>post3, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐 뇌에서 염증과 알파시누클레인 단백질의 비정상적 축적이 확인됐다</b>
+          <q>“The researchers also detected inflammation in the animals&#39; brains, along with abnormal accumulations of a protein called alpha-synuclein.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제브라피시 실험에서 자가포식 교란이 확인됐다</b>
+          <q>“Their experiments pointed to a disruption in autophagy, a natural cellular maintenance process that helps remove damaged proteins and other unwanted material.”</q>
+          <small>post4, post6 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>청소 시스템이 방해받으면 손상된 물질이 신경세포 안에 쌓여 퇴화에 기여했다</b>
+          <q>“When chlorpyrifos interfered with this cleanup system, damaged material accumulated inside neurons, contributing to their deterioration.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세포 청소 과정을 복구하거나 시누클레인을 제거하면 신경세포가 손상에서 보호됐다</b>
+          <q>“The researchers also made an encouraging discovery. When they restored the cellular cleanup process or removed synuclein protein in their experiments, the neurons were protected from damage.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보호 효과는 아직 실험실 모델에서만 확인됐다</b>
+          <q>“However, the protective effects have so far been demonstrated in laboratory models.”</q>
+          <small>post5, post6, post7 · <a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="bd771f8ad2f5">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/10/261031013035.htm" target="_blank" rel="noopener">Common pesticide linked to 2.5 times the risk of Parkinson’s disease</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-f2d134ab6b2c">
+    <div class="head">
+      <h2>S3. 우주선 모양 침대 옆 램프 WOLOLOW 2.0</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 8
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-f2d134ab6b2c">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;이게 램프라고?&#39; 싶은 우주선 모양에 1968년 건축물을 줄였다는 반전을 얹고, 선물하고 싶은 사람을 떠올리게 하는 각도</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "우주선 모양 무드등 탁상 램프" · 원문 제품: WOLOLOW Night Lamp Ver 2.0 (디자이너 Arthur Koshatahyan, Kostya Trunov), 12V MR16 LED 전구(GU5.3 소켓), 크라우드펀딩(Kickstarter) 진행 중, 가격·판매처는 원문에 없음<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: designboom.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/f2d134ab6b2c/thread-photo-1102094558-01.jpg" alt="파란 배경과 주황 반원 세트 위 받침대에 놓인 노란색 타원형 우주선 모양 램프, 타원형 창과 다리, 전선이 보임" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/f2d134ab6b2c/thread-photo-1102094558-02.jpg" alt="파란 배경 앞에 여러 색(흰색, 주황, 은색, 하늘색, 노란색 등)의 타원형 우주선 모양 램프가 다리 달린 받침대 위에 놓여 있고, 창 모양 구멍에서 빛이 새어 나온다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261102-pm-9f2bbc83f532/f2d134ab6b2c/thread-photo-1102094558-03.jpg" alt="선반 위에 놓인 주황색 타원형 우주선 모양 램프, 검은 받침대와 여러 개의 타원형 창이 보임" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-f2d134ab6b2c">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">침대 옆 조명이 우주선 모양이면 어떨 것 같아?
+1968년 건축물을 탁상 램프로 줄여놨대. 선물하고 싶은 사람 한 명쯤은 떠오를 모양
+근데 어떤 건물을 줄인 건지가 재밌음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">1/ 이름은 WOLOLOW Night Lamp Ver 2.0. 납작한 타원형 몸통에 타원형 창이 빙 둘러 있고, 가느다랗고 기울어진 강철 삼각대 위에 올라간 모양이래. 그럼 이 모양의 원본은 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">87/500자</span></div>
+      <p class="tp-text">2/ 원본은 마티 수우로넨의 1968년 푸투로 하우스. 이동식 샬레 같은 그 집 모양을 그대로 줄인 거래. 근데 2.0이라는데, 1.0이랑 뭐가 달라졌을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">175/500자</span></div>
+      <p class="tp-text">3/ 2.0 요약 정리
+- 이전 세대: 내장 배터리
+- 2.0: 전원 직결 방식
+- 전구: 12V MR16 LED, 사용자가 직접 교체 가능 (GU5.3 소켓)
+- 일반 웜화이트 모듈도, 따로 산 스마트 LED 전구도 사용 가능
+- 스마트 전구면 밝기·RGB 색 조절 연동 가능
+그럼 몸통 색은 몇 가지로 나올까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">4/ 몸통 색은 화이트, 옐로, 오렌지, 스카이블루, 미러 크롬 이렇게 5가지래. 지금 크라우드펀딩에 나온 상태고, 가격은 아직 확인 안 됨. 참고로 매체의 독자 투고 코너로 소개된 작품이야. 그래서 이 램프, 한 줄로 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">217/500자</span></div>
+      <p class="tp-text">5/ 결국 1968년 우주시대 건축물을 침대 옆 램프로 줄인 거고, 전구는 갈아 끼울 수 있는 구조래.
+이거 선물로 받으면 좋아할 사람 소환해봐
+해외 신기한 물건 이런 거 계속 배달함. 팔로우해두면 피드에 뜸. 다음 배송: 지브리 종이공작 디오라마 키트 3종 얘기
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 가격은 아직 확인되지 않은 상태다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>침대 옆 조명이 우주선 모양이면 어떨 것 같아?</li><li>침대 옆 조명은 꼭 스탠드 모양이어야 한다는 법 있어?</li><li>탁상 램프인 줄 알았는데 1968년 건축물을 줄여놓은 거였대</li><li>선물 뭐 사지 고민될 때, 이런 우주선 램프는 어때?</li><li>&#39;이게 램프라고?&#39; 소리 나올 침대 옆 조명이 나왔대</li><li>책상 위에 1968년 우주시대 건축물 하나 올려두는 방법</li><li>침대 옆 램프, 전구만 갈면 계속 쓰는 구조로 나왔대</li><li>조명은 그냥 켜는 거라고 생각했다면 이건 좀 다름</li><li>침대 옆에 우주선 한 대 두고 싶은 사람 손?</li><li>램프 색이 화이트부터 미러 크롬까지 5가지로 나왔대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해봐</li><li>5가지 색 중에 하나만 고르면 뭐야?</li><li>침대 옆에 이런 우주선 램프 있으면 살 거야?</li><li>우주선 램프 vs 평범한 스탠드, 어느 쪽이야?</li><li>이런 신기한 모양 조명 써본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>지브리 종이공작 디오라마 키트 3종</li><li>펜더 재팬 포켓몬 30주년 8비트 기타</li><li>도쿄 박물관 무료 족욕 공간 아시유 테라스</li><li>스마트 전구로 분위기 바꾸는 침대 옆 조명 이야기</li><li>1960년대 우주시대 디자인에서 나온 소품 이야기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문이 매체의 독자 투고(DIY submissions) 코너라 디자이너 제공 정보이고, 가격·판매처·해외 반응은 원문에 없음. 글에서 단정하지 말 것</li><li>원문 소제목은 &#39;FIVE CHROMED FINISHES&#39;지만 본문은 화이트·옐로·오렌지·스카이블루·미러 크롬 5가지 쉘 마감으로 설명함. 본문 기준으로 썼으니 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>탁상 램프가 1968년 푸투로 하우스를 줄인 것이다</b>
+          <q>“Designed by Arthur Koshatahyan and Kostya Trunov, WOLOLOW Night Lamp Ver 2.0 is a compact luminaire that translates the Space Age architectural language of Matti Suuronen’s 1968 Futuro House into an everyday tabletop object.”</q>
+          <small>post0 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>납작한 타원형 몸통에 타원형 창이 둘러져 있고 기울어진 강철 삼각대 위에 올라가 있다</b>
+          <q>“Directly scaling down the iconic portable chalet typology, the second version of the lamp features an elliptical disc-shaped hull punctuated by a ring of oval portholes, elevated on a slender, angled steel tripod base.”</q>
+          <small>post1 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원본은 마티 수우로넨의 1968년 푸투로 하우스이고 이동식 샬레 형태를 줄였다</b>
+          <q>“Directly scaling down the iconic portable chalet typology, the second version of the lamp features an elliptical disc-shaped hull punctuated by a ring of oval portholes, elevated on a slender, angled steel tripod base.”</q>
+          <small>post2 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2.0은 이전 세대의 내장 배터리 대신 전원 직결 방식과 교체 가능한 12V MR16 LED 전구(GU5.3)를 쓴다</b>
+          <q>“Replacing the previous generation’s integrated battery, the revised model incorporates a hardwired power connection and a standard, user-replaceable 12V MR16 LED bulb with a GU5.3 base.”</q>
+          <small>post3 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>웜화이트 모듈과 별도 스마트 LED 전구를 쓸 수 있고 밝기·RGB 색 조절과 연동된다</b>
+          <q>“The fixture accommodates standard warm-white modules as well as aftermarket smart LED bulbs, allowing integration with wireless home automation protocols for dimming and RGB color adjustments.”</q>
+          <small>post3 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>몸통 색은 화이트, 옐로, 오렌지, 스카이블루, 미러 크롬 5가지다</b>
+          <q>“The lamp is manufactured in five distinct shell finishes: white, yellow, orange, sky blue, and mirror chrome.”</q>
+          <small>post4 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2.0 에디션이 크라우드펀딩에 출시된 상태다</b>
+          <q>“Currently launched on Kickstarter, the updated 2.0 edition retains the original fiberglass-inspired silhouette while upgrading the internal illumination hardware.”</q>
+          <small>post4 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>매체의 독자 투고 코너로 소개된 작품이다</b>
+          <q>“designboom has received this project from our DIY submissions feature, where we welcome our readers to submit their own work for publication.”</q>
+          <small>post4 · <a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="f2d134ab6b2c">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.designboom.com/design/wololow-2-0-1960s-space-age-architecture-elliptical-bedside-light-arthur-koshatahyan-kostya-trunov/" target="_blank" rel="noopener">WOLOLOW 2.0 reinterprets 1960s space age architecture as elliptical bedside light</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261102-pm";
+  const ORIGINAL = {"08abd4fa1904": {"caption": "\ub3c4\ucfc4 \ud55c\ubcf5\ud310, \ubc15\ubb3c\uad00 \uac74\ubb3c \uc548\uc5d0 \ub3c8 \ud55c \ud47c \uc548 \ub0b4\uace0 \ubc1c\uc744 \ub2f4\uae00 \uc218 \uc788\ub294 \uacf5\uac04\uc774 \uc788\ub2e4. \uc57c\ub9c8\ub178\ud14c\uc120\uc5d0\uc11c \uac00\uc7a5 \uc0c8\ub85c\uc6b4 \uc5ed\uc778 \ub2e4\uce74\ub098\uc640 \uac8c\uc774\ud2b8\uc6e8\uc774\uc5ed \uadfc\ucc98, MoN \ub2e4\uce74\ub098\uc640 \ubc15\ubb3c\uad00 6\uce35\uc758 \uc544\uc2dc\uc720 \ud14c\ub77c\uc2a4\ub2e4.\n\n\ubc15\ubb3c\uad00\uc740 3\uc6d4\uc5d0 \ubb38\uc744 \uc5f4\uc5c8\ub2e4. \ucde8\uc7ac \ub2f9\uc2dc\uc5d0\ub294 \uc804\uc2dc \uad6c\uc5ed\uc5d0 \ub4e4\uc5b4\uac00\uc9c0 \uc54a\uc544 \uc785\uc7a5\uad8c\uc744 \uc0b4 \ud544\uc694\uac00 \uc5c6\uc5c8\ub2e4. \ud14c\ub77c\uc2a4\uc5d0\ub294 \ucd08\ub85d \uc2dd\ubb3c\uc774 \ub458\ub7ec\uc2f8\uace0 \uc788\uace0, \uadf8 \ub108\uba38\ub85c \ub3c4\uc2dc \ud48d\uacbd\uc774 \ub113\uac8c \uc5f4\ub9b0\ub2e4. \uc120\ub85c \uc606\uc5d0 \uc790\ub9ac\ud55c \ub370\ub2e4 \uc2dc\ub098\uac00\uc640\uc5ed\uacfc \uac00\uae4c\uc6b4 \ub355\ubd84\uc774\ub77c\uace0 \ud55c\ub2e4. \ucca0\ub3c4 \ud32c\uc774 \uae30\ucc28\ub97c \uad6c\uacbd\ud558\uae30\uc5d0\ub3c4 \uc88b\uc740 \uacf3\uc774\ub77c\uace0 \ub9e4\uccb4\ub294 \uc18c\uac1c\ud588\ub2e4.\n\n\ub530\ub73b\ud55c \ubb3c \uad6c\uc5ed\uacfc \ucc28\uac00\uc6b4 \ubb3c \uad6c\uc5ed\uc774 \uc788\uc5b4 \ubc88\uac08\uc544 \uc624\uac00\uba70 \uc274 \uc218 \uc788\ub2e4. \ub2e4\ub9cc \uc57c\uc678\ub77c\uc11c \ud55c\uc5ec\ub984 \ub0ae\uc774\ub098 \ud55c\uaca8\uc6b8 \uc800\ub141\uc5d0\ub294 \ucf8c\uc801\ud558\uc9c0 \uc54a\uc744 \uc218 \uc788\uace0, \uc218\uac74\uc774 \uc5c6\uc73c\ub2c8 \uc190\uc218\uac74\uc740 \ucc59\uaca8\uc57c \ud55c\ub2e4.\n\n\uac19\uc740 \uac74\ubb3c\uc5d0\ub294 \uc625\uc0c1\uc758 \uc791\uc740 \uc2e0\uc0ac\uc640 4\uce35 \ub2e4\ub2e4\ubbf8 \ud734\uc2dd \uacf5\uac04\ub3c4 \uc788\ub2e4. \ub2e4\ub2e4\ubbf8 \uacf5\uac04 \uc5ed\uc2dc \ubb34\ub8cc\ub85c \uc774\uc6a9\ud560 \uc218 \uc788\ub2e4. \ubc15\ubb3c\uad00 \uc6b4\uc601 \uc2dc\uac04\uc740 \uc624\uc804 10\uc2dc\ubd80\ud130 \uc624\ud6c4 9\uc2dc\uae4c\uc9c0\ub2e4.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\ub3c4\ucfc4\uc5ec\ud589", "#\ub3c4\ucfc4\uac00\ubcfc\ub9cc\ud55c\uacf3", "#\uc871\uc695", "#\uc77c\ubcf8\uc5ec\ud589", "#\ub2e4\uce74\ub098\uc640\uac8c\uc774\ud2b8\uc6e8\uc774"], "slides": [["\ub3c4\ucfc4 \ud55c\ubcf5\ud310\uc5d0", "**\uacf5\uc9dc** \uc871\uc695\ud0d5?!", "---", "\ub3c4\ucfc4 \ub2e4\uce74\ub098\uc640 \uac8c\uc774\ud2b8\uc6e8\uc774\uc5ed \uadfc\ucc98 \ubc15\ubb3c\uad00 \uac74\ubb3c 6\uce35\uc5d0 \ubb34\ub8cc\ub85c \uc774\uc6a9\ud560 \uc218 \uc788\ub294 \uc57c\uc678 \uc871\uc695 \uacf5\uac04\uc774 \uc788\ub2e4."], ["\uc57c\ub9c8\ub178\ud14c\uc120", "**\uc0c8 \uc5ed** \ubc14\ub85c \uc606", "---", "\ub2e4\uce74\ub098\uc640 \uac8c\uc774\ud2b8\uc6e8\uc774\ub294 \ub3c4\uc2ec\uc744 \uc21c\ud658\ud558\ub294 \uc57c\ub9c8\ub178\ud14c\uc120\uc5d0\uc11c \uac00\uc7a5 \uc0c8\ub85c\uc6b4 \uc5ed\uc774\ub2e4. \uc774 \uc5ed\uc740 \ubcf5\ud569 \uac1c\ubc1c \uc9c0\uad6c\uc640 \uc774\uc5b4\uc838 \uc788\uace0, \uadf8 \uc77c\ubd80\uac00 MoN \ub2e4\uce74\ub098\uc640 \ubc15\ubb3c\uad00\uc774\ub2e4."], ["\ud2f0\ucf13 \uc5c6\uc774", "**6\uce35** \ud14c\ub77c\uc2a4\ub85c", "---", "\ubc15\ubb3c\uad00\uc740 3\uc6d4\uc5d0 \ubb38\uc744 \uc5f4\uc5c8\ub2e4. \ucde8\uc7ac \ub2f9\uc2dc\uc5d0\ub294 \uc804\uc2dc \uad6c\uc5ed\uc5d0 \ub4e4\uc5b4\uac00\uc9c0 \uc54a\uc544 \ud45c\ub97c \uc0b4 \ud544\uc694\uac00 \uc5c6\uc5c8\uace0, 6\uce35 \uc57c\uc678 \uacf5\uac04 \uc544\uc2dc\uc720 \ud14c\ub77c\uc2a4\ub85c \ud5a5\ud588\ub2e4. \uc544\uc2dc\uc720\ub294 \uc77c\ubcf8\uc5b4\ub85c \uc871\uc695\uc744 \ub73b\ud55c\ub2e4."], ["\ucd08\ub85d \ub108\uba38\ub85c", "**\ud0c1 \ud2b8\uc778** \ub3c4\uc2ec", "---", "\ud14c\ub77c\uc2a4\ub294 \ucd08\ub85d \uc2dd\ubb3c\uc774 \ub458\ub7ec\uc2f8\uace0 \uc788\uace0, \uadf8 \ub108\uba38\ub85c \ub3c4\uc2dc \ud48d\uacbd\uc774 \ub113\uac8c \ud3bc\uccd0\uc9c4\ub2e4. \uc120\ub85c \uc606\uc5d0 \uc788\uace0 \uc2dc\ub098\uac00\uc640\uc5ed\uacfc \uac00\uae4c\uc6b4 \ub355\ubd84\uc774\uba70, \ucca0\ub3c4 \ud32c\uc774 \uae30\ucc28\ub97c \uad6c\uacbd\ud558\uae30\uc5d0\ub3c4 \uc88b\uc740 \uc790\ub9ac\ub77c\uace0 \ud55c\ub2e4."], ["\ub530\ub73b\ud55c \ubb3c\uacfc", "\ucc28\uac00\uc6b4 \ubb3c **\ub458 \ub2e4**", "---", "\uc628\uc218 \uad6c\uc5ed\uacfc \ub0c9\uc218 \uad6c\uc5ed\uc774 \ud568\uaed8 \uc788\uc5b4, \ub530\ub73b\ud574\uc9c0\uba74 \ubc18\ub300\ud3b8 \ub05d\uc73c\ub85c \uac00 \uc2dd\ud790 \uc218 \uc788\ub2e4. \ub9e4\uccb4\ub294 \uc57c\uc678\ub77c \ud55c\uc5ec\ub984 \ub0ae\uc774\ub098 \ud55c\uaca8\uc6b8 \uc800\ub141\uc5d4 \ucf8c\uc801\ud558\uc9c0 \uc54a\uc744 \uc218 \uc788\ub2e4\uace0 \uc9da\uc5c8\ub2e4."], ["**\uc218\uac74**\uc740", "\uc9c1\uc811 \ucc59\uae30\uae30", "---", "\uc544\uc2dc\uc720 \ud14c\ub77c\uc2a4\uc5d0\ub294 \uc218\uac74\uc774 \ub9c8\ub828\ub3fc \uc788\uc9c0 \uc54a\uc544 \uc190\uc218\uac74 \uac19\uc740 \uac83\uc744 \uac00\uc838\uac00\uc57c \ud55c\ub2e4. \ubc15\ubb3c\uad00\uc740 \uc624\uc804 10\uc2dc\ubd80\ud130 \uc624\ud6c4 9\uc2dc\uae4c\uc9c0 \ubb38\uc744 \uc5f4\uace0, 4\uce35\uc5d0\ub294 \uc5ed\uc2dc \ubb34\ub8cc\uc778 \ub2e4\ub2e4\ubbf8 \ud734\uc2dd \uacf5\uac04\uc774 \uc788\ub2e4."], ["\ub3c4\ucfc4 \uac00\uae30 \uc804\uc5d0", "**\uc800\uc7a5**\ud574 \ub450\uae30", "---", "\uac77\ub2e4 \uc9c0\uce5c \ub2e4\ub9ac\ub97c \uc26c\uac8c \ud574 \uc904 \ubb34\ub8cc \uacf5\uac04\uc744 \ucc3e\ub294 \uc0ac\ub78c\uc774 \ub2e4\uc2dc \uaebc\ub0b4 \ubcfc \uc815\ubcf4. \uc704\uce58\uc640 \uc6b4\uc601 \uc2dc\uac04, \uc900\ube44\ubb3c\uc774 \uc55e \uc7a5\uc5d0 \ubaa8\ub450 \uc788\ub2e4."]]}, "73cb91792d33": {"caption": "\uc9c0\ube0c\ub9ac \uc18d \uc9d1\uc744 \ucc45\uc0c1 \uc704\uc5d0 \uc62c\ub824 \ub458 \uc218 \uc788\uac8c \ub410\ub2e4. \uc77c\ubcf8 \uc885\uc774\uacf5\uc791 \uc5c5\uccb4 \uc0b0\ucf00\uc774\uac00 Miniatuart Mini Plus \uc2dc\ub9ac\uc988\uc5d0 \ud558\uc6b8, \ud0a4\ud0a4, \uc544\ub9ac\uc5d0\ud2f0\uc758 \uc9d1\uc744 \uc7ac\ud604\ud55c \uc2e0\uc791 3\uc885\uc744 11\uc6d4 3\uc77c \ubc1c\ub9e4\ud55c\ub2e4.\n\n\ud0a4\ud2b8\ub294 \ubcbd\uacfc \ub0b4\ubd80\ub97c \ub9cc\ub4e4 \uc885\uc774 \uc2dc\ud2b8\uac00 \ub2f4\uae34 \uc0c1\uc790\ub85c \uc2dc\uc791\ud558\uace0, \uc870\ub9bd\uc774 \ub05d\ub098\uba74 \uadf8 \uc0c1\uc790\uac00 \uc644\uc131\uc791\uc758 \ubc1b\uce68\uc774 \ub41c\ub2e4. \uc0c1\uc790 \uba74\ub9c8\ub2e4 \ub2e4\ub978 \uc77c\ub7ec\uc2a4\ud2b8\uac00 \uc788\uc5b4 \uc5ec\ub7ec \uac01\ub3c4\uc5d0\uc11c \ubcfc \uc774\uc720\uac00 \ud558\ub098 \ub354 \uc0dd\uae34\ub2e4. \ud558\uc6b8\uc758 \ub09c\ub86f\uac00\uc5d0\ub294 \ub9c8\ubc95 \uc7a5\uc2dd\ud488\uacfc \ucc38\uace0 \uc790\ub8cc\uac00 \uc5b4\uc9c0\ub7fd\uac8c \ub193\uc600\uace0 \ubd88\uc758 \uc815\ub839 \uce7c\uc2dc\ud37c\ub3c4 \ub4f1\uc7a5\ud55c\ub2e4. \ud0a4\ud0a4\uc758 \ubc29\uc740 \ube68\ub798, \ube57\uc790\ub8e8, \uc9c0\uc9c0\uae4c\uc9c0 \ub2f4\uc558\uc73c\uba70 \uc138 \ud0a4\ud2b8 \uc911 \uc678\uad00\uc774 \uac00\uc7a5 \uc815\uad50\ud558\ub2e4. \uc544\ub9ac\uc5d0\ud2f0 \uac00\uc871\uc758 \uac70\uc2e4\uc740 \ud55c \ubcc0\uc774 6cm\ub2e4.\n\n\ub09c\uc774\ub3c4\ub294 \ubaa8\ub450 \uc0c1\uae09\uc774\ub2e4. \ud0a4\ud0a4\ub294 5\uc2dc\uac04 \uc774\uc0c1, \ub098\uba38\uc9c0\ub294 10\uc2dc\uac04 \uc774\uc0c1 \uac78\ub9b0\ub2e4\uace0 \ud55c\ub2e4. \uac00\uaca9\uc740 \ud0a4\ud0a4 4,290\uc5d4(\uc57d 27\ub2ec\ub7ec), \uc544\ub9ac\uc5d0\ud2f0 6,160\uc5d4, \ud558\uc6b8 6,600\uc5d4\uc774\uba70 \uc0b0\ucf00\uc774\uc758 \ub77c\ucfe0\ud150 \uc628\ub77c\uc778 \ub9e4\uc7a5\uc5d0\uc11c 11\uc6d4 3\uc77c\ubd80\ud130 \uc8fc\ubb38\ud560 \uc218 \uc788\ub2e4.\n\n\uc9c0\ube0c\ub9ac \ub355\uc9c8\ud558\ub294 \uce5c\uad6c\uc5d0\uac8c \uacf5\uc720\ud574 \ubcf4\uc790.\n\n\ucd9c\ucc98: SoraNews24, Sankei", "hashtags": ["#\uc9c0\ube0c\ub9ac", "#\uc885\uc774\uacf5\uc791", "#\ub514\uc624\ub77c\ub9c8", "#\ud558\uc6b8\uc758\uc6c0\uc9c1\uc774\ub294\uc131", "#\ub355\uc9c8"], "slides": [["\uc9c0\ube0c\ub9ac \uc9d1\uc744", "**\uc885\uc774\ub85c** \uad6c\ud604?!", "---", "\uc77c\ubcf8 \uc885\uc774\uacf5\uc791 \uc5c5\uccb4 \uc0b0\ucf00\uc774\uac00 \ud558\uc6b8, \ud0a4\ud0a4, \uc544\ub9ac\uc5d0\ud2f0\uc758 \uc9d1\uc744 \ub9cc\ub4dc\ub294 \ub514\uc624\ub77c\ub9c8 \ud0a4\ud2b8 3\uc885\uc744 11\uc6d4 3\uc77c \ub0b4\ub193\ub294\ub2e4."], ["\uc0c1\uc790\uac00 \uace7", "**\uc804\uc2dc\ub300**\uac00 \ub3fc", "---", "\ud0a4\ud2b8\ub294 \ubcbd\uacfc \ub0b4\ubd80\ub97c \ub9cc\ub4e4 \uc885\uc774 \uc2dc\ud2b8\uac00 \ub4e0 \uc0c1\uc790\ub85c \uc2dc\uc791\ud55c\ub2e4. \uc870\ub9bd\uc744 \ub05d\ub0b4\uba74 \uadf8 \uc0c1\uc790\uac00 \uc644\uc131\ud55c \ub514\uc624\ub77c\ub9c8\uc758 \ubc1b\uce68\uc774 \ub41c\ub2e4. \uc0c1\uc790 \uba74\ub9c8\ub2e4 \ub2e4\ub978 \uc77c\ub7ec\uc2a4\ud2b8\uac00 \uc2e4\ub824 \uc788\ub2e4."], ["\ud558\uc6b8\uc758 \ubc29\uc5d4", "**\uce7c\uc2dc\ud37c**\ub3c4 \uc788\uc5b4", "---", "\ud558\uc6b8\uc758 \ub09c\ub86f\uac00\ub294 \uc628\uac16 \ub9c8\ubc95 \uc7a5\uc2dd\ud488\uacfc \ucc38\uace0 \uc790\ub8cc\ub85c \uc5b4\uc218\uc120\ud558\uac8c \ucc44\uc6cc\uc838 \uc788\ub2e4. \ubd88\uc758 \uc815\ub839 \uce7c\uc2dc\ud37c\ub3c4 \ud568\uaed8 \ub4f1\uc7a5\ud55c\ub2e4."], ["\ud0a4\ud0a4\uc758 \ubc29\uc740", "**\uc678\uad00**\uae4c\uc9c0 \ub514\ud14c\uc77c", "---", "\ud0a4\ud0a4\uc640 \uc9c0\uc9c0\uac00 \uc9c0\ub0b4\ub294 \ubc29\uc5d0\ub294 \ub110\uc5b4 \ub454 \ube68\ub798, \ucc3d\uac00\uc5d0 \uae30\ub304 \ube57\uc790\ub8e8, \ubc14\ub2e5\uc744 \ub354\ub7fd\ud788\uc9c0 \uc54a\uc73c\ub824\ub294 \uc9c0\uc9c0\uac00 \ub2f4\uacbc\ub2e4. \uc138 \ud0a4\ud2b8 \uc911 \uc678\uad00\uc774 \uac00\uc7a5 \uc815\uad50\ud558\ub2e4."], ["\uc544\ub9ac\uc5d0\ud2f0 \uac70\uc2e4", "\uace0\uc791 **6cm**?!", "---", "\uc544\ub9ac\uc5d0\ud2f0 \uac00\uc871\uc758 \uac70\uc2e4 \ub514\uc624\ub77c\ub9c8\ub294 \ud55c \ubcc0\uc774 6cm\ub2e4. \uae30\uc0ac\ub294 \uc774 \uc791\uc740 \ud06c\uae30\uac00 \uc0ac\ub78c \ub208\uc5d0 \ub744\uc9c0 \uc54a\ub358 \uc18c\uc778 \uac00\uc871\uc744 \ub5a0\uc62c\ub9ac\uac8c \ud55c\ub2e4\uace0 \uc9da\uc5c8\ub2e4."], ["\uc0c1\uae09\uc790\uc6a9 \ud0a4\ud2b8", "**5\uc2dc\uac04**\uc740 \uae30\ubcf8", "---", "\uc0b0\ucf00\uc774 \uc0ac\uc774\ud2b8\ub294 \uc138 \ud0a4\ud2b8\ub97c \ubaa8\ub450 \uc0c1\uae09 \ub09c\uc774\ub3c4\ub85c \ubd84\ub958\ud55c\ub2e4. \ud0a4\ud0a4\ub294 5\uc2dc\uac04 \uc774\uc0c1, \ub098\uba38\uc9c0\ub294 10\uc2dc\uac04 \uc774\uc0c1 \uac78\ub9b0\ub2e4. \uac00\uaca9\uc740 \ud0a4\ud0a4 4,290\uc5d4, \uc544\ub9ac\uc5d0\ud2f0 6,160\uc5d4, \ud558\uc6b8 6,600\uc5d4\uc774\ub2e4."], ["\uc9c0\ube0c\ub9ac \ub355\ud6c4 \uce5c\uad6c", "**\ud0dc\uadf8\ud574\uc11c** \uc54c\ub824\uc918", "---", "\ud558\uc6b8, \ud0a4\ud0a4, \uc544\ub9ac\uc5d0\ud2f0\uc758 \uc9d1\uc744 \uc885\uc774\ub85c \uc9c1\uc811 \uc9d3\ub294 \ud0a4\ud2b8 \uc18c\uc2dd. \uc870\ub9bd\uc5d0 \uc2dc\uac04\uc774 \uac78\ub824\ub3c4 \uc990\uae38 \uc9c0\ube0c\ub9ac \ud32c \uce5c\uad6c\uc5d0\uac8c \ub531 \ub9de\ub294 \uc18c\uc2dd"]]}, "be611d2eb76d": {"caption": "\ud3ec\ucf13\ubaac 30\uc8fc\ub144\uc744 \uae30\ud0c0 \uc18c\ub9ac\ub85c \uae30\ub150\ud55c\ub2e4\uba74 \uc5b4\ub5a4 \ubaa8\uc2b5\uc77c\uae4c. \ud39c\ub354 \uc7ac\ud32c\uc774 \ud3ec\ucf13\ubaac \ube68\uac15\u00b7\ucd08\ub85d 30\uc8fc\ub144\uc744 \ub9de\uc544 8\ube44\ud2b8 \uc0ac\uc6b4\ub4dc \ubaa8\ub4dc\uac00 \ub4e4\uc5b4\uac04 \uae30\ud0c0 \ub450 \uc885\uc744 \uc120\ubcf4\uc600\ub2e4.\n\n\uc601\uc5b4\uad8c\uc5d0\uc11c\ub294 1998\ub144 \uac8c\uc784\ubcf4\uc774\ub85c \ub098\uc628 \ube68\uac15\u00b7\ud30c\ub791\uc774 \uc2dc\ub9ac\uc988\uc758 \uc2dc\uc791\uc73c\ub85c \uc54c\ub824\uc838 \uc788\uc9c0\ub9cc, \uc77c\ubcf8\uc5d0\uc11c\ub294 2\ub144 \uc55e\uc11c \ube68\uac15\u00b7\ucd08\ub85d\uc774 \uba3c\uc800 \ub098\uc654\ub2e4. \uc774\ubc88 \ud611\uc5c5 \uae30\ud0c0\uc758 \uc0c9\ub3c4 \uc774 \uc870\ud569\uc744 \ub530\ub790\ub2e4. \ubaa8\ub378\uc740 \uba54\uc774\ub4dc \uc778 \uc7ac\ud32c \ud3ec\ucf13\ubaac \ub808\ub4dc \ubc84\uc804 \uc2a4\ud2b8\ub77c\ud1a0\uce90\uc2a4\ud130\uc640 \uadf8\ub9b0 \ubc84\uc804 \ud154\ub808\uce90\uc2a4\ud130 \ub450 \uac00\uc9c0\ub2e4. \ube68\uac15\uc740 \ubd88\uaf43 \ud0c0\uc785, \ucd08\ub85d\uc740 \ud480 \ud0c0\uc785\uacfc \uc5f0\uacb0\ub418\ub294 \uc0c9\uc774\ub77c \uac01 \uae30\ud0c0\uc758 \ubab8\ud1b5\uc5d0\ub294 \ud574\ub2f9 \ud0c0\uc785 \ud3ec\ucf13\ubaac\uc758 \ud53d\uc140 \uc544\ud2b8\uac00 \uac00\ub4dd\ud558\ub2e4.\n\n\ub125\uc5d0\ub294 \ubaac\uc2a4\ud130\ubcfc\uc774 \uc740\uadfc\ud558\uac8c \ud769\ubfcc\ub824\uc838 \uc788\uace0 \ub4b7\uba74\uc5d0\ub294 \ud3ec\ucf13\ubaac 30\uc8fc\ub144 \uae30\ub150 \ud50c\ub808\uc774\ud2b8\uac00 \ubd99\ub294\ub2e4. \ud53d\uc140 \uc544\ud2b8 \ud53c\ud06c, \uc804\uc6a9 \ud558\ub4dc\ucf00\uc774\uc2a4, \uc778\uc99d\uc11c\ub3c4 \ud568\uaed8 \uc81c\uacf5\ub41c\ub2e4.\n\n\ud575\uc2ec\uc740 \uc18c\ub9ac\ub2e4. \ubcfc\ub968 \ub178\ube0c\ub97c \ub204\ub974\uba74 \ud39c\ub354\uac00 \u00278\ube44\ud2b8 \uc0ac\uc6b4\ub4dc \uc2dc\uc2a4\ud15c \ubaa8\ub4dc\u0027\ub77c \uc774\ub984 \ubd99\uc778 \ud6a8\uacfc\uac00 \ucf1c\uc9c0\uace0, \ucd94\uc5b5\uc758 \uce69\ud2a0 \uac19\uc740 \uc74c\uc0c9\uc774 \ub098\uc628\ub2e4. \uc18c\ub77c\ub274\uc2a424\ub294 \uc774 \ubaa8\ub4dc\uac00 \uace0\uc804 \ud3ec\ucf13\ubaac \uac8c\uc784 \uc74c\uc545\uc744 \ucee4\ubc84\ud558\ub294 \ub370 \uc798 \uc5b4\uc6b8\ub9b4 \uac83\uc774\ub77c\uace0 \uc18c\uac1c\ud588\ub2e4.\n\n\uac00\uaca9\uc740 \uac01\uac01 39\ub9cc 6\ucc9c \uc5d4(\uc57d 2,490\ub2ec\ub7ec)\uc774\uace0, \uc218\ub7c9 \ud55c\uc815\uc774\ub77c \ud3ec\ucf13\ubaac\uc13c\ud130 \uc628\ub77c\uc778\uc5d0\uc11c \ucd94\ucca8\uc73c\ub85c \ud310\ub9e4\ud55c\ub2e4. \uc751\ubaa8\ub294 \uc77c\ubcf8 \uc2dc\uac04 \uae30\uc900 11\uc6d4 19\uc77c \uc815\uc624\ubd80\ud130 11\uc6d4 24\uc77c \uc624\ud6c4 4\uc2dc 59\ubd84\uae4c\uc9c0 \ubc1b\ub294\ub2e4.\n\n\ucd9c\ucc98: SoraNews24, \ud3ec\ucf13\ubaac \uacf5\uc2dd \uc6f9\uc0ac\uc774\ud2b8, PR Times", "hashtags": ["#\ud3ec\ucf13\ubaac", "#\ud39c\ub354", "#\uc77c\ub809\uae30\ud0c0", "#\ud3ec\ucf13\ubaac30\uc8fc\ub144", "#8\ube44\ud2b8"], "slides": [["**\ud3ec\ucf13\ubaac** 30\uc8fc\ub144 \uae30\ub150", "**\uae30\ud0c0** \ucd9c\uc2dc!!", "---", "\ud39c\ub354 \uc7ac\ud32c\uc774 \ud3ec\ucf13\ubaac \ube68\uac15\u00b7\ucd08\ub85d 30\uc8fc\ub144\uc744 \ub9de\uc544 8\ube44\ud2b8 \uc0ac\uc6b4\ub4dc \ubaa8\ub4dc\ub97c \ub123\uc740 \uae30\ud0c0 \ub450 \uc885\uc744 \uc120\ubcf4\uc600\ub2e4."], ["30\uc8fc\ub144\uc740", "\ube68\uac15\u00b7\ucd08\ub85d \uae30\uc900", "---", "\uc601\uc5b4\uad8c\uc5d0\uc11c\ub294 1998\ub144 \uac8c\uc784\ubcf4\uc774\ub85c \ub098\uc628 \ube68\uac15\u00b7\ud30c\ub791\uc774 \uc2dc\uc791\uc73c\ub85c \ud1b5\ud558\uc9c0\ub9cc, \uc77c\ubcf8\uc5d0\uc11c\ub294 \uadf8\ubcf4\ub2e4 2\ub144 \uc55e\uc11c \ube68\uac15\u00b7\ucd08\ub85d\uc774 \uba3c\uc800 \ub098\uc654\ub2e4. \uc774\ubc88 \uae30\ud0c0\uc758 \uc0c9\ub3c4 \uc774 \uc6d0\uc870 \uc870\ud569\uc744 \ub530\ub790\ub2e4."], ["**\ub450 \uac00\uc9c0 \ubaa8\ub378**\ub85c", "\uc9dd\uc744 \ub9de\ucdc4\ub2e4", "---", "\ub808\ub4dc \ubc84\uc804\uc740 \uc2a4\ud2b8\ub77c\ud1a0\uce90\uc2a4\ud130, \uadf8\ub9b0 \ubc84\uc804\uc740 \ud154\ub808\uce90\uc2a4\ud130\ub2e4. \ud3ec\ucf13\ubaac \ubcf8\ud3b8\uc5d0 \ube44\uc2b7\ud558\uba74\uc11c \ub2e4\ub978 \uc9dd \ubc84\uc804\uc774 \uc788\ub4ef \uae30\ud0c0\ub3c4 \ub450 \uc885\uc73c\ub85c \ub0c8\uace0, \ubab8\ud1b5\uc5d0\ub294 \ubd88\uaf43\u00b7\ud480 \ud0c0\uc785 \ud3ec\ucf13\ubaac\uc758 \ud53d\uc140 \uc544\ud2b8\uac00 \uc785\ud600\uc84c\ub2e4."], ["\ub125\uc5d4 **\ubaac\uc2a4\ud130\ubcfc**", "\ub4b7\uba74\uc5d4 **\uae30\ub150\ud310**", "---", "\ub125\uc5d0\ub294 \ubaac\uc2a4\ud130\ubcfc\uc774 \uc740\uadfc\ud558\uac8c \ud769\ubfcc\ub824\uc838 \uc788\uace0, \ub4b7\uba74\uc5d0\ub294 \ud3ec\ucf13\ubaac 30\uc8fc\ub144 \uae30\ub150 \ud50c\ub808\uc774\ud2b8\uac00 \ubd99\uc5c8\ub2e4. \ud53d\uc140 \uc544\ud2b8 \ud53c\ud06c\uc640 \uc804\uc6a9 \ud558\ub4dc\ucf00\uc774\uc2a4, \uc778\uc99d\uc11c\ub3c4 \ud568\uaed8 \ub4e4\uc5b4 \uc788\ub2e4."], ["\ubcfc\ub968 \ub178\ube0c \ub20c\ub7ec", "**8\ube44\ud2b8** \ubaa8\ub4dc ON", "---", "\ubcfc\ub968 \ub178\ube0c\ub97c \ub204\ub974\uba74 \ud39c\ub354\uac00 \u00278\ube44\ud2b8 \uc0ac\uc6b4\ub4dc \uc2dc\uc2a4\ud15c \ubaa8\ub4dc\u0027\ub77c \ubd80\ub974\ub294 \ud6a8\uacfc\uac00 \ucf1c\uc9c4\ub2e4. \ucd94\uc5b5\uc758 \uce69\ud2a0\uc744 \ub2ee\uc740 \uc18c\ub9ac\ub77c, \uc18c\ub77c\ub274\uc2a424\ub294 \uace0\uc804 \ud3ec\ucf13\ubaac \uac8c\uc784 \uc74c\uc545 \ucee4\ubc84\uc5d0 \uc798 \uc5b4\uc6b8\ub9b4 \uac83\uc774\ub77c\uace0 \ubd24\ub2e4."], ["\ud55c \uc790\ub8e8\uc5d0", "**39\ub9cc 6\ucc9c \uc5d4**", "---", "\ub450 \uae30\ud0c0\ub294 \uac01\uac01 39\ub9cc 6\ucc9c \uc5d4(\uc57d 2,490\ub2ec\ub7ec)\uc774\uba70 \uc218\ub7c9\uc774 \ud55c\uc815\ub3fc \ucd94\ucca8\uc73c\ub85c \ud310\ub9e4\ub41c\ub2e4. \ud3ec\ucf13\ubaac\uc13c\ud130 \uc628\ub77c\uc778\uc5d0\uc11c 11\uc6d4 19\uc77c \uc815\uc624\ubd80\ud130 24\uc77c \uc624\ud6c4 4\uc2dc 59\ubd84\uae4c\uc9c0(\uc77c\ubcf8 \uc2dc\uac04) \uc751\ubaa8\ub97c \ubc1b\ub294\ub2e4."], ["\uae30\ud0c0 \uce58\ub294", "**\ud3ec\ucf13\ubaac \ub355\ud6c4** \ud0dc\uadf8", "---", "8\ube44\ud2b8 \uce69\ud2a0 \uc18c\ub9ac\ub97c \ub0b4\ub294 \uae30\ud0c0\ub77c\uc11c \ud3ec\ucf13\ubaac\uc744 \uc88b\uc544\ud558\ub294 \uae30\ud0c0\ub9ac\uc2a4\ud2b8 \uce5c\uad6c\uac00 \ud2b9\ud788 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd. \ud53d\uc140 \uc544\ud2b8 \ub514\uc790\uc778\uacfc \uc751\ubaa8 \uc77c\uc815\uc740 \uc55e \uc7a5\uc5d0 \ub2f4\uaca8 \uc788\ub2e4."]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {"08abd4fa1904": "approve", "73cb91792d33": "approve", "be611d2eb76d": "approve"};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 2;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

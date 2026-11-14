@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.11 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.11 오전 검수</span> <span id="progress">0 / 1 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-b42625842004" data-jump="b42625842004">1</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-b42625842004" data-id="b42625842004">
+    <div class="head">
+      <h2>1. 걸으며 배우는 프랑스어, 루앙 일주일</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-am-515e30c34467/b42625842004/v1-01.jpg" alt="1장: 프랑스어를 걸으면서 배움?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-am-515e30c34467/b42625842004/v1-02.jpg" alt="2장: 학교는 만석, 튜터도 없음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-am-515e30c34467/b42625842004/v1-03.jpg" alt="3장: 시간당 19유로 튜터 발견" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-am-515e30c34467/b42625842004/v1-04.jpg" alt="4장: 두 시간 수업을 걸으며 진행" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-am-515e30c34467/b42625842004/v1-05.jpg" alt="5장: 엿새 총비용 600파운드 남짓" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-am-515e30c34467/b42625842004/v1-06.jpg" alt="6장: 어학연수 꿈꾸는 친구에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-am-515e30c34467/b42625842004/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">프랑스어를 걸으면서 배운다는 발상, 생각보다 꽤 설득력 있다. 가디언에 실린 여행기에서 한 필자는 프랑스 루앙에서 일주일 동안 개인 튜터 안나와 도시를 걸으며 프랑스어 대화 수업을 받았다.
+
+계기는 단순했다. 필자가 시간을 낼 수 있던 단 한 주에 루앙의 어학원들은 자리가 없다고 했고, 개인 튜터도 구할 수 없다고 했다. 대신 Apprentus라는 사이트에서 안나를 찾았는데, 어학원 튜터가 시간당 60유로인 데 비해 안나는 시간당 19유로였다. 안나는 루앙 노르망디 대학교에서 정치학을 공부하는 학생이다.
+
+수업은 하루 두 시간씩 루앙 거리를 걸으며 진행됐다. 필자는 Nature에 실린 최근 연구가 움직이면 집중과 기억, 전반적인 학습에 도움이 된다고 시사한다고 소개했다. 지난겨울 몽펠리에 어학원 수업은 학생이 열두 명이었고, 필자는 그곳을 떠날 때 별로 배우지 못했다고 느꼈다고 한다.
+
+비용도 눈에 띈다. 페리와 기차 왕복권은 65파운드, 루앙 역사 중심가의 스튜디오 숙소는 하룻밤 60파운드 미만이었다. 식비와 교통, 튜터, 숙소를 모두 포함한 엿새 총비용은 600파운드를 조금 넘었다.
+
+출처: The Guardian</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#프랑스어 #어학연수 #프랑스여행 #루앙 #언어학습</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 필자가 루앙에서 일주일간 수업을 받았다는 기간(원문은 5일간 10시간 수업, 엿새 체류로 서술)</li><li>근거 등록 안 된 주장: 이 여행기가 가디언(The Guardian)에 실렸다는 게재 매체 주장</li><li>근거 등록 안 된 주장: 필자가 어학원 대신 튜터와 일대일로 수업했다는 설명(캡션의 일대일 수업 서술)</li><li>근거 등록 안 된 주장: 몽펠리에 어학원 수업이 하루 세 시간이었다는 내용(캡션에는 없고 본문 근거에만 있음)</li>
+          <li>필자 한 사람의 개인 체험담이라 모든 학습자에게 같은 효과가 있다고 단정할 수 없음</li><li>가격(유로·파운드)은 기사 작성 시점 기준이며 변동 가능</li><li>걷기와 학습 효과 연구는 필자가 소개한 내용으로, 연구 자체는 원문에서 확인하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b42625842004-0">1장</label>
+          <textarea id="s-b42625842004-0" rows="6" data-slide="0">프랑스어를
+**걸으면서** 배움?!
+---
+한 필자가 프랑스 루앙에서 일주일간 튜터와 도시를 걸으며 프랑스어를 배운 경험을 가디언에 소개했다.</textarea>
+          
+          <label class="f" for="s-b42625842004-1">2장</label>
+          <textarea id="s-b42625842004-1" rows="6" data-slide="1">학교는 **만석**,
+튜터도 없음
+---
+루앙의 어학원들은 필자가 시간을 낼 수 있던 한 주에 자리가 없다고 했다. 개인 튜터를 문의했을 때도 가능한 사람이 없다는 답이 돌아왔다.</textarea>
+          
+          <label class="f" for="s-b42625842004-2">3장</label>
+          <textarea id="s-b42625842004-2" rows="6" data-slide="2">시간당 **19유로**
+튜터 발견
+---
+어학원 튜터는 시간당 60유로였지만, 온라인 사이트 Apprentus에서 찾은 안나는 시간당 19유로였다. 안나는 루앙 노르망디 대학교에서 정치학을 공부하는 학생이다.</textarea>
+          
+          <label class="f" for="s-b42625842004-3">4장</label>
+          <textarea id="s-b42625842004-3" rows="6" data-slide="3">두 시간 수업을
+**걸으며** 진행
+---
+안나의 제안으로 하루 두 시간 수업을 루앙 거리를 걸으며 진행했다. 필자는 움직이면 집중과 기억, 학습에 도움이 된다는 Nature 연구를 근거로 들었다.</textarea>
+          
+          <label class="f" for="s-b42625842004-4">5장</label>
+          <textarea id="s-b42625842004-4" rows="6" data-slide="4">엿새 총비용
+**600파운드** 남짓
+---
+식비·교통·튜터·숙소를 모두 합쳐 엿새에 600파운드를 조금 넘게 썼다. 페리와 기차 왕복권은 65파운드, 루앙 중심가 숙소는 하룻밤 60파운드 미만이었다.</textarea>
+          
+          <label class="f" for="s-b42625842004-5">6장</label>
+          <textarea id="s-b42625842004-5" rows="6" data-slide="5">어학연수 꿈꾸는
+**친구에게** 보내기
+---
+걸으며 배우는 일대일 수업과 여행을 한 번에 다룬 후기이다. 앞 장에 나온 비용과 일정을 참고할 수 있어, 프랑스어 공부와 여행을 함께 꿈꾸는 친구라면 눈여겨볼 소식</textarea>
+          
+          <label class="f" for="c-b42625842004">본문 (캡션)</label>
+          <textarea id="c-b42625842004" class="caption">프랑스어를 걸으면서 배운다는 발상, 생각보다 꽤 설득력 있다. 가디언에 실린 여행기에서 한 필자는 프랑스 루앙에서 일주일 동안 개인 튜터 안나와 도시를 걸으며 프랑스어 대화 수업을 받았다.
+
+계기는 단순했다. 필자가 시간을 낼 수 있던 단 한 주에 루앙의 어학원들은 자리가 없다고 했고, 개인 튜터도 구할 수 없다고 했다. 대신 Apprentus라는 사이트에서 안나를 찾았는데, 어학원 튜터가 시간당 60유로인 데 비해 안나는 시간당 19유로였다. 안나는 루앙 노르망디 대학교에서 정치학을 공부하는 학생이다.
+
+수업은 하루 두 시간씩 루앙 거리를 걸으며 진행됐다. 필자는 Nature에 실린 최근 연구가 움직이면 집중과 기억, 전반적인 학습에 도움이 된다고 시사한다고 소개했다. 지난겨울 몽펠리에 어학원 수업은 학생이 열두 명이었고, 필자는 그곳을 떠날 때 별로 배우지 못했다고 느꼈다고 한다.
+
+비용도 눈에 띈다. 페리와 기차 왕복권은 65파운드, 루앙 역사 중심가의 스튜디오 숙소는 하룻밤 60파운드 미만이었다. 식비와 교통, 튜터, 숙소를 모두 포함한 엿새 총비용은 600파운드를 조금 넘었다.
+
+출처: The Guardian</textarea>
+          <label class="f" for="t-b42625842004">해시태그</label>
+          <input id="t-b42625842004" type="text" class="tagsin" value="#프랑스어 #어학연수 #프랑스여행 #루앙 #언어학습" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>필자가 루앙에서 튜터 안나와 하루 두 시간 수업을 걸으며 진행했다</b>
+            <q>“So I was delighted when Anna suggested that we do our two-hour classes on foot round Rouen.”</q>
+            <small>slide1, slide4, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루앙의 어학원들은 필자가 갈 수 있던 한 주에 자리가 없다고 했고 개인 튜터도 가능한 사람이 없다고 했다</b>
+            <q>“This is the last day of a DIY language course that I devised when Rouen’s language schools told me they were full for the only week I could get away. When I then enquired about their private tutors, I was told no one was available.”</q>
+            <small>slide2, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어학원 튜터는 시간당 60유로, Apprentus에서 찾은 안나는 시간당 19유로였다</b>
+            <q>“This turned out to save me a pretty penny: language school tutors cost €60 an hour while Anna – who I discovered on the website Apprentus – is a cost-effective €19 an hour.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>안나는 루앙 노르망디 대학교의 정치학 전공 학생이다</b>
+            <q>“Having booked Anna (a political sciences student at the University of Rouen Normandy) for 10 hours of French conversation over five days, I reserved a studio apartment (bang in the historic heart of Rouen for less than £60 a night) and bought a ferry ticket from Newhaven to Dieppe.”</q>
+            <small>slide3, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Nature에 실린 최근 연구는 움직이면 집중, 기억, 학습에 도움이 된다고 시사한다</b>
+            <q>“A recent study published in Nature suggests that moving helps us concentrate, remember and generally learn more effectively.”</q>
+            <small>slide4, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지난겨울 몽펠리에 어학원 수업은 학생이 12명이었다</b>
+            <q>“The class was large: 12 pupils from across the world.”</q>
+            <small>caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>필자는 몽펠리에를 떠날 때 별로 배우지 못했다고 느꼈다</b>
+            <q>“Little wonder that I left Montpellier feeling I hadn’t learned much.”</q>
+            <small>caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>식비·교통·튜터·숙소를 포함한 엿새 총비용은 600파운드를 조금 넘었다</b>
+            <q>“And my six days, including food, transport, tutor and accommodation, had cost little more than £600.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>페리와 기차 왕복권은 65파운드였다</b>
+            <q>“Rouen is a one-hour train journey from the port, and the combined ferry-train ticket (return) cost a thrifty £65.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루앙 중심가 숙소는 하룻밤 60파운드 미만이었다</b>
+            <q>“Having booked Anna (a political sciences student at the University of Rouen Normandy) for 10 hours of French conversation over five days, I reserved a studio apartment (bang in the historic heart of Rouen for less than £60 a night) and bought a ferry ticket from Newhaven to Dieppe.”</q>
+            <small>slide5, caption · <a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/travel/2026/nov/10/immersive-learning-french-in-rouen-normandy" target="_blank" rel="noopener">Walk the talk: a week learning French with a personal prof in Normandy</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:June_2008_Rouen.jpg" target="_blank" rel="noopener">Syced / Wikimedia Commons · CC0</a> — "Rouen"</li><li>2장: <a href="https://pixabay.com/photos/education-student-boy-classroom-3670453/" target="_blank" rel="noopener">JhonDL / Pixabay</a> — "empty classroom"</li><li>3장: <a href="https://pixabay.com/photos/macbook-laptop-google-display-459196/" target="_blank" rel="noopener">377053 / Pixabay</a> — "laptop"</li><li>4장: <a href="https://pixabay.com/photos/old-town-buildings-street-twilight-6300696/" target="_blank" rel="noopener">TomasHa73 / Pixabay</a> — "cobblestone street"</li><li>5장: <a href="https://pixabay.com/photos/hallstatt-austria-mountain-lake-3609863/" target="_blank" rel="noopener">Julius_Silver / Pixabay</a> — "ferry"</li><li>6장: <a href="https://pixabay.com/photos/girls-children-friends-kids-young-462072/" target="_blank" rel="noopener">cherylholt / Pixabay</a> — "friends walking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-7776fecde778">
+    <div class="head">
+      <h2>S1. 고기 많이 먹으면 남성호르몬 오른다? 핀란드 중년 남성 2,546명 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-7776fecde778">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;고기 = 남성호르몬&#39; 통념을 중년 남성 2,546명 데이터로 점검하되, 차이가 작고 인과는 아니라는 점까지 같이 전한다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">&#39;고기 많이 먹어야 남성호르몬 오른다&#39;는 말, 이 연구 보면 좀 달라짐
+핀란드 연구진이 중년 남성 2,546명을 봤더니 오히려 반대 방향 연관이 나옴
+근데 식물성으로 바꾸면 오른다는 얘기도 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 식물성 대비 동물성 단백질을 제일 많이 먹은 남성들이 혈중 유리 테스토스테론 수치가 가장 낮았대. 총 테스토스테론도 동물성 비율이 높을수록 낮은 쪽으로 연관됐고. 근데 이 연구, 누구를 어떻게 봤을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">2/ 동핀란드대 연구진이 42~60세 남성 2,546명을 분석했고, 참가자들이 4일 동안 먹은 걸 직접 기록했음. 대부분 백인 집단이라 다른 집단에도 그대로 맞는다고 보긴 어렵대. 그럼 반대로 식물성 단백질은 어땠을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">3/ 곡물 말고 채소·콩류·견과류 같은 식물성 단백질을 가장 많이 먹은 남성들은 유리 테스토스테론이 더 높았대. &#39;유리&#39;는 혈액 속 단백질에 안 붙고 떠다니는 테스토스테론이라는 뜻. 그럼 고기를 식물성으로 바꾸면 수치가 오를까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">150/500자</span></div>
+      <p class="tp-text">4/ 연구진이 통계 모델로 동물성 단백질을 식물성으로 바꾼 상황을 돌려봤는데, 총·유리 테스토스테론 모두 유의한 연관이 없었음. 수치 차이도 통계적으론 의미 있지만 작았고, 건강에 어떤 의미인지는 이 연구로 알 수 없다는 게 연구진 말. 그럼 왜 이런 연관이 나왔을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">5/ 이유는 아직 몰라. 기사에선 동물성 단백질이 염증 지표를 건드려 테스토스테론 분비를 누를 수도 있고, 인슐린 반응 같은 대사 결과가 달라서일 수도 있다고 하는데 지금은 추측 단계래. 그럼 지금까지 나온 걸 한 번에 정리하면?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">204/500자</span></div>
+      <p class="tp-text">6/ 연구 결과 요약 정리
+- 대상: 42~60세 남성 2,546명, 4일간 식단 기록 (관찰 연구)
+- 동물성:식물성 단백질 비율이 높을수록 총 테스토스테론 낮음
+- 곡물 아닌 식물성 단백질을 많이 먹을수록 유리 테스토스테론 높음
+- 동물성을 식물성으로 바꾼 모델: 유의한 연관 없음
+- 차이는 작았고, 건강 영향은 확인 못 함
+- 내 식단이 맞는지는 의사와 상의</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">209/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 고기를 많이 먹는다고 테스토스테론이 오른다는 근거는 이 연구에서 안 나왔고, 이유도 아직 몰라.
+닭가슴살·소고기 파 vs 두부·콩 파, 너는 어디야?
+이런 해외 건강·영양 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>동물성 단백질이 더 높은 테스토스테론이나 더 나은 건강을 보장하는 것은 아니다 <small>애매 · 원문은 동물성 단백질이 테스토스테론이나 건강을 좋게 한다는 보장이 없다는 뜻인데, 카드 요약 &#39;건강 영향은 확인 못 함&#39;과 &#39;내 식단은 의사와 상의&#39;는 원문에 없는 권고이므로 과도한 확장임. 원문 취지는 &#39;더 나은 보장 아님&#39;으로 한정할 것.</small></li>
+        <li>근거 등록 안 된 주장: 연구가 &#39;International Journal of Food Sciences and Nutrition&#39;에 게재되었다는 점은 카드에 명시되지 않았으나, 카드 6번 &#39;관찰 연구&#39; 표기는 원문 통계 모델 언급으로 뒷받침됨(별도 주장 없음)</li><li>근거 등록 안 된 주장: &#39;Carnivore MD&#39;로 알려진 Paul Saladino가 테스토스테론 하락으로 고기 섭취를 줄였다는 내용은 카드 본문에 직접 등장하지 않음(카드에 미포함)</li><li>근거 등록 안 된 주장: 카드 3번 &#39;곡물 말고&#39; 표현은 원문의 non-grain 구분과 맞으나, 카드 5번 &#39;동물성이 염증 지표를 건드려 분비를 누를 수도 있다&#39;의 &#39;기사에선&#39;이라는 출처 귀속은 원문 기사 출처와 일치하므로 추가 미기재 주장 없음</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;고기 많이 먹어야 남성호르몬 오른다&#39;는 말, 이 연구 보면 좀 달라짐</li><li>남성호르몬 올리려고 &#39;고기 더&#39;가 아니라, 동물성 비율이 높은 쪽이 오히려 수치가 낮게 나온 연구가 있음</li><li>카니보어 식단이 남성호르몬 해법이라는 말, 근거는 약하다는 기사가 나옴</li><li>&#39;진짜 남자는 고기 먹는다&#39;는 말에 중년 남성 2,546명 데이터가 답함</li><li>닭가슴살 열심히 챙겨 먹는 사람, 이 연구 한번 봐봐</li><li>고기를 더 먹는다고 오르는 게 아니라 콩·견과류 같은 식물성 단백질 쪽이 유리 테스토스테론과 이어졌대</li><li>단백질 식단 얘기하다 남성호르몬 나오면 다들 고기부터 외치잖아, 근데 데이터는 좀 달랐음</li><li>헬스장 식단 통념 하나 점검함: 고기 = 남성호르몬?</li><li>동물성 단백질 비율이 높은 중년 남성들, 유리 테스토스테론이 제일 낮았대</li><li>식단으로 남성호르몬 챙기려는 사람, &#39;고기 더&#39;가 정답은 아닐 수도 있음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>닭가슴살·소고기 파 vs 두부·콩 파, 너는 어디야?</li><li>&#39;고기 먹어야 힘난다&#39;는 말, 믿는 편이야 아닌 편이야?</li><li>식단 통념 중에 알고 보니 아니었던 거 있어?</li><li>단백질 챙길 때 동물성 vs 식물성, 어느 쪽이 더 손이 가?</li><li>헬스 식단 통념 중에 제일 먼저 점검해보고 싶은 건 뭐야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>카니보어 식단, 연구로는 뭐가 확인됐고 뭐가 아직 없는지</li><li>콩·견과류 같은 식물성 단백질과 호르몬 연구</li><li>테스토스테론은 많을수록 좋은 게 아니라는 얘기</li><li>동물성 vs 식물성 단백질, 염증·인슐린 반응 차이</li><li>단백질 출처가 근력·운동 성과와 어떻게 이어지는지</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문이 기사 요약이라 논문 원문의 실제 테스토스테론 수치·효과 크기는 확인하지 못함 (본문에서도 수치 대신 &#39;작았다&#39;로만 전함)</li><li>관찰 연구의 연관성이라 인과로 읽히지 않는지 확인 필요 (대부분 백인 집단이라는 한계도 2/에 포함)</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>동물성 단백질이 더 높은 테스토스테론이나 더 나은 건강을 보장하는 것은 아니다</b>
+          <q>“For now, it&#39;s worth remembering that eating animal protein isn&#39;t necessarily a recipe for better testosterone levels or better health, no matter what you might see on social media.”</q>
+          <small>post7 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>핀란드 연구진이 42~60세 남성 2,546명을 분석했고 동물성:식물성 단백질 비율이 높을수록 총 테스토스테론이 낮은 연관이 나왔다</b>
+          <q>“Researchers from the University of Eastern Finland have found that among 2,546 men aged 42 to 60, a higher animal-to-plant protein ratio is associated with lower total testosterone levels.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식물성 대비 동물성 단백질을 가장 많이 먹은 남성들의 유리 테스토스테론이 가장 낮았다</b>
+          <q>“Those who reported eating the most animal protein relative to plant protein had the lowest levels of free testosterone in their bloodstream.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>총 테스토스테론도 동물성 비율이 높을수록 낮은 쪽으로 연관됐다</b>
+          <q>“Researchers from the University of Eastern Finland have found that among 2,546 men aged 42 to 60, a higher animal-to-plant protein ratio is associated with lower total testosterone levels.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들이 4일 동안 식단을 직접 기록했다</b>
+          <q>“In the current study, participants carefully reported their dietary intake over four days.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대부분 백인 집단이라 다른 집단에 일반화하기 어려울 수 있다</b>
+          <q>“This was a predominantly Caucasian cohort, so the findings may not generalize to other populations.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>곡물 아닌 식물성 단백질(채소·콩류·견과류)을 가장 많이 먹은 남성들은 유리 테스토스테론이 더 높았다</b>
+          <q>“On the flip side, men who reported eating the most plant protein from non-grain sources (such as vegetables, legumes, or nuts) had higher free testosterone levels.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>&#39;유리&#39; 테스토스테론은 혈액 속 단백질에 결합하지 않은 것을 뜻한다</b>
+          <q>“The term &#39;free&#39; means that circulating testosterone was not bound to a protein in the bloodstream and was essentially &#39;up for grabs&#39;.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>동물성 단백질을 식물성으로 바꾸는 모델에서 총·유리 테스토스테론과 유의한 연관이 없었다</b>
+          <q>“The choice was not significantly associated with either total testosterone levels or free testosterone levels.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수치 차이는 통계적으로 유의했지만 작았다고 연구진이 인정했다</b>
+          <q>“&#34;Although the observed differences in testosterone concentrations were statistically significant, they were relatively small,&#34; admits nutrition researcher Miika Wynne-Ellis from the University of Eastern Finland.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구로는 이 차이가 건강에 의미가 있는지 알 수 없다</b>
+          <q>“&#34;The study cannot establish whether these differences have implications for health.&#34;”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>동물성 단백질이 테스토스테론을 낮추는지, 왜 그런지 과학자들이 단정할 수 없다</b>
+          <q>“At this point, scientists cannot definitively say whether animal protein decreases testosterone levels, or why.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>동물성 단백질이 염증 지표를 자극해 테스토스테론 분비를 억제할 가능성이 있다</b>
+          <q>“It&#39;s possible that animal protein could trigger inflammatory markers in the body, which can suppress testosterone secretion.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>동물성·식물성 단백질의 대사 결과(인슐린 반응 등)가 다를 수 있다</b>
+          <q>“Or it could be that animal and plant proteins trigger different metabolic outcomes, such as alternate insulin responses.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지금은 추측 단계다</b>
+          <q>“For now, however, scientists can only speculate.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="7776fecde778">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/animal-protein-is-linked-to-lower-testosterone-in-middle-aged-men-surprising-study-finds" target="_blank" rel="noopener">Popular Claims About Meat And Testosterone Get a Reality Check From a New Study</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-712bf687376f">
+    <div class="head">
+      <h2>S2. 행복감과 수명 메타분석(99개 연구)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-712bf687376f">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 우울·불안을 줄이는 것과 별개로 &#39;행복감이 높은 것&#39;도 더 긴 수명과 이어졌다는 통념 뒤집기 + 14%·2년 가까이라는 숫자</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">마음 건강은 &#39;우울 줄이기&#39;만이 아니라 &#39;행복감 키우기&#39;도 수명이랑 따로 이어진대
+99개 연구를 묶어 본 분석에서 나온 얘기
+우울이 덜한 효과를 빼고 봐도 차이가 남았다는데, 그 차이가 얼마나 됐을까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">1/ 행복감이 평균보다 표준편차 1만큼 높은 사람은 사망 속도가 평균인 사람보다 14% 느렸대. 미국 2020년 사회보장국 생명표로 환산하면 남녀 모두 2년 조금 안 되는 수명 차이. 근데 여기서 &#39;행복감&#39;이 정확히 뭘 말하는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">156/500자</span></div>
+      <p class="tp-text">2/ 연구에서 행복감(웰빙)은 긍정적인 감정을 자주 느끼고, 삶에 만족하고, 삶의 의미와 목적이 있다고 느끼는 걸 묶은 개념이야. 반대로 부정적인 감정이 계속되고 만족과 목적이 없는 상태는 &#39;나쁜 상태(ill-being)&#39;로 봄. 그럼 연구진은 이 둘을 어떻게 갈라서 계산했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">156/500자</span></div>
+      <p class="tp-text">3/ 연구진은 Genecov와 Yeager. 같은 사람을 시간 간격을 두고 반복 측정한 연구들만 모아 메타분석했어. 정신건강 문제가 수명에 준 영향을 수학적으로 빼고 행복감 효과만 따로 계산했는데, 행복감 높은 쪽이 더 오래 사는 효과가 그대로 남았대. 이걸 한 번에 정리해보면?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">199/500자</span></div>
+      <p class="tp-text">4/ 연구 결과 요약 정리
+- 99개 연구를 묶은 메타분석
+- 행복감이 평균보다 표준편차 1 높으면 사망 속도 14% 느림
+- 미국 2020년 생명표 기준 남녀 모두 2년 조금 안 되는 차이
+- 정신건강 문제가 적은 효과와 별개로 나타남
+- 낙관, 삶의 만족, 긍정 감정, 사회적 지지, 삶의 목적이 높은 사람들도 더 오래 삶
+그럼 왜 그런지는 밝혀졌을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">5/ 솔직히 왜 그런지는 아직 확실하지 않대. 단서는 있는데, 낙관적인 사람은 운동·식단 선택이 더 건강한 편이고 담배를 안 피우는 경향이 있다는 것. 그리고 가장 유명한 장수 연구 중 하나는 생존을 가장 크게 좌우하는 요인으로 서로 돕는 관계를 꼽는다는 것. 그럼 결국 우리가 챙겨갈 건 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">244/500자</span></div>
+      <p class="tp-text">6/ 결국 이 연구가 보여준 건, 우울·불안이 적은 것과 별개로 행복감이 높은 것도 더 긴 수명과 이어졌다는 거야. 연관이 나온 거라 &#39;행복하면 오래 산다&#39;고 단정할 수는 없음.
+우울·불안 줄이기 vs 행복감 키우기, 너라면 뭐부터 할래?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구가 우울·불안을 구체적으로 측정했다는 서술(원문은 정신건강 증상과 상태 일반을 측정했다고만 함)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>마음 건강은 &#39;우울 줄이기&#39;만이 아니라 &#39;행복감 키우기&#39;도 수명이랑 따로 이어진대</li><li>마음 건강은 &#39;증상이 없는 상태&#39;만이 아니라 &#39;잘 지내는 상태&#39;도 수명과 따로 이어졌다는 분석이 나옴</li><li>행복감이 높은 사람은 사망 속도가 14% 느렸다는 분석이 나옴</li><li>&#39;행복한 사람이 오래 산다&#39;는 말, 우울 효과를 빼고 봐도 남았대</li><li>99개 연구를 묶었더니 행복감 높은 쪽이 2년 조금 안 되게 더 사는 계산이 나왔대</li><li>&#39;우울만 없으면 괜찮은 거지&#39; 했다면 이 메타분석은 좀 다르게 말함</li><li>낙관, 삶의 만족, 삶의 목적… 이런 게 높은 사람들이 더 오래 살았다는 연구</li><li>&#39;마음이 안 아프면 충분하다&#39;는 통념, 99개 연구 분석이 좀 뒤집음</li><li>우울이 덜한 것과 별개로 행복감이 높으면 더 오래 산다는 결과가 나왔대</li><li>스트레스 줄이는 것만이 아니라 삶의 의미를 느끼는 것도 수명이랑 이어진다는 연구</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>우울·불안 줄이기 vs 행복감 키우기, 너라면 뭐부터 할래?</li><li>기분 제일 좋아지는 시간대, 아침파 vs 밤파?</li><li>기분 풀리는 건 친구랑 수다 vs 혼자 산책, 어느 쪽이야?</li><li>요즘 &#39;이거 하려고 산다&#39; 싶은 취미 있는 사람?</li><li>스스로 낙관파 vs 비관파, 어느 쪽이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>사회적 유대와 장수, 가장 유명한 장수 연구 얘기</li><li>낙관적인 사람은 운동·식단 선택이 정말 다를까</li><li>삶의 목적이 있는 사람이 더 오래 산다는 연구</li><li>웰빙을 높이는 활동 150여 개를 모아둔 Greater Good in Action 소개</li><li>걸으며 배우는 프랑스어, 루앙 일주일</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;2년 조금 안 되는 차이&#39;는 미국 2020년 생명표로 환산한 통계적 계산이라 개인 수명 예측처럼 읽히지 않는지 확인</li><li>행복감과 수명의 연관을 인과(&#39;행복하면 오래 산다&#39;)로 읽히지 않게 표현 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Genecov와 Yeager가 99개 연구를 묶은 메타분석을 했다</b>
+          <q>“That’s what Max Genecov and David S. Yeager explored in a recent meta-analysis, which combined findings from 99 different studies that measured mental health symptoms and conditions, well-being scores, and lifespan.”</q>
+          <small>post0 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>행복감이 정신건강 문제 감소 효과와 별개로 더 긴 수명과 이어졌다</b>
+          <q>“In this study, people with higher-than-average well-being did live longer—and, indeed, this effect occurs above and beyond the lifespan advantages of lower-than-average ill-being.”</q>
+          <small>post0 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>행복감이 표준편차 1 높은 사람은 사망 속도가 14% 느렸다</b>
+          <q>“People one standard deviation above the average on well-being die at a 14% slower rate than those with average well-being.”</q>
+          <small>post1 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 2020년 생명표 기준 남녀 모두 2년 조금 안 되는 수명 차이</b>
+          <q>“As a practical reference using death probabilities from a 2020 United States Social Security Administration actuarial life table, a standard deviation increase on well-being corresponds to just under two years of more life for both men and women.”</q>
+          <small>post1 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>웰빙은 긍정 감정, 삶의 만족, 의미와 목적의 조합이고 나쁜 상태는 지속적인 부정 감정, 불만족, 목적 없음이다</b>
+          <q>“Well-being is generally understood as a combination of regularly feeling positive emotions, being satisfied with your life, and having a sense of meaning and purpose in life; ill-being reflects frequent and persistent negative emotions, chronic dissatisfaction, and purposelessness.”</q>
+          <small>post2 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대상 연구들은 모두 시간에 걸쳐 반복 측정한 종단 방식이다</b>
+          <q>“Importantly, all the studies that they drew from used a longitudinal method, which means they took measurements repeatedly over time to explore whether momentary scores or score changes over time (e.g., well-being in early adulthood, or improvement in well-being) correspond with later scores or changes in another factor (such as the age or cause of death).”</q>
+          <small>post3 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정신건강 문제의 영향을 수학적으로 빼고 행복감의 영향을 따로 계산했다</b>
+          <q>“Their method was able to mathematically enumerate the impact of well-being on mortality while subtracting any coexisting impact of mental health challenges on mortality.”</q>
+          <small>post3 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>행복감이 높은 쪽이 더 오래 사는 효과가 정신건강 문제 감소 효과를 넘어서 나타났다</b>
+          <q>“In this study, people with higher-than-average well-being did live longer—and, indeed, this effect occurs above and beyond the lifespan advantages of lower-than-average ill-being.”</q>
+          <small>post3 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낙관, 삶의 만족, 긍정 감정, 사회적 지지, 삶의 목적이 높은 사람들도 더 오래 살았다</b>
+          <q>“They saw older adults and patient populations with greater well-being live longer, and they also found people living longer who rated high in optimism, life satisfaction, positive emotion, a sense of social support, and purpose in life.”</q>
+          <small>post4 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>왜 그런지는 아직 확실히 모른다</b>
+          <q>“Right now, we know that optimism, positive emotion, social support, and purpose are associated with a longer life—we’re just not sure why, exactly.”</q>
+          <small>post5 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낙관적인 사람은 운동·식단 선택이 더 건강하고 담배를 피우지 않는 경향이 있다</b>
+          <q>“More optimistic people, for example, tend to make healthier choices around physical exercise and diet, and to not smoke cigarettes.”</q>
+          <small>post5 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가장 유명한 장수 연구 중 하나는 생존을 지지적인 사회적 유대에 가장 크게 연결한다</b>
+          <q>“One of the most famous studies of longevity attributes survival most strongly to supportive social bonds.”</q>
+          <small>post5 · <a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="712bf687376f">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://greatergood.berkeley.edu/article/item/Can_wellbeing_give_you_two_more_years" target="_blank" rel="noopener">Can Well-Being Give You Two More Years of Life?</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261111-am";
+  const ORIGINAL = {"b42625842004": {"caption": "\ud504\ub791\uc2a4\uc5b4\ub97c \uac78\uc73c\uba74\uc11c \ubc30\uc6b4\ub2e4\ub294 \ubc1c\uc0c1, \uc0dd\uac01\ubcf4\ub2e4 \uaf64 \uc124\ub4dd\ub825 \uc788\ub2e4. \uac00\ub514\uc5b8\uc5d0 \uc2e4\ub9b0 \uc5ec\ud589\uae30\uc5d0\uc11c \ud55c \ud544\uc790\ub294 \ud504\ub791\uc2a4 \ub8e8\uc559\uc5d0\uc11c \uc77c\uc8fc\uc77c \ub3d9\uc548 \uac1c\uc778 \ud29c\ud130 \uc548\ub098\uc640 \ub3c4\uc2dc\ub97c \uac78\uc73c\uba70 \ud504\ub791\uc2a4\uc5b4 \ub300\ud654 \uc218\uc5c5\uc744 \ubc1b\uc558\ub2e4.\n\n\uacc4\uae30\ub294 \ub2e8\uc21c\ud588\ub2e4. \ud544\uc790\uac00 \uc2dc\uac04\uc744 \ub0bc \uc218 \uc788\ub358 \ub2e8 \ud55c \uc8fc\uc5d0 \ub8e8\uc559\uc758 \uc5b4\ud559\uc6d0\ub4e4\uc740 \uc790\ub9ac\uac00 \uc5c6\ub2e4\uace0 \ud588\uace0, \uac1c\uc778 \ud29c\ud130\ub3c4 \uad6c\ud560 \uc218 \uc5c6\ub2e4\uace0 \ud588\ub2e4. \ub300\uc2e0 Apprentus\ub77c\ub294 \uc0ac\uc774\ud2b8\uc5d0\uc11c \uc548\ub098\ub97c \ucc3e\uc558\ub294\ub370, \uc5b4\ud559\uc6d0 \ud29c\ud130\uac00 \uc2dc\uac04\ub2f9 60\uc720\ub85c\uc778 \ub370 \ube44\ud574 \uc548\ub098\ub294 \uc2dc\uac04\ub2f9 19\uc720\ub85c\uc600\ub2e4. \uc548\ub098\ub294 \ub8e8\uc559 \ub178\ub974\ub9dd\ub514 \ub300\ud559\uad50\uc5d0\uc11c \uc815\uce58\ud559\uc744 \uacf5\ubd80\ud558\ub294 \ud559\uc0dd\uc774\ub2e4.\n\n\uc218\uc5c5\uc740 \ud558\ub8e8 \ub450 \uc2dc\uac04\uc529 \ub8e8\uc559 \uac70\ub9ac\ub97c \uac78\uc73c\uba70 \uc9c4\ud589\ub410\ub2e4. \ud544\uc790\ub294 Nature\uc5d0 \uc2e4\ub9b0 \ucd5c\uadfc \uc5f0\uad6c\uac00 \uc6c0\uc9c1\uc774\uba74 \uc9d1\uc911\uacfc \uae30\uc5b5, \uc804\ubc18\uc801\uc778 \ud559\uc2b5\uc5d0 \ub3c4\uc6c0\uc774 \ub41c\ub2e4\uace0 \uc2dc\uc0ac\ud55c\ub2e4\uace0 \uc18c\uac1c\ud588\ub2e4. \uc9c0\ub09c\uaca8\uc6b8 \ubabd\ud3a0\ub9ac\uc5d0 \uc5b4\ud559\uc6d0 \uc218\uc5c5\uc740 \ud559\uc0dd\uc774 \uc5f4\ub450 \uba85\uc774\uc5c8\uace0, \ud544\uc790\ub294 \uadf8\uacf3\uc744 \ub5a0\ub0a0 \ub54c \ubcc4\ub85c \ubc30\uc6b0\uc9c0 \ubabb\ud588\ub2e4\uace0 \ub290\uaf08\ub2e4\uace0 \ud55c\ub2e4.\n\n\ube44\uc6a9\ub3c4 \ub208\uc5d0 \ub748\ub2e4. \ud398\ub9ac\uc640 \uae30\ucc28 \uc655\ubcf5\uad8c\uc740 65\ud30c\uc6b4\ub4dc, \ub8e8\uc559 \uc5ed\uc0ac \uc911\uc2ec\uac00\uc758 \uc2a4\ud29c\ub514\uc624 \uc219\uc18c\ub294 \ud558\ub8fb\ubc24 60\ud30c\uc6b4\ub4dc \ubbf8\ub9cc\uc774\uc5c8\ub2e4. \uc2dd\ube44\uc640 \uad50\ud1b5, \ud29c\ud130, \uc219\uc18c\ub97c \ubaa8\ub450 \ud3ec\ud568\ud55c \uc5ff\uc0c8 \ucd1d\ube44\uc6a9\uc740 600\ud30c\uc6b4\ub4dc\ub97c \uc870\uae08 \ub118\uc5c8\ub2e4.\n\n\ucd9c\ucc98: The Guardian", "hashtags": ["#\ud504\ub791\uc2a4\uc5b4", "#\uc5b4\ud559\uc5f0\uc218", "#\ud504\ub791\uc2a4\uc5ec\ud589", "#\ub8e8\uc559", "#\uc5b8\uc5b4\ud559\uc2b5"], "slides": [["\ud504\ub791\uc2a4\uc5b4\ub97c", "**\uac78\uc73c\uba74\uc11c** \ubc30\uc6c0?!", "---", "\ud55c \ud544\uc790\uac00 \ud504\ub791\uc2a4 \ub8e8\uc559\uc5d0\uc11c \uc77c\uc8fc\uc77c\uac04 \ud29c\ud130\uc640 \ub3c4\uc2dc\ub97c \uac78\uc73c\uba70 \ud504\ub791\uc2a4\uc5b4\ub97c \ubc30\uc6b4 \uacbd\ud5d8\uc744 \uac00\ub514\uc5b8\uc5d0 \uc18c\uac1c\ud588\ub2e4."], ["\ud559\uad50\ub294 **\ub9cc\uc11d**,", "\ud29c\ud130\ub3c4 \uc5c6\uc74c", "---", "\ub8e8\uc559\uc758 \uc5b4\ud559\uc6d0\ub4e4\uc740 \ud544\uc790\uac00 \uc2dc\uac04\uc744 \ub0bc \uc218 \uc788\ub358 \ud55c \uc8fc\uc5d0 \uc790\ub9ac\uac00 \uc5c6\ub2e4\uace0 \ud588\ub2e4. \uac1c\uc778 \ud29c\ud130\ub97c \ubb38\uc758\ud588\uc744 \ub54c\ub3c4 \uac00\ub2a5\ud55c \uc0ac\ub78c\uc774 \uc5c6\ub2e4\ub294 \ub2f5\uc774 \ub3cc\uc544\uc654\ub2e4."], ["\uc2dc\uac04\ub2f9 **19\uc720\ub85c**", "\ud29c\ud130 \ubc1c\uacac", "---", "\uc5b4\ud559\uc6d0 \ud29c\ud130\ub294 \uc2dc\uac04\ub2f9 60\uc720\ub85c\uc600\uc9c0\ub9cc, \uc628\ub77c\uc778 \uc0ac\uc774\ud2b8 Apprentus\uc5d0\uc11c \ucc3e\uc740 \uc548\ub098\ub294 \uc2dc\uac04\ub2f9 19\uc720\ub85c\uc600\ub2e4. \uc548\ub098\ub294 \ub8e8\uc559 \ub178\ub974\ub9dd\ub514 \ub300\ud559\uad50\uc5d0\uc11c \uc815\uce58\ud559\uc744 \uacf5\ubd80\ud558\ub294 \ud559\uc0dd\uc774\ub2e4."], ["\ub450 \uc2dc\uac04 \uc218\uc5c5\uc744", "**\uac78\uc73c\uba70** \uc9c4\ud589", "---", "\uc548\ub098\uc758 \uc81c\uc548\uc73c\ub85c \ud558\ub8e8 \ub450 \uc2dc\uac04 \uc218\uc5c5\uc744 \ub8e8\uc559 \uac70\ub9ac\ub97c \uac78\uc73c\uba70 \uc9c4\ud589\ud588\ub2e4. \ud544\uc790\ub294 \uc6c0\uc9c1\uc774\uba74 \uc9d1\uc911\uacfc \uae30\uc5b5, \ud559\uc2b5\uc5d0 \ub3c4\uc6c0\uc774 \ub41c\ub2e4\ub294 Nature \uc5f0\uad6c\ub97c \uadfc\uac70\ub85c \ub4e4\uc5c8\ub2e4."], ["\uc5ff\uc0c8 \ucd1d\ube44\uc6a9", "**600\ud30c\uc6b4\ub4dc** \ub0a8\uc9d3", "---", "\uc2dd\ube44\u00b7\uad50\ud1b5\u00b7\ud29c\ud130\u00b7\uc219\uc18c\ub97c \ubaa8\ub450 \ud569\uccd0 \uc5ff\uc0c8\uc5d0 600\ud30c\uc6b4\ub4dc\ub97c \uc870\uae08 \ub118\uac8c \uc37c\ub2e4. \ud398\ub9ac\uc640 \uae30\ucc28 \uc655\ubcf5\uad8c\uc740 65\ud30c\uc6b4\ub4dc, \ub8e8\uc559 \uc911\uc2ec\uac00 \uc219\uc18c\ub294 \ud558\ub8fb\ubc24 60\ud30c\uc6b4\ub4dc \ubbf8\ub9cc\uc774\uc5c8\ub2e4."], ["\uc5b4\ud559\uc5f0\uc218 \uafc8\uafb8\ub294", "**\uce5c\uad6c\uc5d0\uac8c** \ubcf4\ub0b4\uae30", "---", "\uac78\uc73c\uba70 \ubc30\uc6b0\ub294 \uc77c\ub300\uc77c \uc218\uc5c5\uacfc \uc5ec\ud589\uc744 \ud55c \ubc88\uc5d0 \ub2e4\ub8ec \ud6c4\uae30\uc774\ub2e4. \uc55e \uc7a5\uc5d0 \ub098\uc628 \ube44\uc6a9\uacfc \uc77c\uc815\uc744 \ucc38\uace0\ud560 \uc218 \uc788\uc5b4, \ud504\ub791\uc2a4\uc5b4 \uacf5\ubd80\uc640 \uc5ec\ud589\uc744 \ud568\uaed8 \uafc8\uafb8\ub294 \uce5c\uad6c\ub77c\uba74 \ub208\uc5ec\uaca8\ubcfc \uc18c\uc2dd"]]}};
+  const TOTAL = 1;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>
