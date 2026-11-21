@@ -1,0 +1,1901 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.09 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.09 오후 검수</span> <span id="progress">0 / 2 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-872fd9558318" data-jump="872fd9558318">1</a><a href="#post-9c0fe77e91fb" data-jump="9c0fe77e91fb">2</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-872fd9558318" data-id="872fd9558318">
+    <div class="head">
+      <h2>1. 헤디 라마, 어뢰 아이디어에서 Wi-Fi까지</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/872fd9558318/v1-01.jpg" alt="1장: 할리우드 배우가 와이파이 뿌리?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/872fd9558318/v1-02.jpg" alt="2장: 오스트리아에서 먼저 성공했어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/872fd9558318/v1-03.jpg" alt="3장: 어뢰가 방해받는다고?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/872fd9558318/v1-04.jpg" alt="4장: 주파수가 계속 뛴다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/872fd9558318/v1-05.jpg" alt="5장: 전쟁엔 안 쓰인 기술이었어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/872fd9558318/v1-06.jpg" alt="6장: 블루투스 이어폰 쓰는 친구한테 전달" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/872fd9558318/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">할리우드 배우가 설계한 어뢰 유도 방식이 훗날 Wi-Fi와 블루투스의 길을 열었다는 이야기, 알고 있었어? 주인공은 헤디 라마(Hedy Lamarr)야. 굿뉴스 네트워크의 &#39;역사 속 오늘의 좋은 소식&#39;에 소개된 내용이야.
+
+라마는 오스트리아에서 영화와 연극 배우로 성공을 거뒀고, 유대인 부모를 둔 딸로서 빠르게 나치화되던 고향을 떠났어. 파리에서 MGM 공동 창업자 루이스 메이어를 만나 할리우드 계약을 제안받았지.
+
+2차 세계대전 중 그녀는 무선 조종 어뢰가 해군에 제안됐다는 글을 읽었고, 적이 유도 장치를 교란할 수 있다는 점에 주목했어. 작곡가이자 피아니스트인 조지 앤타일과 이야기하다가 주파수 도약 신호라는 아이디어가 나왔대. 비행기와 배 사이의 무선 신호를 계속 바뀌는 주파수로 보내면 적이 가로채거나 교란할 수 없다는 구조야.
+
+이 발명은 2차 세계대전에서도, 이후 해군 실험에서도 쓰이지 않았어. 하지만 셀룰러 통신, Wi-Fi, 블루투스가 본질적으로 같은 주파수 도약 기술을 쓰게 되는 길을 열었다고 해. 2014년에는 라마와 앤타일이 사후에 전미 발명가 명예의 전당에 이름을 올렸어.
+
+지금 쓰는 무선 기술의 뒷이야기, 궁금해할 친구에게 들려줘.
+
+출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#와이파이 #헤디라마 #블루투스 #과학이야기 #역사속오늘</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 카드뉴스가 굿뉴스 네트워크의 &#39;역사 속 오늘의 좋은 소식&#39; 코너에 소개된 내용이라는 출처 설명</li><li>근거 등록 안 된 주장: 출처가 Good News Network라는 표기</li>
+          <li>원문은 11월 9일 &#39;역사 속 오늘&#39; 기념 기사라 &#39;지금 터진 소식&#39;이 아닌 과거 사건 소개임</li><li>&#39;Wi-Fi 뿌리&#39;는 원문의 &#39;길을 열었다(put scientists on track)&#39; 표현을 줄인 것이라 직접 발명했다는 뜻으로 읽히지 않게 주의</li><li>인물 사진은 저작권 확인 없이 쓰지 말 것</li><li>원문 표기가 &#39;Louis Mayor&#39;로 되어 있어 인명 표기 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-872fd9558318-0">1장</label>
+          <textarea id="s-872fd9558318-0" rows="6" data-slide="0">할리우드 배우가
+**와이파이** 뿌리?!
+---
+2차 세계대전 중 할리우드 배우 헤디 라마가 어뢰 유도 방식을 설계했고, 이 기술은 훗날 Wi-Fi와 블루투스로 이어졌다.</textarea>
+          
+          <label class="f" for="s-872fd9558318-1">2장</label>
+          <textarea id="s-872fd9558318-1" rows="6" data-slide="1">오스트리아에서
+먼저 성공했어
+---
+라마는 오스트리아에서 영화와 연극 배우로 성공을 거뒀다. 유대인 부모를 둔 딸이었던 그녀는 빠르게 나치화되던 고향을 떠나기로 했다.</textarea>
+          
+          <label class="f" for="s-872fd9558318-2">3장</label>
+          <textarea id="s-872fd9558318-2" rows="6" data-slide="2">어뢰가
+**방해받는다고**?
+---
+2차 세계대전 중 라마는 무선 조종 어뢰가 해군에 제안됐다는 글을 읽었다. 하지만 적이 유도 장치를 교란해 어뢰를 엉뚱한 경로로 보낼 수 있다는 문제가 있었다.</textarea>
+          
+          <label class="f" for="s-872fd9558318-3">4장</label>
+          <textarea id="s-872fd9558318-3" rows="6" data-slide="3">**주파수**가
+계속 뛴다
+---
+작곡가 조지 앤타일과 대화하다 주파수 도약 신호라는 아이디어가 나왔다. 비행기와 배 사이의 신호를 계속 바뀌는 주파수로 보내, 적이 가로챌 수 없게 하는 방식이다.</textarea>
+          
+          <label class="f" for="s-872fd9558318-4">5장</label>
+          <textarea id="s-872fd9558318-4" rows="6" data-slide="4">전쟁엔 **안 쓰인**
+기술이었어
+---
+이 발명은 2차 세계대전에도, 이후 해군 실험에도 쓰이지 않았다. 다만 셀룰러 통신과 Wi-Fi, 블루투스가 본질적으로 같은 주파수 도약 기술을 쓰는 길을 열었고, 2014년 두 사람은 사후에 발명가 명예의 전당에 올랐다.</textarea>
+          
+          <label class="f" for="s-872fd9558318-5">6장</label>
+          <textarea id="s-872fd9558318-5" rows="6" data-slide="5">블루투스 이어폰
+쓰는 **친구한테** 전달
+---
+매일 쓰는 Wi-Fi와 블루투스의 뿌리가 한 배우의 어뢰 아이디어에서 나왔다고 알려 주면 신기해할 소식</textarea>
+          
+          <label class="f" for="c-872fd9558318">본문 (캡션)</label>
+          <textarea id="c-872fd9558318" class="caption">할리우드 배우가 설계한 어뢰 유도 방식이 훗날 Wi-Fi와 블루투스의 길을 열었다는 이야기, 알고 있었어? 주인공은 헤디 라마(Hedy Lamarr)야. 굿뉴스 네트워크의 &#39;역사 속 오늘의 좋은 소식&#39;에 소개된 내용이야.
+
+라마는 오스트리아에서 영화와 연극 배우로 성공을 거뒀고, 유대인 부모를 둔 딸로서 빠르게 나치화되던 고향을 떠났어. 파리에서 MGM 공동 창업자 루이스 메이어를 만나 할리우드 계약을 제안받았지.
+
+2차 세계대전 중 그녀는 무선 조종 어뢰가 해군에 제안됐다는 글을 읽었고, 적이 유도 장치를 교란할 수 있다는 점에 주목했어. 작곡가이자 피아니스트인 조지 앤타일과 이야기하다가 주파수 도약 신호라는 아이디어가 나왔대. 비행기와 배 사이의 무선 신호를 계속 바뀌는 주파수로 보내면 적이 가로채거나 교란할 수 없다는 구조야.
+
+이 발명은 2차 세계대전에서도, 이후 해군 실험에서도 쓰이지 않았어. 하지만 셀룰러 통신, Wi-Fi, 블루투스가 본질적으로 같은 주파수 도약 기술을 쓰게 되는 길을 열었다고 해. 2014년에는 라마와 앤타일이 사후에 전미 발명가 명예의 전당에 이름을 올렸어.
+
+지금 쓰는 무선 기술의 뒷이야기, 궁금해할 친구에게 들려줘.
+
+출처: Good News Network</textarea>
+          <label class="f" for="t-872fd9558318">해시태그</label>
+          <input id="t-872fd9558318" type="text" class="tagsin" value="#와이파이 #헤디라마 #블루투스 #과학이야기 #역사속오늘" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헤디 라마가 어뢰 유도 방식을 설계했고 이 기술이 훗날 Wi-Fi와 블루투스로 이어졌다</b>
+            <q>“Alongside George Antheil, a musical composer, Lamarr developed a radio-wave guidance system that was hoped to allow Allied torpedoes to break through the Nazi’s radar jamming systems, but led to the invention of Wi-Fi and Bluetooth instead.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>라마는 오스트리아에서 영화와 연극 배우로 성공했다</b>
+            <q>“Hedy Lamarr had a successful film and theater career as an actress in Austria, including for an award-ridden portrayal of Empress Elisabeth of Austria in Sissy (1933).”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유대인 부모를 둔 딸인 라마는 나치화되는 고향을 떠나기로 했다</b>
+            <q>“Dark clouds gathered over Europe at the time, and as the daughter of two Jewish parents, Lamarr decided to leave her rapidly Nazified home.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>라마는 파리에서 MGM 공동 창업자 루이스 메이어를 만나 할리우드 계약을 제안받았다</b>
+            <q>“Fleeing Vienna and her oppressive husband who himself had connections to both Hitler and Mussolini, Lamarr moved to Paris where she met Metro-Goldwyn-Mayer co-founder, Louis Mayor who offered her a Hollywood contract.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2차 세계대전 중 라마는 무선 조종 어뢰가 해군에 제안됐다는 글을 읽었다</b>
+            <q>“Lamarr had picked up tinkering from her father, and during World War II she read that radio-controlled torpedoes had been proposed for use in the Navy.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>적이 어뢰의 유도 장치를 교란해 경로를 벗어나게 할 수 있다는 문제가 있었다</b>
+            <q>“However, an enemy might be able to jam such a torpedo’s guidance system and set it off course.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>작곡가 조지 앤타일과의 대화에서 주파수 도약 신호 아이디어가 나왔다</b>
+            <q>“When discussing this with her friend the composer and pianist George Antheil, also a government munitions inspector, the idea was raised that a frequency-hopping signal might prevent the torpedo’s radio guidance system from being tracked or jammed.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>비행기와 배 사이의 신호를 계속 바뀌는 주파수로 보내 적이 가로채거나 교란할 수 없게 하는 방식이다</b>
+            <q>“The radio signal between plane and ship would transmit over constantly changing frequencies so it could not be intercepted or jammed by the enemy, hence “hopping.””</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 발명은 2차 세계대전과 이후 해군 실험에서 쓰이지 않았지만 셀룰러 통신, Wi-Fi, 블루투스가 본질적으로 같은 주파수 도약 기술을 쓰게 되는 길을 열었다</b>
+            <q>“In 2014, Lamarr and Antheil were posthumously inducted into the National Inventors Hall of Fame for this discovery, which was neither used during World War II, nor in subsequent Navy experiments, but put scientists on track to develop cellular communications, Wi-Fi, and Bluetooth, which all use essentially the same technology of “frequency hopping.””</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2014년 라마와 앤타일이 사후에 전미 발명가 명예의 전당에 올랐다</b>
+            <q>“In 2014, Lamarr and Antheil were posthumously inducted into the National Inventors Hall of Fame for this discovery, which was neither used during World War II, nor in subsequent Navy experiments, but put scientists on track to develop cellular communications, Wi-Fi, and Bluetooth, which all use essentially the same technology of “frequency hopping.””</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/events061109/" target="_blank" rel="noopener">Good News in History, November 9 - Good News Network</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/audio-music-sound-headphones-7276511/" target="_blank" rel="noopener">terydanphiri / Pixabay</a> — "glowing wireless signal waves over a bright sky"</li><li>2장: <a href="https://pixabay.com/photos/ticket-coupon-admission-carnival-2974645/" target="_blank" rel="noopener">igorovsyannykov / Pixabay</a> — "vintage cinema"</li><li>3장: <a href="https://pixabay.com/photos/water-waves-ocean-sea-beach-6901805/" target="_blank" rel="noopener">Kranich17 / Pixabay</a> — "ocean waves"</li><li>4장: <a href="https://pixabay.com/photos/radar-dish-radar-earth-station-63013/" target="_blank" rel="noopener">WikiImages / Pixabay</a> — "radio antenna"</li><li>5장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li><li>6장: <a href="https://pixabay.com/photos/earphone-wireless-airpods-audio-6849119/" target="_blank" rel="noopener">subarasikiai / Pixabay</a> — "wireless earbuds"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-9c0fe77e91fb" data-id="9c0fe77e91fb">
+    <div class="head">
+      <h2>2. 독일 탐지견, 외래 식물 75% 찾아냈다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/9c0fe77e91fb/v1-01.jpg" alt="1장: 개가 외래식물 75% 찾는다?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/9c0fe77e91fb/v1-02.jpg" alt="2장: 외래 식물이 골칫거리" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/9c0fe77e91fb/v1-03.jpg" alt="3장: 개 31마리가 훈련 받았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/9c0fe77e91fb/v1-04.jpg" alt="4장: 현장 시험, 11팀 통과" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/9c0fe77e91fb/v1-05.jpg" alt="5장: 산책이 탐지 활동으로" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/9c0fe77e91fb/v1-06.jpg" alt="6장: 산책 좋아하는 반려인에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/9c0fe77e91fb/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">산책하던 개가 외래 식물을 찾아낸다면 어떨까. 독일 연구진이 반려견과 자원봉사 보호자로 이뤄진 탐지 팀을 훈련시켜 야생에서 침입 식물을 찾게 했고, 평균 75%의 탐지 성공률을 기록했다.
+
+외래종은 전 세계 생물다양성 감소의 주된 원인 중 하나다. 기존 대응법은 비용이 많이 들고 시간이 오래 걸렸으며, 효과적인 조기 발견 수단이 부족해 확산을 통제하기 어려웠다. 헬름홀츠 환경연구센터(UFZ)의 그림-자이파르트 박사팀은 시민 과학자가 참여하는 탐지견 훈련 프로그램이 현실적으로 가능한지 시험했다.
+
+2021년부터 2023년까지 개 31마리와 보호자가 히말라야 봉선화, 돼지풀, 마디풀류를 대상으로 훈련했다. 현장 시험을 마친 12팀 중 11팀이 통과했다. 연구는 학술지 PLOS One에 실렸고, 연구팀은 자원봉사자 선정과 조율, 개 훈련, 초기 투입을 개선할 권고안도 정리했다.
+
+그림-자이파르트 박사는 사람들이 이미 좋아하는 야외 활동을 생물다양성 보전에 기여하는 일로 바꿀 수 있다는 점이 흥미롭다고 말했다. 다만 실전에서 성공하려면 개 훈련 전문가와 생태 전문가의 지속적인 지도가 필요하다.
+
+개는 침입 동물 탐지에도 쓰인다. 미국 버지니아 공대 팀은 스팟티드 랜턴플라이의 알을 찾도록 개를 훈련시켰고, AP 영상에 따르면 지금까지 알집 1만 개를 없앴다.
+
+출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#탐지견 #외래종 #생물다양성 #반려견 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>개의 후각과 시민 과학자의 열정을 결합해 모니터링을 확대할 수 있다 <small>애매 · 원문은 개의 후각과 시민 과학자의 열정을 결합하면 모니터링을 확대할 수 있다는 가능성을 말한다. 카드의 &#39;일찍 찾을 수 있다&#39;는 확정적 표현이므로 &#39;찾을 수 있을 것으로 기대된다&#39;처럼 가능성으로 낮추는 것이 좋다.</small></li>
+          <li>근거 등록 안 된 주장: 연구진이 라이프치히 소속이라는 주장(슬라이드3 &#39;라이프치히 연구진&#39;)은 claims 목록에 없다</li><li>근거 등록 안 된 주장: 스팟티드 랜턴플라이가 미국 동부 해안에서 제지 없이 확산되고 있다는 내용</li><li>근거 등록 안 된 주장: &#39;개의 후각과 시민 참여로 외래 식물을 일찍 찾을 수 있다&#39;는 확정적 효과 주장(claim 9를 넘어서는 표현)</li><li>근거 등록 안 된 주장: 출처가 Good News Network라는 주장</li>
+          <li>원문 날짜가 2026-11-08로 표기되어 있어 게재일 확인 필요</li><li>돼지풀·마디풀류·스팟티드 랜턴플라이 등 한국어 식물·곤충 명칭은 원문 영어명의 번역이라 확인 필요</li><li>75%는 12팀 중 현장 시험을 끝낸 팀의 평균으로 표본이 작음</li><li>버지니아 공대 사례는 AP 영상 인용이라 원문 기사 재인용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-9c0fe77e91fb-0">1장</label>
+          <textarea id="s-9c0fe77e91fb-0" rows="6" data-slide="0">개가 외래식물
+**75%** 찾는다?!
+---
+독일 연구진이 반려견과 자원봉사 보호자 팀을 훈련시켜 야생에서 침입 식물을 찾게 했더니 평균 75%의 탐지 성공률이 나왔다.</textarea>
+          
+          <label class="f" for="s-9c0fe77e91fb-1">2장</label>
+          <textarea id="s-9c0fe77e91fb-1" rows="6" data-slide="1">외래 식물이
+**골칫거리**
+---
+외래종은 전 세계 생물다양성 감소의 주된 원인 중 하나다. 기존 대응법은 비용이 많이 들고 시간도 오래 걸렸으며, 조기 발견 수단이 부족해 확산을 통제하기 어려웠다.</textarea>
+          
+          <label class="f" for="s-9c0fe77e91fb-2">3장</label>
+          <textarea id="s-9c0fe77e91fb-2" rows="6" data-slide="2">개 **31마리**가
+훈련 받았다
+---
+라이프치히 연구진은 2021년부터 2023년까지 개 31마리와 보호자를 훈련시켰다. 대상 식물은 히말라야 봉선화, 돼지풀, 마디풀류 세 가지였다.</textarea>
+          
+          <label class="f" for="s-9c0fe77e91fb-3">4장</label>
+          <textarea id="s-9c0fe77e91fb-3" rows="6" data-slide="3">현장 시험,
+**11팀 통과**
+---
+훈련의 마지막 단계로 야생에서 목표 식물을 찾는 시험을 치렀다. 시험을 끝낸 12팀 중 11팀이 통과했고, 평균 탐지 성공률은 75%였다.</textarea>
+          
+          <label class="f" for="s-9c0fe77e91fb-4">5장</label>
+          <textarea id="s-9c0fe77e91fb-4" rows="6" data-slide="4">**산책**이
+탐지 활동으로
+---
+연구진은 보호자가 이미 즐기는 야외 산책을 생물다양성 보전에 보탬이 되는 활동으로 바꿀 수 있다고 밝혔다. 다만 실전에서 성공하려면 개 훈련·생태 전문가의 지속적인 지도가 필요하다고 했다.</textarea>
+          
+          <label class="f" for="s-9c0fe77e91fb-5">6장</label>
+          <textarea id="s-9c0fe77e91fb-5" rows="6" data-slide="5">산책 좋아하는
+**반려인**에게 보내기
+---
+매일 반려견과 산책하는 친구라면 반가워할 소식. 개의 후각과 시민의 참여로 외래 식물을 일찍 찾을 수 있다는 연구 결과 이야기</textarea>
+          
+          <label class="f" for="c-9c0fe77e91fb">본문 (캡션)</label>
+          <textarea id="c-9c0fe77e91fb" class="caption">산책하던 개가 외래 식물을 찾아낸다면 어떨까. 독일 연구진이 반려견과 자원봉사 보호자로 이뤄진 탐지 팀을 훈련시켜 야생에서 침입 식물을 찾게 했고, 평균 75%의 탐지 성공률을 기록했다.
+
+외래종은 전 세계 생물다양성 감소의 주된 원인 중 하나다. 기존 대응법은 비용이 많이 들고 시간이 오래 걸렸으며, 효과적인 조기 발견 수단이 부족해 확산을 통제하기 어려웠다. 헬름홀츠 환경연구센터(UFZ)의 그림-자이파르트 박사팀은 시민 과학자가 참여하는 탐지견 훈련 프로그램이 현실적으로 가능한지 시험했다.
+
+2021년부터 2023년까지 개 31마리와 보호자가 히말라야 봉선화, 돼지풀, 마디풀류를 대상으로 훈련했다. 현장 시험을 마친 12팀 중 11팀이 통과했다. 연구는 학술지 PLOS One에 실렸고, 연구팀은 자원봉사자 선정과 조율, 개 훈련, 초기 투입을 개선할 권고안도 정리했다.
+
+그림-자이파르트 박사는 사람들이 이미 좋아하는 야외 활동을 생물다양성 보전에 기여하는 일로 바꿀 수 있다는 점이 흥미롭다고 말했다. 다만 실전에서 성공하려면 개 훈련 전문가와 생태 전문가의 지속적인 지도가 필요하다.
+
+개는 침입 동물 탐지에도 쓰인다. 미국 버지니아 공대 팀은 스팟티드 랜턴플라이의 알을 찾도록 개를 훈련시켰고, AP 영상에 따르면 지금까지 알집 1만 개를 없앴다.
+
+출처: Good News Network</textarea>
+          <label class="f" for="t-9c0fe77e91fb">해시태그</label>
+          <input id="t-9c0fe77e91fb" type="text" class="tagsin" value="#탐지견 #외래종 #생물다양성 #반려견 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>개의 후각과 시민 과학자의 열정을 결합해 모니터링을 확대할 수 있다</b>
+            <q>““By combining dogs’ remarkable sense of smell with the enthusiasm of citizen scientists, we could expand monitoring efforts.”</q>
+            <small>slide6 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>독일에서 침입 식물을 탐지하는 탐지견을 훈련하고 있다</b>
+            <q>“Sniffer dogs are being trained in Germany to detect potentially destructive invasive plants—alien species that are one of the main causes of biodiversity loss worldwide.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개와 자원봉사 보호자 팀이 야생에서 침입종을 평균 75% 정확도로 찾았다</b>
+            <q>“Scientists from Leipzig evaluated whether volunteer handlers and their dogs could be trained as effective detectives, and found the teams could locate invasive species in the wild with 75% accuracy.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>외래종은 전 세계 생물다양성 감소의 주된 원인 중 하나다</b>
+            <q>“Sniffer dogs are being trained in Germany to detect potentially destructive invasive plants—alien species that are one of the main causes of biodiversity loss worldwide.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기존 방법은 비용이 많이 들고 시간이 오래 걸렸으며 조기 발견 수단 부족이 확산 통제를 제한했다</b>
+            <q>“Other methods to combat invasive species have been costly and time-consuming, and the lack of effective early-detection methods has limited ecologists’ ability to control further colonization by invasive species.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개 31마리와 보호자가 2021~2023년 히말라야 봉선화, 돼지풀, 마디풀류로 훈련받았다</b>
+            <q>“31 dogs and their owners were trained between 2021 and 2023 using three highly problematic invasive plant species: Himalayan balsam, common ragweed, and those in the knotweed family, such as Japanese knotweed (Fallopia spp. complex, Impatiens glandulifera, and Ambrosia artemisiifolia).”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>훈련의 마지막은 야생에서 목표 식물을 찾는 현장 시험이었다</b>
+            <q>“The training culminated with a field test of the dogs’ ability to locate target species in the wild.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>현장 시험을 끝낸 12팀 중 11팀이 통과했고 평균 탐지 성공률은 75%였다</b>
+            <q>“Of the 12 teams that completed the field test, 11 teams passed, with an average detection success rate of 75%.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 이미 즐기는 야외 활동을 생물다양성 보전 기여로 바꿀 기회라고 밝혔다</b>
+            <q>““What we find particularly exciting is the opportunity to turn something people already love doing—spending time outdoors with their dogs—into a meaningful contribution to biodiversity conservation.””</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자원봉사 팀의 실전 성공에는 개 훈련·생태 전문가의 지속적인 지도가 필요하다</b>
+            <q>“Training and continued guidance from both dog-training and ecological experts are needed to help volunteer teams succeed in real deployments.”</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그림-자이파르트 박사팀이 UFZ에서 시민 과학자 참여 훈련 프로그램의 실현 가능성을 시험했다</b>
+            <q>“Dr. Annegret Grimm-Seyfarth and her colleagues at the Helmholtz Centre for Environmental Research (UFZ) tested the feasibility of a volunteer dog-handler training program, so citizen scientists could join the fight.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 PLOS One에 실렸고 연구팀은 향후 프로젝트 개선을 위한 권고안을 만들었다</b>
+            <q>“From the feasibility study, published in the journal PLOS One, the research team developed a set of recommendations to improve effectiveness of future, similar projects to improve volunteer selection and coordination, dog training, and initial deployments.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>버지니아 공대 팀이 개에게 스팟티드 랜턴플라이 알을 찾도록 훈련시켰다</b>
+            <q>“The insect has been steadily spreading across the American East Coast without impediment, but a team at Virginia Tech has trained dogs to root out their eggs in the wild—trying to slow the spread of these Asian aliens.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개 팀이 지금까지 알집 1만 개를 없앴다</b>
+            <q>“So far, the dog teams have eliminated 10,000 egg masses, according to the recent AP video below.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">Dogs Can Sniff-Out Invasive Plant Species With High Accuracy to Curb Their Destruction</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/buttercups-flower-meadow-yellow-6225833/" target="_blank" rel="noopener">Kranich17 / Pixabay</a> — "dog walking through sunlit green meadow"</li><li>2장: <a href="https://www.goodnewsnetwork.org/dogs-can-sniff-out-invasive-plant-species-with-75pt-accuracy/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/knotweed-invasive-species-plant-pubdomain.jpeg"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Impatiens_glandulifera_RF.jpg" target="_blank" rel="noopener">Robert Flogaus-Faust / Wikimedia Commons · CC BY 4.0</a> — "Himalayan balsam"</li><li>4장: <a href="https://pixabay.com/photos/relax-man-log-field-meadow-rest-7142183/" target="_blank" rel="noopener">pen_ash / Pixabay</a> — "field grass"</li><li>5장: <a href="https://pixabay.com/photos/family-nature-forest-walk-10531385/" target="_blank" rel="noopener">Jupilu / Pixabay</a> — "walking trail"</li><li>6장: <a href="https://pixabay.com/photos/couple-park-autumn-fall-foliage-4852225/" target="_blank" rel="noopener">chulmin1700 / Pixabay</a> — "park walk"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-12399c65f545">
+    <div class="head">
+      <h2>S1. 낮 밝은 빛 노출과 치매 위험, 비만보다 센 예측 요인</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-12399c65f545">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 치매 위험요인 하면 비만·술을 떠올리는 통념을 뒤집고, 매일 하는 &#39;낮에 어디서 시간을 보내나&#39;가 더 센 예측 요인으로 나왔다는 점</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">치매 위험, 비만보다 &#39;낮에 얼마나 밝은 데 있었나&#39;가 더 센 신호로 나왔대
+8만 8천 명 가까이 본 연구에서 나온 얘기
+근데 &#39;하루 몇 분&#39;이 기준이었는지가 의외였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">1/ 낮에 밝은 빛(5,000럭스 이상)을 하루 42분 이상 쬔 사람들은 치매 상대위험이 17% 낮은 것과 연관됐대. 이게 다른 위험요인이랑 비교하면 어느 정도였을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">2/ 연구에서는 이 연관이 비만, 음주, 대기오염, 난청 등 전통적 위험요인 6개보다 치매를 더 잘 예측하는 걸로 나왔대. 근데 특히 더 강하게 나온 사람들이 따로 있었음. 누구였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">3/ 올빼미형(저녁형)은 낮 빛을 더 쬘수록 치매 위험이 최대 41% 낮은 것과 연관됐대. 치매 유전 위험 변이(APOE ε4)가 있는 사람도 최대 27%. 그럼 빛이 뇌에 어떻게 작용한다는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">143/500자</span></div>
+      <p class="tp-text">4/ 눈으로 빛이 들어오면 뇌의 &#39;마스터 시계&#39;가 켜져서 몸의 하루 리듬을 조절한대. 낮 빛을 더 받은 사람들은 기억에 중요한 내측 측두엽의 부피나 표면적이 더 큰 경향도 있었음. 근데 왜 그런지는 아직 모른대. 그럼 연구진은 우리 일상이 어떻다고 봤을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">143/500자</span></div>
+      <p class="tp-text">5/ 연구진은 현대인이 하루의 거의 90%를 실내 조명 아래서 보내는데, 그 밝기가 보통 300~500럭스라 낮엔 부족하다고 짚었대. 낮에 1,000럭스 이상으로 밝게 지내는 게 간단한 방법일 수 있다고도 제안함. 그럼 우리는 낮에 얼마나 밝은 데 있을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">162/500자</span></div>
+      <p class="tp-text">6/ 연구 요약 정리
+- 대상: 노인 8만 8천 명 가까이, 일주일간 빛 센서 착용 (영국 UK Biobank)
+- 낮에 5,000럭스 이상 42분 이상 → 치매 상대위험 17% 낮은 연관
+- 올빼미형은 최대 41% 낮은 연관
+- 약 8년 뒤 추적, 관찰 연구라 &#39;쬐면 예방된다&#39;까지는 아님</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">233/500자</span></div>
+      <p class="tp-text">7/ 결국 연구진 말은 낮 밝은 빛을 늘리는 게 돈 안 드는 뇌 건강 전략이 될 수 있는지 더 연구해볼 만하다는 거 (자기한테 맞는지는 의사와 상의)
+낮에 주로 밖에 있는 편 vs 거의 실내에 있는 편, 너는 어느 쪽?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 연구는 관찰 연구이므로 낮 빛 노출이 치매를 예방한다고 인과적으로 입증하지는 않는다</li><li>근거 등록 안 된 주장: 연구는 중국 광저우 의과대학 연구진이 주도했다</li><li>근거 등록 안 된 주장: 연구 결과는 학술지 General Psychiatry에 게재되었다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>치매 위험, 비만보다 &#39;낮에 얼마나 밝은 데 있었나&#39;가 더 센 신호로 나왔대</li><li>치매 걱정되면 체중만 보지 말고 낮 햇빛부터 따져보라는 연구가 나옴</li><li>하루 42분. 낮에 이 정도 밝은 데 있던 사람들은 치매 위험이 17% 낮은 쪽이었대</li><li>치매 위험요인 하면 술, 비만 떠올리잖아. 이 연구에선 낮 빛이 그보다 앞섰대</li><li>올빼미형일수록 낮 빛과 치매 위험의 연관이 더 컸다는 연구</li><li>8만 8천 명 가까이 본 연구, 결론이 의외로 &#39;낮에 얼마나 밝았나&#39;였음</li><li>&#39;낮에 햇빛 쬐면 좋다&#39;는 말, 이번엔 숫자가 붙었음 (42분)</li><li>실내 조명 300~500럭스로는 낮에 부족하다는 얘기가 치매 연구에서 나왔어</li><li>치매 유전 위험 변이가 있는 사람도 낮 빛을 더 쬔 쪽이 위험이 최대 27% 낮았대</li><li>하루 거의 90%를 실내에서 보내는 현대인, 이 연구는 한 번 봐야 함</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>낮에 주로 밖에 있는 편 vs 거의 실내에 있는 편, 너는 어느 쪽?</li><li>점심시간에 밖에 나가서 햇빛 쬐는 사람?</li><li>너는 아침형 vs 올빼미형?</li><li>낮에 창가 자리 vs 안쪽 자리, 너라면 어디 앉을 거야?</li><li>이 연구 보고 오늘 낮에 잠깐이라도 밖에 나가볼 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>올빼미형과 아침형, 낮 빛 효과가 왜 다르게 나왔을까</li><li>낮 빛 부족과 우울증, 치매로 이어지는 연결고리 얘기</li><li>낮잠과 치매, 생각보다 더 깊은 연관 얘기</li><li>헤디 라마, 어뢰 아이디어에서 Wi-Fi까지</li><li>독일 탐지견, 외래 식물 75% 찾아냈다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>상대위험 17%·41%·27%는 관찰 연구의 연관 수치라 &#39;쬐면 치매가 예방된다&#39;로 읽히지 않는지 확인</li><li>원문은 노인 대상 연구인데 한국 20~30대 출퇴근 햇빛 얘기는 사실 확인이 안 된 연결이라 질문으로만 처리됐는지 확인</li><li>훅의 &#39;낮 햇빛부터 따져보라&#39;는 원문이 직접 권하는 행동이 아니라 연구진의 추가 연구 제안 범위임</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>8만 8천 명 가까이 본 노인 대상 연구에서 낮 빛 노출이 많을수록 치매 발병이 적었다</b>
+          <q>“According to recent research among nearly 88,000 older adults, those who are exposed to more daily light are less likely to develop dementia over the next decade or so.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낮 빛 노출이 비만 등 전통적 위험요인 6개보다 치매를 더 잘 예측했다</b>
+          <q>“That&#39;s a better predictor of dementia than six other traditional risk factors, including obesity, alcohol consumption, air pollution, and hearing loss.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 42분 이상 밝은 빛(5,000럭스 이상) 노출은 치매 상대위험 17% 감소와 연관됐다</b>
+          <q>“In fact, spending at least 42 minutes a day exposed to bright light (5,000 lux or more) was associated with a 17 percent lower relative risk of dementia.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>비만, 음주, 대기오염, 난청 등 전통적 위험요인 6개보다 더 나은 예측 요인이었다</b>
+          <q>“That&#39;s a better predictor of dementia than six other traditional risk factors, including obesity, alcohol consumption, air pollution, and hearing loss.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>올빼미형은 낮 빛 노출이 많을수록 치매 위험이 최대 41% 낮았다</b>
+          <q>“For &#39;night owls&#39;, the association was even stronger. Greater daytime light exposure was linked with up to a 41 percent lower risk of dementia.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>APOE ε4 보유자도 낮 빛 노출이 많으면 치매 위험이 최대 27% 낮았다</b>
+          <q>“For instance, those who carry the APOE ε4 allele and are exposed to more daytime light had up to a 27 percent lower risk of dementia.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>눈으로 빛이 들어오면 뇌의 마스터 시계가 활성화되어 몸의 하루 리듬을 조절한다</b>
+          <q>“When light enters the eyes, it activates the brain&#39;s master clock, thereby regulating the rest of the body&#39;s daily rhythms.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낮 빛을 더 받은 참가자는 내측 측두엽 부피나 표면적이 더 큰 경향이 있었지만 이유는 알려지지 않았다</b>
+          <q>“It&#39;s not known how light exposure might impact cognitive decline, but in this observational research, participants exposed to more daytime light tended to have greater brain volume or surface area in parts of the medial temporal lobe.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>내측 측두엽은 기억에 중요한 영역이다</b>
+          <q>“This region plays an important role in memory and is often one of the first areas affected by dementia.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>현대인은 하루의 거의 90%를 실내 조명 아래서 보내며 그 밝기는 보통 낮에 부족한 300~500럭스다</b>
+          <q>“This is particularly relevant given that people in modern society spend nearly 90 percent of their day indoors under artificial lighting, which typically provides insufficient brightness (∼300–500 lux) during the day.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 낮에 1,000럭스 이상으로 밝게 지내는 것이 간단한 방법일 수 있다고 제안했다</b>
+          <q>“Therefore, ensuring brighter daytime light exposure (e.g., ≥ 1000 lux) may be a simple means of preventing psychiatric disorders and dementia,”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들이 7일간 빛 센서를 착용한 UK Biobank 데이터를 분석했다</b>
+          <q>“In the recent analysis, researchers examined data from the UK Biobank, in which participants wore a light sensor continuously for seven days.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낮 빛을 더 받은 사람은 약 8년 뒤 치매 위험이 유의하게 낮았다</b>
+          <q>“Those who were exposed to more daytime light during this week-long period had a significantly lower risk of dementia roughly eight years later.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 낮 빛 노출 증가가 저비용 뇌 건강 전략으로 향후 연구와 공중보건 지침에 활용될 수 있다고 봤다</b>
+          <q>“They could inform future research into light-based interventions and public health guidelines that recommend increased daytime light exposure as a low-cost strategy to support brain health, particularly in high-risk populations.”</q>
+          <small>post7 · <a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="12399c65f545">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/less-than-42-minutes-of-daily-bright-light-is-a-stronger-predictor-of-dementia-than-obesity-study-finds" target="_blank" rel="noopener">Less Than 42 Minutes of Bright Light Daily Is a Stronger Predictor of Dementia Than Obesity, Study Finds</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-24baf4a61d2b">
+    <div class="head">
+      <h2>S2. 노화 늦추는 식단 10가지 비교 연구 (DZNE, Nature Communications)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-24baf4a61d2b">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;정답 식단은 하나&#39;라는 통념을 뒤집고, 완벽한 식단이 필요 없다는 연구진 메시지를 매일 먹는 밥상과 연결</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">건강한 식단, 정답이 하나뿐이라고 생각했다면 이 연구 보면 좀 달라짐
+식단 지침 10가지를 6,470명 데이터로 비교했는데 결과가 한 방향이었대
+근데 연구진이 꼽은 &#39;가장 실용적인 메시지&#39;는 따로 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">78/500자</span></div>
+      <p class="tp-text">1/ 연구에서 본 10가지 식단 전부, 건강하게 먹을수록 생물학적 노화가 느린 것과 연관이 나왔대. 그런데 &#39;생물학적 노화&#39;가 정확히 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">2/ 몸이 얼마나 빨리 닳고 있는지를 말하는 건데, 생일 수랑 꼭 일치하진 않는대. 빨리 늙을수록 수명이 짧고 나이 들어 건강 문제가 많은 경향이 있다고 함. 그럼 10가지 식단엔 뭐가 들어 있었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">146/500자</span></div>
+      <p class="tp-text">3/ 지중해식, 노르딕, 혈압 낮추는 DASH, 뇌 건강용 MIND 같은 기존 지침들이 들어갔어. 특이하게 마지막 두 개는 단 음료·단것 같은 &#39;건강하지 않은 식사&#39;를 재는 지표라, 점수가 낮을수록 노화가 느린 쪽이었대. 그럼 식단마다 영향 가는 곳도 달랐을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">4/ 차이는 있었어. 예로 DASH는 심장, MIND는 인지·기억 쪽이 나옴. 근데 영향받은 생물학적 경로의 70% 넘게는 모든 식단이 공유했대. 그럼 연구 내용을 한눈에 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">170/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 대상: 30세 이상 6,470명, 별도 1,034명으로 검증
+- 10가지 식단 지침 전부, 건강하게 먹을수록 노화 느린 연관
+- 연구진: 효과가 크진 않지만 측정되고 예방에 의미 있음
+- 한계: 인과는 아니고, 한 시점 데이터
+그럼 연구진이 꼽은 가장 실용적인 메시지는 뭐였을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">226/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 &#39;완벽한 식단은 필요 없다&#39;는 게 가장 실용적인 메시지라는 거. 입맛·예산·문화에 맞게 건강한 식사를 고를 여지도 있다고 봄.
+완벽하게 먹기 vs 입맛에 맞게 오래 먹기, 어느 파야?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 10가지 식단은 이미 확립된 식단 지침(기존 지침)들이다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>건강한 식단, 정답이 하나뿐이라고 생각했다면 이 연구 보면 좀 달라짐</li><li>노화 늦추겠다고 완벽한 식단부터 짜지 말라는 연구가 나옴. 연구진이 꼽은 핵심이 &#39;완벽할 필요 없다&#39;</li><li>&#39;지중해식만 답&#39;인 줄 알았다면, 10가지 식단 비교한 연구가 좀 다른 얘기를 함</li><li>매일 먹는 밥상이 &#39;내 몸이 늙는 속도&#39;랑 이어져 있다면?</li><li>&#39;완벽한 식단&#39;이 아니라 &#39;나한테 맞는 식단&#39;을 말하는 연구가 나옴</li><li>&#39;효과가 크진 않지만 측정은 된다&#39;는 연구진 말, 식단 얘기였음</li><li>생일 케이크 초 개수랑 내 몸 나이는 다를 수 있대. 그걸 밥상이랑 연결한 연구</li><li>식단 10가지를 6,470명 데이터로 비교했더니 전부 같은 방향이 나옴</li><li>단 음료·단것 같은 &#39;건강하지 않은 식사&#39; 점수는 낮을수록 노화가 느린 쪽이었대</li><li>식단 고민 중이면, 연구진이 꼽은 &#39;가장 실용적인 메시지&#39;부터 보고 가</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>완벽하게 먹기 vs 입맛에 맞게 오래 먹기, 어느 파야?</li><li>지중해식, 노르딕, DASH 중 하나만 따라 한다면 뭐가 끌려?</li><li>단 음료 줄여본 사람?</li><li>밥·국·반찬 한식 밥상, 노화 늦추는 식단이랑 비슷할 것 같아 아닐 것 같아?</li><li>입맛에 맞는 식단 vs 몸에 좋다는 식단, 너라면 뭐부터 챙길 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>지중해식 vs 노르딕 식단, 노화 연관 어떻게 다를까</li><li>DASH는 심장, MIND는 기억력: 식단별 차이 더 자세히</li><li>몸 나이를 재는 &#39;후성유전 시계&#39;, 쉽게 풀어보기</li><li>단 음료·단것 같은 &#39;건강하지 않은 식사&#39; 지표 얘기</li><li>식단을 바꾸면 노화 속도도 달라질까: 후속 연구 방향</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>30세 이상 6,470명의 데이터로 10가지 식단 지침 점수를 혈액 노화 지표와 비교했다</b>
+          <q>“In this latest study, researchers led by a team from the German Centre for Neurodegenerative Diseases (DZNE) analyzed data for 6,470 participants aged 30 and over, comparing their scores across the 10 sets of diet guidelines with blood biomarkers that indicate biological age.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 꼽은 가장 실용적인 메시지는 완벽한 식단이 필요 없다는 것</b>
+          <q>“You don&#39;t need a perfect diet – that may be the most practical message here.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구한 모든 식단에서 건강하게 먹을수록 생물학적 노화가 느린 것과 연관</b>
+          <q>“Across the board, and for all of the diet regimes covered by the study, healthier eating was associated with slower biological aging.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>생물학적 노화는 몸이 닳는 속도이며 생일 수와 꼭 일치하지 않는다</b>
+          <q>“Biological aging is how quickly or slowly our bodies are wearing out, and it doesn&#39;t necessarily match up with how many birthdays you&#39;ve had.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>빠른 노화는 수명이 짧고 노년에 건강 문제가 많은 경향과 관련</b>
+          <q>“Faster aging tends to mean a shorter lifespan, and more health problems in later years.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지중해식, 노르딕, DASH, MIND 식단이 포함됐다</b>
+          <q>“They included the Mediterranean diet, the Nordic diet, the DASH (Dietary Approaches to Stop Hypertension) diet for lowering blood pressure, and the MIND (Mediterranean-DASH Intervention for Neurodegenerative Delay) diet for supporting brain health.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>마지막 두 지표는 건강하지 않은 식사를 재며 점수가 낮을수록 노화가 느린 것과 연관</b>
+          <q>“The final two diets, the Unhealthful Plant-based Diet Index (uPDI) and the Dietary Inflammatory Index (DII), actually measure unhealthy eating (think sugary drinks and sweets). With these diets, lower scores (so a lower adherence to them) were associated with slower aging.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식단별로 영향 부위 차이(DASH는 심장, MIND는 인지·기억)가 있었지만 겹치는 부분도 컸다</b>
+          <q>“While there were some differences in terms of which diets affected which aspects of biological aging – the heart for the DASH diet, and cognition and memory for the MIND diet, for instance – there was also a substantial amount of overlap.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영향받은 생물학적 경로의 70% 넘게가 모든 식단에서 공유됐다</b>
+          <q>“More than 70 percent of the affected biological pathways were shared across all diets”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>별도의 1,034명 표본으로 결과를 검증했다</b>
+          <q>“The results of the study were verified using a separate sample of 1,034 individuals, analyzed in the same way as the first group.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>효과가 크진 않지만 측정 가능하고 예방에 의미 있다는 연구진 발언</b>
+          <q>“The effects are not massive, but they are measurable and relevant for prevention”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 인과관계가 아니라 상당한 연관만 보여준다</b>
+          <q>“That said, the research doesn&#39;t show direct cause and effect, only a substantial link.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수집된 데이터는 한 시점의 스냅샷이다</b>
+          <q>“The collected data represents a snapshot in time, and further studies could look at how diet changes over an extended period affect DNA methylation.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>개인·문화적 취향, 예산, 입맛에 맞춰 건강한 식사를 조정할 여지가 있다</b>
+          <q>“That is an encouraging finding, because it leaves room to tailor healthy eating to personal and cultural preferences, budget and taste.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="24baf4a61d2b">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/scientists-identified-10-healthy-diets-linked-to-slower-biological-aging" target="_blank" rel="noopener">Scientists Identified 10 Healthy Diets Linked to Slower Biological Aging</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-b9b2f710efbf">
+    <div class="head">
+      <h2>S3. 24시간 단식과 장 유익균 AKK, 방사선 손상 후 장 재생 전임상 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-b9b2f710efbf">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강과학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;단식=장에 부담&#39;이라는 통념과 달리 24시간 단식 때 장에서 유익균이 늘고 장 재생 준비가 된다는 결과를 보여주되, 방사선 손상 회복을 본 전임상 연구라는 점을 같이 전해야 신뢰를 얻는다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">&#39;단식하면 장 상한다&#39;는 말, 24시간 굶었더니 장에서 유익균이 늘었다는 연구가 나옴
+장세포가 미리 &#39;복구 준비&#39;를 하는 것 같다는 연구진 설명도 있고
+근데 이 결과가 나온 상황이 좀 특이했음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">1/ 이 연구는 방사선을 맞은 장이 얼마나 잘 회복되는지를 본 거야. 24시간 단식하면 소장에서 &#39;AKK&#39;라는 유익균이 늘었고, 방사선 뒤 장 재생에 도움이 됐다는 결과가 나왔대. 그럼 이 균은 뭘 하는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">2/ AKK가 만드는 프로피오네이트라는 분자가 단식으로 생기는 다른 대사 변화와 함께, 장세포 속 히스톤에 화학 표시를 붙인대. 이 표시가 DNA를 풀어서 재생 관련 유전자가 켜지기 쉽게 만든다는 거야. 연구진은 세포를 &#39;비상 대비 계획으로 훈련시키는 것 같다&#39;고 설명했대. 그럼 방사선을 맞으면 어떻게 될까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">3/ 이렇게 재생 프로그램을 미리 장착한 장세포 집단이 단식 중에 쌓여 있다가, 방사선을 맞은 뒤 늘어나서 장 점막이 다시 만들어지는 데 쓰였대. 그럼 AKK가 진짜 필수인지는 어떻게 확인했을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">4/ 연구진이 AKK만 골라서 없앴더니 단식의 이점이 사라졌대. 단식과 함께 AKK를 다시 넣었을 때만 회복 반응이 돌아왔고. 둘 중 하나만으로는 부족하다는 얘기야. 그럼 여기까지 뭐가 확인된 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">182/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 24시간 단식 → 소장에서 AKK 증가
+- AKK가 프로피오네이트 생산 → 히스톤 표시 → 재생 유전자 준비
+- AKK를 없애면 단식 효과 사라짐
+- 단식과 AKK가 같이 있어야 회복 반응이 나타남
+- 아직 전임상 단계, 사람에서도 되는지는 추가 연구 필요
+근데 이걸 일반인의 단식에 그대로 적용해도 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">6/ 이 연구는 암 치료의 방사선으로 생기는 장 손상 회복을 전임상 단계에서 본 거야. 사람에게도 같은 경로가 작동하는지는 앞으로 연구가 더 필요하대. 그러니까 평소 간헐적 단식의 효과를 본 연구는 아니야. 그럼 연구진이 진짜 노리는 건 뭘까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">221/500자</span></div>
+      <p class="tp-text">7/ 결국 연구진이 노리는 건 단식 없이도 유익균이나 그 대사물질로 비슷한 회복을 돕는 방법이래. 암 환자한테 단식은 늘 쉽지 않다는 이유야.
+
+간헐적 단식파 vs 세 끼 꼬박파, 너는 어느 쪽?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 연구는 평소 간헐적 단식의 효과를 본 연구가 아니다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;단식하면 장 상한다&#39;는 말, 24시간 굶었더니 장에서 유익균이 늘었다는 연구가 나옴</li><li>간헐적 단식하는 사람들, 굶는 동안 장에서 벌어지는 일이 &#39;쉬는 것&#39;만은 아니래</li><li>장은 굶는 동안 쉬는 게 아니라 &#39;복구 준비&#39;를 한다는 연구가 나옴</li><li>24시간 굶으면 장에 유익균이 늘어난다는데, 그 균을 빼면 효과가 통째로 사라졌대</li><li>연구진이 &#39;비상 대비 훈련&#39; 같다고 표현한 장의 24시간 단식 반응</li><li>공복 24시간이 장세포에 하는 일, 이 연구 보면 좀 달라 보임</li><li>간헐적 단식 한다면 알아둘 만한, 장 속 유익균 얘기가 나온 연구</li><li>단식을 &#39;장에 부담&#39;으로만 보던 시각에 다른 데이터가 나옴</li><li>유익균 하나를 없앴더니 단식 효과가 사라졌대. 그 균 이름이 AKK</li><li>굶으면 장이 약해지는 게 아니라 &#39;미리 훈련받는&#39; 쪽이라는 연구, 단 조건이 있음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>간헐적 단식파 vs 세 끼 꼬박파, 너는 어느 쪽?</li><li>유산균 따로 챙겨 먹는 파 vs 음식으로만 먹는 파?</li><li>이 연구 보고 단식에 대한 생각이 좀 달라졌어?</li><li>단식이 치료에 도움이 되는 방법이라면, 너라면 시도해볼 것 같아?</li><li>하루 중 공복을 길게 두는 시간대는 아침 쪽 vs 저녁 쪽?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>골수 같은 다른 조직도 이 복구 경로로 회복될 수 있을까, 후속 연구 소식</li><li>사람의 장내 미생물과 단식을 다룬 해외 연구</li><li>방사선 치료 부작용을 줄이려는 다른 해외 연구</li><li>헤디 라마, 어뢰 아이디어에서 Wi-Fi까지</li><li>독일 탐지견, 외래 식물 75% 찾아냈다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>전임상 연구인데 간헐적 단식을 하면 장이 좋아진다는 식으로 읽힐 수 있음. 방사선 손상 회복 연구이고 일반 단식 효과가 아니라는 문구(6/)를 지우지 말 것</li><li>원문이 &#39;preclinical models&#39;라고만 해서 실험 대상 동물 종과 규모를 알 수 없음. 쥐 등으로 구체화하지 말 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>24시간 단식이 소장에서 유익균 AKK를 늘렸다</b>
+          <q>“Fasting for 24 hours increased levels of a beneficial bacterium called Akkermansia muciniphila, or AKK, in the small intestine.”</q>
+          <small>post0, post1, post5 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단식이 장세포가 손상에 더 빠르게 반응하도록 준비시키는 것 같다는 연구진 설명</b>
+          <q>“Fasting helps prepare intestinal cells to respond more quickly and effectively after injury, almost like training the cells with an emergency preparedness plan”</q>
+          <small>post0, post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261104084024.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전임상 모델에서 단식으로 균이 늘고 방사선 후 소장 재생이 더 잘 됐다</b>
+          <q>“In preclinical models, short-term fasting increased the population of this bacterium, helping the small intestine regenerate more effectively after radiation treatment”</q>
+          <small>post1, post5 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AKK가 프로피오네이트를 만들고 단식의 대사 변화와 함께 히스톤에 화학 표시를 붙인다</b>
+          <q>“AKK produces a small molecule called propionate, which works with other metabolic changes triggered by fasting to add small chemical tags to proteins called histones – around which DNA is wrapped – inside intestinal cells.”</q>
+          <small>post2, post5 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>화학 표시가 DNA를 풀어 단식 중 쌓이는 장세포 집단의 유전자 발현을 가능하게 한다</b>
+          <q>“The chemical tags act as a kind of advance warning system by unwrapping DNA from histones to allow gene expression in a group of intestinal cells that accumulate during fasting.”</q>
+          <small>post2 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>재생 프로그램을 가진 세포가 방사선 후 늘어나 장 점막 재생에 기여했다</b>
+          <q>“After radiation treatment, these cells expanded and contributed to regeneration of the intestinal lining.”</q>
+          <small>post3 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AKK를 선택적으로 없애면 단식의 이점이 사라졌다</b>
+          <q>“Importantly, researchers found that the benefits of fasting were lost when AKK was selectively removed, confirming its essential role in the regeneration process.”</q>
+          <small>post4, post5 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AKK를 단식과 함께 다시 넣었을 때만 재생 반응이 돌아왔다</b>
+          <q>“The regenerative response returned only when AKK was reintroduced alongside fasting, suggesting both components are required to produce the response.”</q>
+          <small>post4, post5 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람에게도 같은 보호 기전이 작동하는지는 추가 연구가 필요하다</b>
+          <q>“Additional studies will be needed to determine whether the same protective mechanism operates in humans and whether it can safely improve outcomes for patients receiving radiation therapy.”</q>
+          <small>post5, post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261104084024.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단식 없이 미생물이나 대사물질 기반 접근을 시도할 가능성이 있다</b>
+          <q>“These findings suggest new strategies that may not require patients to fast before treatment, such as microbial therapies or metabolite-based approaches.”</q>
+          <small>post7 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>암 환자에게 단식은 늘 실용적이지 않다는 연구자 발언</b>
+          <q>“Fasting is not always practical for cancer patients, and this work supports several other potential ways to enhance recovery after treatment”</q>
+          <small>post7 · <a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="b9b2f710efbf">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261104084024.htm" target="_blank" rel="noopener">A 24-hour fast triggers a surprising repair response in the gut</a></li><li><a href="https://www.mdanderson.org/newsroom/research-newsroom/fasting-primes-gut-microbiome-to-improve-intestinal-recovery-after-radiation-treatment.h00-159856923.html" target="_blank" rel="noopener">Fasting primes gut microbiome to improve intestinal recovery after radiation treatment</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-2a56ce7c18da">
+    <div class="head">
+      <h2>S4. 받침 없이 서는 종이 삼각형 달력 TriAngular</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-2a56ce7c18da">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 받침도 없고 클립까지 종이인 달력이 어떻게 서는지 궁금증을 남기고, 20달러라는 부담 없는 가격으로 선물 각도를 만든다</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "접이식 종이 탁상 달력 삼각형" · 원문 제품: Replug(문구 브랜드)의 TriAngular Calendar 2027, 원문 표기 가격 $20, 일본 제작. 판매처는 원문에 없음(Yanko Design 기사 기준)<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/2a56ce7c18da/thread-photo-1109081909-01.jpg" alt="회색 종이 재질의 삼각형으로 세워진 달력 한 개. 큰 숫자 3과 2027년 3월 달력이 적혀 있고 하단에 YD SELECT 2027 표기가 보인다. 배경은 어두운 벽과 책상." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/2a56ce7c18da/thread-photo-1109081909-02.jpg" alt="파란 회색 종이 달력이 펼쳐져 2, 3, 4, 5월 면이 이어져 있고, 각 월의 숫자와 요일 달력이 보이며 &#39;YD SELECT 2027&#39; 로고가 있음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261109-pm-a24a7adf70d9/2a56ce7c18da/thread-photo-1109081909-03.jpg" alt="어두운 배경에 놓인 삼각 기둥 형태의 종이 달력 상단 모서리, 흰색 플라스틱 클립, 면에 찍힌 큰 숫자 &#39;1&#39;과 작은 날짜 칸이 보임" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-2a56ce7c18da">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">84/500자</span></div>
+      <p class="tp-text">책상 위에 날짜 하나 보자고 받침까지 둘 순 없잖아
+종이를 삼각형으로 접어 받침 없이 서는 달력이 있대
+근데 이걸 붙들고 있는 부품이 뭔지가 반전임 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">89/500자</span></div>
+      <p class="tp-text">1/ 이 달력은 폭 좁은 종이 삼각형 하나가 전부야. 세 면에 석 달이 둘러져 있어서 다른 달이 보고 싶으면 돌려주면 됨. 그럼 이걸 붙들고 있는 부품은 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">76/500자</span></div>
+      <p class="tp-text">2/ 반전은 삼각형을 붙잡는 클립도 종이라는 거. 받침이나 장식 프레임 없이 접는 구조 자체가 지지력을 줌. 그럼 크기는 어느 정도일까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">3/ 요약 정리
+- Replug의 TriAngular Calendar 2027, 20달러
+- 세 면에 석 달, 돌려서 확인
+- 가로 2.4인치, 세로 4.9인치, 깊이 2.1인치
+- 지난 달은 절취선 따라 뜯어냄
+- 2028년 1·2월까지 들어 있음
+- 일본 제작, 손으로 실크스크린
+그럼 아쉬운 점은 없을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">4/ 아쉬운 점은 공휴일 표시가 없다는 거. 이번 판에는 미국 공휴일을 포함해서 국가 공휴일이 인쇄돼 있지 않아서 연휴 계획은 다른 걸로 확인해야 함. 그럼 이걸로 디지털 캘린더를 대체할 수 있을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">186/500자</span></div>
+      <p class="tp-text">5/ 소개한 매체 말로는 디지털 캘린더를 버릴 정도는 아니고, 빠른 날짜 확인만 따로 맡기는 물건이라는 거.
+이거 책상에 있으면 살 거야?
+해외에서 화제 된 신기한 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>종이 삼각형으로 만든 달력으로 별도 받침 없이 스스로 선다 <small>애매 · 원문은 받침 없이 스스로 서는 달력이라는 취지이나 &#39;종이 삼각형으로 만든&#39;은 맞음. 다만 원문은 &#39;합리적인 선택지&#39;라는 의견 톤이므로 &#39;스스로 선다&#39;는 단정은 대체로 맞음. 원문 근거는 supports itself이므로 사실로 인정 가능하나 &#39;별도 받침 없이&#39;를 명시하면 더 정확함.</small></li>
+        <li>근거 등록 안 된 주장: 이 달력은 받침 없이 스스로 선다는 점이 반전이며 붙드는 부품이 종이라는 설명 (원문 근거와 일치하나 claims에 &#39;반전&#39; 구성 자체는 포함되지 않음)</li><li>근거 등록 안 된 주장: 손으로 실크스크린 인쇄 시 시트를 개별 건조하고 흰 잉크를 두 번 바른다는 사실</li><li>근거 등록 안 된 주장: 은색 소재가 금속 케이스가 아닌 특수지라는 사실</li><li>근거 등록 안 된 주장: 구글 캘린더는 공유 일정, 날짜 지정 작업, Gmail 연동 이벤트를 지원한다는 사실</li><li>근거 등록 안 된 주장: 매체가 이 제품을 일정 조율과 타인에게 정보 공유에는 구글 제품이 더 적합하다고 본다는 사실</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>책상 위에 날짜 하나 보자고 받침까지 둘 순 없잖아</li><li>달력은 받침이 있어야 선다는 생각, 종이 한 장이 뒤집음</li><li>책상 달력은 &#39;세워두는&#39; 게 아니라 &#39;접어서 서게 하는&#39; 거래</li><li>날짜 보려고 폰부터 꺼내는 사람, 이 종이 달력 한번 봐봐</li><li>20달러짜리 종이 달력 하나가 석 달을 들고 서 있대</li><li>&#39;이게 어떻게 서 있어?&#39; 소리 나오는 종이 달력</li><li>받침도 없고 클립도 종이인 달력이 있대</li><li>20달러면 선물로 어때? 받침 없이 서는 종이 달력</li><li>책상이 좁아서 달력 못 놓던 사람 주목</li><li>일본에서 손으로 찍어낸 종이 달력, 받침 없이 선대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 책상에 있으면 살 거야?</li><li>종이 달력파 vs 폰 달력파?</li><li>이거 선물로 받으면 좋아할 사람 소환</li><li>달력에 공휴일 표시, 꼭 있어야 하는 편이야?</li><li>책상에 달력 놓는 편이야, 안 놓는 편이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>받침 없이 서는 또 다른 신기한 종이 소품</li><li>책상 위 공간 아끼는 해외 문구템</li><li>해외 문구 브랜드가 만든 달력·다이어리</li><li>일본 손작업 인쇄로 만든 생활 소품</li><li>좁은 책상용 소형 정리템</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문 필자가 샘플을 만져보지 않아 실제로 얼마나 안정적으로 서는지는 확인되지 않음</li><li>한국에서 판매되는지, 어디서 파는지는 원문에 없음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>종이 삼각형으로 만든 달력으로 별도 받침 없이 스스로 선다</b>
+          <q>“A calendar that supports itself and keeps nearby months accessible makes a reasonable case for that remaining patch of space.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>별도 받침이나 장식 프레임이 없다</b>
+          <q>“There’s no separate base to disguise or decorative frame to justify.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>좁은 종이 삼각형으로 만든 달력이다</b>
+          <q>“TriAngular makes a calendar out of a narrow paper triangle, which sounds like a stationery trick until you consider the desk it’s meant to occupy.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세 면에 석 달이 둘러져 있고 다른 달을 보려면 돌린다</b>
+          <q>“Three months wrap around three faces, so checking another month means rotating the calendar.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>삼각형을 고정하는 클립도 종이로 만들었다</b>
+          <q>“The paper forms the triangular structure, held together with a clip that’s also made of paper.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>접는 구조 자체가 지지력을 준다</b>
+          <q>“Folding gives the printed sheet its support.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Replug의 TriAngular Calendar 2027은 20달러</b>
+          <q>“From stationery brand Replug, the TriAngular Calendar 2027 is listed at $20.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>크기는 가로 2.4인치, 세로 4.9인치, 깊이 2.1인치</b>
+          <q>“At 2.4 inches wide, 4.9 inches tall, and 2.1 inches deep, it’s small enough to consider for a desk where space is already negotiated inch by inch.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>각 달에 절취선이 있어 지난 달은 뜯어낼 수 있다</b>
+          <q>“Each month has perforations so it can be removed once it’s passed.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2028년 1월과 2월이 포함되어 있다</b>
+          <q>“January and February 2028 are included, keeping the calendar useful for looking ahead at the end of 2027.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Replug 말로는 손으로 실크스크린 인쇄한 달력이다</b>
+          <q>“Replug says the calendar is hand-silkscreened, with sheets individually dried and white ink applied twice on silver paper.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일본에서 만들었다</b>
+          <q>“Made in Japan, it brings a little printmaking craft to an everyday object.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이번 판에는 미국 공휴일을 포함해 국가 공휴일이 인쇄돼 있지 않다</b>
+          <q>“This edition has no national public holidays printed, including US holidays.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>매체는 디지털 캘린더를 버리진 않겠지만 빠른 날짜 확인을 별도 물건에 맡기는 매력은 이해한다고 평했다</b>
+          <q>“I wouldn’t abandon a digital calendar for it, but I can see the appeal of letting a separate object handle that quick reference.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="2a56ce7c18da">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/08/a-20-paper-calendar-holds-three-months-without-a-separate-stand/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-20-paper-calendar-holds-three-months-without-a-separate-stand" target="_blank" rel="noopener">A $20 Paper Calendar Holds Three Months Without a Separate Stand - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261109-pm";
+  const ORIGINAL = {"872fd9558318": {"caption": "\ud560\ub9ac\uc6b0\ub4dc \ubc30\uc6b0\uac00 \uc124\uacc4\ud55c \uc5b4\ub8b0 \uc720\ub3c4 \ubc29\uc2dd\uc774 \ud6d7\ub0a0 Wi-Fi\uc640 \ube14\ub8e8\ud22c\uc2a4\uc758 \uae38\uc744 \uc5f4\uc5c8\ub2e4\ub294 \uc774\uc57c\uae30, \uc54c\uace0 \uc788\uc5c8\uc5b4? \uc8fc\uc778\uacf5\uc740 \ud5e4\ub514 \ub77c\ub9c8(Hedy Lamarr)\uc57c. \uad7f\ub274\uc2a4 \ub124\ud2b8\uc6cc\ud06c\uc758 \u0027\uc5ed\uc0ac \uc18d \uc624\ub298\uc758 \uc88b\uc740 \uc18c\uc2dd\u0027\uc5d0 \uc18c\uac1c\ub41c \ub0b4\uc6a9\uc774\uc57c.\n\n\ub77c\ub9c8\ub294 \uc624\uc2a4\ud2b8\ub9ac\uc544\uc5d0\uc11c \uc601\ud654\uc640 \uc5f0\uadf9 \ubc30\uc6b0\ub85c \uc131\uacf5\uc744 \uac70\ub480\uace0, \uc720\ub300\uc778 \ubd80\ubaa8\ub97c \ub454 \ub538\ub85c\uc11c \ube60\ub974\uac8c \ub098\uce58\ud654\ub418\ub358 \uace0\ud5a5\uc744 \ub5a0\ub0ac\uc5b4. \ud30c\ub9ac\uc5d0\uc11c MGM \uacf5\ub3d9 \ucc3d\uc5c5\uc790 \ub8e8\uc774\uc2a4 \uba54\uc774\uc5b4\ub97c \ub9cc\ub098 \ud560\ub9ac\uc6b0\ub4dc \uacc4\uc57d\uc744 \uc81c\uc548\ubc1b\uc558\uc9c0.\n\n2\ucc28 \uc138\uacc4\ub300\uc804 \uc911 \uadf8\ub140\ub294 \ubb34\uc120 \uc870\uc885 \uc5b4\ub8b0\uac00 \ud574\uad70\uc5d0 \uc81c\uc548\ub410\ub2e4\ub294 \uae00\uc744 \uc77d\uc5c8\uace0, \uc801\uc774 \uc720\ub3c4 \uc7a5\uce58\ub97c \uad50\ub780\ud560 \uc218 \uc788\ub2e4\ub294 \uc810\uc5d0 \uc8fc\ubaa9\ud588\uc5b4. \uc791\uace1\uac00\uc774\uc790 \ud53c\uc544\ub2c8\uc2a4\ud2b8\uc778 \uc870\uc9c0 \uc564\ud0c0\uc77c\uacfc \uc774\uc57c\uae30\ud558\ub2e4\uac00 \uc8fc\ud30c\uc218 \ub3c4\uc57d \uc2e0\ud638\ub77c\ub294 \uc544\uc774\ub514\uc5b4\uac00 \ub098\uc654\ub300. \ube44\ud589\uae30\uc640 \ubc30 \uc0ac\uc774\uc758 \ubb34\uc120 \uc2e0\ud638\ub97c \uacc4\uc18d \ubc14\ub00c\ub294 \uc8fc\ud30c\uc218\ub85c \ubcf4\ub0b4\uba74 \uc801\uc774 \uac00\ub85c\ucc44\uac70\ub098 \uad50\ub780\ud560 \uc218 \uc5c6\ub2e4\ub294 \uad6c\uc870\uc57c.\n\n\uc774 \ubc1c\uba85\uc740 2\ucc28 \uc138\uacc4\ub300\uc804\uc5d0\uc11c\ub3c4, \uc774\ud6c4 \ud574\uad70 \uc2e4\ud5d8\uc5d0\uc11c\ub3c4 \uc4f0\uc774\uc9c0 \uc54a\uc558\uc5b4. \ud558\uc9c0\ub9cc \uc140\ub8f0\ub7ec \ud1b5\uc2e0, Wi-Fi, \ube14\ub8e8\ud22c\uc2a4\uac00 \ubcf8\uc9c8\uc801\uc73c\ub85c \uac19\uc740 \uc8fc\ud30c\uc218 \ub3c4\uc57d \uae30\uc220\uc744 \uc4f0\uac8c \ub418\ub294 \uae38\uc744 \uc5f4\uc5c8\ub2e4\uace0 \ud574. 2014\ub144\uc5d0\ub294 \ub77c\ub9c8\uc640 \uc564\ud0c0\uc77c\uc774 \uc0ac\ud6c4\uc5d0 \uc804\ubbf8 \ubc1c\uba85\uac00 \uba85\uc608\uc758 \uc804\ub2f9\uc5d0 \uc774\ub984\uc744 \uc62c\ub838\uc5b4.\n\n\uc9c0\uae08 \uc4f0\ub294 \ubb34\uc120 \uae30\uc220\uc758 \ub4b7\uc774\uc57c\uae30, \uad81\uae08\ud574\ud560 \uce5c\uad6c\uc5d0\uac8c \ub4e4\ub824\uc918.\n\n\ucd9c\ucc98: Good News Network", "hashtags": ["#\uc640\uc774\ud30c\uc774", "#\ud5e4\ub514\ub77c\ub9c8", "#\ube14\ub8e8\ud22c\uc2a4", "#\uacfc\ud559\uc774\uc57c\uae30", "#\uc5ed\uc0ac\uc18d\uc624\ub298"], "slides": [["\ud560\ub9ac\uc6b0\ub4dc \ubc30\uc6b0\uac00", "**\uc640\uc774\ud30c\uc774** \ubfcc\ub9ac?!", "---", "2\ucc28 \uc138\uacc4\ub300\uc804 \uc911 \ud560\ub9ac\uc6b0\ub4dc \ubc30\uc6b0 \ud5e4\ub514 \ub77c\ub9c8\uac00 \uc5b4\ub8b0 \uc720\ub3c4 \ubc29\uc2dd\uc744 \uc124\uacc4\ud588\uace0, \uc774 \uae30\uc220\uc740 \ud6d7\ub0a0 Wi-Fi\uc640 \ube14\ub8e8\ud22c\uc2a4\ub85c \uc774\uc5b4\uc84c\ub2e4."], ["\uc624\uc2a4\ud2b8\ub9ac\uc544\uc5d0\uc11c", "\uba3c\uc800 \uc131\uacf5\ud588\uc5b4", "---", "\ub77c\ub9c8\ub294 \uc624\uc2a4\ud2b8\ub9ac\uc544\uc5d0\uc11c \uc601\ud654\uc640 \uc5f0\uadf9 \ubc30\uc6b0\ub85c \uc131\uacf5\uc744 \uac70\ub480\ub2e4. \uc720\ub300\uc778 \ubd80\ubaa8\ub97c \ub454 \ub538\uc774\uc5c8\ub358 \uadf8\ub140\ub294 \ube60\ub974\uac8c \ub098\uce58\ud654\ub418\ub358 \uace0\ud5a5\uc744 \ub5a0\ub098\uae30\ub85c \ud588\ub2e4."], ["\uc5b4\ub8b0\uac00", "**\ubc29\ud574\ubc1b\ub294\ub2e4\uace0**?", "---", "2\ucc28 \uc138\uacc4\ub300\uc804 \uc911 \ub77c\ub9c8\ub294 \ubb34\uc120 \uc870\uc885 \uc5b4\ub8b0\uac00 \ud574\uad70\uc5d0 \uc81c\uc548\ub410\ub2e4\ub294 \uae00\uc744 \uc77d\uc5c8\ub2e4. \ud558\uc9c0\ub9cc \uc801\uc774 \uc720\ub3c4 \uc7a5\uce58\ub97c \uad50\ub780\ud574 \uc5b4\ub8b0\ub97c \uc5c9\ub6b1\ud55c \uacbd\ub85c\ub85c \ubcf4\ub0bc \uc218 \uc788\ub2e4\ub294 \ubb38\uc81c\uac00 \uc788\uc5c8\ub2e4."], ["**\uc8fc\ud30c\uc218**\uac00", "\uacc4\uc18d \ub6f4\ub2e4", "---", "\uc791\uace1\uac00 \uc870\uc9c0 \uc564\ud0c0\uc77c\uacfc \ub300\ud654\ud558\ub2e4 \uc8fc\ud30c\uc218 \ub3c4\uc57d \uc2e0\ud638\ub77c\ub294 \uc544\uc774\ub514\uc5b4\uac00 \ub098\uc654\ub2e4. \ube44\ud589\uae30\uc640 \ubc30 \uc0ac\uc774\uc758 \uc2e0\ud638\ub97c \uacc4\uc18d \ubc14\ub00c\ub294 \uc8fc\ud30c\uc218\ub85c \ubcf4\ub0b4, \uc801\uc774 \uac00\ub85c\ucc4c \uc218 \uc5c6\uac8c \ud558\ub294 \ubc29\uc2dd\uc774\ub2e4."], ["\uc804\uc7c1\uc5d4 **\uc548 \uc4f0\uc778**", "\uae30\uc220\uc774\uc5c8\uc5b4", "---", "\uc774 \ubc1c\uba85\uc740 2\ucc28 \uc138\uacc4\ub300\uc804\uc5d0\ub3c4, \uc774\ud6c4 \ud574\uad70 \uc2e4\ud5d8\uc5d0\ub3c4 \uc4f0\uc774\uc9c0 \uc54a\uc558\ub2e4. \ub2e4\ub9cc \uc140\ub8f0\ub7ec \ud1b5\uc2e0\uacfc Wi-Fi, \ube14\ub8e8\ud22c\uc2a4\uac00 \ubcf8\uc9c8\uc801\uc73c\ub85c \uac19\uc740 \uc8fc\ud30c\uc218 \ub3c4\uc57d \uae30\uc220\uc744 \uc4f0\ub294 \uae38\uc744 \uc5f4\uc5c8\uace0, 2014\ub144 \ub450 \uc0ac\ub78c\uc740 \uc0ac\ud6c4\uc5d0 \ubc1c\uba85\uac00 \uba85\uc608\uc758 \uc804\ub2f9\uc5d0 \uc62c\ub790\ub2e4."], ["\ube14\ub8e8\ud22c\uc2a4 \uc774\uc5b4\ud3f0", "\uc4f0\ub294 **\uce5c\uad6c\ud55c\ud14c** \uc804\ub2ec", "---", "\ub9e4\uc77c \uc4f0\ub294 Wi-Fi\uc640 \ube14\ub8e8\ud22c\uc2a4\uc758 \ubfcc\ub9ac\uac00 \ud55c \ubc30\uc6b0\uc758 \uc5b4\ub8b0 \uc544\uc774\ub514\uc5b4\uc5d0\uc11c \ub098\uc654\ub2e4\uace0 \uc54c\ub824 \uc8fc\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "9c0fe77e91fb": {"caption": "\uc0b0\ucc45\ud558\ub358 \uac1c\uac00 \uc678\ub798 \uc2dd\ubb3c\uc744 \ucc3e\uc544\ub0b8\ub2e4\uba74 \uc5b4\ub5a8\uae4c. \ub3c5\uc77c \uc5f0\uad6c\uc9c4\uc774 \ubc18\ub824\uacac\uacfc \uc790\uc6d0\ubd09\uc0ac \ubcf4\ud638\uc790\ub85c \uc774\ub904\uc9c4 \ud0d0\uc9c0 \ud300\uc744 \ud6c8\ub828\uc2dc\ucf1c \uc57c\uc0dd\uc5d0\uc11c \uce68\uc785 \uc2dd\ubb3c\uc744 \ucc3e\uac8c \ud588\uace0, \ud3c9\uade0 75%\uc758 \ud0d0\uc9c0 \uc131\uacf5\ub960\uc744 \uae30\ub85d\ud588\ub2e4.\n\n\uc678\ub798\uc885\uc740 \uc804 \uc138\uacc4 \uc0dd\ubb3c\ub2e4\uc591\uc131 \uac10\uc18c\uc758 \uc8fc\ub41c \uc6d0\uc778 \uc911 \ud558\ub098\ub2e4. \uae30\uc874 \ub300\uc751\ubc95\uc740 \ube44\uc6a9\uc774 \ub9ce\uc774 \ub4e4\uace0 \uc2dc\uac04\uc774 \uc624\ub798 \uac78\ub838\uc73c\uba70, \ud6a8\uacfc\uc801\uc778 \uc870\uae30 \ubc1c\uacac \uc218\ub2e8\uc774 \ubd80\uc871\ud574 \ud655\uc0b0\uc744 \ud1b5\uc81c\ud558\uae30 \uc5b4\ub824\uc6e0\ub2e4. \ud5ec\ub984\ud640\uce20 \ud658\uacbd\uc5f0\uad6c\uc13c\ud130(UFZ)\uc758 \uadf8\ub9bc-\uc790\uc774\ud30c\ub974\ud2b8 \ubc15\uc0ac\ud300\uc740 \uc2dc\ubbfc \uacfc\ud559\uc790\uac00 \ucc38\uc5ec\ud558\ub294 \ud0d0\uc9c0\uacac \ud6c8\ub828 \ud504\ub85c\uadf8\ub7a8\uc774 \ud604\uc2e4\uc801\uc73c\ub85c \uac00\ub2a5\ud55c\uc9c0 \uc2dc\ud5d8\ud588\ub2e4.\n\n2021\ub144\ubd80\ud130 2023\ub144\uae4c\uc9c0 \uac1c 31\ub9c8\ub9ac\uc640 \ubcf4\ud638\uc790\uac00 \ud788\ub9d0\ub77c\uc57c \ubd09\uc120\ud654, \ub3fc\uc9c0\ud480, \ub9c8\ub514\ud480\ub958\ub97c \ub300\uc0c1\uc73c\ub85c \ud6c8\ub828\ud588\ub2e4. \ud604\uc7a5 \uc2dc\ud5d8\uc744 \ub9c8\uce5c 12\ud300 \uc911 11\ud300\uc774 \ud1b5\uacfc\ud588\ub2e4. \uc5f0\uad6c\ub294 \ud559\uc220\uc9c0 PLOS One\uc5d0 \uc2e4\ub838\uace0, \uc5f0\uad6c\ud300\uc740 \uc790\uc6d0\ubd09\uc0ac\uc790 \uc120\uc815\uacfc \uc870\uc728, \uac1c \ud6c8\ub828, \ucd08\uae30 \ud22c\uc785\uc744 \uac1c\uc120\ud560 \uad8c\uace0\uc548\ub3c4 \uc815\ub9ac\ud588\ub2e4.\n\n\uadf8\ub9bc-\uc790\uc774\ud30c\ub974\ud2b8 \ubc15\uc0ac\ub294 \uc0ac\ub78c\ub4e4\uc774 \uc774\ubbf8 \uc88b\uc544\ud558\ub294 \uc57c\uc678 \ud65c\ub3d9\uc744 \uc0dd\ubb3c\ub2e4\uc591\uc131 \ubcf4\uc804\uc5d0 \uae30\uc5ec\ud558\ub294 \uc77c\ub85c \ubc14\uafc0 \uc218 \uc788\ub2e4\ub294 \uc810\uc774 \ud765\ubbf8\ub86d\ub2e4\uace0 \ub9d0\ud588\ub2e4. \ub2e4\ub9cc \uc2e4\uc804\uc5d0\uc11c \uc131\uacf5\ud558\ub824\uba74 \uac1c \ud6c8\ub828 \uc804\ubb38\uac00\uc640 \uc0dd\ud0dc \uc804\ubb38\uac00\uc758 \uc9c0\uc18d\uc801\uc778 \uc9c0\ub3c4\uac00 \ud544\uc694\ud558\ub2e4.\n\n\uac1c\ub294 \uce68\uc785 \ub3d9\ubb3c \ud0d0\uc9c0\uc5d0\ub3c4 \uc4f0\uc778\ub2e4. \ubbf8\uad6d \ubc84\uc9c0\ub2c8\uc544 \uacf5\ub300 \ud300\uc740 \uc2a4\ud31f\ud2f0\ub4dc \ub79c\ud134\ud50c\ub77c\uc774\uc758 \uc54c\uc744 \ucc3e\ub3c4\ub85d \uac1c\ub97c \ud6c8\ub828\uc2dc\ucf30\uace0, AP \uc601\uc0c1\uc5d0 \ub530\ub974\uba74 \uc9c0\uae08\uae4c\uc9c0 \uc54c\uc9d1 1\ub9cc \uac1c\ub97c \uc5c6\uc574\ub2e4.\n\n\ucd9c\ucc98: Good News Network", "hashtags": ["#\ud0d0\uc9c0\uacac", "#\uc678\ub798\uc885", "#\uc0dd\ubb3c\ub2e4\uc591\uc131", "#\ubc18\ub824\uacac", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\uac1c\uac00 \uc678\ub798\uc2dd\ubb3c", "**75%** \ucc3e\ub294\ub2e4?!", "---", "\ub3c5\uc77c \uc5f0\uad6c\uc9c4\uc774 \ubc18\ub824\uacac\uacfc \uc790\uc6d0\ubd09\uc0ac \ubcf4\ud638\uc790 \ud300\uc744 \ud6c8\ub828\uc2dc\ucf1c \uc57c\uc0dd\uc5d0\uc11c \uce68\uc785 \uc2dd\ubb3c\uc744 \ucc3e\uac8c \ud588\ub354\ub2c8 \ud3c9\uade0 75%\uc758 \ud0d0\uc9c0 \uc131\uacf5\ub960\uc774 \ub098\uc654\ub2e4."], ["\uc678\ub798 \uc2dd\ubb3c\uc774", "**\uace8\uce6b\uac70\ub9ac**", "---", "\uc678\ub798\uc885\uc740 \uc804 \uc138\uacc4 \uc0dd\ubb3c\ub2e4\uc591\uc131 \uac10\uc18c\uc758 \uc8fc\ub41c \uc6d0\uc778 \uc911 \ud558\ub098\ub2e4. \uae30\uc874 \ub300\uc751\ubc95\uc740 \ube44\uc6a9\uc774 \ub9ce\uc774 \ub4e4\uace0 \uc2dc\uac04\ub3c4 \uc624\ub798 \uac78\ub838\uc73c\uba70, \uc870\uae30 \ubc1c\uacac \uc218\ub2e8\uc774 \ubd80\uc871\ud574 \ud655\uc0b0\uc744 \ud1b5\uc81c\ud558\uae30 \uc5b4\ub824\uc6e0\ub2e4."], ["\uac1c **31\ub9c8\ub9ac**\uac00", "\ud6c8\ub828 \ubc1b\uc558\ub2e4", "---", "\ub77c\uc774\ud504\uce58\ud788 \uc5f0\uad6c\uc9c4\uc740 2021\ub144\ubd80\ud130 2023\ub144\uae4c\uc9c0 \uac1c 31\ub9c8\ub9ac\uc640 \ubcf4\ud638\uc790\ub97c \ud6c8\ub828\uc2dc\ucf30\ub2e4. \ub300\uc0c1 \uc2dd\ubb3c\uc740 \ud788\ub9d0\ub77c\uc57c \ubd09\uc120\ud654, \ub3fc\uc9c0\ud480, \ub9c8\ub514\ud480\ub958 \uc138 \uac00\uc9c0\uc600\ub2e4."], ["\ud604\uc7a5 \uc2dc\ud5d8,", "**11\ud300 \ud1b5\uacfc**", "---", "\ud6c8\ub828\uc758 \ub9c8\uc9c0\ub9c9 \ub2e8\uacc4\ub85c \uc57c\uc0dd\uc5d0\uc11c \ubaa9\ud45c \uc2dd\ubb3c\uc744 \ucc3e\ub294 \uc2dc\ud5d8\uc744 \uce58\ub800\ub2e4. \uc2dc\ud5d8\uc744 \ub05d\ub0b8 12\ud300 \uc911 11\ud300\uc774 \ud1b5\uacfc\ud588\uace0, \ud3c9\uade0 \ud0d0\uc9c0 \uc131\uacf5\ub960\uc740 75%\uc600\ub2e4."], ["**\uc0b0\ucc45**\uc774", "\ud0d0\uc9c0 \ud65c\ub3d9\uc73c\ub85c", "---", "\uc5f0\uad6c\uc9c4\uc740 \ubcf4\ud638\uc790\uac00 \uc774\ubbf8 \uc990\uae30\ub294 \uc57c\uc678 \uc0b0\ucc45\uc744 \uc0dd\ubb3c\ub2e4\uc591\uc131 \ubcf4\uc804\uc5d0 \ubcf4\ud0ec\uc774 \ub418\ub294 \ud65c\ub3d9\uc73c\ub85c \ubc14\uafc0 \uc218 \uc788\ub2e4\uace0 \ubc1d\ud614\ub2e4. \ub2e4\ub9cc \uc2e4\uc804\uc5d0\uc11c \uc131\uacf5\ud558\ub824\uba74 \uac1c \ud6c8\ub828\u00b7\uc0dd\ud0dc \uc804\ubb38\uac00\uc758 \uc9c0\uc18d\uc801\uc778 \uc9c0\ub3c4\uac00 \ud544\uc694\ud558\ub2e4\uace0 \ud588\ub2e4."], ["\uc0b0\ucc45 \uc88b\uc544\ud558\ub294", "**\ubc18\ub824\uc778**\uc5d0\uac8c \ubcf4\ub0b4\uae30", "---", "\ub9e4\uc77c \ubc18\ub824\uacac\uacfc \uc0b0\ucc45\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd. \uac1c\uc758 \ud6c4\uac01\uacfc \uc2dc\ubbfc\uc758 \ucc38\uc5ec\ub85c \uc678\ub798 \uc2dd\ubb3c\uc744 \uc77c\ucc0d \ucc3e\uc744 \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c \uacb0\uacfc \uc774\uc57c\uae30"]]}};
+  const TOTAL = 2;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 1;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

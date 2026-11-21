@@ -1,0 +1,1888 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.20 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.20 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-8679f5996604" data-jump="8679f5996604">1</a><a href="#post-b533bba3b100" data-jump="b533bba3b100">2</a><a href="#post-306b2a1c12ef" data-jump="306b2a1c12ef">3</a>
+      <a href="#threads">🧵 스레드 3</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-8679f5996604" data-id="8679f5996604">
+    <div class="head">
+      <h2>1. 원피스 1198화 루피 니카 변신, 파괴의 신 논란</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 7 · 애매 1 · 근거 없음 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-01.jpg" alt="1장: 루피가 파괴의 신?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-02.jpg" alt="2장: 기어5가 정점 아니었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-03.jpg" alt="3장: 하얀 모습과는 전혀 다른 변신" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-04.jpg" alt="4장: 열매에 먹힐 수도?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-05.jpg" alt="5장: 해방자이자 파괴자였다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-06.jpg" alt="6장: 물의 신을 가볍게 제압" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-07.jpg" alt="7장: 원피스 정주행 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/8679f5996604/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">데뷔 30년을 맞은 루피가 이번엔 &#39;파괴의 신&#39;이라는 말까지 나오고 있다. 해외 매체 스크린랜트는 원피스 1198화에서 루피가 흰 옷의 기어5와는 전혀 다른 모습으로 변했다고 전했다.
+
+루피가 카이도와 싸우며 기어5를 처음 깨웠을 때는 본인도 일부 독자도 그것이 힘의 정점이라 여겼다. 하지만 엘바프 편이 그 생각을 뒤집었다. 엘바프 편은 세계정부의 숨은 지배자 이무 성이 섬에 도착한 뒤 크게 커졌다.
+
+동물계 악마의 열매 능력자는 각성을 지나치게 밀어붙이면 열매의 동물적 본성에 자신을 잃을 위험이 있다. 루피의 열매는 태양신 니카를 본뜬 것이다. 니카는 노예와 고대 종족들에게 희망의 기둥 같은 해방자였지만, 권력을 쥔 쪽은 질서를 흔드는 존재로 해석할 수 있다고 매체는 짚었다.
+
+1198화는 루피가 적이 불러낸 물의 신 구조물을 쉽게 처리하는 장면으로 끝난다. 매체는 그 모습이 해적 황제보다 진짜 원숭이에 가까웠다고 표현했다.
+
+※ 1198화 스포일러가 포함돼 있다.
+
+출처: Screen Rant</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#원피스 #루피 #원피스1198화 #애니메이션 #해외반응</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>루피가 데뷔 30년을 맞았고 파괴의 신이 될 준비가 됐다는 해외 매체의 시각 <small>근거 없음 · 인용문이 원문에서 발견되지 않음 (지어낸 인용 가능성)</small></li><li>권력을 쥔 쪽은 니카를 다르게 해석할 수 있고 질서를 흔드는 존재로 파괴의 신이라 불릴 만하다는 매체의 시각 <small>애매 · 원문은 권력자에게는 다르게 해석될 수 있고 질서를 흔드는 존재라 파괴의 신으로 불릴 만하다고 쓴다. 다만 &#39;매체의 시각&#39;이라는 해석이므로 단정처럼 읽히지 않도록 &#39;~로 해석할 수 있다&#39;는 표현을 유지해야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 루피가 데뷔 30년을 맞았다는 주장</li><li>근거 등록 안 된 주장: 이 기사가 스크린랜트(Screen Rant)의 보도라는 출처 귀속</li><li>근거 등록 안 된 주장: 1198화에 스포일러가 포함되어 있다는 안내 문구</li>
+          <li>1198화 스포일러가 포함된 소재 (카드·본문에 스포일러 표기 필요)</li><li>원피스 캐릭터·작품 이미지는 저작권 대상이라 사용하지 않고 일반 스톡 이미지만 사용</li><li>&#39;파괴의 신&#39; 해석은 단일 해외 매체(Screen Rant)의 의견·추측이며 공식 설정이 아님</li><li>편집자 메모의 &#39;해외 검색 급상승 1위권&#39; 내용은 제공된 원문으로 확인되지 않아 카드에 쓰지 않음</li><li>원문 발행일이 2026-11-15로 표기되어 있어 게시 전 최신 연재 상황 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-8679f5996604-0">1장</label>
+          <textarea id="s-8679f5996604-0" rows="6" data-slide="0">루피가
+**파괴의 신**?!
+---
+데뷔 30년을 맞은 루피가 1198화에서 이전과 전혀 다른 모습으로 변신했고, 해외 매체는 &#39;파괴의 신&#39; 가능성을 짚었다.</textarea>
+          
+          <label class="f" for="s-8679f5996604-1">2장</label>
+          <textarea id="s-8679f5996604-1" rows="6" data-slide="1">기어5가
+**정점** 아니었다
+---
+카이도와 싸우며 기어5를 처음 깨웠을 때 루피와 일부 독자는 그것이 힘의 정점이라 여겼다. 하지만 엘바프 편이 그 생각을 뒤집었다.</textarea>
+          
+          <label class="f" for="s-8679f5996604-2">3장</label>
+          <textarea id="s-8679f5996604-2" rows="6" data-slide="2">하얀 모습과는
+**전혀 다른** 변신
+---
+1198화에서 루피는 흰 옷의 기어5와 전혀 다른 모습으로 변했다. 아군에게도 적에게도 섬뜩하게 보일 수 있는 모습이라는 것이 매체의 설명이다.</textarea>
+          
+          <label class="f" for="s-8679f5996604-3">4장</label>
+          <textarea id="s-8679f5996604-3" rows="6" data-slide="3">열매에
+**먹힐** 수도?
+---
+동물계 열매 능력자는 각성을 지나치게 밀어붙이면 열매의 동물적 본성에 자신을 잃을 위험이 있다. 루피의 열매는 태양신 니카를 본뜬 것이다.</textarea>
+          
+          <label class="f" for="s-8679f5996604-4">5장</label>
+          <textarea id="s-8679f5996604-4" rows="6" data-slide="4">해방자이자
+**파괴자**였다
+---
+니카는 노예와 고대 종족들에게 희망의 기둥 같은 해방자였다. 하지만 권력을 쥔 쪽은 질서를 흔드는 존재로 해석할 수 있다는 것이 매체의 시각이다.</textarea>
+          
+          <label class="f" for="s-8679f5996604-5">6장</label>
+          <textarea id="s-8679f5996604-5" rows="6" data-slide="5">물의 신을
+**가볍게** 제압
+---
+1198화는 루피가 적이 불러낸 물의 신 구조물을 쉽게 처리하는 장면으로 끝난다. 매체는 그 모습이 해적 황제보다 진짜 원숭이에 가까웠다고 표현했다.</textarea>
+          
+          <label class="f" for="s-8679f5996604-6">7장</label>
+          <textarea id="s-8679f5996604-6" rows="6" data-slide="6">원피스 정주행
+친구한테 보내기
+---
+최신화까지 챙겨 본 친구라면 루피의 새 변신에 할 말이 많을 소식. 1198화 스포일러가 담겨 있으니 아직 안 본 친구는 피해서 보내기.</textarea>
+          
+          <label class="f" for="c-8679f5996604">본문 (캡션)</label>
+          <textarea id="c-8679f5996604" class="caption">데뷔 30년을 맞은 루피가 이번엔 &#39;파괴의 신&#39;이라는 말까지 나오고 있다. 해외 매체 스크린랜트는 원피스 1198화에서 루피가 흰 옷의 기어5와는 전혀 다른 모습으로 변했다고 전했다.
+
+루피가 카이도와 싸우며 기어5를 처음 깨웠을 때는 본인도 일부 독자도 그것이 힘의 정점이라 여겼다. 하지만 엘바프 편이 그 생각을 뒤집었다. 엘바프 편은 세계정부의 숨은 지배자 이무 성이 섬에 도착한 뒤 크게 커졌다.
+
+동물계 악마의 열매 능력자는 각성을 지나치게 밀어붙이면 열매의 동물적 본성에 자신을 잃을 위험이 있다. 루피의 열매는 태양신 니카를 본뜬 것이다. 니카는 노예와 고대 종족들에게 희망의 기둥 같은 해방자였지만, 권력을 쥔 쪽은 질서를 흔드는 존재로 해석할 수 있다고 매체는 짚었다.
+
+1198화는 루피가 적이 불러낸 물의 신 구조물을 쉽게 처리하는 장면으로 끝난다. 매체는 그 모습이 해적 황제보다 진짜 원숭이에 가까웠다고 표현했다.
+
+※ 1198화 스포일러가 포함돼 있다.
+
+출처: Screen Rant</textarea>
+          <label class="f" for="t-8679f5996604">해시태그</label>
+          <input id="t-8679f5996604" type="text" class="tagsin" value="#원피스 #루피 #원피스1198화 #애니메이션 #해외반응" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-unsupported">근거 없음</span>
+            <b>루피가 데뷔 30년을 맞았고 파괴의 신이 될 준비가 됐다는 해외 매체의 시각</b>
+            <q>“30 Years After His Debut, Luffy Is Officially Ready To Become One Piece’s God Of Destruction”</q>
+            <small>slide1, caption · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>권력을 쥔 쪽은 니카를 다르게 해석할 수 있고 질서를 흔드는 존재로 파괴의 신이라 불릴 만하다는 매체의 시각</b>
+            <q>“While Nika is known as a symbol of freedom to the oppressed, those in power would have a different interpretation of the figure. After the agent of chaos shakes up the status quo for those in power, it makes sense that Nika would also be known as a God of Destruction for the way that he disrupts the establishment.”</q>
+            <small>slide5, caption, summary · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1198화에서 루피가 흰 옷의 기어5와 전혀 다른 모습으로 변신했다</b>
+            <q>“In chapter #1198, he transformed into something very different than his white-clad Gear Five form and into something that could be downright scary to friends and enemies alike.”</q>
+            <small>slide1, slide3, caption, summary · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카이도와 싸우며 기어5를 처음 깨웠을 때 루피와 일부 독자는 그것이 힘의 정점이라 생각했지만 엘바프 편이 이를 뒤집었다</b>
+            <q>“When Luffy first unlocked Gear Five in his epic battle against Kaido, he and some readers assumed that it was the peak of his powers, but the Elbaph arc has proved that wrong.”</q>
+            <small>slide2, caption, summary · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>엘바프 편은 세계정부의 숨은 지배자 이무 성이 섬에 도착한 뒤 크게 커졌다</b>
+            <q>“The Elbaph arc has escalated in gigantic ways after the World Government&#39;s secret ruler, Saint Nerona Imu, arrived on the island.”</q>
+            <small>caption · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>동물계 열매 능력자는 각성을 지나치게 밀어붙이면 열매의 동물적 본성에 자신을 잃을 위험이 있다</b>
+            <q>“Zoan Devil Fruit users run the risk of losing themselves to the fruit&#39;s animalistic nature if they push it&#39;s awakening too far.”</q>
+            <small>slide4, caption · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>루피의 열매는 태양신 니카를 본뜬 것이다</b>
+            <q>“And since Luffy&#39;s fruit is modeled after the legendary Sun God, Nika, his Devil Fruit’s awakening has showcased a new transformation that has changed him into something far more chaotic.”</q>
+            <small>slide4, caption · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>니카는 노예와 고대 종족들에게 희망의 기둥 같은 해방자였다</b>
+            <q>“The Legend of Nika as a liberator has been a pillar of hope for slaves living in One Piece&#39;s world, and other ancient races like the Buccaneers and Elbaph&#39;s Giants.”</q>
+            <small>slide5, caption, summary · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1198화는 루피가 적이 불러낸 물의 신 구조물을 쉽게 처리하는 장면으로 끝나며, 매체는 해적 황제보다 실제 원숭이에 가까운 모습이라고 표현했다</b>
+            <q>“The chapter ends with their captain looking and sounding more like an actual monkey than a Pirate Emperor while he easily dispatched the Water God construct summoned by the enemy.”</q>
+            <small>slide6, caption · <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">30 Years After His Debut, Luffy Is Officially Ready To Become One Piece’s God Of Destruction</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://gamerant.com/one-piece-god-of-destruction/" target="_blank" rel="noopener">Game Rant / </a> — "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2026/11/god-of-destruction-in-one-piece.jpg?q=49&amp;fit=crop&amp;w=825&amp;dpr=2"</li><li>2장: <a href="https://screenrant.com/one-piece-luffy-god-destruction/" target="_blank" rel="noopener">Screen Rant / </a> — "https://static0.srcdn.com/wordpress/wp-content/uploads/2026/11/luffy-gear-5-fire-smile.jpg?w=1600&amp;h=900&amp;fit=crop"</li><li>3장: <a href="https://gamerant.com/one-piece-god-of-destruction/" target="_blank" rel="noopener">Game Rant / </a> — "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2026/10/one-piece-devil-fruits-turn-eater-god.jpeg?q=49&amp;fit=crop&amp;w=825&amp;dpr=2"</li><li>4장: <a href="https://gamerant.com/one-piece-creator-oda-dark-nika/" target="_blank" rel="noopener">Game Rant / </a> — "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2026/08/luffy-s-final-gear-in-one-piece.jpg?q=49&amp;fit=crop&amp;w=825&amp;dpr=2"</li><li>5장: <a href="https://pixabay.com/photos/sunlight-nature-outdoors-sunbeam-3130638/" target="_blank" rel="noopener">Marys_fotos / Pixabay</a> — "sunrise"</li><li>6장: <a href="https://pixabay.com/photos/beach-birds-sea-ocean-flying-birds-1852945/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "ocean waves"</li><li>7장: <a href="https://gamerant.com/one-piece-creator-oda-dark-nika/" target="_blank" rel="noopener">Game Rant / </a> — "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2026/11/dark-nika-in-one-piece.jpg?w=1600&amp;h=900&amp;fit=crop"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b533bba3b100" data-id="b533bba3b100">
+    <div class="head">
+      <h2>2. GTA 6 출시 첫날 23억 달러 추정</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/b533bba3b100/v1-01.jpg" alt="1장: GTA 6가 23억 달러???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/b533bba3b100/v1-02.jpg" alt="2장: 올해 1위 영화 턱밑 매출" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/b533bba3b100/v1-03.jpg" alt="3장: 개발비만 10억 달러 넘게" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/b533bba3b100/v1-04.jpg" alt="4장: 다른 게임은 10% 덜 한다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/b533bba3b100/v1-05.jpg" alt="5장: 밤새우고 휴가까지 냈다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/b533bba3b100/v1-06.jpg" alt="6장: 게임 안 하는 친구도 놀랄 숫자 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/b533bba3b100/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">13년을 기다린 GTA 6가 출시되자마자 엔터테인먼트 역사상 가장 큰 출시로 기록됐을 것이라는 추정이 나왔다. 시장 분석 업체 센서타워는 사전 예약과 첫날 판매가 2,450만 장을 넘고 금액으로는 약 23억 6천만 달러라고 추정했다. 올해 최고 흥행 영화인 &#39;스파이더맨: 브랜드 뉴 데이&#39;가 극장 상영 내내 번 돈이 25억 달러다. 제작사 락스타와 모회사 테이크투는 판매 세부 내용은 공개하지 않았지만 수요가 &#39;전례 없는&#39; 수준이라고 밝혔다. 게임 시장 조사 업체 니코 파트너스는 올해 전 세계 매출이 30억 달러를 넘을 것으로 내다봤다. 다만 물가를 반영한 &#39;바람과 함께 사라지다&#39;의 추정 매출 45억 달러에는 아직 거리가 있다. 개발비는 10억 달러 넘게 든 것으로 추정되고, 판매의 약 4분의 3은 플레이스테이션 5에서 나왔다. PC 출시일과 멀티플레이 확장 일정은 아직 발표되지 않았다. 일본에서는 수위 높은 표현 때문에 검열이 이뤄졌고, 중국 본토에서는 판매 승인이 나지 않았다. 출처: BBC, Sensor Tower</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#GTA6 #게임 #락스타게임즈 #해외이슈 #게임뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 사전 예약·첫날 판매 금액이 올해 1위 영화 매출에 &#39;맞먹는&#39; 또는 &#39;근접&#39;한다는 비교 주장 (원문에는 GTA 6 매출이 영화 매출과 같은 수준이라는 직접 비교가 없고, 원문은 45억 달러 기록에는 아직 못 미친다고만 함)</li><li>근거 등록 안 된 주장: 출처가 BBC와 Sensor Tower라는 표기</li>
+          <li>판매·매출 수치는 센서타워의 추정치이며 락스타·테이크투가 공식 확인하지 않음</li><li>개발비 10억 달러 이상은 추정</li><li>스파이더맨 25억 달러는 극장 상영 전체 기간 매출이라 첫날·사전예약 합산과 직접 비교에는 한계</li><li>게임 폭력성·일본 검열·중국 미승인 등 민감한 콘텐츠 이슈 언급 가능성</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b533bba3b100-0">1장</label>
+          <textarea id="s-b533bba3b100-0" rows="6" data-slide="0">GTA 6가
+**23억 달러**???
+---
+13년 만에 나온 GTA 6가 사전 예약과 첫날 판매만으로 약 23억 6천만 달러를 벌어들인 것으로 추정된다.</textarea>
+          
+          <label class="f" for="s-b533bba3b100-1">2장</label>
+          <textarea id="s-b533bba3b100-1" rows="6" data-slide="1">올해 1위 영화
+**턱밑 매출**
+---
+센서타워 추정으로 사전 예약과 첫날 판매는 2,450만 장을 넘겼다. 올해 최고 흥행 영화 &#39;스파이더맨: 브랜드 뉴 데이&#39;가 극장 상영 내내 번 돈은 25억 달러였다.</textarea>
+          
+          <label class="f" for="s-b533bba3b100-2">3장</label>
+          <textarea id="s-b533bba3b100-2" rows="6" data-slide="2">개발비만
+**10억 달러 넘게**
+---
+개발에 10억 달러 넘게 든 것으로 추정되며, 사실이라면 역대 가장 비싼 게임이 된다. 출시까지는 여러 차례 미뤄지며 13년을 기다렸다.</textarea>
+          
+          <label class="f" for="s-b533bba3b100-3">4장</label>
+          <textarea id="s-b533bba3b100-3" rows="6" data-slide="3">다른 게임은
+**10%** 덜 한다
+---
+센서타워는 GTA 6가 워낙 인기여서 게이머가 다른 싱글플레이 게임에 쓰는 시간이 10% 줄 것이라고 내다봤다. 판매의 약 4분의 3은 플레이스테이션 5가 차지했다.</textarea>
+          
+          <label class="f" for="s-b533bba3b100-4">5장</label>
+          <textarea id="s-b533bba3b100-4" rows="6" data-slide="4">밤새우고
+**휴가까지** 냈다
+---
+목요일 자정에 출시되자 많은 게이머가 밤을 새웠고, 일부는 다음 날 휴가를 내고 게임을 즐겼다. 212GB에 달하는 설치 파일 때문에 통신사 버진 미디어 O2의 저녁 트래픽 기록도 깨졌다.</textarea>
+          
+          <label class="f" for="s-b533bba3b100-5">6장</label>
+          <textarea id="s-b533bba3b100-5" rows="6" data-slide="5">게임 안 하는 친구도
+**놀랄 숫자** 보내기
+---
+영화 흥행작 매출에 맞먹는 금액이 사전 예약과 첫날 판매에서 나왔다는 추정이라, 게임을 안 하는 사람에게도 화젯거리가 될 소식</textarea>
+          
+          <label class="f" for="c-b533bba3b100">본문 (캡션)</label>
+          <textarea id="c-b533bba3b100" class="caption">13년을 기다린 GTA 6가 출시되자마자 엔터테인먼트 역사상 가장 큰 출시로 기록됐을 것이라는 추정이 나왔다. 시장 분석 업체 센서타워는 사전 예약과 첫날 판매가 2,450만 장을 넘고 금액으로는 약 23억 6천만 달러라고 추정했다. 올해 최고 흥행 영화인 &#39;스파이더맨: 브랜드 뉴 데이&#39;가 극장 상영 내내 번 돈이 25억 달러다. 제작사 락스타와 모회사 테이크투는 판매 세부 내용은 공개하지 않았지만 수요가 &#39;전례 없는&#39; 수준이라고 밝혔다. 게임 시장 조사 업체 니코 파트너스는 올해 전 세계 매출이 30억 달러를 넘을 것으로 내다봤다. 다만 물가를 반영한 &#39;바람과 함께 사라지다&#39;의 추정 매출 45억 달러에는 아직 거리가 있다. 개발비는 10억 달러 넘게 든 것으로 추정되고, 판매의 약 4분의 3은 플레이스테이션 5에서 나왔다. PC 출시일과 멀티플레이 확장 일정은 아직 발표되지 않았다. 일본에서는 수위 높은 표현 때문에 검열이 이뤄졌고, 중국 본토에서는 판매 승인이 나지 않았다. 출처: BBC, Sensor Tower</textarea>
+          <label class="f" for="t-b533bba3b100">해시태그</label>
+          <input id="t-b533bba3b100" type="text" class="tagsin" value="#GTA6 #게임 #락스타게임즈 #해외이슈 #게임뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>GTA 6가 사전 예약과 첫날 판매로 약 23억 6천만 달러를 벌어들인 것으로 추정된다</b>
+            <q>“The highly anticipated open-world action-adventure saw pre-orders and first day sales total more than 24.5 million units, raking in about $2.36bn (£1.8bn), according to analytics platform Sensor Tower.”</q>
+            <small>slide1, summary, caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>13년 만에 출시됐고 역대 가장 큰 엔터테인먼트 출시로 추정된다</b>
+            <q>“Grand Theft Auto 6 is estimated to have become the biggest entertainment launch in history following the blockbuster video game&#39;s debut on Thursday, after a 13-year wait.”</q>
+            <small>slide1, caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사전 예약과 첫날 판매가 2,450만 장을 넘었다</b>
+            <q>“The highly anticipated open-world action-adventure saw pre-orders and first day sales total more than 24.5 million units, raking in about $2.36bn (£1.8bn), according to analytics platform Sensor Tower.”</q>
+            <small>slide2, caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 최고 흥행 영화 스파이더맨: 브랜드 뉴 데이가 극장 상영 내내 25억 달러를 벌었다</b>
+            <q>“In comparison, this year&#39;s highest grossing movie so far, Spider-Man: Brand New Day, made $2.5bn over its entire run in cinemas.”</q>
+            <small>slide2, caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개발비가 10억 달러 넘게 든 것으로 추정되며 역대 가장 비싼 게임이 된다</b>
+            <q>“GTA 6 is estimated to have cost more than $1bn to develop, which would make it the most expensive video game in history.”</q>
+            <small>slide3, caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>여러 차례 출시가 미뤄지며 13년을 기다렸다</b>
+            <q>“Anticipation for the blockbuster title has grown through repeated delays, following a 13-year wait.”</q>
+            <small>slide3 · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>센서타워는 GTA 6가 다른 싱글플레이 게임에 쓰는 시간을 10% 줄일 것이라고 내다봤다</b>
+            <q>“Sensor Tower said GTA 6 will be so popular that it will reduce the time gamers spend on other single-player titles by 10%.”</q>
+            <small>slide4 · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>판매의 약 4분의 3은 플레이스테이션 5, 나머지는 엑스박스였다</b>
+            <q>“Around three quarters of the game&#39;s sales have been for the PlayStation 5 and the balance on Xbox, Sensor Tower said.”</q>
+            <small>slide4, caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>목요일 자정 출시에 많은 게이머가 밤을 새웠고 일부는 다음 날 휴가를 냈다</b>
+            <q>“The release of GTA 6 at midnight on Thursday across various time zones saw many gamers stay up through the night, while some took the following day off to play.”</q>
+            <small>slide5 · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>출시로 버진 미디어 O2의 저녁 트래픽 기록이 깨졌고 설치 파일은 212GB다</b>
+            <q>“Its launch broke Virgin Media O2&#39;s evening traffic record as people rushed to install GTA 6&#39;s huge 212GB file on consoles.”</q>
+            <small>slide5, summary · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>락스타와 테이크투는 판매 세부 내용을 공개하지 않았지만 수요가 전례 없다고 밝혔다</b>
+            <q>“GTA 6&#39;s maker Rockstar and parent company Take-Two have not released details of the game&#39;s sales but said demand has been &#34;unprecedented&#34;.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>니코 파트너스는 올해 전 세계 매출이 30억 달러를 넘을 것으로 예상했다</b>
+            <q>“Niko Partners, a gaming market research firm, said it expects GTA 6 to make more than $3bn in sales worldwide this year.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>바람과 함께 사라지다의 물가 반영 추정 매출은 45억 달러다</b>
+            <q>“That figure would rank GTA 6 among the highest-grossing entertainment releases ever, but it would still have some way to go to catch 1939&#39;s Gone with the Wind, which has made an estimated $4.5bn, adjusted for inflation.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>PC 출시일과 멀티플레이 확장 일정은 아직 발표되지 않았다</b>
+            <q>“The New York-based studio has yet to announce when the game will be released for PCs or given a date for its multiplayer expansion, which will allow players to interact and go on missions with others over the internet.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에서 검열됐고 중국 본토에서는 판매 승인이 나지 않았다</b>
+            <q>“The game&#39;s graphic content has resulted in censorship in Japan and, like earlier GTA releases, is not approved for sale in mainland China.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">GTA 6 breaks records as estimated sales top $2.3bn</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.notebookcheck.net/GTA-6-passes-2-36-billion-in-estimated-launch-day-sales.1455216.0.html" target="_blank" rel="noopener">Rockstar Games(Notebookcheck 게재) / </a> — "https://www.notebookcheck.net/fileadmin/Notebooks/News/_nc5/gta-6-netfloix-deal691087.jpg"</li><li>2장: <a href="https://www.tweaktown.com/news/114795/gta-6-day-one-sales-estimates-break-24-5-million-with-dollars2-36-billion-earned/index.html" target="_blank" rel="noopener">Sensor Tower(TweakTown 게재) / </a> — "https://static.tweaktown.com/news/1/1/114795_1_gta-6-day-one-sales-estimates-break-24-5-million-with-2-36-billion-earned_full.png?v=1795138480"</li><li>3장: <a href="https://pixabay.com/photos/blocks-child-toy-education-game-503109/" target="_blank" rel="noopener">bethL / Pixabay</a> — "game development"</li><li>4장: <a href="https://pixabay.com/photos/cat-kitten-animal-pet-indoors-8446390/" target="_blank" rel="noopener">nathan-osman / Pixabay</a> — "gaming controller"</li><li>5장: <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">BBC / </a> — "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/929e/live/80e88200-e4b9-11f1-99a1-253766e7ad8b.jpg"</li><li>6장: <a href="https://www.bbc.co.uk/news/articles/c9zr5nyv5dj2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">BBC(Rockstar Games 제공 화면) / </a> — "https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/5ccb/live/0f9f2750-e493-11f1-a094-5fdc692f3e33.jpg"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-306b2a1c12ef" data-id="306b2a1c12ef">
+    <div class="head">
+      <h2>3. 일본 KFC 부도덕 버거 2종</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-01.jpg" alt="1장: 43년 만에 닭다리살 버거?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-02.jpg" alt="2장: 일본 패스트푸드 닭다리살 대전" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-03.jpg" alt="3장: 욕망 가득 부도덕 버거" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-04.jpg" alt="4장: 마늘 맛이 베이컨 삼켰다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-05.jpg" alt="5장: 이쪽이 진짜 부도덕이네" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-06.jpg" alt="6장: 둘 다 실망은 아니었대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-07.jpg" alt="7장: 맥앤치즈 덕후한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/product-1120081426-01.jpg" alt="상품 사진: 흰 배경 위 종이에 놓인 치킨 버거: 둥근 번 위에 노란 마요 소스, 두툼한 베이컨 조각, 튀김옷 입힌 치킨 패티. 우상단 &#39;数量限定&#39;, 우하단 &#39;極旨&#39; 배지 있음 (entabe.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/product-1120081426-02.jpg" alt="상품 사진: 치킨 패티 위에 노란 치즈 맥앤치즈가 올라간 버거가 흰 빵과 분홍빛 포장지에 담겨 있음 (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 2장이 카드 뒤에 같이 들어가요 (entabe.jp, soranews24.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">일본 KFC가 43년 만에 처음으로 치킨 버거에 닭다리살을 쓰기 시작했다. 그리고 이름부터 심상치 않은 신메뉴 &#39;욕망투성이 배덕 버거(부도덕 버거)&#39; 시리즈까지 내놓았다.
+
+소라뉴스24에 따르면 일본 패스트푸드계에서는 지금 닭다리살이 최신 유행으로 보인다. 맥도날드가 내놓은 &#39;크런치 쥬시 맥&#39;은 인기가 너무 높아 공급이 수요를 따라가지 못해 현재 판매가 중단된 상태다. KFC의 부도덕 버거는 현재 두 종류다. 마늘마요 두툼 베이컨 치킨 버거는 620엔(약 4달러), 맥&amp;치즈 치킨 버거는 650엔이고, 둘 다 양상추를 아예 뺐다.
+
+맛 평가는 갈렸다. 마늘마요는 마늘 맛이 너무 강해서 닭고기 맛이 묻히고 베이컨 맛도 지워졌고, 취재진은 그다지 부도덕하게 느껴지지 않아 아쉬웠다고 했다. 반면 맥&amp;치즈는 치즈 맛도 양념도 아주 강해서 프라이드치킨이 조연으로 밀릴 정도였고, 일본인 기자는 이 맛을 &#39;미국의 맛&#39;이라고 표현했다.
+
+취재진은 마늘마요보다 맥&amp;치즈를 고르겠다면서도, 둘 다 실망시키지 않을 것이라고 평했다. 다만 이는 취재진 개인의 맛 평가다.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본KFC #치킨버거 #패스트푸드 #일본음식 #해외화제</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 620엔이 약 4달러(US$4.00)라는 환산 금액</li><li>근거 등록 안 된 주장: SoraNews24 출처 표기(기사 출처 귀속)</li>
+          <li>맛 평가는 소라뉴스24 취재진의 주관적 의견임</li><li>가격은 원문 기준 엔화 표기이며 환율에 따라 달라짐</li><li>한정 메뉴라 현재 판매 여부와 기간은 원문에 없어 확인되지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-306b2a1c12ef-0">1장</label>
+          <textarea id="s-306b2a1c12ef-0" rows="6" data-slide="0">43년 만에
+**닭다리살** 버거?!
+---
+일본 KFC가 43년 만에 처음으로 치킨 버거를 닭다리살로 바꾸고, 이름부터 수상한 &#39;부도덕 버거&#39; 신메뉴까지 내놓았다.</textarea>
+          
+          <label class="f" for="s-306b2a1c12ef-1">2장</label>
+          <textarea id="s-306b2a1c12ef-1" rows="6" data-slide="1">일본 패스트푸드
+**닭다리살** 대전
+---
+맥도날드는 &#39;크런치 쥬시 맥&#39;을 내놓았고, KFC는 닭다리살 버거로 갈아탔다. 소라뉴스24는 닭다리살이 일본 패스트푸드계의 최신 유행으로 보인다고 전했다.</textarea>
+          
+          <label class="f" for="s-306b2a1c12ef-2">3장</label>
+          <textarea id="s-306b2a1c12ef-2" rows="6" data-slide="2">욕망 가득
+**부도덕 버거**
+---
+KFC가 &#39;욕망투성이 배덕 버거&#39;라는 새 시리즈를 냈다. 마늘마요 두툼 베이컨 치킨 버거는 620엔, 맥&amp;치즈 치킨 버거는 650엔이며 둘 다 양상추가 없다.</textarea>
+          
+          <label class="f" for="s-306b2a1c12ef-3">4장</label>
+          <textarea id="s-306b2a1c12ef-3" rows="6" data-slide="3">**마늘** 맛이
+베이컨 삼켰다
+---
+한 입 먹자 마늘 향이 강하게 치고 올라와 닭고기 본연의 맛이 묻힐 정도였고, 기대했던 베이컨 맛도 지워졌다. 취재진은 생각만큼 부도덕하지 않아 아쉬웠다고 평했다.</textarea>
+          
+          <label class="f" for="s-306b2a1c12ef-4">5장</label>
+          <textarea id="s-306b2a1c12ef-4" rows="6" data-slide="4">이쪽이 **진짜**
+부도덕이네
+---
+큼직한 파스타와 새빨갛다 싶을 만큼 주황빛 치즈가 얹혀 겉모습부터 부도덕해 보였다. 맛이 워낙 자극적이라 프라이드치킨이 조연으로 밀렸고, 일본인 기자는 &#39;미국의 맛&#39;이라고 표현했다.</textarea>
+          
+          <label class="f" for="s-306b2a1c12ef-5">6장</label>
+          <textarea id="s-306b2a1c12ef-5" rows="6" data-slide="5">둘 다 실망은
+아니었대
+---
+두 버거에는 KFC가 새로 도입한 즙 많은 닭다리살 패티가 들어간다. 취재진은 마늘마요보다 맥&amp;치즈를 고르겠다면서도, 둘 다 실망시키지 않을 것이라고 평했다.</textarea>
+          
+          <label class="f" for="s-306b2a1c12ef-6">7장</label>
+          <textarea id="s-306b2a1c12ef-6" rows="6" data-slide="6">**맥앤치즈** 덕후한테
+조용히 보내기
+---
+취재진은 마늘마요보다 맥&amp;치즈를 고르겠다고 했다. 느끼한 맛을 좋아하는 친구에게 어느 쪽을 고를지 물어보기 좋은 소식</textarea>
+          
+          <label class="f" for="c-306b2a1c12ef">본문 (캡션)</label>
+          <textarea id="c-306b2a1c12ef" class="caption">일본 KFC가 43년 만에 처음으로 치킨 버거에 닭다리살을 쓰기 시작했다. 그리고 이름부터 심상치 않은 신메뉴 &#39;욕망투성이 배덕 버거(부도덕 버거)&#39; 시리즈까지 내놓았다.
+
+소라뉴스24에 따르면 일본 패스트푸드계에서는 지금 닭다리살이 최신 유행으로 보인다. 맥도날드가 내놓은 &#39;크런치 쥬시 맥&#39;은 인기가 너무 높아 공급이 수요를 따라가지 못해 현재 판매가 중단된 상태다. KFC의 부도덕 버거는 현재 두 종류다. 마늘마요 두툼 베이컨 치킨 버거는 620엔(약 4달러), 맥&amp;치즈 치킨 버거는 650엔이고, 둘 다 양상추를 아예 뺐다.
+
+맛 평가는 갈렸다. 마늘마요는 마늘 맛이 너무 강해서 닭고기 맛이 묻히고 베이컨 맛도 지워졌고, 취재진은 그다지 부도덕하게 느껴지지 않아 아쉬웠다고 했다. 반면 맥&amp;치즈는 치즈 맛도 양념도 아주 강해서 프라이드치킨이 조연으로 밀릴 정도였고, 일본인 기자는 이 맛을 &#39;미국의 맛&#39;이라고 표현했다.
+
+취재진은 마늘마요보다 맥&amp;치즈를 고르겠다면서도, 둘 다 실망시키지 않을 것이라고 평했다. 다만 이는 취재진 개인의 맛 평가다.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-306b2a1c12ef">해시태그</label>
+          <input id="t-306b2a1c12ef" type="text" class="tagsin" value="#일본KFC #치킨버거 #패스트푸드 #일본음식 #해외화제" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/product-1120081426-01.jpg" alt="" width="56" height="56" loading="lazy"> 흰 배경 위 종이에 놓인 치킨 버거: 둥근 번 위에 노란 마요 소스, 두툼한 베이컨 조각, 튀김옷 입힌 치킨 패티. 우상단 &#39;数量限定&#39;, 우하단 &#39;極旨&#39; 배지 있음 · entabe.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/306b2a1c12ef/product-1120081426-02.jpg" alt="" width="56" height="56" loading="lazy"> 치킨 패티 위에 노란 치즈 맥앤치즈가 올라간 버거가 흰 빵과 분홍빛 포장지에 담겨 있음 · soranews24.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>KFC가 43년 만에 처음으로 닭다리살 치킨 버거로 바꿨다</b>
+            <q>“Juicy chicken thighs appear to be the latest trend rocking the fast food world in Japan right now, with McDonald’s releasing a new “Crunchy Juicy Mac” and KFC switching to chicken thigh burgers for the first time in 43 years.”</q>
+            <small>slide1, slide2, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>맥도날드가 크런치 쥬시 맥을 내놓았고 닭다리살이 일본 패스트푸드의 최신 유행으로 보인다</b>
+            <q>“Juicy chicken thighs appear to be the latest trend rocking the fast food world in Japan right now, with McDonald’s releasing a new “Crunchy Juicy Mac” and KFC switching to chicken thigh burgers for the first time in 43 years.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>크런치 쥬시 맥은 공급이 수요를 못 따라가 판매가 중단됐다</b>
+            <q>“There’s certainly an appetite for these burgers, as the Crunchy Juicy Mac has been so popular that sales are currently suspended, as supply can’t keep up with demand.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>KFC가 욕망투성이 배덕 버거라는 스핀오프를 내놓았고 현재 두 종류다</b>
+            <q>“Over at KFC, though, things are going strong, with the chain even expanding its range to include a new spin-off called the “Yokubou Mamire no Haitoku Burger” (“Desire-Filled Immoral Burgers”), and there are currently two to choose from.”</q>
+            <small>slide1, slide3, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마늘마요 두툼 베이컨 치킨 버거는 620엔, 맥&amp;치즈 치킨 버거는 650엔이다</b>
+            <q>“▼ The Garlic Mayo Thick-Cut Bacon Chicken Burger (620 yen [US$4.00]) and the Mac &amp; Cheese Chicken Burger (650 yen).”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 버거 모두 양상추를 뺐다</b>
+            <q>“Both burgers are so decadent they even do away with the lettuce, and a quote on the poster reads, “They’ll blow your mind.””</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마늘마요 버거는 마늘 맛이 닭고기 맛을 거의 덮고 베이컨 맛을 지웠다</b>
+            <q>“It was so strong that it almost overwhelmed the flavour of the original chicken, and it totally wiped away the taste of the bacon, which we had been looking forward to.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마늘마요 버거는 마늘이 매우 강했지만 특별히 부도덕하게 느껴지지 않아 아쉬웠다</b>
+            <q>“It was more like a Garlic Mayo Chicken Burger, and although the garlic was incredibly strong, it didn’t feel particularly immoral, which in our eyes, was another disappointment.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>맥&amp;치즈 버거는 큰 파스타 덩어리와 주황색 치즈가 얹혀 부도덕해 보였다</b>
+            <q>“Now it was time to turn our attention to the Mac &amp; Cheese, which came with a large dollop of pasta and bright orange cheese that certainly made it look immoral.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>맥&amp;치즈 버거는 맛이 강해 프라이드치킨이 조연이 됐고 일본인 기자가 &#39;미국의 맛&#39;이라고 표현했다</b>
+            <q>“It was such a sinful flavour that the fried chicken was downgraded to a supporting role, and our Japanese-language reporter fondly described it as “The Taste of America“.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 버거 모두 KFC가 새로 도입한 즙 많은 닭다리살 패티를 쓴다</b>
+            <q>“Both burgers feature KFC’s newly introduced juicy chicken thigh patties, and though it’s difficult to directly compare them to the Crunchy Juicy Mac, which has a much crunchier coating, the fried chicken burgers at KFC definitely come out on top in terms of the thickness and juiciness of the meat.”</q>
+            <small>slide6 · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>취재진은 마늘마요보다 맥&amp;치즈를 고르겠지만 둘 다 실망시키지 않을 것이라고 평했다</b>
+            <q>“Though we’d choose the Mac &amp; Cheese over the garlic, neither of these two will disappoint, especially when you’re looking for a little decadence in your life.”</q>
+            <small>slide6, slide7, summary, caption · <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">KFC Japan releases new Desire-Filled Immoral Burgers with Mac &amp; Cheese… but are they as sinful as they look?</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/KFC-Japan-Mac-and-Cheese-garlic-mayo-bacon-fried-chicken-burger-limited-edition-exclusive-menu-fast-food-Japan-McDonalds-Zetteria-news-3.jpeg?w=640"</li><li>2장: <a href="https://pixabay.com/photos/french-fries-fast-food-junk-food-250641/" target="_blank" rel="noopener">kgberlin / Pixabay</a> — "fast food tray"</li><li>3장: <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/KFC-Japan-Mac-and-Cheese-garlic-mayo-bacon-fried-chicken-burger-limited-edition-exclusive-menu-fast-food-Japan-McDonalds-Zetteria-news-1.jpeg?w=640"</li><li>4장: <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/KFC-Japan-Mac-and-Cheese-garlic-mayo-bacon-fried-chicken-burger-limited-edition-exclusive-menu-fast-food-Japan-McDonalds-Zetteria-news-7.jpeg?w=640"</li><li>5장: <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/KFC-Japan-Mac-and-Cheese-garlic-mayo-bacon-fried-chicken-burger-limited-edition-exclusive-menu-fast-food-Japan-McDonalds-Zetteria-news-10.jpeg"</li><li>6장: <a href="https://soranews24.com/2026/11/20/kfc-japan-releases-new-desire-filled-immoral-burgers-with-mac-cheese-but-are-they-as-sinful-as-they-look/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/KFC-Japan-Mac-and-Cheese-garlic-mayo-bacon-fried-chicken-burger-limited-edition-exclusive-menu-fast-food-Japan-McDonalds-Zetteria-news-5.jpeg?w=640"</li><li>7장: <a href="https://pixabay.com/photos/girls-casual-eating-sitting-stairs-8408369/" target="_blank" rel="noopener">Surprising_Media / Pixabay</a> — "friends eating"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 3개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-b2a0dd276176">
+    <div class="head">
+      <h2>S1. 과도한 운동, 회복 없으면 뇌 도파민이 48시간 높게 남는다는 쥐 실험</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-b2a0dd276176">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;운동은 많이 할수록 좋다&#39;는 통념을 뒤집고, 매일 운동하는 사람이 오늘 바로 쉬는 날을 넣을 이유를 쥐 실험 결과로 보여주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">83/500자</span></div>
+      <p class="tp-text">운동은 &#39;많이 할수록 좋다&#39;가 아니라 &#39;쉬는 것까지&#39;가 운동이라는 연구가 나옴
+쥐 실험인데, 운동 끝나고 이틀이 지나도 뇌에서 안 꺼진 게 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">75/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 몇 주 빡세게 훈련시킨 쥐는 회복 기간인데도 48시간 뒤까지 뇌 속 도파민이 높게 남아 있었대. 대체 얼마나 굴렸길래?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">2/ 8주 동안 훈련량을 점점 늘렸고, 마지막 주엔 하루 2번 운동에 사이 휴식은 4시간뿐이었대. 엘리트 선수의 과훈련 증후군 조건을 흉내 낸 거야. 그럼 도파민이 높게 남으면 뭐가 문제일까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">3/ 연구진이 본 곳은 기억·감정 조절에 중요한 뇌 부위인 해마. 도파민은 동기·각성에 관여하는데, 잠들 준비를 할 때도 높으면 문제가 생길 수 있다는 게 연구자 설명이고, 불면·불안을 직접 잰 건 아니래. 그럼 같이 본 세로토닌은 어땠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">4/ 의외로 세로토닌은 쥐들 사이에 유의미한 차이가 없었대. 피로는 세로토닌 탓이라는 오래된 생각에 도전하는 결과라고 하고, 도파민 조절도 눈여겨볼 만하다는 거야. 그럼 사람도 똑같을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">155/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 대상: 쥐 (사람 아님)
+- 8주 훈련, 마지막 주엔 하루 2번·사이 휴식 4시간
+- 결과: 회복 기간 48시간 뒤에도 해마 도파민 높게 유지, 세로토닌은 차이 없음
+- 안 본 것: 수면·불안·각성은 직접 측정 안 함
+- 사람도 같은지는 추가 연구 필요</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">240/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 강도를 올린다고 무조건 결과가 좋아지는 게 아니라, 몸이 적응할 시간도 줘야 한다는 거. 자기한테 맞는 강도는 전문가랑 상의하고.
+너는 어느 쪽이야? 쉬는 날 없이 매일 운동파 vs 쉬는 날 꼭 넣는 파
+이런 해외 건강·운동 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>이 결과는 피로가 주로 세로토닌 때문이라는 오래된 생각에 도전한다 <small>애매 · 원문은 세로토닌 &#39;단독으로&#39; 과도한 피로의 주된 원인이라는 오래된 생각에 도전한다고 한다. 게시글은 &#39;alone&#39;과 &#39;주로&#39;라는 한정을 빼서 피로는 세로토닌 탓이라는 생각 전체를 반박한 것처럼 일반화했다. &#39;세로토닌만이 주원인이라는 생각에 도전한다&#39;로 고치는 것이 좋다.</small></li>
+        <li>근거 등록 안 된 주장: 헤드라인의 &#39;운동은 많이 할수록 좋다가 아니라 쉬는 것까지가 운동이라는 연구&#39;라는 결론 (원문은 회복과 균형을 강조했을 뿐 &#39;쉬는 것까지가 운동&#39;이라고 정의하지 않음)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>운동은 &#39;많이 할수록 좋다&#39;가 아니라 &#39;쉬는 것까지&#39;가 운동이라는 연구가 나옴</li><li>쉬는 날 없이 몰아붙인 쥐는 운동 끝나고 이틀이 지나도 뇌가 안 꺼져 있었대</li><li>운동 강도부터 올리지 말고 회복 시간부터 챙기라는 연구가 나옴</li><li>&#39;운동은 할수록 득&#39;이라는 말, 이 쥐 실험 보면 좀 달라짐</li><li>운동 끝나고 48시간이 지났는데 뇌는 아직 운동 중이었대</li><li>피로는 세로토닌 탓이라는 오래된 통념, 이 실험에선 차이가 안 났대</li><li>하루 2번 운동에 사이 휴식은 4시간. 이렇게 굴린 쥐의 뇌에서 나온 결과</li><li>&#39;매일 운동 인증&#39; 하는 사람들, 이 연구 한번 보고 가</li><li>러닝·헬스에 과몰입한 사람들한테 연구진이 하는 말: 강도를 올린다고 결과가 좋아지진 않는다</li><li>운동 많이 하면 몸만 지치는 게 아니라 뇌 화학도 흔들릴 수 있다는 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>쉬는 날 없이 매일 운동파 vs 쉬는 날 꼭 넣는 파, 너는 어느 쪽이야?</li><li>운동하다가 &#39;오늘은 쉬는 게 낫겠다&#39; 하고 쉬어본 사람?</li><li>운동 인증, 운동한 날만 올리기 vs 쉬는 날도 올리기, 어느 쪽이 더 낫다고 봐?</li><li>헬스 vs 러닝, 매일 해도 덜 질리는 건 뭐야?</li><li>너라면 일주일에 쉬는 날을 며칠 넣을 것 같아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>과훈련 증후군, 연구에서 말하는 증상 정리</li><li>운동 쉬는 날 몸과 뇌에서 벌어지는 일</li><li>도파민은 쾌락만이 아니라 각성도 조절한다는 얘기</li><li>피로의 원인은 세로토닌뿐일까? 피로 연구 이야기</li><li>운동이 효과를 내는 선과 해로워지는 선, 연구가 찾는 신호들</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>이 결과는 피로가 주로 세로토닌 때문이라는 오래된 생각에 도전한다</b>
+          <q>“This result challenges the long-standing idea that serotonin alone is primarily responsible for excessive fatigue.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐가 몇 주 훈련 후 회복 기간인 48시간 뒤에도 도파민이 높게 유지됐다</b>
+          <q>“In this group, both dopamine and TyrH remained elevated for 48 hours after the performance test, even though the mice were in their recovery period.”</q>
+          <small>post0, post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>8주간 훈련량을 늘렸고 마지막 주엔 하루 2번, 사이 휴식 4시간이었다</b>
+          <q>“For the extended training experiment, the mice exercised over eight weeks as the researchers gradually increased the workload. By the final week, they were completing two sessions each day, with only four hours of recovery between workouts.”</q>
+          <small>post2, post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>엘리트 선수의 과훈련 증후군 조건을 재현하도록 설계된 훈련 프로그램이었다</b>
+          <q>“The other followed an extended training program designed to reproduce the demanding conditions associated with overtraining syndrome in elite athletes.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>해마는 기억과 감정 조절에 중요한 뇌 부위이며 연구진이 이곳의 도파민 조절 변화를 확인했다</b>
+          <q>“researchers in Brazil found that prolonged, exhausting exercise altered dopamine regulation in the hippocampus, a brain region important for memory and emotional regulation.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>도파민은 동기와 각성에 중요한 역할을 한다</b>
+          <q>“Dopamine plays an important role in motivation and alertness, and the researchers believe that similar disruptions in humans could help explain why excessive training is sometimes associated with insomnia, anxiety, and persistent fatigue.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>뇌가 잠들 준비를 할 때 도파민이 비정상적으로 높으면 문제가 생길 수 있다는 것이 Rocha의 설명이다</b>
+          <q>“According to Rocha, difficulties could arise if dopamine remains unusually elevated when the brain should be preparing for sleep.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 수면, 불안, 각성을 직접 측정하지 않았다</b>
+          <q>“However, the researchers caution that the study did not directly measure sleep, anxiety, or alertness.”</q>
+          <small>post3, post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐들 사이에 세로토닌 수치의 유의미한 차이가 발견되지 않았다</b>
+          <q>“Despite the substantial changes in dopamine, the researchers detected no significant differences in serotonin levels between the animals.”</q>
+          <small>post4, post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람에게서도 같은 도파민 변화가 나타나는지는 추가 연구가 필요하다</b>
+          <q>“Those possible consequences remain to be investigated, and additional research is needed to determine whether the same dopamine changes occur in people.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>운동 강도를 높인다고 몸이 적응할 시간이 없으면 더 좋은 결과가 나오는 것은 아니다</b>
+          <q>“Increasing workout intensity does not necessarily produce better results if the body is not given enough time to adapt.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 훈련을 적절한 회복과 전문가 지도와 균형 있게 하라고 강조한다</b>
+          <q>“For recreational exercisers and professional athletes alike, the researchers emphasize that training should be balanced with appropriate recovery and expert guidance.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="b2a0dd276176">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261117033923.htm" target="_blank" rel="noopener">Too much exercise could leave your brain stuck in overdrive</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-5fd1d9eb4968">
+    <div class="head">
+      <h2>S2. 식물성 식품 212개 곰팡이독소 검출 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-5fd1d9eb4968">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;비건이면 안전&#39;이라는 통념을 흔드는 &#39;212개 전부 검출&#39; 숫자로 끌고, 결론은 &#39;기준치 아래, 겁먹을 일은 아님&#39;과 &#39;제품 하나가 아니라 먹는 걸 통틀어 보라&#39;는 점으로 균형 있게 전한다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">매일 마시는 오트밀크, &#39;비건이니까 안전&#39;하다는 말이 좀 달라지는 연구가 나옴
+영국에서 식물성 식품 212개를 검사했더니 전부에서 곰팡이독소가 나왔대
+근데 연구진이 진짜 짚은 건 따로 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">1/ 검사 대상은 영국에서 파는 비건·채식 제품 212개야. 대체육, 오트·아몬드·두유 음료가 포함됐고, 전 제품에서 19종 곰팡이독소 중 최소 한 종류가 검출됐대. 그럼 위험한 수준이었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">86/500자</span></div>
+      <p class="tp-text">2/ 아니, 212개 전부 EU 권고 기준치 아래였어. 연구진은 이게 영국 식품업계의 높은 품질 기준이 반영된 결과라고 말했대. 그럼 뭐가 문제라는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">3/ 곰팡이독소는 곡물·콩·씨앗이 재배나 보관 중에 곰팡이를 만나면서 생길 수 있대. 근데 독소가 검출됐다고 곧 안전하지 않다는 뜻은 아니고, 독소 종류와 농도, 얼마나 오래 먹느냐에 따라 달라진다고. 그럼 연구진이 신경 쓴 건 뭘까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">4/ 연구진이 짚은 건 &#39;반복 노출&#39;이야. 대체육·식물성 음료·곡물·콩류를 자주 먹으면 여러 식품에서 조금씩 접할 수 있고, 제품 하나만 보면 전체 그림이 안 나온다는 거지. 그럼 이거 다 끊으라는 얘기일까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">182/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 대상: 영국에서 파는 식물성 제품 212개 (대체육, 식물성 음료)
+- 결과: 전 제품에서 19종 중 최소 1종 검출
+- 농도: 전부 EU 권고 기준 아래
+- 연구진: 반복 노출의 영향은 더 지켜볼 필요
+- 연구진: 소비자가 겁먹을 필요는 없다고 함
+- 이번 결과가 제품이 병을 일으킨다는 증거는 아님</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">210/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 비건 제품이 문제라는 게 아니라, 제품 하나가 아니라 먹는 걸 통틀어서 노출을 봐야 한다는 거
+오트밀크 vs 두유 vs 아몬드밀크, 너는 어느 파야?
+이런 해외 식품·건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구진의 말은 비건 제품이 문제라는 뜻이 아니다(연구진이 비건·채식 식품을 포기할 이유가 아니라고 했다는 주장)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>매일 마시는 오트밀크, &#39;비건이니까 안전&#39;하다는 말이 좀 달라지는 연구가 나옴</li><li>식물성 음료, 독소가 &#39;있냐 없냐&#39;가 아니라 &#39;얼마나, 얼마나 오래 먹냐&#39;를 보라는 연구가 나옴</li><li>오트밀크 한 팩만 따지지 말고 &#39;먹는 식품 전체&#39;로 보라는 연구가 나옴</li><li>대체육·오트밀크 212개 검사했더니 212개 전부에서 곰팡이독소가 나옴</li><li>영국 마트 비건 버거, 채식 소시지, 오트밀크까지 212개를 털어봤더니</li><li>곰팡이독소가 전 제품에서 나왔는데 연구진은 &#39;겁먹지 말라&#39;고 함</li><li>두유·아몬드밀크 자주 마시면 이 연구 결과는 한번 봐둘 만함</li><li>&#39;독소 검출&#39;이라는 제목, 끝까지 읽어보면 반전이 있음</li><li>&#39;식물성이라 무조건 안전&#39;이 아니라 &#39;검출은 되지만 기준치 아래&#39;가 이번 결과래</li><li>해외에선 대체육과 식물성 음료까지 곰팡이독소를 이렇게 뜯어봤대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>오트밀크 vs 두유 vs 아몬드밀크, 너는 어느 파야?</li><li>식물성 음료 평소에 자주 마셔본 사람?</li><li>대체육 버거나 소시지 먹어본 사람?</li><li>&#39;비건이면 더 건강하다&#39;는 말, 너는 믿는 편이야 아닌 편이야?</li><li>마트에서 식물성 음료 고를 때 맛파야 성분파야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>곰팡이독소가 뭐길래: 곡물·콩·씨앗에서 생기는 과정</li><li>여러 재료가 섞인 가공식품은 왜 독소 평가가 더 어려울까</li><li>식물성 식품이 늘면서 식품 안전 감시는 어떻게 따라가고 있나</li><li>식단별로 곰팡이독소 노출이 얼마나 다른지 보는 후속 연구</li><li>취약한 소비자 집단을 가려내려는 연구진의 다음 계획</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>영국 판매 제품 212개 대상 결과라 한국 제품으로 일반화하면 안 됨</li><li>&#39;전부 검출&#39; 숫자만 부각되면 공포 조장으로 읽힐 수 있어 &#39;기준치 아래&#39;와 &#39;겁먹을 필요 없다&#39;는 문장이 같이 가야 함</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국에서 식물성 식품·음료 212개를 검사했더니 전부에서 곰팡이독소가 최소 하나 검출됐다</b>
+          <q>“Every one of 212 plant-based foods and drinks tested in a new study contained at least one naturally occurring fungal toxin, raising questions about the potential health effects of regularly consuming these products.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국에서 파는 비건·채식 제품이 검사 대상이었다</b>
+          <q>“Researchers examined a wide selection of vegetarian and vegan products sold in the UK, including meat alternatives and dairy substitutes.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대체육과 오트·아몬드·두유 음료가 포함됐다</b>
+          <q>“The selection covered foods commonly found on supermarket shelves, such as vegan burgers, vegetarian chicken pieces, vegan sausages, and oat, almond, and soy milk.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>모든 제품에서 19종 곰팡이독소 중 최소 한 종류가 검출됐다</b>
+          <q>“They detected at least one of 19 mycotoxins in every product, and many contained multiple toxins.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>모든 제품이 EU 권고 기준 아래였고 연구진은 영국 식품업계의 높은 품질 기준이 반영된 결과라고 했다</b>
+          <q>“Every product contained mycotoxin concentrations below recommended European Union guideline levels, which the team said reflected the high food quality standards maintained by the UK food industry.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>곡물·콩·씨앗이 재배나 보관 중 곰팡이를 만나 독소가 생길 수 있다</b>
+          <q>“Grains, legumes, and seeds can encounter mold in fields or storage facilities, creating opportunities for mycotoxins to develop before the ingredients reach food manufacturers.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>독소 검출이 곧 안전하지 않다는 뜻은 아니며 위험은 독소 종류, 농도, 얼마나 오래 먹는지에 따라 달라진다</b>
+          <q>“Their presence in food does not necessarily mean the product contains living mold, and detecting a toxin does not automatically mean the food is unsafe. The potential health risk depends on factors such as the type of toxin, its concentration, and how much a person consumes over time.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대체육·식물성 음료·곡물·콩류를 자주 먹으면 여러 식품에서 독소를 접할 수 있다</b>
+          <q>“Someone whose diet regularly includes meat substitutes, dairy alternatives, grains, and legumes may encounter these substances through several different foods rather than a single source.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제품 하나만 평가하면 전체 식이 노출을 파악하기 어렵다</b>
+          <q>“In other words, assessing a single product may not provide a complete picture of a person&#39;s overall dietary exposure.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>반복 노출의 영향은 더 주의 깊게 볼 필요가 있다고 연구진이 말했다</b>
+          <q>“While the concentrations detected in the UK products were below recommended EU guidelines, researchers say the potential effects of repeated exposure deserve closer attention.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 소비자가 겁먹을 필요가 없다고 했다</b>
+          <q>“As consumers, we should not be frightened or deterred from enjoying a variety of products.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이번 결과가 제품이 질환을 일으킨다는 걸 입증하지는 않는다</b>
+          <q>“The new findings do not establish that the tested products cause these conditions.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제품 하나씩이 아니라 여러 식품에 걸친 식이 노출을 연구하는 게 중요하다</b>
+          <q>“The discovery of fungal toxins in all 212 products highlights the importance of studying dietary exposure across multiple foods, rather than evaluating each product in isolation.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="5fd1d9eb4968">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261118073749.htm" target="_blank" rel="noopener">Scientists tested 212 plant-based foods. Every single one contained fungal toxins</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-06f41b3dfb15">
+    <div class="head">
+      <h2>S3. 8BitDo GC 블루투스 게임패드 - GameCube 패드 무선 부활</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 15 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-06f41b3dfb15">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: GameCube 패드 모양 그대로인데 속은 TMR 조이스틱, 홀 효과 트리거, 무선 연결까지 바뀐 $49.99 신상이라, 향수 있는 게이머가 갖고 싶거나 선물하고 싶어 하는 각도</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "무선 블루투스 게임패드 레트로" · 원문 제품: 8BitDo GC Bluetooth Gamepad, $49.99, 오렌지·보라 에디션, 8BitDo 공식 온라인 스토어에서 예약 판매, 2026년 12월 10일 배송 시작 예정. 오리지널 GameCube 연결용으로 별매 8BitDo Retro Receiver 언급.<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: shop.8bitdo.com, 8bitdo.com, yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/06f41b3dfb15/thread-photo-1120082547-01.jpg" alt="주황색 GameCube 스타일 무선 게임패드 정면 사진, 흰 배경, 아날로그 스틱·십자패드·A/B/X/Y/C 버튼 보임" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/06f41b3dfb15/thread-photo-1120082547-02.jpg" alt="브릭 벽 앞 나무 탁자 위에 오렌지색과 남색(인디고) GameCube 스타일 게임패드 2개가 나란히 놓여 있고, 양옆으로 레드 조이콘 스위치와 검은색 스위치 본체가 보이며, 뒤쪽 노트북 화면에는 픽셀 게임이 나온다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261120-pm-81c775568afe/06f41b3dfb15/thread-photo-1120082547-03.jpg" alt="보라색 GameCube 스타일 게임패드 상단 모습. Z 버튼과 ZL 버튼, USB-C 포트, 상단 버튼들이 보이고 아날로그 스틱이 우측에 있음" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-06f41b3dfb15">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">86/500자</span></div>
+      <p class="tp-text">이거 GameCube 패드 그대로네? 싶은데 속은 요즘 패드래
+보라색, 주황색으로 나온 8BitDo 신상인데
+모양은 추억 그대로, 달라진 건 따로 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">1/ 제일 큰 변화는 조이스틱이래. TMR 조이스틱에 10비트 ADC 칩을 붙여서 정밀한 입력은 챙기고 전력은 덜 쓰게 만들었다고 함. 팔각형 게이트로 GameCube 하던 사람한테 익숙한 8방향 움직임도 그대로래. 그럼 어깨 쪽 트리거는 어떻게 달라졌을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">145/500자</span></div>
+      <p class="tp-text">2/ 트리거는 스프링 달린 홀 효과 리니어 트리거로 바뀌었대. 움직임이 부드럽고 저항이 일정하고, 끝까지 눌렀을 때 쿠션감이 있다고 함. Z랑 ZL 버튼은 좌우 대칭으로 하나 더 늘어서 요즘 게임에 더 쓸 만해졌다는 설명. 그럼 어디에 연결해서 쓸 수 있을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">231/500자</span></div>
+      <p class="tp-text">3/ GC Bluetooth Gamepad 요약 정리
+- 색상: 보라색, 주황색
+- 연결: Bluetooth 5.0, 2.4GHz 무선, USB-C 유선
+- 호환: Switch, Switch 2, Windows PC (Bluetooth는 Switch 기기에서 지원)
+- 기능: 캡처 버튼, 터보, 여러 패드 동시 연결
+- 크기·무게: 140.1 × 102.95 × 67.6mm, 218.1g
+그럼 가격은 얼마일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">156/500자</span></div>
+      <p class="tp-text">4/ 가격은 $49.99. 오렌지, 보라 두 가지로 공식 온라인 스토어에서 예약 중이고, 배송은 2026년 12월 10일부터 시작이래. 다만 원래 GameCube 패드와 모양이나 그립감이 완전히 똑같진 않다는 점은 알고 가야 함. 그래서 원문은 이걸 어떤 사람한테 맞다고 봤을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">182/500자</span></div>
+      <p class="tp-text">5/ 결국 레트로 느낌은 가져가면서 요즘 기능은 포기하기 싫은 사람한테 괜찮은 대안이라는 얘기
+
+이거 선물로 받으면 좋아할 사람 소환해봐
+
+해외에서 난리 난 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>모양은 그대로 두고 속에는 요즘 조작 기술을 넣었다 <small>애매 · 원문은 물리적 특성을 유지하며 현대 조작 기술을 넣었다고 하지만, 원래 모양을 그대로 재현한 것은 아니라고 명시한다. &#39;모양은 그대로&#39;는 과장이니 &#39;모양의 특징을 살리고&#39;처럼 고쳐야 한다.</small></li>
+        <li>근거 등록 안 된 주장: 해외에서 난리 난 물건이라는 인기 주장은 원문 근거가 없다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>이거 GameCube 패드 그대로네? 싶은데 속은 완전 요즘 패드래</li><li>추억의 GameCube 패드, 이번엔 무선으로 돌아왔대</li><li>GameCube 패드는 추억템이 아니라 지금 쓰는 패드로 돌아왔어</li><li>스위치 패드 바꿀 때가 됐다면, 이번엔 GameCube 모양은 어때?</li><li>$49.99에 GameCube 감성 무선 패드가 나온대</li><li>옛날 패드는 선 달린 추억이 아니라 블루투스에 USB-C까지 되는 걸로 돌아왔어</li><li>스매시 브라더스 좀 해본 사람이면 이 패드 보고 손이 근질거릴 듯</li><li>보라색 GameCube 패드가 다시 나온대, 근데 버튼이 하나 더 있음</li><li>GameCube 패드 선물하고 싶은 친구 한 명 떠오르면 이거 봐</li><li>GameCube 패드의 모양은 그대로, 조이스틱은 아예 다른 걸로 바뀌었대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해봐</li><li>GameCube 패드 써본 사람?</li><li>이 패드 있으면 살 거야?</li><li>레트로 패드파 vs 요즘 패드파, 어디야?</li><li>GameCube 게임 중에 제일 오래 한 거 하나만 말해주면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>8BitDo가 만든 N64 감성 컨트롤러 얘기</li><li>8BitDo 레트로 키보드 얘기</li><li>GTA 6 출시 첫날 23억 달러 추정 얘기</li><li>원피스 1198화 루피 니카 변신, 파괴의 신 논란</li><li>일본 KFC 부도덕 버거 2종</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>모양은 그대로 두고 속에는 요즘 조작 기술을 넣었다</b>
+          <q>“8BitDo has incorporated modern control technology while keeping the physical characteristics that made the original appealing to players.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>8BitDo의 이 신상은 보라색과 주황색으로 나오고 GameCube 패드의 외형을 살렸다</b>
+          <q>“Available in purple and orange, the new controller retains much of the visual character that made the original GameCube gamepad memorable.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>TMR 조이스틱과 10비트 ADC 칩을 써서 정밀한 입력과 낮은 전력 소모를 노렸다</b>
+          <q>“The controller uses TMR (Tunnel Magnetoresistance) joysticks paired with a 10-bit ADC sampling chip, designed to deliver precise input while consuming less power.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>팔각형 게이트로 GameCube 사용자에게 익숙한 8방향 움직임을 유지했다</b>
+          <q>“These are surrounded by octagonal gates, preserving the eight-direction movement familiar to GameCube players.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스프링이 달린 홀 효과 리니어 트리거로 부드러운 움직임, 일정한 저항, 끝에서의 쿠션감을 낸다</b>
+          <q>“The controller features Hall Effect linear triggers with spring mechanisms, offering smooth travel, consistent resistance, and a cushioned feel at the end of each press.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>좌우 대칭 Z, ZL 버튼이 원래 배열에 컨트롤을 하나 더하고 요즘 게임에 더 실용적이다</b>
+          <q>“A symmetrical Z and ZL button arrangement adds another control to the original layout, making the gamepad more practical for contemporary titles.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Bluetooth 5.0, 2.4GHz 무선, USB-C 유선 연결을 지원한다</b>
+          <q>“The GC Bluetooth Gamepad supports Bluetooth 5.0, 2.4GHz wireless connectivity, and wired USB-C connections.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Switch, Switch 2, Windows PC에서 작동한다</b>
+          <q>“It works with Nintendo Switch, Switch 2 and Windows PCs, with the wireless USB receiver included for 2.4GHz connections.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Bluetooth는 Switch 기기에서 지원되고 2.4GHz 무선과 USB-C 유선은 Switch와 Windows에서 된다</b>
+          <q>“Bluetooth connectivity is supported on Nintendo Switch consoles, while both 2.4GHz wireless and USB-C wired modes work with Switch and Windows devices.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>캡처 버튼, 터보 기능, 여러 패드 동시 연결을 지원한다</b>
+          <q>“8BitDo has included a dedicated Capture button for taking screenshots and recording gameplay, alongside a Turbo function and support for connecting multiple gamepads simultaneously.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>크기는 140.1 × 102.95 × 67.6mm, 무게는 218.1g이다</b>
+          <q>“Measuring 140.1 × 102.95 × 67.6mm and weighing 218.1g, the controller maintains a relatively compact profile while incorporating the additional controls and hardware.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보라색과 주황색 두 가지 색상으로 나온다</b>
+          <q>“Available in purple and orange, the new controller retains much of the visual character that made the original GameCube gamepad memorable.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격은 $49.99이고 오렌지·보라 에디션을 공식 온라인 스토어에서 판매한다</b>
+          <q>“The GC Bluetooth Gamepad is priced at $49.99 and is available in Orange and Purple editions through 8BitDo’s official online store.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>예약이 열려 있고 배송은 2026년 12월 10일부터 시작될 예정이다</b>
+          <q>“Pre-orders are open, with shipping scheduled to begin on December 10, 2026.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원래 패드의 모양과 인체공학을 그대로 재현한 것은 아니다</b>
+          <q>“While it is not an exact reproduction of the original controller’s shape and ergonomics, the combination of familiar GameCube controls, updated joystick technology and flexible connectivity makes it an interesting alternative for players who want a retro-inspired gamepad without giving up modern functionality.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원문은 레트로 느낌을 원하면서 요즘 기능을 포기하기 싫은 사람에게 흥미로운 대안이라고 평가했다</b>
+          <q>“While it is not an exact reproduction of the original controller’s shape and ergonomics, the combination of familiar GameCube controls, updated joystick technology and flexible connectivity makes it an interesting alternative for players who want a retro-inspired gamepad without giving up modern functionality.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="06f41b3dfb15">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/19/8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=8bitdo-gc-bluetooth-gamepad-revives-the-nintendo-gamecube-controller-back-with-modern-wireless-tech" target="_blank" rel="noopener">8BitDo GC Bluetooth gamepad revives the Nintendo GameCube controller back with modern wireless tech - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261120-pm";
+  const ORIGINAL = {"306b2a1c12ef": {"caption": "\uc77c\ubcf8 KFC\uac00 43\ub144 \ub9cc\uc5d0 \ucc98\uc74c\uc73c\ub85c \uce58\ud0a8 \ubc84\uac70\uc5d0 \ub2ed\ub2e4\ub9ac\uc0b4\uc744 \uc4f0\uae30 \uc2dc\uc791\ud588\ub2e4. \uadf8\ub9ac\uace0 \uc774\ub984\ubd80\ud130 \uc2ec\uc0c1\uce58 \uc54a\uc740 \uc2e0\uba54\ub274 \u0027\uc695\ub9dd\ud22c\uc131\uc774 \ubc30\ub355 \ubc84\uac70(\ubd80\ub3c4\ub355 \ubc84\uac70)\u0027 \uc2dc\ub9ac\uc988\uae4c\uc9c0 \ub0b4\ub193\uc558\ub2e4.\n\n\uc18c\ub77c\ub274\uc2a424\uc5d0 \ub530\ub974\uba74 \uc77c\ubcf8 \ud328\uc2a4\ud2b8\ud478\ub4dc\uacc4\uc5d0\uc11c\ub294 \uc9c0\uae08 \ub2ed\ub2e4\ub9ac\uc0b4\uc774 \ucd5c\uc2e0 \uc720\ud589\uc73c\ub85c \ubcf4\uc778\ub2e4. \ub9e5\ub3c4\ub0a0\ub4dc\uac00 \ub0b4\ub193\uc740 \u0027\ud06c\ub7f0\uce58 \uc96c\uc2dc \ub9e5\u0027\uc740 \uc778\uae30\uac00 \ub108\ubb34 \ub192\uc544 \uacf5\uae09\uc774 \uc218\uc694\ub97c \ub530\ub77c\uac00\uc9c0 \ubabb\ud574 \ud604\uc7ac \ud310\ub9e4\uac00 \uc911\ub2e8\ub41c \uc0c1\ud0dc\ub2e4. KFC\uc758 \ubd80\ub3c4\ub355 \ubc84\uac70\ub294 \ud604\uc7ac \ub450 \uc885\ub958\ub2e4. \ub9c8\ub298\ub9c8\uc694 \ub450\ud23c \ubca0\uc774\ucee8 \uce58\ud0a8 \ubc84\uac70\ub294 620\uc5d4(\uc57d 4\ub2ec\ub7ec), \ub9e5\u0026\uce58\uc988 \uce58\ud0a8 \ubc84\uac70\ub294 650\uc5d4\uc774\uace0, \ub458 \ub2e4 \uc591\uc0c1\ucd94\ub97c \uc544\uc608 \ube90\ub2e4.\n\n\ub9db \ud3c9\uac00\ub294 \uac08\ub838\ub2e4. \ub9c8\ub298\ub9c8\uc694\ub294 \ub9c8\ub298 \ub9db\uc774 \ub108\ubb34 \uac15\ud574\uc11c \ub2ed\uace0\uae30 \ub9db\uc774 \ubb3b\ud788\uace0 \ubca0\uc774\ucee8 \ub9db\ub3c4 \uc9c0\uc6cc\uc84c\uace0, \ucde8\uc7ac\uc9c4\uc740 \uadf8\ub2e4\uc9c0 \ubd80\ub3c4\ub355\ud558\uac8c \ub290\uaef4\uc9c0\uc9c0 \uc54a\uc544 \uc544\uc26c\uc6e0\ub2e4\uace0 \ud588\ub2e4. \ubc18\uba74 \ub9e5\u0026\uce58\uc988\ub294 \uce58\uc988 \ub9db\ub3c4 \uc591\ub150\ub3c4 \uc544\uc8fc \uac15\ud574\uc11c \ud504\ub77c\uc774\ub4dc\uce58\ud0a8\uc774 \uc870\uc5f0\uc73c\ub85c \ubc00\ub9b4 \uc815\ub3c4\uc600\uace0, \uc77c\ubcf8\uc778 \uae30\uc790\ub294 \uc774 \ub9db\uc744 \u0027\ubbf8\uad6d\uc758 \ub9db\u0027\uc774\ub77c\uace0 \ud45c\ud604\ud588\ub2e4.\n\n\ucde8\uc7ac\uc9c4\uc740 \ub9c8\ub298\ub9c8\uc694\ubcf4\ub2e4 \ub9e5\u0026\uce58\uc988\ub97c \uace0\ub974\uaca0\ub2e4\uba74\uc11c\ub3c4, \ub458 \ub2e4 \uc2e4\ub9dd\uc2dc\ud0a4\uc9c0 \uc54a\uc744 \uac83\uc774\ub77c\uace0 \ud3c9\ud588\ub2e4. \ub2e4\ub9cc \uc774\ub294 \ucde8\uc7ac\uc9c4 \uac1c\uc778\uc758 \ub9db \ud3c9\uac00\ub2e4.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\uc77c\ubcf8KFC", "#\uce58\ud0a8\ubc84\uac70", "#\ud328\uc2a4\ud2b8\ud478\ub4dc", "#\uc77c\ubcf8\uc74c\uc2dd", "#\ud574\uc678\ud654\uc81c"], "slides": [["43\ub144 \ub9cc\uc5d0", "**\ub2ed\ub2e4\ub9ac\uc0b4** \ubc84\uac70?!", "---", "\uc77c\ubcf8 KFC\uac00 43\ub144 \ub9cc\uc5d0 \ucc98\uc74c\uc73c\ub85c \uce58\ud0a8 \ubc84\uac70\ub97c \ub2ed\ub2e4\ub9ac\uc0b4\ub85c \ubc14\uafb8\uace0, \uc774\ub984\ubd80\ud130 \uc218\uc0c1\ud55c \u0027\ubd80\ub3c4\ub355 \ubc84\uac70\u0027 \uc2e0\uba54\ub274\uae4c\uc9c0 \ub0b4\ub193\uc558\ub2e4."], ["\uc77c\ubcf8 \ud328\uc2a4\ud2b8\ud478\ub4dc", "**\ub2ed\ub2e4\ub9ac\uc0b4** \ub300\uc804", "---", "\ub9e5\ub3c4\ub0a0\ub4dc\ub294 \u0027\ud06c\ub7f0\uce58 \uc96c\uc2dc \ub9e5\u0027\uc744 \ub0b4\ub193\uc558\uace0, KFC\ub294 \ub2ed\ub2e4\ub9ac\uc0b4 \ubc84\uac70\ub85c \uac08\uc544\ud0d4\ub2e4. \uc18c\ub77c\ub274\uc2a424\ub294 \ub2ed\ub2e4\ub9ac\uc0b4\uc774 \uc77c\ubcf8 \ud328\uc2a4\ud2b8\ud478\ub4dc\uacc4\uc758 \ucd5c\uc2e0 \uc720\ud589\uc73c\ub85c \ubcf4\uc778\ub2e4\uace0 \uc804\ud588\ub2e4."], ["\uc695\ub9dd \uac00\ub4dd", "**\ubd80\ub3c4\ub355 \ubc84\uac70**", "---", "KFC\uac00 \u0027\uc695\ub9dd\ud22c\uc131\uc774 \ubc30\ub355 \ubc84\uac70\u0027\ub77c\ub294 \uc0c8 \uc2dc\ub9ac\uc988\ub97c \ub0c8\ub2e4. \ub9c8\ub298\ub9c8\uc694 \ub450\ud23c \ubca0\uc774\ucee8 \uce58\ud0a8 \ubc84\uac70\ub294 620\uc5d4, \ub9e5\u0026\uce58\uc988 \uce58\ud0a8 \ubc84\uac70\ub294 650\uc5d4\uc774\uba70 \ub458 \ub2e4 \uc591\uc0c1\ucd94\uac00 \uc5c6\ub2e4."], ["**\ub9c8\ub298** \ub9db\uc774", "\ubca0\uc774\ucee8 \uc0bc\ucf30\ub2e4", "---", "\ud55c \uc785 \uba39\uc790 \ub9c8\ub298 \ud5a5\uc774 \uac15\ud558\uac8c \uce58\uace0 \uc62c\ub77c\uc640 \ub2ed\uace0\uae30 \ubcf8\uc5f0\uc758 \ub9db\uc774 \ubb3b\ud790 \uc815\ub3c4\uc600\uace0, \uae30\ub300\ud588\ub358 \ubca0\uc774\ucee8 \ub9db\ub3c4 \uc9c0\uc6cc\uc84c\ub2e4. \ucde8\uc7ac\uc9c4\uc740 \uc0dd\uac01\ub9cc\ud07c \ubd80\ub3c4\ub355\ud558\uc9c0 \uc54a\uc544 \uc544\uc26c\uc6e0\ub2e4\uace0 \ud3c9\ud588\ub2e4."], ["\uc774\ucabd\uc774 **\uc9c4\uc9dc**", "\ubd80\ub3c4\ub355\uc774\ub124", "---", "\ud07c\uc9c1\ud55c \ud30c\uc2a4\ud0c0\uc640 \uc0c8\ube68\uac1b\ub2e4 \uc2f6\uc744 \ub9cc\ud07c \uc8fc\ud669\ube5b \uce58\uc988\uac00 \uc5b9\ud600 \uac89\ubaa8\uc2b5\ubd80\ud130 \ubd80\ub3c4\ub355\ud574 \ubcf4\uc600\ub2e4. \ub9db\uc774 \uc6cc\ub099 \uc790\uadf9\uc801\uc774\ub77c \ud504\ub77c\uc774\ub4dc\uce58\ud0a8\uc774 \uc870\uc5f0\uc73c\ub85c \ubc00\ub838\uace0, \uc77c\ubcf8\uc778 \uae30\uc790\ub294 \u0027\ubbf8\uad6d\uc758 \ub9db\u0027\uc774\ub77c\uace0 \ud45c\ud604\ud588\ub2e4."], ["\ub458 \ub2e4 \uc2e4\ub9dd\uc740", "\uc544\ub2c8\uc5c8\ub300", "---", "\ub450 \ubc84\uac70\uc5d0\ub294 KFC\uac00 \uc0c8\ub85c \ub3c4\uc785\ud55c \uc999 \ub9ce\uc740 \ub2ed\ub2e4\ub9ac\uc0b4 \ud328\ud2f0\uac00 \ub4e4\uc5b4\uac04\ub2e4. \ucde8\uc7ac\uc9c4\uc740 \ub9c8\ub298\ub9c8\uc694\ubcf4\ub2e4 \ub9e5\u0026\uce58\uc988\ub97c \uace0\ub974\uaca0\ub2e4\uba74\uc11c\ub3c4, \ub458 \ub2e4 \uc2e4\ub9dd\uc2dc\ud0a4\uc9c0 \uc54a\uc744 \uac83\uc774\ub77c\uace0 \ud3c9\ud588\ub2e4."], ["**\ub9e5\uc564\uce58\uc988** \ub355\ud6c4\ud55c\ud14c", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30", "---", "\ucde8\uc7ac\uc9c4\uc740 \ub9c8\ub298\ub9c8\uc694\ubcf4\ub2e4 \ub9e5\u0026\uce58\uc988\ub97c \uace0\ub974\uaca0\ub2e4\uace0 \ud588\ub2e4. \ub290\ub07c\ud55c \ub9db\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc5d0\uac8c \uc5b4\ub290 \ucabd\uc744 \uace0\ub97c\uc9c0 \ubb3c\uc5b4\ubcf4\uae30 \uc88b\uc740 \uc18c\uc2dd"]]}, "8679f5996604": {"caption": "\ub370\ubdd4 30\ub144\uc744 \ub9de\uc740 \ub8e8\ud53c\uac00 \uc774\ubc88\uc5d4 \u0027\ud30c\uad34\uc758 \uc2e0\u0027\uc774\ub77c\ub294 \ub9d0\uae4c\uc9c0 \ub098\uc624\uace0 \uc788\ub2e4. \ud574\uc678 \ub9e4\uccb4 \uc2a4\ud06c\ub9b0\ub79c\ud2b8\ub294 \uc6d0\ud53c\uc2a4 1198\ud654\uc5d0\uc11c \ub8e8\ud53c\uac00 \ud770 \uc637\uc758 \uae30\uc5b45\uc640\ub294 \uc804\ud600 \ub2e4\ub978 \ubaa8\uc2b5\uc73c\ub85c \ubcc0\ud588\ub2e4\uace0 \uc804\ud588\ub2e4.\n\n\ub8e8\ud53c\uac00 \uce74\uc774\ub3c4\uc640 \uc2f8\uc6b0\uba70 \uae30\uc5b45\ub97c \ucc98\uc74c \uae68\uc6e0\uc744 \ub54c\ub294 \ubcf8\uc778\ub3c4 \uc77c\ubd80 \ub3c5\uc790\ub3c4 \uadf8\uac83\uc774 \ud798\uc758 \uc815\uc810\uc774\ub77c \uc5ec\uacbc\ub2e4. \ud558\uc9c0\ub9cc \uc5d8\ubc14\ud504 \ud3b8\uc774 \uadf8 \uc0dd\uac01\uc744 \ub4a4\uc9d1\uc5c8\ub2e4. \uc5d8\ubc14\ud504 \ud3b8\uc740 \uc138\uacc4\uc815\ubd80\uc758 \uc228\uc740 \uc9c0\ubc30\uc790 \uc774\ubb34 \uc131\uc774 \uc12c\uc5d0 \ub3c4\ucc29\ud55c \ub4a4 \ud06c\uac8c \ucee4\uc84c\ub2e4.\n\n\ub3d9\ubb3c\uacc4 \uc545\ub9c8\uc758 \uc5f4\ub9e4 \ub2a5\ub825\uc790\ub294 \uac01\uc131\uc744 \uc9c0\ub098\uce58\uac8c \ubc00\uc5b4\ubd99\uc774\uba74 \uc5f4\ub9e4\uc758 \ub3d9\ubb3c\uc801 \ubcf8\uc131\uc5d0 \uc790\uc2e0\uc744 \uc783\uc744 \uc704\ud5d8\uc774 \uc788\ub2e4. \ub8e8\ud53c\uc758 \uc5f4\ub9e4\ub294 \ud0dc\uc591\uc2e0 \ub2c8\uce74\ub97c \ubcf8\ub72c \uac83\uc774\ub2e4. \ub2c8\uce74\ub294 \ub178\uc608\uc640 \uace0\ub300 \uc885\uc871\ub4e4\uc5d0\uac8c \ud76c\ub9dd\uc758 \uae30\ub465 \uac19\uc740 \ud574\ubc29\uc790\uc600\uc9c0\ub9cc, \uad8c\ub825\uc744 \uc954 \ucabd\uc740 \uc9c8\uc11c\ub97c \ud754\ub4dc\ub294 \uc874\uc7ac\ub85c \ud574\uc11d\ud560 \uc218 \uc788\ub2e4\uace0 \ub9e4\uccb4\ub294 \uc9da\uc5c8\ub2e4.\n\n1198\ud654\ub294 \ub8e8\ud53c\uac00 \uc801\uc774 \ubd88\ub7ec\ub0b8 \ubb3c\uc758 \uc2e0 \uad6c\uc870\ubb3c\uc744 \uc27d\uac8c \ucc98\ub9ac\ud558\ub294 \uc7a5\uba74\uc73c\ub85c \ub05d\ub09c\ub2e4. \ub9e4\uccb4\ub294 \uadf8 \ubaa8\uc2b5\uc774 \ud574\uc801 \ud669\uc81c\ubcf4\ub2e4 \uc9c4\uc9dc \uc6d0\uc22d\uc774\uc5d0 \uac00\uae4c\uc6e0\ub2e4\uace0 \ud45c\ud604\ud588\ub2e4.\n\n\u203b 1198\ud654 \uc2a4\ud3ec\uc77c\ub7ec\uac00 \ud3ec\ud568\ub3fc \uc788\ub2e4.\n\n\ucd9c\ucc98: Screen Rant", "hashtags": ["#\uc6d0\ud53c\uc2a4", "#\ub8e8\ud53c", "#\uc6d0\ud53c\uc2a41198\ud654", "#\uc560\ub2c8\uba54\uc774\uc158", "#\ud574\uc678\ubc18\uc751"], "slides": [["\ub8e8\ud53c\uac00", "**\ud30c\uad34\uc758 \uc2e0**?!", "---", "\ub370\ubdd4 30\ub144\uc744 \ub9de\uc740 \ub8e8\ud53c\uac00 1198\ud654\uc5d0\uc11c \uc774\uc804\uacfc \uc804\ud600 \ub2e4\ub978 \ubaa8\uc2b5\uc73c\ub85c \ubcc0\uc2e0\ud588\uace0, \ud574\uc678 \ub9e4\uccb4\ub294 \u0027\ud30c\uad34\uc758 \uc2e0\u0027 \uac00\ub2a5\uc131\uc744 \uc9da\uc5c8\ub2e4."], ["\uae30\uc5b45\uac00", "**\uc815\uc810** \uc544\ub2c8\uc5c8\ub2e4", "---", "\uce74\uc774\ub3c4\uc640 \uc2f8\uc6b0\uba70 \uae30\uc5b45\ub97c \ucc98\uc74c \uae68\uc6e0\uc744 \ub54c \ub8e8\ud53c\uc640 \uc77c\ubd80 \ub3c5\uc790\ub294 \uadf8\uac83\uc774 \ud798\uc758 \uc815\uc810\uc774\ub77c \uc5ec\uacbc\ub2e4. \ud558\uc9c0\ub9cc \uc5d8\ubc14\ud504 \ud3b8\uc774 \uadf8 \uc0dd\uac01\uc744 \ub4a4\uc9d1\uc5c8\ub2e4."], ["\ud558\uc580 \ubaa8\uc2b5\uacfc\ub294", "**\uc804\ud600 \ub2e4\ub978** \ubcc0\uc2e0", "---", "1198\ud654\uc5d0\uc11c \ub8e8\ud53c\ub294 \ud770 \uc637\uc758 \uae30\uc5b45\uc640 \uc804\ud600 \ub2e4\ub978 \ubaa8\uc2b5\uc73c\ub85c \ubcc0\ud588\ub2e4. \uc544\uad70\uc5d0\uac8c\ub3c4 \uc801\uc5d0\uac8c\ub3c4 \uc12c\ub729\ud558\uac8c \ubcf4\uc77c \uc218 \uc788\ub294 \ubaa8\uc2b5\uc774\ub77c\ub294 \uac83\uc774 \ub9e4\uccb4\uc758 \uc124\uba85\uc774\ub2e4."], ["\uc5f4\ub9e4\uc5d0", "**\uba39\ud790** \uc218\ub3c4?", "---", "\ub3d9\ubb3c\uacc4 \uc5f4\ub9e4 \ub2a5\ub825\uc790\ub294 \uac01\uc131\uc744 \uc9c0\ub098\uce58\uac8c \ubc00\uc5b4\ubd99\uc774\uba74 \uc5f4\ub9e4\uc758 \ub3d9\ubb3c\uc801 \ubcf8\uc131\uc5d0 \uc790\uc2e0\uc744 \uc783\uc744 \uc704\ud5d8\uc774 \uc788\ub2e4. \ub8e8\ud53c\uc758 \uc5f4\ub9e4\ub294 \ud0dc\uc591\uc2e0 \ub2c8\uce74\ub97c \ubcf8\ub72c \uac83\uc774\ub2e4."], ["\ud574\ubc29\uc790\uc774\uc790", "**\ud30c\uad34\uc790**\uc600\ub2e4", "---", "\ub2c8\uce74\ub294 \ub178\uc608\uc640 \uace0\ub300 \uc885\uc871\ub4e4\uc5d0\uac8c \ud76c\ub9dd\uc758 \uae30\ub465 \uac19\uc740 \ud574\ubc29\uc790\uc600\ub2e4. \ud558\uc9c0\ub9cc \uad8c\ub825\uc744 \uc954 \ucabd\uc740 \uc9c8\uc11c\ub97c \ud754\ub4dc\ub294 \uc874\uc7ac\ub85c \ud574\uc11d\ud560 \uc218 \uc788\ub2e4\ub294 \uac83\uc774 \ub9e4\uccb4\uc758 \uc2dc\uac01\uc774\ub2e4."], ["\ubb3c\uc758 \uc2e0\uc744", "**\uac00\ubccd\uac8c** \uc81c\uc555", "---", "1198\ud654\ub294 \ub8e8\ud53c\uac00 \uc801\uc774 \ubd88\ub7ec\ub0b8 \ubb3c\uc758 \uc2e0 \uad6c\uc870\ubb3c\uc744 \uc27d\uac8c \ucc98\ub9ac\ud558\ub294 \uc7a5\uba74\uc73c\ub85c \ub05d\ub09c\ub2e4. \ub9e4\uccb4\ub294 \uadf8 \ubaa8\uc2b5\uc774 \ud574\uc801 \ud669\uc81c\ubcf4\ub2e4 \uc9c4\uc9dc \uc6d0\uc22d\uc774\uc5d0 \uac00\uae4c\uc6e0\ub2e4\uace0 \ud45c\ud604\ud588\ub2e4."], ["\uc6d0\ud53c\uc2a4 \uc815\uc8fc\ud589", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\ucd5c\uc2e0\ud654\uae4c\uc9c0 \ucc59\uaca8 \ubcf8 \uce5c\uad6c\ub77c\uba74 \ub8e8\ud53c\uc758 \uc0c8 \ubcc0\uc2e0\uc5d0 \ud560 \ub9d0\uc774 \ub9ce\uc744 \uc18c\uc2dd. 1198\ud654 \uc2a4\ud3ec\uc77c\ub7ec\uac00 \ub2f4\uaca8 \uc788\uc73c\ub2c8 \uc544\uc9c1 \uc548 \ubcf8 \uce5c\uad6c\ub294 \ud53c\ud574\uc11c \ubcf4\ub0b4\uae30."]]}, "b533bba3b100": {"caption": "13\ub144\uc744 \uae30\ub2e4\ub9b0 GTA 6\uac00 \ucd9c\uc2dc\ub418\uc790\ub9c8\uc790 \uc5d4\ud130\ud14c\uc778\uba3c\ud2b8 \uc5ed\uc0ac\uc0c1 \uac00\uc7a5 \ud070 \ucd9c\uc2dc\ub85c \uae30\ub85d\ub410\uc744 \uac83\uc774\ub77c\ub294 \ucd94\uc815\uc774 \ub098\uc654\ub2e4. \uc2dc\uc7a5 \ubd84\uc11d \uc5c5\uccb4 \uc13c\uc11c\ud0c0\uc6cc\ub294 \uc0ac\uc804 \uc608\uc57d\uacfc \uccab\ub0a0 \ud310\ub9e4\uac00 2,450\ub9cc \uc7a5\uc744 \ub118\uace0 \uae08\uc561\uc73c\ub85c\ub294 \uc57d 23\uc5b5 6\ucc9c\ub9cc \ub2ec\ub7ec\ub77c\uace0 \ucd94\uc815\ud588\ub2e4. \uc62c\ud574 \ucd5c\uace0 \ud765\ud589 \uc601\ud654\uc778 \u0027\uc2a4\ud30c\uc774\ub354\ub9e8: \ube0c\ub79c\ub4dc \ub274 \ub370\uc774\u0027\uac00 \uadf9\uc7a5 \uc0c1\uc601 \ub0b4\ub0b4 \ubc88 \ub3c8\uc774 25\uc5b5 \ub2ec\ub7ec\ub2e4. \uc81c\uc791\uc0ac \ub77d\uc2a4\ud0c0\uc640 \ubaa8\ud68c\uc0ac \ud14c\uc774\ud06c\ud22c\ub294 \ud310\ub9e4 \uc138\ubd80 \ub0b4\uc6a9\uc740 \uacf5\uac1c\ud558\uc9c0 \uc54a\uc558\uc9c0\ub9cc \uc218\uc694\uac00 \u0027\uc804\ub840 \uc5c6\ub294\u0027 \uc218\uc900\uc774\ub77c\uace0 \ubc1d\ud614\ub2e4. \uac8c\uc784 \uc2dc\uc7a5 \uc870\uc0ac \uc5c5\uccb4 \ub2c8\ucf54 \ud30c\ud2b8\ub108\uc2a4\ub294 \uc62c\ud574 \uc804 \uc138\uacc4 \ub9e4\ucd9c\uc774 30\uc5b5 \ub2ec\ub7ec\ub97c \ub118\uc744 \uac83\uc73c\ub85c \ub0b4\ub2e4\ubd24\ub2e4. \ub2e4\ub9cc \ubb3c\uac00\ub97c \ubc18\uc601\ud55c \u0027\ubc14\ub78c\uacfc \ud568\uaed8 \uc0ac\ub77c\uc9c0\ub2e4\u0027\uc758 \ucd94\uc815 \ub9e4\ucd9c 45\uc5b5 \ub2ec\ub7ec\uc5d0\ub294 \uc544\uc9c1 \uac70\ub9ac\uac00 \uc788\ub2e4. \uac1c\ubc1c\ube44\ub294 10\uc5b5 \ub2ec\ub7ec \ub118\uac8c \ub4e0 \uac83\uc73c\ub85c \ucd94\uc815\ub418\uace0, \ud310\ub9e4\uc758 \uc57d 4\ubd84\uc758 3\uc740 \ud50c\ub808\uc774\uc2a4\ud14c\uc774\uc158 5\uc5d0\uc11c \ub098\uc654\ub2e4. PC \ucd9c\uc2dc\uc77c\uacfc \uba40\ud2f0\ud50c\ub808\uc774 \ud655\uc7a5 \uc77c\uc815\uc740 \uc544\uc9c1 \ubc1c\ud45c\ub418\uc9c0 \uc54a\uc558\ub2e4. \uc77c\ubcf8\uc5d0\uc11c\ub294 \uc218\uc704 \ub192\uc740 \ud45c\ud604 \ub54c\ubb38\uc5d0 \uac80\uc5f4\uc774 \uc774\ub904\uc84c\uace0, \uc911\uad6d \ubcf8\ud1a0\uc5d0\uc11c\ub294 \ud310\ub9e4 \uc2b9\uc778\uc774 \ub098\uc9c0 \uc54a\uc558\ub2e4. \ucd9c\ucc98: BBC, Sensor Tower", "hashtags": ["#GTA6", "#\uac8c\uc784", "#\ub77d\uc2a4\ud0c0\uac8c\uc784\uc988", "#\ud574\uc678\uc774\uc288", "#\uac8c\uc784\ub274\uc2a4"], "slides": [["GTA 6\uac00", "**23\uc5b5 \ub2ec\ub7ec**???", "---", "13\ub144 \ub9cc\uc5d0 \ub098\uc628 GTA 6\uac00 \uc0ac\uc804 \uc608\uc57d\uacfc \uccab\ub0a0 \ud310\ub9e4\ub9cc\uc73c\ub85c \uc57d 23\uc5b5 6\ucc9c\ub9cc \ub2ec\ub7ec\ub97c \ubc8c\uc5b4\ub4e4\uc778 \uac83\uc73c\ub85c \ucd94\uc815\ub41c\ub2e4."], ["\uc62c\ud574 1\uc704 \uc601\ud654", "**\ud131\ubc11 \ub9e4\ucd9c**", "---", "\uc13c\uc11c\ud0c0\uc6cc \ucd94\uc815\uc73c\ub85c \uc0ac\uc804 \uc608\uc57d\uacfc \uccab\ub0a0 \ud310\ub9e4\ub294 2,450\ub9cc \uc7a5\uc744 \ub118\uacbc\ub2e4. \uc62c\ud574 \ucd5c\uace0 \ud765\ud589 \uc601\ud654 \u0027\uc2a4\ud30c\uc774\ub354\ub9e8: \ube0c\ub79c\ub4dc \ub274 \ub370\uc774\u0027\uac00 \uadf9\uc7a5 \uc0c1\uc601 \ub0b4\ub0b4 \ubc88 \ub3c8\uc740 25\uc5b5 \ub2ec\ub7ec\uc600\ub2e4."], ["\uac1c\ubc1c\ube44\ub9cc", "**10\uc5b5 \ub2ec\ub7ec \ub118\uac8c**", "---", "\uac1c\ubc1c\uc5d0 10\uc5b5 \ub2ec\ub7ec \ub118\uac8c \ub4e0 \uac83\uc73c\ub85c \ucd94\uc815\ub418\uba70, \uc0ac\uc2e4\uc774\ub77c\uba74 \uc5ed\ub300 \uac00\uc7a5 \ube44\uc2fc \uac8c\uc784\uc774 \ub41c\ub2e4. \ucd9c\uc2dc\uae4c\uc9c0\ub294 \uc5ec\ub7ec \ucc28\ub840 \ubbf8\ub904\uc9c0\uba70 13\ub144\uc744 \uae30\ub2e4\ub838\ub2e4."], ["\ub2e4\ub978 \uac8c\uc784\uc740", "**10%** \ub35c \ud55c\ub2e4", "---", "\uc13c\uc11c\ud0c0\uc6cc\ub294 GTA 6\uac00 \uc6cc\ub099 \uc778\uae30\uc5ec\uc11c \uac8c\uc774\uba38\uac00 \ub2e4\ub978 \uc2f1\uae00\ud50c\ub808\uc774 \uac8c\uc784\uc5d0 \uc4f0\ub294 \uc2dc\uac04\uc774 10% \uc904 \uac83\uc774\ub77c\uace0 \ub0b4\ub2e4\ubd24\ub2e4. \ud310\ub9e4\uc758 \uc57d 4\ubd84\uc758 3\uc740 \ud50c\ub808\uc774\uc2a4\ud14c\uc774\uc158 5\uac00 \ucc28\uc9c0\ud588\ub2e4."], ["\ubc24\uc0c8\uc6b0\uace0", "**\ud734\uac00\uae4c\uc9c0** \ub0c8\ub2e4", "---", "\ubaa9\uc694\uc77c \uc790\uc815\uc5d0 \ucd9c\uc2dc\ub418\uc790 \ub9ce\uc740 \uac8c\uc774\uba38\uac00 \ubc24\uc744 \uc0c8\uc6e0\uace0, \uc77c\ubd80\ub294 \ub2e4\uc74c \ub0a0 \ud734\uac00\ub97c \ub0b4\uace0 \uac8c\uc784\uc744 \uc990\uacbc\ub2e4. 212GB\uc5d0 \ub2ec\ud558\ub294 \uc124\uce58 \ud30c\uc77c \ub54c\ubb38\uc5d0 \ud1b5\uc2e0\uc0ac \ubc84\uc9c4 \ubbf8\ub514\uc5b4 O2\uc758 \uc800\ub141 \ud2b8\ub798\ud53d \uae30\ub85d\ub3c4 \uae68\uc84c\ub2e4."], ["\uac8c\uc784 \uc548 \ud558\ub294 \uce5c\uad6c\ub3c4", "**\ub180\ub784 \uc22b\uc790** \ubcf4\ub0b4\uae30", "---", "\uc601\ud654 \ud765\ud589\uc791 \ub9e4\ucd9c\uc5d0 \ub9de\uba39\ub294 \uae08\uc561\uc774 \uc0ac\uc804 \uc608\uc57d\uacfc \uccab\ub0a0 \ud310\ub9e4\uc5d0\uc11c \ub098\uc654\ub2e4\ub294 \ucd94\uc815\uc774\ub77c, \uac8c\uc784\uc744 \uc548 \ud558\ub294 \uc0ac\ub78c\uc5d0\uac8c\ub3c4 \ud654\uc82f\uac70\ub9ac\uac00 \ub420 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

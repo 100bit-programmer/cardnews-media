@@ -1,0 +1,1821 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.07 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.07 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-12405a4e365c" data-jump="12405a4e365c">1</a><a href="#post-6ae6885878e8" data-jump="6ae6885878e8">2</a><a href="#post-8680dc3914c9" data-jump="8680dc3914c9">3</a>
+      <a href="#threads">🧵 스레드 3</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-12405a4e365c" data-id="12405a4e365c">
+    <div class="head">
+      <h2>1. 치매 어르신이 서빙하는 일본 팝업 식당</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-01.jpg" alt="1장: 주문 틀려도 괜찮은 식당?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-02.jpg" alt="2장: 이름부터 솔직한 식당" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-03.jpg" alt="3장: 2018년 시작 하루짜리 팝업" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-04.jpg" alt="4장: 어르신 네 명이 직접 서빙" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-05.jpg" alt="5장: 일을 시키는 게 목적이 아냐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-06.jpg" alt="6장: 눈물 훔친 가족도 있었어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-07.jpg" alt="7장: 부모님 돌보는 친구에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/12405a4e365c/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">주문을 틀려도 괜찮은 식당이 일본 마쓰야마에 문을 열었다. 이름부터 &#39;주문을 틀릴지도 모르는 요리점&#39;인데, 번역 오류가 아니라 일본어 이름을 거의 그대로 옮긴 것이다. 이곳의 직원은 치매를 가진 어르신들이기 때문이다.
+
+이 식당은 2018년에 시작했고, 이미 있는 식당을 하루 동안 빌려 운영하는 팝업 방식이다. 이번에는 9월 21일 덴류 라멘과 손잡았다. 이날은 일본의 경로의 날이자 세계 알츠하이머의 날이기도 했다.
+
+마쓰야마에서는 78세부터 88세까지 지역 어르신 네 명이 손님의 주문을 받고 음식을 날랐다. 참가자 한 명의 딸과 손녀도 손님으로 찾았는데, 딸은 어머니가 활동하는 모습이 감동적이라며 눈물을 훔쳤다. 한 손님은 천천히 듣고 차분히 말하니 서로 이해할 수 있었다고 전했고, 어르신 한 명은 많은 사람을 만나 이야기해서 정말 기뻤다고 웃으며 말했다.
+
+운영 취지는 어르신들에게 일을 시키는 게 아니다. 치매를 가진 사람에 대한 인식과 배려를 키우고, 병이 있어도 사람과의 교류에서 완전히 멀어질 필요는 없다는 걸 보여 주며 자신감과 성취감을 주는 것이다. 수익은 우선순위가 아니며, 가게에 오지 못하는 사람을 위해 온라인 기부도 받는다.
+
+주문이 틀릴 수 있다고 미리 밝힌 이 방식은 소라뉴스24에 따르면 웃음과 감사의 눈물로 이어졌다.
+
+출처: SoraNews24, ITV, Fukuoka TNC News</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#치매 #일본 #마쓰야마 #주문을틀리는요리점 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 참가자 가족의 손녀도 손님으로 방문했다는 사실</li><li>근거 등록 안 된 주장: 본문과 카드가 SoraNews24, ITV, Fukuoka TNC News를 출처로 인용했다는 사실</li><li>근거 등록 안 된 주장: &#39;주문 실수 가능성을 미리 밝히는 이름&#39;이라는 이름 설명이 직원 구성 때문이라는 인과 설명</li><li>근거 등록 안 된 주장: &#39;웃음을 나눈 하루&#39;라는 현장 분위기 묘사</li>
+          <li>치매라는 민감한 건강 주제이므로 어르신을 대상화하거나 놀리는 어조로 읽히지 않게 주의</li><li>기사 사진과 영상은 저작권이 있어 사용하지 않음</li><li>식당 이름의 한국어 표기는 원문 영어 표현을 바탕으로 옮긴 것이라 공식 한국어 명칭이 아님</li><li>단일 매체(SoraNews24) 기사에 의존하며 행사 규모와 이후 일정은 원문에 없음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-12405a4e365c-0">1장</label>
+          <textarea id="s-12405a4e365c-0" rows="6" data-slide="0">주문 **틀려도**
+괜찮은 식당?!
+---
+일본 마쓰야마에서 치매를 앓는 어르신들이 웨이트리스로 일하는 &#39;주문을 틀릴지도 모르는 요리점&#39;이 문을 열었다.</textarea>
+          
+          <label class="f" for="s-12405a4e365c-1">2장</label>
+          <textarea id="s-12405a4e365c-1" rows="6" data-slide="1">이름부터
+**솔직한** 식당
+---
+가게 이름은 일본어 원래 이름을 거의 그대로 옮긴 것으로, 번역 오류가 아니다. 직원이 치매를 가진 어르신들이라서 주문 실수 가능성을 미리 밝히는 이름이다.</textarea>
+          
+          <label class="f" for="s-12405a4e365c-2">3장</label>
+          <textarea id="s-12405a4e365c-2" rows="6" data-slide="2">2018년 시작
+하루짜리 **팝업**
+---
+2018년에 시작된 이 식당은 이미 있는 식당을 하루 동안 빌려 문을 여는 팝업 방식이다. 이번 마쓰야마에서는 9월 21일 덴류 라멘과 손잡았다.</textarea>
+          
+          <label class="f" for="s-12405a4e365c-3">4장</label>
+          <textarea id="s-12405a4e365c-3" rows="6" data-slide="3">어르신 **네 명이**
+직접 서빙
+---
+9월 21일은 일본의 경로의 날이자 세계 알츠하이머의 날이었다. 이날 78세부터 88세까지 지역 어르신 네 명이 주문을 받고 음식을 날랐다.</textarea>
+          
+          <label class="f" for="s-12405a4e365c-4">5장</label>
+          <textarea id="s-12405a4e365c-4" rows="6" data-slide="4">일을 시키는 게
+**목적이 아냐**
+---
+취지는 치매를 가진 사람에 대한 인식과 배려를 키우는 것이다. 또 병이 있어도 사람과의 교류가 끊기는 건 아니라는 걸 보여 주며 어르신들에게 자신감과 성취감을 주려 한다.</textarea>
+          
+          <label class="f" for="s-12405a4e365c-5">6장</label>
+          <textarea id="s-12405a4e365c-5" rows="6" data-slide="5">**눈물** 훔친
+가족도 있었어
+---
+참가자 한 명의 딸은 어머니가 활동하는 모습이 감동적이라며 눈물을 훔쳤다. 한 손님은 천천히 듣고 차분히 말하면 서로 이해할 수 있었다고 했다.</textarea>
+          
+          <label class="f" for="s-12405a4e365c-6">7장</label>
+          <textarea id="s-12405a4e365c-6" rows="6" data-slide="6">부모님 돌보는
+친구에게 보내기
+---
+치매를 가진 어르신들이 주문을 받으며 웃음을 나눈 하루를 담았다. 어르신을 곁에서 챙기는 가족이 있는 친구라면 뭉클해할 소식</textarea>
+          
+          <label class="f" for="c-12405a4e365c">본문 (캡션)</label>
+          <textarea id="c-12405a4e365c" class="caption">주문을 틀려도 괜찮은 식당이 일본 마쓰야마에 문을 열었다. 이름부터 &#39;주문을 틀릴지도 모르는 요리점&#39;인데, 번역 오류가 아니라 일본어 이름을 거의 그대로 옮긴 것이다. 이곳의 직원은 치매를 가진 어르신들이기 때문이다.
+
+이 식당은 2018년에 시작했고, 이미 있는 식당을 하루 동안 빌려 운영하는 팝업 방식이다. 이번에는 9월 21일 덴류 라멘과 손잡았다. 이날은 일본의 경로의 날이자 세계 알츠하이머의 날이기도 했다.
+
+마쓰야마에서는 78세부터 88세까지 지역 어르신 네 명이 손님의 주문을 받고 음식을 날랐다. 참가자 한 명의 딸과 손녀도 손님으로 찾았는데, 딸은 어머니가 활동하는 모습이 감동적이라며 눈물을 훔쳤다. 한 손님은 천천히 듣고 차분히 말하니 서로 이해할 수 있었다고 전했고, 어르신 한 명은 많은 사람을 만나 이야기해서 정말 기뻤다고 웃으며 말했다.
+
+운영 취지는 어르신들에게 일을 시키는 게 아니다. 치매를 가진 사람에 대한 인식과 배려를 키우고, 병이 있어도 사람과의 교류에서 완전히 멀어질 필요는 없다는 걸 보여 주며 자신감과 성취감을 주는 것이다. 수익은 우선순위가 아니며, 가게에 오지 못하는 사람을 위해 온라인 기부도 받는다.
+
+주문이 틀릴 수 있다고 미리 밝힌 이 방식은 소라뉴스24에 따르면 웃음과 감사의 눈물로 이어졌다.
+
+출처: SoraNews24, ITV, Fukuoka TNC News</textarea>
+          <label class="f" for="t-12405a4e365c">해시태그</label>
+          <input id="t-12405a4e365c" type="text" class="tagsin" value="#치매 #일본 #마쓰야마 #주문을틀리는요리점 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마쓰야마에서 주문 실수 가능성을 미리 밝힌 식당이 웃음과 감사의 눈물로 이어졌다</b>
+            <q>“Because of that, a restaurant saying, in advance, that it might get your order wrong seems like a recipe for dissatisfied diners, but that strategy led to smiles all around, plus a few appreciative tears, recently in the city of Matsuyama, Ehime Prefecture.”</q>
+            <small>slide1, slide7, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>식당 이름은 번역 오류가 아니라 일본어 이름을 거의 정확히 옮긴 것이다</b>
+            <q>““Restaurant of Mistaken Orders” didn’t get its unusual name through a translation error, as that really is a pretty accurate rendering of its Japanese name, Chumon wo Machigaeru Kamoshirenai Ryori-ten.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>직원은 치매를 가진 어르신들이다</b>
+            <q>“That less-than-perfect precision isn’t due to a lack of effort or concern on the restaurant’s part, though, but because the waitstaff is composed of senior citizens with dementia.”</q>
+            <small>slide1, slide2, slide7, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>식당은 2018년에 시작했고 기존 식당을 하루 빌려 여는 팝업 방식이다</b>
+            <q>“Restaurant of Mistaken Orders, which started out in 2018, operates on a popup basis, partnering with preexisting restaurants which serve as a venue for the unique eatery for the day.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마쓰야마에서는 9월 21일 덴류 라멘과 손잡았고 그날은 경로의 날이자 세계 알츠하이머의 날이었다</b>
+            <q>“For its most recent iteration in Matsuyama, Restaurant of Mistaken Orders teamed up with Tenryu Ramen on September 21, which was both the Japanese public holiday Respect for the Aged Day and World Alzheimer’s Day.”</q>
+            <small>slide3, slide4, summary, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>78세부터 88세까지 어르신 네 명이 주문을 받고 음식을 날랐으며 참가자의 딸이 어머니의 활동하는 모습에 감동해 눈물을 훔쳤다</b>
+            <q>“In Matsuyama, four local seniors, ranging in age from 78 to 88, took orders and served diners, including the daughter and granddaughter of one of the participants (the daughter is the woman who can be seen wiping away tears in the above video, while talking about how emotionally moving it is to see her mother staying active).”</q>
+            <small>slide4, slide6, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>취지는 치매에 대한 인식과 배려를 키우고 어르신들에게 자신감과 성취감을 주는 것이다</b>
+            <q>“Instead, the purpose of the venture is to foster a greater sense of awareness and consideration towards people living with dementia, and also to give the participating seniors a sense of confidence and accomplishment by showing that their condition doesn’t have to mean complete debilitation and isolation from human interaction.”</q>
+            <small>slide5, summary, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어르신들에게 일을 시키려는 것이 운영 철학이 아니다</b>
+            <q>“It should be pointed out that the driving philosophy behind Restaurant of Mistaken Orders is not “Let’s get those dementia-stricken seniors working!””</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 손님은 천천히 듣고 차분히 말하면 서로 이해할 수 있었다고 했고 한 어르신은 많은 사람과 이야기해 기뻤다고 했다</b>
+            <q>““If we took our time and listened and spoke patiently, we could understand each other,” says a father of a family of four that are at Restaurant of Mistaken Orders of communicating with the staff, and one of the elderly waitresses, at the end of the event, said with a smile “I was really happy to get to see so many people and talk with them.””</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>수익은 우선순위가 아니며 온라인 기부를 받는다</b>
+            <q>“With community outreach and public awareness being the primary goals, operating profits aren’t really a priority for Restaurant of Mistaken Orders, and the organization accepts online donations here for those that aren’t able to come in for a bite to eat, but still want to lend a helping hand.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">Restaurant opens in Japan with all-dementia waitresses, serves up ramen, awareness, and kindness</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/22.jpg"</li><li>2장: <a href="https://soranews24.com/2026/11/07/restaurant-opens-in-japan-with-all-dementia-waitresses-serves-up-ramen-awareness-and-kindness/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/21.jpg"</li><li>3장: <a href="https://pixabay.com/photos/ramen-soup-food-asian-pasta-7238665/" target="_blank" rel="noopener">joannawielgosz / Pixabay</a> — "ramen bowl"</li><li>4장: <a href="https://www.openculture.com/2019/08/the-restaurant-of-mistaken-orders.html" target="_blank" rel="noopener">Open Culture / </a> — "https://cdn8.openculture.com/2019/08/20223612/mistakenorders.jpg"</li><li>5장: <a href="https://pixabay.com/photos/couple-holding-hands-together-date-6976409/" target="_blank" rel="noopener">nhuhang9261 / Pixabay</a> — "holding hands"</li><li>6장: <a href="https://pixabay.com/photos/people-joy-smile-holiday-friends-2295052/" target="_blank" rel="noopener">StarFlames / Pixabay</a> — "family dinner"</li><li>7장: <a href="https://pixabay.com/photos/tea-cup-vintage-tea-cup-tea-cup-2107599/" target="_blank" rel="noopener">TerriC / Pixabay</a> — "tea cup"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-6ae6885878e8" data-id="6ae6885878e8">
+    <div class="head">
+      <h2>2. 100년 멸종 취급받던 독 영장류, 사실은 살아 있었다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-01.jpg" alt="1장: 멸종했다던 독 영장류???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-02.jpg" alt="2장: 마지막 목격이 1930년대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-03.jpg" alt="3장: 힌트는 2022년 현장 도감 한 권" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-04.jpg" alt="4장: 알고 보니 센터가 구조 중" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-05.jpg" alt="5장: 10년간 90마리 넘게 구조" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-06.jpg" alt="6장: 깨물면 세포 파괴 독" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-07.jpg" alt="7장: 동물 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/6ae6885878e8/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">멸종한 줄 알았던 독 있는 영장류가 사실은 계속 살아 있었다. 주인공은 인도네시아 방카섬의 방카 늘보로리스다. 서구 과학계에 마지막으로 기록된 때는 1930년대였고, 2015년에는 멸종했을 가능성이 있는 종으로 여겨졌다. 하지만 섬의 현지 야생동물 단체는 오랫동안 이 동물을 구조해 야생으로 돌려보내고 있었다. 그 활동은 과학계의 시야 밖에 있었던 셈이다. 오스트리아 과학자들과 국제 동료들이 낸 재발견 논문에 따르면, 이 종이 아직 있을지 모른다는 첫 생각은 2022년 인도네시아 영장류 현장 도감에서 나왔다. 도감은 문톡 시 근처의 작은 숲인 구눙마라스 국립공원을 서식지로 언급했고, 알로비 야생동물 구조센터를 조사하면서 멸종하지 않았다는 점이 확인됐다. 스미소니언 매거진에 따르면 센터는 2015년부터 2025년 사이 90마리 넘게 구조했고 86마리를 방사했다. 글로벌 보전 단체 Re:wild의 벤지 바르카는 한 종이 과학 기록에서 사라져도 그 집을 나눠 쓰는 사람들의 삶에서는 사라지지 않을 수 있다고 밝혔다. 이 동물은 위팔 분비샘의 독을 침과 섞어 방어용 물기를 독 공격으로 바꾼다. 세상에 몇 안 되는 독 있는 영장류 중 하나다. 출처: Good News Network, Smithsonian Magazine</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#멸종 #늘보로리스 #방카섬 #야생동물 #재발견</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 방카 늘보로리스가 인도네시아 방카섬에 서식한다는 위치 주장</li><li>근거 등록 안 된 주장: 섬의 현지 야생동물 단체가 알로비 야생동물 구조센터라는 동일 시설이라는 주장</li><li>근거 등록 안 된 주장: Re:wild가 글로벌 보전 단체라는 설명</li><li>근거 등록 안 된 주장: 출처가 Good News Network와 Smithsonian Magazine이라는 귀속 주장</li>
+          <li>기사 제목의 &#39;100년&#39;과 본문의 &#39;마지막 기록 1930년대&#39;는 표현이 달라 카드에서는 1930년대로 표기함</li><li>구조 건수(90마리, 86마리)는 스미소니언 매거진을 재인용한 수치</li><li>&#39;늘보로리스&#39;는 원문 slow loris의 한국어 표기로, 공식 표기와 다를 수 있음</li><li>기사 게시일 표기가 2026년으로 되어 있어 게시 전 날짜 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-6ae6885878e8-0">1장</label>
+          <textarea id="s-6ae6885878e8-0" rows="6" data-slide="0">멸종했다던
+**독 영장류**???
+---
+1930년대 이후 서구 과학계의 기록이 끊겨 멸종 가능성이 제기됐던 방카 늘보로리스가 여전히 살아 있는 것으로 확인됐다.</textarea>
+          
+          <label class="f" for="s-6ae6885878e8-1">2장</label>
+          <textarea id="s-6ae6885878e8-1" rows="6" data-slide="1">마지막 목격이
+**1930년대**
+---
+방카 늘보로리스가 서구 과학에 마지막으로 기록된 때는 1930년대였다. 2015년에는 멸종했을 가능성이 있는 종으로 여겨졌다.</textarea>
+          
+          <label class="f" for="s-6ae6885878e8-2">3장</label>
+          <textarea id="s-6ae6885878e8-2" rows="6" data-slide="2">힌트는 **2022년**
+현장 도감 한 권
+---
+오스트리아 과학자들이 국제 동료들과 낸 논문에 따르면, 이 종이 아직 있을지 모른다는 첫 생각은 2022년 인도네시아 영장류 현장 도감에서 나왔다. 도감은 방카섬의 구눙마라스 국립공원을 서식지로 언급했다.</textarea>
+          
+          <label class="f" for="s-6ae6885878e8-3">4장</label>
+          <textarea id="s-6ae6885878e8-3" rows="6" data-slide="3">알고 보니
+**센터**가 구조 중
+---
+도감 저자는 알로비 야생동물 구조센터의 방카 늘보로리스를 다룬 미발표 논문을 인용했다. 센터를 조금 더 조사하자 이 동물이 멸종한 적이 없다는 사실이 드러났다.</textarea>
+          
+          <label class="f" for="s-6ae6885878e8-4">5장</label>
+          <textarea id="s-6ae6885878e8-4" rows="6" data-slide="4">10년간 **90마리**
+넘게 구조
+---
+스미소니언 매거진에 따르면 센터는 2015년부터 2025년 사이 90마리 넘게 구조했고, 그중 86마리를 야생으로 돌려보냈다. 거의 모두 사람 사는 곳 가까이 왔다가 구조가 필요해진 경우였다.</textarea>
+          
+          <label class="f" for="s-6ae6885878e8-5">6장</label>
+          <textarea id="s-6ae6885878e8-5" rows="6" data-slide="5">깨물면
+**세포 파괴 독**
+---
+방카 늘보로리스는 세계에서 몇 안 되는 독 있는 영장류다. 위팔 분비샘에서 나온 독을 핥아 침과 섞으면, 방어용 깨물기가 세포를 빠르게 손상시키는 공격이 된다.</textarea>
+          
+          <label class="f" for="s-6ae6885878e8-6">7장</label>
+          <textarea id="s-6ae6885878e8-6" rows="6" data-slide="6">동물 좋아하는
+**친구한테** 보내기
+---
+멸종된 줄 알았던 동물이 사실은 계속 살아 있었다는 이야기에 신기해할 친구라면 반길 소식. 현지 구조센터가 오래 지켜 온 동물이라는 점도 함께 전할 만한 소식</textarea>
+          
+          <label class="f" for="c-6ae6885878e8">본문 (캡션)</label>
+          <textarea id="c-6ae6885878e8" class="caption">멸종한 줄 알았던 독 있는 영장류가 사실은 계속 살아 있었다. 주인공은 인도네시아 방카섬의 방카 늘보로리스다. 서구 과학계에 마지막으로 기록된 때는 1930년대였고, 2015년에는 멸종했을 가능성이 있는 종으로 여겨졌다. 하지만 섬의 현지 야생동물 단체는 오랫동안 이 동물을 구조해 야생으로 돌려보내고 있었다. 그 활동은 과학계의 시야 밖에 있었던 셈이다. 오스트리아 과학자들과 국제 동료들이 낸 재발견 논문에 따르면, 이 종이 아직 있을지 모른다는 첫 생각은 2022년 인도네시아 영장류 현장 도감에서 나왔다. 도감은 문톡 시 근처의 작은 숲인 구눙마라스 국립공원을 서식지로 언급했고, 알로비 야생동물 구조센터를 조사하면서 멸종하지 않았다는 점이 확인됐다. 스미소니언 매거진에 따르면 센터는 2015년부터 2025년 사이 90마리 넘게 구조했고 86마리를 방사했다. 글로벌 보전 단체 Re:wild의 벤지 바르카는 한 종이 과학 기록에서 사라져도 그 집을 나눠 쓰는 사람들의 삶에서는 사라지지 않을 수 있다고 밝혔다. 이 동물은 위팔 분비샘의 독을 침과 섞어 방어용 물기를 독 공격으로 바꾼다. 세상에 몇 안 되는 독 있는 영장류 중 하나다. 출처: Good News Network, Smithsonian Magazine</textarea>
+          <label class="f" for="t-6ae6885878e8">해시태그</label>
+          <input id="t-6ae6885878e8" type="text" class="tagsin" value="#멸종 #늘보로리스 #방카섬 #야생동물 #재발견" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>방카 늘보로리스가 서구 과학에 마지막으로 기록된 시점은 1930년대다</b>
+            <q>“The last documented sighting of a Bangka slow loris in Western science occurred in the 1930s, and in 2015 it was considered “possibly extinct.””</q>
+            <small>slide1, slide2, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2015년에는 멸종했을 가능성이 있는 종으로 여겨졌다</b>
+            <q>“The last documented sighting of a Bangka slow loris in Western science occurred in the 1930s, and in 2015 it was considered “possibly extinct.””</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>방카 늘보로리스는 여전히 살아 있다</b>
+            <q>“As the video demonstrates, the Bangka slow loris (N. bancanus) is still very much with us—thanks to a local wildlife organization on the island of Bangka that had been rescuing and returning them to the wild for years.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>현지 야생동물 단체가 오랫동안 이 동물을 구조해 야생으로 돌려보내고 있었다</b>
+            <q>“As the video demonstrates, the Bangka slow loris (N. bancanus) is still very much with us—thanks to a local wildlife organization on the island of Bangka that had been rescuing and returning them to the wild for years.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>단체의 수년간 활동이 과학계의 시야 밖에 있었다</b>
+            <q>“The organization’s years of work protecting these animals seems to have gone completely under the radar.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오스트리아 과학자들이 국제 동료들과 재발견 논문을 냈고, 이 종이 아직 있을지 모른다는 첫 생각은 2022년 인도네시아 영장류 현장 도감에서 나왔다</b>
+            <q>“A paper published by Austrian scientists with international colleagues on the “rediscovery” details how their first notion that this species of slow loris still existed was a 2022 field guide to the primates of Indonesia.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>도감은 방카섬 문톡 시 근처의 작은 숲인 구눙마라스 국립공원을 서식지로 언급했다</b>
+            <q>“The author, named Supriatna, mentioned the Gunung Maras National Park, a small forest near the city of Muntok on Bangka Island, as a habitat of the species.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>도감 저자는 알로비 야생동물 구조센터의 방카 늘보로리스를 다룬 미발표 논문을 인용했다</b>
+            <q>“Supriatna also cited another scientist’s unpublished thesis concerning Bangka slow lorises held at the Alobi Wildlife Rescue Center.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>알로비 센터를 조사하면서 이 동물이 멸종한 적이 없다는 점이 확인됐다</b>
+            <q>“From there it was a rather straightforward task of learning a bit more about the Alobi Center to determine that the animal had never gone extinct.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2015년부터 2025년 사이 센터는 90마리 넘게 구조했고 그중 86마리를 방사했다</b>
+            <q>“Between 2015 and 2025, the center rescued more than 90 Bangka slow lorises, 86 of which were subsequently released, Smithsonian Magazine wrote.”</q>
+            <small>slide5, summary, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>거의 모든 구조는 동물이 사람 사는 곳 가까이 왔다가 정원, 농장, 도로에 있게 되어 필요했다</b>
+            <q>“In almost all cases, the rescues were necessary because the animals had strayed too close to civilization and ended up in people’s gardens, plantations, or on roads.”</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Re:wild의 벤지 바르카는 한 종이 과학 기록에서 사라져도 함께 사는 사람들의 삶에서는 사라지지 않을 수 있다고 밝혔다</b>
+            <q>““A species can disappear from the scientific record without disappearing from the lives of the people who share its home.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>방카 늘보로리스는 세계에서 몇 안 되는 독 있는 영장류 중 하나다</b>
+            <q>“The Bangka slow loris is one of the world’s only venomous primates.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>위팔 분비샘의 독을 핥아 침과 섞어 방어용 깨물기를 세포독성 공격으로 바꾼다</b>
+            <q>“Though omnivorous, this slow loris can secrete a toxin from glands located on its upper arms which it will lick and mix with its saliva to transform its defensive bite into a cytotoxic surprise.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 독은 세포를 빠르게 손상시키고 죽일 수 있다</b>
+            <q>“This kind of venom rapidly damages and kills cells and can lead to necrosis and impaired wound healing.”</q>
+            <small>slide6 · <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">Venomous Primate Believed Extinct for 100 Years Was Hiding in Plain Sight All Along</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Nycticebus_coucang_84653116.jpg" target="_blank" rel="noopener">Wich&#39;yanan L / Wikimedia Commons · CC BY 4.0</a> — "Slow loris"</li><li>2장: <a href="https://www.goodnewsnetwork.org/venomous-primate-believed-extinct-for-100-years-was-hiding-in-plain-sight-all-along/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/The-Bangka-slow-loris-credit-Gunay-M.E.-CC-4.0.-BY-SA.jpg"</li><li>3장: <a href="https://pixabay.com/photos/binoculars-birdwatching-spy-glass-2164526/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "field guide book"</li><li>4장: <a href="https://pixabay.com/photos/pet-dog-adopted-adoption-animal-10072662/" target="_blank" rel="noopener">GumiKutya / Pixabay</a> — "animal shelter"</li><li>5장: <a href="https://pixabay.com/photos/road-forest-fall-autumn-season-1072823/" target="_blank" rel="noopener">Valiphotos / Pixabay</a> — "forest road"</li><li>6장: <a href="https://pixabay.com/photos/winter-tree-snow-frost-frosty-4846638/" target="_blank" rel="noopener">8moments / Pixabay</a> — "tree branch"</li><li>7장: <a href="https://pixabay.com/photos/blue-capped-motmot-bird-branch-5539596/" target="_blank" rel="noopener">alejandroespeche / Pixabay</a> — "tropical forest"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-8680dc3914c9" data-id="8680dc3914c9">
+    <div class="head">
+      <h2>3. 케이팝 데몬 헌터스 4K 블루레이, 넷플릭스 한 달보다 싸다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 9장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/v1-01.jpg" alt="1장: 넷플릭스 한 달보다 싸다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/v1-02.jpg" alt="2장: 프리미엄은 월 26.99달러" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/v1-03.jpg" alt="3장: 49.95달러가 24.99달러로" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/v1-04.jpg" alt="4장: 4K에 블루레이 두 장 더" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/v1-05.jpg" alt="5장: 메이킹부터 엽서까지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/v1-06.jpg" alt="6장: 4K 보려 구독 중인 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/product-1107081234-01.jpg" alt="상품 사진: 크라이테리온 패키지 슬립케이스 두 개(앞·뒤), 아트 카드 여러 장, 스티커 시트, 엽서, 디스크 3장이 펼쳐져 있는 상품 구성 사진 (physicalmediavault.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/product-1107081234-02.jpg" alt="상품 사진: 크라이테리온 로고와 2025 표기가 있는 K-POP DEMON HUNTERS 블루레이 커버 아트. 세 여성 캐릭터와 푸른 호랑이 모습의 그림이 있고, 하단에 타이틀과 감독 이름이 적혀 있다. (physicalmediavault.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 9</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 2장이 카드 뒤에 같이 들어가요 (physicalmediavault.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">넷플릭스 프리미엄 한 달 요금보다 싼 케이팝 데몬 헌터스 4K 블루레이가 나왔다. 미국 매체 The Verge에 따르면 프리미엄 요금은 월 26.99달러인데, 이 영화를 4K로 보려는 목적으로 구독을 유지하는 사람들에게 디스크 구매는 이미 현명한 선택일 수 있었다고 한다. 여기에 원래 49.95달러였던 가격이 반스앤노블과 아마존에서 24.99달러로 내려가면서 추천하기가 더 쉬워졌다.
+
+구성도 알차다. 크라이테리온 컬렉션 판에는 돌비 비전 HDR과 돌비 애트모스 사운드를 갖춘 4K 디지털 마스터가 들어 있고, 1080p 블루레이 두 장이 함께 담겼다. 한 장은 본편, 다른 한 장은 특전 영상이다. 특전에는 장편 길이의 애니매틱, 메이킹 다큐멘터리, 가사 영상 등이 포함된다. 수집용 엽서와 폴리곤 출신 카렌 한이 쓴 에세이도 들어 있다.
+
+처음에는 반스앤노블 매장 픽업으로만 이 할인을 받을 수 있었지만, 11월 6일 업데이트 기준으로는 두 곳 모두 온라인에서 살 수 있다. 기사를 쓴 기자는 이 할인이 연말 쇼핑 시즌을 앞두고 이 영화를 꼭 사야 할 물건으로 만들었다고 평했다.
+
+4K 때문에 구독을 유지 중인 친구가 있다면 이 카드를 보내 주자.
+
+출처: The Verge</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#케이팝데몬헌터스 #블루레이 #넷플릭스 #4K #크라이테리온</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 정가 49.95달러에서 24.99달러로 내려가 &#39;정가에서 절반 가까이 내려간 셈&#39;이라는 계산 주장</li><li>근거 등록 안 된 주장: 카드뉴스와 캡션에서 정보 출처를 미국 매체 The Verge로 밝힌 부분</li>
+          <li>가격은 미국 달러 기준이며 할인 기간·재고는 원문에 없어 변동 가능</li><li>원문 한 건에만 의존하며 한국 내 판매·배송 여부는 확인되지 않음</li><li>&#39;꼭 사야 할 물건&#39;은 The Verge 기자 개인 의견이므로 단정하지 말 것</li><li>영화 캐릭터·포스터·제품 패키지 이미지는 저작권 때문에 사용하지 않음</li><li>상업적 구매 유도로 읽히지 않도록 광고·제휴 표기 여부 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-8680dc3914c9-0">1장</label>
+          <textarea id="s-8680dc3914c9-0" rows="6" data-slide="0">넷플릭스 한 달보다
+**싸다고**???
+---
+케이팝 데몬 헌터스 4K 블루레이가 24.99달러로 내려가, 넷플릭스 프리미엄 한 달 요금 26.99달러보다 싸졌다.</textarea>
+          
+          <label class="f" for="s-8680dc3914c9-1">2장</label>
+          <textarea id="s-8680dc3914c9-1" rows="6" data-slide="1">프리미엄은
+월 **26.99달러**
+---
+넷플릭스 프리미엄 요금은 월 26.99달러다. 이 영화를 4K로 보려는 목적 하나로 구독을 유지하는 사람들에게는 디스크 구매가 이미 괜찮은 선택일 수 있었다.</textarea>
+          
+          <label class="f" for="s-8680dc3914c9-2">3장</label>
+          <textarea id="s-8680dc3914c9-2" rows="6" data-slide="2">49.95달러가
+**24.99달러로**
+---
+원래 가격은 49.95달러였다. 지금은 반스앤노블과 아마존에서 24.99달러에 살 수 있어, 정가에서 절반 가까이 내려간 셈이다.</textarea>
+          
+          <label class="f" for="s-8680dc3914c9-3">4장</label>
+          <textarea id="s-8680dc3914c9-3" rows="6" data-slide="3">4K에 블루레이
+**두 장** 더
+---
+크라이테리온 컬렉션 판에는 돌비 비전 HDR과 돌비 애트모스 사운드를 갖춘 4K 마스터가 담겼다. 1080p 블루레이 두 장이 함께 들어 있고, 하나는 본편, 다른 하나는 특전 영상이다.</textarea>
+          
+          <label class="f" for="s-8680dc3914c9-4">5장</label>
+          <textarea id="s-8680dc3914c9-4" rows="6" data-slide="4">메이킹부터
+**엽서**까지
+---
+특전 디스크에는 장편 길이의 애니매틱, 메이킹 다큐멘터리, 가사 영상 등이 담겼다. 수집용 엽서와 폴리곤 출신 카렌 한이 쓴 에세이도 포함된다.</textarea>
+          
+          <label class="f" for="s-8680dc3914c9-5">6장</label>
+          <textarea id="s-8680dc3914c9-5" rows="6" data-slide="5">4K 보려 구독 중인
+**친구한테** 보내기
+---
+넷플릭스 프리미엄을 이 영화 하나 때문에 유지하는 친구라면 솔깃해할 소식. 월 26.99달러보다 싼 24.99달러라는 가격이 바로 보낼 이유.</textarea>
+          
+          <label class="f" for="c-8680dc3914c9">본문 (캡션)</label>
+          <textarea id="c-8680dc3914c9" class="caption">넷플릭스 프리미엄 한 달 요금보다 싼 케이팝 데몬 헌터스 4K 블루레이가 나왔다. 미국 매체 The Verge에 따르면 프리미엄 요금은 월 26.99달러인데, 이 영화를 4K로 보려는 목적으로 구독을 유지하는 사람들에게 디스크 구매는 이미 현명한 선택일 수 있었다고 한다. 여기에 원래 49.95달러였던 가격이 반스앤노블과 아마존에서 24.99달러로 내려가면서 추천하기가 더 쉬워졌다.
+
+구성도 알차다. 크라이테리온 컬렉션 판에는 돌비 비전 HDR과 돌비 애트모스 사운드를 갖춘 4K 디지털 마스터가 들어 있고, 1080p 블루레이 두 장이 함께 담겼다. 한 장은 본편, 다른 한 장은 특전 영상이다. 특전에는 장편 길이의 애니매틱, 메이킹 다큐멘터리, 가사 영상 등이 포함된다. 수집용 엽서와 폴리곤 출신 카렌 한이 쓴 에세이도 들어 있다.
+
+처음에는 반스앤노블 매장 픽업으로만 이 할인을 받을 수 있었지만, 11월 6일 업데이트 기준으로는 두 곳 모두 온라인에서 살 수 있다. 기사를 쓴 기자는 이 할인이 연말 쇼핑 시즌을 앞두고 이 영화를 꼭 사야 할 물건으로 만들었다고 평했다.
+
+4K 때문에 구독을 유지 중인 친구가 있다면 이 카드를 보내 주자.
+
+출처: The Verge</textarea>
+          <label class="f" for="t-8680dc3914c9">해시태그</label>
+          <input id="t-8680dc3914c9" type="text" class="tagsin" value="#케이팝데몬헌터스 #블루레이 #넷플릭스 #4K #크라이테리온" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/product-1107081234-01.jpg" alt="" width="56" height="56" loading="lazy"> 크라이테리온 패키지 슬립케이스 두 개(앞·뒤), 아트 카드 여러 장, 스티커 시트, 엽서, 디스크 3장이 펼쳐져 있는 상품 구성 사진 · physicalmediavault.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/8680dc3914c9/product-1107081234-02.jpg" alt="" width="56" height="56" loading="lazy"> 크라이테리온 로고와 2025 표기가 있는 K-POP DEMON HUNTERS 블루레이 커버 아트. 세 여성 캐릭터와 푸른 호랑이 모습의 그림이 있고, 하단에 타이틀과 감독 이름이 적혀 있다. · physicalmediavault.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>케이팝 데몬 헌터스 4K 블루레이가 넷플릭스 프리미엄 한 달 요금보다 싸다</b>
+            <q>“KPop Demon Hunters on 4K Blu-ray costs less than a month of Netflix Premium”</q>
+            <small>slide1, caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>블루레이가 24.99달러로 내려갔다</b>
+            <q>“But at just $24.99 from Barnes and Noble and Amazon instead of its original $49.95 price, it’s easier than ever to recommend.”</q>
+            <small>slide1 · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>넷플릭스 프리미엄 요금은 월 26.99달러이고, 4K로 이 영화를 보려고 구독을 유지하는 사람들이 있다</b>
+            <q>“Buying the 4K Blu-ray disc version of KPop Demon Hunters was already going to be a wise idea for some people, especially those who primarily keep their $26.99 Netflix Premium subscription just to watch the hit animated flick in 4K.”</q>
+            <small>slide2, slide6, caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>원래 가격은 49.95달러였고 반스앤노블과 아마존에서 24.99달러에 판매된다</b>
+            <q>“But at just $24.99 from Barnes and Noble and Amazon instead of its original $49.95 price, it’s easier than ever to recommend.”</q>
+            <small>slide3, caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>크라이테리온 컬렉션 판은 돌비 비전 HDR과 돌비 애트모스를 갖춘 4K 마스터와 1080p 블루레이 두 장(본편, 특전)으로 구성된다</b>
+            <q>“In addition to the 4K digital master, complete with Dolby Vision HDR and Dolby Atmos sound, you also get two standard 1080p Blu-rays, one containing the film, and the other packed with special features (a full feature-length animatic, a making-of documentary, lyric videos, and more).”</q>
+            <small>slide4, caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>특전에는 장편 길이의 애니매틱, 메이킹 다큐멘터리, 가사 영상 등이 담겼다</b>
+            <q>“In addition to the 4K digital master, complete with Dolby Vision HDR and Dolby Atmos sound, you also get two standard 1080p Blu-rays, one containing the film, and the other packed with special features (a full feature-length animatic, a making-of documentary, lyric videos, and more).”</q>
+            <small>slide5, caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>수집용 엽서와 폴리곤 출신 카렌 한의 에세이가 포함된다</b>
+            <q>“It includes physical goodies, too, like collectible postcards, as well as an essay by Polygon alum Karen Han.”</q>
+            <small>slide5, caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>처음에는 반스앤노블 매장 픽업으로만 가능했으나 업데이트 기준 두 곳 모두 온라인에서 구매할 수 있다</b>
+            <q>“Update, 4:50PM ET, November 6th: Previously, this deal was available for in-store pickup at Barnes and Noble, but it’s currently available online at both Barnes and Noble and Amazon.”</q>
+            <small>caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기사를 쓴 기자는 이 할인이 연말 쇼핑 시즌을 앞두고 꼭 사야 할 물건으로 만들었다고 평했다</b>
+            <q>“Kpop Demon Hunters was on my list of physical movies to buy, and this deal just turned it into a must-buy ahead of the holiday season.”</q>
+            <small>caption · <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">KPop Demon Hunters on 4K Blu-ray costs less than a month of Netflix Premium</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">The Verge / </a> — "https://platform.theverge.com/wp-content/uploads/sites/2/2025/08/KpopDemonHunters_ProRes422HQ_SDR_2ch_20250424.01_04_39_22.jpg?quality=90&amp;strip=all&amp;crop=18.59375%2C0%2C62.8125%2C100&amp;w=2400"</li><li>2장: <a href="https://pixabay.com/photos/netflix-peliculas-youtube-digital-3733812/" target="_blank" rel="noopener">afra32 / Pixabay</a> — "streaming tv"</li><li>3장: <a href="https://cultsploitation.com/release/kpop-demon-hunters-4k-uhd-blu-ray/" target="_blank" rel="noopener">Cultsploitation / </a> — "https://s3.amazonaws.com/criterion-production/films/9aecc678390ed0ad349572ff77a248ac/hwzqn2pGZCedcS5uAivnwRSYSuNvhv_large.jpg"</li><li>4장: <a href="https://pixabay.com/photos/movie-theater-personal-black-movie-2270554/" target="_blank" rel="noopener">sampane / Pixabay</a> — "home theater"</li><li>5장: <a href="https://www.theverge.com/gadgets/1028640/kpop-demon-hunters-4k-criterion-bluray-deal-sale" target="_blank" rel="noopener">The Verge / </a> — "https://platform.theverge.com/wp-content/uploads/sites/2/2026/11/kpopcontents.jpg?quality=90&amp;strip=all&amp;crop=16.666666666667%2C0%2C66.666666666667%2C100&amp;w=2400"</li><li>6장: <a href="https://pixabay.com/photos/girls-bench-laugh-laughing-friends-1853958/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "friends talking"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 3개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-6479f0b5e048">
+    <div class="head">
+      <h2>S1. 허리 통증, 바른 자세가 답이 아니라는 전문가들</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 7
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-6479f0b5e048">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;바르게 앉아&#39;라는 익숙한 통념을 뒤집고, 하루 중 자세를 자주 바꾸라는 지금 바로 할 수 있는 행동으로 연결하는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">98/500자</span></div>
+      <p class="tp-text">허리 아프면 &#39;바르게 앉아&#39;부터 떠올리잖아
+근데 전문가들은 &#39;바른 자세로 버티기&#39;보다 &#39;자세를 자주 바꾸기&#39;가 더 중요하다고 말함
+하루 앉아 있는 시간 계산이 꽤 충격이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">98/500자</span></div>
+      <p class="tp-text">1/ 영국 정골요법사 아니샤 조시는 푹 퍼지게 앉는 것도 경고하지만, 너무 꼿꼿하게 한 자세로 고정하면 특정 근육에 긴장이 생길 수 있다고 함. 그럼 좋은 자세의 기준은 뭘까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">2/ 기준은 &#39;편안하고 바뀔 수 있는가&#39;래. 문제는 몇 시간씩 한 자세로 있는 거고, 허리가 굽었어도 하루 동안 움직임이 다양하면 꼭 나쁜 건 아니라고 함. 그럼 하루에 앉아 있는 시간은 얼마나 될까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">3/ 물리치료사 앤터니 부시 계산으로는 일하고, 이동하고, 저녁에 넷플릭스까지 보면 사무직은 하루 12시간을 앉아 있을 수 있음. 허리 통증이 생긴다고 알려진 시간의 두 배래. 근데 허리를 건드리는 건 앉기만이 아니었음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">4/ 정골요법사 에마 헤이워드는 진료실에서 큰 스트레스 없이 요통만 온 사람은 거의 못 봤다고 함. &#39;스트레스가 통증의 볼륨을 키운다&#39;는 표현까지 썼음. 그럼 이걸 한눈에 정리하면 뭘까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">197/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 꼿꼿하게 고정된 자세로 몇 시간: 특정 근육 긴장 (정골요법사 조시)
+- 좋은 자세는 편안하고 바뀔 수 있는 자세
+- 앉는 시간 합치면 하루 12시간일 수도 (물리치료사 부시 계산)
+- 스트레스가 통증을 키울 수 있다는 임상가 설명
+- 통증이 와도 겁먹지 말고 계속 움직이라는 조언
+- 뚜렷한 원인 없이 아프면 다른 문제일 수도 있음</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">206/500자</span></div>
+      <p class="tp-text">6/ 결국 전문가들 말은 자세 하나를 정답으로 두지 말고 하루 동안 자주 움직이라는 거. 오래 앉는 날엔 자세 한 번 바꿔볼 만해.
+
+너는 의자에서 꼿꼿파야 구부정파야?
+
+이런 해외 건강 소식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 전문가들은 &#39;바른 자세로 버티기&#39;보다 &#39;자세를 자주 바꾸기&#39;가 더 중요하다고 말함 (캡션 주장, 원문에 직접 비교 문장 없음)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>허리 통증, &#39;바르게 앉기&#39;가 아니라 &#39;자세 자주 바꾸기&#39;부터 하라는 전문가들 말이 나옴</li><li>허리 아프면 &#39;바르게 앉아&#39;부터 떠올리잖아 근데 너무 꼿꼿한 자세가 오히려 문제일 수 있대</li><li>사무직 하루 앉는 시간, 넷플릭스까지 합치면 12시간일 수 있다는 계산</li><li>어릴 때 들은 &#39;허리 펴고 앉아&#39;라는 말, 전문가들은 좀 다르게 말함</li><li>허리 통증, 의자 탓만 하지 말고 스트레스부터 보라는 전문가 인터뷰가 나옴</li><li>&#39;좋은 자세&#39;의 기준이 &#39;바른 모양&#39;이 아니라 &#39;바뀔 수 있는지&#39;래</li><li>아침에 허리 아프면 매트리스 탓하기 전에 &#39;전날 16시간&#39;을 보라는 말이 나옴</li><li>&#39;꼿꼿하게 앉기&#39;가 허리에 오히려 긴장을 줄 수 있다고 경고한 정골요법사</li><li>허리 통증이 있어도 겁먹지 말고 계속 움직이라는 전문가들, 근거가 궁금했음</li><li>책상 앞에 오래 앉는 사람이라면, 허리 아픈 진짜 이유 이 기사 한 번 봐봐</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너는 의자에서 꼿꼿파야 구부정파야?</li><li>오늘 앉은 자세, 지금 이 순간 몇 점이야?</li><li>1시간 넘게 안 일어나고 앉아 있어본 적 있는 사람?</li><li>허리 아플 때 &#39;쉬기파&#39; vs &#39;움직이기파&#39; 어느 쪽이야?</li><li>의자 vs 서서 일하기, 너라면 어느 쪽 고를래?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>허리 MRI에서 &#39;디스크 돌출&#39;이 나와도 통증이랑 안 맞을 수 있다는 전문가들 말</li><li>아침에 허리 아프면 침대 탓일까? 전날 16시간을 보라는 이유</li><li>허리 통증이 사실 허리 문제가 아닐 수 있다는 경우</li><li>&#39;허리 통증은 겁낼수록 커진다&#39;는 전문가 설명</li><li>전 세계 요통 환자가 2050년 8억 명 넘는다는 전망</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문 1번은 연구가 아니라 전문가 인터뷰 기사라서 &#39;연구에서 밝혀졌다&#39;로 쓰면 안 됨</li><li>&#39;하루 12시간 앉기=통증 위험 두 배&#39;는 물리치료사 개인의 계산이라 단정하지 않고 &#39;계산&#39;으로 전했는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조시는 푹 퍼지게 앉는 것도 경고하지만 꼿꼿하고 고정된 자세는 특정 근육에 긴장을 만들 수 있다고 말함</b>
+          <q>“London-based osteopath Anisha Joshi, who counts Rita Ora and Nick Grimshaw among her clients, still warns against a heavy slouch, but says “a very upright, fixed posture” can create tension in certain muscles, most often from sitting in one position for hours without a break.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전문가는 자세가 편안하고 바뀔 수 있을 때 가장 도움이 된다고 말함</b>
+          <q>““Posture is generally most helpful when it’s relaxed and adaptable, rather than forced or held in one ‘correct’ position for hours at a time,” Joshi says.”</q>
+          <small>post0 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>허리가 굽었어도 하루 동안 움직임이 다양하면 꼭 나쁜 건 아니다</b>
+          <q>“A bent back isn’t necessarily a bad one as long as your movement varies throughout the day.”</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>부시는 사무직이 일, 이동, 저녁 넷플릭스를 합치면 하루 12시간을 앉아 있을 수 있고 이는 허리 통증이 생긴다고 알려진 시간의 두 배라고 말함</b>
+          <q>“Antony Bush, a physiotherapist and author of The Back Fix, says office workers can be sitting for 12 hours a day once work, travel and Netflix in the evening are counted, “double what we know gives people back pain”.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>헤이워드는 큰 스트레스 없이 요통만 있는 사람은 진료실에서 거의 못 봤고 스트레스가 통증의 볼륨을 키운다고 말함</b>
+          <q>““I very rarely see low back pain in my clinic without the person also having experienced some significant life stressor at the same time. Stress essentially turns up the volume of pain,” she says.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>통증이 와도 겁먹지 말고 계속 움직이려 하라는 조언이 나옴</b>
+          <q>“So if the patio needs washing again in two years’ time and your back protests, don’t panic and try to keep moving.”</q>
+          <small>post5 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>뚜렷한 원인이 없는 허리 통증은 다른 문제의 증상일 수 있음</b>
+          <q>“Back pain with no obvious cause can be symptomatic of another issue.”</q>
+          <small>post5 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="6479f0b5e048">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.theguardian.com/lifeandstyle/2026/nov/06/experts-why-your-back-hurts-and-what-to-do-about-it" target="_blank" rel="noopener">What causes back pain? The surprising triggers, from stress to sitting up straight – and what you can do about it</a></li><li><a href="https://www.healthdata.org/news-events/newsroom/news-releases/lancet-new-study-shows-low-back-pain-leading-cause-disability" target="_blank" rel="noopener">The Lancet: New study shows low back pain is the leading cause of disability around the world</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-44b727c48288">
+    <div class="head">
+      <h2>S2. 머리 쓰는 일 치매 위험 18%↓ 연관 - 줄리 앤드루스와 평생 뇌 쓰기 연구들</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-44b727c48288">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 뇌건강</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;한 가지 습관&#39;이 아니라 &#39;머리 쓰는 일·새로 배우기&#39;와 치매 위험이 연결됐다는 연구 묶음이고, 은퇴 후엔 어떻게 해야 하나로 풀어야 팔림</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">일할 때 머리 쓰는 사람, 치매 위험이 18% 낮았다는 연구가 있어
+10만 명 넘는 데이터를 묶어서 본 거래
+그럼 일을 그만두고 나면 뇌는 어떻게 될까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">1/ 2023년에 과학자들이 은퇴 직후에 인지 기능이 더 빠르게 떨어진다는 걸 발견했대. 다만 은퇴 때문이라는 건 아니고 연관성만 본 거라는 설명. 그럼 왜 이런 일이 생기는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">2/ 기사에선 두 가지 가능성을 짚음. 머리 좋은 사람이 더 오래 일하는 걸 수도 있고, 머리 쓰는 일이 뇌를 건강하게 지켜주는 걸 수도 있다는 거. 그럼 나이 들고 나서 새로 배우면 달라질까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">3/ 캘리포니아대 리버사이드 심리학자 연구팀이 노인들에게 3개월 동안 스페인어, 그림, 작곡 같은 새 기술을 최소 3개 배우게 했대. 끝나고 보니 인지 수행 점수가 올랐고, 훨씬 젊은 다른 집단과 비슷한 수준이었다고. 그럼 평생 뇌를 써온 사람은 어떨까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">166/500자</span></div>
+      <p class="tp-text">4/ 미국 일리노이 노인 약 2,000명을 8년 가까이 따라간 연구(Neurology)도 있어. 책 읽기, 도서관·박물관 가기, 외국어 배우기, 사전 쓰기 같은 활동을 평생 더 자주 한 사람일수록 알츠하이머 위험이 38% 낮은 것과 연결됐고, 인지 저하 시작도 최대 7년 늦었대. 한눈에 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">189/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 머리 쓰는 일: 치매 위험 18% 낮음 (10만 명 이상, 2021)
+- 평생 인지 활동 점수 높음: 알츠하이머 38%, 경도인지장애 36% 낮음 (약 2,000명)
+- 노인이 새 기술 3개 배움: 3개월 뒤 인지 점수 향상
+- 앞의 두 개는 연관성이라 원인이라고 단정은 못 함
+그래서 결국 뭘 챙기면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">215/500자</span></div>
+      <p class="tp-text">6/ 결국 기사가 짚는 건 나이 들어서도 뇌를 계속 쓰고 새로 배우는 쪽이 유리해 보인다는 거 (연관성 연구 기준).
+나이 들어서 새로 배운다면 언어 vs 그림 vs 작곡, 뭐 골라?
+이런 해외 건강·뇌 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 18%와 38% 등 결과가 원인이 아니라 연관성이라 단정할 수 없다는 설명 (카드 5번 항목)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>일할 때 머리 쓰는 사람, 치매 위험이 18% 낮았다는 연구가 있어</li><li>91살 줄리 앤드루스가 &#39;뇌 살리려고 계속 일한다&#39;는데, 연구가 은근 편을 들어줌</li><li>나이 들면 배우는 건 끝난 줄 알았는데, 노인들이 3개월 새로 배웠더니 인지 점수가 올랐대</li><li>은퇴 직후에 인지 기능이 더 빨리 떨어진다는 연구, 은퇴 때문은 아니라는데 타이밍이 수상함</li><li>뇌 건강은 &#39;가만히 쉬기&#39;가 아니라 &#39;계속 새로 배우기&#39; 쪽에 힘이 실리는 연구들이 나옴</li><li>책 읽기, 도서관·박물관 가기 같은 평생 습관이 알츠하이머 위험 38% 낮은 것과 연결됐대</li><li>&#39;어른은 애들만큼 배우면 안 된다&#39;는 분위기가 문제일 수 있다는 심리학자 말</li><li>전 세계 치매의 약 45%는 생활습관 등을 바꾸면 막거나 늦출 수 있다는 추정이 있대</li><li>91살 배우의 아버지는 76살에 새 언어를 공부했대, 그 집안의 뇌 쓰는 법</li><li>근육처럼 뇌도 &#39;저금&#39;해둔 만큼 버틴다는 개념, 평생 얼마나 썼는지가 중요하대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>나이 들어서 새로 배운다면 언어 vs 그림 vs 작곡, 뭐 골라?</li><li>은퇴하고 나서도 일 계속하고 싶은 쪽? 아니면 푹 쉬고 싶은 쪽?</li><li>외국어 하나 새로 배운다면 어떤 언어 고를래?</li><li>책 읽기 vs 박물관 가기, 뇌에 더 좋을 것 같은 건?</li><li>최근에 새로 배워본 거 있는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>은퇴 직후 인지 기능이 빨리 떨어진다는 연구, 뭘 더 알아냈을까</li><li>하버드가 연구하는 슈퍼에이저, 뇌가 젊은 노인들의 공통점</li><li>치매 어르신이 서빙하는 일본 팝업 식당</li><li>100년 멸종 취급받던 독 영장류, 사실은 살아 있었다</li><li>케이팝 데몬 헌터스 4K 블루레이, 넷플릭스 한 달보다 싸다</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문 제목은 &#39;한 가지 습관&#39;이지만 18%는 &#39;머리 쓰는 직업&#39;과 치매 위험의 연관 수치임. 습관 하나로 읽히지 않게 본글 표현 확인 필요</li><li>관찰 연구의 연관성이라 &#39;하면 치매 안 걸린다&#39;로 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>머리 쓰는 일을 하던 사람들은 치매 위험이 18% 낮았다</b>
+          <q>“After adjusting for other risk factors, they found that those participants with cognitively stimulating jobs had an 18 percent lower risk of dementia.”</q>
+          <small>post0, post5 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국·유럽·미국 10만 명 넘는 데이터를 묶어 분석했다</b>
+          <q>“They brought together data from more than 100,000 people in the United Kingdom, Europe, and the United States.”</q>
+          <small>post0, post5 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2023년 연구에서 은퇴 직후 인지 기능이 더 빠르게 떨어지는 것이 발견됐다</b>
+          <q>“In 2023, for instance, scientists found that immediately after retirement, cognitive function declines at an accelerated rate.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>은퇴 때문이라는 뜻이 아니라 연관성일 뿐이다</b>
+          <q>“That isn&#39;t to say that the decline is due to retirement; it&#39;s just an association.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인지 능력이 높은 사람이 더 오래 일하는 것일 수도, 머리 쓰는 일이 뇌를 지켜주는 것일 수도 있다</b>
+          <q>“It could be that people more cognitively capable are working into later age, or it may be that mentally stimulating work can help keep the brain fit and healthy.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>캘리포니아대 리버사이드의 심리학자 Rachel Wu는 노년에도 배움이 인지를 높일 수 있는지 연구한다</b>
+          <q>“Rachel Wu is a psychologist at the University of California, Riverside, who is researching how learning can boost cognition even in older age.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2023년 연구에서 노인들이 3개월 동안 스페인어, 그림, 작곡 같은 새 기술을 최소 3개 배웠다</b>
+          <q>“She and her colleagues published a study in 2023 that had older adults learn at least three new skills, such as Spanish, drawing, or music composition, over the course of three months.”</q>
+          <small>post3, post5 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들의 인지 수행이 좋아졌고 점수가 훨씬 젊은 집단과 비슷했다</b>
+          <q>“At the end of the trial, participants showed improved cognitive performance. In fact, their scores were on par with a separate cohort of much younger adults.”</q>
+          <small>post3, post5 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Neurology에 실린 연구가 치매 없던 일리노이 노인 약 2,000명을 따라갔다</b>
+          <q>“A recent study, published in Neurology earlier this year, followed nearly 2,000 older individuals from Illinois in the United States who did not have dementia at baseline.”</q>
+          <small>post4, post5 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책 읽기, 도서관·박물관 방문, 외국어 학습, 사전 사용 같은 인지 활동을 더 자주 한 사람이 이후 인지 결과가 더 좋았다</b>
+          <q>“Those who reported more frequent engagement in cognitive activities throughout their lifespan, like reading books, visiting libraries and museums, learning foreign languages, or using dictionaries, showed better cognitive outcomes in later life.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>평생 인지 자극 점수가 높으면 알츠하이머 위험 38%, 경도인지장애 위험 36% 낮은 것과 연결됐고 인지 저하 시작이 최대 7년 늦었다</b>
+          <q>“In fact, a higher lifetime score for cognitive enrichment was associated with a 38 percent lower risk of Alzheimer&#39;s, a 36 percent lower risk of mild cognitive impairment, and a delayed onset of cognitive decline by up to 7 years.”</q>
+          <small>post4, post5 · <a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="44b727c48288">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/at-91-julie-andrews-swears-by-one-habit-linked-to-18-lower-dementia-risk" target="_blank" rel="noopener">At 91, Julie Andrews Swears by One Habit Linked to 18% Lower Dementia Risk</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-1de00a800684">
+    <div class="head">
+      <h2>S3. 소니 MDR-3R 워크맨 복고 유선 헤드폰</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-1de00a800684">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 블루투스 시대에 일부러 선 달린 복고 헤드폰을 원본 설계도까지 보고 다시 만들었고, 가격이 $59.99라는 대비로 팔린다</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "레트로 오버이어 헤드폰 유선" · 원문 제품: Sony MDR-3R 오버이어 유선 헤드폰, 기본형 $59.99, Stranger Things Edition $79.99, 원문에 판매처 언급 없음<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: yankodesign.com, whathifi.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/1de00a800684/thread-photo-1107081747-01.jpg" alt="흰색(회색) 밴드와 은색 하우징의 레트로 유선 헤드폰 두 개가 나란히 있고, 왼쪽은 블루, 오른쪽은 오렌지 이어패드가 달려 있다. 흰 배경의 제품 사진이다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/1de00a800684/thread-photo-1107081747-02.jpg" alt="파란색 패키지 박스(SONY, MDR-3R, USB Type-C STEREO HEADPHONES 표기)와 블루·실버 헤드폰, USB Type-C 케이블, 주황색 이어패드 두 개가 회색 배경에 놓인 모습" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261107-pm-1432e71505da/1de00a800684/thread-photo-1107081747-03.jpg" alt="검은 배경 위에 놓인 회색 밴드와 주황색 이어패드를 가진 소니 헤드폰이 비스듬한 각도로 보인다. 오른쪽 이어컵에 SONY 로고와 MDR-3R 각인이 보이며, 유선 케이블이 아래로 늘어져 있다." loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-1de00a800684">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">블루투스 시대에 소니가 &#39;선 달린&#39; 헤드폰을 다시 내놨대
+워크맨 시절 헤드폰을 원본 설계도까지 참고해서 만들었다는데
+요즘 폰에 꽂으려면 좀 번거로운 점이 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">1/ 소니 MDR-3R, 원조랑 거의 구분이 안 된다는 평이야. 금속 헤드밴드랑 드라이버 바깥쪽 구멍 같은 작은 디테일까지 살렸고, 밀레니얼은 보자마자 향수를 느낄 거라고 함. 그럼 소리는 원조랑 같을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">2/ 소리도 같은 방향으로 맞췄대. 원조랑 같은 23mm 다이내믹 드라이버를 넣어서 같은 음색을 재현하려 했다고. 통화용 마이크랑 리모컨 같은 요즘 기능도 들어갔음. 근데 무게는 원조보다 더 가볍대. 몇 g일까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">184/500자</span></div>
+      <p class="tp-text">3/ MDR-3R 요약 정리
+- 금속 헤드밴드, 드라이버 바깥쪽 구멍 디테일
+- 23mm 다이내믹 드라이버
+- 무게 38g (원조보다 2g 가벼움)
+- 마이크 + 인라인 리모컨
+- 이어패드 블루·오렌지
+- 기본형 $59.99
+- 스트레인저 싱스 에디션 $79.99 (검정 헤드밴드, 빨강·검정 폼 패드)
+그럼 아쉬운 점은 없을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">4/ 연결이 아쉽대. 요즘 폰엔 3.5mm 잭이 거의 안 보여서 USB-C 커넥터가 달려 나온다고. 기사 쓴 쪽은 3.5mm나 4.4mm로 갈아 끼울 수 있었으면 했다고 함. DAP에 꽂으려면 변환 케이블을 따로 사야 한대. 그래도 $59.99면 어떨까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">187/500자</span></div>
+      <p class="tp-text">5/ 결국 소니가 워크맨 시절 헤드폰을 원본 설계도까지 보고, 기본형 $59.99에 다시 냈다는 얘기야. 이거 선물로 받으면 좋아할 사람 소환해봐. 해외에서 난리 난 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 제품이나 원조 헤드폰이 해외에서 화제가 되어 난리가 났다는 주장(원문에 인기·반응 언급 없음)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>블루투스 시대에 소니가 &#39;선 달린&#39; 헤드폰을 다시 내놨대</li><li>워크맨 헤드폰, 원본 설계도 꺼내서 다시 만들었다는 소니</li><li>원조랑 거의 구분이 안 된대, 소니가 되살린 40년도 더 된 헤드폰</li><li>$59.99에 워크맨 감성을 살 수 있다는 헤드폰이 나옴</li><li>&#39;이어폰 선 꼬이는 맛&#39;을 아는 사람이면 눈 돌아갈 헤드폰</li><li>무선이 대세인데 소니는 왜 유선 헤드폰을 다시 냈을까?</li><li>선물할 사람 떠오르는 헤드폰, 소니가 워크맨 시절 걸 부활시킴</li><li>금속 헤드밴드에 포장, 설명서까지 옛날 느낌으로 만든 헤드폰</li><li>스트레인저 싱스 에디션까지 나온 소니 복고 헤드폰</li><li>요즘 폰엔 꽂을 데도 없는데 소니가 유선 헤드폰을 낸 이유</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환</li><li>선 달린 헤드폰 vs 블루투스, 너는 어느 쪽?</li><li>$59.99면 이거 살 거야?</li><li>기본형 vs 스트레인저 싱스 에디션, 어느 쪽?</li><li>옛날에 쓰던 워크맨이나 유선 이어폰 기억나는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>케이팝 데몬 헌터스 4K 블루레이, 넷플릭스 한 달보다 싸다</li><li>유선 오디오 감성이 다시 돌아온 흐름 더 보기</li><li>치매 어르신이 서빙하는 일본 팝업 식당</li><li>100년 멸종 취급받던 독 영장류, 사실은 살아 있었다</li><li>해외에서 화제 된 복고 감성 물건 또 가져오기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문이 원조 헤드폰 출시를 &#39;1981년&#39;이라 쓰면서 다른 문장에선 1979년 워크맨 TPS-L2와 함께 출시됐다고 해서 연도가 불일치함. 글에는 연도를 쓰지 않았음</li><li>원문에 판매처·출시 국가·출시일이 없어 한국 발매 여부는 확인 불가. 스트레인저 싱스 에디션은 콘텐츠 상표라 사진 사용 시 주의</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소니가 유선 오디오를 좋아하는 세대를 겨냥해 오버이어 헤드폰을 다시 내놨다</b>
+          <q>“Well, the nostalgia is revived as Sony has brought back over-ear headphones for a generation obsessed with wired audio gear.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원조 헤드폰의 원본 설계도를 참고해 만들었다</b>
+          <q>“The new pair of earphones draws inspiration from the originals that debuted in 1981, with the original design drawings referenced in crafting this pair.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요즘 폰엔 3.5mm 잭이 드물어 USB-C 커넥터가 달려 나온다</b>
+          <q>“Since modern phones are rarely seen with a 3.5mm headphone jack, the pair comes with a USB-C connector to plug in easily with modern devices.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원조와 거의 구분이 안 되고 밀레니얼은 향수를 느낄 것이라는 평</b>
+          <q>“You can barely distinguish the MDR-3R from the original one, and millennials will instantly feel the nostalgia.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>금속 헤드밴드와 드라이버 바깥쪽 구멍 같은 디테일을 살렸다</b>
+          <q>“The small design details, like the metal headband and the holes on the outer casing of the drivers.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원조와 같은 23mm 다이내믹 드라이버로 같은 음색을 재현하려 했다</b>
+          <q>“The inspiration doesn’t stop at the looks alone, as the earphones come with the same 23mm dynamic driver, so that the same sound signature can be replicated in these.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>통화용 마이크와 인라인 리모컨이 들어갔다</b>
+          <q>“All the modern conveniences are included, though, like a microphone for taking calls and the in-line remote control to toggle calls, music, and podcast streaming.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무게는 38g으로 원조보다 2g 가볍다</b>
+          <q>“Practicality of use is also taken care of, as the earphones weigh just 38 grams, bettering the original ones by 2 grams.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>블루와 오렌지 이어패드가 함께 온다</b>
+          <q>“The earphones come with the iconic blue and orange earpads to customize the look.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스트레인저 싱스 에디션은 검정 헤드밴드와 빨강·검정 폼 패드다</b>
+          <q>“Along with the OG classic version, the earphones also come in a Stranger Things Edition that has a black headband and the themed red and black foam pads to match the ones worn by Max.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기본형은 $59.99, 스트레인저 싱스 에디션은 $79.99다</b>
+          <q>“The standard MDR-3R over-ear earphones are priced at $59.99, while the Stranger Things Edition comes for $79.99.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기사 쓴 쪽은 3.5mm나 4.4mm로 갈아 끼우는 옵션이 있었으면 했다</b>
+          <q>“I would have liked the headphones to come with a swappable option to plug in a 3.5mm or 4.4mm jack for high-quality playback with services like Tidal or Apple Music.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>DAP에 꽂으려면 USB-C to 3.5mm 또는 4.4mm 변환 케이블을 따로 사야 한다</b>
+          <q>“That said, you’ll have to buy a USB-C to 3.5mm or 4.4mm jack so that you can plug it into DAPs like the HiBy W4 HiFi Amplifier.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기본형 가격은 $59.99다</b>
+          <q>“The standard MDR-3R over-ear earphones are priced at $59.99, while the Stranger Things Edition comes for $79.99.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원본 설계도를 참고해 만들었다</b>
+          <q>“The new pair of earphones draws inspiration from the originals that debuted in 1981, with the original design drawings referenced in crafting this pair.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="1de00a800684">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/06/sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=sony-mdr-3r-over-ear-headphones-revive-nostalgia-of-the-walkman-era" target="_blank" rel="noopener">Sony MDR-3R over-ear headphones revive nostalgia of the Walkman era - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261107-pm";
+  const ORIGINAL = {"12405a4e365c": {"caption": "\uc8fc\ubb38\uc744 \ud2c0\ub824\ub3c4 \uad1c\ucc2e\uc740 \uc2dd\ub2f9\uc774 \uc77c\ubcf8 \ub9c8\uc4f0\uc57c\ub9c8\uc5d0 \ubb38\uc744 \uc5f4\uc5c8\ub2e4. \uc774\ub984\ubd80\ud130 \u0027\uc8fc\ubb38\uc744 \ud2c0\ub9b4\uc9c0\ub3c4 \ubaa8\ub974\ub294 \uc694\ub9ac\uc810\u0027\uc778\ub370, \ubc88\uc5ed \uc624\ub958\uac00 \uc544\ub2c8\ub77c \uc77c\ubcf8\uc5b4 \uc774\ub984\uc744 \uac70\uc758 \uadf8\ub300\ub85c \uc62e\uae34 \uac83\uc774\ub2e4. \uc774\uacf3\uc758 \uc9c1\uc6d0\uc740 \uce58\ub9e4\ub97c \uac00\uc9c4 \uc5b4\ub974\uc2e0\ub4e4\uc774\uae30 \ub54c\ubb38\uc774\ub2e4.\n\n\uc774 \uc2dd\ub2f9\uc740 2018\ub144\uc5d0 \uc2dc\uc791\ud588\uace0, \uc774\ubbf8 \uc788\ub294 \uc2dd\ub2f9\uc744 \ud558\ub8e8 \ub3d9\uc548 \ube4c\ub824 \uc6b4\uc601\ud558\ub294 \ud31d\uc5c5 \ubc29\uc2dd\uc774\ub2e4. \uc774\ubc88\uc5d0\ub294 9\uc6d4 21\uc77c \ub374\ub958 \ub77c\uba58\uacfc \uc190\uc7a1\uc558\ub2e4. \uc774\ub0a0\uc740 \uc77c\ubcf8\uc758 \uacbd\ub85c\uc758 \ub0a0\uc774\uc790 \uc138\uacc4 \uc54c\uce20\ud558\uc774\uba38\uc758 \ub0a0\uc774\uae30\ub3c4 \ud588\ub2e4.\n\n\ub9c8\uc4f0\uc57c\ub9c8\uc5d0\uc11c\ub294 78\uc138\ubd80\ud130 88\uc138\uae4c\uc9c0 \uc9c0\uc5ed \uc5b4\ub974\uc2e0 \ub124 \uba85\uc774 \uc190\ub2d8\uc758 \uc8fc\ubb38\uc744 \ubc1b\uace0 \uc74c\uc2dd\uc744 \ub0a0\ub790\ub2e4. \ucc38\uac00\uc790 \ud55c \uba85\uc758 \ub538\uacfc \uc190\ub140\ub3c4 \uc190\ub2d8\uc73c\ub85c \ucc3e\uc558\ub294\ub370, \ub538\uc740 \uc5b4\uba38\ub2c8\uac00 \ud65c\ub3d9\ud558\ub294 \ubaa8\uc2b5\uc774 \uac10\ub3d9\uc801\uc774\ub77c\uba70 \ub208\ubb3c\uc744 \ud6d4\ucce4\ub2e4. \ud55c \uc190\ub2d8\uc740 \ucc9c\ucc9c\ud788 \ub4e3\uace0 \ucc28\ubd84\ud788 \ub9d0\ud558\ub2c8 \uc11c\ub85c \uc774\ud574\ud560 \uc218 \uc788\uc5c8\ub2e4\uace0 \uc804\ud588\uace0, \uc5b4\ub974\uc2e0 \ud55c \uba85\uc740 \ub9ce\uc740 \uc0ac\ub78c\uc744 \ub9cc\ub098 \uc774\uc57c\uae30\ud574\uc11c \uc815\ub9d0 \uae30\ubee4\ub2e4\uace0 \uc6c3\uc73c\uba70 \ub9d0\ud588\ub2e4.\n\n\uc6b4\uc601 \ucde8\uc9c0\ub294 \uc5b4\ub974\uc2e0\ub4e4\uc5d0\uac8c \uc77c\uc744 \uc2dc\ud0a4\ub294 \uac8c \uc544\ub2c8\ub2e4. \uce58\ub9e4\ub97c \uac00\uc9c4 \uc0ac\ub78c\uc5d0 \ub300\ud55c \uc778\uc2dd\uacfc \ubc30\ub824\ub97c \ud0a4\uc6b0\uace0, \ubcd1\uc774 \uc788\uc5b4\ub3c4 \uc0ac\ub78c\uacfc\uc758 \uad50\ub958\uc5d0\uc11c \uc644\uc804\ud788 \uba40\uc5b4\uc9c8 \ud544\uc694\ub294 \uc5c6\ub2e4\ub294 \uac78 \ubcf4\uc5ec \uc8fc\uba70 \uc790\uc2e0\uac10\uacfc \uc131\ucde8\uac10\uc744 \uc8fc\ub294 \uac83\uc774\ub2e4. \uc218\uc775\uc740 \uc6b0\uc120\uc21c\uc704\uac00 \uc544\ub2c8\uba70, \uac00\uac8c\uc5d0 \uc624\uc9c0 \ubabb\ud558\ub294 \uc0ac\ub78c\uc744 \uc704\ud574 \uc628\ub77c\uc778 \uae30\ubd80\ub3c4 \ubc1b\ub294\ub2e4.\n\n\uc8fc\ubb38\uc774 \ud2c0\ub9b4 \uc218 \uc788\ub2e4\uace0 \ubbf8\ub9ac \ubc1d\ud78c \uc774 \ubc29\uc2dd\uc740 \uc18c\ub77c\ub274\uc2a424\uc5d0 \ub530\ub974\uba74 \uc6c3\uc74c\uacfc \uac10\uc0ac\uc758 \ub208\ubb3c\ub85c \uc774\uc5b4\uc84c\ub2e4.\n\n\ucd9c\ucc98: SoraNews24, ITV, Fukuoka TNC News", "hashtags": ["#\uce58\ub9e4", "#\uc77c\ubcf8", "#\ub9c8\uc4f0\uc57c\ub9c8", "#\uc8fc\ubb38\uc744\ud2c0\ub9ac\ub294\uc694\ub9ac\uc810", "#\ud574\uc678\uc774\uc288"], "slides": [["\uc8fc\ubb38 **\ud2c0\ub824\ub3c4**", "\uad1c\ucc2e\uc740 \uc2dd\ub2f9?!", "---", "\uc77c\ubcf8 \ub9c8\uc4f0\uc57c\ub9c8\uc5d0\uc11c \uce58\ub9e4\ub97c \uc553\ub294 \uc5b4\ub974\uc2e0\ub4e4\uc774 \uc6e8\uc774\ud2b8\ub9ac\uc2a4\ub85c \uc77c\ud558\ub294 \u0027\uc8fc\ubb38\uc744 \ud2c0\ub9b4\uc9c0\ub3c4 \ubaa8\ub974\ub294 \uc694\ub9ac\uc810\u0027\uc774 \ubb38\uc744 \uc5f4\uc5c8\ub2e4."], ["\uc774\ub984\ubd80\ud130", "**\uc194\uc9c1\ud55c** \uc2dd\ub2f9", "---", "\uac00\uac8c \uc774\ub984\uc740 \uc77c\ubcf8\uc5b4 \uc6d0\ub798 \uc774\ub984\uc744 \uac70\uc758 \uadf8\ub300\ub85c \uc62e\uae34 \uac83\uc73c\ub85c, \ubc88\uc5ed \uc624\ub958\uac00 \uc544\ub2c8\ub2e4. \uc9c1\uc6d0\uc774 \uce58\ub9e4\ub97c \uac00\uc9c4 \uc5b4\ub974\uc2e0\ub4e4\uc774\ub77c\uc11c \uc8fc\ubb38 \uc2e4\uc218 \uac00\ub2a5\uc131\uc744 \ubbf8\ub9ac \ubc1d\ud788\ub294 \uc774\ub984\uc774\ub2e4."], ["2018\ub144 \uc2dc\uc791", "\ud558\ub8e8\uc9dc\ub9ac **\ud31d\uc5c5**", "---", "2018\ub144\uc5d0 \uc2dc\uc791\ub41c \uc774 \uc2dd\ub2f9\uc740 \uc774\ubbf8 \uc788\ub294 \uc2dd\ub2f9\uc744 \ud558\ub8e8 \ub3d9\uc548 \ube4c\ub824 \ubb38\uc744 \uc5ec\ub294 \ud31d\uc5c5 \ubc29\uc2dd\uc774\ub2e4. \uc774\ubc88 \ub9c8\uc4f0\uc57c\ub9c8\uc5d0\uc11c\ub294 9\uc6d4 21\uc77c \ub374\ub958 \ub77c\uba58\uacfc \uc190\uc7a1\uc558\ub2e4."], ["\uc5b4\ub974\uc2e0 **\ub124 \uba85\uc774**", "\uc9c1\uc811 \uc11c\ube59", "---", "9\uc6d4 21\uc77c\uc740 \uc77c\ubcf8\uc758 \uacbd\ub85c\uc758 \ub0a0\uc774\uc790 \uc138\uacc4 \uc54c\uce20\ud558\uc774\uba38\uc758 \ub0a0\uc774\uc5c8\ub2e4. \uc774\ub0a0 78\uc138\ubd80\ud130 88\uc138\uae4c\uc9c0 \uc9c0\uc5ed \uc5b4\ub974\uc2e0 \ub124 \uba85\uc774 \uc8fc\ubb38\uc744 \ubc1b\uace0 \uc74c\uc2dd\uc744 \ub0a0\ub790\ub2e4."], ["\uc77c\uc744 \uc2dc\ud0a4\ub294 \uac8c", "**\ubaa9\uc801\uc774 \uc544\ub0d0**", "---", "\ucde8\uc9c0\ub294 \uce58\ub9e4\ub97c \uac00\uc9c4 \uc0ac\ub78c\uc5d0 \ub300\ud55c \uc778\uc2dd\uacfc \ubc30\ub824\ub97c \ud0a4\uc6b0\ub294 \uac83\uc774\ub2e4. \ub610 \ubcd1\uc774 \uc788\uc5b4\ub3c4 \uc0ac\ub78c\uacfc\uc758 \uad50\ub958\uac00 \ub04a\uae30\ub294 \uac74 \uc544\ub2c8\ub77c\ub294 \uac78 \ubcf4\uc5ec \uc8fc\uba70 \uc5b4\ub974\uc2e0\ub4e4\uc5d0\uac8c \uc790\uc2e0\uac10\uacfc \uc131\ucde8\uac10\uc744 \uc8fc\ub824 \ud55c\ub2e4."], ["**\ub208\ubb3c** \ud6d4\uce5c", "\uac00\uc871\ub3c4 \uc788\uc5c8\uc5b4", "---", "\ucc38\uac00\uc790 \ud55c \uba85\uc758 \ub538\uc740 \uc5b4\uba38\ub2c8\uac00 \ud65c\ub3d9\ud558\ub294 \ubaa8\uc2b5\uc774 \uac10\ub3d9\uc801\uc774\ub77c\uba70 \ub208\ubb3c\uc744 \ud6d4\ucce4\ub2e4. \ud55c \uc190\ub2d8\uc740 \ucc9c\ucc9c\ud788 \ub4e3\uace0 \ucc28\ubd84\ud788 \ub9d0\ud558\uba74 \uc11c\ub85c \uc774\ud574\ud560 \uc218 \uc788\uc5c8\ub2e4\uace0 \ud588\ub2e4."], ["\ubd80\ubaa8\ub2d8 \ub3cc\ubcf4\ub294", "\uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4\uae30", "---", "\uce58\ub9e4\ub97c \uac00\uc9c4 \uc5b4\ub974\uc2e0\ub4e4\uc774 \uc8fc\ubb38\uc744 \ubc1b\uc73c\uba70 \uc6c3\uc74c\uc744 \ub098\ub208 \ud558\ub8e8\ub97c \ub2f4\uc558\ub2e4. \uc5b4\ub974\uc2e0\uc744 \uacc1\uc5d0\uc11c \ucc59\uae30\ub294 \uac00\uc871\uc774 \uc788\ub294 \uce5c\uad6c\ub77c\uba74 \ubb49\ud074\ud574\ud560 \uc18c\uc2dd"]]}, "6ae6885878e8": {"caption": "\uba78\uc885\ud55c \uc904 \uc54c\uc558\ub358 \ub3c5 \uc788\ub294 \uc601\uc7a5\ub958\uac00 \uc0ac\uc2e4\uc740 \uacc4\uc18d \uc0b4\uc544 \uc788\uc5c8\ub2e4. \uc8fc\uc778\uacf5\uc740 \uc778\ub3c4\ub124\uc2dc\uc544 \ubc29\uce74\uc12c\uc758 \ubc29\uce74 \ub298\ubcf4\ub85c\ub9ac\uc2a4\ub2e4. \uc11c\uad6c \uacfc\ud559\uacc4\uc5d0 \ub9c8\uc9c0\ub9c9\uc73c\ub85c \uae30\ub85d\ub41c \ub54c\ub294 1930\ub144\ub300\uc600\uace0, 2015\ub144\uc5d0\ub294 \uba78\uc885\ud588\uc744 \uac00\ub2a5\uc131\uc774 \uc788\ub294 \uc885\uc73c\ub85c \uc5ec\uaca8\uc84c\ub2e4. \ud558\uc9c0\ub9cc \uc12c\uc758 \ud604\uc9c0 \uc57c\uc0dd\ub3d9\ubb3c \ub2e8\uccb4\ub294 \uc624\ub7ab\ub3d9\uc548 \uc774 \ub3d9\ubb3c\uc744 \uad6c\uc870\ud574 \uc57c\uc0dd\uc73c\ub85c \ub3cc\ub824\ubcf4\ub0b4\uace0 \uc788\uc5c8\ub2e4. \uadf8 \ud65c\ub3d9\uc740 \uacfc\ud559\uacc4\uc758 \uc2dc\uc57c \ubc16\uc5d0 \uc788\uc5c8\ub358 \uc148\uc774\ub2e4. \uc624\uc2a4\ud2b8\ub9ac\uc544 \uacfc\ud559\uc790\ub4e4\uacfc \uad6d\uc81c \ub3d9\ub8cc\ub4e4\uc774 \ub0b8 \uc7ac\ubc1c\uacac \ub17c\ubb38\uc5d0 \ub530\ub974\uba74, \uc774 \uc885\uc774 \uc544\uc9c1 \uc788\uc744\uc9c0 \ubaa8\ub978\ub2e4\ub294 \uccab \uc0dd\uac01\uc740 2022\ub144 \uc778\ub3c4\ub124\uc2dc\uc544 \uc601\uc7a5\ub958 \ud604\uc7a5 \ub3c4\uac10\uc5d0\uc11c \ub098\uc654\ub2e4. \ub3c4\uac10\uc740 \ubb38\ud1a1 \uc2dc \uadfc\ucc98\uc758 \uc791\uc740 \uc232\uc778 \uad6c\ub219\ub9c8\ub77c\uc2a4 \uad6d\ub9bd\uacf5\uc6d0\uc744 \uc11c\uc2dd\uc9c0\ub85c \uc5b8\uae09\ud588\uace0, \uc54c\ub85c\ube44 \uc57c\uc0dd\ub3d9\ubb3c \uad6c\uc870\uc13c\ud130\ub97c \uc870\uc0ac\ud558\uba74\uc11c \uba78\uc885\ud558\uc9c0 \uc54a\uc558\ub2e4\ub294 \uc810\uc774 \ud655\uc778\ub410\ub2e4. \uc2a4\ubbf8\uc18c\ub2c8\uc5b8 \ub9e4\uac70\uc9c4\uc5d0 \ub530\ub974\uba74 \uc13c\ud130\ub294 2015\ub144\ubd80\ud130 2025\ub144 \uc0ac\uc774 90\ub9c8\ub9ac \ub118\uac8c \uad6c\uc870\ud588\uace0 86\ub9c8\ub9ac\ub97c \ubc29\uc0ac\ud588\ub2e4. \uae00\ub85c\ubc8c \ubcf4\uc804 \ub2e8\uccb4 Re:wild\uc758 \ubca4\uc9c0 \ubc14\ub974\uce74\ub294 \ud55c \uc885\uc774 \uacfc\ud559 \uae30\ub85d\uc5d0\uc11c \uc0ac\ub77c\uc838\ub3c4 \uadf8 \uc9d1\uc744 \ub098\ub220 \uc4f0\ub294 \uc0ac\ub78c\ub4e4\uc758 \uc0b6\uc5d0\uc11c\ub294 \uc0ac\ub77c\uc9c0\uc9c0 \uc54a\uc744 \uc218 \uc788\ub2e4\uace0 \ubc1d\ud614\ub2e4. \uc774 \ub3d9\ubb3c\uc740 \uc704\ud314 \ubd84\ube44\uc0d8\uc758 \ub3c5\uc744 \uce68\uacfc \uc11e\uc5b4 \ubc29\uc5b4\uc6a9 \ubb3c\uae30\ub97c \ub3c5 \uacf5\uaca9\uc73c\ub85c \ubc14\uafbc\ub2e4. \uc138\uc0c1\uc5d0 \uba87 \uc548 \ub418\ub294 \ub3c5 \uc788\ub294 \uc601\uc7a5\ub958 \uc911 \ud558\ub098\ub2e4. \ucd9c\ucc98: Good News Network, Smithsonian Magazine", "hashtags": ["#\uba78\uc885", "#\ub298\ubcf4\ub85c\ub9ac\uc2a4", "#\ubc29\uce74\uc12c", "#\uc57c\uc0dd\ub3d9\ubb3c", "#\uc7ac\ubc1c\uacac"], "slides": [["\uba78\uc885\ud588\ub2e4\ub358", "**\ub3c5 \uc601\uc7a5\ub958**???", "---", "1930\ub144\ub300 \uc774\ud6c4 \uc11c\uad6c \uacfc\ud559\uacc4\uc758 \uae30\ub85d\uc774 \ub04a\uaca8 \uba78\uc885 \uac00\ub2a5\uc131\uc774 \uc81c\uae30\ub410\ub358 \ubc29\uce74 \ub298\ubcf4\ub85c\ub9ac\uc2a4\uac00 \uc5ec\uc804\ud788 \uc0b4\uc544 \uc788\ub294 \uac83\uc73c\ub85c \ud655\uc778\ub410\ub2e4."], ["\ub9c8\uc9c0\ub9c9 \ubaa9\uaca9\uc774", "**1930\ub144\ub300**", "---", "\ubc29\uce74 \ub298\ubcf4\ub85c\ub9ac\uc2a4\uac00 \uc11c\uad6c \uacfc\ud559\uc5d0 \ub9c8\uc9c0\ub9c9\uc73c\ub85c \uae30\ub85d\ub41c \ub54c\ub294 1930\ub144\ub300\uc600\ub2e4. 2015\ub144\uc5d0\ub294 \uba78\uc885\ud588\uc744 \uac00\ub2a5\uc131\uc774 \uc788\ub294 \uc885\uc73c\ub85c \uc5ec\uaca8\uc84c\ub2e4."], ["\ud78c\ud2b8\ub294 **2022\ub144**", "\ud604\uc7a5 \ub3c4\uac10 \ud55c \uad8c", "---", "\uc624\uc2a4\ud2b8\ub9ac\uc544 \uacfc\ud559\uc790\ub4e4\uc774 \uad6d\uc81c \ub3d9\ub8cc\ub4e4\uacfc \ub0b8 \ub17c\ubb38\uc5d0 \ub530\ub974\uba74, \uc774 \uc885\uc774 \uc544\uc9c1 \uc788\uc744\uc9c0 \ubaa8\ub978\ub2e4\ub294 \uccab \uc0dd\uac01\uc740 2022\ub144 \uc778\ub3c4\ub124\uc2dc\uc544 \uc601\uc7a5\ub958 \ud604\uc7a5 \ub3c4\uac10\uc5d0\uc11c \ub098\uc654\ub2e4. \ub3c4\uac10\uc740 \ubc29\uce74\uc12c\uc758 \uad6c\ub219\ub9c8\ub77c\uc2a4 \uad6d\ub9bd\uacf5\uc6d0\uc744 \uc11c\uc2dd\uc9c0\ub85c \uc5b8\uae09\ud588\ub2e4."], ["\uc54c\uace0 \ubcf4\ub2c8", "**\uc13c\ud130**\uac00 \uad6c\uc870 \uc911", "---", "\ub3c4\uac10 \uc800\uc790\ub294 \uc54c\ub85c\ube44 \uc57c\uc0dd\ub3d9\ubb3c \uad6c\uc870\uc13c\ud130\uc758 \ubc29\uce74 \ub298\ubcf4\ub85c\ub9ac\uc2a4\ub97c \ub2e4\ub8ec \ubbf8\ubc1c\ud45c \ub17c\ubb38\uc744 \uc778\uc6a9\ud588\ub2e4. \uc13c\ud130\ub97c \uc870\uae08 \ub354 \uc870\uc0ac\ud558\uc790 \uc774 \ub3d9\ubb3c\uc774 \uba78\uc885\ud55c \uc801\uc774 \uc5c6\ub2e4\ub294 \uc0ac\uc2e4\uc774 \ub4dc\ub7ec\ub0ac\ub2e4."], ["10\ub144\uac04 **90\ub9c8\ub9ac**", "\ub118\uac8c \uad6c\uc870", "---", "\uc2a4\ubbf8\uc18c\ub2c8\uc5b8 \ub9e4\uac70\uc9c4\uc5d0 \ub530\ub974\uba74 \uc13c\ud130\ub294 2015\ub144\ubd80\ud130 2025\ub144 \uc0ac\uc774 90\ub9c8\ub9ac \ub118\uac8c \uad6c\uc870\ud588\uace0, \uadf8\uc911 86\ub9c8\ub9ac\ub97c \uc57c\uc0dd\uc73c\ub85c \ub3cc\ub824\ubcf4\ub0c8\ub2e4. \uac70\uc758 \ubaa8\ub450 \uc0ac\ub78c \uc0ac\ub294 \uacf3 \uac00\uae4c\uc774 \uc654\ub2e4\uac00 \uad6c\uc870\uac00 \ud544\uc694\ud574\uc9c4 \uacbd\uc6b0\uc600\ub2e4."], ["\uae68\ubb3c\uba74", "**\uc138\ud3ec \ud30c\uad34 \ub3c5**", "---", "\ubc29\uce74 \ub298\ubcf4\ub85c\ub9ac\uc2a4\ub294 \uc138\uacc4\uc5d0\uc11c \uba87 \uc548 \ub418\ub294 \ub3c5 \uc788\ub294 \uc601\uc7a5\ub958\ub2e4. \uc704\ud314 \ubd84\ube44\uc0d8\uc5d0\uc11c \ub098\uc628 \ub3c5\uc744 \ud565\uc544 \uce68\uacfc \uc11e\uc73c\uba74, \ubc29\uc5b4\uc6a9 \uae68\ubb3c\uae30\uac00 \uc138\ud3ec\ub97c \ube60\ub974\uac8c \uc190\uc0c1\uc2dc\ud0a4\ub294 \uacf5\uaca9\uc774 \ub41c\ub2e4."], ["\ub3d9\ubb3c \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uba78\uc885\ub41c \uc904 \uc54c\uc558\ub358 \ub3d9\ubb3c\uc774 \uc0ac\uc2e4\uc740 \uacc4\uc18d \uc0b4\uc544 \uc788\uc5c8\ub2e4\ub294 \uc774\uc57c\uae30\uc5d0 \uc2e0\uae30\ud574\ud560 \uce5c\uad6c\ub77c\uba74 \ubc18\uae38 \uc18c\uc2dd. \ud604\uc9c0 \uad6c\uc870\uc13c\ud130\uac00 \uc624\ub798 \uc9c0\ucf1c \uc628 \ub3d9\ubb3c\uc774\ub77c\ub294 \uc810\ub3c4 \ud568\uaed8 \uc804\ud560 \ub9cc\ud55c \uc18c\uc2dd"]]}, "8680dc3914c9": {"caption": "\ub137\ud50c\ub9ad\uc2a4 \ud504\ub9ac\ubbf8\uc5c4 \ud55c \ub2ec \uc694\uae08\ubcf4\ub2e4 \uc2fc \ucf00\uc774\ud31d \ub370\ubaac \ud5cc\ud130\uc2a4 4K \ube14\ub8e8\ub808\uc774\uac00 \ub098\uc654\ub2e4. \ubbf8\uad6d \ub9e4\uccb4 The Verge\uc5d0 \ub530\ub974\uba74 \ud504\ub9ac\ubbf8\uc5c4 \uc694\uae08\uc740 \uc6d4 26.99\ub2ec\ub7ec\uc778\ub370, \uc774 \uc601\ud654\ub97c 4K\ub85c \ubcf4\ub824\ub294 \ubaa9\uc801\uc73c\ub85c \uad6c\ub3c5\uc744 \uc720\uc9c0\ud558\ub294 \uc0ac\ub78c\ub4e4\uc5d0\uac8c \ub514\uc2a4\ud06c \uad6c\ub9e4\ub294 \uc774\ubbf8 \ud604\uba85\ud55c \uc120\ud0dd\uc77c \uc218 \uc788\uc5c8\ub2e4\uace0 \ud55c\ub2e4. \uc5ec\uae30\uc5d0 \uc6d0\ub798 49.95\ub2ec\ub7ec\uc600\ub358 \uac00\uaca9\uc774 \ubc18\uc2a4\uc564\ub178\ube14\uacfc \uc544\ub9c8\uc874\uc5d0\uc11c 24.99\ub2ec\ub7ec\ub85c \ub0b4\ub824\uac00\uba74\uc11c \ucd94\ucc9c\ud558\uae30\uac00 \ub354 \uc26c\uc6cc\uc84c\ub2e4.\n\n\uad6c\uc131\ub3c4 \uc54c\ucc28\ub2e4. \ud06c\ub77c\uc774\ud14c\ub9ac\uc628 \uceec\ub809\uc158 \ud310\uc5d0\ub294 \ub3cc\ube44 \ube44\uc804 HDR\uacfc \ub3cc\ube44 \uc560\ud2b8\ubaa8\uc2a4 \uc0ac\uc6b4\ub4dc\ub97c \uac16\ucd98 4K \ub514\uc9c0\ud138 \ub9c8\uc2a4\ud130\uac00 \ub4e4\uc5b4 \uc788\uace0, 1080p \ube14\ub8e8\ub808\uc774 \ub450 \uc7a5\uc774 \ud568\uaed8 \ub2f4\uacbc\ub2e4. \ud55c \uc7a5\uc740 \ubcf8\ud3b8, \ub2e4\ub978 \ud55c \uc7a5\uc740 \ud2b9\uc804 \uc601\uc0c1\uc774\ub2e4. \ud2b9\uc804\uc5d0\ub294 \uc7a5\ud3b8 \uae38\uc774\uc758 \uc560\ub2c8\ub9e4\ud2f1, \uba54\uc774\ud0b9 \ub2e4\ud050\uba58\ud130\ub9ac, \uac00\uc0ac \uc601\uc0c1 \ub4f1\uc774 \ud3ec\ud568\ub41c\ub2e4. \uc218\uc9d1\uc6a9 \uc5fd\uc11c\uc640 \ud3f4\ub9ac\uace4 \ucd9c\uc2e0 \uce74\ub80c \ud55c\uc774 \uc4f4 \uc5d0\uc138\uc774\ub3c4 \ub4e4\uc5b4 \uc788\ub2e4.\n\n\ucc98\uc74c\uc5d0\ub294 \ubc18\uc2a4\uc564\ub178\ube14 \ub9e4\uc7a5 \ud53d\uc5c5\uc73c\ub85c\ub9cc \uc774 \ud560\uc778\uc744 \ubc1b\uc744 \uc218 \uc788\uc5c8\uc9c0\ub9cc, 11\uc6d4 6\uc77c \uc5c5\ub370\uc774\ud2b8 \uae30\uc900\uc73c\ub85c\ub294 \ub450 \uacf3 \ubaa8\ub450 \uc628\ub77c\uc778\uc5d0\uc11c \uc0b4 \uc218 \uc788\ub2e4. \uae30\uc0ac\ub97c \uc4f4 \uae30\uc790\ub294 \uc774 \ud560\uc778\uc774 \uc5f0\ub9d0 \uc1fc\ud551 \uc2dc\uc98c\uc744 \uc55e\ub450\uace0 \uc774 \uc601\ud654\ub97c \uaf2d \uc0ac\uc57c \ud560 \ubb3c\uac74\uc73c\ub85c \ub9cc\ub4e4\uc5c8\ub2e4\uace0 \ud3c9\ud588\ub2e4.\n\n4K \ub54c\ubb38\uc5d0 \uad6c\ub3c5\uc744 \uc720\uc9c0 \uc911\uc778 \uce5c\uad6c\uac00 \uc788\ub2e4\uba74 \uc774 \uce74\ub4dc\ub97c \ubcf4\ub0b4 \uc8fc\uc790.\n\n\ucd9c\ucc98: The Verge", "hashtags": ["#\ucf00\uc774\ud31d\ub370\ubaac\ud5cc\ud130\uc2a4", "#\ube14\ub8e8\ub808\uc774", "#\ub137\ud50c\ub9ad\uc2a4", "#4K", "#\ud06c\ub77c\uc774\ud14c\ub9ac\uc628"], "slides": [["\ub137\ud50c\ub9ad\uc2a4 \ud55c \ub2ec\ubcf4\ub2e4", "**\uc2f8\ub2e4\uace0**???", "---", "\ucf00\uc774\ud31d \ub370\ubaac \ud5cc\ud130\uc2a4 4K \ube14\ub8e8\ub808\uc774\uac00 24.99\ub2ec\ub7ec\ub85c \ub0b4\ub824\uac00, \ub137\ud50c\ub9ad\uc2a4 \ud504\ub9ac\ubbf8\uc5c4 \ud55c \ub2ec \uc694\uae08 26.99\ub2ec\ub7ec\ubcf4\ub2e4 \uc2f8\uc84c\ub2e4."], ["\ud504\ub9ac\ubbf8\uc5c4\uc740", "\uc6d4 **26.99\ub2ec\ub7ec**", "---", "\ub137\ud50c\ub9ad\uc2a4 \ud504\ub9ac\ubbf8\uc5c4 \uc694\uae08\uc740 \uc6d4 26.99\ub2ec\ub7ec\ub2e4. \uc774 \uc601\ud654\ub97c 4K\ub85c \ubcf4\ub824\ub294 \ubaa9\uc801 \ud558\ub098\ub85c \uad6c\ub3c5\uc744 \uc720\uc9c0\ud558\ub294 \uc0ac\ub78c\ub4e4\uc5d0\uac8c\ub294 \ub514\uc2a4\ud06c \uad6c\ub9e4\uac00 \uc774\ubbf8 \uad1c\ucc2e\uc740 \uc120\ud0dd\uc77c \uc218 \uc788\uc5c8\ub2e4."], ["49.95\ub2ec\ub7ec\uac00", "**24.99\ub2ec\ub7ec\ub85c**", "---", "\uc6d0\ub798 \uac00\uaca9\uc740 49.95\ub2ec\ub7ec\uc600\ub2e4. \uc9c0\uae08\uc740 \ubc18\uc2a4\uc564\ub178\ube14\uacfc \uc544\ub9c8\uc874\uc5d0\uc11c 24.99\ub2ec\ub7ec\uc5d0 \uc0b4 \uc218 \uc788\uc5b4, \uc815\uac00\uc5d0\uc11c \uc808\ubc18 \uac00\uae4c\uc774 \ub0b4\ub824\uac04 \uc148\uc774\ub2e4."], ["4K\uc5d0 \ube14\ub8e8\ub808\uc774", "**\ub450 \uc7a5** \ub354", "---", "\ud06c\ub77c\uc774\ud14c\ub9ac\uc628 \uceec\ub809\uc158 \ud310\uc5d0\ub294 \ub3cc\ube44 \ube44\uc804 HDR\uacfc \ub3cc\ube44 \uc560\ud2b8\ubaa8\uc2a4 \uc0ac\uc6b4\ub4dc\ub97c \uac16\ucd98 4K \ub9c8\uc2a4\ud130\uac00 \ub2f4\uacbc\ub2e4. 1080p \ube14\ub8e8\ub808\uc774 \ub450 \uc7a5\uc774 \ud568\uaed8 \ub4e4\uc5b4 \uc788\uace0, \ud558\ub098\ub294 \ubcf8\ud3b8, \ub2e4\ub978 \ud558\ub098\ub294 \ud2b9\uc804 \uc601\uc0c1\uc774\ub2e4."], ["\uba54\uc774\ud0b9\ubd80\ud130", "**\uc5fd\uc11c**\uae4c\uc9c0", "---", "\ud2b9\uc804 \ub514\uc2a4\ud06c\uc5d0\ub294 \uc7a5\ud3b8 \uae38\uc774\uc758 \uc560\ub2c8\ub9e4\ud2f1, \uba54\uc774\ud0b9 \ub2e4\ud050\uba58\ud130\ub9ac, \uac00\uc0ac \uc601\uc0c1 \ub4f1\uc774 \ub2f4\uacbc\ub2e4. \uc218\uc9d1\uc6a9 \uc5fd\uc11c\uc640 \ud3f4\ub9ac\uace4 \ucd9c\uc2e0 \uce74\ub80c \ud55c\uc774 \uc4f4 \uc5d0\uc138\uc774\ub3c4 \ud3ec\ud568\ub41c\ub2e4."], ["4K \ubcf4\ub824 \uad6c\ub3c5 \uc911\uc778", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\ub137\ud50c\ub9ad\uc2a4 \ud504\ub9ac\ubbf8\uc5c4\uc744 \uc774 \uc601\ud654 \ud558\ub098 \ub54c\ubb38\uc5d0 \uc720\uc9c0\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \uc194\uae43\ud574\ud560 \uc18c\uc2dd. \uc6d4 26.99\ub2ec\ub7ec\ubcf4\ub2e4 \uc2fc 24.99\ub2ec\ub7ec\ub77c\ub294 \uac00\uaca9\uc774 \ubc14\ub85c \ubcf4\ub0bc \uc774\uc720."]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

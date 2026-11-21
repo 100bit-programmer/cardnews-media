@@ -1,0 +1,2139 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.15 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.15 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-17c0b4faedc0" data-jump="17c0b4faedc0">1</a><a href="#post-56de9510473a" data-jump="56de9510473a">2</a><a href="#post-50834373e209" data-jump="50834373e209">3</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-17c0b4faedc0" data-id="17c0b4faedc0">
+    <div class="head">
+      <h2>1. 스페이스X 스타십 젓가락 포획 첫 성공</h2>
+      <span class="badge b-ok">
+        근거 확인 완료
+        · 확인 9
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/17c0b4faedc0/v1-01.jpg" alt="1장: 우주선을 젓가락 포획?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/17c0b4faedc0/v1-02.jpg" alt="2장: 부스터는 이미 잡았었어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/17c0b4faedc0/v1-03.jpg" alt="3장: 미 동부 기준 4시 20분쯤" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/17c0b4faedc0/v1-04.jpg" alt="4장: 부스터는 포기했다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/17c0b4faedc0/v1-05.jpg" alt="5장: 완벽하진 않아도 이정표" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/17c0b4faedc0/v1-06.jpg" alt="6장: 우주 덕후 친구한테 바로 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/17c0b4faedc0/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">우주선을 젓가락으로 잡았다고? 스페이스X가 발사·포획 타워 &#39;메카질라&#39;의 팔로 스타십 우주선 본체를 처음으로 붙잡는 데 성공했다.
+
+스페이스X는 이전에도 부스터를 같은 &#39;젓가락&#39; 방식으로 포획한 적이 있다. 하지만 이 기동이 스타십 우주선 자체에서 성공한 것은 이번이 처음이다. 미국 동부시간 오후 4시 20분쯤 스타십은 구름을 뚫고 내려와 수직으로 자세를 바꾼 뒤 타워의 팔 사이에 자리 잡았다.
+
+다만 모든 게 계획대로는 아니었다. 스페이스X는 15번째 비행 스타십의 부스터 포획을 예정했지만 중단했고, 부스터는 착륙을 포기한 채 멕시코만 상공에서 폭발했다. 원인은 아직 조사 중이다.
+
+더 버지는 발사체 전체를 회수하지 못해 완전한 성공은 아니지만 스타십 프로그램의 이정표라고 짚었다. 머스크 CEO는 3분기 실적 발표에서 첫 비행들에서 성공이 보장되지는 않지만 다음 비행에서는 성공할 가능성이 더 높다고 말했다.
+
+우주 공학에 관심 있는 친구에게 공유해 보자.
+
+출처: The Verge</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#스페이스X #스타십 #우주 #메카질라 #로켓</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          
+          <li>부스터 폭발 원인은 아직 조사 중이라 사실이 바뀔 수 있음</li><li>머스크 발언은 기사에 인용된 내용으로만 전달함</li><li>포획 장면 사진·영상은 사용하지 않고 일반 스톡 이미지만 사용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-17c0b4faedc0-0">1장</label>
+          <textarea id="s-17c0b4faedc0-0" rows="6" data-slide="0">우주선을
+**젓가락** 포획?!
+---
+스페이스X가 발사·포획 타워 &#39;메카질라&#39;의 팔로 스타십 우주선 본체를 처음으로 붙잡는 데 성공했다.</textarea>
+          
+          <label class="f" for="s-17c0b4faedc0-1">2장</label>
+          <textarea id="s-17c0b4faedc0-1" rows="6" data-slide="1">부스터는
+이미 잡았었어
+---
+스페이스X는 이전에도 로켓 부스터를 &#39;젓가락&#39; 방식으로 포획한 적이 있다. 하지만 스타십 우주선 자체에서 이 기동이 성공한 것은 이번이 처음이다.</textarea>
+          
+          <label class="f" for="s-17c0b4faedc0-2">3장</label>
+          <textarea id="s-17c0b4faedc0-2" rows="6" data-slide="2">미 동부 기준
+**4시 20분쯤**
+---
+스타십은 구름을 뚫고 내려온 뒤 수직으로 자세를 바꿨다. 미국 동부시간 오후 4시 20분쯤 메카질라의 팔 사이에 자리 잡았다.</textarea>
+          
+          <label class="f" for="s-17c0b4faedc0-3">4장</label>
+          <textarea id="s-17c0b4faedc0-3" rows="6" data-slide="3">부스터는
+**포기**했다
+---
+스페이스X는 15번째 비행 스타십의 부스터 포획도 예정했지만 중단했다. 부스터는 착륙을 포기한 뒤 멕시코만 상공에서 폭발했고, 원인은 아직 조사 중이다.</textarea>
+          
+          <label class="f" for="s-17c0b4faedc0-4">5장</label>
+          <textarea id="s-17c0b4faedc0-4" rows="6" data-slide="4">완벽하진 않아도
+**이정표**
+---
+발사체 전체를 회수하지는 못해 완전한 성공은 아니었다. 그래도 스타십 프로그램의 이정표이며, 부스터 포획 전례가 있어 이번 실패가 넘지 못할 장애물은 아니라고 더 버지는 보았다.</textarea>
+          
+          <label class="f" for="s-17c0b4faedc0-5">6장</label>
+          <textarea id="s-17c0b4faedc0-5" rows="6" data-slide="5">**우주 덕후** 친구한테
+바로 보내기
+---
+스타십 본체를 처음 포획한 소식이라 우주 공학을 좋아하는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-17c0b4faedc0">본문 (캡션)</label>
+          <textarea id="c-17c0b4faedc0" class="caption">우주선을 젓가락으로 잡았다고? 스페이스X가 발사·포획 타워 &#39;메카질라&#39;의 팔로 스타십 우주선 본체를 처음으로 붙잡는 데 성공했다.
+
+스페이스X는 이전에도 부스터를 같은 &#39;젓가락&#39; 방식으로 포획한 적이 있다. 하지만 이 기동이 스타십 우주선 자체에서 성공한 것은 이번이 처음이다. 미국 동부시간 오후 4시 20분쯤 스타십은 구름을 뚫고 내려와 수직으로 자세를 바꾼 뒤 타워의 팔 사이에 자리 잡았다.
+
+다만 모든 게 계획대로는 아니었다. 스페이스X는 15번째 비행 스타십의 부스터 포획을 예정했지만 중단했고, 부스터는 착륙을 포기한 채 멕시코만 상공에서 폭발했다. 원인은 아직 조사 중이다.
+
+더 버지는 발사체 전체를 회수하지 못해 완전한 성공은 아니지만 스타십 프로그램의 이정표라고 짚었다. 머스크 CEO는 3분기 실적 발표에서 첫 비행들에서 성공이 보장되지는 않지만 다음 비행에서는 성공할 가능성이 더 높다고 말했다.
+
+우주 공학에 관심 있는 친구에게 공유해 보자.
+
+출처: The Verge</textarea>
+          <label class="f" for="t-17c0b4faedc0">해시태그</label>
+          <input id="t-17c0b4faedc0" type="text" class="tagsin" value="#스페이스X #스타십 #우주 #메카질라 #로켓" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스페이스X가 메카질라 타워의 팔로 스타십을 처음으로 포획했다</b>
+            <q>“After aborting a planned catch of Starship Flight 15’s booster, SpaceX successfully captured Starship with its “Mechazilla” launch and catch tower for the first time.”</q>
+            <small>slide1, caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스페이스X는 이전에도 부스터를 젓가락 방식으로 포획한 적이 있다</b>
+            <q>“The company has performed ‘chopstick’ catches of its boosters before, but this is the first time the maneuver has successfully been executed on the Starship vehicle itself.”</q>
+            <small>slide2, caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스타십 우주선 자체에서 이 기동이 성공한 것은 이번이 처음이다</b>
+            <q>“The company has performed ‘chopstick’ catches of its boosters before, but this is the first time the maneuver has successfully been executed on the Starship vehicle itself.”</q>
+            <small>slide2, caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스타십은 구름을 뚫고 내려와 수직으로 자세를 바꾼 뒤 미국 동부시간 오후 4시 20분쯤 메카질라의 팔 사이에 자리 잡았다</b>
+            <q>“In the video above, you can watch Starship plunge through the clouds, flip vertically, and, with surprising grace, ease itself between the waiting arms of Mechazilla at around 4:20 PM ET.”</q>
+            <small>slide3, caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스페이스X는 15번째 비행 스타십의 부스터 포획을 예정했지만 중단했다</b>
+            <q>“After aborting a planned catch of Starship Flight 15’s booster, SpaceX successfully captured Starship with its “Mechazilla” launch and catch tower for the first time.”</q>
+            <small>slide4, caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>부스터는 착륙을 포기하고 멕시코만 상공에서 폭발했으며 원인은 아직 조사 중이다</b>
+            <q>“SpaceX is still trying to determine what caused the booster to abort its landing and detonate over the Gulf of Mexico.”</q>
+            <small>slide4, caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>발사체 전체를 회수하지 못해 완전한 성공은 아니지만 스타십 프로그램의 이정표다</b>
+            <q>“While not a complete success, in that the company was unable to recover the entire launch vehicle, it still stands as a milestone for the Starship program.”</q>
+            <small>slide5, caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>부스터를 이전에 포획한 적이 있어 이번 실패가 넘지 못할 장애물은 아니라고 믿을 이유가 있다</b>
+            <q>“And, since it has previously caught boosters on previous launches, there is reason to believe the failure today was not an insurmountable obstacle.”</q>
+            <small>slide5 · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>머스크 CEO는 3분기 실적 발표에서 다음 비행에서 성공할 가능성이 더 높다고 말했다</b>
+            <q>“SpaceX CEO Elon Musk said during the company’s third-quarter earnings call that “success is not guaranteed on these first flights, but I’d say it’s more likely than not that this succeeds next flight.””</q>
+            <small>caption · <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">Watch SpaceX successfully execute the first ‘chopstick’ catch of Starship</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.theverge.com/science/1033930/spacex-chopstick-starship-catch" target="_blank" rel="noopener">The Verge / </a> — "https://platform.theverge.com/wp-content/uploads/sites/2/2026/10/52822624215_2e5d62e50a_o.jpg?quality=90&amp;strip=all&amp;crop=0%2C3.4206695778748%2C100%2C93.15866084425&amp;w=2400"</li><li>2장: <a href="https://www.foxweather.com/earth-space/spacex-catches-starship-booster-mechazilla-arms" target="_blank" rel="noopener">Fox Weather / </a> — "https://images.foxweather.com/static.foxweather.com/www.foxweather.com/content/uploads/2024/10/1024/512/gettyimages-2177494543.jpg?ve=1&amp;tl=1"</li><li>3장: <a href="https://www.space.com/space-exploration/launches-spacecraft/spacex-chopsticks-catch-starship-upper-stage-flight-14" target="_blank" rel="noopener">Space.com / </a> — "https://cdn.mos.cms.futurecdn.net/Bn6L7LBhuT5CaGFgDgYCRM-1920-80.jpg"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:Gulf_of_Mexico_ETOPO_2022.tif" target="_blank" rel="noopener">NOAA National Centers for Environmental  / Wikimedia Commons · Public domain</a> — "Gulf of Mexico"</li><li>5장: <a href="https://pixabay.com/photos/controls-indoors-room-computer-1853330/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "control room"</li><li>6장: <a href="https://pixabay.com/photos/sunset-lake-telescope-8437462/" target="_blank" rel="noopener">ChiemSeherin / Pixabay</a> — "telescope"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-56de9510473a" data-id="56de9510473a">
+    <div class="head">
+      <h2>2. 62분마다 펄스를 내다 사라진 우주 천체 LPT</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 18
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-01.jpg" alt="1장: 62분마다 번쩍 그러곤 증발???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-02.jpg" alt="2장: 2002년의 첫 수상한 신호" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-03.jpg" alt="3장: 20년 뒤 또 나타났다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-04.jpg" alt="4장: 이름은 LPT 새로 생긴 분류" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-05.jpg" alt="5장: 범인 후보는 세 가지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-06.jpg" alt="6장: 한 주기에 펄스가 두 번" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-07.jpg" alt="7장: 천체 덕후 친구 태그해서 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/56de9510473a/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">62분마다 강력한 전파를 내뿜다가 어느 순간 조용해진 우주 천체가 있다. 천문학자 스콧 하이먼은 2002년 9월 은하수 중심에서 77분 간격의 전파 플레어 다섯 번을 포착했지만, 이후 비슷한 신호를 찾는 데 큰 성과를 내지 못했다. 그런데 20년 뒤 다른 것을 찾던 중 62.2분마다 터지는 새 신호가 다시 나타났다.
+
+이런 천체는 장주기 전파 천체(LPT)로 불린다. 최근 몇 년 사이 알려진 새로운 분류로, 지금까지 약 12개가 확인됐다. 유력 후보는 펄사, 마그네타, 백색왜성이지만 어느 것도 LPT의 모든 행동을 편하게 설명하지 못한다. 이번 천체(LPT J1555-5631)는 한 주기마다 긴 펄스와 짧은 펄스를 내고, 두 펄스의 간격이 180도가 아닌 165.4도였다. 하이먼은 이를 더 복잡한 자기장 구조를 가리키는 중요한 단서라고 설명했다.
+
+또 하나의 수수께끼는 침묵이다. 이 천체는 다시 관측되지 않았지만, GCRT J1745-3009를 포함한 세 개는 반복 활동을 보였다. 연구는 The Astrophysical Journal에 실렸다.
+
+출처: ScienceAlert, arXiv</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#우주 #천문학 #과학뉴스 #미스터리 #전파천체</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: LPT J1555-5631의 주기가 62분이라는 주장(원문 &#39;confirmed a 62-minute period&#39;)</li><li>근거 등록 안 된 주장: 출처에 arXiv가 포함된다는 주장(원문 기사에는 ScienceAlert만 언급됨)</li><li>근거 등록 안 된 주장: 2002년 신호가 나중에 GCRT J1745-3009로 확인되어 LPT로 분류되었다는 주장(원문 &#39;retroactively&#39; 언급)</li>
+          <li>천체의 정체는 확정되지 않았으며 원문도 후보와 가능성만 제시함</li><li>주 근거는 ScienceAlert 기사 한 건이며 해당 논문 원문은 직접 확인하지 못함</li><li>기사 날짜가 2026-11-14로 표기되어 있어 게시 전 날짜 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-56de9510473a-0">1장</label>
+          <textarea id="s-56de9510473a-0" rows="6" data-slide="0">**62분마다** 번쩍
+그러곤 증발???
+---
+우주 어딘가의 천체가 62.2분마다 강력한 전파 플레어를 내뿜다가, 곧 다시 조용해진 사실이 천문학자의 연구로 알려졌다.</textarea>
+          
+          <label class="f" for="s-56de9510473a-1">2장</label>
+          <textarea id="s-56de9510473a-1" rows="6" data-slide="1">2002년의
+첫 **수상한** 신호
+---
+2002년 9월 은하수 중심에서 강력한 전파 플레어 다섯 번이 77분 간격으로 터졌다. 천문학자 스콧 하이먼은 이후 몇 년간 비슷한 신호를 찾았지만 성과가 크지 않았다.</textarea>
+          
+          <label class="f" for="s-56de9510473a-2">3장</label>
+          <textarea id="s-56de9510473a-2" rows="6" data-slide="2">**20년 뒤**
+또 나타났다
+---
+20년 뒤 다른 것을 찾던 데이터 속에서 62.2분마다 강한 전파 플레어가 다시 잡혔다. 이 신호 역시 곧 조용해졌다.</textarea>
+          
+          <label class="f" for="s-56de9510473a-3">4장</label>
+          <textarea id="s-56de9510473a-3" rows="6" data-slide="3">이름은 **LPT**
+새로 생긴 분류
+---
+LPT는 길고 밝은 전파 펄스를 내고 그 사이에 규칙적인 긴 휴지기를 두는 새로운 종류의 전파원이다. 지금까지 은하 곳곳에서 약 12개가 확인됐다.</textarea>
+          
+          <label class="f" for="s-56de9510473a-4">5장</label>
+          <textarea id="s-56de9510473a-4" rows="6" data-slide="4">범인 후보는
+**세 가지**
+---
+유력 후보는 펄사, 마그네타, 백색왜성이다. 다만 LPT는 중성자별 기준으로 극도로 느리게 펄스를 내서, 어느 후보도 LPT의 모든 행동을 편하게 설명하지 못한다.</textarea>
+          
+          <label class="f" for="s-56de9510473a-5">6장</label>
+          <textarea id="s-56de9510473a-5" rows="6" data-slide="5">한 주기에
+펄스가 **두 번**
+---
+LPT J1555-5631은 62분 주기마다 긴 펄스와 짧은 펄스를 하나씩 냈다. 두 펄스는 전파가 꼬이는 방향이 서로 반대였고, 간격도 180도가 아닌 165.4도였다.</textarea>
+          
+          <label class="f" for="s-56de9510473a-6">7장</label>
+          <textarea id="s-56de9510473a-6" rows="6" data-slide="6">천체 덕후 친구
+태그해서 보내기
+---
+정체는 아직 풀리지 않았고 후보만 여럿이라는 점이 포인트다. 우주 미스터리를 좋아하는 친구와 함께 추리해 볼 만한 소식</textarea>
+          
+          <label class="f" for="c-56de9510473a">본문 (캡션)</label>
+          <textarea id="c-56de9510473a" class="caption">62분마다 강력한 전파를 내뿜다가 어느 순간 조용해진 우주 천체가 있다. 천문학자 스콧 하이먼은 2002년 9월 은하수 중심에서 77분 간격의 전파 플레어 다섯 번을 포착했지만, 이후 비슷한 신호를 찾는 데 큰 성과를 내지 못했다. 그런데 20년 뒤 다른 것을 찾던 중 62.2분마다 터지는 새 신호가 다시 나타났다.
+
+이런 천체는 장주기 전파 천체(LPT)로 불린다. 최근 몇 년 사이 알려진 새로운 분류로, 지금까지 약 12개가 확인됐다. 유력 후보는 펄사, 마그네타, 백색왜성이지만 어느 것도 LPT의 모든 행동을 편하게 설명하지 못한다. 이번 천체(LPT J1555-5631)는 한 주기마다 긴 펄스와 짧은 펄스를 내고, 두 펄스의 간격이 180도가 아닌 165.4도였다. 하이먼은 이를 더 복잡한 자기장 구조를 가리키는 중요한 단서라고 설명했다.
+
+또 하나의 수수께끼는 침묵이다. 이 천체는 다시 관측되지 않았지만, GCRT J1745-3009를 포함한 세 개는 반복 활동을 보였다. 연구는 The Astrophysical Journal에 실렸다.
+
+출처: ScienceAlert, arXiv</textarea>
+          <label class="f" for="t-56de9510473a">해시태그</label>
+          <input id="t-56de9510473a" type="text" class="tagsin" value="#우주 #천문학 #과학뉴스 #미스터리 #전파천체" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>20년 뒤 62.2분마다 강한 전파 플레어가 다시 잡혔다</b>
+            <q>“Twenty years later, while looking for something else, it happened again. There, in the data, every 62.2 minutes – another powerful flare of radio waves from a mysterious source.”</q>
+            <small>slide1, slide3, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 신호도 곧 조용해졌다</b>
+            <q>“Then it, too, fell silent.”</q>
+            <small>slide1, slide3 · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2002년 9월 은하수 중심에서 신호가 나타났다</b>
+            <q>“In September of 2002, a mystery emerged from the heart of the Milky Way.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>강력한 전파 플레어 다섯 번이 77분 간격으로 터졌다</b>
+            <q>“Something spat out five flares of powerful radio waves, precisely timed 77 minutes apart.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하이먼은 몇 년간 비슷한 신호를 찾았지만 성과가 크지 않았다</b>
+            <q>“He spent years looking for another, without much success, ultimately turning his attention to other work.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>천문학자 스콧 하이먼은 이 신호를 어떻게 봐야 할지 확신하지 못했다</b>
+            <q>“Astronomer Scott Hyman of Sweet Briar College wasn&#39;t quite sure what to make of it.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>LPT는 길고 밝은 전파 펄스를 내고 그 사이에 규칙적인 긴 휴지기를 두는 새로 인식된 전파원이다</b>
+            <q>“The long-period transient is a newly recognized class of radio source that has only become apparent in the last few years – unidentified objects that emit long, bright pulses of radio waves with regular, lengthy pauses between each emission.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>은하 곳곳에서 약 12개의 LPT가 확인됐다</b>
+            <q>“Since then, around a dozen of the mystery pulsators have emerged in surveys of the radio sky, across the Milky Way, including – retroactively – Hyman&#39;s first, weird observation, GCRT J1745-3009.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유력 후보는 펄사, 마그네타, 백색왜성 세 가지다</b>
+            <q>“There are three leading contenders: pulsars and magnetars, which are neutron stars whose radio emissions are powered by different mechanisms; and white dwarfs, which can periodically lash out through interactions with a binary companion.”</q>
+            <small>slide5, summary, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어느 후보도 LPT의 모든 행동을 편하게 설명하지 못한다</b>
+            <q>“There are several known types of dead stars that pulse in periodic fashion, but none can comfortably explain the full range of behavior exhibited by LPTs.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>LPT는 중성자별 기준으로 극도로 느리게 펄스를 낸다</b>
+            <q>“But LPTs pulse extraordinarily slowly by neutron star standards – sometimes taking hours between flashes.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>LPT J1555-5631은 한 주기에 긴 펄스와 짧은 펄스 두 개를 냈다</b>
+            <q>“Rather than emitting just one burst every 62 minutes, LPT J1555-5631 produced two distinct pulses during each cycle – one longer, one shorter.”</q>
+            <small>slide6, summary, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 펄스는 전파가 꼬이는 방향이 서로 반대였다</b>
+            <q>“Even stranger, the two pulses showed opposite circular polarization: the radio waves from one pulse twisted in one direction, while those from the other twisted in the opposite direction.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 펄스의 간격은 180도가 아닌 165.4도였다</b>
+            <q>“Instead of appearing 180 degrees apart, as might be expected from a simple dipolar magnetic field, they&#39;re separated by just 165.4 degrees.”</q>
+            <small>slide6, summary, caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 편차는 더 복잡한 자기장 구조를 가리키는 중요한 단서라고 하이먼이 설명했다</b>
+            <q>“&#34;A 180-degree separation would more easily be explained by emission from a standard dipolar magnetosphere environment,&#34; Hyman said. &#34;The observed deviation is an important clue pointing to a more complicated magnetic field structure.&#34;”</q>
+            <small>caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 천체는 아직 다시 관측되지 않았지만 GCRT J1745-3009 등 세 개는 반복 활동을 보였다</b>
+            <q>“LPT J1555-5631, like most of the LPT catalog, has not yet been detected again. GCRT J1745-3009, on the other hand, has shown repeat activity – as have two others.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>천체의 정체를 특정하기가 예상보다 어렵다</b>
+            <q>“But it&#39;s proven more difficult than you might think to pin an identity on these strange emitters.”</q>
+            <small>slide7 · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 The Astrophysical Journal에 실렸다</b>
+            <q>“The research has been published in The Astrophysical Journal.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/a-mysterious-object-in-space-pulsed-every-62-minutes-then-it-vanished" target="_blank" rel="noopener">A Mysterious Object in Space Pulsed Every 62 Minutes. Then It Vanished.</a> (기사)</li><li><a href="https://arxiv.org/abs/2601.10393" target="_blank" rel="noopener">Long Period Transients (LPTs): a comprehensive review</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://thenextweb.com/news/this-mysterious-space-object-pulsed-for-3-months-and-disappeared-what-the-hell" target="_blank" rel="noopener">The Next Web / </a> — "https://media.thenextweb.com/2022/01/mysterious-signal.jpg"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:ESO_-_Milky_Way.jpg" target="_blank" rel="noopener">ESO/S. Brunier / Wikimedia Commons · CC BY 4.0</a> — "Milky Way"</li><li>3장: <a href="https://pixabay.com/photos/raisting-satellite-reception-signal-1010862/" target="_blank" rel="noopener">mmisof / Pixabay</a> — "satellite dish"</li><li>4장: <a href="https://pixabay.com/photos/space-astronomy-galaxy-universe-9250868/" target="_blank" rel="noopener">mattiaverga / Pixabay</a> — "galaxy"</li><li>5장: <a href="https://pixabay.com/photos/flower-wildflower-wild-flower-plant-8077948/" target="_blank" rel="noopener">KIMDAEJEUNG / Pixabay</a> — "star cluster"</li><li>6장: <a href="https://pixabay.com/photos/iron-magnet-physics-power-study-5154694/" target="_blank" rel="noopener">francescobovolin / Pixabay</a> — "magnetic field"</li><li>7장: <a href="https://pixabay.com/photos/sunset-lake-telescope-8437462/" target="_blank" rel="noopener">ChiemSeherin / Pixabay</a> — "telescope"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-50834373e209" data-id="50834373e209">
+    <div class="head">
+      <h2>3. 아키하바라 170만 가지 스시 덮밥집 우오동</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 7 · 애매 2
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/v1-01.jpg" alt="1장: 스시덮밥이 170만 가지???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/v1-02.jpg" alt="2장: 역 동쪽 골목에 숨어 있던 집" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/v1-03.jpg" alt="3장: 간판에만 150가지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/v1-04.jpg" alt="4장: 고르기 힘들면 추천이 있어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/v1-05.jpg" alt="5장: 마요네즈 올린 스시라고?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/v1-06.jpg" alt="6장: 아키하바라 갈 친구 태그하기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/product-1115081329-01.jpg" alt="상품 사진: 검은 사발에 담긴 흰 밥 위에 마요네즈 소스를 구워 올린 연어 덮밥, 검은 깨와 향신료가 뿌려져 있고 녹색 잎 장식과 된장국 그릇이 보임 (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/product-1115081329-02.jpg" alt="상품 사진: 검은 사발에 담긴 덮밥으로, 아보카도 큐브, 참치·연어 등 생선 회, 게맛살 같은 흰 살, 날치알(주황색 알), 파채 고명이 올라가 있다 (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/product-1115081329-03.jpg" alt="상품 사진: 검은 사각 그릇에 담긴 덮밥을 젓가락으로 집어 올린 클로즈업. 마요 소스를 올려 구운 연어 조각과 아보카도 비슷한 연두색 조각, 검은 깨가 보이고 밥 위에 연어가 깔려 있다. (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 3장이 카드 뒤에 같이 들어가요 (soranews24.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">도쿄 아키하바라에 토핑 조합만 170만 가지가 넘는다는 스시 덮밥집이 있다. 이름은 우오동, 말 그대로 &#39;생선 덮밥&#39;이라는 뜻이다. 2025년에 문을 열었고, 역에서 두 블록쯤 떨어져 있지만 관광객이 많이 찾는 가게와 오락실은 서쪽에 몰려 있어 동쪽에 있는 이곳은 모르고 지나치기 쉽다. 간판에 적힌 메뉴만 약 150가지인데, 이것도 주문 가능한 전체의 일부다. 선택지가 너무 많아 망설일 손님을 위해 추천 메뉴와 남성·여성 손님별 인기 주문 3위까지 적어 둔다. 소라뉴스24 기자는 남성 인기 1위인 마요 연어뱃살 덮밥(930엔, 약 5.85달러)을 먹었고, 연어 자체가 꽤 좋았다고 전했다. 이후 곧 다시 찾아 아보카도를 올린 절임 치라시 덮밥도 먹어 봤는데 이것도 훌륭했다고 한다. 우오동은 일본 전국에 약 50개 지점이 있는 체인이며, 대부분 도심에서 더 떨어진 곳에 있다고 한다. 한 그릇 고르는 데만 한참 걸릴 이 집, 여러분이라면 어떤 토핑으로 시작할까? 출처: 소라뉴스24(SoraNews24)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#아키하바라 #스시 #도쿄맛집 #일본여행 #해외토픽</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>우오동은 &#39;생선 덮밥&#39;이라는 뜻이며 2025년에 문을 열었고 위치상 많은 방문객이 모르고 지나칠 수 있다 <small>애매 · 이름 뜻(생선 덮밥)과 2025년 개업은 맞지만, &#39;많은 방문객이 모르고 지나칠 수 있다&#39;는 기자의 추정이며 &#39;모르고 지나치기 쉽다&#39;는 표현은 원문보다 단정적이다. &#39;이름 그대로&#39;라는 표현도 원문은 literally translates로 동일 의미.</small></li><li>선택지가 많아 망설일 수 있다는 점을 가게도 인식해 간판에 150가지 추천을 올렸다 <small>애매 · 원문은 가게가 선택지가 마비 효과를 줄 수 있음을 인식하고 150개 제안을 올렸다고 함. &#39;망설일 수 있다&#39;는 점을 가게가 안다는 내용은 맞으나 가게 의도 해석이 일부 더해짐.</small></li>
+          <li>근거 등록 안 된 주장: 소라뉴스24 기자가 아키하바라 우오동을 발견한 경위와 &#39;최근 산책&#39; 중 알게 되었다는 내용은 claims에 없음</li><li>근거 등록 안 된 주장: 게시물 본문의 &#39;관광객이 많이 찾는 가게와 오락실은 서쪽에 몰려 있어&#39;라는 서술은 claim 2·3에 포함되나 &#39;동쪽에 있는 이곳은 모르고 지나치기 쉽다&#39;는 결론 부분은 별도 주장으로 명시되지 않음</li><li>근거 등록 안 된 주장: &#39;남성·여성 손님별 인기 주문 3위까지 적어 두었다&#39;는 내용은 claim 5에 포함되나 여성 손님 인기 메뉴 내용은 본문에 구체적으로 없음</li><li>근거 등록 안 된 주장: &#39;인기 메뉴가 930엔&#39;이라는 슬라이드6 문구는 남성 인기 1위 메뉴 가격이라는 전제를 포함함</li><li>근거 등록 안 된 주장: &#39;선택지가 너무 많아 망설일 손님을 위해&#39; 추천을 적었다는 캡션 서술은 claim 4에 대응하나 &#39;한 그릇 고르는 데만 한참 걸릴 이 집&#39;이라는 표현은 의견에 가까움</li><li>근거 등록 안 된 주장: &#39;일본 전국&#39; 체인이라는 표현은 원문의 nationwide와 대응하나 체인 여부 자체는 claim 8에 포함됨</li><li>근거 등록 안 된 주장: 여성 손님 인기 1위 등 원문에 없는 세부 메뉴 정보는 본문에 없어 확인 불가</li>
+          <li>170만 가지 조합 수치는 가게 측 주장이라 독립적으로 검증된 숫자가 아님</li><li>음식 맛 평가는 소라뉴스24 기자 개인의 의견</li><li>원문 사진은 SoraNews24 저작물이므로 사용하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-50834373e209-0">1장</label>
+          <textarea id="s-50834373e209-0" rows="6" data-slide="0">스시덮밥이
+**170만 가지**???
+---
+도쿄 아키하바라의 덮밥집 우오동은 토핑을 골라 170만 가지가 넘는 조합을 만들 수 있다고 밝혔다.</textarea>
+          
+          <label class="f" for="s-50834373e209-1">2장</label>
+          <textarea id="s-50834373e209-1" rows="6" data-slide="1">역 **동쪽** 골목에
+숨어 있던 집
+---
+이름 그대로 &#39;생선 덮밥&#39;이라는 뜻의 우오동은 2025년에 문을 열었다. 역에서 두 블록쯤 떨어졌지만 관광객 몰리는 서쪽이 아닌 동쪽이라 놓치기 쉽다.</textarea>
+          
+          <label class="f" for="s-50834373e209-2">3장</label>
+          <textarea id="s-50834373e209-2" rows="6" data-slide="2">간판에만
+**150가지**
+---
+가게 앞 간판에 적힌 메뉴만 약 150가지다. 그런데도 이건 주문할 수 있는 것 중 일부일 뿐이고, 토핑을 직접 고르면 170만 가지가 넘는 조합이 가능하다고 가게 측은 밝혔다.</textarea>
+          
+          <label class="f" for="s-50834373e209-3">4장</label>
+          <textarea id="s-50834373e209-3" rows="6" data-slide="3">고르기 힘들면
+**추천**이 있어
+---
+선택지가 너무 많으면 오히려 망설이게 될 수 있다는 점을 가게도 안다. 그래서 간판에 150가지 추천을 올리고, 남성·여성 손님별 인기 메뉴 3위까지 따로 적어 두었다.</textarea>
+          
+          <label class="f" for="s-50834373e209-4">5장</label>
+          <textarea id="s-50834373e209-4" rows="6" data-slide="4">**마요네즈** 올린
+스시라고?
+---
+남성 손님 인기 1위인 마요 연어뱃살 덮밥(930엔, 약 5.85달러)을 주문했다. 소라뉴스24 기자는 연어가 꽤 좋았고 마요와 후추가 맛에 힘을 더했다고 전했다.</textarea>
+          
+          <label class="f" for="s-50834373e209-5">6장</label>
+          <textarea id="s-50834373e209-5" rows="6" data-slide="5">아키하바라 갈
+**친구 태그하기**
+---
+아키하바라 여행을 앞둔 친구에게 알려 주면 좋을 소식. 역 동쪽에 170만 가지 조합의 덮밥집이 있고, 인기 메뉴가 930엔이라는 점까지 함께 전할 만한 이야기</textarea>
+          
+          <label class="f" for="c-50834373e209">본문 (캡션)</label>
+          <textarea id="c-50834373e209" class="caption">도쿄 아키하바라에 토핑 조합만 170만 가지가 넘는다는 스시 덮밥집이 있다. 이름은 우오동, 말 그대로 &#39;생선 덮밥&#39;이라는 뜻이다. 2025년에 문을 열었고, 역에서 두 블록쯤 떨어져 있지만 관광객이 많이 찾는 가게와 오락실은 서쪽에 몰려 있어 동쪽에 있는 이곳은 모르고 지나치기 쉽다. 간판에 적힌 메뉴만 약 150가지인데, 이것도 주문 가능한 전체의 일부다. 선택지가 너무 많아 망설일 손님을 위해 추천 메뉴와 남성·여성 손님별 인기 주문 3위까지 적어 둔다. 소라뉴스24 기자는 남성 인기 1위인 마요 연어뱃살 덮밥(930엔, 약 5.85달러)을 먹었고, 연어 자체가 꽤 좋았다고 전했다. 이후 곧 다시 찾아 아보카도를 올린 절임 치라시 덮밥도 먹어 봤는데 이것도 훌륭했다고 한다. 우오동은 일본 전국에 약 50개 지점이 있는 체인이며, 대부분 도심에서 더 떨어진 곳에 있다고 한다. 한 그릇 고르는 데만 한참 걸릴 이 집, 여러분이라면 어떤 토핑으로 시작할까? 출처: 소라뉴스24(SoraNews24)</textarea>
+          <label class="f" for="t-50834373e209">해시태그</label>
+          <input id="t-50834373e209" type="text" class="tagsin" value="#아키하바라 #스시 #도쿄맛집 #일본여행 #해외토픽" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/product-1115081329-01.jpg" alt="" width="56" height="56" loading="lazy"> 검은 사발에 담긴 흰 밥 위에 마요네즈 소스를 구워 올린 연어 덮밥, 검은 깨와 향신료가 뿌려져 있고 녹색 잎 장식과 된장국 그릇이 보임 · soranews24.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/product-1115081329-02.jpg" alt="" width="56" height="56" loading="lazy"> 검은 사발에 담긴 덮밥으로, 아보카도 큐브, 참치·연어 등 생선 회, 게맛살 같은 흰 살, 날치알(주황색 알), 파채 고명이 올라가 있다 · soranews24.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="2"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/50834373e209/product-1115081329-03.jpg" alt="" width="56" height="56" loading="lazy"> 검은 사각 그릇에 담긴 덮밥을 젓가락으로 집어 올린 클로즈업. 마요 소스를 올려 구운 연어 조각과 아보카도 비슷한 연두색 조각, 검은 깨가 보이고 밥 위에 연어가 깔려 있다. · soranews24.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>우오동은 &#39;생선 덮밥&#39;이라는 뜻이며 2025년에 문을 열었고 위치상 많은 방문객이 모르고 지나칠 수 있다</b>
+            <q>“Uodon, whose name literally translates as “Fish Bowl,” opened in 2025, but its location means that a lot of visitors to Akihabara might not have noticed it.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>선택지가 많아 망설일 수 있다는 점을 가게도 인식해 간판에 150가지 추천을 올렸다</b>
+            <q>“Uodon does also recognize that having so many choices could also have a paralyzing effect on some people, hence the 150 suggestions on the board.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>우오동에서는 토핑을 골라 170만 가지가 넘는 조합을 만들 수 있다고 가게가 밝혔다</b>
+            <q>“By picking and choosing your own sushi rice bowl toppings, you can actually make more than 1.7 million different combinations, the restaurant says.”</q>
+            <small>slide1, slide3, slide6, caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>역에서 두 블록쯤 떨어져 있고 관광객이 몰리는 가게는 서쪽에 있는데 우오동은 동쪽에 있다</b>
+            <q>“It’s only about two blocks from Akihabara Station, but it’s to the east of the station, whereas most of the tourist-attracting stores and arcades are on the west side.”</q>
+            <small>slide2, slide6, caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>간판에 약 150가지 메뉴가 적혀 있다</b>
+            <q>“Unlike most restaurants, though, Uodon’s board has about 150 different options on it.”</q>
+            <small>slide3, summary, caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>남성·여성 손님별 인기 주문 3위까지 적어 두었고, 기자는 남성 인기 1위인 마요 연어뱃살 덮밥을 930엔에 주문했다</b>
+            <q>“The restaurant also lists the top three most popular orders among male and female customers, and our Japanese-language reporter P.K. Sanjun decided to take their advice and order the most popular bowl for guys, the Seared Salmon Belly with Mayo and Hidden Negitoro, for 930 yen (US$5.85).”</q>
+            <small>slide4, slide5, slide6, caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 연어가 꽤 좋았고 마요와 후추가 맛에 힘을 더했다고 전했다</b>
+            <q>“The salmon in P.K.’s bowl was actually quite good, just given an extra impactful punch with the contributions of the mayo and pepper.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 곧 다시 찾아 아보카도를 올린 절임 치라시 덮밥을 먹었고 이것도 훌륭했다</b>
+            <q>“Fully satisfied, P.K. soon came back to Uodon to try something still creative but a little less outlandish, a marinated chirashi (mixed sashimi) bowl with avocado, which was excellent too.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>우오동은 전국에 약 50개 지점을 둔 체인이며 대부분 도심에서 더 떨어져 있다</b>
+            <q>“P.K. later learned that Uodon is actually a chain, though they only have about 50 locations nationwide, and most branches tend to be farther outside the city center than Akihabara.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">Akihabara restaurant with 1.7 million sushi bowl options will have us coming back again and again</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/3_048092.jpg?w=1200&amp;h=630&amp;crop=1"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Akihabara_1976.jpg" target="_blank" rel="noopener">JOHN LLOYD / Wikimedia Commons · CC BY 2.0</a> — "Akihabara"</li><li>3장: <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/4_96c6ab.jpg?w=640"</li><li>4장: <a href="https://pixabay.com/photos/food-salmon-teriyaki-fish-eat-712665/" target="_blank" rel="noopener">Wow_Pho / Pixabay</a> — "chopsticks"</li><li>5장: <a href="https://soranews24.com/2026/11/15/akihabara-restaurant-with-1-7-million-sushi-bowl-options-will-have-us-coming-back-again-and-again/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/2_d29c26.jpg"</li><li>6장: <a href="https://pixabay.com/photos/street-autumn-japan-city-travel-6884534/" target="_blank" rel="noopener">yoonason23 / Pixabay</a> — "tokyo night"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-8be2d6f5b815">
+    <div class="head">
+      <h2>S1. 치매 진단 때 과체중·비만이면 사망 위험 16~27% 낮게 나온 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-8be2d6f5b815">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;살찌면 무조건 위험&#39;이라는 통념이 치매 진단 시점 기준으로는 뒤집혀 나온 연구. 단 &#39;살 찌워라&#39;가 아니라는 연구진의 선 긋기까지 같이 전할 때 팔린다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">&#39;살찌면 무조건 단명&#39;이라는 말, 치매 진단받은 4,500명 데이터에선 반대로 나왔대
+과체중·비만이던 쪽이 정상체중보다 사망 위험이 낮게 나온 연구야
+근데 연구진이 &#39;그렇다고 살 찌우진 말라&#39;고 한 이유가 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">1/ 치매 진단 때 과체중이거나 비만이던 사람은 정상체중보다 사망 위험이 16~27% 낮게 나왔어. 흡연, 기존 질환, 인구학적 특성을 감안한 뒤에도 그랬대. 그럼 어떤 사람들을 얼마나 오래 따라간 연구였을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">2/ 미국 51세 이상을 따라가는 Health and Retirement Study 자료를 썼어. 1998~2022년 기록 중, 처음엔 치매가 없다가 나중에 치매 진단을 받은 4,523명이 대상이야. 이걸 체중 구간별로 나누면 숫자가 어떻게 갈렸을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">176/500자</span></div>
+      <p class="tp-text">3/ 연구 결과 요약 정리
+- 기준: 치매 진단 시점의 정상체중과 비교
+- 과체중(BMI 25~29.9): 사망 위험 16% 낮음
+- 1단계 비만(BMI 30~34.9): 27% 낮음
+- 2·3단계 비만(BMI 35 이상): 22% 낮음
+- 살을 찌우면 좋다는 걸 검증한 연구는 아님
+근데 이게 통계 착시는 아닐까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">4/ 연구진도 착시를 의심했어. 치매는 진단 최대 10년 전부터 체중이 빠질 수 있어서, 지금 정상체중인 사람이 원래는 더 나갔을 수 있거든. 추가 분석을 돌렸는데, 살펴본 주요 편향으로는 이 차이가 설명되지 않았대. 그럼 왜 그런 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">162/500자</span></div>
+      <p class="tp-text">5/ 이유는 아직 확실하지 않아. 연구진 추정은 지방이나 근육 같은 에너지 비축분이 몸이 약해지는 시기를 버티는 데 도움이 될 수 있다는 거야. 치매는 식욕이 줄거나 혼자 먹기 어려워지기도 한대. 다만 이 연구가 그걸 직접 확인한 건 아님. 그럼 연구진은 이 결과를 어떻게 읽으라고 했을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">261/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 &#39;치매 환자가 일부러 과체중이나 비만이 되려 하라는 뜻은 아니다&#39;야. 이 연구는 그걸 검증하려고 설계된 게 아니라서. 대신 진단 시점의 체중이 생존 신호가 될 수 있고, 영양이 중요하다는 쪽이래.
+이 결과, 의외다 vs 그럴 만하다 어느 쪽이야?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 연구의 비교 기준은 치매 진단 시점의 정상체중 집단이다</li><li>근거 등록 안 된 주장: 연구 추적 기간은 약 24년이다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;살찌면 무조건 단명&#39;이라는 말, 치매 진단받은 4,500명 데이터에선 반대로 나왔대</li><li>살 빼면 오래 산다는 공식, 치매 앞에서는 뒤집혔다는 연구가 나옴</li><li>비만은 &#39;무조건 위험&#39;이 아니라 &#39;언제냐&#39;에 따라 달라진다는 연구가 나옴</li><li>정상체중이 제일 안전한 줄 알았는데, 치매 진단 때 정상체중이던 사람이 사망 위험이 더 높았대</li><li>연구진도 &#39;이거 착시 아냐?&#39; 싶어서 편향부터 의심하고 다시 돌려봤다는 결과</li><li>체중계 숫자 하나가 치매 진단 후 생존을 가늠하는 신호일 수 있다는 연구</li><li>사망 위험 27% 낮다는 숫자, 근데 연구진은 &#39;그렇다고 살 찌우지 마라&#39;고 못 박음</li><li>치매 진단 때 몸무게가 더 나가면 사망 위험이 낮게 나왔다는 미국 연구, 이거 진짜?</li><li>과체중 16%, 비만 27%… 사망 위험이 낮게 나온 숫자의 정체</li><li>치매는 진단 최대 10년 전부터 살이 빠질 수 있대. 그래서 체중을 다시 보게 된 연구</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이 결과, 의외다 vs 그럴 만하다 어느 쪽이야?</li><li>&#39;살찌면 무조건 나쁘다&#39;는 말, 지금까지 그대로 믿었어?</li><li>&#39;정상체중이 최선&#39;이라는 말, 믿는 쪽이야 의심하는 쪽이야?</li><li>체중 얘기할 때 &#39;숫자&#39;파 vs &#39;컨디션&#39;파?</li><li>이런 반전 연구, 더 보고 싶은 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>치매 진단 최대 10년 전부터 체중이 빠진다는 연구, 더 자세히</li><li>중년의 과체중·비만과 치매 발병 위험 사이의 연관</li><li>치매 환자의 식욕·영양 문제, 연구가 말하는 것</li><li>&#39;치매 역설&#39;이라는 말이 나오는 이유와 연구진이 조심하라는 점</li><li>근육·에너지 비축분이 병을 버티는 데 어떤 역할을 하는지 보는 연구들</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>본글·훅이 &#39;살찌는 게 낫다&#39;로 읽힐 수 있음. 치매 진단 시점 한정 연구이고 연구진이 체중 증가를 권하지 않았다는 점이 빠지지 않게 확인</li><li>&#39;단명&#39; 같은 센 표현이 비만을 조롱하거나 치매 환자를 가볍게 다루는 것으로 읽히지 않는지 올리기 전 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>치매 진단받은 4,500여 명 연구에서 과체중·비만이던 사람은 정상체중보다 사망 위험이 낮게 나옴</b>
+          <q>“A surprising study of more than 4,500 older adults found that people who were overweight or obese when diagnosed with dementia had a 16% to 27% lower risk of death than those at a normal weight.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>과체중·비만이 사망 위험이 낮았고 흡연, 기존 질환, 인구학적 특성을 감안한 뒤에도 그랬음</b>
+          <q>“Compared with individuals in the normal weight range, those who were overweight or obese had a significantly lower risk of death, even after the researchers accounted for smoking, existing medical conditions, and demographic characteristics.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 51세 이상을 추적하는 Health and Retirement Study 자료를 사용함</b>
+          <q>“To investigate the connection, Zhang, Chang, and their colleagues examined information from the Health and Retirement Study, a nationally representative research project that follows Americans ages 51 and older.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1998~2022년 기록 중 처음엔 치매가 없다가 나중에 치매가 생긴 4,523명이 대상</b>
+          <q>“The team analyzed records collected between 1998 and 2022, focusing on 4,523 participants who did not have dementia when they entered the study but subsequently developed the condition.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>과체중(BMI 25~29.9)은 사망 위험 16% 낮음</b>
+          <q>“People classified as overweight (body mass index of 25 to 29.9) had a 16 percent lower risk of death.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1단계 비만(BMI 30~34.9)은 27% 낮고, 2·3단계 비만(BMI 35 이상)은 22% 낮음</b>
+          <q>“Those with class 1 obesity (BMI of 30 to 34.9) had an even larger reduction of 27 percent, while individuals with class 2 and 3 obesity (BMI equal to or greater than 35) had a 22 percent lower risk.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 치매 환자가 살을 찌워야 하는지를 검증하도록 설계되지 않았음</b>
+          <q>“This doesn&#39;t mean that patients with dementia should attempt to become overweight or obese, as our study was not designed to test that question.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>치매 진단 최대 10년 전부터 체중이 빠지기 시작할 수 있음</b>
+          <q>“Earlier research by Zhang and Chang found that people can begin losing weight as much as 10 years before a dementia diagnosis, with the decline becoming more pronounced as the disease approaches.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정상체중으로 분류된 사람 중에 원래 더 나갔다가 병 때문에 살이 빠진 경우가 있을 수 있음</b>
+          <q>“Some individuals classified as having a normal weight may previously have been heavier and lost weight because of the developing disease.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추가 분석 결과 살펴본 편향들은 체중과 낮은 사망률 연관의 주된 원인일 가능성이 낮았음</b>
+          <q>“The results indicated that the biases they examined were unlikely to be major drivers of the observed connection between higher weight and lower mortality.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 과체중·비만 참가자의 사망률이 왜 낮았는지 확실히 말할 수 없음</b>
+          <q>“Even after examining multiple potential biases and identifying plausible biological explanations, they cannot say for certain why overweight and obese participants experienced lower mortality.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지방이나 근육이 더 많으면 영양 부족과 신체 쇠약을 버티는 데 도움이 될 수 있다는 추정</b>
+          <q>“People with more stored fat or greater muscle mass may be better equipped to withstand periods of poor nutrition and the physical deterioration that can accompany the disease.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>치매는 식욕 저하나 혼자 먹기 어려워지는 문제를 일으킬 수 있음</b>
+          <q>“Changes in brain function may reduce appetite or motivation to eat, while some patients experience increased energy needs or gradually lose the ability to feed themselves.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구가 에너지 비축분이 생존 차이를 직접 설명한다는 걸 입증하지는 않음</b>
+          <q>“Having additional energy stores or muscle tissue could potentially help patients cope with these challenges, although the study did not establish that these factors directly explain the survival differences.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>치매 진단 시점의 체중이 생존을 가늠하는 신호가 될 수 있음</b>
+          <q>“But our findings do suggest that weight status may serve as a useful prognostic signal for survival at the time of dementia diagnosis.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영양이 치매 환자의 건강과 생존에 핵심 요인이라는 시각을 뒷받침함</b>
+          <q>“They also support the notion that nutrition is a key factor in the health and survival of people with dementia”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="8be2d6f5b815">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261109205401.htm" target="_blank" rel="noopener">Obesity linked to up to 27% lower risk of death in dementia</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-804f2a494c89">
+    <div class="head">
+      <h2>S2. 십자인대 수술 후 4개월 지도 운동, 무릎 연골 손상 없이 통증 줄었다는 임상시험</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 10
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-804f2a494c89">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;운동하면 다친 무릎이 더 망가진다&#39;는 흔한 걱정을 184명 임상시험으로 반박하고, 수술 1~3년 뒤에도 물리치료사 지도 운동이 도움될 수 있다는 점을 보여줌</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">&#39;운동하면 다친 무릎 더 망가진다&#39;는 말, 이 연구 보면 좀 달라짐
+십자인대 수술하고 1~3년 지나도 아픈 사람 184명한테 4개월 운동을 시켜봤대
+근데 연골 상태가 어땠냐면 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">1/ 물리치료사가 지켜본 4개월 운동을 끝낸 사람들은 통증이 줄고 근력과 삶의 질이 좋아졌대. 연골이 손상되거나 초기 관절염이 나빠졌다는 증거도 없었고.
+그럼 비교 그룹은 뭘 했을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">2/ 비교 그룹은 교육 세션을 딱 한 번만 받았어. 운동 그룹은 단계적으로 강도를 올리는 운동 치료를 했고.
+근데 수술 직후도 아니고 왜 1~3년 뒤 사람들이었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">3/ 십자인대 수술 2년 뒤에도 환자 절반쯤은 무릎 상태에 만족 못 한대. 10년 안에 절반쯤은 초기 무릎 관절염 징후가 생기고, 40살 전인 경우도 많고.
+그럼 이 연구에 참가한 사람은 어땠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">4/ 참가자 한 명은 수술 뒤 3~4년 동안 정도는 달라도 거의 매일 무릎이 아팠대. 그런데 주 1회 물리치료사 지도 재활을 하고 통증이 크게 좋아졌다고 말했어.
+그래서 연구진 결론은 뭘까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">177/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 대상: 십자인대 수술 1~3년 뒤에도 무릎이 불편한 18~40세 184명
+- 방식: 물리치료사 지도 4개월 운동 vs 교육 1회
+- 결과: 통증 감소, 근력·삶의 질 개선, 연골 손상 증거 없음
+- 아직 모름: 장기적으로 관절염을 막는지는 입증 못 함
+그럼 연구진이 최종적으로 한 말은?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">246/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은, 십자인대 수술 뒤 젊은 사람의 무릎 건강을 위해 물리치료사 지도 운동과 교육이 안전하니 권고돼야 한다는 거. 자기한테 맞는지는 의사랑 상의해봐.
+무릎 아플 때 너는 일단 쉬는 파야, 운동 방식부터 바꿔보는 파야?
+이런 해외 건강·운동 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;운동하면 다친 무릎 더 망가진다&#39;는 말, 이 연구 보면 좀 달라짐</li><li>무릎 수술 뒤에도 계속 아프면, 운동을 끊지 말고 물리치료사 지도 운동부터 보라는 연구가 나옴</li><li>다친 무릎엔 &#39;운동 쉬기&#39;가 아니라 &#39;운동 방식 고르기&#39;라는 연구가 나옴</li><li>십자인대 수술 받은 사람 절반쯤이 10년 안에 초기 관절염 징후가 생긴대</li><li>수술하고 3~4년을 매일 아팠던 사람이 주 1회 재활로 달라진 얘기</li><li>&#39;운동하면 무릎 더 나빠진다&#39;는 믿음에 정면으로 맞선 임상시험이 나옴</li><li>무릎 연골 걱정에 운동 피하는 사람들, 184명 임상시험 결과 보면 좀 달라짐</li><li>십자인대 수술 2년 뒤에도 절반은 만족 못 한대. 그 뒤엔 뭘 해야 할까?</li><li>무릎 수술 끝나면 재활도 끝일까? 1~3년 뒤에 시작한 운동 실험이 있었음</li><li>특별한 장비 없이도 쓸 수 있다는 무릎 재활 프로그램이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>무릎 아플 때 너는 일단 쉬는 파야, 운동 방식부터 바꿔보는 파야?</li><li>운동하다 무릎이 걱정돼서 멈춰본 적 있는 사람?</li><li>헬스 vs 러닝, 무릎 걱정되는 건 어느 쪽이야?</li><li>재활 운동, 너라면 혼자 하는 쪽이야 물리치료사랑 하는 쪽이야?</li><li>운동 전에 무릎 챙기는 루틴 있는 파 vs 없는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>십자인대를 다친 사람은 무릎 관절염이 왜 더 일찍 올까</li><li>수술 뒤 재활, 물리치료사 지도가 있을 때와 없을 때 차이</li><li>무릎 아플 때 운동 방식을 고르는 기준</li><li>러닝·헬스 하는 사람들의 무릎 건강 연구</li><li>근력 운동과 관절 건강, 최근 해외 연구는 뭐라고 할까</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>십자인대 수술 후 1~3년이 지나도 무릎 증상이 있는 18~40세 성인 184명을 모집했다</b>
+          <q>“The researchers enrolled 184 adults between the ages of 18 and 40 who were still struggling with knee symptoms one to three years after their operations.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>운동하면 취약한 무릎 연골이 손상될 수 있다는 우려가 널리 퍼져 있다</b>
+          <q>“One obstacle is the widespread concern, shared by some patients and healthcare professionals, that exercise could damage already vulnerable knee cartilage.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>4개월 프로그램을 물리치료사 지도로 수행한 참가자들은 무릎 건강과 근력이 좋아지고 통증이 줄고 삶의 질이 나아졌다</b>
+          <q>“The findings, published in Annals of Internal Medicine, showed that participants who completed the four-month program under the guidance of a physical therapist experienced improvements in knee health and muscle strength, along with less pain and better quality of life.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>운동이 연골을 손상시키거나 초기 관절염을 악화시킨다는 증거 없이 이런 이점이 나타났다</b>
+          <q>“Importantly, these benefits came without evidence that the exercises were damaging knee cartilage or worsening early osteoarthritis.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 점진적 운동 치료 프로그램 또는 교육 세션 한 번만 받는 비교 그룹에 배정됐다</b>
+          <q>“Participants were assigned to either a progressive exercise therapy program or a comparison group that received a single educational session.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수술 2년 뒤 환자 절반쯤이 무릎 건강에 불만족하고, 10년 안에 절반쯤이 초기 무릎 관절염 징후가 생기며 40세 이전인 경우가 많다</b>
+          <q>“About half of patients are still dissatisfied with their knee health two years after the procedure. Even more concerning, roughly half develop signs of early-onset knee osteoarthritis within a decade, often before reaching age 40.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자 루비 커밍은 3~4년 동안 정도는 달랐지만 매일 무릎 통증을 겪었다</b>
+          <q>“Despite those efforts, she continued to experience varying degrees of knee pain every day for three to four years.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>루비는 주 1회 물리치료사 지도 재활로 통증이 크게 좋아졌다고 말했다</b>
+          <q>“When I joined the SUPER-Knee program and did weekly physio-supervised rehab, this improved my pain significantly”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 시험은 장기적으로 프로그램이 관절염을 예방하는지는 입증하지 못했다</b>
+          <q>“Although the trial did not establish whether the program prevents osteoarthritis over the long term, it demonstrated that supervised exercise can improve knee health without accelerating the cartilage damage or early osteoarthritis researchers were monitoring.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 책임자는 물리치료사 지도 운동 치료와 교육이 안전하며 권고돼야 한다고 말했다</b>
+          <q>“Our study showed physiotherapist-supervised exercise therapy and education is safe and should be recommended to improve the knee health of young people at high risk of early-onset osteoarthritis following ACL reconstruction.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="804f2a494c89">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261112025538.htm" target="_blank" rel="noopener">Exercise after ACL surgery may protect knees from early osteoarthritis</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-cb523908a9cc">
+    <div class="head">
+      <h2>S3. 70세 이후 스타틴 중단 연구 - 2년과 4년 결과 차이</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 12 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-cb523908a9cc">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;끊어도 안전하다&#39;는 2년 결과 뒤에 4년 숫자(12.7% vs 9.2%)가 달랐다는 반전을 보여주고, 끊으라는 말이 아니라 &#39;의사랑 같이 정하라&#39;는 결론으로 닫는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">콜레스테롤 약(스타틴), 70 넘으면 그만 먹어도 되나?
+70세 이상 1,880명 따라간 연구에서 2년 뒤엔 별 차이 없어 보였는데
+4년까지 보니 숫자가 달라졌대 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 약을 끊은 그룹도 2년쯤 지나서는 심근경색·뇌졸중·사망이 통계적으로 의미 있게 늘진 않았대. 근데 4년까지 길게 보니 얘기가 달라짐. 그 숫자가 뭐였을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">2/ 최대 4년까지 보니 끊은 그룹은 12.7%가 심근경색·뇌졸중·사망을 겪었고, 계속 먹은 그룹은 9.2%였대. 연구진은 이게 기존 문헌에 없던 새 발견이라고 함. 그럼 이 연구는 어떤 사람들을 본 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">202/500자</span></div>
+      <p class="tp-text">3/ 연구 요약 정리
+- 대상: 70세 이상 1,880명, 만성질환 2개 이상 (심근경색·뇌졸중 이력자는 제외)
+- 2년: 끊은 그룹도 심근경색·뇌졸중·사망 유의한 증가 없음
+- 다만 2년간 끊은 40명당 심혈관 사건 1건 더
+- 최대 4년: 12.7% vs 9.2%
+- 삶의 질·근육통·낙상·근감소증은 두 그룹 비슷
+근데 이 연구에도 한계가 있었음. 뭐였을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">4/ 한계도 있었음. 참가자의 약 14%가 중간에 반대 그룹으로 넘어갔대 (끊은 쪽이 다시 먹거나, 계속 먹던 쪽이 끊거나). 추가 분석을 해도 결과는 안 바뀌었다고 함. 그래서 연구진 결론은 뭐였을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">5/ 연구진 결론은 &#39;위험 증가가 작아도 있으니 일률적으로 끊으라고 말할 순 없다&#39;는 거. 환자와 의료진이 같이 정해야 한다고. 그래도 이 연령대에 심혈관 이력이 없으면 대체로 안전하다고도 했대. 그래서 결국 챙길 건 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">218/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 70세 넘어 스타틴을 끊을지는 일괄로 못 정하니 의사랑 같이 정하라는 거. 자기한테 맞는지는 의사와 상의가 먼저.
+12.7%와 9.2%, 이 차이 크다고 봐 작다고 봐?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>심혈관질환이나 이전 심혈관 사건이 있는 사람은 연구에서 제외 <small>애매 · 원문은 심혈관질환 전반과 이전 심혈관 사건자를 제외했다고 한다. &#39;심근경색·뇌졸중 이력자 제외&#39;로 좁혀 쓴 것은 범위가 달라지므로 &#39;심혈관질환(심근경색·뇌졸중 등) 이력자 제외&#39;로 고치는 것이 좋다.</small></li>
+        <li>근거 등록 안 된 주장: 연구 참가자는 만성질환을 2개 이상 가진 사람들이었다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>콜레스테롤 약(스타틴), 70 넘으면 그만 먹어도 되나?
+70세 이상 1,880명 따라간 연구에서 2년 뒤엔 별 차이 없어 보였는데</li><li>&#39;끊어도 안전하다&#39;는 결과, 2년 뒤까지만 맞는 말이었다면?</li><li>부모님 약 &#39;계속 먹을까 끊을까&#39;를 혼자 정하지 말고 의사랑 같이 따져보라는 연구가 나옴</li><li>약 끊는 문제, &#39;OK냐 아니냐&#39;가 아니라 &#39;몇 년을 보느냐&#39;라서 의사랑 같이 정하라는 연구가 나옴</li><li>&#39;약은 평생 먹는 거&#39;라는 말, 70세 이후엔 연구들이 슬슬 묻기 시작함</li><li>70세 넘은 1,880명을 나눠서 한쪽은 콜레스테롤 약을 끊게 했더니</li><li>12.7% vs 9.2%, 약을 끊은 쪽과 계속 먹은 쪽의 4년 뒤 숫자</li><li>연구진이 직접 &#39;일률적으로 끊으라고 말할 순 없다&#39;고 선을 그은 약 연구</li><li>약을 끊으면 몸이 달라질 줄 알았는데 근육통·낙상은 두 그룹이 비슷했대</li><li>&#39;2년 결과&#39;만 보고 안심하면 놓치는 게 있다는 콜레스테롤 약 연구</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>12.7%와 9.2%, 이 차이 크다고 봐 작다고 봐?</li><li>2년 결과가 더 와닿아 vs 4년 결과가 더 와닿아?</li><li>&#39;약은 의사랑 같이 정하는 게 맞다&#39; vs &#39;숫자 차이 작아서 애매하다&#39;, 어느 쪽이야?</li><li>병원에서 약 왜 먹는지 물어보는 편이야, 그냥 받는 편이야?</li><li>너라면 이런 연구 나왔을 때 가족한테 얘기 꺼내볼 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>같은 학회에서 나온 다른 심장 건강 연구</li><li>&#39;나쁜 콜레스테롤&#39; LDL은 정확히 뭘까</li><li>스페이스X 스타십 젓가락 포획 첫 성공</li><li>62분마다 펄스를 내다 사라진 우주 천체 LPT</li><li>아키하바라 170만 가지 스시 덮밥집 우오동</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;부모님 약&#39; 표현이 약 중단 권유로 읽히지 않는지 확인 필요 (본문은 &#39;의사와 같이 정하라&#39;로 닫음)</li><li>미국 학회 발표 예비 연구(NEJM 동시 게재)이고 유럽 3개국 참가자라 한국 중장년에 그대로 적용된다고 읽힐 수 있음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>심혈관질환이나 이전 심혈관 사건이 있는 사람은 연구에서 제외</b>
+          <q>“People with existing cardiovascular disease or a prior cardiovascular event were excluded from the study.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>70세 이상 성인 1,880명이 참여한 연구</b>
+          <q>“The research included 1,880 total adults, age 70 and older (average age of 77; 53% men, and 47% women) with at least two chronic health conditions.”</q>
+          <small>post0 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약 2년 시점에는 끊은 그룹에서 심근경색·뇌졸중·사망이 유의하게 늘지 않았다</b>
+          <q>“At about two years, discontinuation of statins was safe, without a significant increase in heart attack, stroke or death, compared to those who continued the therapy.”</q>
+          <small>post0, post1 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>최대 4년 추적에서 끊은 그룹 12.7%, 계속 먹은 그룹 9.2%가 심근경색·뇌졸중·사망</b>
+          <q>“In a follow-up period of up to four years, 12.7% of those who discontinued statins had a heart attack, stroke or death, compared to 9.2% who continued the therapy.”</q>
+          <small>post0, post2, post3 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>4년 시점의 위험 증가는 과학 문헌에 없던 새 발견이라고 연구진이 언급</b>
+          <q>“Redberg noted the increased risk at four years among a small number of older adults was a new finding in scientific literature, one which she said could be because this trial had more people and a longer follow-up than previous studies.”</q>
+          <small>post2 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2년간 끊은 그룹 40명당 심혈관 사건이 1건 더 발생</b>
+          <q>“Statistically speaking, over the course of two years, for every 40 individuals in the group who discontinued statins, one additional cardiovascular event occurred among them.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>삶의 질·근육통·낙상·근감소증은 두 그룹 간 차이가 없었다</b>
+          <q>“There were no differences between the groups when researchers assessed the study participants’ quality of life, muscle pain, falls and sarcopenia.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자의 약 14%가 중간에 반대 그룹으로 넘어갔다</b>
+          <q>“Overall, about 14% of participants crossed over to the other group during the study.”</q>
+          <small>post4 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>끊은 쪽이 다시 먹거나 계속 먹던 쪽이 끊은 교차가 있었다</b>
+          <q>“A limitation of the study was that there was crossover in both groups during the study period, meaning some people in the discontinuation group restarted their statins while some in the continuation group stopped them.”</q>
+          <small>post4 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추가 분석을 해도 결과는 바뀌지 않았다</b>
+          <q>“To account for this shift, the researchers conducted several additional analyses that yielded no change in the results.”</q>
+          <small>post4 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>작은 위험 증가 때문에 중단에 대한 일반적 권고는 할 수 없다고 연구진이 말함</b>
+          <q>“This small, increased risk of cardiovascular events means that one cannot make a general recommendation about stopping statins in this patient population,”</q>
+          <small>post5 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>환자와 의료진이 함께 결정해야 한다</b>
+          <q>“There should be shared decision-making between the patient and the healthcare professional to know if it is appropriate for an individual to discontinue the medication.”</q>
+          <small>post5, post6 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연령대에서 심혈관 이력이 없으면 중단은 대체로 안전하다고 연구진이 말함</b>
+          <q>“In general, however, discontinuation is safe for most people who are in this age group and without a previous CVD event.”</q>
+          <small>post5 · <a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="cb523908a9cc">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261112025534.htm" target="_blank" rel="noopener">Stopping statins after 70 may be safer than expected, but there&#39;s a catch</a></li><li><a href="https://newsroom.heart.org/news/discontinuing-statins-generally-safe-for-older-adults-without-heart-disease" target="_blank" rel="noopener">Discontinuing statins generally safe for older adults without heart disease</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-bb47cbb0e7ea">
+    <div class="head">
+      <h2>S4. 레고 스타워즈 2026 어드벤트 캘린더 - 만도·그로구 24개 서프라이즈</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 20
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-bb47cbb0e7ea">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 큰 모형 하나가 아니라 24개 미니 소품이라는 반전에, 만도와 그로구가 서로가 그려진 스웨터를 입는 디테일을 얹으면 선물 소재로 팔린다.</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "레고 스타워즈 어드벤트 캘린더" · 원문 제품: LEGO Star Wars Advent Calendar 2026 (The Mandalorian and Grogu 테마), 293피스, 6세 이상, 미국 가격 $44.99, 판매처는 LEGO 미국 사이트(기사 시점 품절 표시)<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: target.com, yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/bb47cbb0e7ea/thread-photo-1115082333-01.jpg" alt="LEGO Star Wars 어드벤트 캘린더 75456 박스와 여러 미니피그·미니빌드 구성품이 펼쳐져 있는 사진" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/bb47cbb0e7ea/thread-photo-1115082333-02.jpg" alt="스타워즈 로고가 있는 LEGO 어드벤트 캘린더 박스가 문이 열린 채 펼쳐져 있고, 날짜 번호가 적힌 문과 벽, 만도·그로구 미니피그가 있는 플레이 매트, 주변에 떠 있는 우주선 미니피그들이 보인다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261115-pm-b3dc607e2093/bb47cbb0e7ea/thread-photo-1115082333-03.jpg" alt="레고 미니피그와 소품 구성품들: 빨간 모자를 쓴 초록 로봇, 회색 후드 인물, 흰색 장비를 든 IG-11 계열 로봇, 테이블 위 선물 상자와 소품들, 바닥의 작은 가방, 흰색 포드 형태 소품, 회색 기계 장치 빌드" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-bb47cbb0e7ea">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">어드벤트 캘린더가 &#39;큰 모형 하나를 24번 나눠 뜯기&#39;가 아니라 24개 소품이래
+레고 스타워즈 2026 버전인데, 만도랑 그로구가 서로가 그려진 스웨터를 입고 나옴
+근데 가격 옆에 붙은 상황이 좀 걸림 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">1/ 그로구는 만도가 그려진 스웨터, 만도는 그로구가 그려진 스웨터를 입고 나옴. 모프 기디언도 휴일 옷을 입고 X-윙은 축제 색이래. 그럼 24개 안에 뭐가 들었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">2/ 캐릭터 7개(만도, 그로구 포함), 미니 탈것 7개(레이저 크레스트, 만도의 N-1 스타파이터), 크리처 4개, 소품 빌드 6개. 소품엔 그로구가 타고 다니는 호버프램이랑 만달로리안 건틀릿도 있음. 그럼 다 뜯고 나면 어떻게 쓰는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">3/ 뜯은 순서대로 안 둬도 돼서 배치는 마음대로래. 다른 레고 스타워즈 세트에 붙일 수도 있고, 축제 옷 입은 피규어는 시즌 장식으로 둬도 됨. 그럼 가격은 얼마일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">4/ 293피스에 6세 이상용이고, 미국 가격은 $44.99. 근데 레고 미국 사이트엔 품절로 떠 있었대. 12월 계획 세우기 전에 재고부터 확인해보라는 얘기. 그리고 이 세트, 안 맞는 사람도 있다고 함 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">5/ 레고 스타워즈 캘린더 요약 정리
+- 구성: 캐릭터 7 / 미니 탈것 7 / 크리처 4 / 소품 6
+- 293피스, 6세 이상
+- 미국 가격 $44.99, 레고 미국 사이트엔 품절 표시
+- 대부분 미니피그 같은 작은 형태, 날마다 조립 분량은 다름
+- 큰 모형 하나가 목적이면 일반 세트가 더 맞을 수 있음</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">192/500자</span></div>
+      <p class="tp-text">6/ 결국 이건 큰 걸 한 번에 조립하는 세트가 아니라, 매일 작은 서프라이즈 하나 뜯는 재미로 고르는 물건이래.
+이거 선물로 받으면 좋아할 사람 소환해보자
+해외에서 화제 된 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외에서 화제가 된 물건이라는 주장은 원문 근거가 없다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>어드벤트 캘린더가 &#39;큰 모형 하나를 24번 나눠 뜯기&#39;가 아니라 24개 소품이래</li><li>만도는 그로구 스웨터, 그로구는 만도 스웨터를 입고 나오는 캘린더가 있음</li><li>12월 카운트다운 짜기 전에 재고부터 확인하라는 레고 캘린더가 나옴</li><li>크리스마스 선물, 큰 세트 하나보다 &#39;매일 하나씩 뜯는 24개&#39;가 더 설렐 수도 있대</li><li>스타워즈 팬이면 위시리스트 맨 위에 두라고 외신이 꼽은 레고 캘린더가 나옴</li><li>모프 기디언도 크리스마스 옷을 입는 레고 캘린더가 나옴</li><li>큰 모형 고르지 말고 &#39;매일 뜯는 재미&#39;부터 따져보라는 레고 캘린더 소개가 나옴</li><li>293피스에 $44.99인데 레고 미국 사이트엔 품절로 떠 있었대</li><li>이 레고, 다 뜯고 나서도 다른 스타워즈 세트에 붙일 수 있다는데</li><li>선물로 받으면 좋아할 스타워즈 덕후 떠올랐다면 이 캘린더부터 봐</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해보자</li><li>어드벤트 캘린더, 큰 세트파 vs 매일 소품파?</li><li>이 캘린더 있으면 살 거야?</li><li>스웨터 입은 만도랑 그로구, 귀엽다 vs 과하다?</li><li>12월 1일부터 매일 하나씩 뜯는다면 제일 기대되는 건 피규어 vs 탈것?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>다른 어드벤트 캘린더는 뭐가 있을까</li><li>선물용으로 좋은 해외 화제 소품</li><li>해외에서 화제 된 레고 신제품</li><li>연말 시즌 한정 해외 화제템</li><li>스타워즈 팬들이 탐내는 굿즈</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>레고 미국 사이트 품절 표시와 가격은 기사 시점(2026-11-14) 기준이라 올리기 전에 바뀌었는지 확인 필요</li><li>한국 정식 판매 여부는 원문에 없어 글에서 단정하지 않았음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>어드벤트 캘린더가 큰 모형을 24번 나눠 뜯는 방식이 아니라 24개의 일일 서프라이즈다</b>
+          <q>“This isn’t a large model divided into 24 installments for you to unwrap.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>만도와 그로구가 서로가 그려진 스웨터를 입는다</b>
+          <q>“Grogu has a sweater that features Mando, while Mando is wearing one that has Grogu on it.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>레고 스타워즈 어드벤트 캘린더 2026 제품이다</b>
+          <q>“If you’re a Star Wars fan, particularly of The Mandalorian and Grogu, and you love LEGO, then the LEGO Star Wars Advent Calendar 2026 should be at the top of your list.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그로구는 만도가 그려진 스웨터, 만도는 그로구가 그려진 스웨터를 입는다</b>
+          <q>“Grogu has a sweater that features Mando, while Mando is wearing one that has Grogu on it.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>모프 기디언도 휴일 옷을 입고 X-윙은 축제 색으로 나온다</b>
+          <q>“Even Moff Gideon gets a holiday outfit, and the X-wing comes in festive colors.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>캐릭터 7개, 미니 탈것 7개(레이저 크레스트, N-1 스타파이터 포함), 크리처 4개가 들어 있다</b>
+          <q>“you’ll get seven characters including the aforementioned Mando and Grogu, seven miniature vehicles including the iconic Razor Crest and Mando’s N-1 Starfighter, and four creatures including a Mudhorn like the one Grogu levitated with the Force.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소품 빌드 6개에 그로구가 타는 호버프램과 만달로리안 건틀릿이 포함된다</b>
+          <q>“There are also six supporting accessory builds, including the very cute hoverpram that Grogu rides around in and a Mandalorian gauntlet.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나온 순서대로 보관하지 않고 배치를 마음대로 할 수 있다</b>
+          <q>“You don’t have to keep everything in the order it appeared behind the doors, either.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>다른 레고 스타워즈 세트에 캐릭터와 미니 빌드를 추가할 수 있다</b>
+          <q>“You can actually add the characters and mini builds to other LEGO Star Wars sets (or maybe even other universes if you’re creating a crossover).”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>축제 옷을 입은 피규어를 시즌 장식으로 둘 수 있다</b>
+          <q>“There is also the option to keep the figures that are wearing festive outfits as a seasonal display.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>293피스 세트이고 6세 이상 대상이다</b>
+          <q>“The 293-piece set is meant for kids (and adults) ages 6 and up.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 가격은 $44.99이고 레고 미국 사이트에는 품절로 표시되어 있었다</b>
+          <q>“The US price is $44.99, although LEGO’s US site listed it as sold out.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>12월 계획을 세우기 전에 재고 확인이 필요하다</b>
+          <q>“That makes availability worth checking before you plan your December countdown around it.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>구성은 캐릭터 7, 미니 탈것 7, 크리처 4, 소품 6이다</b>
+          <q>“you’ll get seven characters including the aforementioned Mando and Grogu, seven miniature vehicles including the iconic Razor Crest and Mando’s N-1 Starfighter, and four creatures including a Mudhorn like the one Grogu levitated with the Force.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>293피스, 6세 이상이다</b>
+          <q>“The 293-piece set is meant for kids (and adults) ages 6 and up.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 가격 $44.99이며 레고 미국 사이트에 품절 표시가 있었다</b>
+          <q>“The US price is $44.99, although LEGO’s US site listed it as sold out.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대부분 미니피그 같은 작은 형태이고 큰 스타워즈 레고 세트와 다르다</b>
+          <q>“Since this comes in the miniature format, with most of them looking like minifigs, this is basically different from the bigger Star Wars LEGO sets.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>날마다 조립 분량이 다르다</b>
+          <q>“Some days bring a figure or accessory rather than a more involved vehicle build, so it’s better to think of this as a daily surprise than to expect the same amount of building each time.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>큰 모형 하나가 목적이면 일반 세트가 더 맞을 수 있다</b>
+          <q>“If you’re after one substantial model, a conventional set may suit you better.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 캘린더의 매력은 매일 작은 걸 열어보는 재미다</b>
+          <q>“The appeal of this Advent Calendar is that you have something small to open every day and deciding where it fits into the “story”.”</q>
+          <small>post6 · <a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="bb47cbb0e7ea">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/14/legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=legos-2026-star-wars-advent-calendar-brings-24-mando-and-grogu-surprises" target="_blank" rel="noopener">LEGO’s 2026 Star Wars Advent Calendar Brings 24 Mando and Grogu Surprises - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261115-pm";
+  const ORIGINAL = {"17c0b4faedc0": {"caption": "\uc6b0\uc8fc\uc120\uc744 \uc813\uac00\ub77d\uc73c\ub85c \uc7a1\uc558\ub2e4\uace0? \uc2a4\ud398\uc774\uc2a4X\uac00 \ubc1c\uc0ac\u00b7\ud3ec\ud68d \ud0c0\uc6cc \u0027\uba54\uce74\uc9c8\ub77c\u0027\uc758 \ud314\ub85c \uc2a4\ud0c0\uc2ed \uc6b0\uc8fc\uc120 \ubcf8\uccb4\ub97c \ucc98\uc74c\uc73c\ub85c \ubd99\uc7a1\ub294 \ub370 \uc131\uacf5\ud588\ub2e4.\n\n\uc2a4\ud398\uc774\uc2a4X\ub294 \uc774\uc804\uc5d0\ub3c4 \ubd80\uc2a4\ud130\ub97c \uac19\uc740 \u0027\uc813\uac00\ub77d\u0027 \ubc29\uc2dd\uc73c\ub85c \ud3ec\ud68d\ud55c \uc801\uc774 \uc788\ub2e4. \ud558\uc9c0\ub9cc \uc774 \uae30\ub3d9\uc774 \uc2a4\ud0c0\uc2ed \uc6b0\uc8fc\uc120 \uc790\uccb4\uc5d0\uc11c \uc131\uacf5\ud55c \uac83\uc740 \uc774\ubc88\uc774 \ucc98\uc74c\uc774\ub2e4. \ubbf8\uad6d \ub3d9\ubd80\uc2dc\uac04 \uc624\ud6c4 4\uc2dc 20\ubd84\ucbe4 \uc2a4\ud0c0\uc2ed\uc740 \uad6c\ub984\uc744 \ub6ab\uace0 \ub0b4\ub824\uc640 \uc218\uc9c1\uc73c\ub85c \uc790\uc138\ub97c \ubc14\uafbc \ub4a4 \ud0c0\uc6cc\uc758 \ud314 \uc0ac\uc774\uc5d0 \uc790\ub9ac \uc7a1\uc558\ub2e4.\n\n\ub2e4\ub9cc \ubaa8\ub4e0 \uac8c \uacc4\ud68d\ub300\ub85c\ub294 \uc544\ub2c8\uc5c8\ub2e4. \uc2a4\ud398\uc774\uc2a4X\ub294 15\ubc88\uc9f8 \ube44\ud589 \uc2a4\ud0c0\uc2ed\uc758 \ubd80\uc2a4\ud130 \ud3ec\ud68d\uc744 \uc608\uc815\ud588\uc9c0\ub9cc \uc911\ub2e8\ud588\uace0, \ubd80\uc2a4\ud130\ub294 \ucc29\ub959\uc744 \ud3ec\uae30\ud55c \ucc44 \uba55\uc2dc\ucf54\ub9cc \uc0c1\uacf5\uc5d0\uc11c \ud3ed\ubc1c\ud588\ub2e4. \uc6d0\uc778\uc740 \uc544\uc9c1 \uc870\uc0ac \uc911\uc774\ub2e4.\n\n\ub354 \ubc84\uc9c0\ub294 \ubc1c\uc0ac\uccb4 \uc804\uccb4\ub97c \ud68c\uc218\ud558\uc9c0 \ubabb\ud574 \uc644\uc804\ud55c \uc131\uacf5\uc740 \uc544\ub2c8\uc9c0\ub9cc \uc2a4\ud0c0\uc2ed \ud504\ub85c\uadf8\ub7a8\uc758 \uc774\uc815\ud45c\ub77c\uace0 \uc9da\uc5c8\ub2e4. \uba38\uc2a4\ud06c CEO\ub294 3\ubd84\uae30 \uc2e4\uc801 \ubc1c\ud45c\uc5d0\uc11c \uccab \ube44\ud589\ub4e4\uc5d0\uc11c \uc131\uacf5\uc774 \ubcf4\uc7a5\ub418\uc9c0\ub294 \uc54a\uc9c0\ub9cc \ub2e4\uc74c \ube44\ud589\uc5d0\uc11c\ub294 \uc131\uacf5\ud560 \uac00\ub2a5\uc131\uc774 \ub354 \ub192\ub2e4\uace0 \ub9d0\ud588\ub2e4.\n\n\uc6b0\uc8fc \uacf5\ud559\uc5d0 \uad00\uc2ec \uc788\ub294 \uce5c\uad6c\uc5d0\uac8c \uacf5\uc720\ud574 \ubcf4\uc790.\n\n\ucd9c\ucc98: The Verge", "hashtags": ["#\uc2a4\ud398\uc774\uc2a4X", "#\uc2a4\ud0c0\uc2ed", "#\uc6b0\uc8fc", "#\uba54\uce74\uc9c8\ub77c", "#\ub85c\ucf13"], "slides": [["\uc6b0\uc8fc\uc120\uc744", "**\uc813\uac00\ub77d** \ud3ec\ud68d?!", "---", "\uc2a4\ud398\uc774\uc2a4X\uac00 \ubc1c\uc0ac\u00b7\ud3ec\ud68d \ud0c0\uc6cc \u0027\uba54\uce74\uc9c8\ub77c\u0027\uc758 \ud314\ub85c \uc2a4\ud0c0\uc2ed \uc6b0\uc8fc\uc120 \ubcf8\uccb4\ub97c \ucc98\uc74c\uc73c\ub85c \ubd99\uc7a1\ub294 \ub370 \uc131\uacf5\ud588\ub2e4."], ["\ubd80\uc2a4\ud130\ub294", "\uc774\ubbf8 \uc7a1\uc558\uc5c8\uc5b4", "---", "\uc2a4\ud398\uc774\uc2a4X\ub294 \uc774\uc804\uc5d0\ub3c4 \ub85c\ucf13 \ubd80\uc2a4\ud130\ub97c \u0027\uc813\uac00\ub77d\u0027 \ubc29\uc2dd\uc73c\ub85c \ud3ec\ud68d\ud55c \uc801\uc774 \uc788\ub2e4. \ud558\uc9c0\ub9cc \uc2a4\ud0c0\uc2ed \uc6b0\uc8fc\uc120 \uc790\uccb4\uc5d0\uc11c \uc774 \uae30\ub3d9\uc774 \uc131\uacf5\ud55c \uac83\uc740 \uc774\ubc88\uc774 \ucc98\uc74c\uc774\ub2e4."], ["\ubbf8 \ub3d9\ubd80 \uae30\uc900", "**4\uc2dc 20\ubd84\ucbe4**", "---", "\uc2a4\ud0c0\uc2ed\uc740 \uad6c\ub984\uc744 \ub6ab\uace0 \ub0b4\ub824\uc628 \ub4a4 \uc218\uc9c1\uc73c\ub85c \uc790\uc138\ub97c \ubc14\uafe8\ub2e4. \ubbf8\uad6d \ub3d9\ubd80\uc2dc\uac04 \uc624\ud6c4 4\uc2dc 20\ubd84\ucbe4 \uba54\uce74\uc9c8\ub77c\uc758 \ud314 \uc0ac\uc774\uc5d0 \uc790\ub9ac \uc7a1\uc558\ub2e4."], ["\ubd80\uc2a4\ud130\ub294", "**\ud3ec\uae30**\ud588\ub2e4", "---", "\uc2a4\ud398\uc774\uc2a4X\ub294 15\ubc88\uc9f8 \ube44\ud589 \uc2a4\ud0c0\uc2ed\uc758 \ubd80\uc2a4\ud130 \ud3ec\ud68d\ub3c4 \uc608\uc815\ud588\uc9c0\ub9cc \uc911\ub2e8\ud588\ub2e4. \ubd80\uc2a4\ud130\ub294 \ucc29\ub959\uc744 \ud3ec\uae30\ud55c \ub4a4 \uba55\uc2dc\ucf54\ub9cc \uc0c1\uacf5\uc5d0\uc11c \ud3ed\ubc1c\ud588\uace0, \uc6d0\uc778\uc740 \uc544\uc9c1 \uc870\uc0ac \uc911\uc774\ub2e4."], ["\uc644\ubcbd\ud558\uc9c4 \uc54a\uc544\ub3c4", "**\uc774\uc815\ud45c**", "---", "\ubc1c\uc0ac\uccb4 \uc804\uccb4\ub97c \ud68c\uc218\ud558\uc9c0\ub294 \ubabb\ud574 \uc644\uc804\ud55c \uc131\uacf5\uc740 \uc544\ub2c8\uc5c8\ub2e4. \uadf8\ub798\ub3c4 \uc2a4\ud0c0\uc2ed \ud504\ub85c\uadf8\ub7a8\uc758 \uc774\uc815\ud45c\uc774\uba70, \ubd80\uc2a4\ud130 \ud3ec\ud68d \uc804\ub840\uac00 \uc788\uc5b4 \uc774\ubc88 \uc2e4\ud328\uac00 \ub118\uc9c0 \ubabb\ud560 \uc7a5\uc560\ubb3c\uc740 \uc544\ub2c8\ub77c\uace0 \ub354 \ubc84\uc9c0\ub294 \ubcf4\uc558\ub2e4."], ["**\uc6b0\uc8fc \ub355\ud6c4** \uce5c\uad6c\ud55c\ud14c", "\ubc14\ub85c \ubcf4\ub0b4\uae30", "---", "\uc2a4\ud0c0\uc2ed \ubcf8\uccb4\ub97c \ucc98\uc74c \ud3ec\ud68d\ud55c \uc18c\uc2dd\uc774\ub77c \uc6b0\uc8fc \uacf5\ud559\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "50834373e209": {"caption": "\ub3c4\ucfc4 \uc544\ud0a4\ud558\ubc14\ub77c\uc5d0 \ud1a0\ud551 \uc870\ud569\ub9cc 170\ub9cc \uac00\uc9c0\uac00 \ub118\ub294\ub2e4\ub294 \uc2a4\uc2dc \ub36e\ubc25\uc9d1\uc774 \uc788\ub2e4. \uc774\ub984\uc740 \uc6b0\uc624\ub3d9, \ub9d0 \uadf8\ub300\ub85c \u0027\uc0dd\uc120 \ub36e\ubc25\u0027\uc774\ub77c\ub294 \ub73b\uc774\ub2e4. 2025\ub144\uc5d0 \ubb38\uc744 \uc5f4\uc5c8\uace0, \uc5ed\uc5d0\uc11c \ub450 \ube14\ub85d\ucbe4 \ub5a8\uc5b4\uc838 \uc788\uc9c0\ub9cc \uad00\uad11\uac1d\uc774 \ub9ce\uc774 \ucc3e\ub294 \uac00\uac8c\uc640 \uc624\ub77d\uc2e4\uc740 \uc11c\ucabd\uc5d0 \ubab0\ub824 \uc788\uc5b4 \ub3d9\ucabd\uc5d0 \uc788\ub294 \uc774\uacf3\uc740 \ubaa8\ub974\uace0 \uc9c0\ub098\uce58\uae30 \uc27d\ub2e4. \uac04\ud310\uc5d0 \uc801\ud78c \uba54\ub274\ub9cc \uc57d 150\uac00\uc9c0\uc778\ub370, \uc774\uac83\ub3c4 \uc8fc\ubb38 \uac00\ub2a5\ud55c \uc804\uccb4\uc758 \uc77c\ubd80\ub2e4. \uc120\ud0dd\uc9c0\uac00 \ub108\ubb34 \ub9ce\uc544 \ub9dd\uc124\uc77c \uc190\ub2d8\uc744 \uc704\ud574 \ucd94\ucc9c \uba54\ub274\uc640 \ub0a8\uc131\u00b7\uc5ec\uc131 \uc190\ub2d8\ubcc4 \uc778\uae30 \uc8fc\ubb38 3\uc704\uae4c\uc9c0 \uc801\uc5b4 \ub454\ub2e4. \uc18c\ub77c\ub274\uc2a424 \uae30\uc790\ub294 \ub0a8\uc131 \uc778\uae30 1\uc704\uc778 \ub9c8\uc694 \uc5f0\uc5b4\ubc43\uc0b4 \ub36e\ubc25(930\uc5d4, \uc57d 5.85\ub2ec\ub7ec)\uc744 \uba39\uc5c8\uace0, \uc5f0\uc5b4 \uc790\uccb4\uac00 \uaf64 \uc88b\uc558\ub2e4\uace0 \uc804\ud588\ub2e4. \uc774\ud6c4 \uace7 \ub2e4\uc2dc \ucc3e\uc544 \uc544\ubcf4\uce74\ub3c4\ub97c \uc62c\ub9b0 \uc808\uc784 \uce58\ub77c\uc2dc \ub36e\ubc25\ub3c4 \uba39\uc5b4 \ubd24\ub294\ub370 \uc774\uac83\ub3c4 \ud6cc\ub96d\ud588\ub2e4\uace0 \ud55c\ub2e4. \uc6b0\uc624\ub3d9\uc740 \uc77c\ubcf8 \uc804\uad6d\uc5d0 \uc57d 50\uac1c \uc9c0\uc810\uc774 \uc788\ub294 \uccb4\uc778\uc774\uba70, \ub300\ubd80\ubd84 \ub3c4\uc2ec\uc5d0\uc11c \ub354 \ub5a8\uc5b4\uc9c4 \uacf3\uc5d0 \uc788\ub2e4\uace0 \ud55c\ub2e4. \ud55c \uadf8\ub987 \uace0\ub974\ub294 \ub370\ub9cc \ud55c\ucc38 \uac78\ub9b4 \uc774 \uc9d1, \uc5ec\ub7ec\ubd84\uc774\ub77c\uba74 \uc5b4\ub5a4 \ud1a0\ud551\uc73c\ub85c \uc2dc\uc791\ud560\uae4c? \ucd9c\ucc98: \uc18c\ub77c\ub274\uc2a424(SoraNews24)", "hashtags": ["#\uc544\ud0a4\ud558\ubc14\ub77c", "#\uc2a4\uc2dc", "#\ub3c4\ucfc4\ub9db\uc9d1", "#\uc77c\ubcf8\uc5ec\ud589", "#\ud574\uc678\ud1a0\ud53d"], "slides": [["\uc2a4\uc2dc\ub36e\ubc25\uc774", "**170\ub9cc \uac00\uc9c0**???", "---", "\ub3c4\ucfc4 \uc544\ud0a4\ud558\ubc14\ub77c\uc758 \ub36e\ubc25\uc9d1 \uc6b0\uc624\ub3d9\uc740 \ud1a0\ud551\uc744 \uace8\ub77c 170\ub9cc \uac00\uc9c0\uac00 \ub118\ub294 \uc870\ud569\uc744 \ub9cc\ub4e4 \uc218 \uc788\ub2e4\uace0 \ubc1d\ud614\ub2e4."], ["\uc5ed **\ub3d9\ucabd** \uace8\ubaa9\uc5d0", "\uc228\uc5b4 \uc788\ub358 \uc9d1", "---", "\uc774\ub984 \uadf8\ub300\ub85c \u0027\uc0dd\uc120 \ub36e\ubc25\u0027\uc774\ub77c\ub294 \ub73b\uc758 \uc6b0\uc624\ub3d9\uc740 2025\ub144\uc5d0 \ubb38\uc744 \uc5f4\uc5c8\ub2e4. \uc5ed\uc5d0\uc11c \ub450 \ube14\ub85d\ucbe4 \ub5a8\uc5b4\uc84c\uc9c0\ub9cc \uad00\uad11\uac1d \ubab0\ub9ac\ub294 \uc11c\ucabd\uc774 \uc544\ub2cc \ub3d9\ucabd\uc774\ub77c \ub193\uce58\uae30 \uc27d\ub2e4."], ["\uac04\ud310\uc5d0\ub9cc", "**150\uac00\uc9c0**", "---", "\uac00\uac8c \uc55e \uac04\ud310\uc5d0 \uc801\ud78c \uba54\ub274\ub9cc \uc57d 150\uac00\uc9c0\ub2e4. \uadf8\ub7f0\ub370\ub3c4 \uc774\uac74 \uc8fc\ubb38\ud560 \uc218 \uc788\ub294 \uac83 \uc911 \uc77c\ubd80\uc77c \ubfd0\uc774\uace0, \ud1a0\ud551\uc744 \uc9c1\uc811 \uace0\ub974\uba74 170\ub9cc \uac00\uc9c0\uac00 \ub118\ub294 \uc870\ud569\uc774 \uac00\ub2a5\ud558\ub2e4\uace0 \uac00\uac8c \uce21\uc740 \ubc1d\ud614\ub2e4."], ["\uace0\ub974\uae30 \ud798\ub4e4\uba74", "**\ucd94\ucc9c**\uc774 \uc788\uc5b4", "---", "\uc120\ud0dd\uc9c0\uac00 \ub108\ubb34 \ub9ce\uc73c\uba74 \uc624\ud788\ub824 \ub9dd\uc124\uc774\uac8c \ub420 \uc218 \uc788\ub2e4\ub294 \uc810\uc744 \uac00\uac8c\ub3c4 \uc548\ub2e4. \uadf8\ub798\uc11c \uac04\ud310\uc5d0 150\uac00\uc9c0 \ucd94\ucc9c\uc744 \uc62c\ub9ac\uace0, \ub0a8\uc131\u00b7\uc5ec\uc131 \uc190\ub2d8\ubcc4 \uc778\uae30 \uba54\ub274 3\uc704\uae4c\uc9c0 \ub530\ub85c \uc801\uc5b4 \ub450\uc5c8\ub2e4."], ["**\ub9c8\uc694\ub124\uc988** \uc62c\ub9b0", "\uc2a4\uc2dc\ub77c\uace0?", "---", "\ub0a8\uc131 \uc190\ub2d8 \uc778\uae30 1\uc704\uc778 \ub9c8\uc694 \uc5f0\uc5b4\ubc43\uc0b4 \ub36e\ubc25(930\uc5d4, \uc57d 5.85\ub2ec\ub7ec)\uc744 \uc8fc\ubb38\ud588\ub2e4. \uc18c\ub77c\ub274\uc2a424 \uae30\uc790\ub294 \uc5f0\uc5b4\uac00 \uaf64 \uc88b\uc558\uace0 \ub9c8\uc694\uc640 \ud6c4\ucd94\uac00 \ub9db\uc5d0 \ud798\uc744 \ub354\ud588\ub2e4\uace0 \uc804\ud588\ub2e4."], ["\uc544\ud0a4\ud558\ubc14\ub77c \uac08", "**\uce5c\uad6c \ud0dc\uadf8\ud558\uae30**", "---", "\uc544\ud0a4\ud558\ubc14\ub77c \uc5ec\ud589\uc744 \uc55e\ub454 \uce5c\uad6c\uc5d0\uac8c \uc54c\ub824 \uc8fc\uba74 \uc88b\uc744 \uc18c\uc2dd. \uc5ed \ub3d9\ucabd\uc5d0 170\ub9cc \uac00\uc9c0 \uc870\ud569\uc758 \ub36e\ubc25\uc9d1\uc774 \uc788\uace0, \uc778\uae30 \uba54\ub274\uac00 930\uc5d4\uc774\ub77c\ub294 \uc810\uae4c\uc9c0 \ud568\uaed8 \uc804\ud560 \ub9cc\ud55c \uc774\uc57c\uae30"]]}, "56de9510473a": {"caption": "62\ubd84\ub9c8\ub2e4 \uac15\ub825\ud55c \uc804\ud30c\ub97c \ub0b4\ubfdc\ub2e4\uac00 \uc5b4\ub290 \uc21c\uac04 \uc870\uc6a9\ud574\uc9c4 \uc6b0\uc8fc \ucc9c\uccb4\uac00 \uc788\ub2e4. \ucc9c\ubb38\ud559\uc790 \uc2a4\ucf67 \ud558\uc774\uba3c\uc740 2002\ub144 9\uc6d4 \uc740\ud558\uc218 \uc911\uc2ec\uc5d0\uc11c 77\ubd84 \uac04\uaca9\uc758 \uc804\ud30c \ud50c\ub808\uc5b4 \ub2e4\uc12f \ubc88\uc744 \ud3ec\ucc29\ud588\uc9c0\ub9cc, \uc774\ud6c4 \ube44\uc2b7\ud55c \uc2e0\ud638\ub97c \ucc3e\ub294 \ub370 \ud070 \uc131\uacfc\ub97c \ub0b4\uc9c0 \ubabb\ud588\ub2e4. \uadf8\ub7f0\ub370 20\ub144 \ub4a4 \ub2e4\ub978 \uac83\uc744 \ucc3e\ub358 \uc911 62.2\ubd84\ub9c8\ub2e4 \ud130\uc9c0\ub294 \uc0c8 \uc2e0\ud638\uac00 \ub2e4\uc2dc \ub098\ud0c0\ub0ac\ub2e4.\n\n\uc774\ub7f0 \ucc9c\uccb4\ub294 \uc7a5\uc8fc\uae30 \uc804\ud30c \ucc9c\uccb4(LPT)\ub85c \ubd88\ub9b0\ub2e4. \ucd5c\uadfc \uba87 \ub144 \uc0ac\uc774 \uc54c\ub824\uc9c4 \uc0c8\ub85c\uc6b4 \ubd84\ub958\ub85c, \uc9c0\uae08\uae4c\uc9c0 \uc57d 12\uac1c\uac00 \ud655\uc778\ub410\ub2e4. \uc720\ub825 \ud6c4\ubcf4\ub294 \ud384\uc0ac, \ub9c8\uadf8\ub124\ud0c0, \ubc31\uc0c9\uc65c\uc131\uc774\uc9c0\ub9cc \uc5b4\ub290 \uac83\ub3c4 LPT\uc758 \ubaa8\ub4e0 \ud589\ub3d9\uc744 \ud3b8\ud558\uac8c \uc124\uba85\ud558\uc9c0 \ubabb\ud55c\ub2e4. \uc774\ubc88 \ucc9c\uccb4(LPT J1555-5631)\ub294 \ud55c \uc8fc\uae30\ub9c8\ub2e4 \uae34 \ud384\uc2a4\uc640 \uc9e7\uc740 \ud384\uc2a4\ub97c \ub0b4\uace0, \ub450 \ud384\uc2a4\uc758 \uac04\uaca9\uc774 180\ub3c4\uac00 \uc544\ub2cc 165.4\ub3c4\uc600\ub2e4. \ud558\uc774\uba3c\uc740 \uc774\ub97c \ub354 \ubcf5\uc7a1\ud55c \uc790\uae30\uc7a5 \uad6c\uc870\ub97c \uac00\ub9ac\ud0a4\ub294 \uc911\uc694\ud55c \ub2e8\uc11c\ub77c\uace0 \uc124\uba85\ud588\ub2e4.\n\n\ub610 \ud558\ub098\uc758 \uc218\uc218\uaed8\ub07c\ub294 \uce68\ubb35\uc774\ub2e4. \uc774 \ucc9c\uccb4\ub294 \ub2e4\uc2dc \uad00\uce21\ub418\uc9c0 \uc54a\uc558\uc9c0\ub9cc, GCRT J1745-3009\ub97c \ud3ec\ud568\ud55c \uc138 \uac1c\ub294 \ubc18\ubcf5 \ud65c\ub3d9\uc744 \ubcf4\uc600\ub2e4. \uc5f0\uad6c\ub294 The Astrophysical Journal\uc5d0 \uc2e4\ub838\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert, arXiv", "hashtags": ["#\uc6b0\uc8fc", "#\ucc9c\ubb38\ud559", "#\uacfc\ud559\ub274\uc2a4", "#\ubbf8\uc2a4\ud130\ub9ac", "#\uc804\ud30c\ucc9c\uccb4"], "slides": [["**62\ubd84\ub9c8\ub2e4** \ubc88\uca4d", "\uadf8\ub7ec\uace4 \uc99d\ubc1c???", "---", "\uc6b0\uc8fc \uc5b4\ub518\uac00\uc758 \ucc9c\uccb4\uac00 62.2\ubd84\ub9c8\ub2e4 \uac15\ub825\ud55c \uc804\ud30c \ud50c\ub808\uc5b4\ub97c \ub0b4\ubfdc\ub2e4\uac00, \uace7 \ub2e4\uc2dc \uc870\uc6a9\ud574\uc9c4 \uc0ac\uc2e4\uc774 \ucc9c\ubb38\ud559\uc790\uc758 \uc5f0\uad6c\ub85c \uc54c\ub824\uc84c\ub2e4."], ["2002\ub144\uc758", "\uccab **\uc218\uc0c1\ud55c** \uc2e0\ud638", "---", "2002\ub144 9\uc6d4 \uc740\ud558\uc218 \uc911\uc2ec\uc5d0\uc11c \uac15\ub825\ud55c \uc804\ud30c \ud50c\ub808\uc5b4 \ub2e4\uc12f \ubc88\uc774 77\ubd84 \uac04\uaca9\uc73c\ub85c \ud130\uc84c\ub2e4. \ucc9c\ubb38\ud559\uc790 \uc2a4\ucf67 \ud558\uc774\uba3c\uc740 \uc774\ud6c4 \uba87 \ub144\uac04 \ube44\uc2b7\ud55c \uc2e0\ud638\ub97c \ucc3e\uc558\uc9c0\ub9cc \uc131\uacfc\uac00 \ud06c\uc9c0 \uc54a\uc558\ub2e4."], ["**20\ub144 \ub4a4**", "\ub610 \ub098\ud0c0\ub0ac\ub2e4", "---", "20\ub144 \ub4a4 \ub2e4\ub978 \uac83\uc744 \ucc3e\ub358 \ub370\uc774\ud130 \uc18d\uc5d0\uc11c 62.2\ubd84\ub9c8\ub2e4 \uac15\ud55c \uc804\ud30c \ud50c\ub808\uc5b4\uac00 \ub2e4\uc2dc \uc7a1\ud614\ub2e4. \uc774 \uc2e0\ud638 \uc5ed\uc2dc \uace7 \uc870\uc6a9\ud574\uc84c\ub2e4."], ["\uc774\ub984\uc740 **LPT**", "\uc0c8\ub85c \uc0dd\uae34 \ubd84\ub958", "---", "LPT\ub294 \uae38\uace0 \ubc1d\uc740 \uc804\ud30c \ud384\uc2a4\ub97c \ub0b4\uace0 \uadf8 \uc0ac\uc774\uc5d0 \uaddc\uce59\uc801\uc778 \uae34 \ud734\uc9c0\uae30\ub97c \ub450\ub294 \uc0c8\ub85c\uc6b4 \uc885\ub958\uc758 \uc804\ud30c\uc6d0\uc774\ub2e4. \uc9c0\uae08\uae4c\uc9c0 \uc740\ud558 \uacf3\uacf3\uc5d0\uc11c \uc57d 12\uac1c\uac00 \ud655\uc778\ub410\ub2e4."], ["\ubc94\uc778 \ud6c4\ubcf4\ub294", "**\uc138 \uac00\uc9c0**", "---", "\uc720\ub825 \ud6c4\ubcf4\ub294 \ud384\uc0ac, \ub9c8\uadf8\ub124\ud0c0, \ubc31\uc0c9\uc65c\uc131\uc774\ub2e4. \ub2e4\ub9cc LPT\ub294 \uc911\uc131\uc790\ubcc4 \uae30\uc900\uc73c\ub85c \uadf9\ub3c4\ub85c \ub290\ub9ac\uac8c \ud384\uc2a4\ub97c \ub0b4\uc11c, \uc5b4\ub290 \ud6c4\ubcf4\ub3c4 LPT\uc758 \ubaa8\ub4e0 \ud589\ub3d9\uc744 \ud3b8\ud558\uac8c \uc124\uba85\ud558\uc9c0 \ubabb\ud55c\ub2e4."], ["\ud55c \uc8fc\uae30\uc5d0", "\ud384\uc2a4\uac00 **\ub450 \ubc88**", "---", "LPT J1555-5631\uc740 62\ubd84 \uc8fc\uae30\ub9c8\ub2e4 \uae34 \ud384\uc2a4\uc640 \uc9e7\uc740 \ud384\uc2a4\ub97c \ud558\ub098\uc529 \ub0c8\ub2e4. \ub450 \ud384\uc2a4\ub294 \uc804\ud30c\uac00 \uaf2c\uc774\ub294 \ubc29\ud5a5\uc774 \uc11c\ub85c \ubc18\ub300\uc600\uace0, \uac04\uaca9\ub3c4 180\ub3c4\uac00 \uc544\ub2cc 165.4\ub3c4\uc600\ub2e4."], ["\ucc9c\uccb4 \ub355\ud6c4 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \ubcf4\ub0b4\uae30", "---", "\uc815\uccb4\ub294 \uc544\uc9c1 \ud480\ub9ac\uc9c0 \uc54a\uc558\uace0 \ud6c4\ubcf4\ub9cc \uc5ec\ub7ff\uc774\ub77c\ub294 \uc810\uc774 \ud3ec\uc778\ud2b8\ub2e4. \uc6b0\uc8fc \ubbf8\uc2a4\ud130\ub9ac\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc640 \ud568\uaed8 \ucd94\ub9ac\ud574 \ubcfc \ub9cc\ud55c \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

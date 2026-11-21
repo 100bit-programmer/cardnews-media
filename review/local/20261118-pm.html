@@ -1,0 +1,2173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.18 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.18 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-dcbb82372312" data-jump="dcbb82372312">1</a><a href="#post-7e06b239abf0" data-jump="7e06b239abf0">2</a><a href="#post-365dad3943ff" data-jump="365dad3943ff">3</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-dcbb82372312" data-id="dcbb82372312">
+    <div class="head">
+      <h2>1. 보이저 1호 1광일 도달 임박</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/dcbb82372312/v1-01.jpg" alt="1장: 보이저 1호가 1광일 눈앞?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/dcbb82372312/v1-02.jpg" alt="2장: 50년 가까운 여정의 시작" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/dcbb82372312/v1-03.jpg" alt="3장: 인류가 만든 가장 먼 물체" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/dcbb82372312/v1-04.jpg" alt="4장: 태양계 이해를 뒤흔든 임무" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/dcbb82372312/v1-05.jpg" alt="5장: 태양권을 벗어난 그 다음은?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/dcbb82372312/v1-06.jpg" alt="6장: 우주덕후 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/dcbb82372312/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">보이저 1호가 지구에서 1광일 떨어진 거리에 곧 닿는다는 소식이 나왔다. 가디언이 과학 팟캐스트를 통해 전한 이야기다.
+
+나사는 거의 50년 전 보이저 1호와 2호 두 탐사선을 우주로 보냈다. 목적은 태양계의 먼 바깥쪽을 탐사하는 것이었다. 그 가운데 1호는 지금 지구에서 가장 멀리 떨어진 인공물이고, 지구로부터 1광일 떨어진 거리에 이르기 직전이다.
+
+이번 팟캐스트에서 매덜린 핀레이는 애리조나주립대 지구·우주탐사학부의 행성과학자이자 교수인 짐 벨의 이야기를 들었다. 벨 교수는 이 임무가 태양계에 대한 우리의 이해에 얼마나 큰 충격을 줬는지, 그리고 태양권을 벗어난 보이저 1호가 앞으로 어디로 향할 수 있는지를 설명한다.
+
+50년 가까운 시간이 흐른 지금도 계속 멀어지고 있는 탐사선의 여정이 궁금하다면 팟캐스트를 들어보자. 우주 이야기를 좋아하는 친구에게 공유해도 좋겠다.
+
+출처: 가디언(The Guardian)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#보이저1호 #우주 #나사 #태양계 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 보이저 1호가 기록의 문턱에 서 있다는 내용(slide2)은 근거 목록에 없다.</li><li>근거 등록 안 된 주장: 인류가 보낸 물체 중 가장 먼 곳에 닿는다는 해석(slide3)은 근거 목록에 없다.</li><li>근거 등록 안 된 주장: 보이저 1호의 여정이 50년 가까이 이어졌다는 내용(slide6)은 근거 목록에 없다.</li><li>근거 등록 안 된 주장: 보이저 1호가 지금도 계속 멀어지고 있다는 내용(본문)은 근거 목록에 없다.</li><li>근거 등록 안 된 주장: 이 이야기가 가디언 과학 팟캐스트에서 나왔다는 출처 주장(slide4, caption, 출처 표기)은 근거 목록에 없다.</li><li>근거 등록 안 된 주장: 애리조나주립대가 지구·우주탐사학부 소속이라는 내용은 근거 목록에 명시되어 있지 않다.</li>
+          <li>원문이 팟캐스트 소개문 한 단락뿐이라 구체적인 거리·날짜 수치가 없음</li><li>1광일 도달 시점이 확정되지 않았고 &#39;도달 직전&#39;이라는 표현만 근거로 삼음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-dcbb82372312-0">1장</label>
+          <textarea id="s-dcbb82372312-0" rows="6" data-slide="0">보이저 1호가
+**1광일** 눈앞?!
+---
+나사가 50년 가까이 전에 우주로 보낸 보이저 1호가 지구에서 1광일 떨어진 지점에 곧 닿을 예정이라는 소식</textarea>
+          
+          <label class="f" for="s-dcbb82372312-1">2장</label>
+          <textarea id="s-dcbb82372312-1" rows="6" data-slide="1">**50년** 가까운
+여정의 시작
+---
+나사는 거의 50년 전 보이저 1호와 2호 두 탐사선을 우주로 보냈다. 목적은 태양계의 먼 바깥쪽을 탐사하는 것이었다. 그 가운데 1호가 지금 기록의 문턱에 서 있다.</textarea>
+          
+          <label class="f" for="s-dcbb82372312-2">3장</label>
+          <textarea id="s-dcbb82372312-2" rows="6" data-slide="2">인류가 만든
+**가장 먼 물체**
+---
+보이저 1호는 지구에서 가장 멀리 떨어진 인공물이다. 이제 그 거리가 지구로부터 1광일에 이르기 직전이다. 인류가 보낸 물체가 닿은 가장 먼 곳이라는 뜻이다.</textarea>
+          
+          <label class="f" for="s-dcbb82372312-3">4장</label>
+          <textarea id="s-dcbb82372312-3" rows="6" data-slide="3">태양계 이해를
+**뒤흔든** 임무
+---
+행성과학자인 짐 벨 애리조나주립대 교수는 이 임무가 태양계에 대한 우리의 이해에 지진 같은 충격을 줬다고 설명한다. 가디언 팟캐스트에서 나온 이야기</textarea>
+          
+          <label class="f" for="s-dcbb82372312-4">5장</label>
+          <textarea id="s-dcbb82372312-4" rows="6" data-slide="4">**태양권**을 벗어난
+그 다음은?
+---
+보이저 1호는 이미 태양권을 벗어났다. 짐 벨 교수는 탐사선이 이제 어디로 향할 수 있는지에 대해서도 이야기한다. 팟캐스트는 이 여정을 놀라운 여정으로 소개한다.</textarea>
+          
+          <label class="f" for="s-dcbb82372312-5">6장</label>
+          <textarea id="s-dcbb82372312-5" rows="6" data-slide="5">우주덕후 친구한테
+조용히 보내기
+---
+카드 몇 장이면 50년 가까이 이어진 보이저 1호의 여정이 한눈에 들어온다. 우주 이야기를 좋아하는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-dcbb82372312">본문 (캡션)</label>
+          <textarea id="c-dcbb82372312" class="caption">보이저 1호가 지구에서 1광일 떨어진 거리에 곧 닿는다는 소식이 나왔다. 가디언이 과학 팟캐스트를 통해 전한 이야기다.
+
+나사는 거의 50년 전 보이저 1호와 2호 두 탐사선을 우주로 보냈다. 목적은 태양계의 먼 바깥쪽을 탐사하는 것이었다. 그 가운데 1호는 지금 지구에서 가장 멀리 떨어진 인공물이고, 지구로부터 1광일 떨어진 거리에 이르기 직전이다.
+
+이번 팟캐스트에서 매덜린 핀레이는 애리조나주립대 지구·우주탐사학부의 행성과학자이자 교수인 짐 벨의 이야기를 들었다. 벨 교수는 이 임무가 태양계에 대한 우리의 이해에 얼마나 큰 충격을 줬는지, 그리고 태양권을 벗어난 보이저 1호가 앞으로 어디로 향할 수 있는지를 설명한다.
+
+50년 가까운 시간이 흐른 지금도 계속 멀어지고 있는 탐사선의 여정이 궁금하다면 팟캐스트를 들어보자. 우주 이야기를 좋아하는 친구에게 공유해도 좋겠다.
+
+출처: 가디언(The Guardian)</textarea>
+          <label class="f" for="t-dcbb82372312">해시태그</label>
+          <input id="t-dcbb82372312" type="text" class="tagsin" value="#보이저1호 #우주 #나사 #태양계 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>나사는 거의 50년 전 보이저 1호와 2호를 우주로 보냈다.</b>
+            <q>“Nasa sent the Voyager 1 and 2 probes into space almost 50 years ago to explore the outer reaches of our solar system.”</q>
+            <small>slide2 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호와 2호는 태양계 바깥쪽을 탐사하기 위해 보내졌다.</b>
+            <q>“Nasa sent the Voyager 1 and 2 probes into space almost 50 years ago to explore the outer reaches of our solar system.”</q>
+            <small>slide2 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호는 지구에서 가장 멀리 떨어진 인공물이다.</b>
+            <q>“Now Voyager 1, the farthest human-made object from Earth, is about to reach a distance of one light-day away from our planet.”</q>
+            <small>slide3 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호는 지구로부터 1광일 거리에 곧 도달한다.</b>
+            <q>“Now Voyager 1, the farthest human-made object from Earth, is about to reach a distance of one light-day away from our planet.”</q>
+            <small>slide1 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>짐 벨은 행성과학자이자 애리조나주립대 교수이다.</b>
+            <q>“To find out more about its astonishing journey, Madeleine Finlay hears from Jim Bell, a planetary scientist and professor at Arizona State University’s school of Earth and space exploration.”</q>
+            <small>slide4 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>짐 벨은 이 임무가 태양계에 대한 이해에 큰 충격을 줬다고 설명한다.</b>
+            <q>“He explains the seismic impact the mission has had on our understanding of the solar system, and where Voyager 1 could be heading now it has left the heliosphere”</q>
+            <small>slide4 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호는 이미 태양권을 벗어났고, 벨 교수는 앞으로의 행선지를 설명한다.</b>
+            <q>“He explains the seismic impact the mission has had on our understanding of the solar system, and where Voyager 1 could be heading now it has left the heliosphere”</q>
+            <small>slide5 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>팟캐스트는 보이저 1호의 여정을 놀라운 여정으로 소개한다.</b>
+            <q>“To find out more about its astonishing journey, Madeleine Finlay hears from Jim Bell, a planetary scientist and professor at Arizona State University’s school of Earth and space exploration.”</q>
+            <small>slide5 · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>매덜린 핀레이가 짐 벨의 이야기를 들었다.</b>
+            <q>“To find out more about its astonishing journey, Madeleine Finlay hears from Jim Bell, a planetary scientist and professor at Arizona State University’s school of Earth and space exploration.”</q>
+            <small>caption · <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">Nasa’s Voyager 1 probe in sight of an incredible milestone – podcast</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.nasa.gov/podcasts/curious-universe/voyager-one-light-day/" target="_blank" rel="noopener">NASA / </a> — "https://www.nasa.gov/wp-content/uploads/2026/11/voyager-1-advisory-image-2-nov-10.jpg"</li><li>2장: <a href="https://www.theguardian.com/science/audio/2026/nov/17/nasa-voyager-1-probe-incredible-milestone-podcast" target="_blank" rel="noopener">The Guardian / </a> — "https://i.guim.co.uk/img/media/8954e2e4d0145706637eee857c8558065c569427/93_0_2415_1931/master/2415.jpg?width=620&amp;dpr=2&amp;s=none&amp;crop=none"</li><li>3장: <a href="https://www.thenakedscientists.com/podcasts/naked-scientists-podcast/ovarian-cancer-breakthrough-and-voyager-milestone" target="_blank" rel="noopener">The Naked Scientists / </a> — "https://www.thenakedscientists.com/sites/default/files/styles/social-media-large/public/media/media/NASA-VOYAGER_0.jpg?itok=55yqo6AY"</li><li>4장: <a href="https://pixabay.com/photos/solar-system-sun-mercury-venus-439046/" target="_blank" rel="noopener">51581 / Pixabay</a> — "solar system"</li><li>5장: <a href="https://www.thenakedscientists.com/articles/interviews/voyager-1-space-probe-one-light-day-earth" target="_blank" rel="noopener">The Naked Scientists / </a> — "https://www.thenakedscientists.com/sites/default/files/styles/social-media-large/public/media/media/VOYAGER-1.jpg?itok=s4vKGzsl"</li><li>6장: <a href="https://pixabay.com/photos/sunset-lake-telescope-8437462/" target="_blank" rel="noopener">ChiemSeherin / Pixabay</a> — "telescope"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-7e06b239abf0" data-id="7e06b239abf0">
+    <div class="head">
+      <h2>2. 일본 남성의 사기꾼 볶음밥 레시피 털기 작전</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 8
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/7e06b239abf0/v1-01.jpg" alt="1장: 사기꾼 상대로 볶음밥 털기???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/7e06b239abf0/v1-02.jpg" alt="2장: 사기꾼 상대로 장난치던 사람" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/7e06b239abf0/v1-03.jpg" alt="3장: 집이 곧 볶음밥 부대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/7e06b239abf0/v1-04.jpg" alt="4장: 중고 맥 미니 한 대가 본부" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/7e06b239abf0/v1-05.jpg" alt="5장: 걸려들면 본인이 등판" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/7e06b239abf0/v1-06.jpg" alt="6장: 사기 조심하라는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/7e06b239abf0/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">사기꾼 상대로 볶음밥 레시피를 털겠다는 황당하고 유쾌한 작전이 일본에서 나왔다.
+
+주인공은 일본 매체 소라뉴스24의 고 하토리다. 그는 온라인 사기꾼과 대화하며 신뢰를 얻은 뒤, 의미 없는 잡담으로 상대의 시간을 빼앗는 일을 해 왔다. 일본에서 온라인 사기 전문가로 책을 쓰고 TV에 출연하고 강연도 해 온 사람이다.
+
+이번에는 AI를 끌어들였다. 자신의 아파트를 비정부 기관 &#39;볶음밥 부대(FRU)&#39;의 제1레시피 사단으로 바꾸고, 사기꾼과 친해진 뒤 경계가 풀리면 레시피를 가져오는 구조를 만들었다. 본체는 중고로 산 2020년형 M1 맥 미니다. 이 기기에서 Muse와 ChatGPT 에이전트가 인스타그램 DM으로 사기꾼을 라인 계정으로 끌어들이고, 대화를 슬쩍 볶음밥 쪽으로 이끈다.
+
+사기꾼이 걸려들면 AI가 하토리에게 알리고, 그가 직접 넘겨받아 레시피를 확보한다. 에이전트의 이름은 클로이(Muse)와 낸시(ChatGPT). 하토리는 이 방식으로 이미 레시피 하나를 손에 넣었고, 곧 사기 음식 리뷰에서 공개할 예정이라고 한다.
+
+사기 DM에 시달려 본 친구가 있다면 이 소식을 보내 주자.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#볶음밥 #일본뉴스 #사기꾼 #AI #해외토픽</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 하토리가 소라뉴스24 소속이라는 점(원문 맥락의 &#39;one of soranews24&#39;s greatest minds&#39;)은 claims 목록에 없다.</li><li>근거 등록 안 된 주장: FRU 기기가 아파트 안에서 사기 활동과 분리된 환경으로 운영된다는 내용은 본문에 없으나 원문 사실이다. 본문에는 포함되지 않았다.</li><li>근거 등록 안 된 주장: FRU 본체에 모니터를 연결하지 않고 필요할 때만 프로젝터에 연결한다는 내용은 본문 주장에 없다.</li>
+          <li>편집자 메모는 &#39;레시피를 공개해 버리는 복수&#39;로 설명했지만 원문은 사기꾼에게서 볶음밥 레시피를 받아내는 내용이라 원문 기준으로 작성함</li><li>소라뉴스24 자체 기자가 쓴 유머성 기사로, 사실과 연출이 섞였을 수 있어 과장 없이 전달할 필요가 있음</li><li>원문 사진은 SoraNews24 저작권이라 사용하지 않음</li><li>실제 사기 피해 예방 효과나 레시피 내용은 원문에 없어 단정하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-7e06b239abf0-0">1장</label>
+          <textarea id="s-7e06b239abf0-0" rows="6" data-slide="0">사기꾼 상대로
+**볶음밥** 털기???
+---
+일본 매체 소라뉴스24의 고 하토리가 AI를 동원해 온라인 사기꾼에게서 볶음밥 레시피를 받아내는 부대를 꾸렸다.</textarea>
+          
+          <label class="f" for="s-7e06b239abf0-1">2장</label>
+          <textarea id="s-7e06b239abf0-1" rows="6" data-slide="1">사기꾼 상대로
+**장난치던** 사람
+---
+하토리는 온라인 사기꾼의 신뢰를 얻은 뒤 어디로도 가지 않는 잡담으로 시간을 뺏는 일을 해 왔다. 일본에서 온라인 사기 전문가로 책, TV 출연, 강연 활동도 했다.</textarea>
+          
+          <label class="f" for="s-7e06b239abf0-2">3장</label>
+          <textarea id="s-7e06b239abf0-2" rows="6" data-slide="2">집이 곧
+**볶음밥 부대**
+---
+그는 자신의 아파트를 비정부 기관 &#39;볶음밥 부대(FRU)&#39;의 제1레시피 사단으로 바꿨다. 사기꾼과 친해져 경계가 풀리면 레시피를 가져오는 것이 목표다.</textarea>
+          
+          <label class="f" for="s-7e06b239abf0-3">4장</label>
+          <textarea id="s-7e06b239abf0-3" rows="6" data-slide="3">**중고** 맥 미니
+한 대가 본부
+---
+FRU의 본체는 중고로 산 2020년형 M1 맥 미니다. 여기서 Muse와 ChatGPT 에이전트가 인스타그램 DM으로 사기꾼을 라인 계정에 끌어들여 볶음밥 쪽으로 대화를 이끈다.</textarea>
+          
+          <label class="f" for="s-7e06b239abf0-4">5장</label>
+          <textarea id="s-7e06b239abf0-4" rows="6" data-slide="4">걸려들면
+**본인이 등판**
+---
+사기꾼이 걸려들면 AI가 하토리에게 알리고, 그가 직접 넘겨받아 레시피를 확보한다. 에이전트 이름은 클로이(Muse)와 낸시(ChatGPT)이며, 레시피는 이미 하나 손에 넣었다.</textarea>
+          
+          <label class="f" for="s-7e06b239abf0-5">6장</label>
+          <textarea id="s-7e06b239abf0-5" rows="6" data-slide="5">사기 조심하라는
+**친구한테** 보내기
+---
+사기 DM에 시달려 본 친구라면 통쾌해할 소식. 사기꾼의 시간을 빼앗는 방식이 유쾌해서 같이 웃으며 볼 만한 이야기</textarea>
+          
+          <label class="f" for="c-7e06b239abf0">본문 (캡션)</label>
+          <textarea id="c-7e06b239abf0" class="caption">사기꾼 상대로 볶음밥 레시피를 털겠다는 황당하고 유쾌한 작전이 일본에서 나왔다.
+
+주인공은 일본 매체 소라뉴스24의 고 하토리다. 그는 온라인 사기꾼과 대화하며 신뢰를 얻은 뒤, 의미 없는 잡담으로 상대의 시간을 빼앗는 일을 해 왔다. 일본에서 온라인 사기 전문가로 책을 쓰고 TV에 출연하고 강연도 해 온 사람이다.
+
+이번에는 AI를 끌어들였다. 자신의 아파트를 비정부 기관 &#39;볶음밥 부대(FRU)&#39;의 제1레시피 사단으로 바꾸고, 사기꾼과 친해진 뒤 경계가 풀리면 레시피를 가져오는 구조를 만들었다. 본체는 중고로 산 2020년형 M1 맥 미니다. 이 기기에서 Muse와 ChatGPT 에이전트가 인스타그램 DM으로 사기꾼을 라인 계정으로 끌어들이고, 대화를 슬쩍 볶음밥 쪽으로 이끈다.
+
+사기꾼이 걸려들면 AI가 하토리에게 알리고, 그가 직접 넘겨받아 레시피를 확보한다. 에이전트의 이름은 클로이(Muse)와 낸시(ChatGPT). 하토리는 이 방식으로 이미 레시피 하나를 손에 넣었고, 곧 사기 음식 리뷰에서 공개할 예정이라고 한다.
+
+사기 DM에 시달려 본 친구가 있다면 이 소식을 보내 주자.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-7e06b239abf0">해시태그</label>
+          <input id="t-7e06b239abf0" type="text" class="tagsin" value="#볶음밥 #일본뉴스 #사기꾼 #AI #해외토픽" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하토리는 온라인 사기꾼의 신뢰를 얻은 뒤 의미 없는 대화로 시간을 빼앗는 일을 해 왔다</b>
+            <q>“He fearlessly engages with them and turns the tables by earning their trust instead, only to deprive them of their precious time on this planet with banal conversation that goes nowhere.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하토리는 일본에서 온라인 사기 전문가로 책, TV 출연, 강연 활동을 했다</b>
+            <q>“Go has seriously established himself as a leading authority on online fraud in Japan, having written books, provided his expertise on TV, and given numerous lectures on the topic of online safety.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하토리가 아파트를 비정부 기관 볶음밥 부대(FRU)의 제1레시피 사단으로 바꿨고, 사기꾼과 친해진 뒤 경계가 풀리면 레시피를 훔치는 것이 목표다</b>
+            <q>“He has converted his apartment into the First Recipe Division of the Fried Rice Unit (FRU), a non-governmental agency devoted to seeking out all online grifters, befriending them, and then stealing their fried rice recipes once their guard has been lowered.”</q>
+            <small>slide1, slide3, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>FRU는 중고로 산 2020년형 M1 맥 미니로 구동된다</b>
+            <q>“How does he do this? Well, FRU is powered by a state-of-the-art-circa-2020 M1 Mac mini that he bought secondhand along with some wireless peripherals.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>Muse와 ChatGPT 에이전트가 인스타그램 DM으로 사기꾼을 라인 계정으로 끌어들이고 대화를 볶음밥 쪽으로 이끈다</b>
+            <q>“Go has set them up to lure in scammers via Instagram DMs into a dedicated account on the Japanese texting app Line. From there, the AIs engage in pleasant conversations with the crooks, all the while gently nudging the conversation towards fried rice.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사기꾼이 걸려들면 AI가 하토리에게 알리고 그가 직접 넘겨받아 레시피를 확보한다</b>
+            <q>“Once a scammer is on the hook, the AIs alert Go, who takes over personally and secures the recipe.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>에이전트 이름은 클로이(Muse)와 낸시(ChatGPT)다</b>
+            <q>“Still, every conversation his FRU agents Chloe (Muse) and Nancy (ChatGPT) tie up a con artist with is one less conversation had with a potential victim.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하토리는 이미 레시피 하나를 손에 넣었고 곧 사기 음식 리뷰에서 공유할 예정이다</b>
+            <q>“In fact, as of this writing, Go has already stolen one and will share it in an upcoming fraud food review!”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">Online scammers beware, one man is coming for your fried rice recipes… all of them</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/IMG_5498_1920.jpg.jpeg?w=640"</li><li>2장: <a href="https://soranews24.com/2026/11/18/online-scammers-beware-one-man-is-coming-for-your-fried-rice-recipes-all-of-them/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/IMG_5499_1920.jpg.jpeg"</li><li>3장: <a href="https://pixabay.com/photos/chairs-floor-furniture-indoors-2181947/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "apartment room"</li><li>4장: <a href="https://pixabay.com/photos/computer-pc-workplace-home-office-1185626/" target="_blank" rel="noopener">janeb13 / Pixabay</a> — "desk computer"</li><li>5장: <a href="https://pixabay.com/photos/cinema-projector-home-video-movie-5069314/" target="_blank" rel="noopener">Antonio_Cansino / Pixabay</a> — "projector"</li><li>6장: <a href="https://pixabay.com/photos/happy-holidays-women-talking-laugh-2567915/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "friends laughing"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-365dad3943ff" data-id="365dad3943ff">
+    <div class="head">
+      <h2>3. 패밀리마트 피지컬 AI 로봇 직원, 싸늘한 반응</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-01.jpg" alt="1장: 로봇 직원인데 반응 싸늘…ㄷㄷ" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-02.jpg" alt="2장: 내년부터 전 매장에 설치" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-03.jpg" alt="3장: 직원 부담 70% 줄어든대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-04.jpg" alt="4장: 사람이 채운 걸 로봇이 또 채움" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-05.jpg" alt="5장: 설치비만 120만 엔이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-06.jpg" alt="6장: 이게 전부는 아니라는 말도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-07.jpg" alt="7장: 편의점 알바하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/product-1118081345-01.jpg" alt="상품 사진: 흰색과 검은색의 산업용 로봇 팔이 달린 기둥형 본체가 긴 검은 컨베이어 선반 위에 놓인 단독 제품 렌더링. 배경은 흰색. (gourmet.watch.impress.co.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/product-1118081345-02.jpg" alt="상품 사진: 편의점 진열대 앞에서 음료병을 집고 있는 흰색 음료 보충 로봇, 본체에 TELEXISTENCE 표기, 뒤편에 음료가 진열된 선반과 손님 (robot-digest.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 3장이 카드 뒤에 같이 들어가요 (gourmet.watch.impress.co.jp, robot-digest.com, newswitch.jp). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">일본 패밀리마트의 로봇 직원이 기대와 달리 싸늘한 반응을 받고 있다. 패밀리마트는 내년부터 일본 모든 매장에 피지컬 AI 음료 보충 로봇을 도입하겠다고 발표했다. 피지컬 AI는 쉽게 말해 AI가 제어하는 로봇을 가리키는 말이다. 이 로봇은 음료 진열대 뒤에 설치된 기계 집게로, 캔과 병을 계속 채워 넣는다. 개발에는 일본 기업 텔레이그지스턴스가 참여했고, 편의점들이 겪는 인력난을 덜기 위해 몇 년간 로봇을 만들어 왔다.
+
+패밀리마트는 이 시스템이 직원의 음료 채우기 시간을 70% 줄여 준다고 밝혔다. 하지만 음료 채우기는 직원이 하는 여러 일 중 하나라서 실제로 얼마나 일이 줄지는 불분명하다. 온라인 댓글에서는 사람이 채운 선반에서 로봇이 다시 옮기는 셈이라 같은 일을 두 번 하는 것이라는 반응이 나왔다. 작동이 너무 느리다는 댓글도 있었다. 가맹점 두 곳을 운영한다는 점주는 설치 비용이 120만 엔쯤일 것 같다며, 월 순이익이 10만 엔도 안 되는 매장이 대부분인데 어떻게 감당하겠냐고 적었다.
+
+한편 기사에서는 이 로봇이 바닥 청소부터 재고 관리까지 맡는 더 큰 시스템의 일부라는 점도 짚었다. 전체로 보면 더 쓸모 있을 수 있다는 것이다.
+
+출처: SoraNews24, NHK</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#패밀리마트 #피지컬AI #일본편의점 #로봇 #해외소식</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처가 SoraNews24와 NHK라는 점</li>
+          <li>댓글 반응과 점주의 설치비 120만 엔은 온라인 의견이자 본인 추정이라 사실처럼 단정하지 않도록 주의</li><li>원문 필자의 의견은 카드에 쓰지 않고 댓글 반응으로만 표기</li><li>패밀리마트 등 브랜드 로고가 보이는 사진 사용 주의</li><li>&#39;내년&#39;은 원문 기준 시점(2026년 11월)이라 게시 시점에 따라 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-365dad3943ff-0">1장</label>
+          <textarea id="s-365dad3943ff-0" rows="6" data-slide="0">로봇 직원인데
+반응 **싸늘**…ㄷㄷ
+---
+일본 패밀리마트가 내년부터 전국 매장에 음료 보충 피지컬 AI 로봇을 들이기로 했지만, 온라인에서는 냉담한 반응이 나왔다.</textarea>
+          
+          <label class="f" for="s-365dad3943ff-1">2장</label>
+          <textarea id="s-365dad3943ff-1" rows="6" data-slide="1">내년부터
+**전 매장**에 설치
+---
+패밀리마트는 내년부터 일본 모든 점포에 음료 보충 로봇을 도입하겠다고 발표했다. 음료 진열대 뒤에 설치된 AI 기계 집게가 캔과 병을 계속 채워 넣는 방식이다.</textarea>
+          
+          <label class="f" for="s-365dad3943ff-2">3장</label>
+          <textarea id="s-365dad3943ff-2" rows="6" data-slide="2">직원 부담
+**70%** 줄어든대
+---
+패밀리마트는 이 시스템으로 직원의 음료 채우기 시간이 70% 줄어든다고 밝혔다. 다만 음료 채우기는 직원 업무의 일부라서 실제로 일이 얼마나 줄지는 불분명하다.</textarea>
+          
+          <label class="f" for="s-365dad3943ff-3">4장</label>
+          <textarea id="s-365dad3943ff-3" rows="6" data-slide="3">사람이 채운 걸
+로봇이 **또 채움**
+---
+온라인에서는 사람이 채운 선반에서 로봇이 다시 옮기는 셈이라 같은 일을 두 번 하는 것이라는 댓글이 나왔다. 너무 느리다는 반응도 이어졌다.</textarea>
+          
+          <label class="f" for="s-365dad3943ff-4">5장</label>
+          <textarea id="s-365dad3943ff-4" rows="6" data-slide="4">설치비만
+**120만 엔**이래
+---
+패밀리마트 가맹점 두 곳을 운영한다는 점주는 설치 비용이 120만 엔쯤일 것 같다고 댓글을 남겼다. 월 순이익이 10만 엔도 안 되는 매장이 대부분인데 누가 감당하겠냐는 것이다.</textarea>
+          
+          <label class="f" for="s-365dad3943ff-5">6장</label>
+          <textarea id="s-365dad3943ff-5" rows="6" data-slide="5">이게 **전부**는
+아니라는 말도
+---
+기사를 쓴 쪽은 이 로봇이 바닥 청소부터 재고 관리까지 맡는 더 큰 통합 시스템의 한 부분이라고 전했다. 전체로 보면 더 쓸모 있을 수도 있다는 것이다.</textarea>
+          
+          <label class="f" for="s-365dad3943ff-6">7장</label>
+          <textarea id="s-365dad3943ff-6" rows="6" data-slide="6">편의점 알바하는
+**친구한테** 보내기
+---
+직원의 음료 채우기 시간이 70% 줄어든다는 발표와 너무 느리다는 댓글이 맞선 이야기. 편의점에서 일해 본 친구라면 한마디 보탤 만한 소식</textarea>
+          
+          <label class="f" for="c-365dad3943ff">본문 (캡션)</label>
+          <textarea id="c-365dad3943ff" class="caption">일본 패밀리마트의 로봇 직원이 기대와 달리 싸늘한 반응을 받고 있다. 패밀리마트는 내년부터 일본 모든 매장에 피지컬 AI 음료 보충 로봇을 도입하겠다고 발표했다. 피지컬 AI는 쉽게 말해 AI가 제어하는 로봇을 가리키는 말이다. 이 로봇은 음료 진열대 뒤에 설치된 기계 집게로, 캔과 병을 계속 채워 넣는다. 개발에는 일본 기업 텔레이그지스턴스가 참여했고, 편의점들이 겪는 인력난을 덜기 위해 몇 년간 로봇을 만들어 왔다.
+
+패밀리마트는 이 시스템이 직원의 음료 채우기 시간을 70% 줄여 준다고 밝혔다. 하지만 음료 채우기는 직원이 하는 여러 일 중 하나라서 실제로 얼마나 일이 줄지는 불분명하다. 온라인 댓글에서는 사람이 채운 선반에서 로봇이 다시 옮기는 셈이라 같은 일을 두 번 하는 것이라는 반응이 나왔다. 작동이 너무 느리다는 댓글도 있었다. 가맹점 두 곳을 운영한다는 점주는 설치 비용이 120만 엔쯤일 것 같다며, 월 순이익이 10만 엔도 안 되는 매장이 대부분인데 어떻게 감당하겠냐고 적었다.
+
+한편 기사에서는 이 로봇이 바닥 청소부터 재고 관리까지 맡는 더 큰 시스템의 일부라는 점도 짚었다. 전체로 보면 더 쓸모 있을 수 있다는 것이다.
+
+출처: SoraNews24, NHK</textarea>
+          <label class="f" for="t-365dad3943ff">해시태그</label>
+          <input id="t-365dad3943ff" type="text" class="tagsin" value="#패밀리마트 #피지컬AI #일본편의점 #로봇 #해외소식" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/product-1118081345-01.jpg" alt="" width="56" height="56" loading="lazy"> 흰색과 검은색의 산업용 로봇 팔이 달린 기둥형 본체가 긴 검은 컨베이어 선반 위에 놓인 단독 제품 렌더링. 배경은 흰색. · gourmet.watch.impress.co.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/product-1118081345-02.jpg" alt="" width="56" height="56" loading="lazy"> 편의점 진열대 앞에서 음료병을 집고 있는 흰색 음료 보충 로봇, 본체에 TELEXISTENCE 표기, 뒤편에 음료가 진열된 선반과 손님 · robot-digest.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="2"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/365dad3943ff/product-1118081345-03.jpg" alt="" width="56" height="56" loading="lazy"> 냉장 진열대 안에서 음료병을 집어 올리는 흰색 진열 로봇 팔과 본체, 병음료가 줄지어 진열된 모습 · newswitch.jp</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>패밀리마트의 피지컬 AI 로봇이 냉담한 반응을 받았다</b>
+            <q>“People from both inside the industry and out came forward in saying they felt these machines have failed to impress.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>패밀리마트가 내년부터 일본 모든 매장에 음료 보충 피지컬 AI 로봇을 도입하겠다고 발표했다</b>
+            <q>“After a fair bit of testing, major convenience store chain FamilyMart announced that, starting next year, they would begin rolling out physical AI drink stockers to every location in Japan.”</q>
+            <small>slide1, slide2, caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>로봇은 음료 진열대 뒤에 설치된 AI 기계 집게로 캔과 병을 계속 채운다</b>
+            <q>“These are AI-powered mechanical claws that are installed behind the drink section and constantly refill cans and bottles.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>피지컬 AI는 AI가 제어하는 로봇을 뜻한다</b>
+            <q>“That really just means robots controlled by AI, but it seems to be a buzzword that piggybacks on the name recognition of “AI” itself.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>텔레이그지스턴스가 편의점 인력난을 덜기 위한 로봇을 몇 년간 개발해 왔다</b>
+            <q>“Over the past few years, they have been developing robots to alleviate the labor shortages many convenience stores have been facing.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>패밀리마트는 이 시스템이 직원의 음료 채우기 시간을 70% 줄인다고 밝혔고, 실제 업무 감소량은 불분명하다</b>
+            <q>“According to FamilyMart, adoption of this system will reduce a human’s beverage stocking time by 70 percent. However, since beverage stocking is just one part of an employee’s many duties, it’s unclear how much real-world work that would equate to.”</q>
+            <small>slide3, summary, slide7, caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사람이 채운 선반에서 로봇이 옮기니 같은 일을 두 번 하는 것이라는 댓글이 나왔다</b>
+            <q>““The shelves are restocked by robots from shelves restocked by humans. That’s called doing the same work twice.””</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>너무 느리다는 댓글이 나왔다</b>
+            <q>““I’m curious about how deliveries are handled, but more importantly… IT’S SOOOOOO SLOW!””</q>
+            <small>slide4, slide7, summary, caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가맹점 두 곳 점주가 설치 비용이 120만 엔쯤일 것 같고 월 순이익 10만 엔도 안 되는 매장이 대부분이라고 댓글을 남겼다</b>
+            <q>““I am the owner of two FamilyMart franchise stores. I think the installation cost for this machine is 1.2 million yen. Considering most stores don’t even generate a net profit of 100,000 yen a month, how could any store afford these?”</q>
+            <small>slide5, summary, caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 로봇은 청소부터 재고 관리까지 맡는 더 큰 통합 시스템의 한 구성 요소라고 기사가 전했다</b>
+            <q>“In defense of the people behind these robots, from what I’ve read, this is just one component of a much more integrated system that manages various aspects of running a convenience store, from cleaning floors to managing inventory. Perhaps when viewed as a whole, it would be more useful.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">FamilyMart’s “physical AI” robot workers getting chilly reception in Japan</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/18/familymarts-physical-ai-robot-workers-getting-chilly-reception-in-japan/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/12-3.jpg.jpeg?w=1200&amp;h=630&amp;crop=1"</li><li>2장: <a href="https://www.zmescience.com/science/japan-robot-store-worker-36123434/" target="_blank" rel="noopener">ZME Science / </a> — "https://cdn.zmescience.com/wp-content/uploads/2022/09/Robot-stacker.jpeg"</li><li>3장: <a href="https://pixabay.com/photos/alcoholic-beverages-bar-beer-1845295/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "drink shelf"</li><li>4장: <a href="https://pixabay.com/photos/mobile-phone-smartphone-1875813/" target="_blank" rel="noopener">FunkyFocus / Pixabay</a> — "smartphone screen"</li><li>5장: <a href="https://pixabay.com/photos/euro-seem-money-finance-piggy-bank-870757/" target="_blank" rel="noopener">Bru-nO / Pixabay</a> — "coins calculator"</li><li>6장: <a href="https://pixabay.com/photos/supermarket-stalls-coolers-market-949913/" target="_blank" rel="noopener">ElasticComputeFarm / Pixabay</a> — "store aisle"</li><li>7장: <a href="https://pixabay.com/photos/camera-phone-girl-hands-1869430/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "cafe friends"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-526055c7263f">
+    <div class="head">
+      <h2>S1. 김치 속 균, 장에서 나노플라스틱 배출 돕나</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 20
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-526055c7263f">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 매일 먹는 김치 속 균이 나노플라스틱을 붙잡았다는 숫자(87%, 57%)로 시선을 끌되, 아직 실험실과 쥐 단계라는 선을 같이 그어야 팔린다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">매일 먹는 김치 속 균이 나노플라스틱을 붙잡았다는 연구가 나옴
+물에선 87%, 장을 흉내 낸 액체에선 57%였대
+근데 이게 사람 장에서도 통할지는 얘기가 좀 다름 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">1/ 한국 연구진이 김치에서 찾은 균 이름은 Leuconostoc mesenteroides CBA3656
+물속 나노플라스틱은 87%, 사람 장을 흉내 낸 액체에선 57%를 붙잡았대
+근데 어떻게 플라스틱을 붙잡는 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">139/500자</span></div>
+      <p class="tp-text">2/ 이 연구는 세계김치연구소(WiKim)에서 나왔는데, 연구진은 나노플라스틱이 일부 장내 세균 표면에 달라붙어서 세균이 몸 밖으로 나갈 때 같이 나갈 수 있다고 봄
+그러면 플라스틱이 몸에 흡수되는 걸 막을 수도 있다는 거
+그럼 동물에서는 어땠을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">78/500자</span></div>
+      <p class="tp-text">3/ 초기 동물 실험에서 무균 쥐에게 김치에서 나온 이 균을 먹였더니 똥에 나노플라스틱이 더 많이 나왔대
+근데 쥐 실험엔 한계가 꽤 있음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">4/ 쥐는 특정 미생물이 없게 키우는 경우가 많아서 실제 사람 장과는 달라
+게다가 마이크로플라스틱이 사람에게 손상이나 질병을 일으킨다는 믿을 만한 증거도 아직 없대
+근데 비슷한 결과가 김치만의 얘기는 아니었음 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">5/ 올해 나온 다른 연구에서는 요거트 속 균을 먹인 쥐가 똥으로 마이크로플라스틱을 12배 더 내보냈고, 장 손상 징후도 더 적었대
+탐색적 실험이라고 함
+그럼 지금까지 확실한 건 어디까지일까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">148/500자</span></div>
+      <p class="tp-text">6/ 요약 정리
+- 김치 유래 균 CBA3656: 물속 나노플라스틱 87%, 장 모방액 57% 붙잡음
+- 무균 쥐 실험: 똥에 나노플라스틱이 더 나옴
+- 사람 장에서 성공한 건 아직 아님
+- 요거트 균도 쥐에서 12배 (탐색적 실험)
+그래서 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">207/500자</span></div>
+      <p class="tp-text">7/ 결국 지금 확인된 건 실험실과 쥐에서 김치 균이 나노플라스틱을 붙잡았다는 데까지고, 사람 장에서 되는지는 더 연구해야 한다는 거
+김치파 vs 요거트파, 너는 어느 쪽?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 매일 먹는 김치 속 균이라는 표현(일상 섭취 주장)</li><li>근거 등록 안 된 주장: 요거트 연구가 올해 발표되었다는 시점 주장</li><li>근거 등록 안 된 주장: 요거트 연구에 대한 &#39;다른 연구&#39;라는 설명과 김치 연구와 유사한 결과라는 비교 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>매일 먹는 김치 속 균이 나노플라스틱을 붙잡았다는 연구가 나옴</li><li>&#39;발효식품은 몸에 좋다&#39;는 말, 이번엔 김치 속 균이 나노플라스틱 87%를 붙잡았대</li><li>김치가 장에서 플라스틱 배출을 돕는다고? 아직은 &#39;이론상&#39;이라는 단서가 붙었대</li><li>김치 먹는 이유가 유산균뿐인 줄 알았는데, 이번엔 플라스틱 얘기가 나왔어</li><li>김치 연구하는 연구소에서 나온 결과가 좀 의외임</li><li>김치 속 균이 사람 장을 흉내 낸 액체에서 나노플라스틱 57%를 붙잡았대. 근데 함정이 있음</li><li>김치 균을 먹은 쥐 똥에 나노플라스틱이 더 나왔다는데, 이거 진짜 효과 있는 걸까?</li><li>&#39;마이크로플라스틱은 몸에 쌓인다&#39;가 아니라 &#39;대부분 그냥 지나간다&#39;는 말도 있대</li><li>김치만 그런 게 아니래. 요거트 균을 먹인 쥐는 똥으로 마이크로플라스틱을 12배 내보냈대</li><li>김치 먹으면 플라스틱이 빠진다? 연구진도 아직 사람 장에서는 모른대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>김치파 vs 요거트파, 너는 어느 쪽?</li><li>김치 없으면 밥 못 먹는 사람?</li><li>김치 연구하는 연구소가 있다는 거 알고 있었어?</li><li>이런 연구 나오면 믿고 보는 편 vs 일단 의심하는 편?</li><li>너라면 이 연구, 사람 대상 결과 나올 때까지 기다릴 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>요거트 속 균이 마이크로플라스틱 배출을 돕는다는 쥐 연구 더 자세히</li><li>발효식품이 장내 미생물을 정말 바꾸는지 사람 대상 연구 현황</li><li>마이크로플라스틱은 몸에 얼마나 머무는지 밝혀진 것들</li><li>세계김치연구소는 김치의 또 다른 건강 효과로 뭘 연구하나</li><li>콤부차 같은 발효식품 속 균 연구 이야기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>김치를 먹으면 플라스틱이 빠진다는 뜻으로 읽힐 수 있어서 게시 전 &#39;실험실·쥐 단계&#39; 표현이 유지됐는지 확인</li><li>5/의 &#39;올해 나온 다른 연구&#39;는 기사 속 &#39;this year&#39; 표현을 옮긴 것이라 게시 시점 기준으로 연도가 맞는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한국 연구진이 김치에서 나노플라스틱 배출을 도울 수 있는 균을 발견했다</b>
+          <q>“Scientists in South Korea have discovered a bacterium in kimchi that could theoretically help flush microplastics out of the gut.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>물속에서 이 균이 나노플라스틱의 87%를 붙잡았다</b>
+          <q>“When mixed into water with tiny polystyrene particles, this lactic acid bacterium trapped 87 percent of all nanoplastics.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>장을 흉내 낸 액체에서 이 균이 나노플라스틱의 57%를 붙잡았다</b>
+          <q>“Meanwhile, in a fluid designed to mimic the human intestine, the bacterium bound 57 percent of the nanoplastics present.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 결과가 사람 장에서의 성공을 증명하지는 않는다</b>
+          <q>“These are encouraging findings, though they do not demonstrate success in a living human gut.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>균 이름은 Leuconostoc mesenteroides CBA3656이다</b>
+          <q>“It&#39;s called Leuconostoc mesenteroides CBA3656, and it ferments sugars into lactic acid.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>물속 나노플라스틱 87%를 붙잡았다</b>
+          <q>“When mixed into water with tiny polystyrene particles, this lactic acid bacterium trapped 87 percent of all nanoplastics.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>장 모방액에서 나노플라스틱 57%를 붙잡았다</b>
+          <q>“Meanwhile, in a fluid designed to mimic the human intestine, the bacterium bound 57 percent of the nanoplastics present.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 세계김치연구소에서 나왔다</b>
+          <q>“The discovery, published in Bioresource Technology earlier this year, comes straight from the World Institute of Kimchi (WiKim) – a government-funded scientific research institute in South Korea that is dedicated to investigating the health benefits of salted and fermented vegetables.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>나노플라스틱이 일부 장내 세균 표면에 붙어 세균과 함께 몸 밖으로 나갈 수 있다는 것이 연구의 시사점이다</b>
+          <q>“The recent study was led by microbiologists Se Hee Lee and Tae Woong Whon, and it suggests that nanoplastics can stick to the surface of some gut bacteria, thereby following their passage out of the body.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이렇게 되면 플라스틱이 몸에 흡수되는 것을 막을 가능성이 있다</b>
+          <q>“This could potentially stop the plastic from being absorbed into the body.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무균 쥐에게 김치 유래 균을 먹였더니 똥에 나노플라스틱이 더 많이 나왔다</b>
+          <q>“In initial animal experiments, however, when researchers in South Korea fed germ-free mice the kimchi-derived microbe, their poop contained more nanoplastics.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐는 특정 미생물이 없게 키우는 경우가 많고 실제 사람의 장내 미생물은 매우 다양하다</b>
+          <q>“In these trials, mice are often bred to have guts free of certain microbes and pathogens, and yet in reality, their microbiome and ours are incredibly diverse.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>마이크로플라스틱이 사람에게 손상이나 질병을 일으킨다는 믿을 만한 증거는 없다</b>
+          <q>“While microplastics and their even smaller counterparts, nanoplastics, have been linked to numerous health repercussions, there is no reliable evidence that they can cause damage or disease in humans.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요거트 유래 균을 먹인 쥐가 마이크로플라스틱을 12배 더 배출했다</b>
+          <q>“In an exploratory experiment, mice fed this yogurt-based microbe excreted 12 times as many microplastics in their poop.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요거트 유래 균을 먹인 쥐는 장 손상 징후도 더 적었다</b>
+          <q>“Their guts also showed fewer signs of intestinal damage.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요약: 물속 87%, 장 모방액 57%</b>
+          <q>“Meanwhile, in a fluid designed to mimic the human intestine, the bacterium bound 57 percent of the nanoplastics present.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요약: 무균 쥐 똥에 나노플라스틱이 더 나왔다</b>
+          <q>“In initial animal experiments, however, when researchers in South Korea fed germ-free mice the kimchi-derived microbe, their poop contained more nanoplastics.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요약: 사람 장에서 성공한 것은 아직 아니다</b>
+          <q>“These are encouraging findings, though they do not demonstrate success in a living human gut.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요약: 요거트 균도 쥐에서 12배</b>
+          <q>“In an exploratory experiment, mice fed this yogurt-based microbe excreted 12 times as many microplastics in their poop.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람 장 등에서의 적용 가능성을 확인하려면 추가 연구가 필요하다</b>
+          <q>“Although further field-scale and microbiota-integrated studies are necessary to confirm its applicability in natural ecosystems and the human gut, these findings establish a strong foundation,”</q>
+          <small>post7 · <a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="526055c7263f">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/a-bacterium-in-kimchi-could-help-flush-microplastics-from-the-gut" target="_blank" rel="noopener">Something in Kimchi Could Help Flush Microplastics From The Gut</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-c4b2b2da637c">
+    <div class="head">
+      <h2>S2. 제지방량 많다고 대사 건강 좋은 건 아니라는 UK Biobank 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-c4b2b2da637c">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강과학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;근육 많을수록 건강하다&#39;는 통념을 뒤집는 숫자(총량은 대사증후군 13.3%→28.1%, 체중 대비 비율은 35.9%→7.5%)를 근력운동 하는 독자의 체성분 점검과 연결</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">근육 많을수록 건강하다는 말, 6만 명 연구에선 반대로 나왔대
+제지방량이 가장 높은 그룹에서 대사증후군이 더 많았음
+근데 같은 데이터를 &#39;체중 대비 비율&#39;로 보니 정반대가 나왔음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">143/500자</span></div>
+      <p class="tp-text">1/ 영국 성인 59,269명을 분석했더니, 제지방량 총량이 가장 높은 사람들이 대사증후군일 확률이 더 높았어. 대사증후군 비율이 낮은 3분의 1 그룹은 13.3%, 높은 3분의 1 그룹은 28.1%였음. 근데 이 &#39;제지방량&#39;이 진짜 근육이랑 같은 말일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">2/ 제지방량은 근육이랑 같은 말이 아니야. 장기, 뼈, 체내 수분까지 다 포함한 숫자임. 페닝턴 바이오메디컬 연구센터 연구진은 근육 속에 낀 지방과 배 속 장기 주변의 깊은 지방을 가능한 이유로 꼽았음. 그럼 체중 대비 비율로 보면 어땠을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">173/500자</span></div>
+      <p class="tp-text">3/ 체중 대비 제지방 비율로 보면 패턴이 뒤집혔어. 대사증후군이 낮은 3분의 1 그룹에서 35.9%, 높은 3분의 1 그룹에서 7.5%였음. 큰 몸은 제지방도 지방도 같이 많은 경향이 있고, 제지방 비율이 크면 지방이 들어갈 자리가 적은 게 이유일 수 있다고 함. 그럼 근육 속 지방은 얼마나 영향을 줬을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">4/ 허벅지 MRI로 잰 근육 속 지방(스테이크의 하얀 마블링 같은 거)이 많은 사람은, 제지방량이 많을수록 대사증후군과 높은 혈당 가능성이 살짝 더 높게 연결됐어. 연구진은 이게 핵심 결과라면서도 효과는 크지 않다고 설명함. 그럼 가장 영향이 컸던 건 뭐였을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">5/ 가장 영향이 컸던 건 장기 주변에 깊이 쌓이는 내장지방이었어. 내장지방이 많은 사람들은 제지방량과 대사증후군의 연결이 약해졌고, 연구진은 그 연결의 일부가 배 속 지방 때문일 수 있다고 봤음. 그럼 이 연구가 말해주지 못하는 건 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">196/500자</span></div>
+      <p class="tp-text">6/ 연구 요약 정리
+- 대상: 영국 성인 59,269명, 평균 55세 정도
+- 제지방량 총량: 낮은 3분의 1 13.3% → 높은 3분의 1 28.1% (대사증후군 비율)
+- 체중 대비 제지방 비율: 낮은 3분의 1 35.9% → 높은 3분의 1 7.5%
+- 가능한 이유: 근육 속 지방, 내장지방
+- 한계: 한 시점 데이터라 원인과 결과는 못 가림</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">236/500자</span></div>
+      <p class="tp-text">7/ 결국 제지방량 숫자 하나가 크다고 더 건강한 건 아니라는 얘기야. 근육을 늘리는 게 도움이 되는지 해가 되는지는 이 연구로는 알 수 없다고 함.
+
+근력운동 하는 사람들, 근육량 숫자파 vs 체지방 비율파 어느 쪽이야?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 근육 속 지방을 허벅지 MRI로 측정했다는 측정 방식(MRI)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>근육 많을수록 건강하다는 말, 6만 명 연구에선 반대로 나왔대</li><li>근력운동 열심히 해도 &#39;근육량 숫자&#39;만 보면 놓치는 게 있대</li><li>근육량은 &#39;총량&#39;이 아니라 &#39;체중 대비 비율&#39;로 보면 결과가 정반대로 나온 연구가 나옴</li><li>건강 챙기려고 근육 늘리는 사람 많은데, &#39;얼마나 많냐&#39;보다 &#39;그 안이 어떻냐&#39;가 중요할 수 있다는 연구가 나옴</li><li>&#39;근육 많으면 무조건 좋다&#39;는 생각, 영국 성인 59,269명 데이터가 좀 흔들어놓음</li><li>근육이 많은 사람일수록 대사증후군이 더 많았다는 연구, 이게 진짜?</li><li>&#39;양만 많고 질이 없으면 부족하다&#39;는 말까지 나온 근육 연구</li><li>체중계 숫자 말고 &#39;몸 안에 지방이 어디 끼어 있나&#39;를 보라는 연구가 나옴</li><li>제지방량이 높은 그룹이 대사증후군 28.1%, 근데 비율로 보면 7.5%였대</li><li>근육이 많은데도 대사 건강이 안 좋을 수 있는 이유, 연구진이 두 가지를 꼽음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>근력운동 하는 사람들, 근육량 숫자파 vs 체지방 비율파 어느 쪽이야?</li><li>운동 목표 잡을 때 체중 줄이기파 vs 근육 늘리기파, 너는 어느 쪽이야?</li><li>헬스장에서 체성분 측정해본 사람?</li><li>몸 상태 볼 때 체중계파 vs 거울파, 어디에 가까워?</li><li>&#39;근육 많으면 건강하다&#39;는 말, 지금까지 그대로 믿었던 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>내장지방이 대사증후군과 어떻게 연결되는지 연구</li><li>체성분 검사로 못 보는 것들</li><li>근력운동 후 대사 건강 변화를 본 연구</li><li>보이저 1호 1광일 도달 임박</li><li>패밀리마트 피지컬 AI 로봇 직원, 싸늘한 반응</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>관찰(단면) 연구라 &#39;근육이 많으면 대사증후군 위험이 커진다&#39;로 읽히지 않게 연관성 표현 유지 확인</li><li>제지방량을 근육과 동일시하는 문장이 없는지 확인 (장기·뼈·수분 포함)</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국 성인 59,269명 분석에서 제지방량 총량이 가장 높은 사람들이 대사증후군과 높은 혈당일 가능성이 더 높았다</b>
+          <q>“A study of 59,269 adults in the United Kingdom found a puzzling pattern: people with the highest total lean mass, a measure that counts everything in the body except fat, were more likely to have metabolic syndrome and elevated blood sugar.”</q>
+          <small>post0 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체중 대비 비율로 보면 패턴이 뒤집혀 대사증후군 비율이 낮은 3분의 1에서 35.9%, 높은 3분의 1에서 7.5%였다</b>
+          <q>“Measured as a share of body weight, the pattern flipped, with metabolic syndrome affecting 35.9 percent of the lowest third and 7.5 percent of the highest.”</q>
+          <small>post0 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대사증후군 비율이 제지방량 총량에 따라 낮은 3분의 1의 13.3%에서 높은 3분의 1의 28.1%로 올라갔다</b>
+          <q>“Metabolic syndrome rates climbed with total lean mass, from 13.3 percent in the lowest third to 28.1 percent in the highest.”</q>
+          <small>post1 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제지방량은 근육과 같지 않고 장기, 뼈, 체내 수분도 포함한다</b>
+          <q>“Lean mass is not the same as muscle, though. It also counts organs, bone, and body water.”</q>
+          <small>post2 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>페닝턴 바이오메디컬 연구센터 연구진은 근육 속 지방과 배 속 장기 주변 깊은 지방을 두 가지 가능한 설명으로 꼽았다</b>
+          <q>“Researchers at Pennington Biomedical Research Center point to two possible explanations in The Journal of Clinical Endocrinology &amp; Metabolism: fat tucked inside muscle and fat stored deep around the belly’s organs.”</q>
+          <small>post2 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>큰 몸은 제지방과 지방이 함께 많은 경향이 있고, 제지방 비율이 크면 지방이 들어갈 자리가 적은 것이 역전의 이유일 수 있다</b>
+          <q>“Bigger bodies tend to carry more lean tissue and more fat together, while a larger lean share leaves less room for fat, a likely reason for the reversal.”</q>
+          <small>post3 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근육 속 지방은 허벅지에서 측정했다</b>
+          <q>“Fat marbled inside muscle, like the white streaks in a steak, was measured in the thighs.”</q>
+          <small>post4 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근육 속 지방이 많은 사람에서 제지방량이 많을수록 대사증후군과 높은 혈당 가능성이 살짝 더 높았다</b>
+          <q>“Among people with more of it, extra total lean mass went with a slightly higher chance of metabolic syndrome and elevated blood sugar.”</q>
+          <small>post4 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 근육 속 지방 결과를 핵심 결과라 불렀지만 효과는 크지 않다고 설명했다</b>
+          <q>“Authors called this the central finding of their study, though they described the effects as modest.”</q>
+          <small>post4 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>내장지방이 제지방량 연결에 가장 큰 영향을 미쳤다</b>
+          <q>“Fat stored deep around the organs, called visceral fat, influenced the lean mass link more than anything else tested.”</q>
+          <small>post5 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>내장지방이 많은 사람에선 총 제지방량과 대사증후군의 연결이 약했고 연구진은 그 일부가 배 속 지방 때문일 수 있다고 했다</b>
+          <q>“Among people with more of it, the connection between total lean mass and metabolic syndrome was weaker, so the authors said part of that connection could be traced to belly fat.”</q>
+          <small>post5 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분석 대상은 59,269명이며 평균 나이가 약 55세였다</b>
+          <q>“This analysis included 59,269 participants, 28,587 men and 30,682 women, who averaged about 55 years old, and more than 96 percent identified as white.”</q>
+          <small>post6 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한 시점의 단면 연구라 원인과 결과를 보여줄 수 없다</b>
+          <q>“This was a cross-sectional study, meaning it captured a single snapshot in time rather than following people over years, so it cannot show that fat inside muscle or belly fat causes metabolic problems.”</q>
+          <small>post6 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제지방량 숫자가 크다고 자동으로 더 건강한 것은 아니다</b>
+          <q>“A bigger lean mass number is not automatically a healthier one, and the x-ray scan used here, like other common body composition tests, cannot separate muscle from organs, bone, and water or detect fat inside muscle.”</q>
+          <small>post7 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 근육을 늘리는 것이 도움이 되는지 해가 되는지에 대해 말해주지 않는다</b>
+          <q>“With only a single snapshot of each person and no exercise tested, the study says nothing about whether gaining muscle helps or harms.”</q>
+          <small>post7 · <a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="c4b2b2da637c">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/more-lean-mass-poor-metabolic-health/" target="_blank" rel="noopener">More Total Lean Mass Does Not Guarantee Better Metabolic Health</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-4aa8d05541fa">
+    <div class="head">
+      <h2>S3. 위고비·오젬픽 임신 초기 노출, 조산은 약보다 당뇨 때문일까</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-4aa8d05541fa">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 체중약이 임신에 위험하다는 통념 뒤집기: 덴마크 임신 75만 건에서 조산 연관은 당뇨용 처방에서만 나왔다는 반전. 다만 임신 중 안전하다는 뜻은 아니라는 선을 같이 지킨다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">위고비·오젬픽 임신 위험, &#39;약&#39; 자체보다 &#39;왜 맞았나&#39;가 갈랐다는 연구가 나옴
+덴마크에서 임신 75만 건을 들여다봤는데
+같은 약인데 한쪽에서만 조산 연관이 나왔대. 어느 쪽이었냐면 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 임신 초기에 모르고 이 약을 썼어도 체중 관리용이면 조산이나 다른 합병증과 뚜렷한 연관이 안 나왔대. 조산 연관이 나온 건 당뇨 치료용으로 처방받은 쪽뿐이었음. 그럼 연구진은 이 차이를 어떻게 해석했을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">2/ 연구진은 약이 아니라 당뇨 자체가 조산 위험을 끌어올렸을 수 있다고 봤어. 다만 관찰 연구라 약이 조산을 직접 일으켰는지까지는 판단 못 한대. 그럼 &#39;약을 썼다&#39;는 건 어떻게 가려냈을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">3/ 덴마크 건강 등록 자료로 임신 756,636건을 봤고, 마지막 생리 시작일 전후 8주 안에 세마글루타이드나 리라글루타이드를 처방받아 간 경우를 우연한 노출로 쳤대. 그런 임신이 529건이었음. 근데 이 529건, 처음엔 어떻게 보였을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">177/500자</span></div>
+      <p class="tp-text">4/ 처음엔 약 쓴 쪽에서 합병증이 더 많아 보였는데, 나이·BMI·흡연·당뇨 여부 같은 걸 맞추고 나니 대부분 통계적으로 유의하지 않게 됐대. 끝까지 남은 건 당뇨용 쪽 조산뿐이고, 노출 안 한 여성과 비교한 조정 오즈가 리라글루타이드 70%, 세마글루타이드 84% 높았음. 그럼 이게 &#39;맞아도 안전하다&#39;는 뜻일까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">186/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 대상: 덴마크 임신 756,636건
+- 체중 관리용: 조산 등 유의한 연관 안 나옴
+- 당뇨 치료용: 조산 연관 나옴
+- 한계: 관찰 연구, 처방 기록 기준이라 실제 복용은 확인 못 함
+- 임신 중 안전성은 아직 확립 안 됨
+- 임신 계획 전 중단 지침을 바꿀 근거는 아님
+그럼 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">235/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 앞으로는 왜 처방받았는지를 나눠서 봐야 한다는 거야. 그래도 임신 계획 전 중단 지침을 바꿀 근거는 아니래. 내 상황은 의사와 상의가 먼저.
+건강 연구 소식, 결과부터 보는 파 vs 한계부터 보는 파?
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 위고비·오젬픽이 세마글루타이드 계열 약이라는 점 (원문 근거: 세마글루타이드 브랜드명 ozempic, wegovy)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>위고비·오젬픽 임신 위험, &#39;약&#39; 자체보다 &#39;왜 맞았나&#39;가 갈랐다는 연구가 나옴</li><li>위고비 맞다가 임신인 줄 몰랐던 경우, 조산 위험은 약이 아니라 &#39;당뇨&#39;일 수도 있대</li><li>임신 75만 건 뜯어봤더니 같은 약인데 한쪽에서만 조산 연관이 나왔음</li><li>&#39;체중약은 임신에 위험하다&#39;는 말, 이 연구는 좀 다르게 봄</li><li>오젬픽 뉴스 볼 때 &#39;약이 문제냐 병이 문제냐&#39;부터 나눠 보라는 연구가 나옴</li><li>위고비 모르고 맞은 임신 초기, 덴마크 75만 임신이 보여준 반전</li><li>체중약 임신 연구는 약만 보지 말고 &#39;처방 이유&#39;부터 보라는 연구가 나옴</li><li>위고비 임신 조산, 약 탓이라고 단정하긴 이르다는 연구진 말</li><li>&#39;임신 중 안전하다는 건 아님&#39; 그래도 결과가 꽤 의외였던 위고비 연구</li><li>같은 약, 같은 임신 초기 노출인데 결과가 갈렸다? 위고비 연구 정리</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>건강 연구 소식, 결과부터 보는 파 vs 한계부터 보는 파?</li><li>&#39;관찰 연구&#39;라고 적혀 있으면 한 번 더 따져보는 편이야?</li><li>같은 약인데 이유에 따라 결과가 갈리는 연구, 더 보고 싶어?</li><li>건강 뉴스 제목만 보고 넘기는 파 vs 끝까지 읽는 파?</li><li>체중약 뉴스, 요즘 너무 자주 보인다고 느껴져?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>건강 뉴스 읽을 때 &#39;관찰 연구&#39;와 &#39;인과관계&#39; 구분하는 법</li><li>임신 전 대사 건강·혈당 관리가 왜 중요하다고 하는지 전문가 코멘트</li><li>GLP-1 계열 약을 다룬 또 다른 해외 연구</li><li>보이저 1호 1광일 도달 임박</li><li>패밀리마트 피지컬 AI 로봇 직원, 싸늘한 반응</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>본문의 70%·84%는 조정 오즈이고, 원문 뒤쪽에는 보도자료의 다른 추정치(약 11%, 9%)도 나와 위험 증가율로 읽히거나 수치끼리 혼동될 수 있음</li><li>임신 중 약물 관련 건강 정보라서 &#39;안전하다&#39;로 읽히지 않도록 마지막 글의 중단 지침·의사 상담 문구 유지 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>덴마크 건강 등록 자료로 임신 756,636건을 분석했다</b>
+          <q>“The research team used Denmark&#39;s nationwide health registries to examine 756,636 pregnancies involving a single baby among 480,231 women.”</q>
+          <small>post0, post3, post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>모르고 약을 쓴 여성의 조산 연관은 당뇨 치료용으로 처방된 경우에서만 나타났다</b>
+          <q>“Women who unintentionally used these drugs shortly before or during early pregnancy were more likely to give birth prematurely, but only when the medications had been prescribed to treat existing diabetes.”</q>
+          <small>post0, post1, post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체중 관리용 복용에서는 조산이나 다른 합병증과 유의한 연관이 없었다</b>
+          <q>“Among women taking the same medications for weight management, researchers found no significant association with premature birth or other pregnancy complications examined in the study.”</q>
+          <small>post1, post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 약이 아니라 당뇨 자체가 조산 위험을 끌어올렸을 수 있다고 해석했다</b>
+          <q>“This suggests that the underlying condition of diabetes, rather than the medication, may be driving this association.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰 연구라서 약이 조산을 직접 일으켰는지는 판단할 수 없다</b>
+          <q>“However, the study was observational, meaning it could identify associations but could not determine whether GLP-1 medications directly caused premature births.”</q>
+          <small>post2, post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>마지막 생리 시작일 전후 8주 안에 세마글루타이드나 리라글루타이드를 처방받아 간 경우를 우연한 노출로 분류했다</b>
+          <q>“The researchers classified a pregnancy as having possible accidental exposure to GLP-1 medications if the woman filled a prescription for semaglutide or liraglutide during the eight weeks before or after the first day of her last menstrual period.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>노출로 분류된 임신은 529건이었다</b>
+          <q>“Of the pregnancies included in the study, 529 involved prescription records indicating exposure to GLP-1 medications during this period.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처음에는 약 노출 쪽에서 합병증이 더 많아 보였지만 다른 요인을 보정하자 대부분 통계적으로 유의하지 않게 됐다</b>
+          <q>“At first, women with GLP-1 prescriptions appeared to experience several pregnancy complications more frequently than those without exposure. However, most of these associations were no longer statistically significant once the researchers accounted for other factors that could affect pregnancy outcomes.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보정 요인에는 나이, BMI, 흡연, 당뇨 여부 등이 포함됐다</b>
+          <q>“These included maternal age, body mass index (BMI), smoking habits, location, education, and whether the woman already had diabetes.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>당뇨용 처방에서 조산 조정 오즈가 리라글루타이드 70%, 세마글루타이드 84% 높았다</b>
+          <q>“Compared with women who had not been exposed to these medications, the adjusted odds of premature delivery were 70% higher among women taking liraglutide for diabetes and 84% higher among those taking semaglutide for diabetes.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처방 기록 기준이라 실제로 복용했는지는 확인하지 못했다</b>
+          <q>“Although they could determine whether a woman had filled a prescription, they could not confirm whether she had actually taken the medication.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>임신 중 안전성은 아직 확립되지 않았다</b>
+          <q>“However, their safety during pregnancy has not been established.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이번 결과는 임신 계획 전 약 중단 지침을 버릴 근거가 되지 않는다</b>
+          <q>“In particular, the findings do not justify abandoning current guidance to discontinue GLP-1 medications before a planned pregnancy.”</q>
+          <small>post5, post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>앞으로의 연구는 처방 이유(당뇨 vs 체중 관리)를 구분해서 봐야 한다</b>
+          <q>“Future studies must take account of the reason a woman has been prescribed these medications, as the risks differ between women using GLP-1 RAs for diabetes versus weight management.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="4aa8d05541fa">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261111005911.htm" target="_blank" rel="noopener">Study of 750,000 pregnancies reveals a surprising twist about Ozempic and Wegovy</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-e3493f39bc85">
+    <div class="head">
+      <h2>S4. 로모72 하프프레임 필름카메라 79달러</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-e3493f39bc85">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 필름 한 롤이 36장이 아니라 72장이 되고, 한 장 값이 절반으로 줄어든다는 계산이 &#39;나도 갖고 싶다&#39;로 바로 이어지는 각도</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "하프프레임 필름카메라" · 원문 제품: Lomography Lomo72, 79달러, 검정/은색, 로모그래피 예약 판매 중, 12월 24일 전 배송 약속. 비교 대상: Kodak Ektar H35 약 50달러, Pentax 17 약 500달러<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: petapixel.com, diyphotography.net, the-gadgeteer.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/e3493f39bc85/thread-photo-1118082244-01.jpg" alt="은색과 검은색 하프프레임 필름카메라 정면 사진, LOMO 72 HALF-FRAME 표기와 LOMOGRAPHY 글자가 보임" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/e3493f39bc85/thread-photo-1118082244-02.jpg" alt="은색 바디의 하프프레임 필름카메라 한 대와 파란색·흰색 줄무늬 스트랩이 흰 배경에 놓여 있음. 본체에 LOMO 72 HALF-FRAME, LOMOGRAPHY 표기가 보임" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261118-pm-da6a2be15917/e3493f39bc85/thread-photo-1118082244-03.jpg" alt="로모72 카메라 본체, 박스, 스트랩, 렌즈캡, 설명서 및 분홍색 포스터가 함께 놓인 제품 구성품 사진" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-e3493f39bc85">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">필름 한 롤 사면 36장이 아니라 72장이 나오는 카메라가 있대
+필름 한 프레임을 반으로 쪼개서 찍는 방식인데 가격이 79달러
+근데 세로로 찍히는 사진이 한 쌍으로 붙는 재미가 따로 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">1/ 72장이 나오는 이유는 간단함. 35mm 필름 한 프레임을 반으로 나눠서 두 장을 찍는 거라서, 36장짜리 롤이 72장으로 늘어남. 그럼 사진 한 장 값은 얼마나 줄어들까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">161/500자</span></div>
+      <p class="tp-text">2/ 원문 계산으로는 롤+현상+스캔이 30달러일 때 한 장에 83센트쯤이던 게 42센트쯤으로 줄어듦. 점심, 고양이, 친구의 흔들린 춤까지 막 찍어도 부담이 덜하다는 얘기. 세로 사진 두 장이 네거티브에서 나란히 붙어 한 쌍처럼 보이는 재미도 있음. 그럼 79달러짜리엔 뭐가 달려 있을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">200/500자</span></div>
+      <p class="tp-text">3/ Lomo72 요약 정리
+- 이름: 로모72 (로모그래피 신제품)
+- 가격: 79달러, 검정/은색
+- 렌즈: 멀티코팅 27mm 유리 렌즈
+- 초점: 가까이/멀리 2단계
+- 셔터: 1/100초 고정, 벌브 모드 있음
+- 기타: 내장 플래시, 컬러 젤, 다중노출 스위치
+- 판매: 예약 중, 12월 24일 전 배송 약속
+그럼 코닥, 펜탁스랑 비교하면 어떨까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">149/500자</span></div>
+      <p class="tp-text">4/ 코닥 Ektar H35는 50달러쯤에 22mm 렌즈, 펜탁스 17은 500달러쯤에 25mm f/3.5 렌즈와 자동 노출. 로모72는 노출 설정이 코닥에 가깝고, 추가 금액은 유리 렌즈·금속 외관·근접 초점·다중노출 스위치로 간다고 함. 그럼 아쉬운 점은 없을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">151/500자</span></div>
+      <p class="tp-text">5/ 아쉬운 점은 네거티브가 작아서 크게 인화하면 입자가 더 보인다는 것. 근데 폰 화면이나 4x6 인화에선 그 입자도 매력일 수 있다는 말이 붙음. 처음이면 현상소에 하프프레임으로 찍었다고 말해야 스캔이 제대로 된다는 팁도 있음. 그래서 이건 누구한테 맞는 카메라일까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">194/500자</span></div>
+      <p class="tp-text">6/ 결국 로모72는 일회용 같은 플라스틱 카메라와 500달러쯤 하는 펜탁스 17 사이를 노린 79달러짜리라는 얘기.
+이거 선물로 받으면 좋아할 사람 소환해줘.
+해외에서 난리 난 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외에서 난리 난 물건이라는 화제성 주장</li><li>근거 등록 안 된 주장: 로모그래피의 신제품이라는 점</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>필름 한 롤 사면 36장이 아니라 72장이 나오는 카메라가 있대</li><li>필름 아까워서 셔터 못 누르던 사람, 카메라를 바꾸지 말고 &#39;프레임 반으로 쪼개기&#39;부터 보라는 얘기가 나왔음</li><li>필름 사진은 &#39;한 장 한 장 아껴 찍는 것&#39;이 아니라 &#39;한 롤에 72장&#39;으로 계산하는 시대래</li><li>이 카메라 보면 필름 한 장 값부터 계산해보게 됨</li><li>현상비까지 합쳐 한 장에 83센트쯤이던 게 42센트쯤으로 줄어든대</li><li>필름카메라에 유리 렌즈가 달렸는데 79달러라는 게 포인트</li><li>처음엔 그냥 필름카메라인 줄 알았는데, 한 롤이 72장 나오는 구조였음</li><li>1959년에 올림푸스가 &#39;필름 반으로 자르면 두 배로 찍겠네&#39; 했던 게 지금 다시 돌아왔대</li><li>50달러짜리 코닥이랑 500달러짜리 펜탁스 사이에 79달러 필름카메라가 끼어들었대</li><li>친구한테 선물하면 &#39;이게 뭐야?&#39; 소리 나올 필름카메라, 한 롤에 72장 찍힘</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>필름카메라 vs 폰카, 여행 갈 때 뭐 들고 갈 거야?</li><li>이 카메라 있으면 제일 먼저 찍을 거 하나만 말해줘</li><li>이거 선물로 받으면 좋아할 사람 소환</li><li>한 롤에 72장 vs 한 장 한 장 아껴 찍기, 어느 쪽이야?</li><li>필름카메라 써본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>펜탁스 17과 후지필름 X half, 하프프레임이 다시 돌아온 이야기</li><li>올림푸스 펜이 1960년대 일본을 휩쓴 하프프레임 이야기</li><li>필름이 비싸진 시대에 필름에 빠진 세대 이야기</li><li>해외에서 화제가 된 또 다른 필름카메라</li><li>다음 배송: 일본 남성의 사기꾼 볶음밥 레시피 털기 작전</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>로모72는 36장짜리 롤에서 72장을 찍을 수 있다</b>
+          <q>“Lomography’s newest entry is the Lomo72, and the name gives away the pitch: 72 shots from a regular 36-exposure roll.”</q>
+          <small>post0, post1 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>로모72 가격은 79달러다</b>
+          <q>“At $79, the Lomo72 sits between disposable-style plastic shooters and the roughly $500 Pentax 17.”</q>
+          <small>post0, post3, post6 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하프프레임은 일반 35mm 프레임의 절반만 노출해 두 장이 들어간다</b>
+          <q>“Half-frame means the camera exposes only half of a regular 35mm frame, giving you a tall 17 x 24mm image instead of the usual wide 36 x 24mm one.”</q>
+          <small>post0, post1 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>롤+현상+스캔이 30달러면 한 장 값이 83센트쯤에서 42센트쯤으로 줄어든다</b>
+          <q>“If a roll plus developing and scans costs you $30, each shot drops from about 83 cents to roughly 42.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>점심, 고양이, 친구의 흔들린 춤을 찍는 데 부담이 덜하다</b>
+          <q>“That buys more freedom to photograph your lunch, your cat, and your friend’s slightly blurry dance moves.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세로 사진 두 장이 네거티브에서 나란히 붙어 한 쌍처럼 보인다</b>
+          <q>“The vertical frames also pair up naturally, so two consecutive shots sit side by side on the negative as a diptych.”</q>
+          <small>post0, post2 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>로모72는 멀티코팅 27mm 유리 렌즈, 검정/은색 금속 외관, 2단계 초점을 갖췄다</b>
+          <q>“Lomography gave it a multi-coated 27mm glass lens, a metal-plated body in black or silver, and simple two-zone focusing for nearby subjects or distant scenes.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>셔터는 1/100초 고정이고 벌브 모드가 있다</b>
+          <q>“Shutter speed is fixed at 1/100 of a second, with a Bulb mode for long exposures when you’re feeling brave.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>내장 플래시, 컬러 젤, 다중노출 스위치가 있다</b>
+          <q>“A built-in flash, colored gels, and a multiple-exposure switch leave room for happy accidents.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>예약 판매 중이며 12월 24일 전 배송을 약속했다</b>
+          <q>“The Lomo72 is available for preorder on Lomography’s site for $79 in black or silver, with delivery promised before December 24.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코닥 Ektar H35는 50달러쯤에 22mm 렌즈, 1/100초 셔터다</b>
+          <q>“Kodak’s Ektar H35 sells for around $50 with a 22mm lens at f/9.5 and a 1/100s shutter.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>펜탁스 17은 500달러쯤에 더 밝은 25mm f/3.5 렌즈와 자동 노출을 갖췄다</b>
+          <q>“At the other end, the roughly $500 Pentax 17 adds a brighter 25mm f/3.5 lens and automatic exposure.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>로모72는 노출 설정이 코닥에 가깝고 추가 금액은 유리 렌즈, 금속 외관, 근접 초점, 다중노출 스위치로 간다</b>
+          <q>“The Lomo72’s exposure settings land close to it, so the extra money goes into the multi-coated glass, the metal-plated shell, a close-focus zone down to 1.3 feet (0.4m), and that multiple-exposure switch.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>네거티브가 작아서 크게 인화하면 입자가 더 보인다</b>
+          <q>“The trade-off is a smaller negative, which means more visible grain if you blow prints up big.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폰 화면이나 4x6 인화에서는 입자가 매력일 수 있다</b>
+          <q>“On a phone screen or a 4 x 6 print, you might find that grain part of the charm.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처음 쓰는 사람은 현상소에 하프프레임으로 찍었다고 말해야 스캔이 제대로 된다</b>
+          <q>“One tip for first-timers: tell your lab you shot half-frame so it can scan the frames correctly.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>로모72는 일회용 스타일 플라스틱 카메라와 500달러쯤 하는 펜탁스 17 사이에 있다</b>
+          <q>“At $79, the Lomo72 sits between disposable-style plastic shooters and the roughly $500 Pentax 17.”</q>
+          <small>post6 · <a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="e3493f39bc85">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/17/the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-lomo72-is-a-79-half-frame-film-camera-for-people-stuck-between-a-kodak-and-a-pentax" target="_blank" rel="noopener">The Lomo72 is a $79 half-frame film camera for people stuck between a Kodak and a Pentax - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261118-pm";
+  const ORIGINAL = {"365dad3943ff": {"caption": "\uc77c\ubcf8 \ud328\ubc00\ub9ac\ub9c8\ud2b8\uc758 \ub85c\ubd07 \uc9c1\uc6d0\uc774 \uae30\ub300\uc640 \ub2ec\ub9ac \uc2f8\ub298\ud55c \ubc18\uc751\uc744 \ubc1b\uace0 \uc788\ub2e4. \ud328\ubc00\ub9ac\ub9c8\ud2b8\ub294 \ub0b4\ub144\ubd80\ud130 \uc77c\ubcf8 \ubaa8\ub4e0 \ub9e4\uc7a5\uc5d0 \ud53c\uc9c0\uceec AI \uc74c\ub8cc \ubcf4\ucda9 \ub85c\ubd07\uc744 \ub3c4\uc785\ud558\uaca0\ub2e4\uace0 \ubc1c\ud45c\ud588\ub2e4. \ud53c\uc9c0\uceec AI\ub294 \uc27d\uac8c \ub9d0\ud574 AI\uac00 \uc81c\uc5b4\ud558\ub294 \ub85c\ubd07\uc744 \uac00\ub9ac\ud0a4\ub294 \ub9d0\uc774\ub2e4. \uc774 \ub85c\ubd07\uc740 \uc74c\ub8cc \uc9c4\uc5f4\ub300 \ub4a4\uc5d0 \uc124\uce58\ub41c \uae30\uacc4 \uc9d1\uac8c\ub85c, \uce94\uacfc \ubcd1\uc744 \uacc4\uc18d \ucc44\uc6cc \ub123\ub294\ub2e4. \uac1c\ubc1c\uc5d0\ub294 \uc77c\ubcf8 \uae30\uc5c5 \ud154\ub808\uc774\uadf8\uc9c0\uc2a4\ud134\uc2a4\uac00 \ucc38\uc5ec\ud588\uace0, \ud3b8\uc758\uc810\ub4e4\uc774 \uacaa\ub294 \uc778\ub825\ub09c\uc744 \ub35c\uae30 \uc704\ud574 \uba87 \ub144\uac04 \ub85c\ubd07\uc744 \ub9cc\ub4e4\uc5b4 \uc654\ub2e4.\n\n\ud328\ubc00\ub9ac\ub9c8\ud2b8\ub294 \uc774 \uc2dc\uc2a4\ud15c\uc774 \uc9c1\uc6d0\uc758 \uc74c\ub8cc \ucc44\uc6b0\uae30 \uc2dc\uac04\uc744 70% \uc904\uc5ec \uc900\ub2e4\uace0 \ubc1d\ud614\ub2e4. \ud558\uc9c0\ub9cc \uc74c\ub8cc \ucc44\uc6b0\uae30\ub294 \uc9c1\uc6d0\uc774 \ud558\ub294 \uc5ec\ub7ec \uc77c \uc911 \ud558\ub098\ub77c\uc11c \uc2e4\uc81c\ub85c \uc5bc\ub9c8\ub098 \uc77c\uc774 \uc904\uc9c0\ub294 \ubd88\ubd84\uba85\ud558\ub2e4. \uc628\ub77c\uc778 \ub313\uae00\uc5d0\uc11c\ub294 \uc0ac\ub78c\uc774 \ucc44\uc6b4 \uc120\ubc18\uc5d0\uc11c \ub85c\ubd07\uc774 \ub2e4\uc2dc \uc62e\uae30\ub294 \uc148\uc774\ub77c \uac19\uc740 \uc77c\uc744 \ub450 \ubc88 \ud558\ub294 \uac83\uc774\ub77c\ub294 \ubc18\uc751\uc774 \ub098\uc654\ub2e4. \uc791\ub3d9\uc774 \ub108\ubb34 \ub290\ub9ac\ub2e4\ub294 \ub313\uae00\ub3c4 \uc788\uc5c8\ub2e4. \uac00\ub9f9\uc810 \ub450 \uacf3\uc744 \uc6b4\uc601\ud55c\ub2e4\ub294 \uc810\uc8fc\ub294 \uc124\uce58 \ube44\uc6a9\uc774 120\ub9cc \uc5d4\ucbe4\uc77c \uac83 \uac19\ub2e4\uba70, \uc6d4 \uc21c\uc774\uc775\uc774 10\ub9cc \uc5d4\ub3c4 \uc548 \ub418\ub294 \ub9e4\uc7a5\uc774 \ub300\ubd80\ubd84\uc778\ub370 \uc5b4\ub5bb\uac8c \uac10\ub2f9\ud558\uaca0\ub0d0\uace0 \uc801\uc5c8\ub2e4.\n\n\ud55c\ud3b8 \uae30\uc0ac\uc5d0\uc11c\ub294 \uc774 \ub85c\ubd07\uc774 \ubc14\ub2e5 \uccad\uc18c\ubd80\ud130 \uc7ac\uace0 \uad00\ub9ac\uae4c\uc9c0 \ub9e1\ub294 \ub354 \ud070 \uc2dc\uc2a4\ud15c\uc758 \uc77c\ubd80\ub77c\ub294 \uc810\ub3c4 \uc9da\uc5c8\ub2e4. \uc804\uccb4\ub85c \ubcf4\uba74 \ub354 \uc4f8\ubaa8 \uc788\uc744 \uc218 \uc788\ub2e4\ub294 \uac83\uc774\ub2e4.\n\n\ucd9c\ucc98: SoraNews24, NHK", "hashtags": ["#\ud328\ubc00\ub9ac\ub9c8\ud2b8", "#\ud53c\uc9c0\uceecAI", "#\uc77c\ubcf8\ud3b8\uc758\uc810", "#\ub85c\ubd07", "#\ud574\uc678\uc18c\uc2dd"], "slides": [["\ub85c\ubd07 \uc9c1\uc6d0\uc778\ub370", "\ubc18\uc751 **\uc2f8\ub298**\u2026\u3137\u3137", "---", "\uc77c\ubcf8 \ud328\ubc00\ub9ac\ub9c8\ud2b8\uac00 \ub0b4\ub144\ubd80\ud130 \uc804\uad6d \ub9e4\uc7a5\uc5d0 \uc74c\ub8cc \ubcf4\ucda9 \ud53c\uc9c0\uceec AI \ub85c\ubd07\uc744 \ub4e4\uc774\uae30\ub85c \ud588\uc9c0\ub9cc, \uc628\ub77c\uc778\uc5d0\uc11c\ub294 \ub0c9\ub2f4\ud55c \ubc18\uc751\uc774 \ub098\uc654\ub2e4."], ["\ub0b4\ub144\ubd80\ud130", "**\uc804 \ub9e4\uc7a5**\uc5d0 \uc124\uce58", "---", "\ud328\ubc00\ub9ac\ub9c8\ud2b8\ub294 \ub0b4\ub144\ubd80\ud130 \uc77c\ubcf8 \ubaa8\ub4e0 \uc810\ud3ec\uc5d0 \uc74c\ub8cc \ubcf4\ucda9 \ub85c\ubd07\uc744 \ub3c4\uc785\ud558\uaca0\ub2e4\uace0 \ubc1c\ud45c\ud588\ub2e4. \uc74c\ub8cc \uc9c4\uc5f4\ub300 \ub4a4\uc5d0 \uc124\uce58\ub41c AI \uae30\uacc4 \uc9d1\uac8c\uac00 \uce94\uacfc \ubcd1\uc744 \uacc4\uc18d \ucc44\uc6cc \ub123\ub294 \ubc29\uc2dd\uc774\ub2e4."], ["\uc9c1\uc6d0 \ubd80\ub2f4", "**70%** \uc904\uc5b4\ub4e0\ub300", "---", "\ud328\ubc00\ub9ac\ub9c8\ud2b8\ub294 \uc774 \uc2dc\uc2a4\ud15c\uc73c\ub85c \uc9c1\uc6d0\uc758 \uc74c\ub8cc \ucc44\uc6b0\uae30 \uc2dc\uac04\uc774 70% \uc904\uc5b4\ub4e0\ub2e4\uace0 \ubc1d\ud614\ub2e4. \ub2e4\ub9cc \uc74c\ub8cc \ucc44\uc6b0\uae30\ub294 \uc9c1\uc6d0 \uc5c5\ubb34\uc758 \uc77c\ubd80\ub77c\uc11c \uc2e4\uc81c\ub85c \uc77c\uc774 \uc5bc\ub9c8\ub098 \uc904\uc9c0\ub294 \ubd88\ubd84\uba85\ud558\ub2e4."], ["\uc0ac\ub78c\uc774 \ucc44\uc6b4 \uac78", "\ub85c\ubd07\uc774 **\ub610 \ucc44\uc6c0**", "---", "\uc628\ub77c\uc778\uc5d0\uc11c\ub294 \uc0ac\ub78c\uc774 \ucc44\uc6b4 \uc120\ubc18\uc5d0\uc11c \ub85c\ubd07\uc774 \ub2e4\uc2dc \uc62e\uae30\ub294 \uc148\uc774\ub77c \uac19\uc740 \uc77c\uc744 \ub450 \ubc88 \ud558\ub294 \uac83\uc774\ub77c\ub294 \ub313\uae00\uc774 \ub098\uc654\ub2e4. \ub108\ubb34 \ub290\ub9ac\ub2e4\ub294 \ubc18\uc751\ub3c4 \uc774\uc5b4\uc84c\ub2e4."], ["\uc124\uce58\ube44\ub9cc", "**120\ub9cc \uc5d4**\uc774\ub798", "---", "\ud328\ubc00\ub9ac\ub9c8\ud2b8 \uac00\ub9f9\uc810 \ub450 \uacf3\uc744 \uc6b4\uc601\ud55c\ub2e4\ub294 \uc810\uc8fc\ub294 \uc124\uce58 \ube44\uc6a9\uc774 120\ub9cc \uc5d4\ucbe4\uc77c \uac83 \uac19\ub2e4\uace0 \ub313\uae00\uc744 \ub0a8\uacbc\ub2e4. \uc6d4 \uc21c\uc774\uc775\uc774 10\ub9cc \uc5d4\ub3c4 \uc548 \ub418\ub294 \ub9e4\uc7a5\uc774 \ub300\ubd80\ubd84\uc778\ub370 \ub204\uac00 \uac10\ub2f9\ud558\uaca0\ub0d0\ub294 \uac83\uc774\ub2e4."], ["\uc774\uac8c **\uc804\ubd80**\ub294", "\uc544\ub2c8\ub77c\ub294 \ub9d0\ub3c4", "---", "\uae30\uc0ac\ub97c \uc4f4 \ucabd\uc740 \uc774 \ub85c\ubd07\uc774 \ubc14\ub2e5 \uccad\uc18c\ubd80\ud130 \uc7ac\uace0 \uad00\ub9ac\uae4c\uc9c0 \ub9e1\ub294 \ub354 \ud070 \ud1b5\ud569 \uc2dc\uc2a4\ud15c\uc758 \ud55c \ubd80\ubd84\uc774\ub77c\uace0 \uc804\ud588\ub2e4. \uc804\uccb4\ub85c \ubcf4\uba74 \ub354 \uc4f8\ubaa8 \uc788\uc744 \uc218\ub3c4 \uc788\ub2e4\ub294 \uac83\uc774\ub2e4."], ["\ud3b8\uc758\uc810 \uc54c\ubc14\ud558\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uc9c1\uc6d0\uc758 \uc74c\ub8cc \ucc44\uc6b0\uae30 \uc2dc\uac04\uc774 70% \uc904\uc5b4\ub4e0\ub2e4\ub294 \ubc1c\ud45c\uc640 \ub108\ubb34 \ub290\ub9ac\ub2e4\ub294 \ub313\uae00\uc774 \ub9de\uc120 \uc774\uc57c\uae30. \ud3b8\uc758\uc810\uc5d0\uc11c \uc77c\ud574 \ubcf8 \uce5c\uad6c\ub77c\uba74 \ud55c\ub9c8\ub514 \ubcf4\ud0e4 \ub9cc\ud55c \uc18c\uc2dd"]]}, "7e06b239abf0": {"caption": "\uc0ac\uae30\uafbc \uc0c1\ub300\ub85c \ubcf6\uc74c\ubc25 \ub808\uc2dc\ud53c\ub97c \ud138\uaca0\ub2e4\ub294 \ud669\ub2f9\ud558\uace0 \uc720\ucf8c\ud55c \uc791\uc804\uc774 \uc77c\ubcf8\uc5d0\uc11c \ub098\uc654\ub2e4.\n\n\uc8fc\uc778\uacf5\uc740 \uc77c\ubcf8 \ub9e4\uccb4 \uc18c\ub77c\ub274\uc2a424\uc758 \uace0 \ud558\ud1a0\ub9ac\ub2e4. \uadf8\ub294 \uc628\ub77c\uc778 \uc0ac\uae30\uafbc\uacfc \ub300\ud654\ud558\uba70 \uc2e0\ub8b0\ub97c \uc5bb\uc740 \ub4a4, \uc758\ubbf8 \uc5c6\ub294 \uc7a1\ub2f4\uc73c\ub85c \uc0c1\ub300\uc758 \uc2dc\uac04\uc744 \ube7c\uc557\ub294 \uc77c\uc744 \ud574 \uc654\ub2e4. \uc77c\ubcf8\uc5d0\uc11c \uc628\ub77c\uc778 \uc0ac\uae30 \uc804\ubb38\uac00\ub85c \ucc45\uc744 \uc4f0\uace0 TV\uc5d0 \ucd9c\uc5f0\ud558\uace0 \uac15\uc5f0\ub3c4 \ud574 \uc628 \uc0ac\ub78c\uc774\ub2e4.\n\n\uc774\ubc88\uc5d0\ub294 AI\ub97c \ub04c\uc5b4\ub4e4\uc600\ub2e4. \uc790\uc2e0\uc758 \uc544\ud30c\ud2b8\ub97c \ube44\uc815\ubd80 \uae30\uad00 \u0027\ubcf6\uc74c\ubc25 \ubd80\ub300(FRU)\u0027\uc758 \uc81c1\ub808\uc2dc\ud53c \uc0ac\ub2e8\uc73c\ub85c \ubc14\uafb8\uace0, \uc0ac\uae30\uafbc\uacfc \uce5c\ud574\uc9c4 \ub4a4 \uacbd\uacc4\uac00 \ud480\ub9ac\uba74 \ub808\uc2dc\ud53c\ub97c \uac00\uc838\uc624\ub294 \uad6c\uc870\ub97c \ub9cc\ub4e4\uc5c8\ub2e4. \ubcf8\uccb4\ub294 \uc911\uace0\ub85c \uc0b0 2020\ub144\ud615 M1 \ub9e5 \ubbf8\ub2c8\ub2e4. \uc774 \uae30\uae30\uc5d0\uc11c Muse\uc640 ChatGPT \uc5d0\uc774\uc804\ud2b8\uac00 \uc778\uc2a4\ud0c0\uadf8\ub7a8 DM\uc73c\ub85c \uc0ac\uae30\uafbc\uc744 \ub77c\uc778 \uacc4\uc815\uc73c\ub85c \ub04c\uc5b4\ub4e4\uc774\uace0, \ub300\ud654\ub97c \uc2ac\uca4d \ubcf6\uc74c\ubc25 \ucabd\uc73c\ub85c \uc774\ub048\ub2e4.\n\n\uc0ac\uae30\uafbc\uc774 \uac78\ub824\ub4e4\uba74 AI\uac00 \ud558\ud1a0\ub9ac\uc5d0\uac8c \uc54c\ub9ac\uace0, \uadf8\uac00 \uc9c1\uc811 \ub118\uaca8\ubc1b\uc544 \ub808\uc2dc\ud53c\ub97c \ud655\ubcf4\ud55c\ub2e4. \uc5d0\uc774\uc804\ud2b8\uc758 \uc774\ub984\uc740 \ud074\ub85c\uc774(Muse)\uc640 \ub0b8\uc2dc(ChatGPT). \ud558\ud1a0\ub9ac\ub294 \uc774 \ubc29\uc2dd\uc73c\ub85c \uc774\ubbf8 \ub808\uc2dc\ud53c \ud558\ub098\ub97c \uc190\uc5d0 \ub123\uc5c8\uace0, \uace7 \uc0ac\uae30 \uc74c\uc2dd \ub9ac\ubdf0\uc5d0\uc11c \uacf5\uac1c\ud560 \uc608\uc815\uc774\ub77c\uace0 \ud55c\ub2e4.\n\n\uc0ac\uae30 DM\uc5d0 \uc2dc\ub2ec\ub824 \ubcf8 \uce5c\uad6c\uac00 \uc788\ub2e4\uba74 \uc774 \uc18c\uc2dd\uc744 \ubcf4\ub0b4 \uc8fc\uc790.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\ubcf6\uc74c\ubc25", "#\uc77c\ubcf8\ub274\uc2a4", "#\uc0ac\uae30\uafbc", "#AI", "#\ud574\uc678\ud1a0\ud53d"], "slides": [["\uc0ac\uae30\uafbc \uc0c1\ub300\ub85c", "**\ubcf6\uc74c\ubc25** \ud138\uae30???", "---", "\uc77c\ubcf8 \ub9e4\uccb4 \uc18c\ub77c\ub274\uc2a424\uc758 \uace0 \ud558\ud1a0\ub9ac\uac00 AI\ub97c \ub3d9\uc6d0\ud574 \uc628\ub77c\uc778 \uc0ac\uae30\uafbc\uc5d0\uac8c\uc11c \ubcf6\uc74c\ubc25 \ub808\uc2dc\ud53c\ub97c \ubc1b\uc544\ub0b4\ub294 \ubd80\ub300\ub97c \uafb8\ub838\ub2e4."], ["\uc0ac\uae30\uafbc \uc0c1\ub300\ub85c", "**\uc7a5\ub09c\uce58\ub358** \uc0ac\ub78c", "---", "\ud558\ud1a0\ub9ac\ub294 \uc628\ub77c\uc778 \uc0ac\uae30\uafbc\uc758 \uc2e0\ub8b0\ub97c \uc5bb\uc740 \ub4a4 \uc5b4\ub514\ub85c\ub3c4 \uac00\uc9c0 \uc54a\ub294 \uc7a1\ub2f4\uc73c\ub85c \uc2dc\uac04\uc744 \ube8f\ub294 \uc77c\uc744 \ud574 \uc654\ub2e4. \uc77c\ubcf8\uc5d0\uc11c \uc628\ub77c\uc778 \uc0ac\uae30 \uc804\ubb38\uac00\ub85c \ucc45, TV \ucd9c\uc5f0, \uac15\uc5f0 \ud65c\ub3d9\ub3c4 \ud588\ub2e4."], ["\uc9d1\uc774 \uace7", "**\ubcf6\uc74c\ubc25 \ubd80\ub300**", "---", "\uadf8\ub294 \uc790\uc2e0\uc758 \uc544\ud30c\ud2b8\ub97c \ube44\uc815\ubd80 \uae30\uad00 \u0027\ubcf6\uc74c\ubc25 \ubd80\ub300(FRU)\u0027\uc758 \uc81c1\ub808\uc2dc\ud53c \uc0ac\ub2e8\uc73c\ub85c \ubc14\uafe8\ub2e4. \uc0ac\uae30\uafbc\uacfc \uce5c\ud574\uc838 \uacbd\uacc4\uac00 \ud480\ub9ac\uba74 \ub808\uc2dc\ud53c\ub97c \uac00\uc838\uc624\ub294 \uac83\uc774 \ubaa9\ud45c\ub2e4."], ["**\uc911\uace0** \ub9e5 \ubbf8\ub2c8", "\ud55c \ub300\uac00 \ubcf8\ubd80", "---", "FRU\uc758 \ubcf8\uccb4\ub294 \uc911\uace0\ub85c \uc0b0 2020\ub144\ud615 M1 \ub9e5 \ubbf8\ub2c8\ub2e4. \uc5ec\uae30\uc11c Muse\uc640 ChatGPT \uc5d0\uc774\uc804\ud2b8\uac00 \uc778\uc2a4\ud0c0\uadf8\ub7a8 DM\uc73c\ub85c \uc0ac\uae30\uafbc\uc744 \ub77c\uc778 \uacc4\uc815\uc5d0 \ub04c\uc5b4\ub4e4\uc5ec \ubcf6\uc74c\ubc25 \ucabd\uc73c\ub85c \ub300\ud654\ub97c \uc774\ub048\ub2e4."], ["\uac78\ub824\ub4e4\uba74", "**\ubcf8\uc778\uc774 \ub4f1\ud310**", "---", "\uc0ac\uae30\uafbc\uc774 \uac78\ub824\ub4e4\uba74 AI\uac00 \ud558\ud1a0\ub9ac\uc5d0\uac8c \uc54c\ub9ac\uace0, \uadf8\uac00 \uc9c1\uc811 \ub118\uaca8\ubc1b\uc544 \ub808\uc2dc\ud53c\ub97c \ud655\ubcf4\ud55c\ub2e4. \uc5d0\uc774\uc804\ud2b8 \uc774\ub984\uc740 \ud074\ub85c\uc774(Muse)\uc640 \ub0b8\uc2dc(ChatGPT)\uc774\uba70, \ub808\uc2dc\ud53c\ub294 \uc774\ubbf8 \ud558\ub098 \uc190\uc5d0 \ub123\uc5c8\ub2e4."], ["\uc0ac\uae30 \uc870\uc2ec\ud558\ub77c\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uc0ac\uae30 DM\uc5d0 \uc2dc\ub2ec\ub824 \ubcf8 \uce5c\uad6c\ub77c\uba74 \ud1b5\ucf8c\ud574\ud560 \uc18c\uc2dd. \uc0ac\uae30\uafbc\uc758 \uc2dc\uac04\uc744 \ube7c\uc557\ub294 \ubc29\uc2dd\uc774 \uc720\ucf8c\ud574\uc11c \uac19\uc774 \uc6c3\uc73c\uba70 \ubcfc \ub9cc\ud55c \uc774\uc57c\uae30"]]}, "dcbb82372312": {"caption": "\ubcf4\uc774\uc800 1\ud638\uac00 \uc9c0\uad6c\uc5d0\uc11c 1\uad11\uc77c \ub5a8\uc5b4\uc9c4 \uac70\ub9ac\uc5d0 \uace7 \ub2ff\ub294\ub2e4\ub294 \uc18c\uc2dd\uc774 \ub098\uc654\ub2e4. \uac00\ub514\uc5b8\uc774 \uacfc\ud559 \ud31f\uce90\uc2a4\ud2b8\ub97c \ud1b5\ud574 \uc804\ud55c \uc774\uc57c\uae30\ub2e4.\n\n\ub098\uc0ac\ub294 \uac70\uc758 50\ub144 \uc804 \ubcf4\uc774\uc800 1\ud638\uc640 2\ud638 \ub450 \ud0d0\uc0ac\uc120\uc744 \uc6b0\uc8fc\ub85c \ubcf4\ub0c8\ub2e4. \ubaa9\uc801\uc740 \ud0dc\uc591\uacc4\uc758 \uba3c \ubc14\uae65\ucabd\uc744 \ud0d0\uc0ac\ud558\ub294 \uac83\uc774\uc5c8\ub2e4. \uadf8 \uac00\uc6b4\ub370 1\ud638\ub294 \uc9c0\uae08 \uc9c0\uad6c\uc5d0\uc11c \uac00\uc7a5 \uba40\ub9ac \ub5a8\uc5b4\uc9c4 \uc778\uacf5\ubb3c\uc774\uace0, \uc9c0\uad6c\ub85c\ubd80\ud130 1\uad11\uc77c \ub5a8\uc5b4\uc9c4 \uac70\ub9ac\uc5d0 \uc774\ub974\uae30 \uc9c1\uc804\uc774\ub2e4.\n\n\uc774\ubc88 \ud31f\uce90\uc2a4\ud2b8\uc5d0\uc11c \ub9e4\ub35c\ub9b0 \ud540\ub808\uc774\ub294 \uc560\ub9ac\uc870\ub098\uc8fc\ub9bd\ub300 \uc9c0\uad6c\u00b7\uc6b0\uc8fc\ud0d0\uc0ac\ud559\ubd80\uc758 \ud589\uc131\uacfc\ud559\uc790\uc774\uc790 \uad50\uc218\uc778 \uc9d0 \ubca8\uc758 \uc774\uc57c\uae30\ub97c \ub4e4\uc5c8\ub2e4. \ubca8 \uad50\uc218\ub294 \uc774 \uc784\ubb34\uac00 \ud0dc\uc591\uacc4\uc5d0 \ub300\ud55c \uc6b0\ub9ac\uc758 \uc774\ud574\uc5d0 \uc5bc\ub9c8\ub098 \ud070 \ucda9\uaca9\uc744 \uc92c\ub294\uc9c0, \uadf8\ub9ac\uace0 \ud0dc\uc591\uad8c\uc744 \ubc97\uc5b4\ub09c \ubcf4\uc774\uc800 1\ud638\uac00 \uc55e\uc73c\ub85c \uc5b4\ub514\ub85c \ud5a5\ud560 \uc218 \uc788\ub294\uc9c0\ub97c \uc124\uba85\ud55c\ub2e4.\n\n50\ub144 \uac00\uae4c\uc6b4 \uc2dc\uac04\uc774 \ud750\ub978 \uc9c0\uae08\ub3c4 \uacc4\uc18d \uba40\uc5b4\uc9c0\uace0 \uc788\ub294 \ud0d0\uc0ac\uc120\uc758 \uc5ec\uc815\uc774 \uad81\uae08\ud558\ub2e4\uba74 \ud31f\uce90\uc2a4\ud2b8\ub97c \ub4e4\uc5b4\ubcf4\uc790. \uc6b0\uc8fc \uc774\uc57c\uae30\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc5d0\uac8c \uacf5\uc720\ud574\ub3c4 \uc88b\uaca0\ub2e4.\n\n\ucd9c\ucc98: \uac00\ub514\uc5b8(The Guardian)", "hashtags": ["#\ubcf4\uc774\uc8001\ud638", "#\uc6b0\uc8fc", "#\ub098\uc0ac", "#\ud0dc\uc591\uacc4", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\ubcf4\uc774\uc800 1\ud638\uac00", "**1\uad11\uc77c** \ub208\uc55e?!", "---", "\ub098\uc0ac\uac00 50\ub144 \uac00\uae4c\uc774 \uc804\uc5d0 \uc6b0\uc8fc\ub85c \ubcf4\ub0b8 \ubcf4\uc774\uc800 1\ud638\uac00 \uc9c0\uad6c\uc5d0\uc11c 1\uad11\uc77c \ub5a8\uc5b4\uc9c4 \uc9c0\uc810\uc5d0 \uace7 \ub2ff\uc744 \uc608\uc815\uc774\ub77c\ub294 \uc18c\uc2dd"], ["**50\ub144** \uac00\uae4c\uc6b4", "\uc5ec\uc815\uc758 \uc2dc\uc791", "---", "\ub098\uc0ac\ub294 \uac70\uc758 50\ub144 \uc804 \ubcf4\uc774\uc800 1\ud638\uc640 2\ud638 \ub450 \ud0d0\uc0ac\uc120\uc744 \uc6b0\uc8fc\ub85c \ubcf4\ub0c8\ub2e4. \ubaa9\uc801\uc740 \ud0dc\uc591\uacc4\uc758 \uba3c \ubc14\uae65\ucabd\uc744 \ud0d0\uc0ac\ud558\ub294 \uac83\uc774\uc5c8\ub2e4. \uadf8 \uac00\uc6b4\ub370 1\ud638\uac00 \uc9c0\uae08 \uae30\ub85d\uc758 \ubb38\ud131\uc5d0 \uc11c \uc788\ub2e4."], ["\uc778\ub958\uac00 \ub9cc\ub4e0", "**\uac00\uc7a5 \uba3c \ubb3c\uccb4**", "---", "\ubcf4\uc774\uc800 1\ud638\ub294 \uc9c0\uad6c\uc5d0\uc11c \uac00\uc7a5 \uba40\ub9ac \ub5a8\uc5b4\uc9c4 \uc778\uacf5\ubb3c\uc774\ub2e4. \uc774\uc81c \uadf8 \uac70\ub9ac\uac00 \uc9c0\uad6c\ub85c\ubd80\ud130 1\uad11\uc77c\uc5d0 \uc774\ub974\uae30 \uc9c1\uc804\uc774\ub2e4. \uc778\ub958\uac00 \ubcf4\ub0b8 \ubb3c\uccb4\uac00 \ub2ff\uc740 \uac00\uc7a5 \uba3c \uacf3\uc774\ub77c\ub294 \ub73b\uc774\ub2e4."], ["\ud0dc\uc591\uacc4 \uc774\ud574\ub97c", "**\ub4a4\ud754\ub4e0** \uc784\ubb34", "---", "\ud589\uc131\uacfc\ud559\uc790\uc778 \uc9d0 \ubca8 \uc560\ub9ac\uc870\ub098\uc8fc\ub9bd\ub300 \uad50\uc218\ub294 \uc774 \uc784\ubb34\uac00 \ud0dc\uc591\uacc4\uc5d0 \ub300\ud55c \uc6b0\ub9ac\uc758 \uc774\ud574\uc5d0 \uc9c0\uc9c4 \uac19\uc740 \ucda9\uaca9\uc744 \uc92c\ub2e4\uace0 \uc124\uba85\ud55c\ub2e4. \uac00\ub514\uc5b8 \ud31f\uce90\uc2a4\ud2b8\uc5d0\uc11c \ub098\uc628 \uc774\uc57c\uae30"], ["**\ud0dc\uc591\uad8c**\uc744 \ubc97\uc5b4\ub09c", "\uadf8 \ub2e4\uc74c\uc740?", "---", "\ubcf4\uc774\uc800 1\ud638\ub294 \uc774\ubbf8 \ud0dc\uc591\uad8c\uc744 \ubc97\uc5b4\ub0ac\ub2e4. \uc9d0 \ubca8 \uad50\uc218\ub294 \ud0d0\uc0ac\uc120\uc774 \uc774\uc81c \uc5b4\ub514\ub85c \ud5a5\ud560 \uc218 \uc788\ub294\uc9c0\uc5d0 \ub300\ud574\uc11c\ub3c4 \uc774\uc57c\uae30\ud55c\ub2e4. \ud31f\uce90\uc2a4\ud2b8\ub294 \uc774 \uc5ec\uc815\uc744 \ub180\ub77c\uc6b4 \uc5ec\uc815\uc73c\ub85c \uc18c\uac1c\ud55c\ub2e4."], ["\uc6b0\uc8fc\ub355\ud6c4 \uce5c\uad6c\ud55c\ud14c", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30", "---", "\uce74\ub4dc \uba87 \uc7a5\uc774\uba74 50\ub144 \uac00\uae4c\uc774 \uc774\uc5b4\uc9c4 \ubcf4\uc774\uc800 1\ud638\uc758 \uc5ec\uc815\uc774 \ud55c\ub208\uc5d0 \ub4e4\uc5b4\uc628\ub2e4. \uc6b0\uc8fc \uc774\uc57c\uae30\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

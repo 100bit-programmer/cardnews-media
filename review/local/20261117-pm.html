@@ -1,0 +1,1891 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.17 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.17 오후 검수</span> <span id="progress">0 / 2 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-3bb923cd0703" data-jump="3bb923cd0703">1</a><a href="#post-1d5db9245057" data-jump="1d5db9245057">2</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-3bb923cd0703" data-id="3bb923cd0703">
+    <div class="head">
+      <h2>1. 토미 리 존스, 일본 광고에서 피카츄로 변신</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 9장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/v1-01.jpg" alt="1장: 토미 리 존스가 피카츄 됨???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/v1-02.jpg" alt="2장: 포켓몬 30주년 협업이었음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/v1-03.jpg" alt="3장: 원래 설정이 외계인 존스" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/v1-04.jpg" alt="4장: 6팩 사면 재킷 당첨?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/v1-05.jpg" alt="5장: 우에노역에 피카츄 외계인" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/v1-06.jpg" alt="6장: 포켓몬 덕후 친구 태그해서 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/product-1117081023-01.jpg" alt="상품 사진: 포켓몬 30주년 로고와 BOSS 로고가 인쇄된 캔 5개가 나란히 있음. 각 캔에 피카츄, 이상해씨, 파이리, 꼬부기, 이브이 도감 디자인과 QR코드, 캠페인 문구가 보임 (toy-people.com (©Pokémon. ©Nintendo/Creatures Inc./GAME FREAK inc.))" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/product-1117081023-02.jpg" alt="상품 사진: BOSS 캔커피 4종이 나란히 놓인 사진. 왼쪽은 BOSS 로고가 있는 빨간 캔(토미 리 존스 얼굴 그림), 오른쪽 3개는 이상해꽃·리자몽·거북왕 포켓몬 일러스트가 있는 캔. 캔에는 BOSS×30 로고와 No.0003·0006·0009 표기가 인쇄되어 있음 (toy-people.com (©Pokémon. ©Nintendo/Creatures Inc./GAME FREAK inc.))" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 9</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 2장이 카드 뒤에 같이 들어가요 (toy-people.com (©Pokémon. ©Nintendo/Creatures Inc./GAME FREAK inc.)). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">80세 할리우드 배우 토미 리 존스가 일본 캔커피 광고에서 피카츄 의상을 입고 등장했다. 원문은 평소 투박하고 꾸밈없는 이미지의 배우라 이 의상이 더 의외라고 전한다.
+
+이번 광고는 산토리 보스와 포켓몬 프랜차이즈 30주년 기념 협업의 일부이다. 존스는 여러 해 동안 보스의 고정 광고 모델로 활동해 왔고, 광고 속에서 근엄한 표정의 외계인 &#39;에일리언 존스&#39;를 연기한다. 이 외계인은 지구에 와서 열심히 일하는 인간들을 관찰하는 설정이다. 관찰 범위는 포켓몬 종으로까지 넓어진 듯하다고 원문은 소개했다.
+
+행사도 함께 진행 중이다. 1월 31일까지 보스 커피 6팩을 산 고객은 보스 로고와 포켓몬 30주년 엠블럼이 들어간 재킷에 당첨될 기회를 얻는다. 오프라인에서는 11월 22일까지 도쿄 우에노역 주오 게이트 밖 우에노 캔버스와 인접 통로에서 피카츄로 변신한 외계인을 만날 수 있다.
+
+포켓몬을 좋아하는 친구가 있다면 태그해서 같이 웃어 보자.
+
+출처: SoraNews24, PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#토미리존스 #피카츄 #포켓몬 #일본광고 #보스커피</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 존스가 웃음거리가 되는 것에 전혀 개의치 않는다는 내용</li><li>근거 등록 안 된 주장: 다른 할리우드 배우들이 이런 작업을 피하는 가운데 존스는 일본에서 고정 광고 계약을 유지하는 몇 안 되는 배우 중 하나라는 내용</li><li>근거 등록 안 된 주장: 인터넷 동영상 플랫폼 때문에 이런 기발한 부업이 1980~90년대처럼 일본 내에서만 보이지 않는다는 내용</li><li>근거 등록 안 된 주장: 산토리가 일본 최대 음료 회사 중 하나라는 내용</li><li>근거 등록 안 된 주장: 피카츄 존스가 여러 매장의 포스터와 간판에 등장할 것이라는 예상</li><li>근거 등록 안 된 주장: 출처가 SoraNews24와 PR Times라는 내용</li>
+          <li>상업 광고·프로모션 소재라 홍보성 콘텐츠로 읽힐 수 있음</li><li>포켓몬·산토리 보스 등 상표·캐릭터 저작권 이슈, 공식 이미지와 기사 사진은 사용하지 않음</li><li>실존 인물(토미 리 존스) 초상 사용 금지, 배경 이미지는 일반 사물·장소로 대체</li><li>행사 기간(1월 31일, 11월 22일)은 원문 기준이며 연도와 변경 여부는 원문에 명시되지 않음</li><li>원문이 유머 톤의 매체 기사라 &#39;효과&#39;나 인기 등 평가성 표현은 쓰지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-3bb923cd0703-0">1장</label>
+          <textarea id="s-3bb923cd0703-0" rows="6" data-slide="0">토미 리 존스가
+**피카츄** 됨???
+---
+80세 할리우드 배우 토미 리 존스가 일본 캔커피 보스의 최신 광고에서 피카츄 의상을 입고 등장했다.</textarea>
+          
+          <label class="f" for="s-3bb923cd0703-1">2장</label>
+          <textarea id="s-3bb923cd0703-1" rows="6" data-slide="1">포켓몬 **30주년**
+협업이었음
+---
+이번 피카츄 의상은 보스 캔커피와 포켓몬 프랜차이즈 30주년 기념 협업의 일부이다. 존스는 여러 해 동안 보스 광고에 꾸준히 출연해 온 모델이다.</textarea>
+          
+          <label class="f" for="s-3bb923cd0703-2">3장</label>
+          <textarea id="s-3bb923cd0703-2" rows="6" data-slide="2">원래 설정이
+**외계인** 존스
+---
+보스 광고에서 존스는 &#39;에일리언 존스&#39;를 연기한다. 근엄한 표정의 외계인으로, 지구에 와서 열심히 일하는 인간들을 관찰하는 설정이다.</textarea>
+          
+          <label class="f" for="s-3bb923cd0703-3">4장</label>
+          <textarea id="s-3bb923cd0703-3" rows="6" data-slide="3">6팩 사면
+**재킷** 당첨?
+---
+산토리는 1월 31일까지 보스 커피 6팩을 산 고객에게 재킷 당첨 기회를 주는 행사를 진행 중이다. 재킷에는 보스 로고와 포켓몬 30주년 엠블럼이 들어간다.</textarea>
+          
+          <label class="f" for="s-3bb923cd0703-4">5장</label>
+          <textarea id="s-3bb923cd0703-4" rows="6" data-slide="4">**우에노역에**
+피카츄 외계인
+---
+산토리는 11월 22일까지 도쿄 우에노역 주오 게이트 밖 우에노 캔버스와 인접 통로를 차지한다. 피카츄로 변한 외계인이 여행객을 대형 규모로 맞이한다는 계획이다.</textarea>
+          
+          <label class="f" for="s-3bb923cd0703-5">6장</label>
+          <textarea id="s-3bb923cd0703-5" rows="6" data-slide="5">포켓몬 덕후 친구
+태그해서 보내기
+---
+근엄한 이미지의 80세 배우가 피카츄 의상을 입고 광고에 나왔다는 한 줄이 웃음 포인트. 포켓몬을 좋아하는 친구와 같이 웃어 볼 만한 소식</textarea>
+          
+          <label class="f" for="c-3bb923cd0703">본문 (캡션)</label>
+          <textarea id="c-3bb923cd0703" class="caption">80세 할리우드 배우 토미 리 존스가 일본 캔커피 광고에서 피카츄 의상을 입고 등장했다. 원문은 평소 투박하고 꾸밈없는 이미지의 배우라 이 의상이 더 의외라고 전한다.
+
+이번 광고는 산토리 보스와 포켓몬 프랜차이즈 30주년 기념 협업의 일부이다. 존스는 여러 해 동안 보스의 고정 광고 모델로 활동해 왔고, 광고 속에서 근엄한 표정의 외계인 &#39;에일리언 존스&#39;를 연기한다. 이 외계인은 지구에 와서 열심히 일하는 인간들을 관찰하는 설정이다. 관찰 범위는 포켓몬 종으로까지 넓어진 듯하다고 원문은 소개했다.
+
+행사도 함께 진행 중이다. 1월 31일까지 보스 커피 6팩을 산 고객은 보스 로고와 포켓몬 30주년 엠블럼이 들어간 재킷에 당첨될 기회를 얻는다. 오프라인에서는 11월 22일까지 도쿄 우에노역 주오 게이트 밖 우에노 캔버스와 인접 통로에서 피카츄로 변신한 외계인을 만날 수 있다.
+
+포켓몬을 좋아하는 친구가 있다면 태그해서 같이 웃어 보자.
+
+출처: SoraNews24, PR Times</textarea>
+          <label class="f" for="t-3bb923cd0703">해시태그</label>
+          <input id="t-3bb923cd0703" type="text" class="tagsin" value="#토미리존스 #피카츄 #포켓몬 #일본광고 #보스커피" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/product-1117081023-01.jpg" alt="" width="56" height="56" loading="lazy"> 포켓몬 30주년 로고와 BOSS 로고가 인쇄된 캔 5개가 나란히 있음. 각 캔에 피카츄, 이상해씨, 파이리, 꼬부기, 이브이 도감 디자인과 QR코드, 캠페인 문구가 보임 · toy-people.com (©Pokémon. ©Nintendo/Creatures Inc./GAME FREAK inc.)</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/3bb923cd0703/product-1117081023-02.jpg" alt="" width="56" height="56" loading="lazy"> BOSS 캔커피 4종이 나란히 놓인 사진. 왼쪽은 BOSS 로고가 있는 빨간 캔(토미 리 존스 얼굴 그림), 오른쪽 3개는 이상해꽃·리자몽·거북왕 포켓몬 일러스트가 있는 캔. 캔에는 BOSS×30 로고와 No.0003·0006·0009 표기가 인쇄되어 있음 · toy-people.com (©Pokémon. ©Nintendo/Creatures Inc./GAME FREAK inc.)</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>80세 베테랑 배우 토미 리 존스가 보스 최신 광고에서 피카츄 의상을 입었다</b>
+            <q>“Of course, that atmosphere of solemn dignity is slightly diluted in Jones’ latest ads for Boss, in which the 80-year-old veteran actor dresses as Pikachu.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>토미 리 존스는 할리우드 배우이다</b>
+            <q>“Among Hollywood celebrities, Tommy Lee Jones has always had an old-fashioned, no-nonsense persona.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>피카츄 의상은 보스와 포켓몬 30주년 기념 협업의 일부이다</b>
+            <q>“The unexpected outfit comes as part of Boss’ collaboration with the 30th anniversary celebration of the Pokémon franchise.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>존스는 여러 해 동안 보스의 고정 광고 모델로 일본에서 활동해 왔다</b>
+            <q>“Jones has been a regular pitchman for Boss for many years, one of the few Hollywood celebrities to stick around with a regular marketing deal in Japan after many of his brethren started avoiding such work, as Internet video-sharing platforms mean such silly side projects can no longer be limited to viewers in Japan only like they were in the 1980s and ‘90s.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>광고에서 존스는 근엄한 표정의 외계인 에일리언 존스를 연기하며, 이 외계인은 열심히 일하는 인간들을 관찰한다</b>
+            <q>“Not only is Jones unconcerned about being laughed at, that’s arguably the entire point of his ads for Boss, in which he portrays “Alien Jones,” a stern-faced extraterrestrial who comes to earth to observe hard-working humans in their natural environments.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1월 31일까지 보스 커피 6팩을 산 고객은 보스 로고와 포켓몬 30주년 엠블럼이 들어간 재킷에 당첨될 기회가 있다</b>
+            <q>“Suntory is currently running a promotion in which customers who buy a six-pack of Boss coffee between now and January 31 have a chance of winning a jacket with the Boss logo and the Pokémon 30th anniversary emblem.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>산토리가 11월 22일까지 도쿄 우에노역 주오 게이트 밖 우에노 캔버스와 인접 통로를 차지해 피카츄로 변한 외계인이 여행객을 맞이한다</b>
+            <q>“With Suntory being one of Japan’s biggest beverage makers, we’ll probably be seeing the Pikachu Tommy Lee Jones popping up on posters and signboards at various stores in Japan, but if you want to be sure of spotting him, Suntory will be taking over the Ueno Canvas and adjacent concourse outside the Chuo Gate of Ueno Station in Tokyo from now until November 22 so that their Poké-fied alien can greet travelers in large-scale style.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>존스는 평소 투박하고 꾸밈없는 이미지의 배우이다</b>
+            <q>“Among Hollywood celebrities, Tommy Lee Jones has always had an old-fashioned, no-nonsense persona.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>에일리언 존스의 관찰 범위가 포켓몬 종으로까지 넓어진 듯하다</b>
+            <q>“He’s also apparently expanded his observational operations to include Pokémon species, such as in this short video where he learns about Psyduck.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 광고는 산토리 보스와 포켓몬 프랜차이즈 30주년 협업의 일부이다</b>
+            <q>“The unexpected outfit comes as part of Boss’ collaboration with the 30th anniversary celebration of the Pokémon franchise.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">Tommy Lee Jones becomes Pikachu in Japan for Suntory</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://img.toy-people.com/member/179479414637.JPG"</li><li>2장: <a href="https://pixabay.com/photos/cupcakes-candles-birthday-380178/" target="_blank" rel="noopener">cbaquiran / Pixabay</a> — "anniversary party"</li><li>3장: <a href="https://www.nippon.com/en/articles/-/12327" target="_blank" rel="noopener">Nippon.com / </a> — "https://nippon.ismcdn.jp/mwimgs/9/d/1238m/img_9d73e6b09b7b4930f677732b687eaa0449987.jpg"</li><li>4장: <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/pj-2.jpg"</li><li>5장: <a href="https://commons.wikimedia.org/wiki/File:251130_Ueno_Station.jpg" target="_blank" rel="noopener">Aspere / Wikimedia Commons · CC0</a> — "Ueno Station"</li><li>6장: <a href="https://soranews24.com/2026/11/17/tommy-lee-jones-becomes-pikachu-in-japan-for-suntory/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/pj-1.jpg"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-1d5db9245057" data-id="1d5db9245057">
+    <div class="head">
+      <h2>2. 도쿄 로봇 쓰레기통 도입</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 10
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-01.jpg" alt="1장: 쓰레기통이 알아서 간다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-02.jpg" alt="2장: 일본엔 원래 쓰레기통이 없어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-03.jpg" alt="3장: 2022년엔 오히려 다 뺐다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-04.jpg" alt="4장: 5분마다 압축하는 통" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-05.jpg" alt="5장: 꽉 차면 혼자 비우러 가" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-06.jpg" alt="6장: 반응이 예상보다 좋아" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-07.jpg" alt="7장: 도쿄 다녀온 친구 태그해서 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/product-1117081257-01.jpg" alt="상품 사진: 공원 길가에 설치된 검은색 5구 쓰레기통 사진. 왼쪽 본체 측면에 SmaGO 로고와 일본어 안내 그림이 있고, 나머지 네 칸은 캔·병·페트병 등 분리수거 투입구가 파란색으로 표시되어 있다. (smago.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/product-1117081257-02.jpg" alt="상품 사진: 갈색 3구 쓰레기통 세 개가 나란히 놓인 모습. 왼쪽은 캔, 가운데는 타는 쓰레기, 오른쪽은 병·페트병 구역이며 각 구역에 분리수거 그림과 다국어 안내가 있음. 뒤쪽에는 나무와 건물이 보임. 상단 로고는 잘 보이지 않음. (smago.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 3장이 카드 뒤에 같이 들어가요 (smago.jp). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">쓰레기통이 스스로 움직인다는 소식, 알고 보면 꽤 오래된 고민에서 나왔다. 일본을 여행해 본 사람이라면 거리에서 쓰레기통을 찾기 어려워 당황한 적이 있을 것이다. 이는 의도된 결과였다. 보안과 넘침 문제를 걱정한 당국이 통을 줄였고, 버리기 어려우면 쓰레기를 덜 만들게 된다는 생각도 있었다. 이 방식은 수십 년간 거리를 깨끗하게 지켰지만 관광객에게는 큰 불편으로 꼽힌다. 그런데도 도쿄 메트로는 2022년에 공공 쓰레기통을 모두 없앴다. 동시에 도쿄는 여러 기업과 손잡고 더 많이 담고 넘치지 않는 똑똑한 통을 만들고 있다. 포스텍(Forcetec)이 설치하는 스마고(SmaGO)는 태양광으로 작동하며 5분마다 쓰레기를 압축해 일반 통보다 5배를 담는다. 얼마나 찼는지도 온라인으로 확인할 수 있다. 한편 카트켄의 40리터 로봇 쓰레기통은 센서로 거의 찼음을 감지하면 스스로 이동해 비워진다. 동일본여객철도는 신주쿠역에서 이 로봇을 쓰며, 초기 조사에서 반응이 예상보다 긍정적이었다고 밝혔다. 일자리를 뺏는다는 비판이 나오기 쉬운 로봇이지만, 이런 청소 일자리는 이미 몇 년 전 사라졌고 로봇이 일부를 되살리고 있다고 한다.
+
+출처: Good News Network, Japan Times 인용 보도</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본여행 #도쿄 #로봇 #쓰레기통 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 포스텍(Forcetec)이 스마고를 판매·설치한다는 주장 (원문: forcetec, which sells and installs smago)</li><li>근거 등록 안 된 주장: 스마고가 미국에서 개발되었다는 주장 (원문: developed in the united states)</li><li>근거 등록 안 된 주장: 카트켄이 캘리포니아 기업이라는 주장 (원문: California-based firm Cartken)</li><li>근거 등록 안 된 주장: 출처를 Good News Network와 Japan Times 인용 보도로 밝힌 주장</li>
+          <li>기사 발행일이 2026-11-16으로 표기되어 있어 날짜 확인 필요</li><li>로봇이 일자리를 되살린다는 부분은 기사 서술이며 구체적 수치 근거 없음</li><li>스마고·카트켄 등 기업명이 언급되어 광고성으로 읽히지 않게 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-1d5db9245057-0">1장</label>
+          <textarea id="s-1d5db9245057-0" rows="6" data-slide="0">쓰레기통이
+**알아서** 간다???
+---
+일본 도쿄에서 스스로 움직여 쓰레기를 비우러 가는 로봇 쓰레기통이 신주쿠역에 투입되었다.</textarea>
+          
+          <label class="f" for="s-1d5db9245057-1">2장</label>
+          <textarea id="s-1d5db9245057-1" rows="6" data-slide="1">일본엔 원래
+쓰레기통이 **없어**
+---
+일본을 여행하면 공공 쓰레기통이 거의 없어 당황하게 된다. 보안과 넘침 문제를 걱정한 당국의 의도였고, 버리기 어려우면 덜 만들게 된다는 생각도 깔려 있다.</textarea>
+          
+          <label class="f" for="s-1d5db9245057-2">3장</label>
+          <textarea id="s-1d5db9245057-2" rows="6" data-slide="2">2022년엔
+오히려 **다 뺐다**
+---
+도쿄 메트로는 2022년에 공공 쓰레기통을 모두 없앴다. 이 방식은 수십 년간 거리를 깨끗하게 지켰지만 관광객에게는 큰 불편이었다.</textarea>
+          
+          <label class="f" for="s-1d5db9245057-3">4장</label>
+          <textarea id="s-1d5db9245057-3" rows="6" data-slide="3">**5분마다**
+압축하는 통
+---
+태양광으로 움직이는 스마고(SmaGO)는 5분마다 쓰레기를 압축한다. 압축 기능이 없는 통보다 5배를 담을 수 있고, 얼마나 찼는지 온라인으로 확인한다.</textarea>
+          
+          <label class="f" for="s-1d5db9245057-4">5장</label>
+          <textarea id="s-1d5db9245057-4" rows="6" data-slide="4">꽉 차면
+**혼자** 비우러 가
+---
+미국 캘리포니아 기업 카트켄의 40리터 로봇 쓰레기통은 센서로 찬 정도를 잰다. 거의 차면 사람 손이 닿지 않는 곳으로 스스로 이동해 비워진다.</textarea>
+          
+          <label class="f" for="s-1d5db9245057-5">6장</label>
+          <textarea id="s-1d5db9245057-5" rows="6" data-slide="5">반응이
+예상보다 **좋아**
+---
+동일본여객철도는 신주쿠역에서 이 로봇을 쓰고 있다. 대변인은 초기 조사에서 이용과 수용 반응이 예상보다 긍정적이었다고 밝혔다.</textarea>
+          
+          <label class="f" for="s-1d5db9245057-6">7장</label>
+          <textarea id="s-1d5db9245057-6" rows="6" data-slide="6">**도쿄** 다녀온 친구
+태그해서 보내기
+---
+쓰레기통 찾아 헤맨 기억이 있는 친구라면 반가워할 소식. 그 불편을 로봇이 풀어 주고 있다는 이야기를 함께 나눌 만하다.</textarea>
+          
+          <label class="f" for="c-1d5db9245057">본문 (캡션)</label>
+          <textarea id="c-1d5db9245057" class="caption">쓰레기통이 스스로 움직인다는 소식, 알고 보면 꽤 오래된 고민에서 나왔다. 일본을 여행해 본 사람이라면 거리에서 쓰레기통을 찾기 어려워 당황한 적이 있을 것이다. 이는 의도된 결과였다. 보안과 넘침 문제를 걱정한 당국이 통을 줄였고, 버리기 어려우면 쓰레기를 덜 만들게 된다는 생각도 있었다. 이 방식은 수십 년간 거리를 깨끗하게 지켰지만 관광객에게는 큰 불편으로 꼽힌다. 그런데도 도쿄 메트로는 2022년에 공공 쓰레기통을 모두 없앴다. 동시에 도쿄는 여러 기업과 손잡고 더 많이 담고 넘치지 않는 똑똑한 통을 만들고 있다. 포스텍(Forcetec)이 설치하는 스마고(SmaGO)는 태양광으로 작동하며 5분마다 쓰레기를 압축해 일반 통보다 5배를 담는다. 얼마나 찼는지도 온라인으로 확인할 수 있다. 한편 카트켄의 40리터 로봇 쓰레기통은 센서로 거의 찼음을 감지하면 스스로 이동해 비워진다. 동일본여객철도는 신주쿠역에서 이 로봇을 쓰며, 초기 조사에서 반응이 예상보다 긍정적이었다고 밝혔다. 일자리를 뺏는다는 비판이 나오기 쉬운 로봇이지만, 이런 청소 일자리는 이미 몇 년 전 사라졌고 로봇이 일부를 되살리고 있다고 한다.
+
+출처: Good News Network, Japan Times 인용 보도</textarea>
+          <label class="f" for="t-1d5db9245057">해시태그</label>
+          <input id="t-1d5db9245057" type="text" class="tagsin" value="#일본여행 #도쿄 #로봇 #쓰레기통 #해외이슈" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/product-1117081257-01.jpg" alt="" width="56" height="56" loading="lazy"> 공원 길가에 설치된 검은색 5구 쓰레기통 사진. 왼쪽 본체 측면에 SmaGO 로고와 일본어 안내 그림이 있고, 나머지 네 칸은 캔·병·페트병 등 분리수거 투입구가 파란색으로 표시되어 있다. · smago.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/product-1117081257-02.jpg" alt="" width="56" height="56" loading="lazy"> 갈색 3구 쓰레기통 세 개가 나란히 놓인 모습. 왼쪽은 캔, 가운데는 타는 쓰레기, 오른쪽은 병·페트병 구역이며 각 구역에 분리수거 그림과 다국어 안내가 있음. 뒤쪽에는 나무와 건물이 보임. 상단 로고는 잘 보이지 않음. · smago.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="2"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/1d5db9245057/product-1117081257-03.jpg" alt="" width="56" height="56" loading="lazy"> 파랑과 연두색 2구 쓰레기통 측면 모습. 왼쪽은 파랑색으로 페트병 투입구와 &#39;ペットボトル&#39; 표기, 오른쪽은 연두색으로 캡 투입구가 있음. 상단에 작은 로고와 카메라 같은 장치가 보이고 뒤쪽은 벽돌 건물과 나무. · smago.jp</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 여행 중 공공 쓰레기통이 거의 없는 것은 의도된 것이다</b>
+            <q>“If you’ve ever visited Japan, you too may have been left confused and eventually frustrated by what appears to be a total absence of public waste bins. This is by design.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보안과 넘침을 걱정한 당국이 쓰레기통을 줄였고, 버리기 어려우면 덜 만들게 된다는 생각이 있다</b>
+            <q>“Officials concerned about security and overflowing bins have left the public with few places to dispose of their trash. There is also a philosophy that if waste is difficult to dispose of, people will be less prone to creating it.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>도쿄 메트로가 2022년에 공공 쓰레기통을 모두 없앴다</b>
+            <q>“Yet the trend towards removing waste bins has continued, with the Tokyo metro removing all public waste bins as recently as 2022.”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 방식은 수십 년간 거리를 깨끗하게 했지만 방문객에게는 큰 불편이다</b>
+            <q>“Japanese tourism authorities are beginning to understand that, while this approach may have seen citizens keep their streets clean for decades, it’s a major inconvenience for visitors.”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스마고는 5분마다 압축하며 일반 통보다 5배를 담는다</b>
+            <q>“It compacts waste every 5 minutes and can hold 5 times as much trash as a non-compacting bin.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스마고는 태양광 방식이며 얼마나 찼는지 온라인으로 확인할 수 있다</b>
+            <q>“The communications function also allows operators to check online how full each bin is, so they can make collections more efficiently before the bins reach capacity.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카트켄의 40리터 로봇 쓰레기통은 센서로 찬 정도를 재고 스스로 비우러 이동한다</b>
+            <q>“Enter California-based firm Cartken, whose 40-liter robotic trash bins use sensors to measure when they’re almost full, at which point they drive themselves out of the public reach for emptying.”</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>동일본여객철도가 신주쿠역에서 로봇을 쓰며 초기 반응이 예상보다 긍정적이다</b>
+            <q>“East Japan Railroad uses the robot janitors at Shinjuku Station, one of the busiest train stations on Earth, and early surveys on consumer use and acceptance have been “more positive than anticipated,” a spokesperson told Japan Times.”</q>
+            <small>slide1, slide6 · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 지자체는 이미 몇 년 전 이런 청소 일자리를 없앴고 로봇이 일부를 되살린다</b>
+            <q>“Robotic solutions have a knack for attracting criticism that they’re eliminating jobs, but as was explored above, Japanese municipal governments already eliminated these kinds of sanitation jobs years ago. The robots are actually bringing some back.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>도쿄는 여러 기업과 더 많이 담고 넘치지 않는 쓰레기통을 설계하고 있다</b>
+            <q>“In parallel, however, the city has been enlisting the help of various firms to design smarter waste bins that hold more and won’t overflow.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/" target="_blank" rel="noopener">Tokyo Tackles Trash Troubles with New Generation of Robotic Street Waste Bins</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Shinjuku_Station_2023-07-22.jpg" target="_blank" rel="noopener">Dick Thomas Johnson / Wikimedia Commons · CC BY 2.0</a> — "Shinjuku Station"</li><li>2장: <a href="https://pixabay.com/photos/city-walkway-trees-sidewalk-avenue-2045453/" target="_blank" rel="noopener">RealAKP / Pixabay</a> — "empty sidewalk"</li><li>3장: <a href="https://pixabay.com/photos/metro-platform-public-transport-1853976/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "subway station"</li><li>4장: <a href="https://pixabay.com/photos/photovoltaic-photovoltaic-system-2138992/" target="_blank" rel="noopener">andreas160578 / Pixabay</a> — "solar panel"</li><li>5장: <a href="https://pixabay.com/photos/robot-woman-face-cry-sad-3010309/" target="_blank" rel="noopener">51581 / Pixabay</a> — "robot technology"</li><li>6장: <a href="https://commons.wikimedia.org/wiki/File:Construction_near_Shinjuku_station.jpg" target="_blank" rel="noopener">Syced / Wikimedia Commons · CC0</a> — "Shinjuku Station"</li><li>7장: <a href="https://pixabay.com/photos/tokyo-woman-market-city-people-4436914/" target="_blank" rel="noopener">thepoorphotographer / Pixabay</a> — "tokyo street"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-3592c90c22b8">
+    <div class="head">
+      <h2>S1. 식이섬유 부족하면 장 세균이 점액층을 먹는다 (프리프 연구)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 9 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-3592c90c22b8">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 메커니즘(페놀·티로신) 말고 &#39;채소 대충 먹은 날 장 속에서 벌어지는 일(쥐 실험)&#39;이라는 매일 식단과의 연결로 파는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">오늘 밥상에 식이섬유가 모자라면 장 속 세균이 다른 걸 먹기 시작할 수 있대
+쥐 실험에서 나온 얘기인데, 뭘 먹는지가 포인트임
+그리고 섬유 말고도 좋은 물질 만드는 데 필요한 게 따로 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">96/500자</span></div>
+      <p class="tp-text">1/ 쥐 실험에서 식이섬유가 바닥나자, 장 세균이 장벽을 덮은 점액층을 먹기 시작했대. 그러면서 몸에 해로울 수 있는 물질이 만들어졌고. 그럼 좋은 물질은 어디서 나왔을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">2/ 쥐 실험에선 좋은 물질이 거의 전부 &#39;프리프(Prif)&#39;라는 식물성 단백질에서 나왔대. 소화가 안 되는 식물 단백질인데 섬유 흉내를 낸다고 &#39;섬유 흉내 단백질&#39;이라 부르는 거. 그럼 섬유랑 프리프는 정확히 뭘 바꿀까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">3/ 섬유와 프리프는 같은 방향으로 작동했대. 장 세균이 아미노산을 소화하며 만드는 페놀 대사산물의 균형을, 티로신에서 나오는 해로운 쪽에서 페닐알라닌에서 나오는 건강한 쪽으로 옮겨 놓는다는 거야. 근데 이 좋은 물질에 반전이 하나 더 있음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">4/ 몸에 좋은 이 물질들이 전부 장내 세균 몫이라고 알려졌었는데, 인돌-3-락테이트 같은 물질은 장 밖의 다른 세포도 만들 수 있다는 실험이 나왔대. 쥐, 래트, 사람 세포로 한 실험이고. 그럼 이 연구가 남긴 걸 한눈에 보면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">182/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 섬유가 바닥나면: 쥐 실험에서 장 세균이 점액층을 먹고 해로울 수 있는 물질을 만듦
+- 섬유 + 프리프: 페놀 대사산물을 건강한 쪽으로 이동
+- 좋은 물질 일부는 장 밖 세포도 생성 (쥐·래트·사람 세포 실험)
+- 남은 과제: 식단 변화가 사람 건강에 주는 영향은 더 봐야 함
+그래서 오늘 뭘 바꾸면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">220/500자</span></div>
+      <p class="tp-text">6/ 기사가 짚은 결론은 식물성 음식을 식단에 최대한 많이 넣으라는 거래. 쥐 실험이 포함된 연구라 사람 건강에 어떻게 이어지는지는 앞으로 더 봐야 하고.
+오늘 한 끼에 채소나 잡곡 들어간 사람?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>기사는 식물성 식품을 식단에 최대한 많이 넣으라고 짚는다 <small>애매 · 근거는 식물성 식품을 최대한 많이 먹으라는 &#39;다시 한번 상기시키는&#39; 말이지 기사의 핵심 결론으로 강조된 것은 아니다. &#39;결론&#39;이라는 표현은 과장에 가깝다.</small></li>
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>오늘 밥상에 식이섬유가 모자라면 장 속 세균이 다른 걸 먹기 시작할 수 있대</li><li>식이섬유는 &#39;몸이 쓰는 영양&#39;이 아니라 &#39;장 속 세균에게 줄 밥&#39;이래</li><li>장 건강 고민, 뭘 더 사 먹기보다 식탁에 식물성 음식부터 채우라는 연구 소개가 나옴</li><li>채소 대충 먹고 넘긴 날, 장 속에선 무슨 일이 벌어질까 (쥐 실험이긴 한데)</li><li>&#39;식이섬유 챙겨 먹어라&#39; 잔소리, 그 이유를 장 속에서 따라가 본 연구가 나옴</li><li>식품 포장에 식이섬유 옆에 이것도 적히는 날이 올 수도 있대</li><li>장 속 세균은 같은 재료로 해로운 것도, 좋은 것도 만든대. 갈림길은 식이섬유</li><li>몸에 좋은 물질은 장 세균만 만드는 줄 알았는데, 아니었다는 연구</li><li>채소가 모자라면 장벽을 덮은 점액층이 먹힐 수 있다는 쥐 실험이 나옴</li><li>채소·잡곡 적게 먹는 날, 장 속 세균은 뭘 먹고 있을까?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>오늘 한 끼에 채소나 잡곡 들어간 사람?</li><li>채소 반찬 vs 잡곡밥, 더 챙기기 쉬운 쪽은?</li><li>식품 포장에 프리프 함량이 적히면 챙겨 볼 사람?</li><li>식이섬유 챙기려고 일부러 하는 습관 있는 사람?</li><li>너라면 오늘 저녁에 채소 하나 더 올릴 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>프리프 단백질, 어떤 식물성 식품에 많을까</li><li>식단을 바꾸면 장내 세균은 얼마나 빨리 달라질까</li><li>장 밖 세포도 만든다는 인돌 물질, 후속 연구 얘기</li><li>식이섬유 부족과 장 점막 연구, 사람 대상 결과가 나오면</li><li>해외 식품 영양 표시 변화 소식</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>쥐 실험 결과를 사람 이야기로 읽히지 않게 &#39;쥐 실험&#39; 표기가 유지되는지 확인</li><li>&#39;식물성 음식을 최대한 많이&#39;는 연구진이 아니라 기사(ScienceAlert)의 코멘트라 6/에서 &#39;기사가 짚은&#39;으로 출처를 밝힌 부분 유지</li><li>프리프는 연구진이 붙인 용어이고 식품 포장 표시는 &#39;언젠가 가능&#39;이라는 전망이라 단정하지 말 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>기사는 식물성 식품을 식단에 최대한 많이 넣으라고 짚는다</b>
+          <q>“It&#39;s also another reminder to get as many plant-based foods in your diet as possible – as they really seem to promote positive gut metabolites, and healthier bodily functions.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식이섬유가 바닥나면 장 세균이 장벽을 덮은 점액층을 먹기 시작할 수 있다는 쥐 실험 결과</b>
+          <q>“Further experiments on mice showed that if and when the fiber runs out, bacteria can start feeding on the mucus lining the gut walls, producing compounds that are potentially harmful to the body.”</q>
+          <small>post0, post1 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그 과정에서 몸에 해로울 수 있는 물질이 만들어진다</b>
+          <q>“Further experiments on mice showed that if and when the fiber runs out, bacteria can start feeding on the mucus lining the gut walls, producing compounds that are potentially harmful to the body.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>좋은 물질은 거의 전부 프리프 단백질에서 나온다</b>
+          <q>“In contrast, the good chemicals come almost entirely from the Prif proteins mentioned earlier.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>프리프는 식물의 소화되지 않는 단백질로, 섬유를 흉내 낸다는 뜻의 이름이다</b>
+          <q>“Our studies showed that both the fiber and indigestible proteins from plants – which we call &#39;proteins imitating fiber&#39;, or Prif – shift the balance of phenol metabolites from the harmful kind made from tyrosine to the healthful variety derived from phenylalanine”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>섬유와 프리프는 페놀 대사산물의 균형을 티로신에서 나오는 해로운 쪽에서 페닐알라닌에서 나오는 건강한 쪽으로 옮긴다</b>
+          <q>“Our studies showed that both the fiber and indigestible proteins from plants – which we call &#39;proteins imitating fiber&#39;, or Prif – shift the balance of phenol metabolites from the harmful kind made from tyrosine to the healthful variety derived from phenylalanine”</q>
+          <small>post3, post5 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>페놀 대사산물은 장 세균이 특정 아미노산을 소화하며 만들어진다</b>
+          <q>“The terms used can get quite technical – this was a detailed chemical analysis, after all – but in simple terms the researchers were looking at chemicals called phenol metabolites, produced as gut bacteria digest certain amino acids.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>건강과 밀접하다고 알려진, 장내 세균에서만 나온다고 여겨졌던 대사물질이 몸의 다른 대사 과정에서도 만들어질 수 있다</b>
+          <q>“The researchers also discovered that a broader range of metabolites, known to be closely related to health and previously believed to all come from gut bacteria, could also be produced by metabolism processes elsewhere in the body.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인돌-3-락테이트 같은 물질이 장 밖 다른 세포에서도 만들어질 수 있고, 쥐·래트·사람 세포 실험이었다</b>
+          <q>“Chemicals such as indole-3-lactate and indole-3-acetate, for example, could be produced by other cells outside of the gut, according to experiments carried out by the researchers on cells from mice, rats, and humans.”</q>
+          <small>post4, post5 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>식단 변화가 사람 건강에 주는 영향을 장기적으로 직접 살펴보는 것은 앞으로의 과제다</b>
+          <q>“Next, the researchers could look more directly at how diet changes influence human health over time, when it comes to phenol metabolite production, and examine in more detail how cells outside the gut produce the chemicals covered in these studies.”</q>
+          <small>post5, post6 · <a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="3592c90c22b8">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/without-enough-fiber-gut-bacteria-can-turn-to-eating-your-gut-lining-instead" target="_blank" rel="noopener">Without Enough Fiber, Gut Bacteria Can Turn to Eating Your Gut Lining Instead</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-24512903877a">
+    <div class="head">
+      <h2>S2. 같은 케토 식단인데 면역 반응이 달랐다: 쇼트닝 vs 코코넛오일 쥐 실험</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-24512903877a">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강과학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;케토면 다 같은 케토&#39;라는 통념을 뒤집고, 지방 양이 같아도 지방 종류에 따라 결과가 갈렸다는 대비로 판다 (쥐·세포 실험임을 같이 밝힘).</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">케토 다이어트, &#39;지방 비율&#39;만 보지 말고 &#39;무슨 지방이냐&#39;부터 보라는 연구가 나옴
+쥐 실험이긴 한데, 지방 양은 같은데도 면역 반응이 달랐대
+근데 코코넛오일 쪽은 왜 멀쩡했는지가 포인트임 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">1/ 쥐 두 그룹한테 지방이 열량의 약 90%인 케토 식단을 먹였는데, 한쪽만 장기에 염증성 면역세포가 쌓였대. 갈린 건 지방 &#39;양&#39;이 아니라 &#39;종류&#39;였음. 그럼 두 식단은 뭐가 달랐을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">2/ 한쪽은 크리스코 같은 쇼트닝, 다른 쪽은 코코넛오일로 지방을 채웠음. 쇼트닝 쪽 쥐는 여러 장기에 염증성 면역세포가 쌓였고, 코코넛오일 쪽은 심장이랑 신장에서 그런 증가가 없었대. 그럼 쇼트닝 속 어떤 성분이 범인이었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">3/ 범인 후보는 팔미트산이랑 스테아르산, 둘 다 포화지방이야. 실험실 접시에서 이 둘을 면역세포에 넣었더니 염증 쪽으로 기울었고, 사람 세포도 팔미트산에 똑같이 반응했대. 그럼 코코넛오일엔 이 둘이 얼마나 들었을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">4/ 코코넛오일도 90% 넘게 포화지방인데, 팔미트산이랑 스테아르산은 약 12%뿐이었대. 쇼트닝 케토 식단은 약 26%. 21일 뒤 심장·신장 검사에서 코코넛 쪽은 염증 표지가 안 올랐고. 근데 이게 사람한테도 그럴까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">176/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 지방 약 90%인 케토 식단 쥐 실험: 쇼트닝 쪽만 염증성 면역세포가 쌓임
+- 접시 실험: 팔미트산·스테아르산이 염증 쪽으로 밀었고 사람 세포도 비슷했음
+- 면역 경보 장치(cGAS-STING) 일부를 없앤 쥐는 쌓임이 크게 줄었음
+- 사람 대상 실험은 없었고, 쌓인 게 곧 해롭다는 증거도 아님</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">230/500자</span></div>
+      <p class="tp-text">6/ 결국 포인트는 케토도 &#39;지방 비율&#39;만큼 &#39;어떤 지방이냐&#39;를 사람 대상으로 따져봐야 한다는 거. 시도하기 전엔 의사나 영양사랑 상의하고.
+다이어트 식단 고를 때 &#39;비율파&#39; vs &#39;재료 종류파&#39;, 너는 어느 쪽?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>케토 다이어트, &#39;지방 비율&#39;만 보지 말고 &#39;무슨 지방이냐&#39;부터 보라는 연구가 나옴</li><li>&#39;케토는 다 같은 케토&#39;가 아니라 &#39;기름에 따라 다른 케토&#39;일 수 있대</li><li>지방 90% 케토 식단인데 한쪽 쥐만 염증세포가 쌓인 이유가 기름 종류였대</li><li>케토 식단 시작하기 전에 &#39;지방 양&#39;이 아니라 &#39;지방 종류&#39;부터 보라는 연구가 나옴</li><li>코코넛오일 케토는 멀쩡했고 쇼트닝 케토는 아니었다는 쥐 실험이 나옴</li><li>&#39;케토는 염증 줄여준다더라&#39;는 말, 이 쥐 실험 보면 좀 달라짐</li><li>지방 열량 90%로 똑같이 맞췄는데 결과가 갈렸대. 범인은 기름 종류</li><li>&#39;기름이면 다 같은 기름&#39; 아니라는 연구, 케토 하는 사람들 눈여겨볼 만함</li><li>케토 다이어트 하는 친구한테 &#39;무슨 기름 쓰냐&#39;고 물어봐야 할 수도 있음</li><li>같은 케토인데 면역 반응이 달랐다는 연구, 쥐 실험이지만 질문은 꽤 센 편</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>다이어트 식단 고를 때 &#39;비율파&#39; vs &#39;재료 종류파&#39;, 너는 어느 쪽?</li><li>저탄수 식단, 해본 사람?</li><li>식단 정보는 &#39;연구 논문파&#39; vs &#39;후기파&#39;, 어디에 더 끌려?</li><li>같은 다이어트라도 &#39;재료까지 따져본다&#39; vs &#39;큰 틀만 본다&#39;, 너는?</li><li>쥐 실험 기사, 사람한테도 적용된다고 볼 수 있을까 vs 아직 이르다, 너라면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>케토 식단과 어린이 간질 치료, 왜 지방 90%를 쓰는 걸까</li><li>포화지방 vs 불포화지방, 면역세포 반응이 어떻게 다른지</li><li>식단이 만성 염증에 미치는 영향, 해외 연구 정리</li><li>나이 든 몸은 케토에 다르게 반응할까, 연구진이 보고 있는 질문</li><li>다이어트 식단 비교 연구, 같은 방식인데 결과가 갈린 사례들</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>&#39;무슨 지방이냐부터 보라&#39;는 표현은 논문 자체의 권고가 아니라 기사 결론을 풀어쓴 해석이라 톤 확인 필요</li><li>코코넛오일 쪽 결과는 21일, 심장·신장만 본 것이라 &#39;코코넛오일 케토는 안전&#39;으로 읽히지 않게 확인 필요</li><li>쥐·세포 실험 결과를 사람 다이어트 조언처럼 읽는 독자가 없는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐 두 그룹이 지방 비율이 같은 케토 식단(열량의 약 90%)을 먹었다</b>
+          <q>“Two groups of mice ate ketogenic diets with the same amount of fat, roughly 90% of their calories.”</q>
+          <small>post0, post1 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한 그룹에서만 장기에 염증성 면역세포가 쌓였다</b>
+          <q>“One group’s organs showed a buildup of inflammatory immune cells. The other group’s did not.”</q>
+          <small>post0, post1 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 식단의 주된 차이는 지방 종류(쇼트닝 vs 코코넛오일)였다</b>
+          <q>“The main difference was the fat itself: Crisco-style shortening in one diet, coconut oil in the other.”</q>
+          <small>post2 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쇼트닝 케토 쥐는 여러 장기에 염증성 면역세포가 쌓였고, 코코넛오일 케토 쥐는 심장과 신장에서 그런 증가가 없었다</b>
+          <q>“Mice on a shortening-based keto diet built up inflammatory immune cells in several organs, while mice on a coconut oil keto diet showed no such rise in the heart and kidney.”</q>
+          <small>post0, post2 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>팔미트산과 스테아르산이 면역세포를 염증 상태 쪽으로 밀었다</b>
+          <q>“Palmitic acid and stearic acid, two saturated fats found in animal and vegetable oils, pushed the cells toward the inflammatory state, and higher doses of palmitic acid pushed harder.”</q>
+          <small>post3, post5 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람 세포도 팔미트산에 쥐 세포와 같은 식으로 반응했다</b>
+          <q>“Researchers tested a human cell line and immune cells grown from human bone marrow and blood, and palmitic acid pushed them toward inflammation just as it did in mouse cells.”</q>
+          <small>post3, post5 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코코넛오일은 90% 넘게 포화지방이지만 팔미트산·스테아르산은 약 12%, 쇼트닝 식단은 약 26%였다</b>
+          <q>“That oil is more than 90% saturated fat, yet palmitic and stearic acids made up only about 12% of it, versus about 26% in the shortening-based diet.”</q>
+          <small>post4 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코코넛오일 케토 식단은 21일 뒤 심장·신장에서 염증 표지가 오르지 않았다</b>
+          <q>“After 21 days, heart and kidney samples from groups of six mice showed no rise in inflammatory markers, and the calmer-cell marker held steady.”</q>
+          <small>post4 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>면역 경보 장치 cGAS-STING 일부가 없는 쥐는 쌓임을 대체로 피했다</b>
+          <q>“Mice missing part of an immune alarm system called cGAS-STING in their macrophages largely skipped the buildup.”</q>
+          <small>post5 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>염증성 세포가 쌓였다고 해서 해로움의 증거는 아니다</b>
+          <q>“Piled-up inflammatory cells are not proof of harm.”</q>
+          <small>post5 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람 대상 실험은 없었다</b>
+          <q>“No people on keto diets were tested, and the animals started young, so older bodies might respond differently, a question the researchers say they are now investigating.”</q>
+          <small>post5, post6 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람 대상 시험에서 지방 종류를 지방:탄수 비율만큼 따지기 전까지 케토가 염증에 미치는 영향은 열린 질문이다</b>
+          <q>“Keto is not one diet, and until human trials test the fat source as seriously as the fat-to-carb ratio, what a keto plan does to inflammation will stay an open question.”</q>
+          <small>post6 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>케토 등 식단 변경 전에는 의사나 영양사와 상의해야 한다</b>
+          <q>“Anyone considering a ketogenic diet or changing their diet should first talk with a doctor or registered dietitian.”</q>
+          <small>post6 · <a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="24512903877a">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/two-keto-diets-equal-fat-different-immune-response/" target="_blank" rel="noopener">Two Keto Diets With Equal Fat Triggered Different Immune Responses</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-6797a6ac5195">
+    <div class="head">
+      <h2>S3. 스트레스 연봉 프리미엄, 학사 직업만 예외였다</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 18
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-6797a6ac5195">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 커리어</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;힘들면 더 준다&#39;는 통념이 학력·직군에 따라 갈린다는 걸 숫자로 보여줘서, 이직·직장 선택 때 내 위치를 따져보게 만드는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">스트레스 심한 직장이 연봉 더 준다는 말, 학사 학위가 필요한 직업에선 안 맞았대
+미국 직업 754개를 스트레스 점수로 매겨서 연봉이랑 비교한 분석이야
+근데 어떤 직업군에선 스트레스가 확실히 돈이 됐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">132/500자</span></div>
+      <p class="tp-text">1/ 일단 전체로 보면 스트레스 센 직업이 더 벌긴 해. 스트레스 가장 높은 상위 20% 직업은 연봉 중앙값이 $78,330, 가장 낮은 20%는 $48,235로 62% 차이야. 근데 학사 학위가 필요한 직업은 이 공식이 어떻게 됐을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">2/ 학사 학위가 보통 필요한 직업에선 스트레스 센 절반의 연봉 중앙값이 $87,990, 덜한 절반이 $88,830이었어. 스트레스가 더 심한데 오히려 살짝 적게 번 거야. 그럼 스트레스가 진짜 돈이 되는 곳은 어디였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">175/500자</span></div>
+      <p class="tp-text">3/ 학력별 연봉 요약 정리
+(같은 학력 직업끼리 스트레스 센 절반 vs 덜한 절반, 연봉 중앙값 차이)
+- 학사 불필요 직업: +20~24%
+- 학사 필요 직업: -1%
+- 석사 필요 직업: +27% (직업 38개라 덜 믿을 만하다고 함)
+- 박사·전문직: +78%
+그럼 연봉 10만 달러 넘는 직업은 어땠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">4/ 연봉 10만 달러 넘는 직업 93개 중 스트레스 낮은 건 19개, 5분의 1 정도야. 54개는 스트레스가 높았고. 연봉 중앙값 20만 달러 넘는 14개는 전부 스트레스 높은 직업이었대. 근데 그 스트레스의 정체가 뭘까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">185/500자</span></div>
+      <p class="tp-text">5/ 스트레스 센 고액 연봉 직업은 일 양보다 사람이 문제였어. 매주 불쾌하거나 화난 사람을 상대하는 비율이 43%로, 스트레스 낮은 쪽(6%)의 7배쯤이야. 주 40시간 넘게 일하는 비율은 57% 대 48%로 차이가 작았고. 다만 원인을 증명한 게 아니라 일상 모습을 보여주는 거래. 그럼 스트레스 가장 낮은 고연봉 직업은 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">159/500자</span></div>
+      <p class="tp-text">6/ 연봉 10만 달러 넘는 직업 중 스트레스 가장 낮은 건 전자공학 엔지니어로 100점 만점에 8점, 연봉 중앙값 $130,220이야. 반대쪽 끝인 마취과 의사는 100점에 $391,490. 소프트웨어 개발자도 10점인데, 이 지수는 해고 위험은 안 재서 취업 시장은 빡셀 수 있대.</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">232/500자</span></div>
+      <p class="tp-text">7/ 결국 이 분석 말은, 스트레스 보상은 학력·직군마다 달랐고 학사 필요 직업에선 안 보였다는 거야. 다만 연관성이지 스트레스가 연봉을 만든다는 건 아냐.
+
+이직할 때 연봉 vs 칼퇴, 너는 어느 쪽이야?
+
+이런 해외 직장·커리어 데이터, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>스트레스 심한 직장이 연봉 더 준다는 말, 학사 학위가 필요한 직업에선 안 맞았대</li><li>이직 고민, &#39;스트레스 많으면 더 준다&#39;가 아니라 &#39;학력·직군마다 다르다&#39;는 분석이 나옴</li><li>스트레스 센 직업이 62% 더 번다는데, 이게 전부 사실은 아님</li><li>연봉 10만 달러 넘는 직업 93개 중 스트레스 낮은 건 5분의 1뿐이래</li><li>&#39;스트레스 받는 만큼 번다&#39;는 말, 박사·전문직은 +78%인데 학사 직업은 -1%</li><li>직장 스트레스, 야근보다 &#39;사람&#39;이 문제라는 분석이 나옴</li><li>연봉 20만 달러 넘는 직업 14개가 전부 스트레스 센 직업이었대</li><li>취업 준비 중이면, &#39;스트레스=연봉&#39;은 &#39;학력마다 다르다&#39;는 분석부터 봐</li><li>스트레스 낮은데 연봉 10만 달러 넘는 직업도 있대</li><li>직장 스트레스가 연봉으로 돌아오는 직업군과 안 돌아오는 직업군이 갈렸대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이직할 때 연봉 vs 칼퇴, 너는 어느 쪽이야?</li><li>스트레스 많아도 연봉 2배면 갈 거야?</li><li>직장 스트레스, 일 양 vs 사람 중 뭐가 더 힘들어?</li><li>연봉 같으면 야근 적은 곳 vs 일 재밌는 곳, 어디 갈래?</li><li>퇴근 후 연락 오는 승진 제안, 받을 거야 거절할 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>스트레스 가장 낮은 고연봉 직업 TOP10, 전부 이공계였던 이유</li><li>스트레스 가장 높은 고연봉 직업 TOP10, 8개가 의료직</li><li>퇴근 후에도 연락 오는 승진, 58%가 거절한다는 설문</li><li>연봉 20만 달러 넘는 직업 14개가 전부 스트레스 센 이유</li><li>소프트웨어 개발자는 정말 스트레스 낮은 직업일까</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문 기사는 &#39;학사 학위 소지자&#39;로 쓰지만 원 보고서는 학사가 보통 필요한 &#39;직업&#39; 기준 비교임. 글에서는 직업 기준으로 썼으니 표현이 바뀌지 않게 확인</li><li>미국 직업 754개 기준 분석이라 한국 직장에 그대로 적용된다고 읽히면 안 됨</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 직업 754개에 스트레스 점수를 매겨 연봉 데이터와 비교했다</b>
+          <q>“To find out, we gave 754 U.S. occupations a Stress Index score from 0 (least stressful) to 100 (most stressful), based on their day-to-day working conditions (longer hours, tighter deadlines, stressful interactions, etc.), and compared those scores with the latest federal pay data.”</q>
+          <small>post0 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>학사 학위가 보통 필요한 직업은 스트레스가 더 심해도 추가 연봉이 없다</b>
+          <q>“But for jobs that typically require a bachelor’s degree, the extra stress comes with no extra pay.”</q>
+          <small>post0 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스트레스 가장 높은 상위 20% 직업의 연봉 중앙값은 $78,330로 가장 낮은 20%($48,235)보다 62% 많다</b>
+          <q>“The most stressful fifth of jobs pay a median $78,330 a year, 62% more than the least stressful fifth ($48,235).”</q>
+          <small>post1 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>학사 필요 직업에서 스트레스 센 절반의 연봉 중앙값은 $87,990, 덜한 절반은 $88,830이다</b>
+          <q>“Among jobs that typically need a bachelor’s degree, the more stressful half pays a median $87,990 a year, slightly less than the less stressful half ($88,830).”</q>
+          <small>post2 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>학사 학위가 필요 없는 직업은 스트레스 센 절반이 20~24% 더 번다</b>
+          <q>“Jobs that don’t need a bachelor’s degree: the more stressful half earns 20% to 24% more.”</q>
+          <small>post3 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>학사 직업군에서 스트레스 높은 쪽은 낮은 쪽보다 평균 1% 적게 번다</b>
+          <q>“In fact, bachelor’s degree holders in high-pressure roles earn 1% less on average than bachelor-holding colleagues in lower-pressure positions.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91641293/stressful-jobs-do-in-fact-pay-more-but-theres-a-catch?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>석사 필요 직업은 스트레스 센 절반이 27% 더 벌지만 직업 38개라 결과가 덜 믿을 만하다</b>
+          <q>“For Master’s-level jobs, the most stressful half earns 27% more ($100,040 vs. $78,620), but pay doesn’t rise steadily with stress (correlation of 0.12). With only 38 occupations, the result is less reliable.”</q>
+          <small>post3 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>박사·전문직 필요 직업은 스트레스 센 절반이 78% 더 번다</b>
+          <q>“Jobs that need a doctoral or professional degree: the more stressful half earns 78% more ($170,950 vs. $95,780), led by physicians such as anesthesiologists and emergency medicine physicians.”</q>
+          <small>post3 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 학력 수준의 직업끼리 비교해 연봉 차이를 따졌다</b>
+          <q>“To account for pay differences based on education and get a clearer picture on the stress premium, we also compared jobs requiring the same level of education.”</q>
+          <small>post3 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연봉 10만 달러 이상 직업 93개 중 스트레스 낮은 건 19개로 약 5분의 1이고 54개는 스트레스가 높다</b>
+          <q>“Only 19 of the 93 six-figure occupations in our analysis are low-stress, about one in five. More than half (54) are high-stress.”</q>
+          <small>post4 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연봉 중앙값 20만 달러 이상인 6자리 연봉 직업 14개는 모두 스트레스가 높다</b>
+          <q>“All 14 six-figure jobs with a median wage of $200,000 or more are high-stress: 12 are in medicine, and the other two are airline pilots and chief executives.”</q>
+          <small>post4 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스트레스 센 고액 연봉 직업은 매주 화난 사람을 상대하는 비율이 43% 대 6%, 주 40시간 초과 근무 비율은 57% 대 48%다</b>
+          <q>“In high-stress six-figure jobs, 43% of workers deal with unpleasant or angry people every week, compared with 6% in low-stress ones. But the share regularly working more than 40 hours differs far less (57% vs. 48%).”</q>
+          <small>post5 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>화난 사람을 상대하는 비율은 스트레스 높은 직업에서 7배 흔하다</b>
+          <q>“Stress is often about people, not workload. The widest gaps are in dealing with angry people (7 times as common in high-stress jobs), conflict (4 times) and daily time pressure (4 times).”</q>
+          <small>post5 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 표는 일상 모습을 설명할 뿐 스트레스의 원인을 증명하는 게 아니다</b>
+          <q>“Most of these conditions feed into the Stress Index, so the table describes what high-stress jobs look like day to day rather than proving what causes stress.”</q>
+          <small>post5 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전자공학 엔지니어는 100점 만점에 8점, 연봉 중앙값 $130,220이고 마취과 의사는 100점에 $391,490이다</b>
+          <q>“Electronics engineers score 8 out of 100 and earn a median $130,220. Anesthesiologists score 100 and earn $391,490.”</q>
+          <small>post6 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소프트웨어 개발자는 스트레스 지수 10점이다</b>
+          <q>“Based on daily working conditions, yes: software developers score 10 out of 100.”</q>
+          <small>post6 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스트레스 지수는 해고 위험을 재지 않아 소프트웨어 개발도 취업 시장은 힘들 수 있다</b>
+          <q>“It doesn’t measure job security or layoff risk, so a low-stress job like software development can still face a tough hiring market.”</q>
+          <small>post6 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 분석은 스트레스와 연봉의 연관성을 보여줄 뿐 스트레스가 높은 연봉을 만든다는 걸 보여주진 않는다</b>
+          <q>“Our findings show associations between stress and pay, not that stress causes higher pay.”</q>
+          <small>post7 · <a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="6797a6ac5195">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91641293/stressful-jobs-do-in-fact-pay-more-but-theres-a-catch?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">Stressful jobs do, in fact, pay more. But there&#39;s a catch</a></li><li><a href="https://resumegenius.com/blog/career-advice/workplace-stress-premium-report" target="_blank" rel="noopener">Do Stressful Jobs Pay More? The Stress Premium Report 2026</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-7912d47a1653">
+    <div class="head">
+      <h2>S4. ESR x Craig &amp; Karl 아이폰 케이스 컬렉션</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-7912d47a1653">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 케이스를 보호용이 아니라 폰 뒷면 개성으로 보여주고, 갖고 싶다·선물하고 싶다로 이어지는 각도</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "아이폰 맥세이프 케이스 캐릭터 그래픽" · 원문 제품: ESR x Craig &amp; Karl &#39;Pocket Full of Joy&#39; 컬렉션. Sticker Collage Case, K Character Case (Classic Hybrid Magnetic Case with Camera Control and Flex Stand) 45.99달러, 아이폰 Duo용 49.99달러. HI 지갑: Classic Magnetic Wallet 29.99달러, Wallet Stand 37.99달러, Grip 45.99달러. 판매처: ESR 공식 사이트, Amazon<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: esrtech.com, design-milk.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/7912d47a1653/thread-photo-1117082621-01.jpg" alt="CRAIG&amp;KARL 스티커가 붙은 투명 아이폰 케이스 두 대가 보이고, 뒷면 킥스탠드가 펼쳐져 있음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/7912d47a1653/thread-photo-1117082621-02.jpg" alt="검은색 가죽 질감의 마그네틱 카드 지갑이 아이폰 뒷면에 붙어 있고, 빨간 핑거 루프·스탠드, 파란 물방울 무늬와 노란 캐릭터 그림이 있는 카드들이 꽂혀 있으며 &#39;CRAIG &amp; KARL&#39; 로고가 보인다. 왼쪽 위에는 스탠드로 세워진 아이폰도 보인다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261117-pm-51a7ba3af6c3/7912d47a1653/thread-photo-1117082621-03.jpg" alt="파란색 가죽 질감의 마그네틱 카드 지갑 단품으로, 앞면에 빨간 물방울 무늬 &#39;HI&#39; 글자와 노란 캐릭터, &#39;CRAIG&amp;KARL&#39; 글자가 있고 뒷면은 검은색 스탠드 형태이다." loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-7912d47a1653">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">폰을 엎어놓는 시간이 길어서 제일 많이 보는 면은 케이스라는 해외 매체 글, 듣고 보니 맞음
+아티스트 듀오랑 ESR이 협업한 아이폰 케이스가 나왔는데
+스티커를 폰 뒤에 쏟아부은 모양이면서 안 지저분한 이유가 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">1/ 분홍 물방울무늬 하트 안에 폰을 쥔 손이 있고, 무지개·야자수·별이 주변에 깔린 스티커 콜라주 케이스야. 요소마다 굵은 검정 테두리에 간격을 둬서 쌓여 있어도 깔끔하다는 설명. 근데 그림만 있는 케이스가 아니라는데, 뭐가 더 있을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">120/500자</span></div>
+      <p class="tp-text">2/ 속은 ESR 케이스라서 스탠드를 펼치면 폰이 15도에서 69도까지 혼자 서. 자력 1,500g에 4.9m 낙하 등급이라는 게 ESR 설명이고, 카메라 컨트롤 커버도 붙어 있음. 그럼 이 그림은 누가 그린 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">153/500자</span></div>
+      <p class="tp-text">3/ 그린 사람은 브리즈번 출신 듀오 Craig &amp; Karl. 뉴욕과 런던에 떨어져 살면서 2011년부터 같이 작업했대. 글자에 얼굴 달아주는 게 이 듀오 특기라서, 두 번째 케이스도 노란 물방울 K 글자 가운데에 웃는 얼굴이 있음. 그럼 가격이랑 같이 나온 지갑은 어떨까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">162/500자</span></div>
+      <p class="tp-text">4/ 가격·구성 요약 정리
+- 케이스 45.99달러 (접는 아이폰 듀오용 49.99달러)
+- 지갑 3종 29.99 / 37.99 / 45.99달러
+- 지갑은 카드 5장 수납에 RFID 차단
+- 듀오용은 스탠드가 180도 회전
+- ESR 공식 사이트에서 케이스랑 같이 사면 HI 짐 태그 증정</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">181/500자</span></div>
+      <p class="tp-text">5/ 결국 케이스는 45.99달러, 지갑은 29.99달러부터 시작하는 폰 개성 컬렉션이라는 얘기
+이 케이스 vs 무지 케이스, 어느 파야?
+해외에서 눈길 끈 물건 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>지갑은 카드 5장 수납에 RFID 차단이 있다고 ESR이 밝혔다 <small>애매 · 원문은 카드 5장 또는 카드 4장과 접은 지폐 3장을 수납하고 RFID 차단이 있다고 한다. 5장 수납은 맞지만 조건을 생략했으니 &#39;카드 5장 또는 카드 4장+지폐 3장&#39;으로 적는 것이 정확하다.</small></li>
+        <li>근거 등록 안 된 주장: 접는 아이폰 듀오(애플 폴더블 아이폰)용 케이스라는 점</li><li>근거 등록 안 된 주장: 해외 매체 글의 출처가 되는 Craig &amp; Karl 듀오가 2011년 이후 대형 작업을 해왔다는 배경 설명은 카드에 없음</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>폰을 엎어놓는 시간이 길어서 제일 많이 보는 면은 케이스라는 해외 매체 글, 듣고 보니 맞음</li><li>케이스로 개성 내고 싶은 사람 주목, 아티스트 듀오가 만든 아이폰 케이스가 나옴</li><li>스티커 시트를 폰 뒤에 쏟아부은 케이스인데 안 지저분하대</li><li>그냥 귀여운 케이스인 줄 알았는데 스탠드가 15도에서 69도까지 펼쳐짐</li><li>카드지갑에 &#39;HI&#39;라고 적혀 있음, 아침 커피 전 누구 인사보다 낫다는 평</li><li>케이스 45.99달러, 이 정도 개성이면 살 만할까?</li><li>글자에 얼굴이 달린 폰 케이스, 선물하고 싶어짐</li><li>아이폰 케이스 사려는 사람, 이거 먼저 보고 가</li><li>브리즈번 다리에 그리던 그래픽을 폰 케이스 크기로 줄였대</li><li>접는 아이폰용 케이스는 스탠드가 180도 돈대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이 케이스 vs 무지 케이스, 어느 파야?</li><li>폰 케이스는 캐릭터 그래픽파 vs 심플파?</li><li>이 &#39;HI&#39; 지갑 선물로 받으면 좋아할 사람 소환</li><li>이거 있으면 살 거야?</li><li>폰 케이스 자주 바꾸는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>ESR &#39;HI&#39; 카드지갑 3종 비교</li><li>접는 아이폰 듀오용 케이스, 스탠드가 180도 도는 얘기</li><li>Craig &amp; Karl이 큰 규모로 작업한 작품 얘기</li><li>토미 리 존스, 일본 광고에서 피카츄로 변신</li><li>도쿄 로봇 쓰레기통 도입</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>아이폰 18 Pro, 접는 아이폰 Duo 같은 제품명은 원문 표기를 그대로 쓴 것이라 올리기 전에 제품명 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>지갑은 카드 5장 수납에 RFID 차단이 있다고 ESR이 밝혔다</b>
+          <q>“ESR says all three hold five cards, or four cards and three folded bills, and include RFID blocking.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>해외 매체 필자가 폰을 책상에 엎어두는 시간이 길어 가장 많이 보는 면이 케이스라고 썼다</b>
+          <q>“My phone spends a shocking amount of its life face down on a desk, which means the side I actually look at most is the case.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>ESR이 아티스트 듀오 Craig &amp; Karl과 협업해 컬렉션을 냈다</b>
+          <q>“The accessory maker has teamed up with Craig &amp; Karl, the art duo known for bold color, chunky graphics, and characters with very cheerful faces, on a collection called Pocket Full of Joy.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>콜라주 케이스는 스티커 시트를 폰 뒤에 쏟아부은 모양이다</b>
+          <q>“The collage case looks like someone emptied a sticker sheet onto the back of your phone, and I mean that as a compliment.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분홍 물방울무늬 하트 안에 폰을 쥔 손이 있고 무지개·야자수·별이 둘러싼다</b>
+          <q>“A pink polka-dot heart sits at the center with a hand clutching a phone inside it, surrounded by a rainbow, a palm tree, stars, a “CRAIG &amp; KARL” banner, and an ESR logo in yellow and red.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>굵은 검정 테두리와 간격 덕에 깔끔해 보인다</b>
+          <q>“Every element gets the duo’s signature thick black outline, which keeps the pile looking crisp instead of messy. The trick is the spacing: each sticker gets a little breathing room.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스탠드를 펼치면 폰이 15도에서 69도까지 선다</b>
+          <q>“Flip out the Flex Stand and your phone props itself up anywhere from 15 to 69 degrees, ready for a FaceTime catch-up, a recipe video, or a lazy Sunday episode in bed.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>ESR은 자력 1,500g이라고 밝혔다</b>
+          <q>“ESR claims 1,500g of magnetic hold, so your wallet or MagSafe charger snaps on and stays put while you dash out the door.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>ESR이 4.9m 낙하 등급이라고 밝혔다</b>
+          <q>“Clumsy mornings are covered too, with ESR rating the case for 16-foot (4.9m) drops and raised lips guarding the screen and cameras.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카메라 컨트롤 커버가 내장돼 있다</b>
+          <q>“A built-in Camera Control cover keeps Apple’s camera button ready for spontaneous snaps”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 사람은 브리즈번 출신이고 뉴욕과 런던에 살며 2011년부터 같이 작업했다</b>
+          <q>“Craig Redman lives in New York and Karl Maier lives in London, and the two Brisbane-born artists have been making work together across that time difference since 2011.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>글자에 얼굴을 달아주는 건 Craig &amp; Karl의 특기다</b>
+          <q>“Giving letters faces is a classic Craig &amp; Karl move, and here it turns a single letter into a mascot for your phone.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 번째 케이스는 노란 물방울 K 글자 가운데에 웃는 얼굴이 있다</b>
+          <q>“The second design goes bigger and simpler, with a giant polka-dot letter K in sunny yellow anchoring the bottom half of the case and a little smile tucked into its middle.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>케이스는 45.99달러, 접는 아이폰 듀오용은 49.99달러다</b>
+          <q>“The Duo case costs $49.99, while the Pro and Pro Max versions cost $45.99.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지갑 3종은 29.99, 37.99, 45.99달러다</b>
+          <q>“The $37.99 Classic Magnetic Wallet Stand folds out into a kickstand for hands-free videos.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>듀오용은 스탠드가 180도 회전한다</b>
+          <q>“Both designs also fit Apple’s foldable iPhone Duo, and here the Flex Stand gets a fun upgrade: it rotates a full 180 degrees.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>ESR 공식 사이트에서 케이스와 함께 사면 HI 짐 태그가 무료로 온다</b>
+          <q>“Buy any of them together with a case from ESR’s official site and a free luggage tag comes along too, wearing the same HI.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지갑은 29.99달러부터, 케이스는 45.99달러부터 시작한다</b>
+          <q>“Prices start at $29.99 for the wallets and $45.99 for the cases.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="7912d47a1653">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/16/esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=esr-x-craig-karls-pocket-full-of-joy-accessories-give-your-iphone-more-personality-than-your-wallpaper" target="_blank" rel="noopener">ESR x Craig &amp; Karl’s “Pocket Full of Joy” accessories give your iPhone more personality than your wallpaper - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261117-pm";
+  const ORIGINAL = {"1d5db9245057": {"caption": "\uc4f0\ub808\uae30\ud1b5\uc774 \uc2a4\uc2a4\ub85c \uc6c0\uc9c1\uc778\ub2e4\ub294 \uc18c\uc2dd, \uc54c\uace0 \ubcf4\uba74 \uaf64 \uc624\ub798\ub41c \uace0\ubbfc\uc5d0\uc11c \ub098\uc654\ub2e4. \uc77c\ubcf8\uc744 \uc5ec\ud589\ud574 \ubcf8 \uc0ac\ub78c\uc774\ub77c\uba74 \uac70\ub9ac\uc5d0\uc11c \uc4f0\ub808\uae30\ud1b5\uc744 \ucc3e\uae30 \uc5b4\ub824\uc6cc \ub2f9\ud669\ud55c \uc801\uc774 \uc788\uc744 \uac83\uc774\ub2e4. \uc774\ub294 \uc758\ub3c4\ub41c \uacb0\uacfc\uc600\ub2e4. \ubcf4\uc548\uacfc \ub118\uce68 \ubb38\uc81c\ub97c \uac71\uc815\ud55c \ub2f9\uad6d\uc774 \ud1b5\uc744 \uc904\uc600\uace0, \ubc84\ub9ac\uae30 \uc5b4\ub824\uc6b0\uba74 \uc4f0\ub808\uae30\ub97c \ub35c \ub9cc\ub4e4\uac8c \ub41c\ub2e4\ub294 \uc0dd\uac01\ub3c4 \uc788\uc5c8\ub2e4. \uc774 \ubc29\uc2dd\uc740 \uc218\uc2ed \ub144\uac04 \uac70\ub9ac\ub97c \uae68\ub057\ud558\uac8c \uc9c0\ucf30\uc9c0\ub9cc \uad00\uad11\uac1d\uc5d0\uac8c\ub294 \ud070 \ubd88\ud3b8\uc73c\ub85c \uaf3d\ud78c\ub2e4. \uadf8\ub7f0\ub370\ub3c4 \ub3c4\ucfc4 \uba54\ud2b8\ub85c\ub294 2022\ub144\uc5d0 \uacf5\uacf5 \uc4f0\ub808\uae30\ud1b5\uc744 \ubaa8\ub450 \uc5c6\uc574\ub2e4. \ub3d9\uc2dc\uc5d0 \ub3c4\ucfc4\ub294 \uc5ec\ub7ec \uae30\uc5c5\uacfc \uc190\uc7a1\uace0 \ub354 \ub9ce\uc774 \ub2f4\uace0 \ub118\uce58\uc9c0 \uc54a\ub294 \ub611\ub611\ud55c \ud1b5\uc744 \ub9cc\ub4e4\uace0 \uc788\ub2e4. \ud3ec\uc2a4\ud14d(Forcetec)\uc774 \uc124\uce58\ud558\ub294 \uc2a4\ub9c8\uace0(SmaGO)\ub294 \ud0dc\uc591\uad11\uc73c\ub85c \uc791\ub3d9\ud558\uba70 5\ubd84\ub9c8\ub2e4 \uc4f0\ub808\uae30\ub97c \uc555\ucd95\ud574 \uc77c\ubc18 \ud1b5\ubcf4\ub2e4 5\ubc30\ub97c \ub2f4\ub294\ub2e4. \uc5bc\ub9c8\ub098 \ucc3c\ub294\uc9c0\ub3c4 \uc628\ub77c\uc778\uc73c\ub85c \ud655\uc778\ud560 \uc218 \uc788\ub2e4. \ud55c\ud3b8 \uce74\ud2b8\ucf04\uc758 40\ub9ac\ud130 \ub85c\ubd07 \uc4f0\ub808\uae30\ud1b5\uc740 \uc13c\uc11c\ub85c \uac70\uc758 \ucc3c\uc74c\uc744 \uac10\uc9c0\ud558\uba74 \uc2a4\uc2a4\ub85c \uc774\ub3d9\ud574 \ube44\uc6cc\uc9c4\ub2e4. \ub3d9\uc77c\ubcf8\uc5ec\uac1d\ucca0\ub3c4\ub294 \uc2e0\uc8fc\ucfe0\uc5ed\uc5d0\uc11c \uc774 \ub85c\ubd07\uc744 \uc4f0\uba70, \ucd08\uae30 \uc870\uc0ac\uc5d0\uc11c \ubc18\uc751\uc774 \uc608\uc0c1\ubcf4\ub2e4 \uae0d\uc815\uc801\uc774\uc5c8\ub2e4\uace0 \ubc1d\ud614\ub2e4. \uc77c\uc790\ub9ac\ub97c \ube8f\ub294\ub2e4\ub294 \ube44\ud310\uc774 \ub098\uc624\uae30 \uc26c\uc6b4 \ub85c\ubd07\uc774\uc9c0\ub9cc, \uc774\ub7f0 \uccad\uc18c \uc77c\uc790\ub9ac\ub294 \uc774\ubbf8 \uba87 \ub144 \uc804 \uc0ac\ub77c\uc84c\uace0 \ub85c\ubd07\uc774 \uc77c\ubd80\ub97c \ub418\uc0b4\ub9ac\uace0 \uc788\ub2e4\uace0 \ud55c\ub2e4.\n\n\ucd9c\ucc98: Good News Network, Japan Times \uc778\uc6a9 \ubcf4\ub3c4", "hashtags": ["#\uc77c\ubcf8\uc5ec\ud589", "#\ub3c4\ucfc4", "#\ub85c\ubd07", "#\uc4f0\ub808\uae30\ud1b5", "#\ud574\uc678\uc774\uc288"], "slides": [["\uc4f0\ub808\uae30\ud1b5\uc774", "**\uc54c\uc544\uc11c** \uac04\ub2e4???", "---", "\uc77c\ubcf8 \ub3c4\ucfc4\uc5d0\uc11c \uc2a4\uc2a4\ub85c \uc6c0\uc9c1\uc5ec \uc4f0\ub808\uae30\ub97c \ube44\uc6b0\ub7ec \uac00\ub294 \ub85c\ubd07 \uc4f0\ub808\uae30\ud1b5\uc774 \uc2e0\uc8fc\ucfe0\uc5ed\uc5d0 \ud22c\uc785\ub418\uc5c8\ub2e4."], ["\uc77c\ubcf8\uc5d4 \uc6d0\ub798", "\uc4f0\ub808\uae30\ud1b5\uc774 **\uc5c6\uc5b4**", "---", "\uc77c\ubcf8\uc744 \uc5ec\ud589\ud558\uba74 \uacf5\uacf5 \uc4f0\ub808\uae30\ud1b5\uc774 \uac70\uc758 \uc5c6\uc5b4 \ub2f9\ud669\ud558\uac8c \ub41c\ub2e4. \ubcf4\uc548\uacfc \ub118\uce68 \ubb38\uc81c\ub97c \uac71\uc815\ud55c \ub2f9\uad6d\uc758 \uc758\ub3c4\uc600\uace0, \ubc84\ub9ac\uae30 \uc5b4\ub824\uc6b0\uba74 \ub35c \ub9cc\ub4e4\uac8c \ub41c\ub2e4\ub294 \uc0dd\uac01\ub3c4 \uae54\ub824 \uc788\ub2e4."], ["2022\ub144\uc5d4", "\uc624\ud788\ub824 **\ub2e4 \ube90\ub2e4**", "---", "\ub3c4\ucfc4 \uba54\ud2b8\ub85c\ub294 2022\ub144\uc5d0 \uacf5\uacf5 \uc4f0\ub808\uae30\ud1b5\uc744 \ubaa8\ub450 \uc5c6\uc574\ub2e4. \uc774 \ubc29\uc2dd\uc740 \uc218\uc2ed \ub144\uac04 \uac70\ub9ac\ub97c \uae68\ub057\ud558\uac8c \uc9c0\ucf30\uc9c0\ub9cc \uad00\uad11\uac1d\uc5d0\uac8c\ub294 \ud070 \ubd88\ud3b8\uc774\uc5c8\ub2e4."], ["**5\ubd84\ub9c8\ub2e4**", "\uc555\ucd95\ud558\ub294 \ud1b5", "---", "\ud0dc\uc591\uad11\uc73c\ub85c \uc6c0\uc9c1\uc774\ub294 \uc2a4\ub9c8\uace0(SmaGO)\ub294 5\ubd84\ub9c8\ub2e4 \uc4f0\ub808\uae30\ub97c \uc555\ucd95\ud55c\ub2e4. \uc555\ucd95 \uae30\ub2a5\uc774 \uc5c6\ub294 \ud1b5\ubcf4\ub2e4 5\ubc30\ub97c \ub2f4\uc744 \uc218 \uc788\uace0, \uc5bc\ub9c8\ub098 \ucc3c\ub294\uc9c0 \uc628\ub77c\uc778\uc73c\ub85c \ud655\uc778\ud55c\ub2e4."], ["\uaf49 \ucc28\uba74", "**\ud63c\uc790** \ube44\uc6b0\ub7ec \uac00", "---", "\ubbf8\uad6d \uce98\ub9ac\ud3ec\ub2c8\uc544 \uae30\uc5c5 \uce74\ud2b8\ucf04\uc758 40\ub9ac\ud130 \ub85c\ubd07 \uc4f0\ub808\uae30\ud1b5\uc740 \uc13c\uc11c\ub85c \ucc2c \uc815\ub3c4\ub97c \uc7b0\ub2e4. \uac70\uc758 \ucc28\uba74 \uc0ac\ub78c \uc190\uc774 \ub2ff\uc9c0 \uc54a\ub294 \uacf3\uc73c\ub85c \uc2a4\uc2a4\ub85c \uc774\ub3d9\ud574 \ube44\uc6cc\uc9c4\ub2e4."], ["\ubc18\uc751\uc774", "\uc608\uc0c1\ubcf4\ub2e4 **\uc88b\uc544**", "---", "\ub3d9\uc77c\ubcf8\uc5ec\uac1d\ucca0\ub3c4\ub294 \uc2e0\uc8fc\ucfe0\uc5ed\uc5d0\uc11c \uc774 \ub85c\ubd07\uc744 \uc4f0\uace0 \uc788\ub2e4. \ub300\ubcc0\uc778\uc740 \ucd08\uae30 \uc870\uc0ac\uc5d0\uc11c \uc774\uc6a9\uacfc \uc218\uc6a9 \ubc18\uc751\uc774 \uc608\uc0c1\ubcf4\ub2e4 \uae0d\uc815\uc801\uc774\uc5c8\ub2e4\uace0 \ubc1d\ud614\ub2e4."], ["**\ub3c4\ucfc4** \ub2e4\ub140\uc628 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \ubcf4\ub0b4\uae30", "---", "\uc4f0\ub808\uae30\ud1b5 \ucc3e\uc544 \ud5e4\ub9e8 \uae30\uc5b5\uc774 \uc788\ub294 \uce5c\uad6c\ub77c\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd. \uadf8 \ubd88\ud3b8\uc744 \ub85c\ubd07\uc774 \ud480\uc5b4 \uc8fc\uace0 \uc788\ub2e4\ub294 \uc774\uc57c\uae30\ub97c \ud568\uaed8 \ub098\ub20c \ub9cc\ud558\ub2e4."]]}, "3bb923cd0703": {"caption": "80\uc138 \ud560\ub9ac\uc6b0\ub4dc \ubc30\uc6b0 \ud1a0\ubbf8 \ub9ac \uc874\uc2a4\uac00 \uc77c\ubcf8 \uce94\ucee4\ud53c \uad11\uace0\uc5d0\uc11c \ud53c\uce74\uce04 \uc758\uc0c1\uc744 \uc785\uace0 \ub4f1\uc7a5\ud588\ub2e4. \uc6d0\ubb38\uc740 \ud3c9\uc18c \ud22c\ubc15\ud558\uace0 \uafb8\ubc08\uc5c6\ub294 \uc774\ubbf8\uc9c0\uc758 \ubc30\uc6b0\ub77c \uc774 \uc758\uc0c1\uc774 \ub354 \uc758\uc678\ub77c\uace0 \uc804\ud55c\ub2e4.\n\n\uc774\ubc88 \uad11\uace0\ub294 \uc0b0\ud1a0\ub9ac \ubcf4\uc2a4\uc640 \ud3ec\ucf13\ubaac \ud504\ub79c\ucc28\uc774\uc988 30\uc8fc\ub144 \uae30\ub150 \ud611\uc5c5\uc758 \uc77c\ubd80\uc774\ub2e4. \uc874\uc2a4\ub294 \uc5ec\ub7ec \ud574 \ub3d9\uc548 \ubcf4\uc2a4\uc758 \uace0\uc815 \uad11\uace0 \ubaa8\ub378\ub85c \ud65c\ub3d9\ud574 \uc654\uace0, \uad11\uace0 \uc18d\uc5d0\uc11c \uadfc\uc5c4\ud55c \ud45c\uc815\uc758 \uc678\uacc4\uc778 \u0027\uc5d0\uc77c\ub9ac\uc5b8 \uc874\uc2a4\u0027\ub97c \uc5f0\uae30\ud55c\ub2e4. \uc774 \uc678\uacc4\uc778\uc740 \uc9c0\uad6c\uc5d0 \uc640\uc11c \uc5f4\uc2ec\ud788 \uc77c\ud558\ub294 \uc778\uac04\ub4e4\uc744 \uad00\ucc30\ud558\ub294 \uc124\uc815\uc774\ub2e4. \uad00\ucc30 \ubc94\uc704\ub294 \ud3ec\ucf13\ubaac \uc885\uc73c\ub85c\uae4c\uc9c0 \ub113\uc5b4\uc9c4 \ub4ef\ud558\ub2e4\uace0 \uc6d0\ubb38\uc740 \uc18c\uac1c\ud588\ub2e4.\n\n\ud589\uc0ac\ub3c4 \ud568\uaed8 \uc9c4\ud589 \uc911\uc774\ub2e4. 1\uc6d4 31\uc77c\uae4c\uc9c0 \ubcf4\uc2a4 \ucee4\ud53c 6\ud329\uc744 \uc0b0 \uace0\uac1d\uc740 \ubcf4\uc2a4 \ub85c\uace0\uc640 \ud3ec\ucf13\ubaac 30\uc8fc\ub144 \uc5e0\ube14\ub7fc\uc774 \ub4e4\uc5b4\uac04 \uc7ac\ud0b7\uc5d0 \ub2f9\ucca8\ub420 \uae30\ud68c\ub97c \uc5bb\ub294\ub2e4. \uc624\ud504\ub77c\uc778\uc5d0\uc11c\ub294 11\uc6d4 22\uc77c\uae4c\uc9c0 \ub3c4\ucfc4 \uc6b0\uc5d0\ub178\uc5ed \uc8fc\uc624 \uac8c\uc774\ud2b8 \ubc16 \uc6b0\uc5d0\ub178 \uce94\ubc84\uc2a4\uc640 \uc778\uc811 \ud1b5\ub85c\uc5d0\uc11c \ud53c\uce74\uce04\ub85c \ubcc0\uc2e0\ud55c \uc678\uacc4\uc778\uc744 \ub9cc\ub0a0 \uc218 \uc788\ub2e4.\n\n\ud3ec\ucf13\ubaac\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc788\ub2e4\uba74 \ud0dc\uadf8\ud574\uc11c \uac19\uc774 \uc6c3\uc5b4 \ubcf4\uc790.\n\n\ucd9c\ucc98: SoraNews24, PR Times", "hashtags": ["#\ud1a0\ubbf8\ub9ac\uc874\uc2a4", "#\ud53c\uce74\uce04", "#\ud3ec\ucf13\ubaac", "#\uc77c\ubcf8\uad11\uace0", "#\ubcf4\uc2a4\ucee4\ud53c"], "slides": [["\ud1a0\ubbf8 \ub9ac \uc874\uc2a4\uac00", "**\ud53c\uce74\uce04** \ub428???", "---", "80\uc138 \ud560\ub9ac\uc6b0\ub4dc \ubc30\uc6b0 \ud1a0\ubbf8 \ub9ac \uc874\uc2a4\uac00 \uc77c\ubcf8 \uce94\ucee4\ud53c \ubcf4\uc2a4\uc758 \ucd5c\uc2e0 \uad11\uace0\uc5d0\uc11c \ud53c\uce74\uce04 \uc758\uc0c1\uc744 \uc785\uace0 \ub4f1\uc7a5\ud588\ub2e4."], ["\ud3ec\ucf13\ubaac **30\uc8fc\ub144**", "\ud611\uc5c5\uc774\uc5c8\uc74c", "---", "\uc774\ubc88 \ud53c\uce74\uce04 \uc758\uc0c1\uc740 \ubcf4\uc2a4 \uce94\ucee4\ud53c\uc640 \ud3ec\ucf13\ubaac \ud504\ub79c\ucc28\uc774\uc988 30\uc8fc\ub144 \uae30\ub150 \ud611\uc5c5\uc758 \uc77c\ubd80\uc774\ub2e4. \uc874\uc2a4\ub294 \uc5ec\ub7ec \ud574 \ub3d9\uc548 \ubcf4\uc2a4 \uad11\uace0\uc5d0 \uafb8\uc900\ud788 \ucd9c\uc5f0\ud574 \uc628 \ubaa8\ub378\uc774\ub2e4."], ["\uc6d0\ub798 \uc124\uc815\uc774", "**\uc678\uacc4\uc778** \uc874\uc2a4", "---", "\ubcf4\uc2a4 \uad11\uace0\uc5d0\uc11c \uc874\uc2a4\ub294 \u0027\uc5d0\uc77c\ub9ac\uc5b8 \uc874\uc2a4\u0027\ub97c \uc5f0\uae30\ud55c\ub2e4. \uadfc\uc5c4\ud55c \ud45c\uc815\uc758 \uc678\uacc4\uc778\uc73c\ub85c, \uc9c0\uad6c\uc5d0 \uc640\uc11c \uc5f4\uc2ec\ud788 \uc77c\ud558\ub294 \uc778\uac04\ub4e4\uc744 \uad00\ucc30\ud558\ub294 \uc124\uc815\uc774\ub2e4."], ["6\ud329 \uc0ac\uba74", "**\uc7ac\ud0b7** \ub2f9\ucca8?", "---", "\uc0b0\ud1a0\ub9ac\ub294 1\uc6d4 31\uc77c\uae4c\uc9c0 \ubcf4\uc2a4 \ucee4\ud53c 6\ud329\uc744 \uc0b0 \uace0\uac1d\uc5d0\uac8c \uc7ac\ud0b7 \ub2f9\ucca8 \uae30\ud68c\ub97c \uc8fc\ub294 \ud589\uc0ac\ub97c \uc9c4\ud589 \uc911\uc774\ub2e4. \uc7ac\ud0b7\uc5d0\ub294 \ubcf4\uc2a4 \ub85c\uace0\uc640 \ud3ec\ucf13\ubaac 30\uc8fc\ub144 \uc5e0\ube14\ub7fc\uc774 \ub4e4\uc5b4\uac04\ub2e4."], ["**\uc6b0\uc5d0\ub178\uc5ed\uc5d0**", "\ud53c\uce74\uce04 \uc678\uacc4\uc778", "---", "\uc0b0\ud1a0\ub9ac\ub294 11\uc6d4 22\uc77c\uae4c\uc9c0 \ub3c4\ucfc4 \uc6b0\uc5d0\ub178\uc5ed \uc8fc\uc624 \uac8c\uc774\ud2b8 \ubc16 \uc6b0\uc5d0\ub178 \uce94\ubc84\uc2a4\uc640 \uc778\uc811 \ud1b5\ub85c\ub97c \ucc28\uc9c0\ud55c\ub2e4. \ud53c\uce74\uce04\ub85c \ubcc0\ud55c \uc678\uacc4\uc778\uc774 \uc5ec\ud589\uac1d\uc744 \ub300\ud615 \uaddc\ubaa8\ub85c \ub9de\uc774\ud55c\ub2e4\ub294 \uacc4\ud68d\uc774\ub2e4."], ["\ud3ec\ucf13\ubaac \ub355\ud6c4 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \ubcf4\ub0b4\uae30", "---", "\uadfc\uc5c4\ud55c \uc774\ubbf8\uc9c0\uc758 80\uc138 \ubc30\uc6b0\uac00 \ud53c\uce74\uce04 \uc758\uc0c1\uc744 \uc785\uace0 \uad11\uace0\uc5d0 \ub098\uc654\ub2e4\ub294 \ud55c \uc904\uc774 \uc6c3\uc74c \ud3ec\uc778\ud2b8. \ud3ec\ucf13\ubaac\uc744 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc640 \uac19\uc774 \uc6c3\uc5b4 \ubcfc \ub9cc\ud55c \uc18c\uc2dd"]]}};
+  const TOTAL = 2;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

@@ -1,0 +1,1913 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.19 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.19 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-cfd000f986d6" data-jump="cfd000f986d6">1</a><a href="#post-abd801668d16" data-jump="abd801668d16">2</a><a href="#post-79c77a21418e" data-jump="79c77a21418e">3</a>
+      <a href="#threads">🧵 스레드 3</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-cfd000f986d6" data-id="cfd000f986d6">
+    <div class="head">
+      <h2>1. 후쿠이 포켓몬 망나뇽 호텔 객실</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/cfd000f986d6/v1-01.jpg" alt="1장: 망나뇽 방이 호텔에 생김???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/cfd000f986d6/v1-02.jpg" alt="2장: 후쿠이는 공룡의 고장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/cfd000f986d6/v1-03.jpg" alt="3장: 대도시 밖의 일본을 비춘다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/cfd000f986d6/v1-04.jpg" alt="4장: 수백 마리처럼 보이는 망나뇽" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/cfd000f986d6/v1-05.jpg" alt="5장: 11층인 건 이유가 있어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/cfd000f986d6/v1-06.jpg" alt="6장: 일본 여행 때 저장해 두기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/cfd000f986d6/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">일본 후쿠이의 온천 마을 아와라에 포켓몬 망나뇽을 주인공으로 한 객실이 생겼다. &#39;트래블링 망나뇽 룸&#39;이라는 이름으로, 아와라 온천 그란디아 호우센 11층에 자리한다.
+
+후쿠이는 공룡 화석으로 유명한 곳이고, 일본어로 공룡은 &#39;무서운 용&#39;이라는 뜻이라 용 포켓몬 망나뇽이 이 지역의 관광 홍보 포켓몬을 맡고 있다. 망나뇽은 지구를 16시간 만에 한 바퀴 돌 수 있다고 알려진 포켓몬이다.
+
+객실은 최대 6명이 쓸 수 있고, 지역 장인들이 전통 방식으로 만든 직물에 망나뇽 무늬가 가득하다. 침실과 다다미 거실로 나뉘며, 11층 창밖으로 산과 사카이 평야가 펼쳐진다. 객실에 샤워실과 욕조가 있지만 온천 여관인 만큼 옥상 노천탕을 포함한 대욕장도 이용할 수 있다.
+
+후쿠이는 많은 방문객이 오가는 도쿄~오사카 라인에서 꽤 떨어져 있다. 예약은 그란디아 호우센 웹사이트에서 받고 있고, 가장 빠른 투숙 가능일은 11월 29일이다.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#포켓몬 #일본여행 #후쿠이 #망나뇽 #호텔추천</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 객실의 공식 명칭이 &#39;트래블링 망나뇽 룸&#39;이라는 사실</li><li>근거 등록 안 된 주장: 망나뇽이 후쿠이의 관광 홍보 포켓몬(tourism ambassador)을 맡고 있다는 사실</li><li>근거 등록 안 된 주장: 기사 출처가 SoraNews24라는 사실</li>
+          <li>포켓몬 관련 공식 이미지와 기사 사진은 저작권이 있어 카드에 사용하지 않음</li><li>예약 가능 일정과 객실 정보는 변동될 수 있어 게시 전 공식 안내 확인 필요</li><li>원문은 객실 내 망나뇽 수를 &#39;수백 마리로 보인다&#39;고 표현해 정확한 수량은 불확실</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-cfd000f986d6-0">1장</label>
+          <textarea id="s-cfd000f986d6-0" rows="6" data-slide="0">**망나뇽** 방이
+호텔에 생김???
+---
+일본 후쿠이현의 아와라 온천 호텔에 포켓몬 망나뇽을 테마로 꾸민 객실이 새로 생겨 예약을 받고 있다.</textarea>
+          
+          <label class="f" for="s-cfd000f986d6-1">2장</label>
+          <textarea id="s-cfd000f986d6-1" rows="6" data-slide="1">후쿠이는
+**공룡**의 고장
+---
+후쿠이는 공룡 화석이 발굴된 것으로 유명한 지역이다. 일본어로 공룡은 &#39;무서운 용&#39;을 뜻하는 말이라, 용 느낌의 망나뇽이 이 지역의 관광 홍보 포켓몬이 되었다.</textarea>
+          
+          <label class="f" for="s-cfd000f986d6-2">3장</label>
+          <textarea id="s-cfd000f986d6-2" rows="6" data-slide="2">**대도시** 밖의
+일본을 비춘다
+---
+망나뇽은 &#39;포켓몬 로컬 액츠&#39; 프로젝트에서 후쿠이와 짝을 이뤘다. 이 프로젝트는 큰 도시와 유명 관광지만 보면 놓치기 쉬운 일본의 매력에 주목하려는 사업이다.</textarea>
+          
+          <label class="f" for="s-cfd000f986d6-3">4장</label>
+          <textarea id="s-cfd000f986d6-3" rows="6" data-slide="3">수백 마리처럼
+보이는 **망나뇽**
+---
+아와라 온천 그란디아 호우센 11층에 있는 객실로, 최대 6명이 묵을 수 있다. 태피스트리와 베개 커버, 쿠션 커버에 망나뇽 무늬를 넣었고, 후쿠이 장인들이 전통 방식으로 만들었다.</textarea>
+          
+          <label class="f" for="s-cfd000f986d6-4">5장</label>
+          <textarea id="s-cfd000f986d6-4" rows="6" data-slide="4">**11층**인 건
+이유가 있어
+---
+방은 침실과 다다미 바닥의 거실로 나뉜다. 11층에서 가까운 산과 사카이 평야가 한눈에 들어와, 망나뇽이 후쿠이 위를 날 때 볼 법한 시야를 느끼게 하려는 설계다.</textarea>
+          
+          <label class="f" for="s-cfd000f986d6-5">6장</label>
+          <textarea id="s-cfd000f986d6-5" rows="6" data-slide="5">일본 여행 때
+**저장**해 두기
+---
+망나뇽 무늬 직물부터 11층 전망까지 담긴 후쿠이의 객실이라, 다음 일본 여행을 짜는 포켓몬 팬이 나중에 다시 꺼내 볼 만한 이야기</textarea>
+          
+          <label class="f" for="c-cfd000f986d6">본문 (캡션)</label>
+          <textarea id="c-cfd000f986d6" class="caption">일본 후쿠이의 온천 마을 아와라에 포켓몬 망나뇽을 주인공으로 한 객실이 생겼다. &#39;트래블링 망나뇽 룸&#39;이라는 이름으로, 아와라 온천 그란디아 호우센 11층에 자리한다.
+
+후쿠이는 공룡 화석으로 유명한 곳이고, 일본어로 공룡은 &#39;무서운 용&#39;이라는 뜻이라 용 포켓몬 망나뇽이 이 지역의 관광 홍보 포켓몬을 맡고 있다. 망나뇽은 지구를 16시간 만에 한 바퀴 돌 수 있다고 알려진 포켓몬이다.
+
+객실은 최대 6명이 쓸 수 있고, 지역 장인들이 전통 방식으로 만든 직물에 망나뇽 무늬가 가득하다. 침실과 다다미 거실로 나뉘며, 11층 창밖으로 산과 사카이 평야가 펼쳐진다. 객실에 샤워실과 욕조가 있지만 온천 여관인 만큼 옥상 노천탕을 포함한 대욕장도 이용할 수 있다.
+
+후쿠이는 많은 방문객이 오가는 도쿄~오사카 라인에서 꽤 떨어져 있다. 예약은 그란디아 호우센 웹사이트에서 받고 있고, 가장 빠른 투숙 가능일은 11월 29일이다.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-cfd000f986d6">해시태그</label>
+          <input id="t-cfd000f986d6" type="text" class="tagsin" value="#포켓몬 #일본여행 #후쿠이 #망나뇽 #호텔추천" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>망나뇽 객실은 후쿠이 아와라 온천 마을의 호텔 그란디아 호우센 11층에 있다</b>
+            <q>“The Traveling Dragonite Room is located on the 11th floor of Awara Onsen Grandia Housen, a hotel in the Fukui hot spring town of Awara.”</q>
+            <small>slide1, slide4, caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>후쿠이는 공룡 화석으로 유명하고, 일본어 공룡이 &#39;무서운 용&#39;을 뜻해 망나뇽이 후쿠이와 짝을 이뤘다</b>
+            <q>“Fukui is famous for the dinosaur fossils that have been excavated there, and with the Japanese word for dinosaur, kyoryu, translating literally as “terrifying dragon,” the draconic Dragonite was a natural choice to partner with the prefecture for the Pokémon Local Acts project, which seeks to shine a spotlight on beautiful and interesting parts of Japan that tourists might overlook if they’re only focusing on the largest cities and most famous sightseeing attractions.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포켓몬 로컬 액츠 프로젝트는 큰 도시와 유명 관광지만 보면 놓치기 쉬운 일본의 매력을 조명하려는 사업이다</b>
+            <q>“Fukui is famous for the dinosaur fossils that have been excavated there, and with the Japanese word for dinosaur, kyoryu, translating literally as “terrifying dragon,” the draconic Dragonite was a natural choice to partner with the prefecture for the Pokémon Local Acts project, which seeks to shine a spotlight on beautiful and interesting parts of Japan that tourists might overlook if they’re only focusing on the largest cities and most famous sightseeing attractions.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>객실은 최대 6명이 묵을 수 있고, 수백 마리처럼 보이는 망나뇽 무늬 직물을 후쿠이 장인들이 전통 방식으로 만들었다</b>
+            <q>“Within the room, which can accommodate up to six guests, what look to be hundreds of Dragonites are waiting to greet you, as the Pokémon serves as the muse for the room’s tapestries and woven fabric pillowcases, bed runners, and cushion covers, all of which were created by local Fukui artisans using traditional methods.”</q>
+            <small>slide4, summary, caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>객실은 침실과 다다미 거실로 나뉘고, 11층 전망은 망나뇽이 후쿠이 위를 날 때의 시야와 비슷하게 하려는 것이다</b>
+            <q>“The room consists of two sections, a bedroom area and a living room area, the latter with tatami reed flooring and a raised alcove in which more Dragonite artwork is displayed. As for why the room is on the 11th floor, it’s so that looking out the window at the expansive view of the nearby mountains and Sakai Plains will give you a perspective similar to what Dragonite would see on a Fukui flyover.”</q>
+            <small>slide5, summary, caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>망나뇽은 지구를 16시간 만에 한 바퀴 돌 수 있다고 알려져 있다</b>
+            <q>“The Dragon/Flying Type is reportedly capable of circumnavigating the globe in just 16 hours, and it puts its wings to good use flying hither and yon.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>객실에는 샤워실과 욕조가 있고, 옥상 노천탕을 포함한 대욕장도 이용할 수 있다</b>
+            <q>“The room has its own shower and bathtub, but with Grandia Housen being a hot spring inn, you’ll also want to take time to check out its traditional communal onsen baths, including the open-air rooftop ones.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>후쿠이는 많은 방문객이 주로 오가는 도쿄~오사카 라인에서 꽤 떨어져 있다</b>
+            <q>“As you can see on the above map, Fukui is pretty far off the Tokyo-to-Osaka line that most visitors to Japan spend most of their time on.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>예약은 그란디아 호우센 웹사이트에서 받고 있으며 가장 빠른 투숙 가능일은 11월 29일이다</b>
+            <q>“Reservations are open now for the special Pokémon room through the Grandia Housen website, with the earliest available stays coming up soon on November 29.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">Japan’s beautiful new Pokémon hotel room gives you and Dragonite a place to take a break</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/2_987d5f.jpg"</li><li>2장: <a href="https://pixabay.com/photos/museum-dinosaur-dino-fossil-5082786/" target="_blank" rel="noopener">adventurous_blondine / Pixabay</a> — "dinosaur fossil"</li><li>3장: <a href="https://pixabay.com/photos/mountain-sunset-countryside-natural-8602437/" target="_blank" rel="noopener">DeltaWorks / Pixabay</a> — "japan countryside"</li><li>4장: <a href="https://gonintendo.com/contents/65735-japanese-hotel-getting-a-pokemon-makeover-with-two-dragonite-themed-rooms" target="_blank" rel="noopener">GoNintendo / </a> — "https://gonintendo.com/attachments/image/87123/file/medium-d7f69e2ea054a5ae48894ae2910ce843.jpg"</li><li>5장: <a href="https://soranews24.com/2026/11/19/japans-beautiful-new-pokemon-hotel-room-gives-you-and-dragonite-a-place-to-take-a-break/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/3_1e37b4.jpg"</li><li>6장: <a href="https://pixabay.com/photos/globe-trotter-traveller-globe-map-1828079/" target="_blank" rel="noopener">822640 / Pixabay</a> — "travel planning"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-abd801668d16" data-id="abd801668d16">
+    <div class="head">
+      <h2>2. 산비탈 430단 효도 계단</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-01.jpg" alt="1장: 엄마 집까지 430단 직접?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-02.jpg" alt="2장: 도시살이는 끝내 안 맞았어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-03.jpg" alt="3장: 옛길은 이미 뱀 나오는 길" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-04.jpg" alt="4장: 이번엔 우리가 손잡을 차례" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-05.jpg" alt="5장: 겨울 오기 전 430단 완성" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-06.jpg" alt="6장: 살은 빠져도 후회는 없대" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-07.jpg" alt="7장: 부모님 생각나는 친구에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/abd801668d16/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">산비탈에 430단 계단을 손수 만든 형제들 이야기가 중국에서 화제가 됐어요. 저장성 산꼭대기에서 나고 자란 어머니는 남편이 세상을 떠난 뒤 자녀들이 시내로 모셨지만, 도시 생활에는 끝내 적응하지 못했다고 해요. 매년 4월 청명절에는 산으로 돌아가야 했는데, 이날은 많은 중국인이 가족과 조상의 묘에 쌓인 풀과 흙을 치우러 가는 날이에요. 그런데 어릴 적 아이들 손을 잡고 내려가던 옛길은 풀이 무성하고 뱀이 나오는 길이 되어 있었죠.
+
+58세 황주롄 씨는 이번엔 자신과 형제들이 효를 보일 차례라고 마음먹었어요. 계획과 자재 구입을 맡고 현장 감독까지 했고, 어머니도 저축에서 5만 위안(약 7,500달러)을 보탰습니다. 형제와 사촌들이 돌을 나르고 시멘트를 섞었고, 아들은 대형 드론으로 돌 옮기는 일을 거들었어요. 8월부터 10월까지 일해 겨울 전에 430단 길을 완성했습니다.
+
+황 씨는 일하는 동안 몸무게가 6파운드 넘게 줄고 머리카락도 많이 빠졌지만 후회는 없다고 했어요. 이 길은 약초꾼과 등산객, 주민들에게도 쓸모가 큰 길이 됐다고 합니다.
+
+부모님 손 잡아 본 지 오래된 친구가 떠올랐다면, 이 글 보내 주세요.
+
+출처: Good News Network, South China Morning Post, Chao News</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#효도 #감동실화 #중국 #해외반응 #카드뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 어머니가 큰아들과 둘째 아들 집을 번갈아 오가며 지냈다는 사실</li><li>근거 등록 안 된 주장: 황 씨의 누이와 매형이 식사 준비와 공구 관리를 맡았다는 사실</li><li>근거 등록 안 된 주장: 조카와 질녀가 시간이 날 때마다 잔해 치우는 일을 도왔다는 사실</li><li>근거 등록 안 된 주장: 중국 SNS에서 이 길이 &#39;효도 하늘 사다리(filial piety sky ladder)&#39;로 알려져 화제가 됐다는 사실</li><li>근거 등록 안 된 주장: 황 씨가 몸무게 감량과 함께 피부가 그을렸다(tan)는 사실</li><li>근거 등록 안 된 주장: Good News Network, South China Morning Post, Chao News가 해당 이야기를 보도했다는 출처 정보</li>
+          <li>Chao News와 SCMP 보도를 Good News Network가 재인용한 기사라 현지 사실관계는 2차 확인이 필요함</li><li>5만 위안=7,500달러 환산은 원문 표기를 따른 것</li><li>원문 날짜가 2026-11-18로 표기되어 있어 게시 전 날짜 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-abd801668d16-0">1장</label>
+          <textarea id="s-abd801668d16-0" rows="6" data-slide="0">엄마 집까지
+**430단** 직접?!
+---
+중국 저장성의 한 어머니가 집에 더 쉽게 오르도록, 자녀들이 산비탈에 430단 계단을 손수 만들었다.</textarea>
+          
+          <label class="f" for="s-abd801668d16-1">2장</label>
+          <textarea id="s-abd801668d16-1" rows="6" data-slide="1">도시살이는
+끝내 **안 맞았어**
+---
+아버지가 세상을 떠난 뒤 자녀들은 어머니를 시내로 모셨다. 하지만 어머니는 산 생활을 그리워했고, 매년 4월 청명절에는 산으로 돌아가야 했다.</textarea>
+          
+          <label class="f" for="s-abd801668d16-2">3장</label>
+          <textarea id="s-abd801668d16-2" rows="6" data-slide="2">옛길은 이미
+**뱀** 나오는 길
+---
+어머니가 어린 자녀들 손을 잡고 내려가던 옛길은 풀이 무성해진 채 방치돼 있었다. 현지 보도에 따르면 이제는 뱀이 나오는 길이 됐다.</textarea>
+          
+          <label class="f" for="s-abd801668d16-3">4장</label>
+          <textarea id="s-abd801668d16-3" rows="6" data-slide="3">이번엔 우리가
+**손잡을 차례**
+---
+58세 황주롄은 이제 자신과 형제들이 효를 보일 차례라고 결심했다. 계획과 자재 구입을 맡아 현장 감독 역할까지 했고, 어머니도 저축에서 5만 위안(약 7,500달러)을 보탰다.</textarea>
+          
+          <label class="f" for="s-abd801668d16-4">5장</label>
+          <textarea id="s-abd801668d16-4" rows="6" data-slide="4">겨울 오기 전
+**430단** 완성
+---
+형제 둘과 사촌 둘이 돌을 나르고 시멘트를 섞었다. 황 씨의 아들은 대형 드론으로 돌 옮기는 일을 거들었고, 8월부터 10월까지 일해 일부 구간은 가파른 절벽에 붙여 완성했다.</textarea>
+          
+          <label class="f" for="s-abd801668d16-5">6장</label>
+          <textarea id="s-abd801668d16-5" rows="6" data-slide="5">살은 빠져도
+**후회는 없대**
+---
+황 씨는 공사 중 몸무게가 6파운드 넘게 줄고 머리카락도 많이 빠졌지만 후회는 없다고 했다. 이 길은 약초꾼과 등산객, 주민들에게도 요긴한 길이 됐다.</textarea>
+          
+          <label class="f" for="s-abd801668d16-6">7장</label>
+          <textarea id="s-abd801668d16-6" rows="6" data-slide="6">부모님 생각나는
+친구에게 보내기
+---
+어머니가 잡아 주던 손을 자녀들이 직접 만든 길로 돌려드린 이야기. 부모님 얼굴이 떠오르는 친구라면 한참 마음에 남을 이야기</textarea>
+          
+          <label class="f" for="c-abd801668d16">본문 (캡션)</label>
+          <textarea id="c-abd801668d16" class="caption">산비탈에 430단 계단을 손수 만든 형제들 이야기가 중국에서 화제가 됐어요. 저장성 산꼭대기에서 나고 자란 어머니는 남편이 세상을 떠난 뒤 자녀들이 시내로 모셨지만, 도시 생활에는 끝내 적응하지 못했다고 해요. 매년 4월 청명절에는 산으로 돌아가야 했는데, 이날은 많은 중국인이 가족과 조상의 묘에 쌓인 풀과 흙을 치우러 가는 날이에요. 그런데 어릴 적 아이들 손을 잡고 내려가던 옛길은 풀이 무성하고 뱀이 나오는 길이 되어 있었죠.
+
+58세 황주롄 씨는 이번엔 자신과 형제들이 효를 보일 차례라고 마음먹었어요. 계획과 자재 구입을 맡고 현장 감독까지 했고, 어머니도 저축에서 5만 위안(약 7,500달러)을 보탰습니다. 형제와 사촌들이 돌을 나르고 시멘트를 섞었고, 아들은 대형 드론으로 돌 옮기는 일을 거들었어요. 8월부터 10월까지 일해 겨울 전에 430단 길을 완성했습니다.
+
+황 씨는 일하는 동안 몸무게가 6파운드 넘게 줄고 머리카락도 많이 빠졌지만 후회는 없다고 했어요. 이 길은 약초꾼과 등산객, 주민들에게도 쓸모가 큰 길이 됐다고 합니다.
+
+부모님 손 잡아 본 지 오래된 친구가 떠올랐다면, 이 글 보내 주세요.
+
+출처: Good News Network, South China Morning Post, Chao News</textarea>
+          <label class="f" for="t-abd801668d16">해시태그</label>
+          <input id="t-abd801668d16" type="text" class="tagsin" value="#효도 #감동실화 #중국 #해외반응 #카드뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자녀들이 노모를 위해 산비탈에 계단을 손수 만들었다</b>
+            <q>“The children of an elderly Chinese mother have touched the hearts of millions by painstakingly building a new staircase by hand up the side of a mountain to help her reach her home more easily.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>중국 저장성 산에서 나고 자란 어머니를 아버지 사후 자녀들이 시내로 모셨다</b>
+            <q>“Born and raised on the top of a mountain in eastern China’s Zhejiang Province, the children moved their mother into town after their father died decades ago, where she alternated stays between her eldest and second-eldest son homes.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어머니는 도시 생활에 적응하지 못했고 매년 4월 청명절에 산으로 돌아가야 했다</b>
+            <q>“She never took to urban life. She missed living on the mountain, and Chinese custom required she return at least once a year in April for the Qingming Festival, or Tomb Sweeping Day.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>청명절에는 많은 중국인이 가족과 조상의 묘에 쌓인 풀과 흙을 치우러 간다</b>
+            <q>“On this day, millions of Chinese return to clean away overgrowth, leaves, and dirt accumulated on the graves of their family and ancestors—a central expression of the virtue of filial piety expounded in China since ancient times.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어머니가 자녀 손을 잡고 내려가던 옛길은 풀이 무성하고 쓰이지 않으며 뱀이 나오는 곳이 됐다(현지 보도)</b>
+            <q>“Yet the old path down which she would take her children hand-in-hand was now overgrown and disused—the haunt of snakes—according to the story reported first by Chao News on the mainland and published later in English by the South China Morning Post.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>58세 황주롄이 자신과 형제들이 효를 보일 차례라고 결심하고 계단을 짓기 시작했다</b>
+            <q>“58-year-old Huang Zhulian decided it was now her and her older siblings’ turn to demonstrate their filial piety, and began to build what Chinese social media has celebrated as a “filial piety sky ladder.””</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>황 씨가 계획과 자재 구입을 맡고 현장 감독 역할을 했으며 어머니가 저축에서 5만 위안(약 7,500달러)을 보탰다</b>
+            <q>“As it was Huang’s idea, she undertook planning and purchasing of materials before assuming the role of the foreman as they aimed to rebuild an older path up another side of the mountain with less foliage. Learning what was being undertaken, their mother contributed 50,000 RMB, or $7,500, from her savings to assist in the project.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>형제 둘과 사촌 둘이 돌을 나르고 시멘트를 섞었다</b>
+            <q>“Two of her brothers and two cousins carried stones up the mountain to the build site and mixed the cement.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>황 씨의 아들이 대형 드론으로 돌 옮기는 일을 거들었다</b>
+            <q>“Her nephew and niece helped clear away rubble whenever they were free, while her own son assisted his uncles with the clever use of a heavy-lift drone to move stones.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>8월부터 10월까지 일해 겨울 전에 430단 길을 완성했고 일부는 절벽에 붙어 있다</b>
+            <q>“They worked between August and October to finish the path before winter, and succeeded in creating a 430-step route, which included portions quite literally fastened to the side of a sheer cliff.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>황 씨는 공사 중 6파운드 넘게 빠지고 머리카락도 많이 빠졌지만 후회가 없다고 했다</b>
+            <q>“Huang told Chao News she lost over 6 pounds during the work, got a tan, and lost a lot of hair, but has no regrets.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 길은 약초꾼, 등산객, 주민들에게도 유용했다</b>
+            <q>“In addition to helping their mother, the path has already proved invaluable to herb gatherers, mountain hikers, and other locals who live on and around the mountain.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어릴 적 어머니가 손을 잡아 주었기에 이제 자녀가 길을 만들어 어머니 손을 잡을 차례라고 황 씨가 말했다</b>
+            <q>““When we were young, our mother held our hands as we went down the mountain to see the outside world. Now that our mother is old, we’ve built the road. It’s our turn to hold her hand and take her home,” Huang said.”</q>
+            <small>slide4, slide7, outro · <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">Siblings Build 430-Step ‘Sky Ladder&#39; for Their Mother Who Refuses to Live in the City</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/winding-dirt-road-10430189/" target="_blank" rel="noopener">ahmetyuksek / Pixabay</a> — "stone staircase winding up sunlit green mountain"</li><li>2장: <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/86-year-old-mother-Chen-family-photo.jpg"</li><li>3장: <a href="https://pixabay.com/photos/castle-ruins-path-overgrown-ivy-7459781/" target="_blank" rel="noopener">Alan_Frijns / Pixabay</a> — "overgrown path"</li><li>4장: <a href="https://pixabay.com/photos/love-woman-man-romantic-go-stroll-4536550/" target="_blank" rel="noopener">birgl / Pixabay</a> — "holding hands"</li><li>5장: <a href="https://www.goodnewsnetwork.org/siblings-build-430-step-sky-ladder-for-their-mother-who-refuses-to-live-in-the-city/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/The-filial-piety-sky-ladder-credit-retrieved-from-Chinese-social-media-QQ.jpg"</li><li>6장: <a href="https://pixabay.com/photos/boots-girl-hiking-leather-boots-1867379/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "hiking trail"</li><li>7장: <a href="https://pixabay.com/photos/children-siblings-brother-sister-817365/" target="_blank" rel="noopener">Bessi / Pixabay</a> — "family hands"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-79c77a21418e" data-id="79c77a21418e">
+    <div class="head">
+      <h2>3. 고자소로 이마가와야키 110엔</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 14
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/v1-01.jpg" alt="1장: 이마가와야키가 110엔???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/v1-02.jpg" alt="2장: 1955년부터 한 가지만 구웠어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/v1-03.jpg" alt="3장: 10엔이던 게 지금 110엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/v1-04.jpg" alt="4장: 속의 절반이 넘게 팥이야" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/v1-05.jpg" alt="5장: 팥이냐 흰 팥이냐 고민되면 둘 다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/v1-06.jpg" alt="6장: 신주쿠 가는 날 저장해 두면 끝" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/product-1119081511-01.jpg" alt="상품 사진: 손에 든 둥근 황금갈색 구움과자(이마가와야키 추정) 클로즈업, 윗면에 검은 점 같은 흔적이 보임 (map.yahoo.co.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/product-1119081511-02.jpg" alt="상품 사진: 고자소 포장 상자 안에 담긴 이마가와야키 두 줄, 갈색으로 구워진 둥근 빵 여러 개 (map.yahoo.co.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/product-1119081511-03.jpg" alt="상품 사진: 철판 위에서 굽고 있는 이마가와야키 반죽들. 위쪽 줄은 뒤집어 구운 완성품(노릇한 황금색), 아래쪽 줄은 틀에 반죽을 붓고 팥 앙금과 흰앙금을 올려둔 상태. 사람 손이 보임. (map.yahoo.co.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 3장이 카드 뒤에 같이 들어가요 (map.yahoo.co.jp). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">일본에서 110엔이면 살 수 있는 간식이 있다. 효고현에서 1955년에 시작한 고자소로의 이마가와야키 이야기다. 이 가게는 팥소를 채운 원반 모양 케이크 한 가지만 만든다. 처음 팔 때는 개당 10엔이었는데, 당시 다른 가게의 두 배 가격이었다고 한다.
+
+소개된 곳은 신주쿠 다카시마야 지하 1층 지점이다. 속 재료는 일반 팥소와 흰 팥소 두 가지이고, 개당 110엔이다. 기자는 자판기 물 한 병보다 싸다고 짚었고, 물가가 오르는 일본에서 가격이 잘 버텼다고 썼다.
+
+맛 평가도 좋았다. 속의 절반 넘게 팥소가 들어 있고 겉은 살짝 바삭했다. 흰 팥소는 더 부드럽고 은은한 단맛이라고 한다. 기자는 둘 다 먹어 치우고 배부르고 행복해졌다고 한다.
+
+이 취재는 기자가 어머니에게 할아버지가 이 가게의 과자를 좋아했다는 말을 들은 데서 시작됐다. 영업시간은 오전 10시 30분부터 오후 7시 30분까지다. 일본 여행을 계획 중이라면 저장해 두자.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#이마가와야키 #일본간식 #일본여행 #신주쿠맛집 #도쿄디저트</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 기자가 할아버지 묘에 이마가와야키를 공양으로 가져가려 한다는 내용</li><li>근거 등록 안 된 주장: 기자가 할아버지와 함께 간식을 먹은 기억이 없다는 내용</li><li>근거 등록 안 된 주장: 1엔 대신 0.06달러(10엔)라는 환산 금액</li><li>근거 등록 안 된 주장: 매장 앞 큰 유리창으로 직원이 굽는 모습을 볼 수 있다는 내용</li><li>근거 등록 안 된 주장: 포장지가 백화점 무늬 종이라는 내용</li><li>근거 등록 안 된 주장: 기자가 집에서 전자레인지로 데워 먹었다는 내용</li><li>근거 등록 안 된 주장: 흰 팥소와 일반 팥소 제품의 겉모습이 같다는 내용</li><li>근거 등록 안 된 주장: 일부 사람들이 이 간식을 오반야키라고 부른다는 내용</li><li>근거 등록 안 된 주장: 가게가 70년 동안 한 가지 제품으로 운영을 이어 왔다는 내용</li><li>근거 등록 안 된 주장: 재료 품질에 창업 초기부터 공을 들였다는 내용</li><li>근거 등록 안 된 주장: 매장 주소(도쿄도 시부야구 센다가야 5-24-2)</li>
+          <li>기사 속 사진은 SoraNews24 저작권(©)이라 사용하지 않음</li><li>가격(110엔)과 영업시간은 2026년 11월 기사 기준이라 바뀔 수 있음</li><li>맛 평가는 기자 개인의 의견임</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-79c77a21418e-0">1장</label>
+          <textarea id="s-79c77a21418e-0" rows="6" data-slide="0">이마가와야키가
+**110엔**???
+---
+일본 효고현에서 시작한 고자소로의 이마가와야키가 도쿄 신주쿠 백화점 지점에서 개당 110엔에 팔리고 있다.</textarea>
+          
+          <label class="f" for="s-79c77a21418e-1">2장</label>
+          <textarea id="s-79c77a21418e-1" rows="6" data-slide="1">1955년부터
+**한 가지만** 구웠어
+---
+고자소로는 1955년 효고현에서 문을 열었고, 팥소를 채운 원반 모양 케이크 한 가지만 만든다. 처음 팔 때는 개당 10엔으로, 당시 다른 가게의 두 배 가격이었다.</textarea>
+          
+          <label class="f" for="s-79c77a21418e-2">3장</label>
+          <textarea id="s-79c77a21418e-2" rows="6" data-slide="2">10엔이던 게
+지금 **110엔**
+---
+신주쿠 다카시마야 지하 1층 지점에서 개당 110엔(약 0.69달러)에 판다. 자판기 물 한 병보다 싸고, 물가가 오른 일본에서 가격이 잘 버틴 간식이라고 기자는 짚었다.</textarea>
+          
+          <label class="f" for="s-79c77a21418e-3">4장</label>
+          <textarea id="s-79c77a21418e-3" rows="6" data-slide="3">속의 **절반이**
+넘게 팥이야
+---
+기자가 먹어 보니 속의 절반 넘게 팥소가 차 있었고, 단맛도 설탕 맛만 나지 않았다. 겉은 살짝 바삭하게 구워져 부드러운 팥소와 대비를 이뤘다고 한다.</textarea>
+          
+          <label class="f" for="s-79c77a21418e-4">5장</label>
+          <textarea id="s-79c77a21418e-4" rows="6" data-slide="4">팥이냐 흰 팥이냐
+고민되면 **둘 다**
+---
+속 재료는 일반 팥소와 흰 팥소 두 가지다. 흰 팥소는 맛이 부드럽고 단맛이 은은해 더 세련된 인상이면서도 누구나 좋아할 맛이라고 기자는 평가했다.</textarea>
+          
+          <label class="f" for="s-79c77a21418e-5">6장</label>
+          <textarea id="s-79c77a21418e-5" rows="6" data-slide="5">신주쿠 가는 날
+**저장**해 두면 끝
+---
+신주쿠 백화점 지하에서 110엔으로 살 수 있는 간식 정보라 여행 전에 다시 꺼내 보기 좋은 이야기</textarea>
+          
+          <label class="f" for="c-79c77a21418e">본문 (캡션)</label>
+          <textarea id="c-79c77a21418e" class="caption">일본에서 110엔이면 살 수 있는 간식이 있다. 효고현에서 1955년에 시작한 고자소로의 이마가와야키 이야기다. 이 가게는 팥소를 채운 원반 모양 케이크 한 가지만 만든다. 처음 팔 때는 개당 10엔이었는데, 당시 다른 가게의 두 배 가격이었다고 한다.
+
+소개된 곳은 신주쿠 다카시마야 지하 1층 지점이다. 속 재료는 일반 팥소와 흰 팥소 두 가지이고, 개당 110엔이다. 기자는 자판기 물 한 병보다 싸다고 짚었고, 물가가 오르는 일본에서 가격이 잘 버텼다고 썼다.
+
+맛 평가도 좋았다. 속의 절반 넘게 팥소가 들어 있고 겉은 살짝 바삭했다. 흰 팥소는 더 부드럽고 은은한 단맛이라고 한다. 기자는 둘 다 먹어 치우고 배부르고 행복해졌다고 한다.
+
+이 취재는 기자가 어머니에게 할아버지가 이 가게의 과자를 좋아했다는 말을 들은 데서 시작됐다. 영업시간은 오전 10시 30분부터 오후 7시 30분까지다. 일본 여행을 계획 중이라면 저장해 두자.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-79c77a21418e">해시태그</label>
+          <input id="t-79c77a21418e" type="text" class="tagsin" value="#이마가와야키 #일본간식 #일본여행 #신주쿠맛집 #도쿄디저트" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/product-1119081511-01.jpg" alt="" width="56" height="56" loading="lazy"> 손에 든 둥근 황금갈색 구움과자(이마가와야키 추정) 클로즈업, 윗면에 검은 점 같은 흔적이 보임 · map.yahoo.co.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/product-1119081511-02.jpg" alt="" width="56" height="56" loading="lazy"> 고자소 포장 상자 안에 담긴 이마가와야키 두 줄, 갈색으로 구워진 둥근 빵 여러 개 · map.yahoo.co.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="2"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/79c77a21418e/product-1119081511-03.jpg" alt="" width="56" height="56" loading="lazy"> 철판 위에서 굽고 있는 이마가와야키 반죽들. 위쪽 줄은 뒤집어 구운 완성품(노릇한 황금색), 아래쪽 줄은 틀에 반죽을 붓고 팥 앙금과 흰앙금을 올려둔 상태. 사람 손이 보임. · map.yahoo.co.jp</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고자소로는 1955년 효고현에서 창업했고 팥소를 채운 원반 모양 케이크 한 가지만 만든다</b>
+            <q>“The company, Gozasoro, was founded in Hyogo Prefecture in 1955 and really only makes one product, hockey puck-shaped cakes filled with anko (sweet bean jam), which some people call Imagawayaki, some people call obanyaki, and still other people call something else.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>창업 초기 개당 10엔이었고 이는 당시 다른 가게의 두 배 가격이었다</b>
+            <q>“When the company started out, they charged 10 yen (US$0.06) per Imagawayaki, which was double the price most other shops sold theirs for at the time.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고자소로는 도쿄 신주쿠의 다카시마야 백화점 안에 지점이 있다</b>
+            <q>“Curious to try these sweets that had won her grandfather’s heart/stomach, Natsuki did some checking and found that Gozasoro has a branch inside the Takashimaya department store in downtown Tokyo’s Shinjuku neighborhood.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이마가와야키는 개당 110엔(약 0.69달러)이다</b>
+            <q>“Because even though Gozasoro isn’t selling Imagawayaki for 10 yen in 2026, they’re still an incredibly affordable snack at just 110 yen (US$0.69) each.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>자판기 물 한 병 값보다 싸다</b>
+            <q>“Yep, for less than the cost of a bottle of water in vending machine will run you these days, you can get a freshly cooked Gozasoro Imagawayaki.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>물가 상승 속에서 가격이 잘 버틴 간식이다</b>
+            <q>“With rising prices pummeling pocketbooks in Japan over the past few years, it’s very nice to see something that’s been so inflation-resistant.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>신주쿠 다카시마야 지하 1층 지점이다</b>
+            <q>“Address: Tokyo-to, Shibuya-ku, Sendagaya 5-24-2, Shinjuku Takashimaya basement level 1”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>속의 절반 넘게 팥소이고 단맛이 설탕 맛만 나지 않는다</b>
+            <q>“With some lower-quality Imagawayaki you bite into them to find they’re mostly just dough with a tiny dollop of jam at the core, but the inside of Gozasoro’s is more than half anko, and that anko is very good, flavorfully sweet without being simplistically sugary.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>겉이 살짝 바삭해 부드러운 팥소와 대비를 이룬다</b>
+            <q>“Natsuki particularly liked the ever-so-slight crispness it’s cooked to, which makes for a great contrast with the soft anko inside.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>속 재료는 일반 팥소와 흰 팥소 두 가지다</b>
+            <q>“As you can see in the above photo, there are two fillings to choose from, regular/red anko, and white anko.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>흰 팥소는 맛이 부드럽고 단맛이 은은해 세련된 인상이면서 누구나 좋아할 맛이다</b>
+            <q>“Compared to the more common red version, white anko has a softer flavor and gentler sweetness, making for a more refined impression while still being an approachable, crowd-pleasing taste.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자는 두 가지를 모두 먹어 치우고 배부르고 행복해졌다</b>
+            <q>“These were so good, though, that before Natsuki realized it, she gobbled them both down and was feeling both rather full and extremely happy.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자가 어머니에게 할아버지가 이 가게 과자를 좋아했다는 말을 들었다</b>
+            <q>“Our Japanese-language reporter Natsuki Gojo recently visited her mom, and while they were talking, Mom mentioned how much Natsuki’s grandfather loved a certain maker of Japanese confectionaries.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영업시간은 오전 10시 30분부터 오후 7시 30분까지다</b>
+            <q>“Open 10:30 a.m.-7:30 p.m.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">Gozasoro’s amazingly cheap Imagawayaki are one of Japan’s sweetest sweets deals</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/3_5350ae.jpg?w=1000&amp;h=525&amp;crop=1"</li><li>2장: <a href="https://pixabay.com/photos/doughnuts-desserts-pastries-treats-1868573/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "pastry shop"</li><li>3장: <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/4_407edf.jpg?w=640"</li><li>4장: <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/7_250002.jpg?w=640"</li><li>5장: <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/3_5350ae.jpg"</li><li>6장: <a href="https://soranews24.com/2026/11/19/gozasoros-amazingly-cheap-imagawayaki-are-one-of-japans-sweetest-sweets-deals/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/2_6f9109.jpg"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 3개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-edfdbb7043c8">
+    <div class="head">
+      <h2>S1. 술 적당히 마셔도 신장? UK Biobank 25만 명 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 18
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-edfdbb7043c8">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;간만 조심하면 된다&#39;는 통념 뒤에 숨은 신장 연관 데이터를, 술 종류별 차이(증류주·맥주 vs 와인)로 보여주면 팔린다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">&#39;적당히만 마시면 괜찮다&#39;는 말, 신장 얘기까지 나오면 좀 달라짐
+술 걱정은 간만 하는 줄 알았는데, 25만 명 넘는 음주자 데이터에서 신장과의 연관이 나옴
+근데 와인만 결과가 달랐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 증류주를 많이 마신 쪽은 급성 신장손상 위험이 40%, 맥주는 24% 높게 연관돼 나옴
+와인은 전체적으로 연관이 없었음
+근데 이 숫자, 간 질환을 고려하면 어떻게 됐을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">141/500자</span></div>
+      <p class="tp-text">2/ 지금까지는 술로 인한 신장 문제를 간 문제의 부작용으로 보는 게 일반적이었대
+간 질환을 고려해도 증류주 33%, 맥주 19%로 여전히 뚜렷한 증가였음
+간 질환이 있는 사람을 아예 빼고 봐도 결과는 크게 안 바뀜
+그럼 적게 마시는 사람은 괜찮았을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">3/ 증류주는 주 14단위 이하(샷으로 약 12잔)에서도 위험이 높게 연관돼 나옴
+맥주는 그 구간에선 뚜렷한 연관이 없었음
+근데 주 14단위를 넘으면 와인까지 모든 종류가 위험 증가와 연결됨
+그럼 와인은 왜 달랐을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">4/ 염증 지표가 증류주·맥주에선 올라가고 와인에선 내려갔대
+연구진은 와인 속 식물 성분(레스베라트롤 등)을 이유로 짐작함
+근데 변화 폭이 작았고, 관찰 연구라 와인이 신장을 지킨다고는 말할 수 없음
+그럼 이 연구, 어디까지 믿어야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">260/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 대상: 영국 UK Biobank의 현재 음주자 250,791명, 약 14년 추적
+- 급성 신장손상 진단: 10,335명(4.1%)
+- 증류주 40%, 맥주 24% 높은 위험 연관 (간 질환 고려 후 33%, 19%)
+- 와인: 전체적으로는 연관 없음
+- 한계: 관찰 연구라 인과는 증명 못 함, 참가자는 40~69세, 음주량은 본인 보고
+- 한국 20~30대에 그대로 적용되는지는 이 연구로는 알 수 없음
+그럼 연구진은 결국 뭐라고 했을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">216/500자</span></div>
+      <p class="tp-text">6/ 연구진은 가장 안전한 음주량이 아주 적거나 0에 가까울 가능성이 크다는 연구들을 짚으면서, 간만큼 신장도 같이 얘기해야 한다고 함
+
+맥주파 vs 위스키파 vs 와인파, 너는 어디야?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구 데이터가 영국 UK Biobank에서 나왔다는 점(claims에 없음)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;적당히만 마시면 괜찮다&#39;는 말, 신장 얘기까지 나오면 좀 달라짐</li><li>간만 걱정하던 술, 신장까지 같이 봐야 한다는 연구가 나옴</li><li>술 걱정은 &#39;간&#39;만이 아니라 &#39;신장&#39;까지 하라는 연구가 나옴</li><li>25만 명 음주자를 14년 따라갔더니 신장 얘기가 나옴</li><li>증류주 40%, 맥주 24%. 신장 위험 연관 숫자야</li><li>&#39;간만 멀쩡하면 된다&#39;고 생각했다면 이 연구 한번 봐</li><li>위스키·맥주는 신장 위험 연관이 나왔는데 와인만 달랐대</li><li>회식 때 뭘 마시냐에 따라 신장 위험 숫자가 달랐대</li><li>간 질환 있는 사람을 빼고 봐도 술과 신장 연관이 남았대</li><li>와인은 연관 없었다는데, 그래도 초록불은 아니라는 이유</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>맥주파 vs 위스키파 vs 와인파, 너는 어디야?</li><li>회식 첫 잔, 맥주파 vs 소주파 vs 하이볼파?</li><li>이 연구 보고 술자리에서 주문이 바뀔 것 같아?</li><li>술자리에서 &#39;오늘은 한 잔만&#39; 지켜본 사람?</li><li>너라면 술 걱정할 때 간 말고 신장도 같이 따질 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>술과 신장, 염증 수치가 정말 연결 고리일까</li><li>와인 속 식물 성분 연구는 어디까지 확인됐나</li><li>UK Biobank 데이터로 나온 다른 생활습관 연구</li><li>후쿠이 포켓몬 망나뇽 호텔 객실</li><li>산비탈 430단 효도 계단</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>건강 연구라 &#39;술이 신장을 망친다&#39;는 인과나 &#39;와인은 안전하다&#39;로 읽히지 않는지 확인 필요 (관찰 연구, 와인 연관 없음은 보호 효과 증명이 아님)</li><li>원문 논문이 Article in Press 상태라 최종본에서 수치가 바뀔 수 있음</li><li>&#39;주 14단위 ≈ 샷 12잔&#39; 환산은 원문의 roughly 표현이라 단정하지 말 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>25만 명이 넘는 음주자 연구에서 신장이 두 번째 표적으로 나왔고, 간 질환 진단이 없는 사람에게서도 연관이 나타남</b>
+          <q>“A study of more than 250,000 drinkers now points to a second target, the kidneys, and the link showed up even in people with no diagnosed liver disease.”</q>
+          <small>post0 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>와인은 적색·백색 모두 전체적으로 위험 증가와 연관 없었고 다른 술과 결과가 달랐음</b>
+          <q>“Wine drinkers came out differently. Neither red nor white wine was linked to higher risk overall, and red wine even hinted at protection in men and lighter drinkers.”</q>
+          <small>post0 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>증류주 섭취가 많을수록 급성 신장손상 위험 40%, 맥주 24% 높은 연관</b>
+          <q>“After accounting for age, sex, body weight, blood pressure, diabetes, smoking, physical activity, and several medications, higher spirits intake was linked to a 40% higher risk of kidney injury, and higher beer intake to a 24% higher risk.”</q>
+          <small>post1 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>와인은 전체적으로 위험 증가와 연관이 없었음</b>
+          <q>“Neither red nor white wine was linked to higher risk overall, and red wine even hinted at protection in men and lighter drinkers.”</q>
+          <small>post1 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지금까지 술로 인한 신장 문제는 간 문제의 부작용으로 보는 것이 일반적이었음</b>
+          <q>“For years, doctors have treated alcohol-related kidney trouble as a side effect of liver trouble, a connection the paper calls “generally accepted to be indirect.””</q>
+          <small>post2 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>간 질환을 고려하면 40%와 24%가 33%와 19%로 줄었지만 여전히 증가였고, 간 질환자를 빼도 결과가 크게 안 바뀜</b>
+          <q>“Factoring in liver disease trimmed the 40% and 24% figures to 33% and 19%, still a clear increase. Removing everyone with liver disease from the analysis left the findings largely unchanged, and the pattern appeared in both men and women.”</q>
+          <small>post2 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>증류주는 주 14단위 이하(약 12샷)에서도 위험이 높았고 맥주는 그 구간에서 뚜렷한 연관이 없었음</b>
+          <q>“People averaging 14 units a week or less, roughly a dozen shots, still had higher risk, while beer showed no clear link at that level.”</q>
+          <small>post3 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주 14단위를 넘으면 와인 포함 모든 종류가 위험 증가와 연관됨</b>
+          <q>“Past 14 units a week (about nine small glasses of wine or five and a half pints of beer), every drink type, wine included, was tied to higher risk.”</q>
+          <small>post3 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>염증 지표는 증류주·맥주 섭취와 함께 올랐고 와인 섭취와 함께 내려감</b>
+          <q>“Both inflammation markers rose with spirits and beer intake and fell with wine intake.”</q>
+          <small>post4 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 와인 속 식물 성분(레스베라트롤 등)을 가능한 이유로 지목함</b>
+          <q>“Researchers point to plant compounds in wine, such as resveratrol, which have antioxidant properties, as a possible reason.”</q>
+          <small>post4 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>염증 지표 변화 폭이 작아 의학적으로 의미가 있는지 의문일 수 있다고 저자들이 말함</b>
+          <q>“The shifts were small, though, and the authors say whether such tiny changes matter medically “may be questionable.””</q>
+          <small>post4 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰 연구라 와인이 신장을 지킨다고 보여줄 수 없음</b>
+          <q>“Those hints were weak, and a study that tracks drinkers rather than running an experiment cannot show that wine shields the kidneys.”</q>
+          <small>post4 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분석 대상은 현재 음주자 250,791명</b>
+          <q>“After removing nondrinkers, people who had already had a kidney injury, and anyone missing key information, 250,791 current drinkers remained, nearly half of them women.”</q>
+          <small>post5 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>약 14년 추적 중 10,335명(4.1%)이 급성 신장손상 진단을 받음</b>
+          <q>“National health records were then tracked for about 14 years. In that time, 10,335 participants, or 4.1%, were diagnosed with sudden kidney injury, a rapid drop in kidney function tied to longer hospital stays and higher death rates.”</q>
+          <small>post5 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰 연구라 증류주나 맥주가 신장손상을 일으켰다고 증명할 수 없음</b>
+          <q>“This was an observational study, so it shows associations and cannot prove that spirits or beer caused kidney injuries.”</q>
+          <small>post5 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 40~69세라 더 젊거나 나이 든 성인에게 적용되는 정도가 제한될 수 있음</b>
+          <q>“Participants were ages 40 to 69, which may limit how well the findings apply to younger or older adults.”</q>
+          <small>post5 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>음주량은 주간 평균을 본인이 보고한 값임</b>
+          <q>“Alcohol intake was self-reported as an average weekly amount, which raises the chance of recall errors, though the authors believe underreporting is more likely than overreporting.”</q>
+          <small>post5 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 더 넓은 연구상 가장 안전한 음주량이 아주 적거나 0일 가능성이 크다고 짚고, 신장 건강도 논의에 넣을 것을 주장함</b>
+          <q>“The authors note that broader research suggests the safest level of drinking is likely very low or zero, and these results argue for adding kidney health to that conversation, particularly for spirits and beer.”</q>
+          <small>post6 · <a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="edfdbb7043c8">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/spirits-beer-linked-kidney-injury/" target="_blank" rel="noopener">Why One Bourbon, One Scotch, Or One Beer Could Spell Bad News For Kidney Health</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-a870891b8f00">
+    <div class="head">
+      <h2>S2. 겨울철 감기·독감 의사 10명 팁: 백신·전자담배·보습·코막힘 스프레이</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 9
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-a870891b8f00">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 이번 주 감기·독감 철에 바로 바꿀 수 있는 행동(백신, 전자담배, 보습, 스프레이 기간)만 의사 말로 골라 보여주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">겨울 감기, 걸리고 나서가 아니라 걸리기 전에 챙기라는 의사들 얘기가 나옴
+가디언이 의사들한테 겨울 버티는 팁을 물었는데, 폐 전문의가 전자담배를 콕 집어 말했음
+뭐라고 했는지는 아래에 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">1/ 폐 전문의 말로는 전자담배는 &#39;좋은 생각이 아니다&#39;래. 담배를 끊거나 줄이는 데 꼭 필요한 경우만 빼고. 담배는 심한 가슴 감염 위험을 높이고 증상도 훨씬 오래 끈다고 함. 그럼 이 의사는 본인이 뭘 맞는다고 했을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">129/500자</span></div>
+      <p class="tp-text">2/ 이 폐 전문의는 코로나, 독감, 대상포진 백신을 맞는대. 폐렴구균 백신은 일부 환자에게 권해지는 거고. 겨울엔 세균이 훨씬 흔해서 저항력을 올리는 데 중요하다는 설명. 그럼 독감 B에 걸려 석 달 앓았다는 의사는 뭘 바꿨을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">92/500자</span></div>
+      <p class="tp-text">3/ 영국 GP 한 명은 작년에 독감 B에 걸려서 회복에 석 달이 걸렸대. 그래서 독감 백신을 최대한 일찍 맞는다고 함. 그럼 피부는 겨울에 어떻게 챙기라고 했을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">138/500자</span></div>
+      <p class="tp-text">4/ 피부과 의사 설명: 겨울엔 습도가 많이 낮아져서 피부 표면 수분이 많이 빠지고, 기름도 덜 만들어진대. 본인의 건조 피부 질환도 겨울에 더 심해지지만 보통 진한 보습제로 관리된다고. 그럼 코 막혔을 땐 스프레이를 며칠까지 써도 된다고 했을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">129/500자</span></div>
+      <p class="tp-text">5/ 이비인후과 의사는 코 막혀서 잠을 방해할 때 충혈 완화 스프레이를 쓴대. 근데 5일 넘게 쓰면 안 된다고 강조함. 과하게 쓰면 콧속 점막이 크게 붓고 되돌릴 수 없는 변화가 생길 수 있대. 그럼 지금까지 나온 걸 한눈에 보면?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">183/500자</span></div>
+      <p class="tp-text">6/ 겨울 건강 요약 정리
+- 전자담배: 폐 전문의는 &#39;좋은 생각 아님&#39; (담배 끊거나 줄이는 데 꼭 필요할 때만 예외)
+- 백신: 코로나·독감·대상포진 맞는다는 폐 전문의
+- 독감 백신: 최대한 일찍 맞는다는 영국 GP
+- 보습: 겨울엔 습도가 낮아 피부 수분이 빠짐
+- 코막힘 스프레이: 5일 넘기지 않기 (이비인후과 의사)</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">233/500자</span></div>
+      <p class="tp-text">7/ 이번 기사 의사들 말을 줄이면: 백신 챙기고, 담배·전자담배 멀리하고, 코막힘 스프레이는 5일 넘기지 않기. 자기한테 맞는지는 의사랑 상의.
+올겨울 독감 백신, 이미 맞은 사람?
+이런 해외 겨울철 건강 얘기 쉽게 풀어서 계속 배달함. 2편: 겨울 수면·빛 관리 의사 팁, 내일 새벽 배달
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 겨울 감기를 걸리기 전에 챙기라는 것이 의사들의 공통 권고라는 캡션의 요약 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>겨울 감기, 걸리고 나서가 아니라 걸리기 전에 챙기라는 의사들 얘기가 나옴</li><li>전자담배, 폐 전문의가 &#39;좋은 생각이 아니다&#39;라고 콕 집어 말한 이유</li><li>겨울에 헬스장 땀 빼기보다 산책부터 늘린다는 의사가 있었음</li><li>독감에 걸려 석 달을 앓았던 의사가 올해 제일 먼저 한 일</li><li>겨울에 피부가 당기는 건 습도 때문이래, 피부과 의사 설명</li><li>의사 10명한테 겨울 버티는 법 물었더니 사우나부터 사과까지 나옴</li><li>건조한 공기만이 아니라 겨울엔 피부 기름도 덜 나온다는 피부과 의사 설명</li><li>코 막힌다고 스프레이 계속 뿌리지 말고 5일 안에 끝내라는 의사</li><li>콧속이 되돌릴 수 없게 변할 수 있다는 경고, 코막힘 스프레이 얘기래</li><li>독감 백신은 최대한 일찍 맞는다는 의사, 이유가 있었음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>올겨울 독감 백신, 이미 맞은 사람?</li><li>겨울 피부 관리, 보습제파 vs 가습기파?</li><li>감기 걸리면 일단 병원파 vs 일단 버티는파?</li><li>겨울 운동은 헬스장파 vs 산책파?</li><li>겨울에 이불 밖이 제일 힘든 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>겨울 수면·아침 햇빛·라이트박스, 의사들은 어떻게 쓰나</li><li>연말 술자리, 의사들이 말하는 쉬어가는 기준</li><li>사과 하루 하나? 겨울 장 건강 의사 팁</li><li>겨울에 운동 끊기지 않게 하는 의사들의 방법</li><li>후쿠이 포켓몬 망나뇽 호텔 객실</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>의사 개인의 습관과 의견이 일반 의료 지침처럼 읽히지 않게 주의 (특히 코막힘 스프레이 5일 제한은 이비인후과 의사 한 명의 말)</li><li>백신·전자담배 내용은 영국 의사 인터뷰라 한국 접종 대상·일정과 같다고 읽히지 않게 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가디언이 의사들에게 겨울을 버티는 팁을 물어 공유했다</b>
+          <q>“Doctors share their tips for surviving the season, from saunas to screen blockers, light boxes to apples.”</q>
+          <small>post0 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폐 전문의가 전자담배는 좋은 생각이 아니라고 했다 (담배를 끊거나 줄이는 데 꼭 필요한 경우 예외)</b>
+          <q>“Vaping is not a good idea either, unless it’s absolutely essential to prevent you smoking or to reduce your smoking consumption.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>흡연은 심한 가슴 감염 위험을 높이고 증상을 훨씬 오래 끈다</b>
+          <q>“Smoking is still a mass killer, and increases your risk of getting a serious chest infection, and greatly prolongs the symptoms.”</q>
+          <small>post1 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폐 전문의는 코로나·독감·대상포진 백신을 맞고, 폐렴구균 백신은 일부 환자에게 제공되며, 겨울에 세균이 훨씬 흔해 저항력 향상에 중요하다고 했다</b>
+          <q>“I have vaccinations against Covid, flu and shingles. These – and the pneumococcal vaccination [for serious illnesses including pneumonia] that is offered to some patients – are very important to improve your resistance to bugs, especially in the winter time when they are much more common anyway.”</q>
+          <small>post2 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국 GP는 독감 B로 회복에 석 달이 걸렸고 독감 백신을 최대한 일찍 맞는다</b>
+          <q>“I make sure I have my flu vaccine as early as I can. I had influenza B last year and it took me three months to recover.”</q>
+          <small>post3 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>겨울엔 습도가 낮아 피부 표면 수분이 많이 빠지고 기름도 덜 만들어진다</b>
+          <q>“With humidity levels much lower in the winter, it takes off a lot of the moisture from the surface of the skin. We also produce less oil in the winter.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>피부과 의사 본인의 건조 피부 질환은 겨울에 더 심해지지만 보통 진한 보습제로 치료된다</b>
+          <q>“I’ve got a condition called ichthyosis vulgaris, which is dry skin on the lower legs and arms, and in the winter months it tends to be much worse, but can normally be treated with a rich moisturiser.”</q>
+          <small>post4 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이비인후과 의사는 코가 막혀 잠을 방해할 때 충혈 완화 스프레이를 쓴다</b>
+          <q>“If my nose is blocked and it is affecting my sleep, then I will use a decongestant spray.”</q>
+          <small>post5 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스프레이는 5일 넘게 쓰면 안 되고 과용하면 콧속 점막이 크게 붓고 되돌릴 수 없는 변화가 생길 수 있다</b>
+          <q>“But it is really important not to use these for more than five days. I see a nose condition that is specific to overusing these decongestants, where there is significant swelling of the lining of the nose, which can cause irreversible changes.”</q>
+          <small>post5 · <a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="a870891b8f00">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.theguardian.com/lifeandstyle/2026/nov/18/get-vaccinated-dont-vape-and-moisturise-liberally-10-doctors-on-how-to-avoid-and-treat-winter-ailments" target="_blank" rel="noopener">Get vaccinated, don’t vape – and moisturise liberally! 10 doctors on how to avoid and treat winter ailments</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-43308ae0b308">
+    <div class="head">
+      <h2>S3. 주머니용 8-in-1 가위 (Eiger)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-43308ae0b308">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 서랍 뒤지는 귀찮음을 가위 하나로 해결한다는 점에서 &#39;나도 갖고 싶다 / 선물하고 싶다&#39;가 나오는 각도</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "휴대용 멀티툴 가위" · 원문 제품: Eiger 8-in-1 Scissors (EigerTool, 일본 니가타 산조 수작업, SUS420J2 스테인리스), $65, 가죽 케이스+빨간 NITE IZE 카라비너 포함, 판매처는 원문에 없음. 출처: Yanko Design 2026-11-18<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: shop.yankodesign.com, yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/43308ae0b308/thread-photo-1119082655-01.jpg" alt="검은 판 위에 놓인 은색 가위 한 개가 보이고, 손잡이는 검은 고무 링이며, 한쪽 날 끝에 병따개 날이 달려 있다. 주변에 SOTO 라이터, 컵, 연료 캔, 포크 등 캠핑 용품이 있다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/43308ae0b308/thread-photo-1119082655-02.jpg" alt="검은색 가위 날과 손잡이 한쪽이 보이고, 가위 날로 살라미 소시지를 자르는 모습. 크래커 위 치즈와 살라미 조각이 배경에 있음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-pm-f06e6c721039/43308ae0b308/thread-photo-1119082655-03.jpg" alt="검은 배경 위에 놓인 두 개의 분리된 금속 날. 왼쪽 위는 병따개 날이 달린 날, 오른쪽 아래는 칼날과 검은 손잡이가 달린 날이 보이는 가위형 공구" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-43308ae0b308">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">서랍 뒤져서 가위 찾는 거, 은근 귀찮잖아
+해외 매체가 &#39;주머니에 넣고 다닐 만한 도구&#39;로 꼽은 가위가 있음
+근데 이 가위, 가위만 되는 게 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">1/ 처음엔 그냥 가위인 줄 알았는데 날과 손잡이 안에 기능이 7개 더 들어 있대
+칼, 병따개, 캔따개, 돌려 따는 뚜껑 오프너까지
+그래서 이름이 Eiger 8-in-1. 그럼 이건 어디서 만든 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">88/500자</span></div>
+      <p class="tp-text">2/ 일본 니가타현 산조에서 EigerTool이 수작업으로 만든다고 함
+소재는 SUS420J2 스테인리스, 길이는 5.12인치
+그럼 이걸 어떻게 들고 다닐까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">3/ 무게는 53g이고 가죽 케이스랑 빨간 NITE IZE 카라비너가 같이 옴
+주머니가 좁으면 케이스를 씌워서 가방에 걸어 다니면 된다는 식
+그럼 가격은 얼마일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">98/500자</span></div>
+      <p class="tp-text">4/ 현재 표기 가격은 $65
+매체 말로는 가위랑 오프너를 같이 쓸 사람한테 더 맞고, 기능 8개를 한 가지 용도로 사기엔 애매하다는 쪽
+아쉬운 점도 따로 꼽았는데, 뭐였을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">185/500자</span></div>
+      <p class="tp-text">5/ Eiger 8-in-1 가위 요약 정리
+- 일본 니가타 산조, EigerTool 수작업
+- 길이 5.12인치, 무게 53g
+- 가죽 케이스 + 카라비너 포함
+- 가격 $65
+- 아쉬운 점: 미니 키체인 도구보다 자리를 더 차지함
+- 책상 위주 생활이면 안 쓰는 기능이 생길 수 있음
+그래서 이 매체는 결국 뭘 고르라고 했을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">162/500자</span></div>
+      <p class="tp-text">6/ 결국 매체 말은 자를 일이 더 잦으면 가위 쪽이라는 거
+주머니에 도구 하나만 넣는다면 가위파 vs 칼파?
+이런 해외 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이런 해외 제품을 계속 가져온다는 계정의 콘텐츠 운영 주장</li><li>근거 등록 안 된 주장: 가위 외 기능을 포함해 총 8개 기능이라는 집계</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>서랍 뒤져서 가위 찾는 거, 은근 귀찮잖아 그걸 주머니에 넣고 다니라는 가위가 있음</li><li>가위는 &#39;서랍 속 물건&#39;이 아니라 &#39;주머니 속 도구&#39;라는 해외 매체 픽</li><li>가위 찾으러 서랍 뒤지지 말고 주머니에 넣고 다니라는 가위가 나옴</li><li>처음엔 그냥 가위인 줄 알았는데 병따개에 캔따개까지 들어 있었음</li><li>실밥 하나 자르려고 서랍 열던 사람, 이 가위 보면 솔깃할 듯</li><li>일본 니가타에서 수작업으로 만든 가위 안에 기능이 7개 더 숨어 있음</li><li>53g짜리 가위에 병따개까지 달렸다니 이게 진짜?</li><li>&#39;가위 하나에 기능 8개&#39; 근데 해외 매체는 이게 아쉬울 수 있다고 함</li><li>캠핑 가는 친구한테 선물하고 싶어지는 가위 하나 발견함</li><li>가위 하나 사는데 $65, 비싼 건가 싶었는데 이유를 보니 이해됨</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>주머니에 도구 하나만 넣는다면 가위파 vs 칼파?</li><li>이거 있으면 살 거야?</li><li>이거 선물로 받으면 좋아할 사람 소환</li><li>병따개 달린 가위, 캠핑 갈 때 있으면 쓸 것 같아?</li><li>가위 8-in-1 $65, 이 가격이면 살 만해 vs 비싸?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>자 달린 자석 커터칼 CraftMaster EDC 얘기</li><li>접히는 T자 손잡이 포켓 드라이버 MetMo 얘기</li><li>굴려서 재는 티타늄 줄자 Titaner Tiroler 2.0 얘기</li><li>180도 돌아가는 납작 손전등 Wuben G5 얘기</li><li>주머니 도구 하나만 고른다면 이 매체의 조합 기준</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>$65 가격은 기사(2026-11-18) 기준 표기라 올리기 전 변동 가능성 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>해외 매체가 주머니에 넣고 다닐 만한 도구로 꼽았다</b>
+          <q>“These are our November 2026 editorial picks, chosen for compact proportions, useful mechanisms, and clear reasons to carry them.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주머니 도구는 주방 서랍까지 가는 수고를 덜어줄 때 가치가 있다</b>
+          <q>“A pocket tool earns its place when it saves you a trip to the kitchen drawer.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>날과 손잡이에 기능이 7개 더 들어 있고 칼, 병따개, 캔따개, 뚜껑 오프너가 포함된다</b>
+          <q>“The blades and handles incorporate seven other functions, including a knife, bottle opener, can opener, and screw-cap opener.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>제품 이름이 Eiger 8-in-1 Scissors다</b>
+          <q>“The Eiger 8-in-1 Scissors put the most familiar tool first.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일본 니가타 산조에서 EigerTool이 수작업으로 만들고 SUS420J2 스테인리스이며 길이 5.12인치</b>
+          <q>“EigerTool makes them by hand in Sanjo, Niigata, Japan, using SUS420J2 stainless steel in a body measuring 5.12 inches long.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무게 53g, 가죽 케이스와 빨간 NITE IZE 카라비너가 함께 온다</b>
+          <q>“The scissors have a listed weight of 53 grams and come with a leather case and red NITE IZE carabiner.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주머니가 좁으면 케이스를 씌워 가방에 걸 수 있다</b>
+          <q>“That gives you a defined carrying arrangement: cover the tool, then clip it to a bag if pocket space is tight.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>현재 가격 $65이며 오프너를 가위와 함께 쓸 때 더 맞는다</b>
+          <q>“At the current $65 price, these make more sense when you’ll use the openers alongside the scissors, rather than buying eight functions for one job.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>5.12인치 길이는 미니 키체인 도구보다 더 많은 공간이 필요하다</b>
+          <q>“The 5.12-inch length needs more room than a miniature keychain tool.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책상 위주 생활이면 부가 기능 여러 개를 안 쓸 수 있다</b>
+          <q>“Several secondary functions may go unused in a deskbound routine.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자를 일이 더 잦으면 가위를 우선하라는 매체의 결론</b>
+          <q>“The CraftMaster is the starting point if measuring and cutting often happen together; the scissors deserve preference when snipping is the more frequent task.”</q>
+          <small>post6 · <a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="43308ae0b308">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/18/the-5-best-pocket-tools-worth-carrying-this-november-2026/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=the-5-best-pocket-tools-worth-carrying-this-november-2026" target="_blank" rel="noopener">The 5 Best Pocket Tools Worth Carrying This November 2026 - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261119-pm";
+  const ORIGINAL = {"79c77a21418e": {"caption": "\uc77c\ubcf8\uc5d0\uc11c 110\uc5d4\uc774\uba74 \uc0b4 \uc218 \uc788\ub294 \uac04\uc2dd\uc774 \uc788\ub2e4. \ud6a8\uace0\ud604\uc5d0\uc11c 1955\ub144\uc5d0 \uc2dc\uc791\ud55c \uace0\uc790\uc18c\ub85c\uc758 \uc774\ub9c8\uac00\uc640\uc57c\ud0a4 \uc774\uc57c\uae30\ub2e4. \uc774 \uac00\uac8c\ub294 \ud325\uc18c\ub97c \ucc44\uc6b4 \uc6d0\ubc18 \ubaa8\uc591 \ucf00\uc774\ud06c \ud55c \uac00\uc9c0\ub9cc \ub9cc\ub4e0\ub2e4. \ucc98\uc74c \ud314 \ub54c\ub294 \uac1c\ub2f9 10\uc5d4\uc774\uc5c8\ub294\ub370, \ub2f9\uc2dc \ub2e4\ub978 \uac00\uac8c\uc758 \ub450 \ubc30 \uac00\uaca9\uc774\uc5c8\ub2e4\uace0 \ud55c\ub2e4.\n\n\uc18c\uac1c\ub41c \uacf3\uc740 \uc2e0\uc8fc\ucfe0 \ub2e4\uce74\uc2dc\ub9c8\uc57c \uc9c0\ud558 1\uce35 \uc9c0\uc810\uc774\ub2e4. \uc18d \uc7ac\ub8cc\ub294 \uc77c\ubc18 \ud325\uc18c\uc640 \ud770 \ud325\uc18c \ub450 \uac00\uc9c0\uc774\uace0, \uac1c\ub2f9 110\uc5d4\uc774\ub2e4. \uae30\uc790\ub294 \uc790\ud310\uae30 \ubb3c \ud55c \ubcd1\ubcf4\ub2e4 \uc2f8\ub2e4\uace0 \uc9da\uc5c8\uace0, \ubb3c\uac00\uac00 \uc624\ub974\ub294 \uc77c\ubcf8\uc5d0\uc11c \uac00\uaca9\uc774 \uc798 \ubc84\ud17c\ub2e4\uace0 \uc37c\ub2e4.\n\n\ub9db \ud3c9\uac00\ub3c4 \uc88b\uc558\ub2e4. \uc18d\uc758 \uc808\ubc18 \ub118\uac8c \ud325\uc18c\uac00 \ub4e4\uc5b4 \uc788\uace0 \uac89\uc740 \uc0b4\uc9dd \ubc14\uc0ad\ud588\ub2e4. \ud770 \ud325\uc18c\ub294 \ub354 \ubd80\ub4dc\ub7fd\uace0 \uc740\uc740\ud55c \ub2e8\ub9db\uc774\ub77c\uace0 \ud55c\ub2e4. \uae30\uc790\ub294 \ub458 \ub2e4 \uba39\uc5b4 \uce58\uc6b0\uace0 \ubc30\ubd80\ub974\uace0 \ud589\ubcf5\ud574\uc84c\ub2e4\uace0 \ud55c\ub2e4.\n\n\uc774 \ucde8\uc7ac\ub294 \uae30\uc790\uac00 \uc5b4\uba38\ub2c8\uc5d0\uac8c \ud560\uc544\ubc84\uc9c0\uac00 \uc774 \uac00\uac8c\uc758 \uacfc\uc790\ub97c \uc88b\uc544\ud588\ub2e4\ub294 \ub9d0\uc744 \ub4e4\uc740 \ub370\uc11c \uc2dc\uc791\ub410\ub2e4. \uc601\uc5c5\uc2dc\uac04\uc740 \uc624\uc804 10\uc2dc 30\ubd84\ubd80\ud130 \uc624\ud6c4 7\uc2dc 30\ubd84\uae4c\uc9c0\ub2e4. \uc77c\ubcf8 \uc5ec\ud589\uc744 \uacc4\ud68d \uc911\uc774\ub77c\uba74 \uc800\uc7a5\ud574 \ub450\uc790.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\uc774\ub9c8\uac00\uc640\uc57c\ud0a4", "#\uc77c\ubcf8\uac04\uc2dd", "#\uc77c\ubcf8\uc5ec\ud589", "#\uc2e0\uc8fc\ucfe0\ub9db\uc9d1", "#\ub3c4\ucfc4\ub514\uc800\ud2b8"], "slides": [["\uc774\ub9c8\uac00\uc640\uc57c\ud0a4\uac00", "**110\uc5d4**???", "---", "\uc77c\ubcf8 \ud6a8\uace0\ud604\uc5d0\uc11c \uc2dc\uc791\ud55c \uace0\uc790\uc18c\ub85c\uc758 \uc774\ub9c8\uac00\uc640\uc57c\ud0a4\uac00 \ub3c4\ucfc4 \uc2e0\uc8fc\ucfe0 \ubc31\ud654\uc810 \uc9c0\uc810\uc5d0\uc11c \uac1c\ub2f9 110\uc5d4\uc5d0 \ud314\ub9ac\uace0 \uc788\ub2e4."], ["1955\ub144\ubd80\ud130", "**\ud55c \uac00\uc9c0\ub9cc** \uad6c\uc6e0\uc5b4", "---", "\uace0\uc790\uc18c\ub85c\ub294 1955\ub144 \ud6a8\uace0\ud604\uc5d0\uc11c \ubb38\uc744 \uc5f4\uc5c8\uace0, \ud325\uc18c\ub97c \ucc44\uc6b4 \uc6d0\ubc18 \ubaa8\uc591 \ucf00\uc774\ud06c \ud55c \uac00\uc9c0\ub9cc \ub9cc\ub4e0\ub2e4. \ucc98\uc74c \ud314 \ub54c\ub294 \uac1c\ub2f9 10\uc5d4\uc73c\ub85c, \ub2f9\uc2dc \ub2e4\ub978 \uac00\uac8c\uc758 \ub450 \ubc30 \uac00\uaca9\uc774\uc5c8\ub2e4."], ["10\uc5d4\uc774\ub358 \uac8c", "\uc9c0\uae08 **110\uc5d4**", "---", "\uc2e0\uc8fc\ucfe0 \ub2e4\uce74\uc2dc\ub9c8\uc57c \uc9c0\ud558 1\uce35 \uc9c0\uc810\uc5d0\uc11c \uac1c\ub2f9 110\uc5d4(\uc57d 0.69\ub2ec\ub7ec)\uc5d0 \ud310\ub2e4. \uc790\ud310\uae30 \ubb3c \ud55c \ubcd1\ubcf4\ub2e4 \uc2f8\uace0, \ubb3c\uac00\uac00 \uc624\ub978 \uc77c\ubcf8\uc5d0\uc11c \uac00\uaca9\uc774 \uc798 \ubc84\ud2f4 \uac04\uc2dd\uc774\ub77c\uace0 \uae30\uc790\ub294 \uc9da\uc5c8\ub2e4."], ["\uc18d\uc758 **\uc808\ubc18\uc774**", "\ub118\uac8c \ud325\uc774\uc57c", "---", "\uae30\uc790\uac00 \uba39\uc5b4 \ubcf4\ub2c8 \uc18d\uc758 \uc808\ubc18 \ub118\uac8c \ud325\uc18c\uac00 \ucc28 \uc788\uc5c8\uace0, \ub2e8\ub9db\ub3c4 \uc124\ud0d5 \ub9db\ub9cc \ub098\uc9c0 \uc54a\uc558\ub2e4. \uac89\uc740 \uc0b4\uc9dd \ubc14\uc0ad\ud558\uac8c \uad6c\uc6cc\uc838 \ubd80\ub4dc\ub7ec\uc6b4 \ud325\uc18c\uc640 \ub300\ube44\ub97c \uc774\ub918\ub2e4\uace0 \ud55c\ub2e4."], ["\ud325\uc774\ub0d0 \ud770 \ud325\uc774\ub0d0", "\uace0\ubbfc\ub418\uba74 **\ub458 \ub2e4**", "---", "\uc18d \uc7ac\ub8cc\ub294 \uc77c\ubc18 \ud325\uc18c\uc640 \ud770 \ud325\uc18c \ub450 \uac00\uc9c0\ub2e4. \ud770 \ud325\uc18c\ub294 \ub9db\uc774 \ubd80\ub4dc\ub7fd\uace0 \ub2e8\ub9db\uc774 \uc740\uc740\ud574 \ub354 \uc138\ub828\ub41c \uc778\uc0c1\uc774\uba74\uc11c\ub3c4 \ub204\uad6c\ub098 \uc88b\uc544\ud560 \ub9db\uc774\ub77c\uace0 \uae30\uc790\ub294 \ud3c9\uac00\ud588\ub2e4."], ["\uc2e0\uc8fc\ucfe0 \uac00\ub294 \ub0a0", "**\uc800\uc7a5**\ud574 \ub450\uba74 \ub05d", "---", "\uc2e0\uc8fc\ucfe0 \ubc31\ud654\uc810 \uc9c0\ud558\uc5d0\uc11c 110\uc5d4\uc73c\ub85c \uc0b4 \uc218 \uc788\ub294 \uac04\uc2dd \uc815\ubcf4\ub77c \uc5ec\ud589 \uc804\uc5d0 \ub2e4\uc2dc \uaebc\ub0b4 \ubcf4\uae30 \uc88b\uc740 \uc774\uc57c\uae30"]]}, "abd801668d16": {"caption": "\uc0b0\ube44\ud0c8\uc5d0 430\ub2e8 \uacc4\ub2e8\uc744 \uc190\uc218 \ub9cc\ub4e0 \ud615\uc81c\ub4e4 \uc774\uc57c\uae30\uac00 \uc911\uad6d\uc5d0\uc11c \ud654\uc81c\uac00 \ub410\uc5b4\uc694. \uc800\uc7a5\uc131 \uc0b0\uaf2d\ub300\uae30\uc5d0\uc11c \ub098\uace0 \uc790\ub780 \uc5b4\uba38\ub2c8\ub294 \ub0a8\ud3b8\uc774 \uc138\uc0c1\uc744 \ub5a0\ub09c \ub4a4 \uc790\ub140\ub4e4\uc774 \uc2dc\ub0b4\ub85c \ubaa8\uc168\uc9c0\ub9cc, \ub3c4\uc2dc \uc0dd\ud65c\uc5d0\ub294 \ub05d\ub0b4 \uc801\uc751\ud558\uc9c0 \ubabb\ud588\ub2e4\uace0 \ud574\uc694. \ub9e4\ub144 4\uc6d4 \uccad\uba85\uc808\uc5d0\ub294 \uc0b0\uc73c\ub85c \ub3cc\uc544\uac00\uc57c \ud588\ub294\ub370, \uc774\ub0a0\uc740 \ub9ce\uc740 \uc911\uad6d\uc778\uc774 \uac00\uc871\uacfc \uc870\uc0c1\uc758 \ubb18\uc5d0 \uc313\uc778 \ud480\uacfc \ud759\uc744 \uce58\uc6b0\ub7ec \uac00\ub294 \ub0a0\uc774\uc5d0\uc694. \uadf8\ub7f0\ub370 \uc5b4\ub9b4 \uc801 \uc544\uc774\ub4e4 \uc190\uc744 \uc7a1\uace0 \ub0b4\ub824\uac00\ub358 \uc61b\uae38\uc740 \ud480\uc774 \ubb34\uc131\ud558\uace0 \ubc40\uc774 \ub098\uc624\ub294 \uae38\uc774 \ub418\uc5b4 \uc788\uc5c8\uc8e0.\n\n58\uc138 \ud669\uc8fc\ub844 \uc528\ub294 \uc774\ubc88\uc5d4 \uc790\uc2e0\uacfc \ud615\uc81c\ub4e4\uc774 \ud6a8\ub97c \ubcf4\uc77c \ucc28\ub840\ub77c\uace0 \ub9c8\uc74c\uba39\uc5c8\uc5b4\uc694. \uacc4\ud68d\uacfc \uc790\uc7ac \uad6c\uc785\uc744 \ub9e1\uace0 \ud604\uc7a5 \uac10\ub3c5\uae4c\uc9c0 \ud588\uace0, \uc5b4\uba38\ub2c8\ub3c4 \uc800\ucd95\uc5d0\uc11c 5\ub9cc \uc704\uc548(\uc57d 7,500\ub2ec\ub7ec)\uc744 \ubcf4\ud0f0\uc2b5\ub2c8\ub2e4. \ud615\uc81c\uc640 \uc0ac\ucd0c\ub4e4\uc774 \ub3cc\uc744 \ub098\ub974\uace0 \uc2dc\uba58\ud2b8\ub97c \uc11e\uc5c8\uace0, \uc544\ub4e4\uc740 \ub300\ud615 \ub4dc\ub860\uc73c\ub85c \ub3cc \uc62e\uae30\ub294 \uc77c\uc744 \uac70\ub4e4\uc5c8\uc5b4\uc694. 8\uc6d4\ubd80\ud130 10\uc6d4\uae4c\uc9c0 \uc77c\ud574 \uaca8\uc6b8 \uc804\uc5d0 430\ub2e8 \uae38\uc744 \uc644\uc131\ud588\uc2b5\ub2c8\ub2e4.\n\n\ud669 \uc528\ub294 \uc77c\ud558\ub294 \ub3d9\uc548 \ubab8\ubb34\uac8c\uac00 6\ud30c\uc6b4\ub4dc \ub118\uac8c \uc904\uace0 \uba38\ub9ac\uce74\ub77d\ub3c4 \ub9ce\uc774 \ube60\uc84c\uc9c0\ub9cc \ud6c4\ud68c\ub294 \uc5c6\ub2e4\uace0 \ud588\uc5b4\uc694. \uc774 \uae38\uc740 \uc57d\ucd08\uafbc\uacfc \ub4f1\uc0b0\uac1d, \uc8fc\ubbfc\ub4e4\uc5d0\uac8c\ub3c4 \uc4f8\ubaa8\uac00 \ud070 \uae38\uc774 \ub410\ub2e4\uace0 \ud569\ub2c8\ub2e4.\n\n\ubd80\ubaa8\ub2d8 \uc190 \uc7a1\uc544 \ubcf8 \uc9c0 \uc624\ub798\ub41c \uce5c\uad6c\uac00 \ub5a0\uc62c\ub790\ub2e4\uba74, \uc774 \uae00 \ubcf4\ub0b4 \uc8fc\uc138\uc694.\n\n\ucd9c\ucc98: Good News Network, South China Morning Post, Chao News", "hashtags": ["#\ud6a8\ub3c4", "#\uac10\ub3d9\uc2e4\ud654", "#\uc911\uad6d", "#\ud574\uc678\ubc18\uc751", "#\uce74\ub4dc\ub274\uc2a4"], "slides": [["\uc5c4\ub9c8 \uc9d1\uae4c\uc9c0", "**430\ub2e8** \uc9c1\uc811?!", "---", "\uc911\uad6d \uc800\uc7a5\uc131\uc758 \ud55c \uc5b4\uba38\ub2c8\uac00 \uc9d1\uc5d0 \ub354 \uc27d\uac8c \uc624\ub974\ub3c4\ub85d, \uc790\ub140\ub4e4\uc774 \uc0b0\ube44\ud0c8\uc5d0 430\ub2e8 \uacc4\ub2e8\uc744 \uc190\uc218 \ub9cc\ub4e4\uc5c8\ub2e4."], ["\ub3c4\uc2dc\uc0b4\uc774\ub294", "\ub05d\ub0b4 **\uc548 \ub9de\uc558\uc5b4**", "---", "\uc544\ubc84\uc9c0\uac00 \uc138\uc0c1\uc744 \ub5a0\ub09c \ub4a4 \uc790\ub140\ub4e4\uc740 \uc5b4\uba38\ub2c8\ub97c \uc2dc\ub0b4\ub85c \ubaa8\uc168\ub2e4. \ud558\uc9c0\ub9cc \uc5b4\uba38\ub2c8\ub294 \uc0b0 \uc0dd\ud65c\uc744 \uadf8\ub9ac\uc6cc\ud588\uace0, \ub9e4\ub144 4\uc6d4 \uccad\uba85\uc808\uc5d0\ub294 \uc0b0\uc73c\ub85c \ub3cc\uc544\uac00\uc57c \ud588\ub2e4."], ["\uc61b\uae38\uc740 \uc774\ubbf8", "**\ubc40** \ub098\uc624\ub294 \uae38", "---", "\uc5b4\uba38\ub2c8\uac00 \uc5b4\ub9b0 \uc790\ub140\ub4e4 \uc190\uc744 \uc7a1\uace0 \ub0b4\ub824\uac00\ub358 \uc61b\uae38\uc740 \ud480\uc774 \ubb34\uc131\ud574\uc9c4 \ucc44 \ubc29\uce58\ub3fc \uc788\uc5c8\ub2e4. \ud604\uc9c0 \ubcf4\ub3c4\uc5d0 \ub530\ub974\uba74 \uc774\uc81c\ub294 \ubc40\uc774 \ub098\uc624\ub294 \uae38\uc774 \ub410\ub2e4."], ["\uc774\ubc88\uc5d4 \uc6b0\ub9ac\uac00", "**\uc190\uc7a1\uc744 \ucc28\ub840**", "---", "58\uc138 \ud669\uc8fc\ub844\uc740 \uc774\uc81c \uc790\uc2e0\uacfc \ud615\uc81c\ub4e4\uc774 \ud6a8\ub97c \ubcf4\uc77c \ucc28\ub840\ub77c\uace0 \uacb0\uc2ec\ud588\ub2e4. \uacc4\ud68d\uacfc \uc790\uc7ac \uad6c\uc785\uc744 \ub9e1\uc544 \ud604\uc7a5 \uac10\ub3c5 \uc5ed\ud560\uae4c\uc9c0 \ud588\uace0, \uc5b4\uba38\ub2c8\ub3c4 \uc800\ucd95\uc5d0\uc11c 5\ub9cc \uc704\uc548(\uc57d 7,500\ub2ec\ub7ec)\uc744 \ubcf4\ud0f0\ub2e4."], ["\uaca8\uc6b8 \uc624\uae30 \uc804", "**430\ub2e8** \uc644\uc131", "---", "\ud615\uc81c \ub458\uacfc \uc0ac\ucd0c \ub458\uc774 \ub3cc\uc744 \ub098\ub974\uace0 \uc2dc\uba58\ud2b8\ub97c \uc11e\uc5c8\ub2e4. \ud669 \uc528\uc758 \uc544\ub4e4\uc740 \ub300\ud615 \ub4dc\ub860\uc73c\ub85c \ub3cc \uc62e\uae30\ub294 \uc77c\uc744 \uac70\ub4e4\uc5c8\uace0, 8\uc6d4\ubd80\ud130 10\uc6d4\uae4c\uc9c0 \uc77c\ud574 \uc77c\ubd80 \uad6c\uac04\uc740 \uac00\ud30c\ub978 \uc808\ubcbd\uc5d0 \ubd99\uc5ec \uc644\uc131\ud588\ub2e4."], ["\uc0b4\uc740 \ube60\uc838\ub3c4", "**\ud6c4\ud68c\ub294 \uc5c6\ub300**", "---", "\ud669 \uc528\ub294 \uacf5\uc0ac \uc911 \ubab8\ubb34\uac8c\uac00 6\ud30c\uc6b4\ub4dc \ub118\uac8c \uc904\uace0 \uba38\ub9ac\uce74\ub77d\ub3c4 \ub9ce\uc774 \ube60\uc84c\uc9c0\ub9cc \ud6c4\ud68c\ub294 \uc5c6\ub2e4\uace0 \ud588\ub2e4. \uc774 \uae38\uc740 \uc57d\ucd08\uafbc\uacfc \ub4f1\uc0b0\uac1d, \uc8fc\ubbfc\ub4e4\uc5d0\uac8c\ub3c4 \uc694\uae34\ud55c \uae38\uc774 \ub410\ub2e4."], ["\ubd80\ubaa8\ub2d8 \uc0dd\uac01\ub098\ub294", "\uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4\uae30", "---", "\uc5b4\uba38\ub2c8\uac00 \uc7a1\uc544 \uc8fc\ub358 \uc190\uc744 \uc790\ub140\ub4e4\uc774 \uc9c1\uc811 \ub9cc\ub4e0 \uae38\ub85c \ub3cc\ub824\ub4dc\ub9b0 \uc774\uc57c\uae30. \ubd80\ubaa8\ub2d8 \uc5bc\uad74\uc774 \ub5a0\uc624\ub974\ub294 \uce5c\uad6c\ub77c\uba74 \ud55c\ucc38 \ub9c8\uc74c\uc5d0 \ub0a8\uc744 \uc774\uc57c\uae30"]]}, "cfd000f986d6": {"caption": "\uc77c\ubcf8 \ud6c4\ucfe0\uc774\uc758 \uc628\ucc9c \ub9c8\uc744 \uc544\uc640\ub77c\uc5d0 \ud3ec\ucf13\ubaac \ub9dd\ub098\ub1fd\uc744 \uc8fc\uc778\uacf5\uc73c\ub85c \ud55c \uac1d\uc2e4\uc774 \uc0dd\uacbc\ub2e4. \u0027\ud2b8\ub798\ube14\ub9c1 \ub9dd\ub098\ub1fd \ub8f8\u0027\uc774\ub77c\ub294 \uc774\ub984\uc73c\ub85c, \uc544\uc640\ub77c \uc628\ucc9c \uadf8\ub780\ub514\uc544 \ud638\uc6b0\uc13c 11\uce35\uc5d0 \uc790\ub9ac\ud55c\ub2e4.\n\n\ud6c4\ucfe0\uc774\ub294 \uacf5\ub8e1 \ud654\uc11d\uc73c\ub85c \uc720\uba85\ud55c \uacf3\uc774\uace0, \uc77c\ubcf8\uc5b4\ub85c \uacf5\ub8e1\uc740 \u0027\ubb34\uc11c\uc6b4 \uc6a9\u0027\uc774\ub77c\ub294 \ub73b\uc774\ub77c \uc6a9 \ud3ec\ucf13\ubaac \ub9dd\ub098\ub1fd\uc774 \uc774 \uc9c0\uc5ed\uc758 \uad00\uad11 \ud64d\ubcf4 \ud3ec\ucf13\ubaac\uc744 \ub9e1\uace0 \uc788\ub2e4. \ub9dd\ub098\ub1fd\uc740 \uc9c0\uad6c\ub97c 16\uc2dc\uac04 \ub9cc\uc5d0 \ud55c \ubc14\ud034 \ub3cc \uc218 \uc788\ub2e4\uace0 \uc54c\ub824\uc9c4 \ud3ec\ucf13\ubaac\uc774\ub2e4.\n\n\uac1d\uc2e4\uc740 \ucd5c\ub300 6\uba85\uc774 \uc4f8 \uc218 \uc788\uace0, \uc9c0\uc5ed \uc7a5\uc778\ub4e4\uc774 \uc804\ud1b5 \ubc29\uc2dd\uc73c\ub85c \ub9cc\ub4e0 \uc9c1\ubb3c\uc5d0 \ub9dd\ub098\ub1fd \ubb34\ub2ac\uac00 \uac00\ub4dd\ud558\ub2e4. \uce68\uc2e4\uacfc \ub2e4\ub2e4\ubbf8 \uac70\uc2e4\ub85c \ub098\ub258\uba70, 11\uce35 \ucc3d\ubc16\uc73c\ub85c \uc0b0\uacfc \uc0ac\uce74\uc774 \ud3c9\uc57c\uac00 \ud3bc\uccd0\uc9c4\ub2e4. \uac1d\uc2e4\uc5d0 \uc0e4\uc6cc\uc2e4\uacfc \uc695\uc870\uac00 \uc788\uc9c0\ub9cc \uc628\ucc9c \uc5ec\uad00\uc778 \ub9cc\ud07c \uc625\uc0c1 \ub178\ucc9c\ud0d5\uc744 \ud3ec\ud568\ud55c \ub300\uc695\uc7a5\ub3c4 \uc774\uc6a9\ud560 \uc218 \uc788\ub2e4.\n\n\ud6c4\ucfe0\uc774\ub294 \ub9ce\uc740 \ubc29\ubb38\uac1d\uc774 \uc624\uac00\ub294 \ub3c4\ucfc4~\uc624\uc0ac\uce74 \ub77c\uc778\uc5d0\uc11c \uaf64 \ub5a8\uc5b4\uc838 \uc788\ub2e4. \uc608\uc57d\uc740 \uadf8\ub780\ub514\uc544 \ud638\uc6b0\uc13c \uc6f9\uc0ac\uc774\ud2b8\uc5d0\uc11c \ubc1b\uace0 \uc788\uace0, \uac00\uc7a5 \ube60\ub978 \ud22c\uc219 \uac00\ub2a5\uc77c\uc740 11\uc6d4 29\uc77c\uc774\ub2e4.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\ud3ec\ucf13\ubaac", "#\uc77c\ubcf8\uc5ec\ud589", "#\ud6c4\ucfe0\uc774", "#\ub9dd\ub098\ub1fd", "#\ud638\ud154\ucd94\ucc9c"], "slides": [["**\ub9dd\ub098\ub1fd** \ubc29\uc774", "\ud638\ud154\uc5d0 \uc0dd\uae40???", "---", "\uc77c\ubcf8 \ud6c4\ucfe0\uc774\ud604\uc758 \uc544\uc640\ub77c \uc628\ucc9c \ud638\ud154\uc5d0 \ud3ec\ucf13\ubaac \ub9dd\ub098\ub1fd\uc744 \ud14c\ub9c8\ub85c \uafb8\ubbfc \uac1d\uc2e4\uc774 \uc0c8\ub85c \uc0dd\uaca8 \uc608\uc57d\uc744 \ubc1b\uace0 \uc788\ub2e4."], ["\ud6c4\ucfe0\uc774\ub294", "**\uacf5\ub8e1**\uc758 \uace0\uc7a5", "---", "\ud6c4\ucfe0\uc774\ub294 \uacf5\ub8e1 \ud654\uc11d\uc774 \ubc1c\uad74\ub41c \uac83\uc73c\ub85c \uc720\uba85\ud55c \uc9c0\uc5ed\uc774\ub2e4. \uc77c\ubcf8\uc5b4\ub85c \uacf5\ub8e1\uc740 \u0027\ubb34\uc11c\uc6b4 \uc6a9\u0027\uc744 \ub73b\ud558\ub294 \ub9d0\uc774\ub77c, \uc6a9 \ub290\ub08c\uc758 \ub9dd\ub098\ub1fd\uc774 \uc774 \uc9c0\uc5ed\uc758 \uad00\uad11 \ud64d\ubcf4 \ud3ec\ucf13\ubaac\uc774 \ub418\uc5c8\ub2e4."], ["**\ub300\ub3c4\uc2dc** \ubc16\uc758", "\uc77c\ubcf8\uc744 \ube44\ucd98\ub2e4", "---", "\ub9dd\ub098\ub1fd\uc740 \u0027\ud3ec\ucf13\ubaac \ub85c\uceec \uc561\uce20\u0027 \ud504\ub85c\uc81d\ud2b8\uc5d0\uc11c \ud6c4\ucfe0\uc774\uc640 \uc9dd\uc744 \uc774\ub918\ub2e4. \uc774 \ud504\ub85c\uc81d\ud2b8\ub294 \ud070 \ub3c4\uc2dc\uc640 \uc720\uba85 \uad00\uad11\uc9c0\ub9cc \ubcf4\uba74 \ub193\uce58\uae30 \uc26c\uc6b4 \uc77c\ubcf8\uc758 \ub9e4\ub825\uc5d0 \uc8fc\ubaa9\ud558\ub824\ub294 \uc0ac\uc5c5\uc774\ub2e4."], ["\uc218\ubc31 \ub9c8\ub9ac\ucc98\ub7fc", "\ubcf4\uc774\ub294 **\ub9dd\ub098\ub1fd**", "---", "\uc544\uc640\ub77c \uc628\ucc9c \uadf8\ub780\ub514\uc544 \ud638\uc6b0\uc13c 11\uce35\uc5d0 \uc788\ub294 \uac1d\uc2e4\ub85c, \ucd5c\ub300 6\uba85\uc774 \ubb35\uc744 \uc218 \uc788\ub2e4. \ud0dc\ud53c\uc2a4\ud2b8\ub9ac\uc640 \ubca0\uac1c \ucee4\ubc84, \ucfe0\uc158 \ucee4\ubc84\uc5d0 \ub9dd\ub098\ub1fd \ubb34\ub2ac\ub97c \ub123\uc5c8\uace0, \ud6c4\ucfe0\uc774 \uc7a5\uc778\ub4e4\uc774 \uc804\ud1b5 \ubc29\uc2dd\uc73c\ub85c \ub9cc\ub4e4\uc5c8\ub2e4."], ["**11\uce35**\uc778 \uac74", "\uc774\uc720\uac00 \uc788\uc5b4", "---", "\ubc29\uc740 \uce68\uc2e4\uacfc \ub2e4\ub2e4\ubbf8 \ubc14\ub2e5\uc758 \uac70\uc2e4\ub85c \ub098\ub25c\ub2e4. 11\uce35\uc5d0\uc11c \uac00\uae4c\uc6b4 \uc0b0\uacfc \uc0ac\uce74\uc774 \ud3c9\uc57c\uac00 \ud55c\ub208\uc5d0 \ub4e4\uc5b4\uc640, \ub9dd\ub098\ub1fd\uc774 \ud6c4\ucfe0\uc774 \uc704\ub97c \ub0a0 \ub54c \ubcfc \ubc95\ud55c \uc2dc\uc57c\ub97c \ub290\ub07c\uac8c \ud558\ub824\ub294 \uc124\uacc4\ub2e4."], ["\uc77c\ubcf8 \uc5ec\ud589 \ub54c", "**\uc800\uc7a5**\ud574 \ub450\uae30", "---", "\ub9dd\ub098\ub1fd \ubb34\ub2ac \uc9c1\ubb3c\ubd80\ud130 11\uce35 \uc804\ub9dd\uae4c\uc9c0 \ub2f4\uae34 \ud6c4\ucfe0\uc774\uc758 \uac1d\uc2e4\uc774\ub77c, \ub2e4\uc74c \uc77c\ubcf8 \uc5ec\ud589\uc744 \uc9dc\ub294 \ud3ec\ucf13\ubaac \ud32c\uc774 \ub098\uc911\uc5d0 \ub2e4\uc2dc \uaebc\ub0b4 \ubcfc \ub9cc\ud55c \uc774\uc57c\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

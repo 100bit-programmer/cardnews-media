@@ -1,0 +1,1750 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.19 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.19 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-c5f67ad2291e" data-jump="c5f67ad2291e">1</a><a href="#post-b7f232a34b16" data-jump="b7f232a34b16">2</a><a href="#post-64afe2b7b7dd" data-jump="64afe2b7b7dd">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-c5f67ad2291e" data-id="c5f67ad2291e">
+    <div class="head">
+      <h2>1. 스이카 펭귄 졸업 여행 우주 콘셉트 객실</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-01.jpg" alt="1장: 스이카 펭귄이 우주로 졸업여행?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-02.jpg" alt="2장: 펭귄이 곧 졸업한다니" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-03.jpg" alt="3장: 22층 객실에서 우주 여행" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-04.jpg" alt="4장: 굿즈에 케이크 선물이 한가득" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-05.jpg" alt="5장: 객실당 한 번 비매품 뽑기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-06.jpg" alt="6장: 12월 1일 정오 예약 시작" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-07.jpg" alt="7장: 펭귄 팬 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/c5f67ad2291e/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">스이카 펭귄의 졸업 여행을 콘셉트로 한 한정 객실이 나왔다. JR동일본이 내년 초 스이카 카드에서 펭귄 캐릭터를 졸업시킬 계획이라, 팬들은 벌써부터 아쉬움을 느끼고 있다.
+
+객실은 도쿄 이케부쿠로의 호텔메트로폴리탄 22층에 마련된다. 2026년 12월 22일부터 2027년 3월 30일까지 예약할 수 있고, 하루에 한 실, 최대 두 명까지 묵을 수 있다. 체크인은 오후 3시, 체크아웃은 다음 날 낮 12시다.
+
+객실에는 우주 콘셉트 장식과 함께 멀티링 스트랩 세트 두 개가 제공된다. 투숙객은 펭귄 케이크 교환권도 받고, 객실당 한 번 캡슐 뽑기에도 도전할 수 있다. 3월 16일부터 마지막 15일간은 95cm 펭귄 장식과 인형, 침대 러너, 태피스트리 같은 경품이 더해진다. 큰 경품은 일본 내 주소로 배송도 가능하다고 한다.
+
+룸서비스로는 로스트비프와 카망베르 치즈버거가 한정 메뉴로 나오며 가격은 3,000엔이다.
+
+예약은 12월 1일 낮 12시(일본 시간)부터 시작한다. 요금은 12월 22일부터 3월 15일까지 47,800~62,100엔, 3월 16일부터 30일까지는 75,700엔이다.
+
+출처: SoraNews24, PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#스이카펭귄 #일본여행 #도쿄호텔 #이케부쿠로 #일본굿즈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>팬들이 펭귄 관련 상품에 대해 아쉬움과 추억을 느끼기 시작했다 <small>애매 · 원문은 펭귄과 관련된 &#39;모든 것&#39;에 대한 향수를 말한다. &#39;상품&#39;으로 좁히지 말고 &#39;펭귄 관련 모든 것&#39;으로 고치는 것이 맞다.</small></li>
+          <li>근거 등록 안 된 주장: 객실에 우주 콘셉트 장식이 마련된다는 내용(캡션·슬라이드 3의 &#39;우주 여행&#39; 표현 근거)</li><li>근거 등록 안 된 주장: 출처 표기(SoraNews24, PR Times)는 원문 출처 정보로 본문에 명시되어 있으나 claims 목록에 없음</li>
+          <li>캐릭터 저작권: 스이카 펭귄은 JR동일본 등의 캐릭터이므로 AI 배경에 캐릭터를 재현하지 말 것</li><li>객실 요금과 예약 일정은 변경될 수 있어 공식 안내 확인 필요</li><li>원문 사진은 PR Times 제공 이미지로 사용하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-c5f67ad2291e-0">1장</label>
+          <textarea id="s-c5f67ad2291e-0" rows="6" data-slide="0">스이카 펭귄이
+우주로 **졸업여행**?!
+---
+스이카 펭귄의 졸업 여행을 콘셉트로 한 한정 객실이 도쿄 이케부쿠로의 호텔메트로폴리탄에 등장했다.</textarea>
+          
+          <label class="f" for="s-c5f67ad2291e-1">2장</label>
+          <textarea id="s-c5f67ad2291e-1" rows="6" data-slide="1">펭귄이 곧
+**졸업한다니**
+---
+JR동일본이 내년 초 스이카 카드에서 펭귄 캐릭터를 졸업시킬 계획이다. 팬들은 아쉬운 마음에 펭귄과 관련된 모든 것에 추억을 떠올리기 시작했다.</textarea>
+          
+          <label class="f" for="s-c5f67ad2291e-2">3장</label>
+          <textarea id="s-c5f67ad2291e-2" rows="6" data-slide="2">22층 객실에서
+**우주 여행**
+---
+2026년 12월 22일부터 2027년 3월 30일까지 예약할 수 있는 킹사이즈 침대 객실이다. 하루에 한 실만 열리며 최대 두 명이 묵을 수 있다.</textarea>
+          
+          <label class="f" for="s-c5f67ad2291e-3">4장</label>
+          <textarea id="s-c5f67ad2291e-3" rows="6" data-slide="3">굿즈에 **케이크**
+선물이 한가득
+---
+객실에는 스마트폰 숄더 스트랩으로 쓸 수 있는 멀티링 스트랩 세트가 두 개 함께 제공된다. 투숙객은 마스카르포네와 딸기 젤리로 만든 펭귄 케이크 교환권도 받는다.</textarea>
+          
+          <label class="f" for="s-c5f67ad2291e-4">5장</label>
+          <textarea id="s-c5f67ad2291e-4" rows="6" data-slide="4">객실당 한 번
+**비매품** 뽑기
+---
+객실당 한 번 캡슐 뽑기에 도전해 파우치, 머그컵, 아크릴 스탠드, 티셔츠, 마지팬 같은 비매품을 받을 수 있다. 3월 16일부터 마지막 15일간은 95cm 펭귄 장식도 경품에 더해진다.</textarea>
+          
+          <label class="f" for="s-c5f67ad2291e-5">6장</label>
+          <textarea id="s-c5f67ad2291e-5" rows="6" data-slide="5">**12월 1일** 정오
+예약 시작
+---
+12월 22일부터 1월 31일까지의 숙박은 12월 1일 낮 12시(일본 시간)부터 예약을 받는다. 3월 15일까지는 47,800~62,100엔, 3월 16일 이후는 75,700엔이다.</textarea>
+          
+          <label class="f" for="s-c5f67ad2291e-6">7장</label>
+          <textarea id="s-c5f67ad2291e-6" rows="6" data-slide="6">펭귄 팬 친구한테
+**조용히 보내기**
+---
+스이카 펭귄의 졸업이 아쉬운 친구라면 반가워할 소식. 객실과 굿즈, 케이크까지 한 번에 즐길 수 있다는 이야기</textarea>
+          
+          <label class="f" for="c-c5f67ad2291e">본문 (캡션)</label>
+          <textarea id="c-c5f67ad2291e" class="caption">스이카 펭귄의 졸업 여행을 콘셉트로 한 한정 객실이 나왔다. JR동일본이 내년 초 스이카 카드에서 펭귄 캐릭터를 졸업시킬 계획이라, 팬들은 벌써부터 아쉬움을 느끼고 있다.
+
+객실은 도쿄 이케부쿠로의 호텔메트로폴리탄 22층에 마련된다. 2026년 12월 22일부터 2027년 3월 30일까지 예약할 수 있고, 하루에 한 실, 최대 두 명까지 묵을 수 있다. 체크인은 오후 3시, 체크아웃은 다음 날 낮 12시다.
+
+객실에는 우주 콘셉트 장식과 함께 멀티링 스트랩 세트 두 개가 제공된다. 투숙객은 펭귄 케이크 교환권도 받고, 객실당 한 번 캡슐 뽑기에도 도전할 수 있다. 3월 16일부터 마지막 15일간은 95cm 펭귄 장식과 인형, 침대 러너, 태피스트리 같은 경품이 더해진다. 큰 경품은 일본 내 주소로 배송도 가능하다고 한다.
+
+룸서비스로는 로스트비프와 카망베르 치즈버거가 한정 메뉴로 나오며 가격은 3,000엔이다.
+
+예약은 12월 1일 낮 12시(일본 시간)부터 시작한다. 요금은 12월 22일부터 3월 15일까지 47,800~62,100엔, 3월 16일부터 30일까지는 75,700엔이다.
+
+출처: SoraNews24, PR Times</textarea>
+          <label class="f" for="t-c5f67ad2291e">해시태그</label>
+          <input id="t-c5f67ad2291e" type="text" class="tagsin" value="#스이카펭귄 #일본여행 #도쿄호텔 #이케부쿠로 #일본굿즈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>팬들이 펭귄 관련 상품에 대해 아쉬움과 추억을 느끼기 시작했다</b>
+            <q>“With JR East planning to “graduate” the penguin mascot of its rechargeable Suica ID card early next year, fans are beginning to get nostalgic for all things related to the wing-waving little friend.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>JR동일본이 내년 초 스이카 카드의 펭귄 캐릭터를 졸업시킬 계획이다</b>
+            <q>“With JR East planning to “graduate” the penguin mascot of its rechargeable Suica ID card early next year, fans are beginning to get nostalgic for all things related to the wing-waving little friend.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스이카 펭귄 졸업 여행 콘셉트의 한정 객실이 이케부쿠로 호텔메트로폴리탄에 등장했다</b>
+            <q>“Luckily, Hotel Metropolitan Tokyo Ikebukuro of JR East Hotels has unveiled a new concept room that will appeal to anyone wishing to celebrate the penguin’s departure in high style.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2026년 12월 22일부터 2027년 3월 30일까지 22층 킹사이즈 침대 객실을 예약할 수 있다</b>
+            <q>“From December 22, 2026 through March 30, 2027, visitors can book a themed city-view room with a king-sized bed on the 22nd floor in which the penguin is taking its graduation trip to outer space.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하루 한 실, 최대 두 명이 묵을 수 있고 체크인은 오후 3시, 체크아웃은 다음 날 낮 12시다</b>
+            <q>“Only one room (maximum two people) is available per day, with check-in at 3 p.m. and check-out at 12 p.m. the following day.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>객실에 스마트폰 숄더 스트랩으로 쓸 수 있는 멀티링 스트랩 세트 두 개가 제공된다</b>
+            <q>“The room will come with not only out-of-this-world decorations but also original goods, including two sets of this multi-ring strap set that can be used as a shoulder strap for a smartphone case and is customizable with space-themed Suica penguin charms.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>투숙객은 마스카르포네와 딸기 젤리로 만든 펭귄 케이크 교환권을 받는다</b>
+            <q>“Each guest will also receive a voucher to exchange for an adorable Suica Penguin Cake made from mascarpone and strawberry jelly.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>객실당 한 번 캡슐 뽑기로 파우치, 머그컵, 아크릴 스탠드, 티셔츠, 마지팬 등 비매품을 받을 수 있다</b>
+            <q>“Furthermore, guests can try their hand at a special capsule lottery, limited to one try per room, to win collaborative, not-for-sale items such as pouches, mug cups, acrylic stands, t-shirts, and even marzipan.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>3월 16일부터 마지막 15일간 95cm 펭귄 장식, 인형, 침대 러너, 태피스트리 등이 경품에 더해진다</b>
+            <q>“For the final 15 days of the concept room beginning on March 16, the lottery will go all out with the addition of a special 95-centimeter (37.4-inch) penguin decoration, stand panels, plushies, bed runners, and tapestries for winning.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>큰 경품은 일본 내 주소로 배송할 수 있다</b>
+            <q>“Never fear if you’re coming from a distance because the hotel can ship any large items you score directly to your residence in Japan.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>룸서비스 한정 메뉴로 로스트비프와 카망베르 치즈버거가 3,000엔에 나온다</b>
+            <q>“Finally, a limited-time room service option will include a Suica Penguin Roast Beef and Camembert Cheeseburger for 3,000 yen (US$18.79).”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>12월 22일~1월 31일 숙박분은 12월 1일 낮 12시(일본 시간)부터 예약을 받는다</b>
+            <q>“Hotel Metropolitan Tokyo Ikebukuro will begin taking reservations for the Suica penguin concept room on December 1 at 12 p.m. JST for dates of stay between December 22 and January 31 and on January 1 at 12 p.m. JST for dates of stay between February 1 and March 30.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>요금은 3월 15일까지 47,800~62,100엔, 3월 16일부터 30일까지 75,700엔이다</b>
+            <q>“Rates are 47,800-62,100 yen for stays between December 22 and March 15 and 75,700 yen for stays between March 16 and March 30.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">Join Suica’s penguin on its graduation trip to outer space at Hotel Metropolitan Tokyo Ikebukuro</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/1_57ce25-e1794796798549.jpg"</li><li>2장: <a href="https://pixabay.com/photos/metro-platform-public-transport-1853976/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "train station"</li><li>3장: <a href="https://pixabay.com/photos/indoors-vacation-table-wine-4234071/" target="_blank" rel="noopener">palacioerick / Pixabay</a> — "hotel room"</li><li>4장: <a href="https://soranews24.com/2026/11/19/join-suicas-penguin-on-its-graduation-trip-to-outer-space-at-hotel-metropolitan-tokyo-ikebukuro/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/3_da2118.jpg?w=640"</li><li>5장: <a href="https://pixabay.com/photos/spaceship-model-isolated-2837605/" target="_blank" rel="noopener">Janson_G / Pixabay</a> — "capsule toy"</li><li>6장: <a href="https://pixabay.com/photos/calendar-meeting-planning-10045176/" target="_blank" rel="noopener">Ralf1403 / Pixabay</a> — "calendar"</li><li>7장: <a href="https://pixabay.com/photos/women-friends-beach-sea-summer-3266211/" target="_blank" rel="noopener">FotografieLink / Pixabay</a> — "friends travel"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b7f232a34b16" data-id="b7f232a34b16">
+    <div class="head">
+      <h2>2. 호주 태즈메이니아 코끼리물범 닐 관리 계획</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 14
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-01.jpg" alt="1장: 물범 한 마리에 27쪽 계획서???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-02.jpg" alt="2장: 겨울마다 뭍에 올라온 닐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-03.jpg" alt="3장: 산책로 부수고 차까지 쾅" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-04.jpg" alt="4장: 외진 곳이면 손대지 않음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-05.jpg" alt="5장: 공공장소에선 헤이징 투입" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-06.jpg" alt="6장: 부수지 말고 이거 만져" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-07.jpg" alt="7장: 동물 덕후 친구한테 바로 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/b7f232a34b16/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">호주 태즈메이니아주 정부가 매년 겨울 뭍으로 올라와 말썽을 피우는 코끼리물범 닐을 위한 관리 계획서를 냈다. 천연자원환경부가 이번 주 공개한 문서는 27쪽 분량이다.
+
+닐은 여섯 살로, 몸무게가 2,000파운드를 넘는다. 해마다 털과 겉피부를 갈아치우는 털갈이철이 되면 섬 남동부 쪽으로 올라온다. 이 모습은 주민들을 즐겁게 해 닐은 동네 마스코트이자 SNS 스타가 됐다. 하지만 산책로와 안전 기둥, 울타리, 차량이 피해를 입었고, 시민을 안전거리 밖에 두는 데에도 수만 호주달러가 들었다.
+
+계획은 크게 두 갈래다. 한적한 곳에 올라오면 개입하지 않고 멀리서 지켜보며 안내판을 세운다. 도로와 핵심 시설에 바로 닿는 공공장소로 올라오면 현장 관리에 들어가는데, 그 방안 중 하나가 헤이징이다. 문서는 폭력 없이 자극을 줘 동물이 움직이게 하는 방식이라고 설명한다. 또 &#39;물범 풍부화&#39;는 인프라를 건드리려는 탐색 행동을 튼튼한 대체물로 돌리는 방안이다.
+
+문서는 닐이 표준 관리법에 적응하는 듯하다고도 적었다. 도로 폐쇄 같은 중대한 일이 생길 수 있어, 시민은 해양 포유류 핫라인으로 연락하라고 안내했다.
+
+출처: WIRED</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#코끼리물범 #호주 #태즈메이니아 #해외이슈 #동물뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 카드 slide8 요약의 &#39;시설을 부수자 정부가 계획서 발표&#39;는 계획서 발표의 원인이 시설 파손이라는 인과관계를 담는다. 원문은 정부가 난처한 처지에서 조치를 결정했다고만 쓰고 이런 인과를 직접 말하지 않는다.</li><li>근거 등록 안 된 주장: 본문의 &#39;매년 겨울 뭍으로 올라와&#39;에서 &#39;매년&#39;과 &#39;겨울&#39; 빈도는 원문의 &#39;annual hauling out&#39;과 &#39;winter months&#39; 표현에서 왔지만 claims 목록에 별도 항목으로 없다.</li>
+          <li>편집자 메모는 &#39;바다사자&#39;라고 했지만 원문은 코끼리물범(elephant seal)이라 코끼리물범으로 표기함</li><li>편집자 메모의 &#39;도시&#39;는 원문에 근거가 없어 쓰지 않음 (원문은 섬 남동부, 공공장소로 표현)</li><li>&#39;신고식&#39;은 원문의 비유(frat pledge)라 카드에서는 &#39;헤이징&#39;으로 표기함</li><li>2,000파운드는 원문 단위 그대로 표기함 (킬로그램 환산 생략)</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b7f232a34b16-0">1장</label>
+          <textarea id="s-b7f232a34b16-0" rows="6" data-slide="0">물범 한 마리에
+**27쪽** 계획서???
+---
+호주 태즈메이니아주 정부가 매년 겨울 뭍으로 올라와 말썽을 피우는 코끼리물범 닐을 관리하는 27쪽짜리 계획서를 냈다.</textarea>
+          
+          <label class="f" for="s-b7f232a34b16-1">2장</label>
+          <textarea id="s-b7f232a34b16-1" rows="6" data-slide="1">**겨울마다**
+뭍에 올라온 닐
+---
+닐은 여섯 살 코끼리물범으로 몸무게가 2,000파운드를 넘는다. 해마다 털과 겉피부를 갈아치우는 털갈이철에 뭍으로 올라오고, 주민들은 닐을 동네 마스코트로 여긴다.</textarea>
+          
+          <label class="f" for="s-b7f232a34b16-2">3장</label>
+          <textarea id="s-b7f232a34b16-2" rows="6" data-slide="2">산책로 부수고
+차까지 **쾅**
+---
+닐은 산책로를 망가뜨리고 안전 기둥을 쓰러뜨렸으며, 울타리를 뚫고 차량을 들이받았다. 시민을 안전거리 밖에 두는 데에도 수만 호주달러가 들었다.</textarea>
+          
+          <label class="f" for="s-b7f232a34b16-3">4장</label>
+          <textarea id="s-b7f232a34b16-3" rows="6" data-slide="3">외진 곳이면
+**손대지 않음**
+---
+전담 태스크포스가 닐의 위치를 살핀다. 한적한 곳에 올라오면 개입하지 않고 멀리서 지켜보며, 주변에 안내판을 세워 시민에게 거리를 두라고 알린다.</textarea>
+          
+          <label class="f" for="s-b7f232a34b16-4">5장</label>
+          <textarea id="s-b7f232a34b16-4" rows="6" data-slide="4">공공장소에선
+**헤이징** 투입
+---
+닐이 도로와 핵심 시설에 바로 닿는 공공장소로 올라오면 현장 관리에 들어간다. 방안 중 하나인 헤이징은 폭력 없이 자극을 줘 동물이 스스로 움직이게 만드는 방식이라고 문서는 설명한다.</textarea>
+          
+          <label class="f" for="s-b7f232a34b16-5">6장</label>
+          <textarea id="s-b7f232a34b16-5" rows="6" data-slide="5">부수지 말고
+이거 만져
+---
+&#39;물범 풍부화&#39;는 인프라를 건드리려는 자연스러운 탐색 행동을, 반복 사용에도 견디게 만든 대체물로 돌리려는 방안이다. 문서는 닐이 표준 관리법에 적응하는 듯하다고도 적었다.</textarea>
+          
+          <label class="f" for="s-b7f232a34b16-6">7장</label>
+          <textarea id="s-b7f232a34b16-6" rows="6" data-slide="6">동물 덕후 친구한테
+바로 보내기
+---
+물범 한 마리를 위해 주 정부가 27쪽 문서를 내고 헤이징과 풍부화 같은 대책까지 담았다. 동물 뉴스를 즐겨 보는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-b7f232a34b16">본문 (캡션)</label>
+          <textarea id="c-b7f232a34b16" class="caption">호주 태즈메이니아주 정부가 매년 겨울 뭍으로 올라와 말썽을 피우는 코끼리물범 닐을 위한 관리 계획서를 냈다. 천연자원환경부가 이번 주 공개한 문서는 27쪽 분량이다.
+
+닐은 여섯 살로, 몸무게가 2,000파운드를 넘는다. 해마다 털과 겉피부를 갈아치우는 털갈이철이 되면 섬 남동부 쪽으로 올라온다. 이 모습은 주민들을 즐겁게 해 닐은 동네 마스코트이자 SNS 스타가 됐다. 하지만 산책로와 안전 기둥, 울타리, 차량이 피해를 입었고, 시민을 안전거리 밖에 두는 데에도 수만 호주달러가 들었다.
+
+계획은 크게 두 갈래다. 한적한 곳에 올라오면 개입하지 않고 멀리서 지켜보며 안내판을 세운다. 도로와 핵심 시설에 바로 닿는 공공장소로 올라오면 현장 관리에 들어가는데, 그 방안 중 하나가 헤이징이다. 문서는 폭력 없이 자극을 줘 동물이 움직이게 하는 방식이라고 설명한다. 또 &#39;물범 풍부화&#39;는 인프라를 건드리려는 탐색 행동을 튼튼한 대체물로 돌리는 방안이다.
+
+문서는 닐이 표준 관리법에 적응하는 듯하다고도 적었다. 도로 폐쇄 같은 중대한 일이 생길 수 있어, 시민은 해양 포유류 핫라인으로 연락하라고 안내했다.
+
+출처: WIRED</textarea>
+          <label class="f" for="t-b7f232a34b16">해시태그</label>
+          <input id="t-b7f232a34b16" type="text" class="tagsin" value="#코끼리물범 #호주 #태즈메이니아 #해외이슈 #동물뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>태즈메이니아주 정부 부처가 27쪽짜리 닐 관리 계획서를 냈다</b>
+            <q>“The Department of Natural Resources and Environment published a 27-page dossier this week titled “Neil the Seal Management Plan.””</q>
+            <small>slide1, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>닐은 태즈메이니아의 여섯 살 코끼리물범으로 겨울철에 가벼운 재산 피해를 일으킨다</b>
+            <q>“There is a six-year-old elephant seal in Tasmania named Neil who has a taste for light property damage during the winter months.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>닐의 몸무게는 2,000파운드를 넘고 산책로·기둥·울타리·차량에 피해를 입혔다</b>
+            <q>“Neil, who weighs over 2,000 pounds, has destroyed walkways, flattened bollards, bowled through fences, and rammed vehicles.”</q>
+            <small>slide2, slide3, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>닐은 해마다 털과 겉피부를 갈아치우는 털갈이를 겪는다</b>
+            <q>“But Neil’s on-land hijinks—as he experiences his yearly “catastrophic molt,” during which he, like all elephant seals, sheds and replaces his top level of fur and epidermis— has also created headaches for local officials.”</q>
+            <small>slide2, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>닐은 섬 남동부에 올라와 주민들을 즐겁게 하며 마스코트이자 SNS 스타가 됐다</b>
+            <q>“Neil&#39;s annual “hauling out” and subsequent misadventures on the southeastern part of the island has delighted locals, making him a local mascot and a viral social media star.”</q>
+            <small>slide2, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시민을 안전거리 밖에 두는 데 수만 호주달러가 들었다</b>
+            <q>“The enormous and growing public interest in Neil has also been a source of concern, as officials spend tens of thousands of Australian dollars to keep the public at a safe distance from him.”</q>
+            <small>slide3, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전담 태스크포스가 있고 한적한 곳에서는 개입하지 않는 접근을 취한다</b>
+            <q>“Neil has a dedicated task force to monitor his whereabouts and according to the dossier, they would take a “non-intervention,” hands-off approach if he hauls out in a secluded location.”</q>
+            <small>slide4, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>멀리서 지켜보며 안내판을 세워 시민에게 거리를 두라고 알린다</b>
+            <q>“They’d keep tabs on Neil from a distance, erecting signs around the area to alert the public of Neil’s presence while advising them to keep their distance.”</q>
+            <small>slide4, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공공장소로 올라와 도로·핵심 시설에 닿으면 현장 관리 계획이 적용된다</b>
+            <q>“The second contingency plan is titled “on-site seal management,” which would be necessary if Neil comes ashore in a more public location, and has immediate access to roads and critical infrastructure that up the odds of molting-induced mayhem.”</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헤이징은 폭력 없이 자극으로 동물이 움직이게 하는 방법이라고 문서가 설명한다</b>
+            <q>“The dossier doesn’t get into specifics—ostensibly there’s no paddling or eating a live goldfish involved—but highlights what it calls a “non-violent method of using deterrents and negative associations to disturb an animal, compelling them to move,” which can include “controlled visual, tactile and vocal stimuli where appropriate.””</q>
+            <small>slide5, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>풍부화는 탐색 행동을 반복 사용에 견디도록 만든 대체물로 돌리는 방안이다</b>
+            <q>“Tasmanian officials also propose “seal enrichment,” which they say would be used in tandem with other management options, to redirect “natural exploratory behaviors” (like engaging with infrastructure) towards decoy items “designed to withstand repeated interaction.””</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>닐이 표준 관리법에 적응하는 듯하다고 문서가 적었다</b>
+            <q>“The document also notes that Neil appears to be adapting to and thus eluding “standard management practices,” meaning that the task force needs to stay nimble in coming up with new methods to curb Neil’s taste for antics.”</q>
+            <small>slide6, caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>도로 폐쇄 같은 중대한 일이 여전히 생길 수 있다고 당국이 밝혔다</b>
+            <q>“Officials also say that despite their best efforts to avoid Neil-related interruptions to daily life, “significant events,” such as road closures, public safety incidents, relocation or translocation activities, or wildlife-born diseases, are still liable to happen.”</q>
+            <small>caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시민은 해양 포유류 핫라인으로 연락하라는 안내를 받는다</b>
+            <q>“During such events, members of the public are advised to contact the Marine Mammal Hotline, also known as “0427 WHALES.””</q>
+            <small>caption · <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">Australia’s Plan to Manage Neil the Unruly Seal Involves ‘Hazing’ and ‘Seal Enrichment’</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pulsetasmania.com.au/news/government-to-trademark-neil-the-seal-as-new-management-plan-unveiled/" target="_blank" rel="noopener">Pulse Tasmania / </a> — "https://images.pulsetasmania.com.au/uploads/kcx3pajo53a4hwn_0a174_jb5vc.jpg"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Elephant_seals_fighting.jpg" target="_blank" rel="noopener">Mike Baird, bairdphotos.com / Wikimedia Commons · CC BY 2.0</a> — "elephant seal"</li><li>3장: <a href="https://pulsetasmania.com.au/news/government-to-trademark-neil-the-seal-as-new-management-plan-unveiled/" target="_blank" rel="noopener">Pulse Tasmania / </a> — "https://images.pulsetasmania.com.au/uploads/p5ozlxdejiwdtlg_jgiq9_zq6ch.jpg"</li><li>4장: <a href="https://pulsetasmania.com.au/news/government-to-trademark-neil-the-seal-as-new-management-plan-unveiled/" target="_blank" rel="noopener">Pulse Tasmania / </a> — "https://images.pulsetasmania.com.au/uploads/1fosa6fsunge20t_lepaw_8nnod.jpg"</li><li>5장: <a href="https://pixabay.com/photos/city-buildings-night-city-lights-5772121/" target="_blank" rel="noopener">xegxef / Pixabay</a> — "city road"</li><li>6장: <a href="https://pixabay.com/photos/blue-boat-buoy-floating-2834157/" target="_blank" rel="noopener">photogrammer7 / Pixabay</a> — "rubber buoy"</li><li>7장: <a href="https://www.wired.com/story/australia-neil-the-seal-management-plan/" target="_blank" rel="noopener">WIRED / </a> — "https://media.wired.com/photos/6afdf5886a27dda013bf5998/3:2/w_2560%2Cc_limit/2026-07-06T063630Z_730025260_MT1AAP000JVGO6Y_RTRMADP_3_NEIL-THE-SEAL.jpg"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-64afe2b7b7dd" data-id="64afe2b7b7dd">
+    <div class="head">
+      <h2>3. 보이저 1호, 빛으로 하루 거리에 닿다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 19
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-01.jpg" alt="1장: 보이저 1호 빛으로 하루???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-02.jpg" alt="2장: 1977년에 출발했어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-03.jpg" alt="3장: 2012년, 태양권 탈출" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-04.jpg" alt="4장: 신호 한 번에 이틀 걸려" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-05.jpg" alt="5장: 언젠가 누가 발견할 편지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-06.jpg" alt="6장: 1990년, 지구를 돌아봤어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-07.jpg" alt="7장: 우주 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261119-am-037d8b48b6eb/64afe2b7b7dd/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">보이저 1호가 지구에서 빛으로 하루 걸리는 거리, 약 161억 마일에 도달했다. NASA에 따르면 인간이 만든 물체가 이 거리에 닿은 건 처음이다.
+
+1977년 9월 초 발사된 탐사선은 목성과 토성을 촬영한 뒤 계속 날아갔고, 2012년에는 태양이 만든 입자와 자기장의 보호막을 벗어나 성간 공간에 들어섰다. 지금은 지구에서 보낸 전파가 닿는 데 24시간, 답이 돌아오는 데 또 24시간이 걸린다. 돌아오는 신호가 워낙 약해 NASA 심우주 네트워크의 큰 안테나가 필요하다. 이 네트워크의 지름 70미터짜리 안테나는 가장 크고 민감한 안테나로, 수백억 마일 밖의 탐사선도 추적할 수 있다.
+
+탐사선에는 금도금 구리 디스크가 실려 있다. 55개 언어의 인사와 모차르트, 척 베리의 음악, 아기 울음소리와 고래 노랫소리가 담겼다. 칼 세이건이 NASA에 카메라를 지구 쪽으로 돌리자고 설득했고, 1990년 밸런타인데이에 카메라가 돌아가 &#39;창백한 푸른 점&#39; 사진이 나왔다.
+
+칼럼을 쓴 작가는 2030년대쯤 보이저 1호가 전력을 모두 잃고 침묵할 것으로 내다봤다. 그래도 관성으로 계속 날아가 약 17,600년 뒤에는 지구에서 1광년 거리에 이를 것이라고 한다.
+
+출처: The Guardian, NASA</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#보이저1호 #우주 #NASA #창백한푸른점 #과학</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 디스크에 14개 펄서 위치 지도와 시간 표시가 담겨 있다는 주장</li><li>근거 등록 안 된 주장: 칼 세이건이 금도금 디스크를 설계한 위원회의 위원장이었다는 주장</li>
+          <li>원문 0은 오피니언 칼럼이라 필자의 의견·환경 논평은 쓰지 않고 사실만 사용함</li><li>날짜가 2026년 11월 기준이며 1광일 도달은 NASA 예정 시각 표현을 도달 사실로 옮겼으므로 게시 시점 확인 필요</li><li>NASA 사진이나 &#39;창백한 푸른 점&#39; 이미지를 쓸 경우 별도 사용 조건·크레딧 확인 필요</li><li>세이건 발언은 직접 인용하지 않고 호칭만 사용함</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-64afe2b7b7dd-0">1장</label>
+          <textarea id="s-64afe2b7b7dd-0" rows="6" data-slide="0">보이저 1호
+빛으로 **하루**???
+---
+보이저 1호가 지구에서 빛이 24시간 달려야 닿는 약 161억 마일 거리에 인간이 만든 물체 중 처음으로 도달했다.</textarea>
+          
+          <label class="f" for="s-64afe2b7b7dd-1">2장</label>
+          <textarea id="s-64afe2b7b7dd-1" rows="6" data-slide="1">**1977년**에
+출발했어
+---
+NASA는 1977년 9월 초 미니 쿠퍼만 한 로봇 탐사선 보이저 1호를 발사했다. 목성과 토성을 촬영한 뒤 계속 날아가 지금은 49년째 비행 중이다.</textarea>
+          
+          <label class="f" for="s-64afe2b7b7dd-2">3장</label>
+          <textarea id="s-64afe2b7b7dd-2" rows="6" data-slide="2">2012년,
+**태양권** 탈출
+---
+2012년 보이저 1호는 태양이 만든 입자와 자기장의 보호막을 벗어나 성간 공간에 들어섰다. 이 보호막 밖에서 작동해 본 탐사선은 보이저 1호와 쌍둥이 2호뿐이다.</textarea>
+          
+          <label class="f" for="s-64afe2b7b7dd-3">4장</label>
+          <textarea id="s-64afe2b7b7dd-3" rows="6" data-slide="3">신호 한 번에
+**이틀** 걸려
+---
+지구에서 보낸 전파가 닿는 데 24시간, 답이 돌아오는 데 또 24시간이 걸린다. 돌아오는 신호가 워낙 약해 NASA 심우주 네트워크의 거대한 안테나로 받아야 한다.</textarea>
+          
+          <label class="f" for="s-64afe2b7b7dd-4">5장</label>
+          <textarea id="s-64afe2b7b7dd-4" rows="6" data-slide="4">언젠가 누가
+발견할 **편지**
+---
+2012년 성간 공간에 들어선 보이저 1호는 &#39;병 속의 메시지&#39;가 됐다. 금도금 구리 디스크에 55개 언어의 인사와 모차르트 음악, 고래 노랫소리가 담겨 있다.</textarea>
+          
+          <label class="f" for="s-64afe2b7b7dd-5">6장</label>
+          <textarea id="s-64afe2b7b7dd-5" rows="6" data-slide="5">1990년,
+**지구**를 돌아봤어
+---
+1990년 밸런타인데이에 카메라가 지구 쪽으로 돌려졌다. 사진 속 지구는 1픽셀도 안 되는 크기였고, 칼 세이건은 이를 &#39;창백한 푸른 점&#39;이라 불렀다.</textarea>
+          
+          <label class="f" for="s-64afe2b7b7dd-6">7장</label>
+          <textarea id="s-64afe2b7b7dd-6" rows="6" data-slide="6">우주 좋아하는
+친구한테 보내기
+---
+49년 전 떠난 탐사선이 이제 빛으로 하루 거리에 있다는 사실이 놀랍다. 신호 한 번 주고받는 데 이틀이 걸린다는 점까지 같이 이야기해 보기 좋은 소식</textarea>
+          
+          <label class="f" for="c-64afe2b7b7dd">본문 (캡션)</label>
+          <textarea id="c-64afe2b7b7dd" class="caption">보이저 1호가 지구에서 빛으로 하루 걸리는 거리, 약 161억 마일에 도달했다. NASA에 따르면 인간이 만든 물체가 이 거리에 닿은 건 처음이다.
+
+1977년 9월 초 발사된 탐사선은 목성과 토성을 촬영한 뒤 계속 날아갔고, 2012년에는 태양이 만든 입자와 자기장의 보호막을 벗어나 성간 공간에 들어섰다. 지금은 지구에서 보낸 전파가 닿는 데 24시간, 답이 돌아오는 데 또 24시간이 걸린다. 돌아오는 신호가 워낙 약해 NASA 심우주 네트워크의 큰 안테나가 필요하다. 이 네트워크의 지름 70미터짜리 안테나는 가장 크고 민감한 안테나로, 수백억 마일 밖의 탐사선도 추적할 수 있다.
+
+탐사선에는 금도금 구리 디스크가 실려 있다. 55개 언어의 인사와 모차르트, 척 베리의 음악, 아기 울음소리와 고래 노랫소리가 담겼다. 칼 세이건이 NASA에 카메라를 지구 쪽으로 돌리자고 설득했고, 1990년 밸런타인데이에 카메라가 돌아가 &#39;창백한 푸른 점&#39; 사진이 나왔다.
+
+칼럼을 쓴 작가는 2030년대쯤 보이저 1호가 전력을 모두 잃고 침묵할 것으로 내다봤다. 그래도 관성으로 계속 날아가 약 17,600년 뒤에는 지구에서 1광년 거리에 이를 것이라고 한다.
+
+출처: The Guardian, NASA</textarea>
+          <label class="f" for="t-64afe2b7b7dd">해시태그</label>
+          <input id="t-64afe2b7b7dd" type="text" class="tagsin" value="#보이저1호 #우주 #NASA #창백한푸른점 #과학" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호가 지구에서 약 161억 마일, 빛이 24시간 달리는 거리(1광일)에 도달한다</b>
+            <q>“On Wednesday, Nov. 18, 2026, at 2:16:07 a.m. PST, NASA’s Voyager 1 spacecraft will be 16.094 billion miles (25.902 billion kilometers) away from Earth — or, the distance light travels in 24 hours, also known as one light-day.”</q>
+            <small>slide1 · <a href="https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호는 이 거리에 도달한 최초의 인간이 만든 물체다</b>
+            <q>“Voyager 1 will be the first human-made object to reach this distance from Earth, adding to a long list of historic firsts for the mission.”</q>
+            <small>slide1 · <a href="https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NASA가 1977년 9월 초 보이저 1호를 발사했고, 목성과 토성을 촬영한 뒤 계속 나아갔다</b>
+            <q>“Nasa launched Voyager 1 in early September 1977, just weeks after the first Star Wars movie hit theaters with Luke Skywalker and his charming sidekick droid, R2D2. It took photos of the planets Jupiter and Saturn, then continued onward.”</q>
+            <small>slide2 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호는 미니 쿠퍼 크기의 로봇 탐사선이다</b>
+            <q>“Today, 18 November, that intrepid traveler – Voyager 1, a robotic space probe the size of a Mini Cooper – is exactly one light day away from us: 16.1bn miles.”</q>
+            <small>slide2 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보이저 1호는 49년째 비행 중이다</b>
+            <q>“Imagine traveling nonstop for 49 years, alone in the dark with no destination in sight, powered by curiosity and engineering.”</q>
+            <small>slide2 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2012년 보이저 1호가 태양의 입자·자기장 보호막을 벗어나 헬리오포즈를 넘어 성간 공간에 들어섰다</b>
+            <q>“In 2012 it exited the sun’s protective shield of charged particles and magnetic fields, crossed a boundary called the heliopause, and entered interstellar space.”</q>
+            <small>slide3 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>태양권 밖에서 작동한 탐사선은 보이저 1호와 2호뿐이다</b>
+            <q>“Voyager 1 and its twin, Voyager 2, are the only spacecraft to ever operate outside the heliosphere, or the protective bubble of particles and magnetic fields generated by the Sun.”</q>
+            <small>slide3 · <a href="https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지구발 전파는 닿는 데 24시간, 돌아오는 데 24시간이 걸린다</b>
+            <q>“Radio signals from Earth (traveling at the speed of light, 186,000 miles per second) now take 24 hours to reach it, and another 24 hours to return.”</q>
+            <small>slide4 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>돌아오는 신호가 약해 NASA 심우주 네트워크의 큰 안테나로 들어야 한다</b>
+            <q>“The return signals are so weak that scientists at Nasa’s Deep Space Network must use a massive satellite dish to hear them.”</q>
+            <small>slide4 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>메시지를 보내고 이틀을 기다려야 응답을 받는다</b>
+            <q>“If you want to say ‘hello’ to Voyager, you send your message and then you go home and you wait two days before you finally get a response.”</q>
+            <small>slide4 · <a href="https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>성간 공간에 들어선 시점부터 보이저 1호는 병 속의 메시지가 됐다</b>
+            <q>“That’s when it became a message in a bottle.”</q>
+            <small>slide5 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>금도금 구리 디스크에 55개 언어 인사, 모차르트 음악, 고래 소리가 담겼다</b>
+            <q>“The disk contains photos and greetings in 55 human languages, music by Mozart and Chuck Berry, the sound of a baby crying and a whale singing.”</q>
+            <small>slide5 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>디스크는 12인치 금도금 구리 디스크다</b>
+            <q>“That message consists of a 12in, gold-plated copper disk engraved with information to showcase human culture and the diversity of life on Earth, should any advanced civilization discover it.”</q>
+            <small>slide5 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1990년 밸런타인데이에 카메라가 지구 쪽으로 돌려졌다</b>
+            <q>“Finally, on Valentine’s Day 1990, the cameras turned.”</q>
+            <small>slide6 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세이건이 이를 &#39;창백한 푸른 점&#39;이라 불렀고 지구는 1픽셀의 일부로 보였다</b>
+            <q>“Sagan called it the “pale blue dot”, wherein Earth appears as a fraction of a pixel, “like a mote of dust caught in a sunbeam”.”</q>
+            <small>slide6 · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세이건이 NASA에 카메라를 지구 쪽으로 돌리도록 설득하려 했다</b>
+            <q>“In the late 1980s, as Voyager 1 hastened through the outer solar system, he tried to convince Nasa to turn the probe’s sensitive cameras back toward home.”</q>
+            <small>caption · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>70미터 안테나는 가장 크고 민감하며 수백억 마일 밖 탐사선을 추적할 수 있다</b>
+            <q>“The 70-meter antennas are the largest and most sensitive DSN antennas, capable of tracking a spacecraft traveling tens of billions of miles from Earth.”</q>
+            <small>caption · <a href="https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2030년대쯤 보이저 1호가 전력을 모두 잃고 침묵할 것이다</b>
+            <q>“Sometime soon, probably in the 2030s, Voyager 1 will lose all power and go silent.”</q>
+            <small>caption · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약 17,600년 뒤 보이저 1호는 지구에서 1광년 거리에 있게 된다</b>
+            <q>“In roughly 17,600 years, it will be one light year from Earth.”</q>
+            <small>caption · <a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.theguardian.com/commentisfree/2026/nov/18/nasa-voyager-1-pale-blue-dot" target="_blank" rel="noopener">After 49 years, Nasa’s Voyager 1 is one light-day away from us. Can we save this ‘pale blue dot’? | Kim Heacox</a> (기사)</li><li><a href="https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/" target="_blank" rel="noopener">Where Are Voyager 1 and 2 Now? - NASA Science</a> (1차 출처)</li><li><a href="https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/" target="_blank" rel="noopener">What is the Deep Space Network? - NASA</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/" target="_blank" rel="noopener">NASA / </a> — "https://science.nasa.gov/wp-content/uploads/2024/03/screenshot-2024-10-24-at-6-32-52 am.png"</li><li>2장: <a href="https://science.nasa.gov/mission/voyager/where-are-voyager-1-and-voyager-2-now/" target="_blank" rel="noopener">NASA / </a> — "https://science.nasa.gov/wp-content/uploads/2024/03/instruments-3.jpg"</li><li>3장: <a href="https://pixabay.com/photos/sun-sunset-setting-sun-3275314/" target="_blank" rel="noopener">Myriams-Fotos / Pixabay</a> — "sun"</li><li>4장: <a href="https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/" target="_blank" rel="noopener">NASA / </a> — "https://www.nasa.gov/wp-content/uploads/2023/02/dss43-6_fs.jpg"</li><li>5장: <a href="https://pixabay.com/photos/music-player-record-player-7792956/" target="_blank" rel="noopener">chienba / Pixabay</a> — "vinyl record"</li><li>6장: <a href="https://pixabay.com/photos/earth-world-globe-3d-earth-render-7471157/" target="_blank" rel="noopener">TheHappyCamper / Pixabay</a> — "earth from space"</li><li>7장: <a href="https://pixabay.com/photos/sunset-lake-telescope-8437462/" target="_blank" rel="noopener">ChiemSeherin / Pixabay</a> — "telescope"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-650a5dfa30b9">
+    <div class="head">
+      <h2>S1. 가공식품 2주 식단, 18~21세 뇌 보상 반응 변화 (칼로리·영양 동일 조건)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-650a5dfa30b9">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강정보</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 칼로리·당·지방을 똑같이 맞춘 식단인데도 가공식품 비율만으로 18~21세의 뇌 반응이 달라졌다는 반전. 매일 먹는 음식 이야기라 &#39;나는 어떻지?&#39;로 바로 이어진다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">&#39;칼로리만 같으면 똑같다&#39;는 말, 이 연구 보면 좀 달라짐
+영양을 똑같이 맞춘 두 식단을 2주씩 먹였더니 18~21세는 뇌 반응이 달라졌대
+근데 이게 모든 나이에 해당한 건 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 가공식품 식단을 2주 먹은 18~21세는 밀크셰이크를 맛볼 때 뇌의 안와전두피질 활동이 줄었대. 반대로 가공 안 한 식단을 2주 먹은 뒤에는 이 활동이 늘었고
+그럼 22~25세는 어땠을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">90/500자</span></div>
+      <p class="tp-text">2/ 22~25세는 어느 식단에서도 뇌 반응에 유의미한 변화가 없었음. 같은 가공식품인데 왜 어린 쪽만 달랐을까? 연구진 설명은 뇌 영역의 성숙 시기 쪽이었음 ↓</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">3/ 안와전두피질은 눈 바로 뒤쪽에 있는 영역으로, 음식 보상을 가늠하고 먹는 걸 멈추는 자기조절에 관여한대. 20대 중후반까지 계속 바뀌는, 뇌에서 마지막에 성숙하는 영역 중 하나
+그럼 두 식단은 뭐가 같고 뭐가 달랐을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">167/500자</span></div>
+      <p class="tp-text">4/ 연구 요약 정리
+- 건강한 성인 22명(18~25세), 21세 이하는 7명
+- 가공식품 81% 식단 vs 0% 식단, 2주씩 교차
+- 칼로리·영양 비율·첨가당·나트륨 등 똑같이 맞춤
+- 18~21세만 가공식품 식단 후 해당 영역 반응 감소
+- 22~25세는 변화 없음
+다만 짚을 점도 있었음 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">5/ 짚을 점. 표본이 작았고 나이대별 결과는 탐색적 분석이었대. 전체 참가자로 보면 두 식단 사이 뇌 반응 차이는 없었고, 개인별 뇌 변화를 뷔페 칼로리 섭취와 직접 이은 것도 아님
+그럼 연구진이 결국 말하고 싶은 건 뭐였을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">244/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은, 영양을 똑같이 맞춰도 첨가물이나 가공 과정 같은 요소가 뇌 반응 변화의 원인일 수 있고 어린 쪽이 더 민감할 수 있다는 거. 다만 작은 연구라 더 확인이 필요함
+편의점 도시락 vs 직접 해먹기, 너는 어느 쪽 파?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>영양을 맞춘 결과, 첨가물·가공 과정 생성 물질 같은 비영양적 특성이 뇌 신호 변화의 원인일 수 있다고 연구진이 본다 <small>애매 · 원문은 비영양적 특성이 뇌 신호 변화의 잠재적 원인이라고 제시한 것이다. 원인이라고 단정한 것은 아니므로 &#39;가능성이 있다&#39;는 표현을 유지해야 한다.</small></li>
+        <li>근거 등록 안 된 주장: 연구진이 뇌 영역의 성숙 시기(발달 타이밍)를 나이대 차이의 설명으로 제시했다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;칼로리만 같으면 똑같다&#39;는 말, 이 연구 보면 좀 달라짐</li><li>영양을 똑같이 맞춘 두 식단인데 18~21세 뇌만 다르게 반응했대</li><li>가공식품, 칼로리가 아니라 &#39;가공 정도&#39;에서 뇌 반응이 갈렸다는 연구가 나옴</li><li>당·지방이 아니라 &#39;가공 여부&#39; 하나만 달랐는데 뇌 반응이 달라진 사람들이 있었대</li><li>가공식품 2주 먹었더니 밀크셰이크에 반응하는 뇌 활동이 줄었대, 18~21세만</li><li>같은 20대인데 18~21세는 달라지고 22~25세는 그대로였대, 가공식품 2주 실험에서</li><li>연구진이 &#39;자기조절을 맡는 뇌 영역에서 변화가 보인다&#39;고 한 가공식품 실험</li><li>건강한 성인 22명이 가공식품 81% 식단 vs 0% 식단을 2주씩 먹은 실험, 결과가 흥미로움</li><li>미국 청년은 칼로리 절반 넘게 가공식품으로 먹는다는데, 그 시기 뇌는 아직 성숙 중이라는 연구</li><li>2주 만에 18~21세의 뇌 반응이 달라졌다는 연구가 나옴, 칼로리는 똑같이 맞췄는데도</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>편의점 도시락 vs 직접 해먹기, 너는 어느 쪽 파?</li><li>음식 고를 때 칼로리부터 보는 편 vs 성분표부터 보는 편?</li><li>가공식품 없이 일주일 버티기, 가능 vs 불가능?</li><li>영양성분표 평소에 보는 편이야, 안 보는 편이야?</li><li>라면 vs 편의점 도시락, 둘 중 하나만 끊는다면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>가공식품을 끊으면 뇌 반응이 돌아올까, 연구진이 다음에 보겠다는 질문</li><li>18세 미만은 더 민감할까, 연구진의 다음 연구 계획</li><li>초가공식품이란 뭔지, 미국 청년은 얼마나 먹는지</li><li>다음 배송: 스이카 펭귄 졸업 여행 우주 콘셉트 객실 얘기</li><li>다음 배송: 보이저 1호, 빛으로 하루 거리에 닿다 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>나이대별 결과는 21세 이하 7명이 포함된 소규모 탐색적 분석이라, &#39;가공식품이 18~21세 뇌를 바꾼다&#39;는 인과 단정으로 읽히지 않는지 확인</li><li>전체 참가자 기준으로는 식단 간 뇌 반응 차이가 없었다는 점이 빠지면 과장으로 읽힐 수 있음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>영양을 맞춘 결과, 첨가물·가공 과정 생성 물질 같은 비영양적 특성이 뇌 신호 변화의 원인일 수 있다고 연구진이 본다</b>
+          <q>“Because the two diets were matched across nutritional metrics, the findings point toward non-nutritive properties of ultraprocessed foods, such as chemical additives, emulsifiers, texture alterations, or compounds generated during industrial processing, as potential drivers of altered brain signaling.”</q>
+          <small>post6 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가공식품 식단을 2주 먹은 18~21세는 밀크셰이크에 대한 안와전두피질 반응이 줄었다</b>
+          <q>“Ages 18 to 21: Consuming a diet high in ultraprocessed foods for two weeks significantly decreased neural activity in the orbitofrontal cortex in response to the rewarding milkshake.”</q>
+          <small>post0, post1 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가공 안 한 식단을 2주 먹은 뒤 18~21세의 안와전두피질 활동은 늘었다</b>
+          <q>“Conversely, after two weeks on the unprocessed diet, orbitofrontal cortex activity increased.”</q>
+          <small>post1 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>두 식단은 칼로리와 영양 비율, 섬유질, 첨가당, 포화지방, 나트륨 등을 똑같이 맞췄다</b>
+          <q>“Critically, both diets were engineered to have identical macronutrient profiles (50% carbohydrates, 35% fat, 15% protein), matching levels of fiber, added sugars, saturated fat, sodium, energy density, and overall nutritional quality, calibrated to keep each participant’s body weight stable.”</q>
+          <small>post0, post3, post4 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>22~25세는 두 식단 모두에서 뇌 반응에 유의미한 변화가 없었다</b>
+          <q>“Ages 22 to 25: Older young adults showed no significant changes in brain response across either dietary phase.”</q>
+          <small>post2, post4 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>안와전두피질은 눈 바로 뒤에 있고 20대 중후반까지 계속 바뀌는, 마지막에 성숙하는 영역 중 하나다</b>
+          <q>“Located just behind the eyes, the orbitofrontal cortex is one of the final regions of the human brain to finish maturing, continuing to remodel into the mid- to late 20s.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>안와전두피질은 음식 보상 평가, 갈망 조절, 먹는 걸 멈추는 자기조절에 중요한 역할을 한다</b>
+          <q>“It plays a central role in evaluating food rewards, regulating cravings, and exerting executive self-control to stop eating.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 18~25세 건강한 성인 22명이고 21세 이하가 7명이며 무작위 교차 급식 시험이었다</b>
+          <q>“To separate the effects of industrial food processing from basic nutritional content, the researchers recruited 22 healthy adults ages 18 to 25 (including seven participants ages 21 or younger) for a randomized crossover feeding trial.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>각 참가자는 두 식단을 2주씩 먹었고 사이에 4주 휴지기가 있었다</b>
+          <q>“Each participant followed two strictly controlled diets for two weeks apiece, separated by a four-week washout period:”</q>
+          <small>post0, post4 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가공식품 식단은 총 칼로리의 81%를 가공식품에서 얻었다</b>
+          <q>“Ultraprocessed Diet: Derived 81% of its total calories from ultraprocessed foods.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>비가공 식단은 가공식품 0%였다</b>
+          <q>“Unprocessed Diet: Contained 0% ultraprocessed foods.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전체 참가자로 보면 식단 간 뇌 반응 차이는 없었다</b>
+          <q>“In the entire cohort, there were no differences between diet conditions in brain response.”</q>
+          <small>post5 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>표본이 작았고 나이대별 결과는 탐색적이었으며 개인별 뇌 변화를 뷔페 섭취 칼로리와 직접 연결하지 않았다</b>
+          <q>“While the researchers note that the sample size was small and the age-based findings were exploratory, and did not directly correlate individual fMRI shifts with buffet calorie intake, the results highlight adolescence and early adulthood as critical windows of neurodevelopmental sensitivity.”</q>
+          <small>post5, post6 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>어린 층이 가공식품 영향에 더 취약할 수 있다는 것이 연구진의 시각이다</b>
+          <q>“This is giving us insight into how ultraprocessed foods are affecting the bodies and brains of younger people, who might be especially vulnerable to their effects.”</q>
+          <small>post6 · <a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="650a5dfa30b9">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://neurosciencenews.com/ultraprocessed-foods-reward-brain-32427/" target="_blank" rel="noopener">Ultraprocessed Foods Alter Food-Reward Brain Activity - Neuroscience News</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-1a92c3280a75">
+    <div class="head">
+      <h2>S2. 지중해식 식단과 위암 위험 29% 낮음 리뷰</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-1a92c3280a75">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 매일 먹는 밥상 구성만으로 위암 위험 수치가 달라 보인다는 숫자에, 그 29%가 실제로 무슨 뜻인지와 한계까지 풀어주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">위암 걱정되면 반찬 하나가 아니라 &#39;접시 전체&#39;를 보라는 리뷰가 나옴
+지중해식을 가장 철저히 따른 사람들이 위암 위험 29% 낮았다는 분석인데
+근데 이 29%, 생각하는 그 의미가 아니었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 지중해식을 가장 가깝게 따른 사람들은 가장 안 따른 사람들보다 위암 위험이 29% 낮았어. 대장암도 10~16% 낮았고. 근데 이 29%, &#39;100명 중 29명이 피한다&#39;는 뜻이 아니래. 무슨 뜻일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">2/ 29%는 &#39;상대적&#39; 위험이 줄었다는 거래. 29명이 병을 피한다는 약속이 아니라는 점은 리뷰가 직접 짚었음. 참고로 지중해식은 올리브유·채소·통곡물·생선·견과류 중심에 붉은 고기와 가공식품은 적게 먹는 식단이야. 그럼 암 종류별로 결과는 다 비슷했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">167/500자</span></div>
+      <p class="tp-text">3/ 암별 결과 요약 정리
+- 위암: 위험 29% 낮음 (130만 명 넘는 분석에선 점수 1점당 약 5%씩 감소)
+- 대장암: 10~16% 낮음
+- 폐암: 약한 연관, 근거 확실성 낮음
+- 유방암: 약하고 들쭉날쭉
+- 전립선암: 후속 분석에서 연관이 사라짐
+그럼 이걸 &#39;식단 덕분&#39;이라고 해도 될까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">4/ 여기서 중요한 단서. 대부분 관찰연구라서 &#39;이렇게 먹는 사람이 위험이 낮았다&#39;는 연관이지 증명은 아니래. 원래 건강한 사람이 이런 식단을 고르는 걸 수도 있고. 가장 근거가 좋은 연관도 확실성은 &#39;중간&#39; 정도였음. 그럼 우리한테는 얼마나 맞는 얘기일까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">143/500자</span></div>
+      <p class="tp-text">5/ 이 연구들은 대부분 유럽·미국 쪽이래. 아시아·아프리카에서 테스트한 건 훨씬 적은데, 음식도 유전도 암 패턴도 다르니까. 싱가포르에서 두유·귀리겨·기장으로 바꿔 시험한 적은 있는데 암이 아니라 지방간 연구였음. 그럼 결국 이걸 어떻게 받아들이면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">266/500자</span></div>
+      <p class="tp-text">6/ 결국 리뷰 결론은 올리브유·채소·생선 중심 접시는 &#39;합리적인 선택&#39;이지 암을 막아주는 방패는 아니라는 거. 내 식단 바꾸기 전엔 의사랑 상의하고.
+
+올리브유 vs 참기름, 우리집 부엌 주인공은?
+
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 2편: 식단 점수에 &#39;와인 한 잔&#39;이 들어가면 생기는 문제, 내일 새벽 배달. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>위암 걱정되면 반찬 하나가 아니라 &#39;접시 전체&#39;를 보라는 리뷰가 나옴</li><li>올리브유·채소·생선 중심으로 먹은 사람들, 위암 위험이 29% 낮았대</li><li>&#39;위암 위험 29% 감소&#39;, 이 숫자 100명 중 29명이 피한다는 뜻 아님</li><li>건강 챙기려고 음식 하나만 고르지 말고 식단 전체 패턴부터 보라는 연구가 나옴</li><li>매일 먹는 밥상이 위암 위험이랑 이어질 수 있다는 리뷰가 나왔어</li><li>지중해식 식단은 심장에만 좋은 줄 알았는데 위암 얘기까지 나옴</li><li>&#39;식단이 암을 막아준다&#39;는 말, 이 리뷰는 &#39;방패는 아니다&#39;라고 선을 그음</li><li>올리브유 먹는 사람들 위암 위험이 낮다던데, 정말일까?</li><li>와인 한 잔이 식단 점수에 들어가서 연구 결과가 흐려졌을 수 있대</li><li>위암도 대장암도 낮았는데 유방암·전립선암은 왜 결과가 엇갈렸을까</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>올리브유 vs 참기름, 우리집 부엌 주인공은?</li><li>생선구이 vs 고기구이, 메뉴 고른다면 어느 쪽?</li><li>견과류 간식 꾸준히 먹어본 사람?</li><li>점심으로 샐러드 vs 국밥, 오늘은 어느 쪽?</li><li>식단 바꾼다면 제일 먼저 줄일 것 딱 하나만 꼽는다면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>지중해식 점수에 &#39;와인 한 잔&#39;이 들어가서 결과가 흐려졌다는 얘기</li><li>폐암은 금연한 사람에게서 연관이 더 강했다는 얘기</li><li>대장 선종 위험이 21% 낮았다는 분석</li><li>유방암·전립선암에선 왜 결과가 엇갈렸나</li><li>올리브유·채소가 몸에 작용하는 방식, 염증 수치와 장내세균 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>위암 29%는 상대적 위험 감소인데 절대 확률로 읽히지 않는지 확인</li><li>한국 식단 적용 여부는 원문에 없어서 질문으로만 처리됨. 한국 음식 효과를 단정하는 문장이 끼어들지 않았는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지중해식을 가장 가깝게 따른 사람들이 가장 안 따른 사람들보다 위암 위험이 29% 낮았다</b>
+          <q>“In one large analysis, people who follow a Mediterranean-style diet most closely had a 29 percent lower risk of stomach cancer than people who follow it least, according to a new review of decades of research.”</q>
+          <small>post0 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>위암 위험이 29% 낮았고 대장암은 10~16% 낮았다</b>
+          <q>“Colorectal cancer risk runs 10 to 16 percent lower in similar comparisons, while the evidence for breast and prostate cancer is far shakier.”</q>
+          <small>post1 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>29%는 상대적 위험 감소이며 100명 중 29명이 피한다는 약속이 아니다</b>
+          <q>“One caution: 29 percent is a relative drop in risk, not a promise that 29 of every 100 people will dodge the disease.”</q>
+          <small>post2 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지중해식은 올리브유·채소·통곡물·생선·견과류 중심에 붉은 고기와 가공식품이 적은 식단이다</b>
+          <q>“It centers on olive oil, produce, whole grains, fish, and nuts, with less red meat and processed food.”</q>
+          <small>post2 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>위암 수치는 130만 명 넘는 분석에서 나왔고 점수 1점당 약 5% 위험이 감소했다</b>
+          <q>“Stomach cancer produced the headline figure, from an analysis of more than 1.3 million people. Each added point on the diet score went with about a 5 percent drop in risk.”</q>
+          <small>post3 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폐암은 약한 연관이 있고 근거 확실성이 낮다</b>
+          <q>“Because smoking muddies the data, the review rates the lung evidence as low certainty.”</q>
+          <small>post3 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>유방암은 연관이 약하고 일관되지 않았다</b>
+          <q>“Overall breast cancer risk showed a weak, inconsistent link, though it looked clearer for tumors not fueled by estrogen and in women past menopause.”</q>
+          <small>post3 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전립선암의 약한 보호 연관은 후속 분석에서 사라졌다</b>
+          <q>“A slight protective link for prostate cancer vanished once a later update added more studies.”</q>
+          <small>post3 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대부분 관찰연구이며 건강한 사람이 이런 식단을 택했을 가능성이 있다</b>
+          <q>“Most research is observational, meaning it tracks what people already eat rather than assigning diets at random, so healthier people may gravitate toward this style of eating.”</q>
+          <small>post4 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가장 근거가 좋은 연관도 확실성은 중간 등급이었다</b>
+          <q>“Even the best-supported links, for overall cancer, stomach, and colorectal cancer, earned only a moderate certainty rating.”</q>
+          <small>post4 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>뒷받침 연구 대부분이 유럽과 미국에서 나왔다</b>
+          <q>“Most supporting studies come from Europe and the United States.”</q>
+          <small>post5 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>아시아·아프리카 집단에서 테스트한 연구는 훨씬 적고 음식·유전·암 패턴이 다르다</b>
+          <q>“Far fewer have tested the diet in Asian or African populations, which have different foods, genetics, and cancer patterns.”</q>
+          <small>post5 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>싱가포르 시험은 두유·귀리겨·기장으로 바꿨지만 암이 아니라 지방간을 연구했다</b>
+          <q>“A Singapore trial adapted it with soy milk, oat bran, and millet, but it studied fatty liver disease, not cancer.”</q>
+          <small>post5 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>올리브유·채소·생선 중심 접시는 합리적인 선택이지 방패는 아니다</b>
+          <q>“Until trials show whether the food itself deserves the credit, a plate built around olive oil, produce, and fish is a reasonable bet, not a shield.”</q>
+          <small>post6 · <a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="1a92c3280a75">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/mediterranean-diet-lower-stomach-cancer-risk/" target="_blank" rel="noopener">Mediterranean Diet Tied To 29% Lower Stomach Cancer Risk, Review Finds</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261119-am";
+  const ORIGINAL = {"64afe2b7b7dd": {"caption": "\ubcf4\uc774\uc800 1\ud638\uac00 \uc9c0\uad6c\uc5d0\uc11c \ube5b\uc73c\ub85c \ud558\ub8e8 \uac78\ub9ac\ub294 \uac70\ub9ac, \uc57d 161\uc5b5 \ub9c8\uc77c\uc5d0 \ub3c4\ub2ec\ud588\ub2e4. NASA\uc5d0 \ub530\ub974\uba74 \uc778\uac04\uc774 \ub9cc\ub4e0 \ubb3c\uccb4\uac00 \uc774 \uac70\ub9ac\uc5d0 \ub2ff\uc740 \uac74 \ucc98\uc74c\uc774\ub2e4.\n\n1977\ub144 9\uc6d4 \ucd08 \ubc1c\uc0ac\ub41c \ud0d0\uc0ac\uc120\uc740 \ubaa9\uc131\uacfc \ud1a0\uc131\uc744 \ucd2c\uc601\ud55c \ub4a4 \uacc4\uc18d \ub0a0\uc544\uac14\uace0, 2012\ub144\uc5d0\ub294 \ud0dc\uc591\uc774 \ub9cc\ub4e0 \uc785\uc790\uc640 \uc790\uae30\uc7a5\uc758 \ubcf4\ud638\ub9c9\uc744 \ubc97\uc5b4\ub098 \uc131\uac04 \uacf5\uac04\uc5d0 \ub4e4\uc5b4\uc130\ub2e4. \uc9c0\uae08\uc740 \uc9c0\uad6c\uc5d0\uc11c \ubcf4\ub0b8 \uc804\ud30c\uac00 \ub2ff\ub294 \ub370 24\uc2dc\uac04, \ub2f5\uc774 \ub3cc\uc544\uc624\ub294 \ub370 \ub610 24\uc2dc\uac04\uc774 \uac78\ub9b0\ub2e4. \ub3cc\uc544\uc624\ub294 \uc2e0\ud638\uac00 \uc6cc\ub099 \uc57d\ud574 NASA \uc2ec\uc6b0\uc8fc \ub124\ud2b8\uc6cc\ud06c\uc758 \ud070 \uc548\ud14c\ub098\uac00 \ud544\uc694\ud558\ub2e4. \uc774 \ub124\ud2b8\uc6cc\ud06c\uc758 \uc9c0\ub984 70\ubbf8\ud130\uc9dc\ub9ac \uc548\ud14c\ub098\ub294 \uac00\uc7a5 \ud06c\uace0 \ubbfc\uac10\ud55c \uc548\ud14c\ub098\ub85c, \uc218\ubc31\uc5b5 \ub9c8\uc77c \ubc16\uc758 \ud0d0\uc0ac\uc120\ub3c4 \ucd94\uc801\ud560 \uc218 \uc788\ub2e4.\n\n\ud0d0\uc0ac\uc120\uc5d0\ub294 \uae08\ub3c4\uae08 \uad6c\ub9ac \ub514\uc2a4\ud06c\uac00 \uc2e4\ub824 \uc788\ub2e4. 55\uac1c \uc5b8\uc5b4\uc758 \uc778\uc0ac\uc640 \ubaa8\ucc28\ub974\ud2b8, \ucc99 \ubca0\ub9ac\uc758 \uc74c\uc545, \uc544\uae30 \uc6b8\uc74c\uc18c\ub9ac\uc640 \uace0\ub798 \ub178\ub7ab\uc18c\ub9ac\uac00 \ub2f4\uacbc\ub2e4. \uce7c \uc138\uc774\uac74\uc774 NASA\uc5d0 \uce74\uba54\ub77c\ub97c \uc9c0\uad6c \ucabd\uc73c\ub85c \ub3cc\ub9ac\uc790\uace0 \uc124\ub4dd\ud588\uace0, 1990\ub144 \ubc38\ub7f0\ud0c0\uc778\ub370\uc774\uc5d0 \uce74\uba54\ub77c\uac00 \ub3cc\uc544\uac00 \u0027\ucc3d\ubc31\ud55c \ud478\ub978 \uc810\u0027 \uc0ac\uc9c4\uc774 \ub098\uc654\ub2e4.\n\n\uce7c\ub7fc\uc744 \uc4f4 \uc791\uac00\ub294 2030\ub144\ub300\ucbe4 \ubcf4\uc774\uc800 1\ud638\uac00 \uc804\ub825\uc744 \ubaa8\ub450 \uc783\uace0 \uce68\ubb35\ud560 \uac83\uc73c\ub85c \ub0b4\ub2e4\ubd24\ub2e4. \uadf8\ub798\ub3c4 \uad00\uc131\uc73c\ub85c \uacc4\uc18d \ub0a0\uc544\uac00 \uc57d 17,600\ub144 \ub4a4\uc5d0\ub294 \uc9c0\uad6c\uc5d0\uc11c 1\uad11\ub144 \uac70\ub9ac\uc5d0 \uc774\ub97c \uac83\uc774\ub77c\uace0 \ud55c\ub2e4.\n\n\ucd9c\ucc98: The Guardian, NASA", "hashtags": ["#\ubcf4\uc774\uc8001\ud638", "#\uc6b0\uc8fc", "#NASA", "#\ucc3d\ubc31\ud55c\ud478\ub978\uc810", "#\uacfc\ud559"], "slides": [["\ubcf4\uc774\uc800 1\ud638", "\ube5b\uc73c\ub85c **\ud558\ub8e8**???", "---", "\ubcf4\uc774\uc800 1\ud638\uac00 \uc9c0\uad6c\uc5d0\uc11c \ube5b\uc774 24\uc2dc\uac04 \ub2ec\ub824\uc57c \ub2ff\ub294 \uc57d 161\uc5b5 \ub9c8\uc77c \uac70\ub9ac\uc5d0 \uc778\uac04\uc774 \ub9cc\ub4e0 \ubb3c\uccb4 \uc911 \ucc98\uc74c\uc73c\ub85c \ub3c4\ub2ec\ud588\ub2e4."], ["**1977\ub144**\uc5d0", "\ucd9c\ubc1c\ud588\uc5b4", "---", "NASA\ub294 1977\ub144 9\uc6d4 \ucd08 \ubbf8\ub2c8 \ucfe0\ud37c\ub9cc \ud55c \ub85c\ubd07 \ud0d0\uc0ac\uc120 \ubcf4\uc774\uc800 1\ud638\ub97c \ubc1c\uc0ac\ud588\ub2e4. \ubaa9\uc131\uacfc \ud1a0\uc131\uc744 \ucd2c\uc601\ud55c \ub4a4 \uacc4\uc18d \ub0a0\uc544\uac00 \uc9c0\uae08\uc740 49\ub144\uc9f8 \ube44\ud589 \uc911\uc774\ub2e4."], ["2012\ub144,", "**\ud0dc\uc591\uad8c** \ud0c8\ucd9c", "---", "2012\ub144 \ubcf4\uc774\uc800 1\ud638\ub294 \ud0dc\uc591\uc774 \ub9cc\ub4e0 \uc785\uc790\uc640 \uc790\uae30\uc7a5\uc758 \ubcf4\ud638\ub9c9\uc744 \ubc97\uc5b4\ub098 \uc131\uac04 \uacf5\uac04\uc5d0 \ub4e4\uc5b4\uc130\ub2e4. \uc774 \ubcf4\ud638\ub9c9 \ubc16\uc5d0\uc11c \uc791\ub3d9\ud574 \ubcf8 \ud0d0\uc0ac\uc120\uc740 \ubcf4\uc774\uc800 1\ud638\uc640 \uc30d\ub465\uc774 2\ud638\ubfd0\uc774\ub2e4."], ["\uc2e0\ud638 \ud55c \ubc88\uc5d0", "**\uc774\ud2c0** \uac78\ub824", "---", "\uc9c0\uad6c\uc5d0\uc11c \ubcf4\ub0b8 \uc804\ud30c\uac00 \ub2ff\ub294 \ub370 24\uc2dc\uac04, \ub2f5\uc774 \ub3cc\uc544\uc624\ub294 \ub370 \ub610 24\uc2dc\uac04\uc774 \uac78\ub9b0\ub2e4. \ub3cc\uc544\uc624\ub294 \uc2e0\ud638\uac00 \uc6cc\ub099 \uc57d\ud574 NASA \uc2ec\uc6b0\uc8fc \ub124\ud2b8\uc6cc\ud06c\uc758 \uac70\ub300\ud55c \uc548\ud14c\ub098\ub85c \ubc1b\uc544\uc57c \ud55c\ub2e4."], ["\uc5b8\uc820\uac00 \ub204\uac00", "\ubc1c\uacac\ud560 **\ud3b8\uc9c0**", "---", "2012\ub144 \uc131\uac04 \uacf5\uac04\uc5d0 \ub4e4\uc5b4\uc120 \ubcf4\uc774\uc800 1\ud638\ub294 \u0027\ubcd1 \uc18d\uc758 \uba54\uc2dc\uc9c0\u0027\uac00 \ub410\ub2e4. \uae08\ub3c4\uae08 \uad6c\ub9ac \ub514\uc2a4\ud06c\uc5d0 55\uac1c \uc5b8\uc5b4\uc758 \uc778\uc0ac\uc640 \ubaa8\ucc28\ub974\ud2b8 \uc74c\uc545, \uace0\ub798 \ub178\ub7ab\uc18c\ub9ac\uac00 \ub2f4\uaca8 \uc788\ub2e4."], ["1990\ub144,", "**\uc9c0\uad6c**\ub97c \ub3cc\uc544\ubd24\uc5b4", "---", "1990\ub144 \ubc38\ub7f0\ud0c0\uc778\ub370\uc774\uc5d0 \uce74\uba54\ub77c\uac00 \uc9c0\uad6c \ucabd\uc73c\ub85c \ub3cc\ub824\uc84c\ub2e4. \uc0ac\uc9c4 \uc18d \uc9c0\uad6c\ub294 1\ud53d\uc140\ub3c4 \uc548 \ub418\ub294 \ud06c\uae30\uc600\uace0, \uce7c \uc138\uc774\uac74\uc740 \uc774\ub97c \u0027\ucc3d\ubc31\ud55c \ud478\ub978 \uc810\u0027\uc774\ub77c \ubd88\ub800\ub2e4."], ["\uc6b0\uc8fc \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "49\ub144 \uc804 \ub5a0\ub09c \ud0d0\uc0ac\uc120\uc774 \uc774\uc81c \ube5b\uc73c\ub85c \ud558\ub8e8 \uac70\ub9ac\uc5d0 \uc788\ub2e4\ub294 \uc0ac\uc2e4\uc774 \ub180\ub78d\ub2e4. \uc2e0\ud638 \ud55c \ubc88 \uc8fc\uace0\ubc1b\ub294 \ub370 \uc774\ud2c0\uc774 \uac78\ub9b0\ub2e4\ub294 \uc810\uae4c\uc9c0 \uac19\uc774 \uc774\uc57c\uae30\ud574 \ubcf4\uae30 \uc88b\uc740 \uc18c\uc2dd"]]}, "b7f232a34b16": {"caption": "\ud638\uc8fc \ud0dc\uc988\uba54\uc774\ub2c8\uc544\uc8fc \uc815\ubd80\uac00 \ub9e4\ub144 \uaca8\uc6b8 \ubb4d\uc73c\ub85c \uc62c\ub77c\uc640 \ub9d0\uc37d\uc744 \ud53c\uc6b0\ub294 \ucf54\ub07c\ub9ac\ubb3c\ubc94 \ub2d0\uc744 \uc704\ud55c \uad00\ub9ac \uacc4\ud68d\uc11c\ub97c \ub0c8\ub2e4. \ucc9c\uc5f0\uc790\uc6d0\ud658\uacbd\ubd80\uac00 \uc774\ubc88 \uc8fc \uacf5\uac1c\ud55c \ubb38\uc11c\ub294 27\ucabd \ubd84\ub7c9\uc774\ub2e4.\n\n\ub2d0\uc740 \uc5ec\uc12f \uc0b4\ub85c, \ubab8\ubb34\uac8c\uac00 2,000\ud30c\uc6b4\ub4dc\ub97c \ub118\ub294\ub2e4. \ud574\ub9c8\ub2e4 \ud138\uacfc \uac89\ud53c\ubd80\ub97c \uac08\uc544\uce58\uc6b0\ub294 \ud138\uac08\uc774\ucca0\uc774 \ub418\uba74 \uc12c \ub0a8\ub3d9\ubd80 \ucabd\uc73c\ub85c \uc62c\ub77c\uc628\ub2e4. \uc774 \ubaa8\uc2b5\uc740 \uc8fc\ubbfc\ub4e4\uc744 \uc990\uac81\uac8c \ud574 \ub2d0\uc740 \ub3d9\ub124 \ub9c8\uc2a4\ucf54\ud2b8\uc774\uc790 SNS \uc2a4\ud0c0\uac00 \ub410\ub2e4. \ud558\uc9c0\ub9cc \uc0b0\ucc45\ub85c\uc640 \uc548\uc804 \uae30\ub465, \uc6b8\ud0c0\ub9ac, \ucc28\ub7c9\uc774 \ud53c\ud574\ub97c \uc785\uc5c8\uace0, \uc2dc\ubbfc\uc744 \uc548\uc804\uac70\ub9ac \ubc16\uc5d0 \ub450\ub294 \ub370\uc5d0\ub3c4 \uc218\ub9cc \ud638\uc8fc\ub2ec\ub7ec\uac00 \ub4e4\uc5c8\ub2e4.\n\n\uacc4\ud68d\uc740 \ud06c\uac8c \ub450 \uac08\ub798\ub2e4. \ud55c\uc801\ud55c \uacf3\uc5d0 \uc62c\ub77c\uc624\uba74 \uac1c\uc785\ud558\uc9c0 \uc54a\uace0 \uba40\ub9ac\uc11c \uc9c0\ucf1c\ubcf4\uba70 \uc548\ub0b4\ud310\uc744 \uc138\uc6b4\ub2e4. \ub3c4\ub85c\uc640 \ud575\uc2ec \uc2dc\uc124\uc5d0 \ubc14\ub85c \ub2ff\ub294 \uacf5\uacf5\uc7a5\uc18c\ub85c \uc62c\ub77c\uc624\uba74 \ud604\uc7a5 \uad00\ub9ac\uc5d0 \ub4e4\uc5b4\uac00\ub294\ub370, \uadf8 \ubc29\uc548 \uc911 \ud558\ub098\uac00 \ud5e4\uc774\uc9d5\uc774\ub2e4. \ubb38\uc11c\ub294 \ud3ed\ub825 \uc5c6\uc774 \uc790\uadf9\uc744 \uc918 \ub3d9\ubb3c\uc774 \uc6c0\uc9c1\uc774\uac8c \ud558\ub294 \ubc29\uc2dd\uc774\ub77c\uace0 \uc124\uba85\ud55c\ub2e4. \ub610 \u0027\ubb3c\ubc94 \ud48d\ubd80\ud654\u0027\ub294 \uc778\ud504\ub77c\ub97c \uac74\ub4dc\ub9ac\ub824\ub294 \ud0d0\uc0c9 \ud589\ub3d9\uc744 \ud2bc\ud2bc\ud55c \ub300\uccb4\ubb3c\ub85c \ub3cc\ub9ac\ub294 \ubc29\uc548\uc774\ub2e4.\n\n\ubb38\uc11c\ub294 \ub2d0\uc774 \ud45c\uc900 \uad00\ub9ac\ubc95\uc5d0 \uc801\uc751\ud558\ub294 \ub4ef\ud558\ub2e4\uace0\ub3c4 \uc801\uc5c8\ub2e4. \ub3c4\ub85c \ud3d0\uc1c4 \uac19\uc740 \uc911\ub300\ud55c \uc77c\uc774 \uc0dd\uae38 \uc218 \uc788\uc5b4, \uc2dc\ubbfc\uc740 \ud574\uc591 \ud3ec\uc720\ub958 \ud56b\ub77c\uc778\uc73c\ub85c \uc5f0\ub77d\ud558\ub77c\uace0 \uc548\ub0b4\ud588\ub2e4.\n\n\ucd9c\ucc98: WIRED", "hashtags": ["#\ucf54\ub07c\ub9ac\ubb3c\ubc94", "#\ud638\uc8fc", "#\ud0dc\uc988\uba54\uc774\ub2c8\uc544", "#\ud574\uc678\uc774\uc288", "#\ub3d9\ubb3c\ub274\uc2a4"], "slides": [["\ubb3c\ubc94 \ud55c \ub9c8\ub9ac\uc5d0", "**27\ucabd** \uacc4\ud68d\uc11c???", "---", "\ud638\uc8fc \ud0dc\uc988\uba54\uc774\ub2c8\uc544\uc8fc \uc815\ubd80\uac00 \ub9e4\ub144 \uaca8\uc6b8 \ubb4d\uc73c\ub85c \uc62c\ub77c\uc640 \ub9d0\uc37d\uc744 \ud53c\uc6b0\ub294 \ucf54\ub07c\ub9ac\ubb3c\ubc94 \ub2d0\uc744 \uad00\ub9ac\ud558\ub294 27\ucabd\uc9dc\ub9ac \uacc4\ud68d\uc11c\ub97c \ub0c8\ub2e4."], ["**\uaca8\uc6b8\ub9c8\ub2e4**", "\ubb4d\uc5d0 \uc62c\ub77c\uc628 \ub2d0", "---", "\ub2d0\uc740 \uc5ec\uc12f \uc0b4 \ucf54\ub07c\ub9ac\ubb3c\ubc94\uc73c\ub85c \ubab8\ubb34\uac8c\uac00 2,000\ud30c\uc6b4\ub4dc\ub97c \ub118\ub294\ub2e4. \ud574\ub9c8\ub2e4 \ud138\uacfc \uac89\ud53c\ubd80\ub97c \uac08\uc544\uce58\uc6b0\ub294 \ud138\uac08\uc774\ucca0\uc5d0 \ubb4d\uc73c\ub85c \uc62c\ub77c\uc624\uace0, \uc8fc\ubbfc\ub4e4\uc740 \ub2d0\uc744 \ub3d9\ub124 \ub9c8\uc2a4\ucf54\ud2b8\ub85c \uc5ec\uae34\ub2e4."], ["\uc0b0\ucc45\ub85c \ubd80\uc218\uace0", "\ucc28\uae4c\uc9c0 **\ucf85**", "---", "\ub2d0\uc740 \uc0b0\ucc45\ub85c\ub97c \ub9dd\uac00\ub728\ub9ac\uace0 \uc548\uc804 \uae30\ub465\uc744 \uc4f0\ub7ec\ub728\ub838\uc73c\uba70, \uc6b8\ud0c0\ub9ac\ub97c \ub6ab\uace0 \ucc28\ub7c9\uc744 \ub4e4\uc774\ubc1b\uc558\ub2e4. \uc2dc\ubbfc\uc744 \uc548\uc804\uac70\ub9ac \ubc16\uc5d0 \ub450\ub294 \ub370\uc5d0\ub3c4 \uc218\ub9cc \ud638\uc8fc\ub2ec\ub7ec\uac00 \ub4e4\uc5c8\ub2e4."], ["\uc678\uc9c4 \uacf3\uc774\uba74", "**\uc190\ub300\uc9c0 \uc54a\uc74c**", "---", "\uc804\ub2f4 \ud0dc\uc2a4\ud06c\ud3ec\uc2a4\uac00 \ub2d0\uc758 \uc704\uce58\ub97c \uc0b4\ud540\ub2e4. \ud55c\uc801\ud55c \uacf3\uc5d0 \uc62c\ub77c\uc624\uba74 \uac1c\uc785\ud558\uc9c0 \uc54a\uace0 \uba40\ub9ac\uc11c \uc9c0\ucf1c\ubcf4\uba70, \uc8fc\ubcc0\uc5d0 \uc548\ub0b4\ud310\uc744 \uc138\uc6cc \uc2dc\ubbfc\uc5d0\uac8c \uac70\ub9ac\ub97c \ub450\ub77c\uace0 \uc54c\ub9b0\ub2e4."], ["\uacf5\uacf5\uc7a5\uc18c\uc5d0\uc120", "**\ud5e4\uc774\uc9d5** \ud22c\uc785", "---", "\ub2d0\uc774 \ub3c4\ub85c\uc640 \ud575\uc2ec \uc2dc\uc124\uc5d0 \ubc14\ub85c \ub2ff\ub294 \uacf5\uacf5\uc7a5\uc18c\ub85c \uc62c\ub77c\uc624\uba74 \ud604\uc7a5 \uad00\ub9ac\uc5d0 \ub4e4\uc5b4\uac04\ub2e4. \ubc29\uc548 \uc911 \ud558\ub098\uc778 \ud5e4\uc774\uc9d5\uc740 \ud3ed\ub825 \uc5c6\uc774 \uc790\uadf9\uc744 \uc918 \ub3d9\ubb3c\uc774 \uc2a4\uc2a4\ub85c \uc6c0\uc9c1\uc774\uac8c \ub9cc\ub4dc\ub294 \ubc29\uc2dd\uc774\ub77c\uace0 \ubb38\uc11c\ub294 \uc124\uba85\ud55c\ub2e4."], ["\ubd80\uc218\uc9c0 \ub9d0\uace0", "\uc774\uac70 \ub9cc\uc838", "---", "\u0027\ubb3c\ubc94 \ud48d\ubd80\ud654\u0027\ub294 \uc778\ud504\ub77c\ub97c \uac74\ub4dc\ub9ac\ub824\ub294 \uc790\uc5f0\uc2a4\ub7ec\uc6b4 \ud0d0\uc0c9 \ud589\ub3d9\uc744, \ubc18\ubcf5 \uc0ac\uc6a9\uc5d0\ub3c4 \uacac\ub514\uac8c \ub9cc\ub4e0 \ub300\uccb4\ubb3c\ub85c \ub3cc\ub9ac\ub824\ub294 \ubc29\uc548\uc774\ub2e4. \ubb38\uc11c\ub294 \ub2d0\uc774 \ud45c\uc900 \uad00\ub9ac\ubc95\uc5d0 \uc801\uc751\ud558\ub294 \ub4ef\ud558\ub2e4\uace0\ub3c4 \uc801\uc5c8\ub2e4."], ["\ub3d9\ubb3c \ub355\ud6c4 \uce5c\uad6c\ud55c\ud14c", "\ubc14\ub85c \ubcf4\ub0b4\uae30", "---", "\ubb3c\ubc94 \ud55c \ub9c8\ub9ac\ub97c \uc704\ud574 \uc8fc \uc815\ubd80\uac00 27\ucabd \ubb38\uc11c\ub97c \ub0b4\uace0 \ud5e4\uc774\uc9d5\uacfc \ud48d\ubd80\ud654 \uac19\uc740 \ub300\ucc45\uae4c\uc9c0 \ub2f4\uc558\ub2e4. \ub3d9\ubb3c \ub274\uc2a4\ub97c \uc990\uaca8 \ubcf4\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "c5f67ad2291e": {"caption": "\uc2a4\uc774\uce74 \ud3ad\uadc4\uc758 \uc878\uc5c5 \uc5ec\ud589\uc744 \ucf58\uc149\ud2b8\ub85c \ud55c \ud55c\uc815 \uac1d\uc2e4\uc774 \ub098\uc654\ub2e4. JR\ub3d9\uc77c\ubcf8\uc774 \ub0b4\ub144 \ucd08 \uc2a4\uc774\uce74 \uce74\ub4dc\uc5d0\uc11c \ud3ad\uadc4 \uce90\ub9ad\ud130\ub97c \uc878\uc5c5\uc2dc\ud0ac \uacc4\ud68d\uc774\ub77c, \ud32c\ub4e4\uc740 \ubc8c\uc368\ubd80\ud130 \uc544\uc26c\uc6c0\uc744 \ub290\ub07c\uace0 \uc788\ub2e4.\n\n\uac1d\uc2e4\uc740 \ub3c4\ucfc4 \uc774\ucf00\ubd80\ucfe0\ub85c\uc758 \ud638\ud154\uba54\ud2b8\ub85c\ud3f4\ub9ac\ud0c4 22\uce35\uc5d0 \ub9c8\ub828\ub41c\ub2e4. 2026\ub144 12\uc6d4 22\uc77c\ubd80\ud130 2027\ub144 3\uc6d4 30\uc77c\uae4c\uc9c0 \uc608\uc57d\ud560 \uc218 \uc788\uace0, \ud558\ub8e8\uc5d0 \ud55c \uc2e4, \ucd5c\ub300 \ub450 \uba85\uae4c\uc9c0 \ubb35\uc744 \uc218 \uc788\ub2e4. \uccb4\ud06c\uc778\uc740 \uc624\ud6c4 3\uc2dc, \uccb4\ud06c\uc544\uc6c3\uc740 \ub2e4\uc74c \ub0a0 \ub0ae 12\uc2dc\ub2e4.\n\n\uac1d\uc2e4\uc5d0\ub294 \uc6b0\uc8fc \ucf58\uc149\ud2b8 \uc7a5\uc2dd\uacfc \ud568\uaed8 \uba40\ud2f0\ub9c1 \uc2a4\ud2b8\ub7a9 \uc138\ud2b8 \ub450 \uac1c\uac00 \uc81c\uacf5\ub41c\ub2e4. \ud22c\uc219\uac1d\uc740 \ud3ad\uadc4 \ucf00\uc774\ud06c \uad50\ud658\uad8c\ub3c4 \ubc1b\uace0, \uac1d\uc2e4\ub2f9 \ud55c \ubc88 \ucea1\uc290 \ubf51\uae30\uc5d0\ub3c4 \ub3c4\uc804\ud560 \uc218 \uc788\ub2e4. 3\uc6d4 16\uc77c\ubd80\ud130 \ub9c8\uc9c0\ub9c9 15\uc77c\uac04\uc740 95cm \ud3ad\uadc4 \uc7a5\uc2dd\uacfc \uc778\ud615, \uce68\ub300 \ub7ec\ub108, \ud0dc\ud53c\uc2a4\ud2b8\ub9ac \uac19\uc740 \uacbd\ud488\uc774 \ub354\ud574\uc9c4\ub2e4. \ud070 \uacbd\ud488\uc740 \uc77c\ubcf8 \ub0b4 \uc8fc\uc18c\ub85c \ubc30\uc1a1\ub3c4 \uac00\ub2a5\ud558\ub2e4\uace0 \ud55c\ub2e4.\n\n\ub8f8\uc11c\ube44\uc2a4\ub85c\ub294 \ub85c\uc2a4\ud2b8\ube44\ud504\uc640 \uce74\ub9dd\ubca0\ub974 \uce58\uc988\ubc84\uac70\uac00 \ud55c\uc815 \uba54\ub274\ub85c \ub098\uc624\uba70 \uac00\uaca9\uc740 3,000\uc5d4\uc774\ub2e4.\n\n\uc608\uc57d\uc740 12\uc6d4 1\uc77c \ub0ae 12\uc2dc(\uc77c\ubcf8 \uc2dc\uac04)\ubd80\ud130 \uc2dc\uc791\ud55c\ub2e4. \uc694\uae08\uc740 12\uc6d4 22\uc77c\ubd80\ud130 3\uc6d4 15\uc77c\uae4c\uc9c0 47,800~62,100\uc5d4, 3\uc6d4 16\uc77c\ubd80\ud130 30\uc77c\uae4c\uc9c0\ub294 75,700\uc5d4\uc774\ub2e4.\n\n\ucd9c\ucc98: SoraNews24, PR Times", "hashtags": ["#\uc2a4\uc774\uce74\ud3ad\uadc4", "#\uc77c\ubcf8\uc5ec\ud589", "#\ub3c4\ucfc4\ud638\ud154", "#\uc774\ucf00\ubd80\ucfe0\ub85c", "#\uc77c\ubcf8\uad7f\uc988"], "slides": [["\uc2a4\uc774\uce74 \ud3ad\uadc4\uc774", "\uc6b0\uc8fc\ub85c **\uc878\uc5c5\uc5ec\ud589**?!", "---", "\uc2a4\uc774\uce74 \ud3ad\uadc4\uc758 \uc878\uc5c5 \uc5ec\ud589\uc744 \ucf58\uc149\ud2b8\ub85c \ud55c \ud55c\uc815 \uac1d\uc2e4\uc774 \ub3c4\ucfc4 \uc774\ucf00\ubd80\ucfe0\ub85c\uc758 \ud638\ud154\uba54\ud2b8\ub85c\ud3f4\ub9ac\ud0c4\uc5d0 \ub4f1\uc7a5\ud588\ub2e4."], ["\ud3ad\uadc4\uc774 \uace7", "**\uc878\uc5c5\ud55c\ub2e4\ub2c8**", "---", "JR\ub3d9\uc77c\ubcf8\uc774 \ub0b4\ub144 \ucd08 \uc2a4\uc774\uce74 \uce74\ub4dc\uc5d0\uc11c \ud3ad\uadc4 \uce90\ub9ad\ud130\ub97c \uc878\uc5c5\uc2dc\ud0ac \uacc4\ud68d\uc774\ub2e4. \ud32c\ub4e4\uc740 \uc544\uc26c\uc6b4 \ub9c8\uc74c\uc5d0 \ud3ad\uadc4\uacfc \uad00\ub828\ub41c \ubaa8\ub4e0 \uac83\uc5d0 \ucd94\uc5b5\uc744 \ub5a0\uc62c\ub9ac\uae30 \uc2dc\uc791\ud588\ub2e4."], ["22\uce35 \uac1d\uc2e4\uc5d0\uc11c", "**\uc6b0\uc8fc \uc5ec\ud589**", "---", "2026\ub144 12\uc6d4 22\uc77c\ubd80\ud130 2027\ub144 3\uc6d4 30\uc77c\uae4c\uc9c0 \uc608\uc57d\ud560 \uc218 \uc788\ub294 \ud0b9\uc0ac\uc774\uc988 \uce68\ub300 \uac1d\uc2e4\uc774\ub2e4. \ud558\ub8e8\uc5d0 \ud55c \uc2e4\ub9cc \uc5f4\ub9ac\uba70 \ucd5c\ub300 \ub450 \uba85\uc774 \ubb35\uc744 \uc218 \uc788\ub2e4."], ["\uad7f\uc988\uc5d0 **\ucf00\uc774\ud06c**", "\uc120\ubb3c\uc774 \ud55c\uac00\ub4dd", "---", "\uac1d\uc2e4\uc5d0\ub294 \uc2a4\ub9c8\ud2b8\ud3f0 \uc204\ub354 \uc2a4\ud2b8\ub7a9\uc73c\ub85c \uc4f8 \uc218 \uc788\ub294 \uba40\ud2f0\ub9c1 \uc2a4\ud2b8\ub7a9 \uc138\ud2b8\uac00 \ub450 \uac1c \ud568\uaed8 \uc81c\uacf5\ub41c\ub2e4. \ud22c\uc219\uac1d\uc740 \ub9c8\uc2a4\uce74\ub974\ud3ec\ub124\uc640 \ub538\uae30 \uc824\ub9ac\ub85c \ub9cc\ub4e0 \ud3ad\uadc4 \ucf00\uc774\ud06c \uad50\ud658\uad8c\ub3c4 \ubc1b\ub294\ub2e4."], ["\uac1d\uc2e4\ub2f9 \ud55c \ubc88", "**\ube44\ub9e4\ud488** \ubf51\uae30", "---", "\uac1d\uc2e4\ub2f9 \ud55c \ubc88 \ucea1\uc290 \ubf51\uae30\uc5d0 \ub3c4\uc804\ud574 \ud30c\uc6b0\uce58, \uba38\uadf8\ucef5, \uc544\ud06c\ub9b4 \uc2a4\ud0e0\ub4dc, \ud2f0\uc154\uce20, \ub9c8\uc9c0\ud32c \uac19\uc740 \ube44\ub9e4\ud488\uc744 \ubc1b\uc744 \uc218 \uc788\ub2e4. 3\uc6d4 16\uc77c\ubd80\ud130 \ub9c8\uc9c0\ub9c9 15\uc77c\uac04\uc740 95cm \ud3ad\uadc4 \uc7a5\uc2dd\ub3c4 \uacbd\ud488\uc5d0 \ub354\ud574\uc9c4\ub2e4."], ["**12\uc6d4 1\uc77c** \uc815\uc624", "\uc608\uc57d \uc2dc\uc791", "---", "12\uc6d4 22\uc77c\ubd80\ud130 1\uc6d4 31\uc77c\uae4c\uc9c0\uc758 \uc219\ubc15\uc740 12\uc6d4 1\uc77c \ub0ae 12\uc2dc(\uc77c\ubcf8 \uc2dc\uac04)\ubd80\ud130 \uc608\uc57d\uc744 \ubc1b\ub294\ub2e4. 3\uc6d4 15\uc77c\uae4c\uc9c0\ub294 47,800~62,100\uc5d4, 3\uc6d4 16\uc77c \uc774\ud6c4\ub294 75,700\uc5d4\uc774\ub2e4."], ["\ud3ad\uadc4 \ud32c \uce5c\uad6c\ud55c\ud14c", "**\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30**", "---", "\uc2a4\uc774\uce74 \ud3ad\uadc4\uc758 \uc878\uc5c5\uc774 \uc544\uc26c\uc6b4 \uce5c\uad6c\ub77c\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd. \uac1d\uc2e4\uacfc \uad7f\uc988, \ucf00\uc774\ud06c\uae4c\uc9c0 \ud55c \ubc88\uc5d0 \uc990\uae38 \uc218 \uc788\ub2e4\ub294 \uc774\uc57c\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

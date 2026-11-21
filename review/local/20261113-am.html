@@ -1,0 +1,1847 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.13 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.13 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-134e0588af51" data-jump="134e0588af51">1</a><a href="#post-d7b73bebafb2" data-jump="d7b73bebafb2">2</a><a href="#post-0b6aedda60f9" data-jump="0b6aedda60f9">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-134e0588af51" data-id="134e0588af51">
+    <div class="head">
+      <h2>1. 일본 KFC 켄타 라이스 박스 (다키코미 고항 도시락)</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-01.jpg" alt="1장: KFC가 / 도시락?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-02.jpg" alt="2장: 켄타가 / 무슨 뜻이게" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-03.jpg" alt="3장: 젓가락으로 / 먹는 KFC" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-04.jpg" alt="4장: 치킨 아래엔 / 닭육수 밥" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-05.jpg" alt="5장: 690엔부터 / 지역 한정" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-06.jpg" alt="6장: 맛은 합격인데 양이 아쉬워" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-07.jpg" alt="7장: 일본 여행 가면 이거 저장각" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/product-1112213506-01.jpg" alt="상품 사진: 왼쪽에 KFC RICE BOX 케ンタ라이스 BOX 문구와 흰 종이 박스 일러스트, 오른쪽에 사람이 흰 사각 종이 용기를 들고 튀김 치킨 조각을 젓가락으로 집어 올리는 모습과 그 아래 밥이 보임 (japan.kfc.co.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/product-1112213506-02.jpg" alt="상품 사진: 흰색 사각 종이 박스에 담긴 튀김 치킨 조각과 밥, 아래는 빨간색 KFC 패턴 포장. 상단에 &#39;점포·수량 한정&#39; 문구와 &#39;※국산 쌀을 사용하고 있습니다&#39; 문구가 있음 (ssnp.co.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 3장이 카드 뒤에 같이 들어가요 (japan.kfc.co.jp, ssnp.co.jp, soranews24.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">일본 KFC가 오리지널 치킨을 도시락 형태로 내놨다. 이름은 &#39;켄타 라이스 박스&#39;다. 켄타는 켄터키를 일본식으로 발음한 &#39;켄타키&#39;의 줄임말이고, 일본에서는 맥도날드를 &#39;마쿠도&#39;, 스타벅스를 &#39;스타바&#39;라고 부르듯 KFC에도 팬들의 애칭이 있다고 한다.
+
+이 메뉴의 콘셉트는 &#39;젓가락으로 먹을 수 있는 KFC 식사&#39;다. 상자를 열면 데리야키 소스를 바른 순살 오리지널 치킨이 먼저 보이고, 그 아래에 채 썬 양배추, 맨 밑에 닭육수로 지은 다키코미 고항이 깔려 있다. 다키코미 고항은 흰쌀을 다른 양념이나 재료와 함께 지어 맛이 배게 하는 일본 전통 요리다.
+
+판매처는 도쿄와 가나가와, 사이타마, 지바, 오사카, 효고의 일부 KFC 매장으로 한정돼 있다. 가격은 지역마다 다르며 690엔부터 시작한다. 취재진이 방문한 도쿄 도심 매장에서는 단품 740엔, 음료 세트 930엔이었다.
+
+소라뉴스24는 닭 풍미가 밥과 잘 어울려 아주 맛있다고 평가했다. 반면 양이 아주 크지는 않고, 위는 네모지고 아래는 둥근 상자 모양 때문에 젓가락으로 먹기 다소 불편해 숟가락이 더 낫겠다는 아쉬움도 전했다.
+
+일본 여행을 계획 중이라면 저장해 두고 판매 매장을 확인해 보자.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">일본KFC 켄타라이스박스 다키코미고항 일본여행 일본음식</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 켄타 라이스 박스가 일본 한정 메뉴(japan-exclusive)라는 설명</li><li>근거 등록 안 된 주장: 켄타 라이스 박스 판매 매장의 전체 목록이 별도로 제공된다는 점</li>
+          <li>브랜드(KFC) 관련 소재: 카드 이미지에 로고·제품명 사용 금지</li><li>맛 평가는 SoraNews24 한 매체의 의견</li><li>판매 매장·가격은 지역별로 다르고 변동 가능</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-134e0588af51-0">1장</label>
+          <textarea id="s-134e0588af51-0" rows="5" data-slide="0">KFC가 / **도시락**?!
+---
+일본 KFC가 오리지널 치킨을 다키코미 고항 위에 올린 &#39;켄타 라이스 박스&#39;를 일부 매장에서 팔고 있다.</textarea>
+          
+          <label class="f" for="s-134e0588af51-1">2장</label>
+          <textarea id="s-134e0588af51-1" rows="5" data-slide="1">**켄타**가 / 무슨 뜻이게
+---
+켄타는 켄터키를 일본식으로 읽은 &#39;켄타키&#39;의 줄임말이다. 맥도날드의 &#39;마쿠도&#39;, 스타벅스의 &#39;스타바&#39;처럼 팬들이 부르는 애칭이 생길 만큼 일본에서 KFC가 인기라는 설명이다.</textarea>
+          
+          <label class="f" for="s-134e0588af51-2">3장</label>
+          <textarea id="s-134e0588af51-2" rows="5" data-slide="2">**젓가락**으로 / 먹는 KFC
+---
+이 메뉴의 설계 콘셉트는 &#39;젓가락으로 먹을 수 있는 KFC 식사&#39;다. 손가락을 쪽쪽 빨게 맛있다는 KFC의 유명한 문구와는 어울리지 않아 보이는 방향이다.</textarea>
+          
+          <label class="f" for="s-134e0588af51-3">4장</label>
+          <textarea id="s-134e0588af51-3" rows="5" data-slide="3">치킨 아래엔 / **닭육수 밥**
+---
+뚜껑을 열면 데리야키 소스를 바른 순살 오리지널 치킨이 보인다. 그 밑에는 채 썬 양배추가 깔려 있고, 가장 아래에 닭육수로 지은 다키코미 고항이 들어 있다.</textarea>
+          
+          <label class="f" for="s-134e0588af51-4">5장</label>
+          <textarea id="s-134e0588af51-4" rows="5" data-slide="4">**690엔**부터 / 지역 한정
+---
+도쿄와 가나가와, 사이타마, 지바, 오사카, 효고의 일부 매장에서만 판다. 가격은 690엔부터이고, 취재진이 간 도쿄 도심 매장은 단품 740엔, 음료 세트 930엔이었다.</textarea>
+          
+          <label class="f" for="s-134e0588af51-5">6장</label>
+          <textarea id="s-134e0588af51-5" rows="6" data-slide="5">맛은 합격인데
+양이 아쉬워
+---
+소라뉴스24는 닭 풍미가 밥과 잘 어울려 아주 맛있다고 평했다. 다만 양이 크지 않고, 상자 모양 때문에 젓가락보다 숟가락이 나을 수 있다는 아쉬움도 꼽았다.</textarea>
+          
+          <label class="f" for="s-134e0588af51-6">7장</label>
+          <textarea id="s-134e0588af51-6" rows="6" data-slide="6">일본 여행 가면
+이거 **저장각**
+---
+일부 지역 매장에서만 파는 메뉴라 여행 전에 저장해 두면 찾아보기 좋다. 켄타 라이스 박스가 되는 매장을 미리 확인해 볼 만한 이야기</textarea>
+          
+          <label class="f" for="c-134e0588af51">본문 (캡션)</label>
+          <textarea id="c-134e0588af51" class="caption">일본 KFC가 오리지널 치킨을 도시락 형태로 내놨다. 이름은 &#39;켄타 라이스 박스&#39;다. 켄타는 켄터키를 일본식으로 발음한 &#39;켄타키&#39;의 줄임말이고, 일본에서는 맥도날드를 &#39;마쿠도&#39;, 스타벅스를 &#39;스타바&#39;라고 부르듯 KFC에도 팬들의 애칭이 있다고 한다.
+
+이 메뉴의 콘셉트는 &#39;젓가락으로 먹을 수 있는 KFC 식사&#39;다. 상자를 열면 데리야키 소스를 바른 순살 오리지널 치킨이 먼저 보이고, 그 아래에 채 썬 양배추, 맨 밑에 닭육수로 지은 다키코미 고항이 깔려 있다. 다키코미 고항은 흰쌀을 다른 양념이나 재료와 함께 지어 맛이 배게 하는 일본 전통 요리다.
+
+판매처는 도쿄와 가나가와, 사이타마, 지바, 오사카, 효고의 일부 KFC 매장으로 한정돼 있다. 가격은 지역마다 다르며 690엔부터 시작한다. 취재진이 방문한 도쿄 도심 매장에서는 단품 740엔, 음료 세트 930엔이었다.
+
+소라뉴스24는 닭 풍미가 밥과 잘 어울려 아주 맛있다고 평가했다. 반면 양이 아주 크지는 않고, 위는 네모지고 아래는 둥근 상자 모양 때문에 젓가락으로 먹기 다소 불편해 숟가락이 더 낫겠다는 아쉬움도 전했다.
+
+일본 여행을 계획 중이라면 저장해 두고 판매 매장을 확인해 보자.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-134e0588af51">해시태그</label>
+          <input id="t-134e0588af51" type="text" class="tagsin" value="일본KFC 켄타라이스박스 다키코미고항 일본여행 일본음식" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/product-1112213506-01.jpg" alt="" width="56" height="56" loading="lazy"> 왼쪽에 KFC RICE BOX 케ンタ라이스 BOX 문구와 흰 종이 박스 일러스트, 오른쪽에 사람이 흰 사각 종이 용기를 들고 튀김 치킨 조각을 젓가락으로 집어 올리는 모습과 그 아래 밥이 보임 · japan.kfc.co.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/product-1112213506-02.jpg" alt="" width="56" height="56" loading="lazy"> 흰색 사각 종이 박스에 담긴 튀김 치킨 조각과 밥, 아래는 빨간색 KFC 패턴 포장. 상단에 &#39;점포·수량 한정&#39; 문구와 &#39;※국산 쌀을 사용하고 있습니다&#39; 문구가 있음 · ssnp.co.jp</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="2"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/134e0588af51/product-1112213506-03.jpg" alt="" width="56" height="56" loading="lazy"> 손에 든 흰색 포장 박스, 빨간 KFC 로고가 크게 찍혀 있고 쟁반 위에 놓인 모습 · soranews24.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 KFC가 켄타 라이스 박스를 판다</b>
+            <q>“Kenta creates a new way to enjoy its Original Recipe: with chopsticks!”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>켄타는 켄터키의 일본식 발음 &#39;켄타키&#39;의 줄임말이다</b>
+            <q>““Kenta Rice Box” might sound like an offering from a traditional Japanese restaurant, but Kenta is actually short for “Kentakki,” the Japanese pronunciation of “Kentucky,” as in Kentucky Fried Chicken.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>맥도날드는 마쿠도, 스타벅스는 스타바라는 애칭이 있고 KFC도 팬 애칭이 있다</b>
+            <q>“Yes, like McDonalds (“Makku” or “Makudo”) and Starbucks (“Sutaba”), KFC has become so popular in Japan that it’s got its own fan nickname, which is also a sign that there’s room for some special Japan-exclusive menu items tailored to local tastes, the newest of which is the Kenta Rice Box.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>설계 콘셉트는 젓가락으로 먹을 수 있는 KFC 식사다</b>
+            <q>“Part of the design concept for the Kenta Rice Box is to be “a KFC meal you can eat with chopsticks.””</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>KFC의 유명한 약속은 finger-lickin&#39; good이다</b>
+            <q>“This would seem to go against the chain’s well-known promise of being “finger-lickin’ good,” but we weren’t going to knock the Kenta Rice Box until we’d tried it, so that’s just what we headed out to do.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>치킨은 데리야키 소스를 바른 순살 오리지널 레시피 치킨이다</b>
+            <q>“Opening up the flaps, the first thing you’ll see is sliced pieces of boneless fried chicken slathered with a teriyaki sauce. This is actually still KFC Original Recipe chicken, though, so you get an internationalized mix of its familiar herbs and spices plus all the sweet and savory notes of teriyaki, which makes for a very tasty combination.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>치킨 아래에 채 썬 양배추, 그 아래에 밥이 있다</b>
+            <q>“Underneath the chicken is a layer of shredded cabbage, giving you some nice crisp texture, and underneath that is the rice.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다키코미 고항은 닭육수로 짓는다</b>
+            <q>“Fitting, for the Kenta Rice Box KFC Japan makes its takikomigohan with chicken broth.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다키코미 고항은 흰쌀을 다른 양념이나 재료와 함께 지어 맛이 배게 하는 일본 전통 요리다</b>
+            <q>“It’s takikomi gohan, a traditional Japanese dish made by cooking white rice in a pot together with other seasonings or ingredients, so that the additional flavor gets steeped in.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>도쿄와 가나가와, 사이타마, 지바, 오사카, 효고의 일부 매장에서만 판다</b>
+            <q>“Currently, the Kenta Rice Box is available only at select KFC Japan branches in Tokyo and the prefectures of Kanagawa, Saitama, Chiba, Osaka, and Hyogo (a full list can be found here), but luckily we didn’t have to go too far out of our way to find it for sale here in the capital.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가격은 지역마다 다르며 690엔부터, 도쿄 도심 매장은 단품 740엔 세트 930엔이다</b>
+            <q>“Prices also vary by region, starting at 690 yen (US$4.35), but the downtown Tokyo branch we got ours at was charging 740 yen for the Kenta Rice Box alone, or 930 yen as a combo with a drink.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>닭 풍미가 밥과 잘 어울려 아주 맛있다는 평가</b>
+            <q>“Though the takikomi gohan flavor isn’t particularly heavy, it is really good, giving the rice a delicious touch of meatiness that pairs very nicely with the pieces of fried chicken themselves.”</q>
+            <small>slide6 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>양이 크지 않고 상자 모양 때문에 젓가락으로 먹기 불편해 숟가락이 나을 수 있다</b>
+            <q>“Also, despite the design goal of being something you can eat with chopsticks, the unusual shape of the box, squared-off at the top but round at its base, actually makes it a little hard to eat with utensils, and we think a spoon might actually be the better equipment to use.”</q>
+            <small>slide6 · <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">KFC now sells takikomi gohan rice boxes in Japan, if you know where to look for them [Taste test]</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/6_1b2920.jpg?w=1200&amp;h=630&amp;crop=1"</li><li>2장: <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/0_326e2c.jpg"</li><li>3장: <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/2_21fcab.jpg?w=640"</li><li>4장: <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/7_dfbff9.jpg?w=640"</li><li>5장: <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/6_1b2920.jpg"</li><li>6장: <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/8_6fe208.jpg?w=640"</li><li>7장: <a href="https://soranews24.com/2026/11/13/kfc-now-sells-takikomi-gohan-rice-boxes-in-japan-if-you-know-where-to-look-for-them-taste-test/" target="_blank" rel="noopener">소라뉴스24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/9_f0f645.jpg?w=640"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-d7b73bebafb2" data-id="d7b73bebafb2">
+    <div class="head">
+      <h2>2. 일본 오다큐 신형 로망스카 80000형 초광폭 좌석</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/d7b73bebafb2/v1-01.jpg" alt="1장: 열차 좌석이 60cm???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/d7b73bebafb2/v1-02.jpg" alt="2장: 로망스카라는 이름의 뜻" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/d7b73bebafb2/v1-03.jpg" alt="3장: 운전석이 머리 위에" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/d7b73bebafb2/v1-04.jpg" alt="4장: 폭 60cm 팔꿈치 걱정 끝" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/d7b73bebafb2/v1-05.jpg" alt="5장: 물방울 모양 1.8m 창" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/d7b73bebafb2/v1-06.jpg" alt="6장: 일본 기차여행 계획한 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/d7b73bebafb2/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">열차 좌석 폭이 60cm라니, 일본 오다큐전철이 신형 특급 열차 80000형의 계획을 공개했다. 데뷔 예정 시기는 2029년 3월이다.
+
+이 열차에는 오다큐의 대표 이름인 로망스카가 붙는다. 이름은 가운데 팔걸이 없이 두 좌석이 붙은 &#39;로망스 시트&#39;에서 나왔다. 연인을 위한 열차라는 뜻은 아니라고 한다. 이후 오다큐가 관광객이 많은 특급 열차용으로 로망스카 상표를 등록했고, 지금은 신주쿠와 하코네, 에노시마 사이를 오가며 많은 관광객을 실어 나른다.
+
+로망스카가 철도 팬에게 인기 있는 이유는 전망 좌석이다. 기관사가 승객보다 높은 칸에 앉아 맨 앞줄의 시야가 가리지 않는다. 신형 80000형도 이 특징을 이어받는다. 차체는 청록색 마감에 &#39;물&#39;을 주제로 디자인된다.
+
+가장 눈에 띄는 건 좌석이다. 폭이 약 60cm로 일본 열차 가운데 가장 넓은 축에 들고, 일반 좌석은 280석이 넘는다. 한 칸에는 4인용 부스 좌석이 있어 소규모 일행이나 가족이 크기 1.8m의 물방울 모양 원형 창 옆에 앉을 수 있다. 유리는 바닥 가까이에서 천장까지 이어지고, 완만하게 휜 칸막이가 부스와 나머지 객실을 나눈다.
+
+기차 여행의 상상을 깨는 디자인이라 완성된 모습이 벌써 궁금해진다.
+
+출처: SoraNews24 (PR Times, 오다큐 보도자료 인용)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본여행 #일본열차 #로망스카 #하코네 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 이 신형 열차에 로망스카 이름이 붙는다는 주장</li><li>근거 등록 안 된 주장: 좌석이 다리를 뻗거나 일할 여유를 위해 설계됐다는 주장</li><li>근거 등록 안 된 주장: 출처가 SoraNews24이며 PR Times의 오다큐 보도자료를 인용했다는 주장</li>
+          <li>원문은 계획 단계의 신형 열차 소식이라 실제 사양은 변경될 수 있음</li><li>로망스카는 오다큐의 등록 상표이므로 로고·차량 사진은 사용하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-d7b73bebafb2-0">1장</label>
+          <textarea id="s-d7b73bebafb2-0" rows="6" data-slide="0">열차 좌석이
+**60cm**???
+---
+일본 오다큐전철이 2029년 3월 데뷔 예정인 신형 특급 열차 80000형의 계획을 공개했다. 좌석 폭이 일본 열차 중 가장 넓은 축에 든다.</textarea>
+          
+          <label class="f" for="s-d7b73bebafb2-1">2장</label>
+          <textarea id="s-d7b73bebafb2-1" rows="6" data-slide="1">로망스카라는
+이름의 뜻
+---
+로망스카라는 이름은 가운데 팔걸이 없이 두 좌석이 붙은 &#39;로망스 시트&#39;에서 나왔다. 연인이 둘만의 시간을 보내라고 만든 열차라는 뜻은 아니다.</textarea>
+          
+          <label class="f" for="s-d7b73bebafb2-2">3장</label>
+          <textarea id="s-d7b73bebafb2-2" rows="6" data-slide="2">운전석이
+**머리 위**에
+---
+로망스카는 기관사가 승객보다 높은 칸에 앉는 전망 좌석으로 철도 팬에게 인기가 많다. 맨 앞줄에서는 시야가 전혀 가리지 않는다. 신형 80000형도 이 구조를 이어받는다.</textarea>
+          
+          <label class="f" for="s-d7b73bebafb2-3">4장</label>
+          <textarea id="s-d7b73bebafb2-3" rows="6" data-slide="3">폭 **60cm**
+팔꿈치 걱정 끝
+---
+새 열차의 넓은 좌석은 폭이 약 60cm로, 일본 열차 가운데 가장 넓은 축에 든다. 다리를 뻗거나 일을 하기에 여유가 있도록 설계됐다. 일반 좌석은 280석이 넘는다.</textarea>
+          
+          <label class="f" for="s-d7b73bebafb2-4">5장</label>
+          <textarea id="s-d7b73bebafb2-4" rows="6" data-slide="4">**물방울** 모양
+1.8m 창
+---
+한 칸에는 4인용 부스 좌석이 놓이고, 그 옆에 크기 1.8m의 물방울 모양 원형 창이 달린다. 유리는 바닥 가까이에서 천장까지 이어진다.</textarea>
+          
+          <label class="f" for="s-d7b73bebafb2-5">6장</label>
+          <textarea id="s-d7b73bebafb2-5" rows="6" data-slide="5">일본 기차여행 계획한
+친구한테 보내기
+---
+넓은 좌석과 큰 물방울 창이 이번 소식의 핵심이다. 기차 좌석이 좁아 불편했던 친구라면 반가워할 소식</textarea>
+          
+          <label class="f" for="c-d7b73bebafb2">본문 (캡션)</label>
+          <textarea id="c-d7b73bebafb2" class="caption">열차 좌석 폭이 60cm라니, 일본 오다큐전철이 신형 특급 열차 80000형의 계획을 공개했다. 데뷔 예정 시기는 2029년 3월이다.
+
+이 열차에는 오다큐의 대표 이름인 로망스카가 붙는다. 이름은 가운데 팔걸이 없이 두 좌석이 붙은 &#39;로망스 시트&#39;에서 나왔다. 연인을 위한 열차라는 뜻은 아니라고 한다. 이후 오다큐가 관광객이 많은 특급 열차용으로 로망스카 상표를 등록했고, 지금은 신주쿠와 하코네, 에노시마 사이를 오가며 많은 관광객을 실어 나른다.
+
+로망스카가 철도 팬에게 인기 있는 이유는 전망 좌석이다. 기관사가 승객보다 높은 칸에 앉아 맨 앞줄의 시야가 가리지 않는다. 신형 80000형도 이 특징을 이어받는다. 차체는 청록색 마감에 &#39;물&#39;을 주제로 디자인된다.
+
+가장 눈에 띄는 건 좌석이다. 폭이 약 60cm로 일본 열차 가운데 가장 넓은 축에 들고, 일반 좌석은 280석이 넘는다. 한 칸에는 4인용 부스 좌석이 있어 소규모 일행이나 가족이 크기 1.8m의 물방울 모양 원형 창 옆에 앉을 수 있다. 유리는 바닥 가까이에서 천장까지 이어지고, 완만하게 휜 칸막이가 부스와 나머지 객실을 나눈다.
+
+기차 여행의 상상을 깨는 디자인이라 완성된 모습이 벌써 궁금해진다.
+
+출처: SoraNews24 (PR Times, 오다큐 보도자료 인용)</textarea>
+          <label class="f" for="t-d7b73bebafb2">해시태그</label>
+          <input id="t-d7b73bebafb2" type="text" class="tagsin" value="#일본여행 #일본열차 #로망스카 #하코네 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오다큐전철이 차세대 특급 열차 80000형 계획을 공개했고 2029년 3월 데뷔 예정이다</b>
+            <q>“Odakyu Electric Railway recently unveiled plans for its next-generation limited express train, the Type 80000, which is due to debut in March 2029.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>로망스카 이름은 가운데 팔걸이 없는 두 좌석 &#39;로망스 시트&#39;에서 유래했다</b>
+            <q>“Instead, the name derives from ‘romance seats’, the type of paired seating with no middle armrest to separate the two chairs.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>로망스카는 연인이 사적인 시간을 보내라고 만든 서비스가 아니다</b>
+            <q>“Despite what the name might imply, the Romancecar service is not targeted at young lovers hoping to get some quick private time as they hurtle along the tracks.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오다큐가 관광객이 많은 특급 열차용으로 로망스카 상표를 등록했다</b>
+            <q>“Other train companies started to use the name, but Odakyu later went on to register the trademark Romancecar for their tourist-heavy limited express trains.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>로망스카는 신주쿠와 하코네, 에노시마 사이로 관광객을 실어 나른다</b>
+            <q>“Now the Romancecar fleet can be seen shipping thousands of tourists back and forth between Shinjuku and popular sightseeing destinations of Hakone, the hot spring haven with stunning views of Mt. Fuji, and the coastal sights of Enoshima.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기관사가 승객 위 높은 칸에 앉는 전망 좌석 덕에 맨 앞줄 시야가 가리지 않아 철도 팬에게 인기다</b>
+            <q>“One thing that makes these trains popular among railway enthusiasts is its observation seating, where the driver sits in a raised compartment above the passengers, allowing for the front row to have a completely unobstructed view of the countryside rushing by.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>80000형도 전망 좌석 구조를 이어받는다</b>
+            <q>“The upcoming Type 80000 will embrace this feature, along with a couple of extra design decisions to make travel more enjoyable for its passengers.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>차체는 청록색 마감이며 &#39;물&#39;을 주제로 디자인된다</b>
+            <q>“The car bodies will sport a blue-green finish and their design will be centered around the theme of ‘water.’”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>좌석 폭은 약 60cm로 일본 열차 중 가장 넓은 축에 든다</b>
+            <q>“Measuring roughly 60 centimeters across (23.6 inches), and among the widest on any Japanese train, these seats are designed so you can stretch out, work, or simply exist without getting intimately familiar with your neighbor’s elbow.”</q>
+            <small>slide1, slide4, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일반 좌석은 280석이 넘는다</b>
+            <q>“The new model has over 280 standard seats.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 칸에 4인용 부스가 있고 옆에 1.8m 물방울 모양 원형 창이 있다</b>
+            <q>“For small groups or families, one car will feature four-person booths situated beside large, 1.8-meter (70.9-inch) circular windows shaped like water droplets.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유리가 바닥 가까이부터 천장까지 이어지고 휜 칸막이가 부스를 나눈다</b>
+            <q>“With glass stretching from almost floor to ceiling, and gently curved partitions that separate the booths from the rest of the carriage, the booth seats will allow you and your group to focus on all of nature’s beauty as it rolls past the window.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">Japan’s upcoming Romancecar train seeks to end intimacy with its super-wide seats</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/sub5.jpg"</li><li>2장: <a href="https://en.wikipedia.org/wiki/Romancecar" target="_blank" rel="noopener">Wikipedia / </a> — "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Model_3000_SE_of_Odakyu_Electric_Railway.JPG/1280px-Model_3000_SE_of_Odakyu_Electric_Railway.JPG?utm_source=en.wikipedia.org&amp;utm_campaign=index&amp;utm_content=thumbnail"</li><li>3장: <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/sub2_44416c.jpg?w=640"</li><li>4장: <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/sub6.jpg?w=640"</li><li>5장: <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/sub7.jpg?w=640"</li><li>6장: <a href="https://soranews24.com/2026/11/12/japans-upcoming-romancecar-train-seeks-to-end-intimacy-with-its-super-wide-seats/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/sub5.jpg?w=1200&amp;h=630&amp;crop=1"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-0b6aedda60f9" data-id="0b6aedda60f9">
+    <div class="head">
+      <h2>3. JWST, 40년 전 예측된 H3+ 금지된 빛 첫 포착</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 21
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-01.jpg" alt="1장: 40년 묵은 예측 드디어 포착?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-02.jpg" alt="2장: 우주를 만든 분자의 정체" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-03.jpg" alt="3장: 빛이 나올 리 없던 분자" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-04.jpg" alt="4장: 아기 별의 분노 폭발 속" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-05.jpg" alt="5장: 선 26개, 72시그마" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-06.jpg" alt="6장: 아직 남은 숙제 왜 이렇게 밝지?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-07.jpg" alt="7장: 천문학 덕후 친구 태그해서 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261113-am-e58a30138007/0b6aedda60f9/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">40년 전 계산으로만 존재하던 빛이 마침내 관측됐다. 제임스 웹 우주망원경이 H3+ 분자가 회전하며 내는 &#39;금지된&#39; 빛을 처음으로 포착했다. 이 분자는 우주 가스 화학의 토대로 꼽혀 &#39;우주를 만든 분자&#39;라고도 불린다.
+
+H3+는 정삼각형 모양이라 전하가 고르게 퍼져 있어 회전만으로는 빛을 내기 어렵다고 여겨졌다. 그런데 1986년 시카고대의 두 천체물리학자가 원심력으로 모양이 살짝 일그러지면 아주 희미한 빛을 낼 수 있다고 계산했다. 이 신호는 너무 약해 실험실에서도 확인되지 않았다.
+
+존스홉킨스대 데이비드 뉴펠드가 이끄는 연구팀은 웹이 관측한 HH 168 자료를 살폈고, 예측된 파장과 일치하는 선을 26개 찾아냈다. 가장 강한 선은 72시그마를 기록했다. 같은 신호는 HH 211의 기존 관측 자료에서도 나타났다.
+
+다만 충격파 모델 하나는 이 신호를 5~6배 낮게 예측해, 왜 이렇게 밝은지는 더 연구가 필요하다. 이 연구는 천체물리학 저널 레터스에 게재가 승인됐다.
+
+출처: ScienceAlert, arXiv</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#제임스웹 #우주 #천문학 #과학뉴스 #H3</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 관측된 가스가 수천 광년 떨어져 있다는 주장</li><li>근거 등록 안 된 주장: 출처로 ScienceAlert와 arXiv를 표기한 부분</li>
+          <li>arXiv 프리프린트 단계의 결과로 동료 심사 전 내용이며 학술지 게재 승인 상태</li><li>충격파 모델이 신호 밝기를 완전히 설명하지 못해 원인은 추가 연구 필요</li><li>원문 발행일이 2026년으로 표기되어 있어 확인 필요</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-0b6aedda60f9-0">1장</label>
+          <textarea id="s-0b6aedda60f9-0" rows="6" data-slide="0">40년 묵은 예측
+드디어 **포착**?!
+---
+제임스 웹 우주망원경이 1986년에 예측됐지만 실험실에서도 본 적 없던 H3+ 분자의 빛을 처음 포착했다.</textarea>
+          
+          <label class="f" for="s-0b6aedda60f9-1">2장</label>
+          <textarea id="s-0b6aedda60f9-1" rows="6" data-slide="1">우주를 만든
+분자의 **정체**
+---
+H3+는 수소 원자핵 세 개가 전자 두 개를 나눠 가진 분자다. 거의 모든 우주 가스 화학의 토대라 &#39;우주를 만든 분자&#39;로도 불린다.</textarea>
+          
+          <label class="f" for="s-0b6aedda60f9-2">3장</label>
+          <textarea id="s-0b6aedda60f9-2" rows="6" data-slide="2">빛이 나올 리
+**없던** 분자
+---
+H3+는 정삼각형이라 돌아도 전하가 고르게 퍼져 있어 빛을 내기 어렵다고 여겨졌다. 하지만 1986년 두 천체물리학자가 원심력으로 모양이 일그러져 아주 희미한 빛을 낼 수 있다고 계산했다.</textarea>
+          
+          <label class="f" for="s-0b6aedda60f9-3">4장</label>
+          <textarea id="s-0b6aedda60f9-3" rows="6" data-slide="3">아기 별의
+**분노** 폭발 속
+---
+웹은 적외선으로 먼지를 뚫고 갓 태어난 별의 제트가 만든 천체 HH 168을 관측했다. 충격파로 달궈진 가스 속에서 예측과 같은 파장의 희미한 선들이 나타났다.</textarea>
+          
+          <label class="f" for="s-0b6aedda60f9-4">5장</label>
+          <textarea id="s-0b6aedda60f9-4" rows="6" data-slide="4">선 26개,
+**72시그마**
+---
+연구팀이 확인한 선은 26개이며, 모두 높은 통계적 신뢰도로 검출됐다. 가장 강한 선은 72시그마를 기록해, 존재를 의심할 여지가 거의 없는 수치였다.</textarea>
+          
+          <label class="f" for="s-0b6aedda60f9-5">6장</label>
+          <textarea id="s-0b6aedda60f9-5" rows="6" data-slide="5">아직 남은 **숙제**
+왜 이렇게 밝지?
+---
+한 충격파 모델은 H3+ 신호를 5~6배 낮게 예측해 이유를 더 연구해야 한다. 다른 천체 HH 211의 기존 관측 자료에서도 같은 신호가 발견됐다.</textarea>
+          
+          <label class="f" for="s-0b6aedda60f9-6">7장</label>
+          <textarea id="s-0b6aedda60f9-6" rows="6" data-slide="6">**천문학** 덕후 친구
+태그해서 보내기
+---
+40년 전에 이루어진 계산이 맞았음을 웹 망원경이 직접 확인한 소식. 우주나 별 이야기를 좋아하는 친구와 함께 보기 좋은 과학 뉴스.</textarea>
+          
+          <label class="f" for="c-0b6aedda60f9">본문 (캡션)</label>
+          <textarea id="c-0b6aedda60f9" class="caption">40년 전 계산으로만 존재하던 빛이 마침내 관측됐다. 제임스 웹 우주망원경이 H3+ 분자가 회전하며 내는 &#39;금지된&#39; 빛을 처음으로 포착했다. 이 분자는 우주 가스 화학의 토대로 꼽혀 &#39;우주를 만든 분자&#39;라고도 불린다.
+
+H3+는 정삼각형 모양이라 전하가 고르게 퍼져 있어 회전만으로는 빛을 내기 어렵다고 여겨졌다. 그런데 1986년 시카고대의 두 천체물리학자가 원심력으로 모양이 살짝 일그러지면 아주 희미한 빛을 낼 수 있다고 계산했다. 이 신호는 너무 약해 실험실에서도 확인되지 않았다.
+
+존스홉킨스대 데이비드 뉴펠드가 이끄는 연구팀은 웹이 관측한 HH 168 자료를 살폈고, 예측된 파장과 일치하는 선을 26개 찾아냈다. 가장 강한 선은 72시그마를 기록했다. 같은 신호는 HH 211의 기존 관측 자료에서도 나타났다.
+
+다만 충격파 모델 하나는 이 신호를 5~6배 낮게 예측해, 왜 이렇게 밝은지는 더 연구가 필요하다. 이 연구는 천체물리학 저널 레터스에 게재가 승인됐다.
+
+출처: ScienceAlert, arXiv</textarea>
+          <label class="f" for="t-0b6aedda60f9">해시태그</label>
+          <input id="t-0b6aedda60f9" type="text" class="tagsin" value="#제임스웹 #우주 #천문학 #과학뉴스 #H3" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>H3+의 회전에서 나오는 빛은 1986년부터 예측됐지만 실험실을 포함한 모든 탐색에서 발견되지 않았다</b>
+            <q>“But a particular kind of light it should emit as it rotates, predicted since 1986, has eluded every search – including attempts to observe it in laboratory settings.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>천문학자들이 우주 어디에서도 관측된 적 없는 빛을 H3+에서 처음 포착했다</b>
+            <q>“For the first time, astronomers had caught the molecule emitting light that had never been observed anywhere in the Universe – and not just a small amount.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>H3+는 수소 원자핵 세 개가 전자 두 개를 나눠 가진 분자다</b>
+            <q>“It consists of three hydrogen nuclei chunked together, sharing just two electrons between them.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>H3+는 거의 모든 우주 가스 화학의 토대다</b>
+            <q>“It&#39;s the foundation for almost all gas-phase interstellar chemistry – including the formation of complex organic molecules that make up the ingredients for life.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>H3+는 &#39;우주를 만든 분자&#39;로 불린다</b>
+            <q>“Its name is the trihydrogen cation (H3+), and it&#39;s so important that it&#39;s often referred to as &#34;the molecule that made the Universe.&#34;”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>H3+는 정삼각형 모양이라 허용된 순수 회전 스펙트럼이 없다</b>
+            <q>“The shape they form is an equilateral triangle – which means the molecule has no permanent dipole moment and no allowed pure rotational spectrum.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>회전하는 H3+는 전하가 고르게 분포되어 있다</b>
+            <q>“That means that, as the molecule spins, its electrical charge remains evenly distributed, with no shifting imbalance to generate the electromagnetic radiation that molecules ordinarily emit as they rotate.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1986년 두 천체물리학자가 H3+가 회전하며 아주 희미한 빛을 낼 수 있다고 계산했다</b>
+            <q>“Even so, in 1986, astrophysicists Fu-Shih Pan and Takeshi Oka of the University of Chicago calculated that trihydrogen should be able to emit a very faint amount of light as it rotates.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>원심력이 대칭 모양을 살짝 일그러뜨린다</b>
+            <q>“As the molecule spins, centrifugal forces distort its perfectly symmetrical shape ever so slightly.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>웹이 쓰는 적외선은 먼지를 더 잘 뚫는다</b>
+            <q>“The infrared light that the telescope is attuned to penetrates obscuring dust more effectively than visible light, allowing it to peer into these turbulent stellar nurseries.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>허빅-아로 천체는 갓 태어난 별의 격렬한 분출에서 생긴다</b>
+            <q>“Herbig-Haro objects are some of the most spectacular phenomena in the galaxy, born from the violent outbursts of baby stars.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뉴펠드 연구팀이 HH 168의 웹 관측 자료를 살폈다</b>
+            <q>“But when Neufeld and his colleagues started examining JWST&#39;s observations of an object named Herbig-Haro 168, or HH 168, something was a little peculiar.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뜨거운 충격파 가스의 적외선 방출 속에 아주 희미한 스펙트럼 선들이 있었다</b>
+            <q>“Buried among the infrared emissions from the hot, shocked gas were a series of extraordinarily faint spectral lines.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>선들의 파장이 40년 전 계산된 H3+의 금지된 회전 전이와 일치했다</b>
+            <q>“And their wavelengths matched those of the forbidden rotational transitions of the trihydrogen cation, calculated by Pan and Oka 40 years earlier.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 26개의 선을 높은 통계적 신뢰도로 확인했고 가장 강한 선은 72시그마였다</b>
+            <q>“The team identified 26 distinct lines, all detected with high statistical confidence. The strongest of those lines registered a staggering 72 sigma – leaving virtually no doubt about the detection.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 충격파 모델은 H3+ 신호를 5~6배 낮게 예측했다</b>
+            <q>“One model did a good job of reproducing the emission from ordinary molecular hydrogen, but underestimated the trihydrogen signal by a factor of five or six.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>왜 그렇게 밝은지 알아내려면 더 많은 연구가 필요하다</b>
+            <q>“So more work needs to be done to figure out why the emission was so bright.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>HH 211의 기존 웹 관측 자료에서도 같은 신호가 발견됐다</b>
+            <q>“When the team examined archival JWST observations of another Herbig-Haro object, HH 211, they found the same telltale emission there, too.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>40년 전 예측이 옳았고 이를 확인할 민감한 도구가 부족했을 뿐이었다</b>
+            <q>“Pan and Oka have been right all this time – the thing lacking was the tool sensitive enough to confirm it.”</q>
+            <small>slide7 · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 데이비드 뉴펠드가 이끈 존스홉킨스대 연구팀이 수행했다</b>
+            <q>“Now, using the the JWST, a team of astronomers led by David Neufeld of Johns Hopkins University has finally detected that elusive light, shining from gas thousands of light-years away.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 천체물리학 저널 레터스에 게재가 승인됐다</b>
+            <q>“The research, which has been accepted for publication in The Astrophysical Journal Letters, is available on preprint server arXiv.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">JWST Detects a &#39;Forbidden&#39; Signal Never Before Seen in The Universe – Not Even in a Lab</a> (기사)</li><li><a href="https://www.energy.gov/science/bes/articles/forming-ion-made-universe" target="_blank" rel="noopener">Forming the Ion that Made the Universe</a> (1차 출처)</li><li><a href="https://arxiv.org/abs/2611.10122" target="_blank" rel="noopener">First detection of the forbidden rotational spectrum of H$_3^+$: JWST/MIRI observations of the shocked gas in HH 168</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:James_Webb_Space_Telescope_Mirror37.jpg" target="_blank" rel="noopener">NASA/MSFC/David Higginbotham/Emmett Give / Wikimedia Commons · Public domain</a> — "James Webb Space Telescope"</li><li>2장: <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/trihydrogen.png"</li><li>3장: <a href="https://pixabay.com/photos/ceiling-architecture-airport-lines-8802142/" target="_blank" rel="noopener">SwidaAlba / Pixabay</a> — "triangle pattern"</li><li>4장: <a href="https://www.sciencealert.com/jwst-detects-a-forbidden-signal-never-before-seen-in-the-universe-not-even-in-a-lab" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/cepheus.png"</li><li>5장: <a href="https://pixabay.com/photos/stock-trading-monitor-business-1863880/" target="_blank" rel="noopener">3844328 / Pixabay</a> — "data graph"</li><li>6장: <a href="https://pixabay.com/photos/sunset-lake-telescope-8437462/" target="_blank" rel="noopener">ChiemSeherin / Pixabay</a> — "telescope"</li><li>7장: <a href="https://pixabay.com/photos/sky-stars-galaxy-milky-way-night-6811874/" target="_blank" rel="noopener">Venrike / Pixabay</a> — "milky way"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-5e7ab67c67fa">
+    <div class="head">
+      <h2>S1. 스탠딩 데스크 1년 연구: 컴퓨터 43분 더, 불편감은 비슷</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 19 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-5e7ab67c67fa">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 스탠딩 데스크를 살까 고민하는 사무직에게 &#39;컴퓨터는 더 썼는데 불편감은 비슷했고, 서서 일한 시간은 아무도 안 쟀다&#39;는 반전을 보여주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">스탠딩 데스크는 &#39;덜 아픈 책상&#39;이 아니라 &#39;컴퓨터를 더 쓰게 되는 책상&#39;이었대
+직장인 1만 명 넘게 1년 지켜본 연구가 나옴
+근데 이 결과엔 함정이 꽤 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 높이조절 책상 쓴 사람들이 일반 책상 쓴 사람보다 하루 43분 더 컴퓨터를 활발하게 썼음. 근데 1년 뒤 불편감은 거의 비슷했음. 그럼 이 연구, 어떤 사람들을 본 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">171/500자</span></div>
+      <p class="tp-text">2/ 미국 캘리포니아 에너지 회사 직원 기록을 텍사스A&amp;M대랑 인디애나대 연구진이 뒤져본 거야. 1년 내내 같은 책상을 쓴 1만 145명 중 일반 책상 6,741명, 높이조절 책상 3,404명. 마우스·키보드를 30초 안에 써야 &#39;활동 중&#39;으로 쳤는데, 그럼 이 중에 진짜 서서 일한 사람은 얼마나 됐을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">3/ 그건 아무도 안 쟀음. 높이조절 책상이 &#39;있다&#39;는 것만 기록됐고, 논문이 인용한 다른 연구에선 이런 책상이 있어도 서서 쓰는 사람이 10% 미만이래. 그러니 이 그룹 상당수는 대부분 앉아 있었을 수도 있음. 그럼 불편감 차이는 어땠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">161/500자</span></div>
+      <p class="tp-text">4/ 불편감은 뻐근함·근육 피로·눈 피로를 말하고, 얼마나 자주 느꼈는지만 봤어. 한 달 시점엔 &#39;불편감 전혀 없음&#39;이 높이조절 쪽 30%, 일반 쪽 36%였는데 1년 뒤엔 격차가 2%포인트 아래로 줄었음. 저자들도 실제 차이는 무시할 만한 수준일 수 있다고 함. 그래서 한눈에 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">172/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 대상: 한 회사 직원 10,145명, 1년 기록
+- 높이조절 책상: 하루 컴퓨터 활동 43분 더
+- 불편감: 1년 뒤 거의 비슷
+- 한계: 연관일 뿐 원인은 아님, 서 있던 시간은 기록 없음
+- 연 8,900달러 효과는 가정한 계산이지 실제로 잰 게 아님
+그래서 챙겨갈 결론은?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">234/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 책상만 바꿔서 불편감이 달라졌다는 근거는 이 연구엔 거의 없었고, 연구진은 서느냐보다 &#39;몸에 맞는 책상&#39;이 더 중요했을 가능성을 짚었어.
+스탠딩 데스크 생기면 서서 일할 파 vs 그냥 앉아 있을 파?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>참가자 모두 한 회사에서 왔다 <small>애매 · 원문은 참가자가 한 회사에서 왔다고 하지만 본문에서는 이 주장이 생략되어 있어 근거 위치 정도만 맞다. 한 회사라는 점은 맞다.</small></li>
+        <li>근거 등록 안 된 주장: 연구가 2018년 텍사스A&amp;M대 IRB 승인(프로토콜 2018-0874)을 받았고 외부 자금 지원이 없었다는 내용은 본문에서 다루지 않았다.</li><li>근거 등록 안 된 주장: 일반 책상 사용자는 평균 2시간 57분, 높이조절 책상 사용자는 3시간 40분 활발히 컴퓨터를 썼다는 구체 수치가 본문에 없다.</li><li>근거 등록 안 된 주장: 높이조절 책상 사용자가 하루 약 860번 더 키를 누르고 타이핑 단어 수와 오타도 더 많았다는 내용이 본문에 없다.</li><li>근거 등록 안 된 주장: 높이조절 책상 그룹이 평균 43세, 일반 책상 그룹이 49세이고 남성 비율이 51%대 65%였으며 보정하지 않았다는 내용이 본문에 없다.</li><li>근거 등록 안 된 주장: 연구 대상 기록은 약 24,000명 규모 회사의 웰니스 프로그램에서 나왔다는 내용이 본문에 없다.</li><li>근거 등록 안 된 주장: 연구가 Theoretical and Applied Ergonomics 저널에 실렸다는 내용이 본문에 없다.</li><li>근거 등록 안 된 주장: 직원 약 15%가 연중 책상 유형을 바꿔 제외되었다는 내용이 본문에 없다.</li><li>근거 등록 안 된 주장: 표준 근무일 수와 시급 52.04달러로 추가 컴퓨터 시간을 약 170시간 가치로 환산했고 책상 비용이 3개월 안에 회수될 수 있다는 추정이 본문에 없다.</li><li>근거 등록 안 된 주장: 한 달 시점 격차의 원인으로 잘못된 책상 세팅, 미해결 의료 문제, 의료적 배려 책상 가능성이 본문에 없다.</li><li>근거 등록 안 된 주장: 연구가 본 것은 발생 빈도이며 통계적으로 유의하다고 불리지만 1만 명 규모에서는 작은 차이도 유의해질 수 있다는 점이 본문에 없다.</li><li>근거 등록 안 된 주장: 엔지니어처럼 클릭이나 타이핑 없이 컴퓨터를 쓰는 경우도 있어 마우스 클릭 증가가 곧 생산성 증가는 아니라는 점이 본문에 없다.</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>스탠딩 데스크는 &#39;덜 아픈 책상&#39;이 아니라 &#39;컴퓨터를 더 쓰게 되는 책상&#39;이었대</li><li>스탠딩 데스크 지르기 전에 &#39;서느냐&#39;보다 &#39;내 몸에 맞느냐&#39;부터 따져보라는 연구가 나옴</li><li>직장인 1만 명 넘게 1년 지켜봤더니 스탠딩 데스크 불편감, 일반 책상이랑 비슷했대</li><li>스탠딩 데스크 쓴 사람들이 하루 43분 더 컴퓨터를 썼대. 근데 서서 일해서 그런 게 아닐 수도 있음</li><li>사무직 책상 고민, &#39;서서 일하기&#39;가 아니라 &#39;내 몸에 맞는 책상&#39;부터 보라는 얘기가 나온 연구</li><li>&#39;서서 일하면 덜 뻐근하다&#39;는 말, 1만 명 데이터로 보면 좀 달라짐</li><li>스탠딩 데스크가 있어도 서서 쓰는 사람은 10%도 안 된다는 연구가 인용됐대</li><li>2,200달러짜리 높이조절 책상, 본전 뽑을 수 있을까? 연구진이 계산해봄</li><li>스탠딩 데스크 쓰는 사람들, 사실 대부분 앉아 있었을 수도 있다는 연구가 나옴</li><li>사무직이 하루 종일 마주하는 책상, 바꾸면 달라질까? 1년 치 기록이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>스탠딩 데스크 생기면 서서 일할 파 vs 그냥 앉아 있을 파?</li><li>회사에 높이조절 책상 있는 사람?</li><li>너라면 내 돈으로 스탠딩 데스크 살 거야?</li><li>일할 때 서서 하는 게 집중 잘 돼, 앉아서 하는 게 잘 돼?</li><li>책상 하나만 바꾼다면 높이조절 책상 vs 모니터 암, 뭐부터?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>사무직이 오래 앉아 있는 습관과 건강 연구</li><li>책상 높이·자세를 몸에 맞추면 달라지는지 본 연구</li><li>앉아 있다가 중간중간 일어나 움직이는 습관 연구</li><li>모니터를 오래 볼 때 눈 피로를 다룬 연구</li><li>재택근무 책상 환경과 불편감을 본 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>훅 2번·5번과 6/ 마지막 줄의 &#39;몸에 맞는 책상이 더 중요했을 가능성&#39;은 원문에서 저자들이 가능성 하나로 언급한 것이라 단정으로 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>참가자 모두 한 회사에서 왔다</b>
+          <q>“Employees who changed desk types during the year, about 15 percent of the data, were excluded, and all participants came from a single company.”</q>
+          <small>post5 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>높이조절 책상 사용자가 일반 책상 사용자보다 하루 43분 더 컴퓨터를 활발히 썼고 1년 뒤 불편감은 비슷했다</b>
+          <q>“Employees with sit-stand desks spent 43 more minutes a day actively using their computers than coworkers at fixed desks, yet their reported discomfort looked about the same by the end of the year.”</q>
+          <small>post0 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1만 명 넘는 사무직 1년 치 데이터를 봤다</b>
+          <q>“A year of data from more than 10,000 office workers delivered a narrower result.”</q>
+          <small>post0 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>높이조절 책상 사용자가 하루 43분 더 컴퓨터를 썼고 1년 뒤 불편감이 비슷했다</b>
+          <q>“Employees with sit-stand desks spent 43 more minutes a day actively using their computers than coworkers at fixed desks, yet their reported discomfort looked about the same by the end of the year.”</q>
+          <small>post1 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>텍사스A&amp;M대와 인디애나대 연구진이 캘리포니아 대형 에너지 회사의 컴퓨터 활동 기록과 설문을 분석했다</b>
+          <q>“Researchers at Texas A&amp;M University and Indiana University dug into computer activity logs and employee surveys from a large California energy company, then reported the results in the journal Theoretical and Applied Ergonomics.”</q>
+          <small>post2 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분석 대상은 10,145명이며 일반 책상 6,741명, 높이조절 책상 3,404명이다</b>
+          <q>“That left 10,145 people, 6,741 at traditional desks and 3,404 at sit-stand desks.”</q>
+          <small>post2 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>마우스나 키보드를 30초 안에 써야 활동 중으로 쳤다</b>
+          <q>“A computer counted as active only if the mouse or keyboard was used within a 30-second window, so a screen left glowing did not count.”</q>
+          <small>post2 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>아무도 얼마나 서 있었는지 기록하지 않았고 다른 연구에서는 서기를 택하는 직원이 10% 미만이다</b>
+          <q>“Nobody tracked how often anyone stood, and the paper cites other research finding that fewer than 10 percent of workers choose to stand at such desks.”</q>
+          <small>post3 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>높이조절 책상 그룹 상당수가 대부분 앉아 있었을 수 있다</b>
+          <q>“Many in the sit-stand group may have mostly sat.”</q>
+          <small>post3 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>불편감은 뻐근함, 근육 피로, 눈 피로를 뜻하며 빈도로 평가했다</b>
+          <q>“Discomfort meant soreness, muscle fatigue, or eye strain, and workers rated how often it hit, from never to four or more days a week.”</q>
+          <small>post4 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>불편감은 발생 빈도만 분석했다</b>
+          <q>“Only how often discomfort occurred was analyzed, not how bad it was or where it hurt.”</q>
+          <small>post4 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한 달 시점에 불편감이 전혀 없다는 비율이 높이조절 쪽 30%, 일반 쪽 36%였다</b>
+          <q>“At the one-month mark, sit-stand users were less likely to report no discomfort at all, 30 percent versus 36 percent.”</q>
+          <small>post4 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1년 뒤 격차가 2%포인트 아래로 줄었다</b>
+          <q>“By the end of the year, the gap had shrunk to under two points, with the share of sit-stand users reporting none edging up and the share of traditional desk users drifting down.”</q>
+          <small>post4 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>저자들은 불편감의 실제 차이가 무시할 만한 수준일 수 있다고 했다</b>
+          <q>“The authors themselves said the practical difference in discomfort “may be negligible by industry standards.””</q>
+          <small>post4 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>분석 대상은 한 회사 직원 10,145명이다</b>
+          <q>“That left 10,145 people, 6,741 at traditional desks and 3,404 at sit-stand desks.”</q>
+          <small>post5 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연관은 보여줄 수 있지만 원인은 보여줄 수 없는 과거 자료 분석이다</b>
+          <q>“This was a look back at existing company data, so it can reveal a link but not a cause.”</q>
+          <small>post5 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>서 있던 빈도는 기록되지 않았다</b>
+          <q>“Nobody tracked how often anyone stood, and the paper cites other research finding that fewer than 10 percent of workers choose to stand at such desks.”</q>
+          <small>post5 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연 8,900달러 효과는 가정한 추정치다</b>
+          <q>“A payoff of about $8,900 per worker each year is a hypothetical estimate, not a measured gain.”</q>
+          <small>post5 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책상만 바꿔서 의미 있는 차이가 난다는 근거는 이 연구에 거의 없다</b>
+          <q>“Workers hoping a sit-stand desk will ease workplace discomfort have little evidence here that switching desks alone will make a meaningful difference.”</q>
+          <small>post6 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>컴퓨터 사용 시간 차이는 서는 것보다 몸에 맞는 책상 때문일 수 있다는 저자들의 가능성</b>
+          <q>“The computer-time gap may owe more to a desk that fits a worker’s body, seated or standing, than to standing itself.”</q>
+          <small>post6 · <a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="5e7ab67c67fa">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/standing-desk-workers-more-minutes-computers/" target="_blank" rel="noopener">The Surprising Truth About Standing Desks After 10,000 Workers And One Full Year</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-50f6913cfe5b">
+    <div class="head">
+      <h2>S2. 대마 가끔 써도 뇌졸중 연관? AHA 44만 명 초록</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17 · 애매 3
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-50f6913cfe5b">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;가끔은 괜찮다&#39;는 통념을 뒤집는 결과: 가끔 쓴 쪽(40%)이 거의 매일 쓴 쪽(25%)보다 뇌졸중 경험 오즈가 더 높게 나왔다는 반전에, 예비 결과라는 한계를 같이 전한다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">대마 &#39;가끔은 괜찮다&#39;는 말, 이 연구 보면 좀 달라짐
+미국 성인 44만 명 조사에서 뇌졸중 수치가 가장 높게 나온 쪽이 의외였음
+많이 쓰는 사람이 아니라 &#39;가끔&#39; 쓰는 사람이었대 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">1/ 한 달에 1~5일 대마를 썼다고 답한 사람은 안 쓴 사람보다 뇌졸중 진단 경험이 있다고 답할 오즈가 40% 높았대. 거의 매일(16~30일) 쓴 쪽은 25%였고. 그럼 이 조사는 어떻게 한 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">2/ 미국 성인 442,906명, 평균 나이 49세. 2020~2024년 전화 설문 자료를 모은 거야. 대마 쓴 날 수와 심장질환·뇌졸중 진단 경험을 물었고, 흡연·음주·비만·당뇨 같은 위험요인은 보정했대. 그럼 전체 결과는 어땠을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">178/500자</span></div>
+      <p class="tp-text">3/ 연구 결과 요약 정리
+- 월 1~5일 사용: 심혈관질환 경험 오즈 23% 높음
+- 월 16~30일 사용: 21% 높음
+- 뇌졸중: 가끔 쓴 쪽 40%, 많이 쓴 쪽 25%
+- 심근경색: 사용 빈도와 통계적으로 유의한 연관 없음
+- 피우기·먹기 등 방식과 상관없이 같은 연관
+근데 이 패턴, 연구진은 어떻게 봤을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">4/ 연구진도 놀랐대. 많이 쓸수록 위험이 차근차근 오를 줄 알았는데 그렇지 않았다는 거야. 가끔 쓴 그룹도, 많이 쓴 그룹도 둘 다 높게 나왔다고. 그럼 이 결과, 그대로 믿어도 될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">5/ 아직 단정하긴 일러. 한 시점 조사라 대마가 원인인지는 못 가리고, 응답도 본인 기억에 의존했고, 대마의 세기나 양은 정보가 없었대. 학회 발표 초록이라 동료심사 전 예비 결과이기도 하고. 그래도 전문가 반응은 어땠을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">6/ 연구에 안 참여한 전문가(Page)는 담배를 같이 피우는 사람이 많아 가려내기 어려웠다고 했어. 대마는 그동안 &#39;무고한 구경꾼&#39; 취급이었는데 그렇지 않다고도 했고, 담배 없이도 위험요인일 수 있다는 두 번째 관찰연구래. 그래서 결론이 뭘까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">233/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 연구진 말은 심장·뇌졸중 예방 얘기할 때 담배·술처럼 대마도 같이 따져보자는 거야. 다만 원인이라고 확정된 건 아님.
+&#39;가끔이면 괜찮다&#39;는 말, 이 연구 보고도 믿을 만해? 믿는다 vs 더 봐야 한다
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>뇌졸중과의 연관이 가장 강했고 저빈도 사용 40%, 많이 쓴 쪽 25% <small>애매 · 뇌졸중 연관이 가장 강했고 저빈도 40%, 고빈도 25%는 원문과 일치. 그러나 &#39;많이 쓴 쪽이 가장 높게&#39;가 아니라 가장 강한 연관은 뇌졸중이라는 점이며, 카드의 &#39;가끔 쓴 쪽이 더 높다&#39;는 표현은 가능하나 &#39;쓴 사람이 더 위험&#39;처럼 해석되지 않도록 주의 필요.</small></li><li>피우기·먹기 등 방식과 상관없이 같은 결과와 연관 <small>애매 · 원문은 방식(흡연, 식용 등)과 무관하게 같은 결과라고 했으나, 카드는 &#39;같은 연관&#39;으로 적어 인과적 의미로 과하게 읽힐 수 있음. 연관성 수준임을 명시하는 것이 안전.</small></li><li>대마는 무고한 구경꾼 취급이었으나 그렇지 않고, 담배 없이도 위험요인일 수 있다는 두 번째 관찰연구 <small>애매 · 원문은 대마가 &#39;무고한 구경꾼으로 여겨졌으나 그렇지 않다&#39;고 하고 두 번째 관찰연구라고 했음. 다만 Page의 주장이라는 점과 &#39;가능성&#39; 수준임을 명시해야 하며 &#39;위험요인일 수 있다&#39;로 한정해야 정확함.</small></li>
+        <li>근거 등록 안 된 주장: 미국 성인 44만 명 조사에서 뇌졸중 수치가 가장 높게 나왔다는 의외성 주장은 원문 근거가 뇌졸중이 가장 강한 연관이라는 점과 맞지만 &#39;많이 쓰는 사람이 아니라 가끔 쓰는 사람&#39;이라는 비교 표현은 원문에 직접 없음</li><li>근거 등록 안 된 주장: 연구 대상 중 2020~2024년 기간에 16~24개 주만 참여하고 대마 문항이 선택 항목이었다는 점은 카드에 적히지 않았으나 조사 범위 관련 사실 주장은 아님</li><li>근거 등록 안 된 주장: 연구 대상은 &#39;44만 명&#39;이라고 했으나 카드 2번은 &#39;2020~2024년 전화 설문 자료를 모은&#39;이라고 기술하며 원문과 일치</li><li>근거 등록 안 된 주장: 대마 사용 빈도 구분 기준(1~5일, 16~30일)은 카드에 쓰였으나 원문상 6~15일 중간군도 존재한다는 사실은 생략됨</li><li>근거 등록 안 된 주장: 전문가 Page의 직함(Page II, 2020 AHA 대마 과학 성명서 작성 그룹 의장)에 대한 주장은 카드에 없음</li><li>근거 등록 안 된 주장: 2026년 11월 발표 및 AHA 학술대회 발표라는 시점 정보는 카드 본문에 명시되지 않음</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>대마 &#39;가끔은 괜찮다&#39;는 말, 이 연구 보면 좀 달라짐</li><li>가끔 쓰는 쪽이 거의 매일 쓰는 쪽보다 뇌졸중 수치가 더 높게 나온 연구가 있대</li><li>뇌졸중 수치가 &#39;많이 쓸수록&#39;이 아니라 &#39;가끔 쓰는 쪽&#39;에서 가장 높게 나왔대</li><li>미국 성인 44만 명 조사, 연구진이 &#39;예상과 달랐다&#39;고 한 이유</li><li>&#39;가끔 한두 번은 괜찮겠지&#39;라는 생각, 뇌졸중 얘기에선 안 통할 수도 있대</li><li>심장 건강 얘기할 때 담배·술만 말하지 말고 대마도 같이 따져보라는 연구가 나옴</li><li>뇌졸중 예방, 담배만 챙기지 말고 대마 사용도 같이 점검하라는 연구가 나옴</li><li>&#39;무고한 구경꾼&#39; 취급받던 대마, 전문가가 &#39;그렇지 않다&#39;고 한 이유</li><li>한 달에 1~5일만 써도 뇌졸중 경험 오즈가 40% 높았다는 연구, 한계도 같이 봄</li><li>가끔 쓰는 건 괜찮을 줄 알았는데 이 숫자 보면 생각이 좀 달라짐</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>&#39;가끔이면 괜찮다&#39;는 말, 이 연구 보고도 믿을 만해? 믿는다 vs 더 봐야 한다</li><li>&#39;가끔 쓴 쪽이 더 높다&#39;는 결과, 이상하다 vs 그럴 수 있다 어느 쪽이야?</li><li>건강 뉴스에 &#39;학회 발표 초록&#39;이라고 붙으면 일단 거르는 편이야?</li><li>건강 연구 볼 때 표본 수부터 보는 편이야, 연구 방법부터 보는 편이야?</li><li>너라면 이런 연구, 주변에 공유할 거야 말 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>담배 안 피우는 사람 기준으로도 대마가 심장 위험요인일까? 두 번째 관찰연구 풀어보기</li><li>전문가들이 말한 &#39;대마도 담배처럼 진료 때 물어봐야 한다&#39;는 게 무슨 뜻일까</li><li>전화 설문(BRFSS) 연구는 어떤 한계가 있을까? 건강 연구 읽는 법</li><li>&#39;적당히 마시면 괜찮다&#39;는 술 통념, 연구는 뭐라고 할까</li><li>건강 연구에서 &#39;연관&#39;과 &#39;원인&#39;은 뭐가 다를까</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문은 오즈(odds) 비교인데 &#39;40% 높다&#39;가 위험이 40% 늘었다는 뜻으로 읽힐 수 있음. 본문에서 &#39;오즈&#39;와 &#39;진단 경험이 있다고 답한&#39;을 유지했는지 확인</li><li>대마를 다루는 글이라 사용 옹호나 권유로 읽히지 않는지, 정치적 논쟁으로 번지지 않는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>뇌졸중과의 연관이 가장 강했고 저빈도 사용 40%, 많이 쓴 쪽 25%</b>
+          <q>“The strongest link between cannabis use and cardiovascular disease was with stroke. Reported low-frequency cannabis use was associated with 40% higher odds of stroke, and heavy use had 25% higher odds of stroke.”</q>
+          <small>post0 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>피우기·먹기 등 방식과 상관없이 같은 결과와 연관</b>
+          <q>“Regardless of the form (smoked or edible, etc.), cannabis use, which includes marijuana, was associated with the same outcome.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>대마는 무고한 구경꾼 취급이었으나 그렇지 않고, 담배 없이도 위험요인일 수 있다는 두 번째 관찰연구</b>
+          <q>“In patients who use both, cannabis has always been considered an innocent bystander; however, this is not the case. This is the second observational study to suggest that cannabis exposure (without tobacco smoking) may be a potential risk factor for developing cardiovascular disease.”</q>
+          <small>post6 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 성인 44만 명 이상을 조사한 예비 연구</b>
+          <q>“New preliminary research involving more than 440,000 American adults has uncovered a concerning association between cannabis use and cardiovascular disease, particularly stroke.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261110042539.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>월 1~5일 사용은 뇌졸중 40%, 월 16~30일 사용은 25% 높은 오즈</b>
+          <q>“The strongest link between cannabis use and cardiovascular disease was with stroke. Reported low-frequency cannabis use was associated with 40% higher odds of stroke, and heavy use had 25% higher odds of stroke.”</q>
+          <small>post1 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 대상은 442,906명, 평균 49세, 전화 설문</b>
+          <q>“The study included 442,906 U.S. adults (average age of 49 years; approximately half women) surveyed by telephone as part of the BRFSS.”</q>
+          <small>post2 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2020~2024년 BRFSS 자료를 분석</b>
+          <q>“The study analyzed 2020-2024 BRFSS data from states that included the optional marijuana module in their telephone surveys, with 16-24 states participating each year.”</q>
+          <small>post2 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>심장질환·뇌졸중 진단 경험을 물었음</b>
+          <q>“Participants were also asked whether they had previously been diagnosed with a heart attack, heart disease, heart-related chest pain or stroke.”</q>
+          <small>post2 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>흡연·음주·비만·당뇨 등 위험요인 보정</b>
+          <q>“The association between cannabis use and heart disease was calculated after adjusting for several heart disease risk factors, including demographics, tobacco smoking, alcohol use, obesity, diabetes, chronic kidney disease, physical inactivity, level of education and income.”</q>
+          <small>post2 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>월 1~5일 사용 시 심혈관질환 경험 오즈 23% 높음</b>
+          <q>“Compared with people who reported no cannabis use, those who reported using cannabis on 1 to 5 days per month had 23% higher odds of reporting a history of cardiovascular disease.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>월 16~30일 사용 시 심혈관질환 경험 오즈 21% 높음</b>
+          <q>“Heavy cannabis users, defined as those who reported using it for 16 to 30 days per month, had 21% higher odds of reporting a history of cardiovascular disease.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>심근경색은 사용 빈도와 통계적으로 유의한 연관 없음</b>
+          <q>“Researchers did not see a statistically significant association between the reported frequency of cannabis use and heart attack.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 많이 쓸수록 위험이 점차 오를 줄 알았지만 그렇지 않았고 저빈도·고빈도 모두 높았음</b>
+          <q>“We expected that the chances of heart disease would gradually rise as people used cannabis more often, but that wasn’t the case. Both low-use and heavy-use groups had higher odds of developing heart disease,”</q>
+          <small>post4 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한 시점 조사라 인과를 증명할 수 없음</b>
+          <q>“The study is limited by presenting associations from a single point in time, so it cannot prove that cannabis use causes heart disease.”</q>
+          <small>post5 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자기 보고 의존, 대마 세기·양 정보 없음</b>
+          <q>“In addition, it relied on participants’ self-reported information about their cannabis use and heart-disease diagnoses (making them subject to potential errors in memory), and the study did not have any information about the potency of the cannabis product used or the amount consumed.”</q>
+          <small>post5 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>학회 초록은 동료심사 전이며 예비 결과</b>
+          <q>“Abstracts presented at the American Heart Association’s scientific meetings are not peer-reviewed, and the findings are considered preliminary until published as a full manuscript in a peer-reviewed scientific journal.”</q>
+          <small>post5 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Page는 연구에 참여하지 않은 전문가</b>
+          <q>“Page is also a professor in the department of clinical pharmacy and the department of physical medicine/rehabilitation at the University of Colorado Skaggs School of Pharmacy and Pharmaceutical Sciences in Aurora, Colorado, and was not a part of this study.”</q>
+          <small>post6 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>담배를 같이 피우는 환자가 많아 문제를 흐리게 함</b>
+          <q>“Unfortunately, many patients who use cannabis may also smoke tobacco, which completely clouds the issue when addressing atherosclerotic cardiovascular disease risk.”</q>
+          <small>post6 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 심혈관 건강 대화에 담배·술처럼 대마도 포함하라고 함</b>
+          <q>“As cannabis use becomes more common, it is increasingly important that people and their healthcare professionals include it in conversations about cardiovascular health, just as they discuss tobacco, alcohol and other commonly used substances,”</q>
+          <small>post7 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>원인이라고 확정된 건 아님</b>
+          <q>“The study is limited by presenting associations from a single point in time, so it cannot prove that cannabis use causes heart disease.”</q>
+          <small>post7 · <a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="50f6913cfe5b">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261110042539.htm" target="_blank" rel="noopener">Even occasional marijuana use linked to 40% higher odds of stroke</a></li><li><a href="https://newsroom.heart.org/news/cannabis-use-linked-to-an-increased-risk-of-cardiovascular-disease-especially-strokes" target="_blank" rel="noopener">Cannabis use linked to an increased risk of cardiovascular disease, especially strokes</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261113-am";
+  const ORIGINAL = {"0b6aedda60f9": {"caption": "40\ub144 \uc804 \uacc4\uc0b0\uc73c\ub85c\ub9cc \uc874\uc7ac\ud558\ub358 \ube5b\uc774 \ub9c8\uce68\ub0b4 \uad00\uce21\ub410\ub2e4. \uc81c\uc784\uc2a4 \uc6f9 \uc6b0\uc8fc\ub9dd\uc6d0\uacbd\uc774 H3+ \ubd84\uc790\uac00 \ud68c\uc804\ud558\uba70 \ub0b4\ub294 \u0027\uae08\uc9c0\ub41c\u0027 \ube5b\uc744 \ucc98\uc74c\uc73c\ub85c \ud3ec\ucc29\ud588\ub2e4. \uc774 \ubd84\uc790\ub294 \uc6b0\uc8fc \uac00\uc2a4 \ud654\ud559\uc758 \ud1a0\ub300\ub85c \uaf3d\ud600 \u0027\uc6b0\uc8fc\ub97c \ub9cc\ub4e0 \ubd84\uc790\u0027\ub77c\uace0\ub3c4 \ubd88\ub9b0\ub2e4.\n\nH3+\ub294 \uc815\uc0bc\uac01\ud615 \ubaa8\uc591\uc774\ub77c \uc804\ud558\uac00 \uace0\ub974\uac8c \ud37c\uc838 \uc788\uc5b4 \ud68c\uc804\ub9cc\uc73c\ub85c\ub294 \ube5b\uc744 \ub0b4\uae30 \uc5b4\ub835\ub2e4\uace0 \uc5ec\uaca8\uc84c\ub2e4. \uadf8\ub7f0\ub370 1986\ub144 \uc2dc\uce74\uace0\ub300\uc758 \ub450 \ucc9c\uccb4\ubb3c\ub9ac\ud559\uc790\uac00 \uc6d0\uc2ec\ub825\uc73c\ub85c \ubaa8\uc591\uc774 \uc0b4\uc9dd \uc77c\uadf8\ub7ec\uc9c0\uba74 \uc544\uc8fc \ud76c\ubbf8\ud55c \ube5b\uc744 \ub0bc \uc218 \uc788\ub2e4\uace0 \uacc4\uc0b0\ud588\ub2e4. \uc774 \uc2e0\ud638\ub294 \ub108\ubb34 \uc57d\ud574 \uc2e4\ud5d8\uc2e4\uc5d0\uc11c\ub3c4 \ud655\uc778\ub418\uc9c0 \uc54a\uc558\ub2e4.\n\n\uc874\uc2a4\ud649\ud0a8\uc2a4\ub300 \ub370\uc774\ube44\ub4dc \ub274\ud3a0\ub4dc\uac00 \uc774\ub044\ub294 \uc5f0\uad6c\ud300\uc740 \uc6f9\uc774 \uad00\uce21\ud55c HH 168 \uc790\ub8cc\ub97c \uc0b4\ud3c8\uace0, \uc608\uce21\ub41c \ud30c\uc7a5\uacfc \uc77c\uce58\ud558\ub294 \uc120\uc744 26\uac1c \ucc3e\uc544\ub0c8\ub2e4. \uac00\uc7a5 \uac15\ud55c \uc120\uc740 72\uc2dc\uadf8\ub9c8\ub97c \uae30\ub85d\ud588\ub2e4. \uac19\uc740 \uc2e0\ud638\ub294 HH 211\uc758 \uae30\uc874 \uad00\uce21 \uc790\ub8cc\uc5d0\uc11c\ub3c4 \ub098\ud0c0\ub0ac\ub2e4.\n\n\ub2e4\ub9cc \ucda9\uaca9\ud30c \ubaa8\ub378 \ud558\ub098\ub294 \uc774 \uc2e0\ud638\ub97c 5~6\ubc30 \ub0ae\uac8c \uc608\uce21\ud574, \uc65c \uc774\ub807\uac8c \ubc1d\uc740\uc9c0\ub294 \ub354 \uc5f0\uad6c\uac00 \ud544\uc694\ud558\ub2e4. \uc774 \uc5f0\uad6c\ub294 \ucc9c\uccb4\ubb3c\ub9ac\ud559 \uc800\ub110 \ub808\ud130\uc2a4\uc5d0 \uac8c\uc7ac\uac00 \uc2b9\uc778\ub410\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert, arXiv", "hashtags": ["#\uc81c\uc784\uc2a4\uc6f9", "#\uc6b0\uc8fc", "#\ucc9c\ubb38\ud559", "#\uacfc\ud559\ub274\uc2a4", "#H3"], "slides": [["40\ub144 \ubb35\uc740 \uc608\uce21", "\ub4dc\ub514\uc5b4 **\ud3ec\ucc29**?!", "---", "\uc81c\uc784\uc2a4 \uc6f9 \uc6b0\uc8fc\ub9dd\uc6d0\uacbd\uc774 1986\ub144\uc5d0 \uc608\uce21\ub410\uc9c0\ub9cc \uc2e4\ud5d8\uc2e4\uc5d0\uc11c\ub3c4 \ubcf8 \uc801 \uc5c6\ub358 H3+ \ubd84\uc790\uc758 \ube5b\uc744 \ucc98\uc74c \ud3ec\ucc29\ud588\ub2e4."], ["\uc6b0\uc8fc\ub97c \ub9cc\ub4e0", "\ubd84\uc790\uc758 **\uc815\uccb4**", "---", "H3+\ub294 \uc218\uc18c \uc6d0\uc790\ud575 \uc138 \uac1c\uac00 \uc804\uc790 \ub450 \uac1c\ub97c \ub098\ub220 \uac00\uc9c4 \ubd84\uc790\ub2e4. \uac70\uc758 \ubaa8\ub4e0 \uc6b0\uc8fc \uac00\uc2a4 \ud654\ud559\uc758 \ud1a0\ub300\ub77c \u0027\uc6b0\uc8fc\ub97c \ub9cc\ub4e0 \ubd84\uc790\u0027\ub85c\ub3c4 \ubd88\ub9b0\ub2e4."], ["\ube5b\uc774 \ub098\uc62c \ub9ac", "**\uc5c6\ub358** \ubd84\uc790", "---", "H3+\ub294 \uc815\uc0bc\uac01\ud615\uc774\ub77c \ub3cc\uc544\ub3c4 \uc804\ud558\uac00 \uace0\ub974\uac8c \ud37c\uc838 \uc788\uc5b4 \ube5b\uc744 \ub0b4\uae30 \uc5b4\ub835\ub2e4\uace0 \uc5ec\uaca8\uc84c\ub2e4. \ud558\uc9c0\ub9cc 1986\ub144 \ub450 \ucc9c\uccb4\ubb3c\ub9ac\ud559\uc790\uac00 \uc6d0\uc2ec\ub825\uc73c\ub85c \ubaa8\uc591\uc774 \uc77c\uadf8\ub7ec\uc838 \uc544\uc8fc \ud76c\ubbf8\ud55c \ube5b\uc744 \ub0bc \uc218 \uc788\ub2e4\uace0 \uacc4\uc0b0\ud588\ub2e4."], ["\uc544\uae30 \ubcc4\uc758", "**\ubd84\ub178** \ud3ed\ubc1c \uc18d", "---", "\uc6f9\uc740 \uc801\uc678\uc120\uc73c\ub85c \uba3c\uc9c0\ub97c \ub6ab\uace0 \uac13 \ud0dc\uc5b4\ub09c \ubcc4\uc758 \uc81c\ud2b8\uac00 \ub9cc\ub4e0 \ucc9c\uccb4 HH 168\uc744 \uad00\uce21\ud588\ub2e4. \ucda9\uaca9\ud30c\ub85c \ub2ec\uad88\uc9c4 \uac00\uc2a4 \uc18d\uc5d0\uc11c \uc608\uce21\uacfc \uac19\uc740 \ud30c\uc7a5\uc758 \ud76c\ubbf8\ud55c \uc120\ub4e4\uc774 \ub098\ud0c0\ub0ac\ub2e4."], ["\uc120 26\uac1c,", "**72\uc2dc\uadf8\ub9c8**", "---", "\uc5f0\uad6c\ud300\uc774 \ud655\uc778\ud55c \uc120\uc740 26\uac1c\uc774\uba70, \ubaa8\ub450 \ub192\uc740 \ud1b5\uacc4\uc801 \uc2e0\ub8b0\ub3c4\ub85c \uac80\ucd9c\ub410\ub2e4. \uac00\uc7a5 \uac15\ud55c \uc120\uc740 72\uc2dc\uadf8\ub9c8\ub97c \uae30\ub85d\ud574, \uc874\uc7ac\ub97c \uc758\uc2ec\ud560 \uc5ec\uc9c0\uac00 \uac70\uc758 \uc5c6\ub294 \uc218\uce58\uc600\ub2e4."], ["\uc544\uc9c1 \ub0a8\uc740 **\uc219\uc81c**", "\uc65c \uc774\ub807\uac8c \ubc1d\uc9c0?", "---", "\ud55c \ucda9\uaca9\ud30c \ubaa8\ub378\uc740 H3+ \uc2e0\ud638\ub97c 5~6\ubc30 \ub0ae\uac8c \uc608\uce21\ud574 \uc774\uc720\ub97c \ub354 \uc5f0\uad6c\ud574\uc57c \ud55c\ub2e4. \ub2e4\ub978 \ucc9c\uccb4 HH 211\uc758 \uae30\uc874 \uad00\uce21 \uc790\ub8cc\uc5d0\uc11c\ub3c4 \uac19\uc740 \uc2e0\ud638\uac00 \ubc1c\uacac\ub410\ub2e4."], ["**\ucc9c\ubb38\ud559** \ub355\ud6c4 \uce5c\uad6c", "\ud0dc\uadf8\ud574\uc11c \ubcf4\ub0b4\uae30", "---", "40\ub144 \uc804\uc5d0 \uc774\ub8e8\uc5b4\uc9c4 \uacc4\uc0b0\uc774 \ub9de\uc558\uc74c\uc744 \uc6f9 \ub9dd\uc6d0\uacbd\uc774 \uc9c1\uc811 \ud655\uc778\ud55c \uc18c\uc2dd. \uc6b0\uc8fc\ub098 \ubcc4 \uc774\uc57c\uae30\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc640 \ud568\uaed8 \ubcf4\uae30 \uc88b\uc740 \uacfc\ud559 \ub274\uc2a4."]]}, "134e0588af51": {"caption": "\uc77c\ubcf8 KFC\uac00 \uc624\ub9ac\uc9c0\ub110 \uce58\ud0a8\uc744 \ub3c4\uc2dc\ub77d \ud615\ud0dc\ub85c \ub0b4\ub1a8\ub2e4. \uc774\ub984\uc740 \u0027\ucf04\ud0c0 \ub77c\uc774\uc2a4 \ubc15\uc2a4\u0027\ub2e4. \ucf04\ud0c0\ub294 \ucf04\ud130\ud0a4\ub97c \uc77c\ubcf8\uc2dd\uc73c\ub85c \ubc1c\uc74c\ud55c \u0027\ucf04\ud0c0\ud0a4\u0027\uc758 \uc904\uc784\ub9d0\uc774\uace0, \uc77c\ubcf8\uc5d0\uc11c\ub294 \ub9e5\ub3c4\ub0a0\ub4dc\ub97c \u0027\ub9c8\ucfe0\ub3c4\u0027, \uc2a4\ud0c0\ubc85\uc2a4\ub97c \u0027\uc2a4\ud0c0\ubc14\u0027\ub77c\uace0 \ubd80\ub974\ub4ef KFC\uc5d0\ub3c4 \ud32c\ub4e4\uc758 \uc560\uce6d\uc774 \uc788\ub2e4\uace0 \ud55c\ub2e4.\n\n\uc774 \uba54\ub274\uc758 \ucf58\uc149\ud2b8\ub294 \u0027\uc813\uac00\ub77d\uc73c\ub85c \uba39\uc744 \uc218 \uc788\ub294 KFC \uc2dd\uc0ac\u0027\ub2e4. \uc0c1\uc790\ub97c \uc5f4\uba74 \ub370\ub9ac\uc57c\ud0a4 \uc18c\uc2a4\ub97c \ubc14\ub978 \uc21c\uc0b4 \uc624\ub9ac\uc9c0\ub110 \uce58\ud0a8\uc774 \uba3c\uc800 \ubcf4\uc774\uace0, \uadf8 \uc544\ub798\uc5d0 \ucc44 \uc36c \uc591\ubc30\ucd94, \ub9e8 \ubc11\uc5d0 \ub2ed\uc721\uc218\ub85c \uc9c0\uc740 \ub2e4\ud0a4\ucf54\ubbf8 \uace0\ud56d\uc774 \uae54\ub824 \uc788\ub2e4. \ub2e4\ud0a4\ucf54\ubbf8 \uace0\ud56d\uc740 \ud770\uc300\uc744 \ub2e4\ub978 \uc591\ub150\uc774\ub098 \uc7ac\ub8cc\uc640 \ud568\uaed8 \uc9c0\uc5b4 \ub9db\uc774 \ubc30\uac8c \ud558\ub294 \uc77c\ubcf8 \uc804\ud1b5 \uc694\ub9ac\ub2e4.\n\n\ud310\ub9e4\ucc98\ub294 \ub3c4\ucfc4\uc640 \uac00\ub098\uac00\uc640, \uc0ac\uc774\ud0c0\ub9c8, \uc9c0\ubc14, \uc624\uc0ac\uce74, \ud6a8\uace0\uc758 \uc77c\ubd80 KFC \ub9e4\uc7a5\uc73c\ub85c \ud55c\uc815\ub3fc \uc788\ub2e4. \uac00\uaca9\uc740 \uc9c0\uc5ed\ub9c8\ub2e4 \ub2e4\ub974\uba70 690\uc5d4\ubd80\ud130 \uc2dc\uc791\ud55c\ub2e4. \ucde8\uc7ac\uc9c4\uc774 \ubc29\ubb38\ud55c \ub3c4\ucfc4 \ub3c4\uc2ec \ub9e4\uc7a5\uc5d0\uc11c\ub294 \ub2e8\ud488 740\uc5d4, \uc74c\ub8cc \uc138\ud2b8 930\uc5d4\uc774\uc5c8\ub2e4.\n\n\uc18c\ub77c\ub274\uc2a424\ub294 \ub2ed \ud48d\ubbf8\uac00 \ubc25\uacfc \uc798 \uc5b4\uc6b8\ub824 \uc544\uc8fc \ub9db\uc788\ub2e4\uace0 \ud3c9\uac00\ud588\ub2e4. \ubc18\uba74 \uc591\uc774 \uc544\uc8fc \ud06c\uc9c0\ub294 \uc54a\uace0, \uc704\ub294 \ub124\ubaa8\uc9c0\uace0 \uc544\ub798\ub294 \ub465\uadfc \uc0c1\uc790 \ubaa8\uc591 \ub54c\ubb38\uc5d0 \uc813\uac00\ub77d\uc73c\ub85c \uba39\uae30 \ub2e4\uc18c \ubd88\ud3b8\ud574 \uc21f\uac00\ub77d\uc774 \ub354 \ub0ab\uaca0\ub2e4\ub294 \uc544\uc26c\uc6c0\ub3c4 \uc804\ud588\ub2e4.\n\n\uc77c\ubcf8 \uc5ec\ud589\uc744 \uacc4\ud68d \uc911\uc774\ub77c\uba74 \uc800\uc7a5\ud574 \ub450\uace0 \ud310\ub9e4 \ub9e4\uc7a5\uc744 \ud655\uc778\ud574 \ubcf4\uc790.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["\uc77c\ubcf8KFC", "\ucf04\ud0c0\ub77c\uc774\uc2a4\ubc15\uc2a4", "\ub2e4\ud0a4\ucf54\ubbf8\uace0\ud56d", "\uc77c\ubcf8\uc5ec\ud589", "\uc77c\ubcf8\uc74c\uc2dd"], "slides": [["KFC\uac00 / **\ub3c4\uc2dc\ub77d**?!", "---", "\uc77c\ubcf8 KFC\uac00 \uc624\ub9ac\uc9c0\ub110 \uce58\ud0a8\uc744 \ub2e4\ud0a4\ucf54\ubbf8 \uace0\ud56d \uc704\uc5d0 \uc62c\ub9b0 \u0027\ucf04\ud0c0 \ub77c\uc774\uc2a4 \ubc15\uc2a4\u0027\ub97c \uc77c\ubd80 \ub9e4\uc7a5\uc5d0\uc11c \ud314\uace0 \uc788\ub2e4."], ["**\ucf04\ud0c0**\uac00 / \ubb34\uc2a8 \ub73b\uc774\uac8c", "---", "\ucf04\ud0c0\ub294 \ucf04\ud130\ud0a4\ub97c \uc77c\ubcf8\uc2dd\uc73c\ub85c \uc77d\uc740 \u0027\ucf04\ud0c0\ud0a4\u0027\uc758 \uc904\uc784\ub9d0\uc774\ub2e4. \ub9e5\ub3c4\ub0a0\ub4dc\uc758 \u0027\ub9c8\ucfe0\ub3c4\u0027, \uc2a4\ud0c0\ubc85\uc2a4\uc758 \u0027\uc2a4\ud0c0\ubc14\u0027\ucc98\ub7fc \ud32c\ub4e4\uc774 \ubd80\ub974\ub294 \uc560\uce6d\uc774 \uc0dd\uae38 \ub9cc\ud07c \uc77c\ubcf8\uc5d0\uc11c KFC\uac00 \uc778\uae30\ub77c\ub294 \uc124\uba85\uc774\ub2e4."], ["**\uc813\uac00\ub77d**\uc73c\ub85c / \uba39\ub294 KFC", "---", "\uc774 \uba54\ub274\uc758 \uc124\uacc4 \ucf58\uc149\ud2b8\ub294 \u0027\uc813\uac00\ub77d\uc73c\ub85c \uba39\uc744 \uc218 \uc788\ub294 KFC \uc2dd\uc0ac\u0027\ub2e4. \uc190\uac00\ub77d\uc744 \ucabd\ucabd \ube68\uac8c \ub9db\uc788\ub2e4\ub294 KFC\uc758 \uc720\uba85\ud55c \ubb38\uad6c\uc640\ub294 \uc5b4\uc6b8\ub9ac\uc9c0 \uc54a\uc544 \ubcf4\uc774\ub294 \ubc29\ud5a5\uc774\ub2e4."], ["\uce58\ud0a8 \uc544\ub798\uc5d4 / **\ub2ed\uc721\uc218 \ubc25**", "---", "\ub69c\uaed1\uc744 \uc5f4\uba74 \ub370\ub9ac\uc57c\ud0a4 \uc18c\uc2a4\ub97c \ubc14\ub978 \uc21c\uc0b4 \uc624\ub9ac\uc9c0\ub110 \uce58\ud0a8\uc774 \ubcf4\uc778\ub2e4. \uadf8 \ubc11\uc5d0\ub294 \ucc44 \uc36c \uc591\ubc30\ucd94\uac00 \uae54\ub824 \uc788\uace0, \uac00\uc7a5 \uc544\ub798\uc5d0 \ub2ed\uc721\uc218\ub85c \uc9c0\uc740 \ub2e4\ud0a4\ucf54\ubbf8 \uace0\ud56d\uc774 \ub4e4\uc5b4 \uc788\ub2e4."], ["**690\uc5d4**\ubd80\ud130 / \uc9c0\uc5ed \ud55c\uc815", "---", "\ub3c4\ucfc4\uc640 \uac00\ub098\uac00\uc640, \uc0ac\uc774\ud0c0\ub9c8, \uc9c0\ubc14, \uc624\uc0ac\uce74, \ud6a8\uace0\uc758 \uc77c\ubd80 \ub9e4\uc7a5\uc5d0\uc11c\ub9cc \ud310\ub2e4. \uac00\uaca9\uc740 690\uc5d4\ubd80\ud130\uc774\uace0, \ucde8\uc7ac\uc9c4\uc774 \uac04 \ub3c4\ucfc4 \ub3c4\uc2ec \ub9e4\uc7a5\uc740 \ub2e8\ud488 740\uc5d4, \uc74c\ub8cc \uc138\ud2b8 930\uc5d4\uc774\uc5c8\ub2e4."], ["\ub9db\uc740 \ud569\uaca9\uc778\ub370", "\uc591\uc774 \uc544\uc26c\uc6cc", "---", "\uc18c\ub77c\ub274\uc2a424\ub294 \ub2ed \ud48d\ubbf8\uac00 \ubc25\uacfc \uc798 \uc5b4\uc6b8\ub824 \uc544\uc8fc \ub9db\uc788\ub2e4\uace0 \ud3c9\ud588\ub2e4. \ub2e4\ub9cc \uc591\uc774 \ud06c\uc9c0 \uc54a\uace0, \uc0c1\uc790 \ubaa8\uc591 \ub54c\ubb38\uc5d0 \uc813\uac00\ub77d\ubcf4\ub2e4 \uc21f\uac00\ub77d\uc774 \ub098\uc744 \uc218 \uc788\ub2e4\ub294 \uc544\uc26c\uc6c0\ub3c4 \uaf3d\uc558\ub2e4."], ["\uc77c\ubcf8 \uc5ec\ud589 \uac00\uba74", "\uc774\uac70 **\uc800\uc7a5\uac01**", "---", "\uc77c\ubd80 \uc9c0\uc5ed \ub9e4\uc7a5\uc5d0\uc11c\ub9cc \ud30c\ub294 \uba54\ub274\ub77c \uc5ec\ud589 \uc804\uc5d0 \uc800\uc7a5\ud574 \ub450\uba74 \ucc3e\uc544\ubcf4\uae30 \uc88b\ub2e4. \ucf04\ud0c0 \ub77c\uc774\uc2a4 \ubc15\uc2a4\uac00 \ub418\ub294 \ub9e4\uc7a5\uc744 \ubbf8\ub9ac \ud655\uc778\ud574 \ubcfc \ub9cc\ud55c \uc774\uc57c\uae30"]]}, "d7b73bebafb2": {"caption": "\uc5f4\ucc28 \uc88c\uc11d \ud3ed\uc774 60cm\ub77c\ub2c8, \uc77c\ubcf8 \uc624\ub2e4\ud050\uc804\ucca0\uc774 \uc2e0\ud615 \ud2b9\uae09 \uc5f4\ucc28 80000\ud615\uc758 \uacc4\ud68d\uc744 \uacf5\uac1c\ud588\ub2e4. \ub370\ubdd4 \uc608\uc815 \uc2dc\uae30\ub294 2029\ub144 3\uc6d4\uc774\ub2e4.\n\n\uc774 \uc5f4\ucc28\uc5d0\ub294 \uc624\ub2e4\ud050\uc758 \ub300\ud45c \uc774\ub984\uc778 \ub85c\ub9dd\uc2a4\uce74\uac00 \ubd99\ub294\ub2e4. \uc774\ub984\uc740 \uac00\uc6b4\ub370 \ud314\uac78\uc774 \uc5c6\uc774 \ub450 \uc88c\uc11d\uc774 \ubd99\uc740 \u0027\ub85c\ub9dd\uc2a4 \uc2dc\ud2b8\u0027\uc5d0\uc11c \ub098\uc654\ub2e4. \uc5f0\uc778\uc744 \uc704\ud55c \uc5f4\ucc28\ub77c\ub294 \ub73b\uc740 \uc544\ub2c8\ub77c\uace0 \ud55c\ub2e4. \uc774\ud6c4 \uc624\ub2e4\ud050\uac00 \uad00\uad11\uac1d\uc774 \ub9ce\uc740 \ud2b9\uae09 \uc5f4\ucc28\uc6a9\uc73c\ub85c \ub85c\ub9dd\uc2a4\uce74 \uc0c1\ud45c\ub97c \ub4f1\ub85d\ud588\uace0, \uc9c0\uae08\uc740 \uc2e0\uc8fc\ucfe0\uc640 \ud558\ucf54\ub124, \uc5d0\ub178\uc2dc\ub9c8 \uc0ac\uc774\ub97c \uc624\uac00\uba70 \ub9ce\uc740 \uad00\uad11\uac1d\uc744 \uc2e4\uc5b4 \ub098\ub978\ub2e4.\n\n\ub85c\ub9dd\uc2a4\uce74\uac00 \ucca0\ub3c4 \ud32c\uc5d0\uac8c \uc778\uae30 \uc788\ub294 \uc774\uc720\ub294 \uc804\ub9dd \uc88c\uc11d\uc774\ub2e4. \uae30\uad00\uc0ac\uac00 \uc2b9\uac1d\ubcf4\ub2e4 \ub192\uc740 \uce78\uc5d0 \uc549\uc544 \ub9e8 \uc55e\uc904\uc758 \uc2dc\uc57c\uac00 \uac00\ub9ac\uc9c0 \uc54a\ub294\ub2e4. \uc2e0\ud615 80000\ud615\ub3c4 \uc774 \ud2b9\uc9d5\uc744 \uc774\uc5b4\ubc1b\ub294\ub2e4. \ucc28\uccb4\ub294 \uccad\ub85d\uc0c9 \ub9c8\uac10\uc5d0 \u0027\ubb3c\u0027\uc744 \uc8fc\uc81c\ub85c \ub514\uc790\uc778\ub41c\ub2e4.\n\n\uac00\uc7a5 \ub208\uc5d0 \ub744\ub294 \uac74 \uc88c\uc11d\uc774\ub2e4. \ud3ed\uc774 \uc57d 60cm\ub85c \uc77c\ubcf8 \uc5f4\ucc28 \uac00\uc6b4\ub370 \uac00\uc7a5 \ub113\uc740 \ucd95\uc5d0 \ub4e4\uace0, \uc77c\ubc18 \uc88c\uc11d\uc740 280\uc11d\uc774 \ub118\ub294\ub2e4. \ud55c \uce78\uc5d0\ub294 4\uc778\uc6a9 \ubd80\uc2a4 \uc88c\uc11d\uc774 \uc788\uc5b4 \uc18c\uaddc\ubaa8 \uc77c\ud589\uc774\ub098 \uac00\uc871\uc774 \ud06c\uae30 1.8m\uc758 \ubb3c\ubc29\uc6b8 \ubaa8\uc591 \uc6d0\ud615 \ucc3d \uc606\uc5d0 \uc549\uc744 \uc218 \uc788\ub2e4. \uc720\ub9ac\ub294 \ubc14\ub2e5 \uac00\uae4c\uc774\uc5d0\uc11c \ucc9c\uc7a5\uae4c\uc9c0 \uc774\uc5b4\uc9c0\uace0, \uc644\ub9cc\ud558\uac8c \ud71c \uce78\ub9c9\uc774\uac00 \ubd80\uc2a4\uc640 \ub098\uba38\uc9c0 \uac1d\uc2e4\uc744 \ub098\ub208\ub2e4.\n\n\uae30\ucc28 \uc5ec\ud589\uc758 \uc0c1\uc0c1\uc744 \uae68\ub294 \ub514\uc790\uc778\uc774\ub77c \uc644\uc131\ub41c \ubaa8\uc2b5\uc774 \ubc8c\uc368 \uad81\uae08\ud574\uc9c4\ub2e4.\n\n\ucd9c\ucc98: SoraNews24 (PR Times, \uc624\ub2e4\ud050 \ubcf4\ub3c4\uc790\ub8cc \uc778\uc6a9)", "hashtags": ["#\uc77c\ubcf8\uc5ec\ud589", "#\uc77c\ubcf8\uc5f4\ucc28", "#\ub85c\ub9dd\uc2a4\uce74", "#\ud558\ucf54\ub124", "#\ud574\uc678\uc774\uc288"], "slides": [["\uc5f4\ucc28 \uc88c\uc11d\uc774", "**60cm**???", "---", "\uc77c\ubcf8 \uc624\ub2e4\ud050\uc804\ucca0\uc774 2029\ub144 3\uc6d4 \ub370\ubdd4 \uc608\uc815\uc778 \uc2e0\ud615 \ud2b9\uae09 \uc5f4\ucc28 80000\ud615\uc758 \uacc4\ud68d\uc744 \uacf5\uac1c\ud588\ub2e4. \uc88c\uc11d \ud3ed\uc774 \uc77c\ubcf8 \uc5f4\ucc28 \uc911 \uac00\uc7a5 \ub113\uc740 \ucd95\uc5d0 \ub4e0\ub2e4."], ["\ub85c\ub9dd\uc2a4\uce74\ub77c\ub294", "\uc774\ub984\uc758 \ub73b", "---", "\ub85c\ub9dd\uc2a4\uce74\ub77c\ub294 \uc774\ub984\uc740 \uac00\uc6b4\ub370 \ud314\uac78\uc774 \uc5c6\uc774 \ub450 \uc88c\uc11d\uc774 \ubd99\uc740 \u0027\ub85c\ub9dd\uc2a4 \uc2dc\ud2b8\u0027\uc5d0\uc11c \ub098\uc654\ub2e4. \uc5f0\uc778\uc774 \ub458\ub9cc\uc758 \uc2dc\uac04\uc744 \ubcf4\ub0b4\ub77c\uace0 \ub9cc\ub4e0 \uc5f4\ucc28\ub77c\ub294 \ub73b\uc740 \uc544\ub2c8\ub2e4."], ["\uc6b4\uc804\uc11d\uc774", "**\uba38\ub9ac \uc704**\uc5d0", "---", "\ub85c\ub9dd\uc2a4\uce74\ub294 \uae30\uad00\uc0ac\uac00 \uc2b9\uac1d\ubcf4\ub2e4 \ub192\uc740 \uce78\uc5d0 \uc549\ub294 \uc804\ub9dd \uc88c\uc11d\uc73c\ub85c \ucca0\ub3c4 \ud32c\uc5d0\uac8c \uc778\uae30\uac00 \ub9ce\ub2e4. \ub9e8 \uc55e\uc904\uc5d0\uc11c\ub294 \uc2dc\uc57c\uac00 \uc804\ud600 \uac00\ub9ac\uc9c0 \uc54a\ub294\ub2e4. \uc2e0\ud615 80000\ud615\ub3c4 \uc774 \uad6c\uc870\ub97c \uc774\uc5b4\ubc1b\ub294\ub2e4."], ["\ud3ed **60cm**", "\ud314\uafc8\uce58 \uac71\uc815 \ub05d", "---", "\uc0c8 \uc5f4\ucc28\uc758 \ub113\uc740 \uc88c\uc11d\uc740 \ud3ed\uc774 \uc57d 60cm\ub85c, \uc77c\ubcf8 \uc5f4\ucc28 \uac00\uc6b4\ub370 \uac00\uc7a5 \ub113\uc740 \ucd95\uc5d0 \ub4e0\ub2e4. \ub2e4\ub9ac\ub97c \ubed7\uac70\ub098 \uc77c\uc744 \ud558\uae30\uc5d0 \uc5ec\uc720\uac00 \uc788\ub3c4\ub85d \uc124\uacc4\ub410\ub2e4. \uc77c\ubc18 \uc88c\uc11d\uc740 280\uc11d\uc774 \ub118\ub294\ub2e4."], ["**\ubb3c\ubc29\uc6b8** \ubaa8\uc591", "1.8m \ucc3d", "---", "\ud55c \uce78\uc5d0\ub294 4\uc778\uc6a9 \ubd80\uc2a4 \uc88c\uc11d\uc774 \ub193\uc774\uace0, \uadf8 \uc606\uc5d0 \ud06c\uae30 1.8m\uc758 \ubb3c\ubc29\uc6b8 \ubaa8\uc591 \uc6d0\ud615 \ucc3d\uc774 \ub2ec\ub9b0\ub2e4. \uc720\ub9ac\ub294 \ubc14\ub2e5 \uac00\uae4c\uc774\uc5d0\uc11c \ucc9c\uc7a5\uae4c\uc9c0 \uc774\uc5b4\uc9c4\ub2e4."], ["\uc77c\ubcf8 \uae30\ucc28\uc5ec\ud589 \uacc4\ud68d\ud55c", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\ub113\uc740 \uc88c\uc11d\uacfc \ud070 \ubb3c\ubc29\uc6b8 \ucc3d\uc774 \uc774\ubc88 \uc18c\uc2dd\uc758 \ud575\uc2ec\uc774\ub2e4. \uae30\ucc28 \uc88c\uc11d\uc774 \uc881\uc544 \ubd88\ud3b8\ud588\ub358 \uce5c\uad6c\ub77c\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

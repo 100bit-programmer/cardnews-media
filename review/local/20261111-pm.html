@@ -1,0 +1,2238 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.11 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.11 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-dd88cf5bebf8" data-jump="dd88cf5bebf8">1</a><a href="#post-b27d11bcb24c" data-jump="b27d11bcb24c">2</a><a href="#post-c1b0703eff59" data-jump="c1b0703eff59">3</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-dd88cf5bebf8" data-id="dd88cf5bebf8">
+    <div class="head">
+      <h2>1. 아타카마 사막 기록적 꽃 개화</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-01.jpg" alt="1장: 가장 메마른 곳이 꽃밭 됐다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-02.jpg" alt="2장: 몇 주 전만 해도 가장 건조한 곳" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-03.jpg" alt="3장: 수십 년 잠든 씨앗이 깼다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-04.jpg" alt="4장: 30년 만에 가장 넓고 선명" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-05.jpg" alt="5장: 꽃 따라 동물도 왔다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-06.jpg" alt="6장: 씨앗 모으고 공원도 넓힌다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-07.jpg" alt="7장: 자연 다큐 좋아하는 친구에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/dd88cf5bebf8/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">가장 메마른 곳이 꽃밭이 됐다는 소식입니다. 칠레 아타카마 사막에서 약 200종의 꽃이 피어, 이곳에서 기록된 것 중 가장 큰 개화일 수 있다고 합니다. 불과 몇 주 전까지만 해도 지구에서 가장 건조한 곳이었는데 말이죠.
+
+배경에는 올해의 슈퍼 엘니뇨가 있습니다. 기록적인 비가 내렸고 7~8월 홍수로 물이 땅속 깊이 스며들면서, 평소 계절성 비로는 닿지 않던 씨앗까지 깨웠다고 합니다. 모래 아래에서 씨앗과 덩이줄기가 수십 년간 물을 기다려 왔다는 설명도 있습니다.
+
+국립공원 관리자는 이곳을 비가 오면 살아 있는 기록이 되는 천연 씨앗 은행에 비유했고, 꽃이 한살이를 마칠 수 있는 시간은 대략 2~3개월뿐이라고 했습니다. 이번 개화는 최근 30년 사이 가장 넓고 선명한 슈퍼블룸으로 꼽히며, 노랑, 주황, 연보라, 보라색으로 물든다고 합니다.
+
+꽃과 함께 파충류, 곤충, 박쥐, 과나코 같은 동물이 찾아올 조건도 만들어지고 있습니다. 연구진은 꽃에서 나온 씨앗을 모아 미래 연구에 쓸 계획이고, 지역 주지사는 공원 확장과 유네스코 세계유산 등재를 추진하려 합니다.
+
+출처: Good News Network, NPR 인용 보도</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#아타카마사막 #칠레 #슈퍼블룸 #자연 #해외뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처 표기 &#39;Good News Network&#39;는 근거 목록에 대응하는 주장이 없다.</li><li>근거 등록 안 된 주장: &#39;NPR 인용 보도&#39;라는 출처 표기 자체가 근거 목록에 대응하는 주장이 없다.</li><li>근거 등록 안 된 주장: &#39;슈퍼블룸&#39;이라는 용어가 캘리포니아 용어를 차용한 것이라는 점은 본문에 없다.</li>
+          <li>원문 발행일(2026-11-10)과 인용된 트윗 날짜(2025-10-06)가 서로 달라 시점 확인이 필요함</li><li>&#39;가장 큰 개화&#39;는 원문에서 &#39;perhaps&#39;로 단정하지 않은 표현이라 카드에서도 단정을 피함</li><li>원문에 포함된 AFP 트윗·영상·NPR 사진은 사용하지 않음</li><li>동물 관련 내용은 NPR을 인용한 원문 서술이며 직접 확인된 내용이 아님</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-dd88cf5bebf8-0">1장</label>
+          <textarea id="s-dd88cf5bebf8-0" rows="6" data-slide="0">가장 메마른 곳이
+**꽃밭** 됐다고???
+---
+칠레 아타카마 사막에서 약 200종의 꽃이 한꺼번에 피었고, 이곳에서 기록된 것 중 가장 큰 꽃 잔치일 수 있다는 소식이 전해졌다.</textarea>
+          
+          <label class="f" for="s-dd88cf5bebf8-1">2장</label>
+          <textarea id="s-dd88cf5bebf8-1" rows="6" data-slide="1">몇 주 전만 해도
+**가장 건조한 곳**
+---
+아타카마는 불과 몇 주 전까지 지구에서 가장 건조한 곳으로 통했다. 올해 슈퍼 엘니뇨로 기록적인 비가 쏟아졌고, 7~8월 홍수로 물이 땅속 깊이 스며들었다.</textarea>
+          
+          <label class="f" for="s-dd88cf5bebf8-2">3장</label>
+          <textarea id="s-dd88cf5bebf8-2" rows="6" data-slide="2">수십 년 잠든
+**씨앗이 깼다**
+---
+모래 아래 씨앗과 덩이줄기는 물을 기다리며 수십 년간 휴면 상태로 있었다. 국립공원 관리자는 이곳을 비가 오면 살아나는 천연 씨앗 은행에 빗댔다.</textarea>
+          
+          <label class="f" for="s-dd88cf5bebf8-3">4장</label>
+          <textarea id="s-dd88cf5bebf8-3" rows="6" data-slide="3">**30년** 만에
+가장 넓고 선명
+---
+슈퍼블룸이라 불리는 이번 개화는 최근 30년 사이 가장 넓고 선명한 규모로 꼽힌다. 다만 이 사막에 평소보다 비가 많이 내리고 있어 기록이 오래가지 않을 수도 있다.</textarea>
+          
+          <label class="f" for="s-dd88cf5bebf8-4">5장</label>
+          <textarea id="s-dd88cf5bebf8-4" rows="6" data-slide="4">꽃 따라
+**동물도** 왔다
+---
+NPR에 따르면 계절성 비가 잦아지며 파충류, 곤충, 박쥐 같은 다양한 동물이 잠시나마 머물 조건이 만들어지고 있다. 라마의 친척인 과나코 같은 큰 동물도 포함된다.</textarea>
+          
+          <label class="f" for="s-dd88cf5bebf8-5">6장</label>
+          <textarea id="s-dd88cf5bebf8-5" rows="6" data-slide="5">씨앗 모으고
+**공원도** 넓힌다
+---
+연구진은 수분이 끝난 꽃에서 나온 씨앗을 앞으로의 연구를 위해 모으고 있다. 지역 주지사는 올해 꽃이 핀 곳까지 공원을 넓히고 유네스코 세계유산 등재도 추진하려 한다.</textarea>
+          
+          <label class="f" for="s-dd88cf5bebf8-6">7장</label>
+          <textarea id="s-dd88cf5bebf8-6" rows="6" data-slide="6">자연 다큐 좋아하는
+**친구에게** 보내기
+---
+메마른 사막이 기록적인 비 뒤에 약 200종의 꽃을 피웠다. 풍경 사진이나 자연 다큐를 좋아하는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-dd88cf5bebf8">본문 (캡션)</label>
+          <textarea id="c-dd88cf5bebf8" class="caption">가장 메마른 곳이 꽃밭이 됐다는 소식입니다. 칠레 아타카마 사막에서 약 200종의 꽃이 피어, 이곳에서 기록된 것 중 가장 큰 개화일 수 있다고 합니다. 불과 몇 주 전까지만 해도 지구에서 가장 건조한 곳이었는데 말이죠.
+
+배경에는 올해의 슈퍼 엘니뇨가 있습니다. 기록적인 비가 내렸고 7~8월 홍수로 물이 땅속 깊이 스며들면서, 평소 계절성 비로는 닿지 않던 씨앗까지 깨웠다고 합니다. 모래 아래에서 씨앗과 덩이줄기가 수십 년간 물을 기다려 왔다는 설명도 있습니다.
+
+국립공원 관리자는 이곳을 비가 오면 살아 있는 기록이 되는 천연 씨앗 은행에 비유했고, 꽃이 한살이를 마칠 수 있는 시간은 대략 2~3개월뿐이라고 했습니다. 이번 개화는 최근 30년 사이 가장 넓고 선명한 슈퍼블룸으로 꼽히며, 노랑, 주황, 연보라, 보라색으로 물든다고 합니다.
+
+꽃과 함께 파충류, 곤충, 박쥐, 과나코 같은 동물이 찾아올 조건도 만들어지고 있습니다. 연구진은 꽃에서 나온 씨앗을 모아 미래 연구에 쓸 계획이고, 지역 주지사는 공원 확장과 유네스코 세계유산 등재를 추진하려 합니다.
+
+출처: Good News Network, NPR 인용 보도</textarea>
+          <label class="f" for="t-dd88cf5bebf8">해시태그</label>
+          <input id="t-dd88cf5bebf8" type="text" class="tagsin" value="#아타카마사막 #칠레 #슈퍼블룸 #자연 #해외뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>칠레 아타카마 사막에서 약 200종의 꽃이 피었고 기록상 가장 큰 꽃 개화일 수 있다</b>
+            <q>“Chile’s Atacama Desert has erupted into perhaps the greatest floral display ever recorded there, with some 200 species blooming—some in areas where flowers haven’t been seen since the before new millennium.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아타카마는 몇 주 전까지 지구에서 가장 건조한 곳이었다</b>
+            <q>“Just a few weeks ago it was the driest place on Earth. Now it’s the most colorful.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 슈퍼 엘니뇨로 기록적인 비가 내렸고 7~8월 홍수로 물이 땅속 깊이 스며들어 평소 닿지 않던 씨앗을 깨웠다</b>
+            <q>“This year’s Super El Niño weather event dumped record rainfall onto the landscape. Through July and August, flooding allowed water to permeate deep into the soil, touching seeds that normally escape seasonal rains.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>씨앗과 덩이줄기가 모래 아래에서 수십 년간 물을 기다리며 휴면 상태였다</b>
+            <q>“It means that seeds and tubers have lain dormant under the sand waiting for the lifegiving touch of water for decades—a remarkable adaptation.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>국립공원 관리자가 이곳을 천연 씨앗 은행, 비가 오면 살아 있는 기록이 되는 곳이라고 표현했다</b>
+            <q>““This is a natural seed bank, a dormant archive that becomes a living one with the rains,” Moisés Grimberg, the administrator of Llanos de Challe National Park in the Atacama, told NPR, whose images of the flowering have to be seen to be believed.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 슈퍼블룸은 30년 사이 가장 넓고 선명하며, 평소보다 비가 많이 내려 기록이 오래가지 않을 수도 있다</b>
+            <q>“The resulting “superbloom,” to use the California term, is easily the widest-reaching and most vivid in 30 years. It’s a record that might not stand for long though, as the world’s driest, non-polar desert is seeing more rainfall than usual.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NPR에 따르면 계절성 비가 잦아지면서 파충류, 곤충, 박쥐, 과나코 등 다양한 동물이 잠시 머물 조건이 만들어지고 있다</b>
+            <q>“NPR says the increased frequency of the seasonal rains are creating conditions for more varied animal life—albeit transiently—such as reptiles, insects, bats and other pollinators, and even larger animals like the iconic guanaco, a relative of the lama.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진이 수분된 꽃에서 나온 씨앗을 미래 연구용으로 모으고 있다</b>
+            <q>“Ana Sandoval and her colleagues are busy collecting seeds generated by the now-pollinated flowers for future research.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지역 주지사가 올해 꽃이 핀 지역까지 공원을 확장하려 한다</b>
+            <q>“The local governor now wants to expand the park to cover areas in bloom this year.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주지사가 유네스코 세계유산 등재를 추진하며, 꽃은 노랑, 주황, 연보라, 보라색으로 물든다</b>
+            <q>“He’s also seeking UNESCO World Heritage-recognition for the natural wonder beneath the soil, just waiting to explode into hues of yellow, orange, lilac, and purple.”</q>
+            <small>slide6, caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>꽃이 한살이를 마칠 수 있는 시간은 대략 2~3개월이다</b>
+            <q>““But it’s a race against time — this brief biological window allows these species to complete their life cycle, which lasts roughly two to three months.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">World&#39;s Driest Desert Erupts into Record-Breaking Bloom Boom (LOOK)</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://commons.wikimedia.org/wiki/File:Abandoned_bus_in_San_Pedro_de_Atacama_(Unsplash).jpg" target="_blank" rel="noopener">Pablo Garcia Saldaña pagsa_ / Wikimedia Commons · CC0</a> — "Atacama Desert"</li><li>2장: <a href="https://pixabay.com/photos/namibia-africa-nature-safari-9792421/" target="_blank" rel="noopener">lisahamming / Pixabay</a> — "dry desert"</li><li>3장: <a href="https://pixabay.com/photos/stawberry-fruit-leaves-garden-4879794/" target="_blank" rel="noopener">Zlatano16 / Pixabay</a> — "seeds soil"</li><li>4장: <a href="https://www.goodnewsnetwork.org/worlds-driest-desert-erupts-into-record-breaking-bloom-boom-look/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/Juan-Cortez-Estay-Unsplash.jpg"</li><li>5장: <a href="https://commons.wikimedia.org/wiki/File:Lama_guanicoe_455869946.jpg" target="_blank" rel="noopener">Matias Cabezas / Wikimedia Commons · CC BY 4.0</a> — "guanaco"</li><li>6장: <a href="https://www.houstonpublicmedia.org/npr/2026/11/08/nx-s1-6023812/a-desert-stirs-to-life-chiles-atacama-erupts-in-its-biggest-floral-display-in-decades/" target="_blank" rel="noopener">NPR / Houston Public Media / </a> — "https://npr.brightspotcdn.com/dims3/default/strip/false/crop/4000x2667+0+0/resize/1200/quality/75/format/webp/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F65%2Fe4%2F2c7994b44d46a8856d83cc0cb22c%2Fdesert-bloom-t-merino-80.jpg"</li><li>7장: <a href="https://www.opb.org/article/2026/11/08/heavy-rains-awaken-a-hidden-world-beneath-chiles-atacama-desert/" target="_blank" rel="noopener">NPR / OPB / </a> — "https://opb-opb-prod.cdn.arcpublishing.com/resizer/v2/2EQ7WFJG7NNYHKXUSZVGEZ5PGU.png?auth=d5e86328f9ba26216dbb6204107a26bad60eb78f9b8f5ecfd9381ba54e0a9973&amp;width=1200&amp;height=675&amp;smart=true"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b27d11bcb24c" data-id="b27d11bcb24c">
+    <div class="head">
+      <h2>2. 고질라 마이너스 제로 상영 중 화장실 행렬 논란</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 14
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-01.jpg" alt="1장: 고질라 상영 중 화장실 대란?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-02.jpg" alt="2장: 개봉 첫날 9억 1천만 엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-03.jpg" alt="3장: 불만 1순위는 화장실 행렬" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-04.jpg" alt="4장: 인원수까지 세는 사람도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-05.jpg" alt="5장: 이유를 두고 추측이 분분" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-06.jpg" alt="6장: 참는 비법은 사탕과 찹쌀떡?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-07.jpg" alt="7장: 물 많이 마시는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/b27d11bcb24c/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">고질라 마이너스 제로를 보다가 화장실 행렬 때문에 화가 났다는 관객이 일본에서 화제다. 영화 자체는 비평가와 관객 모두에게 좋은 평가를 받았고, 개봉 첫날에만 9억 1천만 엔(약 580만 달러)을 벌어 일본 실사 영화 기록을 깼다. 그런데 일부 관객은 상영 중 화장실에 가는 사람이 너무 많다고 불만을 털어놨다.
+
+통로 쪽 좌석에 앉았다는 한 SNS 이용자는 영화가 시작되고 얼마 안 돼 사람들이 줄줄이 화장실에 가 몰입이 깨졌다고 적었다. 이 글에는 공감하는 사람이 다수였고, 상영 중 화장실에 간 사람 수를 직접 센 관객도 있었다. 상영 시간은 135분인데, 더 긴 172분짜리 영화보다 자리를 뜬 사람이 훨씬 많았다는 언급도 나왔다.
+
+이유로는 1950년대부터 이어진 시리즈라 나이 든 관객이 많다는 설, 공휴일 개봉작이라 평소 영화관을 잘 가지 않는 사람이 몰렸다는 설이 나왔다. 극중 파괴 장면이 실제 재난을 떠올리게 해 자리를 뜬 사람도 있을지 모른다는 추측도 있다. 한편 영화 전에 봉탄아메 사탕이나 다이후쿠를 먹으면 좋다는 댓글도 많았지만 과학적 근거는 없다.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#고질라 #일본영화관 #일본문화 #해외화제 #영화관람매너</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처가 SoraNews24라는 표기</li>
+          <li>가벼운 화제성 소재로, 화장실 이유에 대한 설명은 모두 추측이며 확인된 사실이 아님</li><li>봉탄아메·다이후쿠 효과는 과학적 근거가 없다고 원문이 밝힘</li><li>원문 사건 날짜(2026년 기사)와 영화 제목 표기는 원문을 따랐으므로 게시 전 재확인 권장</li><li>일본 영화관 관람 매너를 일반화하지 않도록 주의(원문도 &#39;일본 문화&#39;라 단정하지 않음)</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b27d11bcb24c-0">1장</label>
+          <textarea id="s-b27d11bcb24c-0" rows="6" data-slide="0">고질라 상영 중
+**화장실** 대란?!
+---
+일본 영화관에서 고질라 마이너스 제로를 보던 관객들이 상영 중 화장실에 가는 사람이 너무 많다며 불만을 터뜨렸다.</textarea>
+          
+          <label class="f" for="s-b27d11bcb24c-1">2장</label>
+          <textarea id="s-b27d11bcb24c-1" rows="6" data-slide="1">개봉 첫날
+**9억 1천만 엔**
+---
+화제작은 개봉 첫날에만 9억 1천만 엔(약 580만 달러)을 벌어 일본 실사 영화 흥행 기록을 새로 썼다. 비평가와 관객 평가도 모두 좋았다.</textarea>
+          
+          <label class="f" for="s-b27d11bcb24c-2">3장</label>
+          <textarea id="s-b27d11bcb24c-2" rows="6" data-slide="2">불만 1순위는
+**화장실 행렬**
+---
+한 SNS 이용자는 통로 쪽 좌석에 앉았는데 영화가 시작되고 얼마 안 돼 사람들이 줄줄이 화장실에 가 몰입이 깨졌다고 적었다. 이 글에는 공감하는 사람이 다수였다.</textarea>
+          
+          <label class="f" for="s-b27d11bcb24c-3">4장</label>
+          <textarea id="s-b27d11bcb24c-3" rows="6" data-slide="3">**인원수까지**
+세는 사람도
+---
+상영 중 화장실에 간 사람 수를 직접 센 관객도 있었다. 일본 관객 다수는 제작진에 대한 존중으로 엔딩 크레딧까지 자리를 지키는 편이라 참기가 더 어려웠다는 얘기도 나왔다.</textarea>
+          
+          <label class="f" for="s-b27d11bcb24c-4">5장</label>
+          <textarea id="s-b27d11bcb24c-4" rows="6" data-slide="4">이유를 두고
+**추측**이 분분
+---
+1950년대부터 이어진 시리즈라 나이 든 관객이 많아서라는 설이 나왔다. 공휴일 개봉작이라 평소 영화관을 잘 찾지 않는 사람이 몰렸다는 설도 있었다.</textarea>
+          
+          <label class="f" for="s-b27d11bcb24c-5">6장</label>
+          <textarea id="s-b27d11bcb24c-5" rows="6" data-slide="5">참는 비법은
+**사탕**과 찹쌀떡?
+---
+댓글에는 영화 보기 전에 봉탄아메 사탕이나 다이후쿠를 먹으면 요의를 누른다는 얘기가 많았다. 기사는 이를 뒷받침할 과학적 근거는 없다고 짚었다.</textarea>
+          
+          <label class="f" for="s-b27d11bcb24c-6">7장</label>
+          <textarea id="s-b27d11bcb24c-6" rows="6" data-slide="6">물 많이 마시는
+**친구한테** 보내기
+---
+영화관에서 화장실 타이밍 때문에 늘 신경 쓰이는 친구라면 공감할 소식. 일본에서도 상영 중 화장실 행렬이 화제가 됐다.</textarea>
+          
+          <label class="f" for="c-b27d11bcb24c">본문 (캡션)</label>
+          <textarea id="c-b27d11bcb24c" class="caption">고질라 마이너스 제로를 보다가 화장실 행렬 때문에 화가 났다는 관객이 일본에서 화제다. 영화 자체는 비평가와 관객 모두에게 좋은 평가를 받았고, 개봉 첫날에만 9억 1천만 엔(약 580만 달러)을 벌어 일본 실사 영화 기록을 깼다. 그런데 일부 관객은 상영 중 화장실에 가는 사람이 너무 많다고 불만을 털어놨다.
+
+통로 쪽 좌석에 앉았다는 한 SNS 이용자는 영화가 시작되고 얼마 안 돼 사람들이 줄줄이 화장실에 가 몰입이 깨졌다고 적었다. 이 글에는 공감하는 사람이 다수였고, 상영 중 화장실에 간 사람 수를 직접 센 관객도 있었다. 상영 시간은 135분인데, 더 긴 172분짜리 영화보다 자리를 뜬 사람이 훨씬 많았다는 언급도 나왔다.
+
+이유로는 1950년대부터 이어진 시리즈라 나이 든 관객이 많다는 설, 공휴일 개봉작이라 평소 영화관을 잘 가지 않는 사람이 몰렸다는 설이 나왔다. 극중 파괴 장면이 실제 재난을 떠올리게 해 자리를 뜬 사람도 있을지 모른다는 추측도 있다. 한편 영화 전에 봉탄아메 사탕이나 다이후쿠를 먹으면 좋다는 댓글도 많았지만 과학적 근거는 없다.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-b27d11bcb24c">해시태그</label>
+          <input id="t-b27d11bcb24c" type="text" class="tagsin" value="#고질라 #일본영화관 #일본문화 #해외화제 #영화관람매너" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 관객들이 상영 중 화장실에 가는 사람이 너무 많다고 불만을 제기했다</b>
+            <q>“The biggest beef of all was that too many people were getting up to go to the restroom during the film.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영화는 개봉 첫날 9억 1천만 엔(약 580만 달러)을 벌어 일본 실사 영화 기록을 깼다</b>
+            <q>“It was a thought held by many, as the monster movie drew in an amazing 910 million yen (US$5.8M) on its opening day alone, breaking the record for a live-action film in Japan.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영화는 비평가와 관객 모두에게 좋은 평가를 받았다</b>
+            <q>“However, while the film itself has been incredibly well-received by critics and audiences alike, some moviegoers in Japan complained about their viewing experience.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>통로 쪽 좌석의 SNS 이용자가 사람들이 줄줄이 화장실에 가 몰입이 깨졌다고 적었다</b>
+            <q>“One post by a social media user said they had an aisle seat during the movie and shortly into it, people had started going to the bathroom one after another, ruining their ability to get into the story.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그 글에는 공감하는 사람이 다수였다</b>
+            <q>“This might just sound like a single oversensitive reaction to this sort of thing, but the post generated significant discussion, with a majority of people agreeing.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>상영 중 화장실에 간 사람 수를 센 관객도 있었다</b>
+            <q>“Others also reported an inordinate number of people going to hit the head during their screenings of Godzilla Minus Zero (or Godzilla -0.0 as it’s known in Japan), including head counts they took during the film.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영화 말미에 소변을 참기 힘들었다고 말한 사람이 많았다</b>
+            <q>“But there were many more people talking about how hard it was for them to fight the urge to pee towards the end of the movie, which, by the way, includes sitting through the entire credits.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 관객 다수는 제작진에 대한 존중으로 엔딩 크레딧까지 앉아 있는 것이 기대되는 행동이다</b>
+            <q>“That is expected behavior among many moviegoers in Japan, not in the hopes of seeing additional scenes, but purely out of respect for the people who made the film.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>상영 시간은 135분이며 172분짜리 영화보다 자리를 뜬 사람이 훨씬 많았다는 언급이 있었다</b>
+            <q>“It’s a bit of a lengthy movie, clocking in at 135 minutes, but some mention that the number of people ducking out for a moment well exceeded that of lengthier movies such as the 172-minute-long The Odyssey.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1950년대부터 이어진 시리즈라 나이 든 관객이 많아서라는 설이 있었다</b>
+            <q>“One was that Godzilla, which dates back to the 1950s, tends to attract an older demographic who may lack the firm bladder control that the youth enjoys.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>공휴일 개봉작이라 평소 영화를 잘 안 보는 사람이 몰렸다는 설이 있었다</b>
+            <q>“The other is that the fact that a major commercial film opening on a public holiday brought in an inordinate number of people who weren’t “true movie buffs,” or perhaps just decided to see it in on a whim without planning their hydration accordingly.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>댓글에는 봉탄아메 사탕이나 다이후쿠를 먹으면 요의를 누를 수 있다는 얘기가 많았다</b>
+            <q>“By the way, according to many of the comments, a popular way to suppress the urge to urinate before watching a movie is to eat Bontan Ame candies or daifuku, the latter of which are little snacks made of sweet bean paste covered in mochi.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 방법을 뒷받침할 과학적 근거는 없다</b>
+            <q>“There’s no science to back this up, but who am I to deny people their placebos?”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>파괴 장면이 실제 재난을 떠올리게 해 자리를 뜬 사람도 있을 수 있다는 추측이 있다</b>
+            <q>“It could have been that some people weren’t prepared for the scenes of destruction depicted in the film, which can often resemble actual natural disasters and hit close to home for more than a few people in Japan.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">Japanese viewers of Godzilla Minus Zero angered by unusual number of restroom goers</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://vanyaland.com/2026/11/03/godzilla-minus-zero-review-about-as-pointless-as-godzooky/" target="_blank" rel="noopener">Vanyaland / </a> — "https://redefined.s3.us-east-2.amazonaws.com/wp-content/uploads/2026/10/13161138/godzillaminuszero_tohogkids-1400x933.jpg"</li><li>2장: <a href="https://www.hollywoodreporter.com/movies/movie-news/godzilla-minus-zero-first-reactions-toho-1236743206/" target="_blank" rel="noopener">The Hollywood Reporter / </a> — "https://www.hollywoodreporter.com/wp-content/uploads/2026/09/MCDGOMI_EC012-H-2026.jpg?w=1296&amp;h=730&amp;crop=1"</li><li>3장: <a href="https://pixabay.com/photos/theater-noordwijk-cinema-8569119/" target="_blank" rel="noopener">wernerredlich / Pixabay</a> — "cinema seats"</li><li>4장: <a href="https://soranews24.com/2026/11/11/japanese-viewers-of-godzilla-minus-zero-angered-by-unusual-number-of-restroom-goers/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/img_2047.jpg.jpeg"</li><li>5장: <a href="https://pixabay.com/photos/concert-confetti-party-event-club-2527495/" target="_blank" rel="noopener">ktphotography / Pixabay</a> — "audience"</li><li>6장: <a href="https://pixabay.com/photos/gummybears-candies-sweets-bears-1618074/" target="_blank" rel="noopener">Alexas_Fotos / Pixabay</a> — "candy"</li><li>7장: <a href="https://pixabay.com/photos/ai-generated-friends-movie-couch-8375142/" target="_blank" rel="noopener">SAAD_KURT / Pixabay</a> — "friends cinema"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-c1b0703eff59" data-id="c1b0703eff59">
+    <div class="head">
+      <h2>3. 일본인이 사요나라를 안 쓰는 이유</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-01.jpg" alt="1장: 사요나라를 안 쓴다고???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-02.jpg" alt="2장: 친구끼리는 그냥 &#39;쟈&#39;" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-03.jpg" alt="3장: &#39;다시&#39;라는 뜻의 마타" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-04.jpg" alt="4장: 퇴근길엔 수고했어요" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-05.jpg" alt="5장: 사요나라는 영영 이별급" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-06.jpg" alt="6장: 아이스크림집 마지막 날" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-07.jpg" alt="7장: 일본어 배우는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/c1b0703eff59/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">작별 인사로 전 세계가 아는 사요나라, 그런데 일본에 살면 이 말을 직접 듣는 일은 거의 없다고 한다. 일본 매체 소라뉴스24가 그 이유를 소개했다.
+
+일상에서 사요나라를 대신하는 말은 여럿이다. 친구나 또래끼리는 &#39;쟈&#39;를 가장 흔하게 쓴다. &#39;그렇다면&#39;을 뜻하는 &#39;소레쟈&#39;를 줄인 표현이고, 혼자 쓰면 퉁명스럽게 들릴 수 있어 끝에 &#39;네&#39;나 &#39;나&#39;를 붙이는 경우가 많다. &#39;다시&#39;를 뜻하는 &#39;마타&#39;도 있다. &#39;다시 만나자&#39;, &#39;내일 또 보자&#39;를 줄인 말이다. 더 격식 있게 말하고 싶다면 &#39;쟈&#39; 대신 &#39;데와&#39;를 쓸 수 있다.
+
+직장에서는 또 다르다. 퇴근할 때 동료끼리는 &#39;피곤하겠다&#39;에 가까운 뜻의 &#39;오츠카레사마데스&#39;를 흔히 건넨다. 다른 사람이 아직 일하고 있다면 &#39;먼저 실례합니다&#39;라는 뜻의 &#39;오사키니 시츠레이시마스&#39;를 쓰고, 친한 사이라면 &#39;오사키니&#39;로 줄이기도 한다.
+
+사요나라가 드문 까닭은 뉘앙스가 무겁기 때문이다. 영영 작별일 수도 있고, 다시 만나지 못할 가능성이 클 때 주로 쓰는 말이라고 한다. 졸업식에서 각자 다른 대학으로 흩어질 때나, 동료가 해외로 영구 전근하는 송별회에 어울린다. 기사 속 사례도 있다. 10월 31일 문을 닫은 가마쿠라의 콜드스톤 매장은 동일본 마지막 지점이었는데, 기자가 아이스크림을 받자 직원들이 감사 인사와 함께 사요나라라고 했다.
+
+일본어를 배우는 친구가 있다면 이 이야기를 보내 보자.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본어 #일본문화 #사요나라 #일본여행 #언어이야기</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>친구나 또래에게 가장 흔한 작별 인사 중 하나는 ja다 <small>애매 · 원문은 친구나 또래에게 가장 흔한 방법 &#39;중 하나&#39;라고 한다. 본문의 &#39;가장 흔한 말&#39;은 과장이므로 &#39;가장 흔한 말 중 하나&#39;로 고쳐야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 일본 매체 소라뉴스24가 이 내용을 소개했다는 출처 주장</li>
+          <li>원문은 일본 매체의 개인 경험담 중심 기사이며, 사요나라 사용 빈도는 필자의 체감 서술임</li><li>6장에 특정 브랜드(콜드스톤) 매장 사례가 언급됨</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-c1b0703eff59-0">1장</label>
+          <textarea id="s-c1b0703eff59-0" rows="6" data-slide="0">**사요나라를**
+안 쓴다고???
+---
+작별 인사로 세계적으로 유명한 사요나라를, 정작 일본 현지에서는 일상에서 좀처럼 들을 수 없다고 한다.</textarea>
+          
+          <label class="f" for="s-c1b0703eff59-1">2장</label>
+          <textarea id="s-c1b0703eff59-1" rows="6" data-slide="1">친구끼리는
+그냥 &#39;**쟈**&#39;
+---
+친구나 또래끼리 작별할 때 가장 흔한 말은 &#39;쟈&#39;다. &#39;그렇다면&#39;을 뜻하는 &#39;소레쟈&#39;를 줄인 표현이며, 혼자 쓰면 퉁명스러울 수 있어 끝에 &#39;네&#39;나 &#39;나&#39;를 붙이기도 한다.</textarea>
+          
+          <label class="f" for="s-c1b0703eff59-2">3장</label>
+          <textarea id="s-c1b0703eff59-2" rows="6" data-slide="2">&#39;다시&#39;라는
+뜻의 **마타**
+---
+&#39;마타&#39;는 &#39;다시&#39;라는 뜻으로, &#39;다시 만나자&#39;나 &#39;내일 또 보자&#39;를 줄인 말이다. 조금 더 격식을 갖추고 싶다면 &#39;쟈&#39; 대신 같은 뜻의 &#39;데와&#39;를 쓰면 된다.</textarea>
+          
+          <label class="f" for="s-c1b0703eff59-3">4장</label>
+          <textarea id="s-c1b0703eff59-3" rows="6" data-slide="3">퇴근길엔
+**수고했어요**
+---
+퇴근할 때 동료끼리는 &#39;피곤하겠다&#39;에 가까운 뜻의 &#39;오츠카레사마데스&#39;를 흔히 쓴다. 남이 아직 일하는 중이라면 &#39;먼저 실례합니다&#39;라는 뜻의 &#39;오사키니 시츠레이시마스&#39;를 건넨다.</textarea>
+          
+          <label class="f" for="s-c1b0703eff59-4">5장</label>
+          <textarea id="s-c1b0703eff59-4" rows="6" data-slide="4">사요나라는
+**영영 이별급**
+---
+사요나라에는 영영 이별일 수도 있다는 무거운 뉘앙스가 있다. 졸업 후 서로 다른 대학에 가는 친구들이나, 해외로 영구 전근하는 동료의 송별회에서 어울리는 말이다.</textarea>
+          
+          <label class="f" for="s-c1b0703eff59-5">6장</label>
+          <textarea id="s-c1b0703eff59-5" rows="6" data-slide="5">아이스크림집
+**마지막 날**
+---
+10월 31일 문을 닫은 가마쿠라의 콜드스톤은 동일본 마지막 지점이었다. 취재 기자가 아이스크림을 받자 직원들은 감사 인사와 함께 &#39;사요나라&#39;라고 했다.</textarea>
+          
+          <label class="f" for="s-c1b0703eff59-6">7장</label>
+          <textarea id="s-c1b0703eff59-6" rows="6" data-slide="6">일본어 배우는
+친구한테 보내기
+---
+쟈, 마타, 오츠카레사마데스처럼 사요나라보다 훨씬 자주 쓰이는 작별 인사가 따로 있다는 걸 알려 주면 반가워할 일본어 공부 친구에게 어울리는 소식</textarea>
+          
+          <label class="f" for="c-c1b0703eff59">본문 (캡션)</label>
+          <textarea id="c-c1b0703eff59" class="caption">작별 인사로 전 세계가 아는 사요나라, 그런데 일본에 살면 이 말을 직접 듣는 일은 거의 없다고 한다. 일본 매체 소라뉴스24가 그 이유를 소개했다.
+
+일상에서 사요나라를 대신하는 말은 여럿이다. 친구나 또래끼리는 &#39;쟈&#39;를 가장 흔하게 쓴다. &#39;그렇다면&#39;을 뜻하는 &#39;소레쟈&#39;를 줄인 표현이고, 혼자 쓰면 퉁명스럽게 들릴 수 있어 끝에 &#39;네&#39;나 &#39;나&#39;를 붙이는 경우가 많다. &#39;다시&#39;를 뜻하는 &#39;마타&#39;도 있다. &#39;다시 만나자&#39;, &#39;내일 또 보자&#39;를 줄인 말이다. 더 격식 있게 말하고 싶다면 &#39;쟈&#39; 대신 &#39;데와&#39;를 쓸 수 있다.
+
+직장에서는 또 다르다. 퇴근할 때 동료끼리는 &#39;피곤하겠다&#39;에 가까운 뜻의 &#39;오츠카레사마데스&#39;를 흔히 건넨다. 다른 사람이 아직 일하고 있다면 &#39;먼저 실례합니다&#39;라는 뜻의 &#39;오사키니 시츠레이시마스&#39;를 쓰고, 친한 사이라면 &#39;오사키니&#39;로 줄이기도 한다.
+
+사요나라가 드문 까닭은 뉘앙스가 무겁기 때문이다. 영영 작별일 수도 있고, 다시 만나지 못할 가능성이 클 때 주로 쓰는 말이라고 한다. 졸업식에서 각자 다른 대학으로 흩어질 때나, 동료가 해외로 영구 전근하는 송별회에 어울린다. 기사 속 사례도 있다. 10월 31일 문을 닫은 가마쿠라의 콜드스톤 매장은 동일본 마지막 지점이었는데, 기자가 아이스크림을 받자 직원들이 감사 인사와 함께 사요나라라고 했다.
+
+일본어를 배우는 친구가 있다면 이 이야기를 보내 보자.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-c1b0703eff59">해시태그</label>
+          <input id="t-c1b0703eff59" type="text" class="tagsin" value="#일본어 #일본문화 #사요나라 #일본여행 #언어이야기" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>친구나 또래에게 가장 흔한 작별 인사 중 하나는 ja다</b>
+            <q>“One of the most common ways to say goodbye when speaking to friends or peers in social situations is ja, which means “if” or “then.””</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사요나라는 국제적으로 널리 알려진 단어다</b>
+            <q>“Like loco in Spanish and merci in French, sayonara is one of those words that’s so well known internationally that it’s widely understood even by people without any personal connection to its home-country culture.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에 살면 사요나라를 실제로 말하는 사람을 거의 듣지 못한다</b>
+            <q>“And yet, living in Japan, you’ll very rarely hear anyone actually say sayonara (unless you happen to be in a pre-college school, where students of such ages say it to their teachers at the end of the school day).”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>ja는 sore ja를 줄인 말이다</b>
+            <q>“That might seem like a pretty random choice of vocabulary, but there is a logical reason for it, which is that it’s a shortened version of sore ja, meaning “if it’s like that,” or, rendered more naturally in English “in that case” or “well then.””</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>ja만 쓰면 퉁명스러울 수 있어 끝에 ne나 na를 붙이기도 한다</b>
+            <q>“Used completely by itself, though, ja can sound a little curt, so to make it a little cordial the all-purpose emphasizer ne, or na among male speakers, is often tacked onto the end.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mata는 &#39;다시&#39;를 뜻하는 일본어 단어다</b>
+            <q>“Speaking of adding things after ja, another option for that is mata, the Japanese word for “again.””</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>mata는 &#39;다시 만나자&#39;, &#39;내일 또 보자&#39; 같은 표현의 줄임말이다</b>
+            <q>“In this case, it’s included as an abbreviation of things such as mata aimashou (“let’s get together again [sometime]”) or mata ashita (“[see you] again tomorrow”).”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>더 격식 있게 하려면 ja 대신 같은 뜻의 dewa를 쓸 수 있다</b>
+            <q>“And to multiply our options even further, if you want to sound a little more polished and polite, you can replace ja with dewa, a more formal word with the same meaning.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오츠카레사마데스는 대략 &#39;피곤하시겠다&#39;는 뜻으로 퇴근하는 동료끼리 흔히 쓴다</b>
+            <q>“One of them is otsukarasama desu, which, as we’ve discussed before, more or less means “you must be tired,” but which is commonly said between coworkers when going home at the end of the day, since you’ve both put in a full day of work.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>남이 아직 일하는 중에 먼저 퇴근할 땐 오사키니 시츠레이시마스를 쓰고 친하면 오사키니로 줄인다</b>
+            <q>“Similarly, if you’re going home while someone else is still working, the custom is to tell them osaki ni shitsurei shimasu, meaning “excuse me for going home before you,” which can be shortened down to just osaki ni if you’re on friendly terms with one another.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사요나라는 영영 이별일 수 있는 무거운 뉘앙스가 있어 그런 상황에 주로 쓴다</b>
+            <q>“Because sayonara has a very weighty nuance to it, so much so that it’s mainly used for situations where it’s not just goodbye, but possibly goodbye forever, or at the very least where there’s a very real possibility that you’ll never meet again.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>졸업식에서 서로 다른 대학에 가는 친구들끼리는 사요나라를 할 수 있다</b>
+            <q>“It’s what they might say to each other at graduation if they’re all going off to different colleges and there’s no real guarantee they’re going to meet up again.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>해외로 영구 전근하는 동료의 송별회에서는 사요나라를 할 수 있다</b>
+            <q>“You wouldn’t say sayonara to your coworker Tanaka-san when you clock out on a Friday evening, but you might say it to him at his going away party before his permanent transfer to an overseas office.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가마쿠라의 콜드스톤은 동일본 마지막 지점이었고 10월 31일에 문을 닫았다</b>
+            <q>“The workers at Cold Stone in the city of Kamakura, the very last branch of the chain in all of east Japan, which we visited for one last ice cream treat shortly before it closed on October 31.”</q>
+            <small>slide6 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>직원들이 기자에게 감사 인사와 함께 사요나라라고 말했다</b>
+            <q>“While he was waiting for his order, our reporter Mr. Sato briefly chatted with the staff about the shop shutting down, and when they handed him his ice cream, they told him thank you, and also “sayonara.””</q>
+            <small>slide6 · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사요나라는 감정적 의미가 커서 특별한 상황에 쓰는 특별한 표현이다</b>
+            <q>“Sayonara does, though, carry a lot of emotional significance, so it’s a special phrase for special circumstances.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">Why people in Japan hardly ever say “sayonara,” and what they say instead</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://pixabay.com/photos/winding-dirt-road-10430189/" target="_blank" rel="noopener">ahmetyuksek / Pixabay</a> — "two friends waving goodbye on a sunlit street"</li><li>2장: <a href="https://pixabay.com/photos/women-friends-beach-sea-summer-3266211/" target="_blank" rel="noopener">FotografieLink / Pixabay</a> — "friends waving"</li><li>3장: <a href="https://pixabay.com/photos/calendar-meeting-planning-10045176/" target="_blank" rel="noopener">Ralf1403 / Pixabay</a> — "calendar"</li><li>4장: <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/11_13c519.jpg?w=640"</li><li>5장: <a href="https://pixabay.com/photos/dawn-graduates-throwing-hats-dusk-1840298/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "graduation"</li><li>6장: <a href="https://soranews24.com/2026/11/11/why-people-in-japan-hardly-ever-say-sayonara-and-what-they-say-instead/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/13_3d27b8.jpg?w=640"</li><li>7장: <a href="https://pixabay.com/photos/student-typing-keyboard-text-849825/" target="_blank" rel="noopener">StartupStockPhotos / Pixabay</a> — "notebook study"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-f8294ff012fe">
+    <div class="head">
+      <h2>S1. 단백질 덜 먹으면 노화 늦춘다? 350편 리뷰</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 18 · 애매 2
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-f8294ff012fe">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강정보</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 단백질 챙기는 게 일상인 사람들에게 &#39;많이 먹을수록 좋다&#39;는 통념을 흔들고, 기준이 &#39;내 활동량&#39;이라는 점을 던지는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">단백질은 &#39;많이 먹을수록 좋다&#39;가 아니라 &#39;내 활동량만큼&#39;이라는 리뷰가 나왔대
+논문 350편 넘게 훑은 건데, 연구진은 앉아 지내는 사람들이 필요 이상으로 먹고 있을 수 있다고 봄
+근데 활동량 많은 사람은 얘기가 달랐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">1/ 리뷰 결론부터: 단백질을 줄이면 생물학적 노화가 늦춰지고 대사가 좋아질 수 있다는 증거가 나왔대. 조건에 따라 수명이 늘 수도 있다는 거. 근데 이게 사람한테서도 확인된 얘기일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">146/500자</span></div>
+      <p class="tp-text">2/ 파리랑 설치류 실험에선 칼로리는 그대로 두고 단백질만 제한해도 수명이 늘었음. 사람 임상시험에선 단백질을 줄인 사람들이 체중, 체지방, 공복혈당이 좋아졌다는 결과도 있었고. 다만 사람 수명이 늘어난다고 입증된 건 아니래. 그럼 몸속에선 무슨 일이 벌어질까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">152/500자</span></div>
+      <p class="tp-text">3/ 단서 중 하나가 FGF21이라는 호르몬임. 단백질을 덜 먹으면 늘어나고, 에너지 쓰는 양을 늘리고 혈당 조절과 염증을 돕는 쪽으로 작용한대. 쥐 실험에선 이 호르몬 수치가 높은 쪽이 더 오래 살았는데, 사람도 그런지는 아직 답이 없음. 그럼 단백질 &#39;양&#39;만 문제일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">151/500자</span></div>
+      <p class="tp-text">4/ 리뷰는 아미노산 종류도 짚었음. 메티오닌, 이소류신, 발린 세 가지가 특히 중요해 보인대. 너무 많이 먹으면 성장을 촉진하는 경로가 자극되고, 그게 과하거나 오래 가면 비만·염증 같은 노화 관련 문제에 관여할 수 있다는 설명이야. 그럼 운동하는 사람도 줄여야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">155/500자</span></div>
+      <p class="tp-text">5/ 활동량 많은 사람은 얘기가 달랐음. 연구진도 활동적인 사람한테 단백질이 근육 성장에 도움 되는 건 &#39;명백하다&#39;고 했어. 임신부나 일부 고령층도 더 필요하고. 반면 하루 대부분 앉아 있는 사람은 단백질을 더 얹어도 추가 이득이 적을 수 있대. 그래서 연구진이 제안한 기준은?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">199/500자</span></div>
+      <p class="tp-text">6/ 요약 정리
+- 리뷰: 논문 350편 넘게 분석
+- 단백질 줄이면: 파리·설치류는 수명 증가, 사람은 체중·체지방·공복혈당 개선 결과가 있음 (사람 수명 연장은 미확인)
+- 단서: FGF21 호르몬, 메티오닌·이소류신·발린
+- 더 필요할 수 있는 사람: 활동량 많은 사람, 임신부, 일부 고령층
+- 연구진 제안: 나이뿐 아니라 활동량까지 보고 맞춤 권장</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">220/500자</span></div>
+      <p class="tp-text">7/ 결국 연구진 말은 단백질 권장량을 나이뿐 아니라 활동량까지 보고 맞추자는 거야. 자기한테 맞는 양은 의사랑 상의해봐.
+프로틴 음료 챙겨 마시는 파 vs 밥으로 채우는 파, 너는 어디야?
+이런 해외 건강·영양 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>사람 임상시험에서 단백질을 줄인 사람들의 체중, 체지방, 공복혈당이 개선됐다 <small>애매 · 원문은 체중·체지방·공복혈당 개선을 말하지만 &#39;사람 임상시험&#39;이라고 명시한 것은 맞고, 다만 &#39;단백질을 줄인 사람들&#39;의 결과로 과잉 일반화 없이 &#39;여러 최근 임상시험&#39;이라는 범위를 밝히는 것이 정확함.</small></li><li>FGF21 수치가 높은 쥐가 더 오래 살았다 <small>애매 · 원문은 FGF21 수치가 높은 쥐가 더 오래 살았다고 하며 수컷에서 특히 강했다는 단서가 있음. 카드에는 성별 단서가 빠져 있으나 주장 자체는 맞음. &#39;더 오래 살았다&#39;로 충분하나 쥐 실험임을 명시하면 정확.</small></li>
+        <li>근거 등록 안 된 주장: 카드 4번: 운동하는 사람도 단백질을 줄여야 하는지에 대한 답은 원문 인용 없이 활동량 많은 사람 맥락으로 제시됨(사실 주장 아님, 생략 가능)</li><li>근거 등록 안 된 주장: 카드 1번·3번: 리뷰가 &#39;사람에서 확인된 얘기일까&#39;라는 질문을 던진 뒤 확인되지 않았다는 취지는 claim 11 이외에 명시되지 않음</li><li>근거 등록 안 된 주장: 카드 7번: 자기한테 맞는 양은 의사와 상의하라는 권고는 일반 권고이나 연구 결과와 무관한 조언으로 사실 주장 아님</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>단백질은 &#39;많이 먹을수록 좋다&#39;가 아니라 &#39;내 활동량만큼&#39;이라는 리뷰가 나왔대</li><li>단백질 늘리기부터 하지 말고 &#39;내 활동량&#39;부터 보라는 리뷰가 나옴</li><li>&#39;많은 사람이 필요 이상으로 먹고 있을 수 있다&#39;는 연구진 말이 나왔음</li><li>시리얼, 커피, 생수에도 단백질을 넣는 시대에 &#39;덜 먹는 쪽&#39;을 파본 리뷰가 나옴</li><li>칼로리는 그대로 두고 단백질만 줄였더니 수명이 늘었다는 실험들, 사람은 어떨까?</li><li>프로틴 음료 사 마시기 전에 볼 만한 얘기, 필요 이상일 수 있다는 리뷰가 나옴</li><li>단백질 챙겨 먹는다면 하루에 앉아 있는 시간부터 떠올려봐야 한다는 연구</li><li>미국은 올해 단백질 권장량을 거의 두 배로 올렸는데, 덜 먹는 쪽의 이득을 짚은 리뷰가 나옴</li><li>닭가슴살 열심히 먹는 사람들 주목, 논문 350편 넘게 훑은 리뷰의 결론이 좀 다름</li><li>단백질은 무조건 &#39;플러스&#39;가 아니라 &#39;나한테 맞게&#39;가 답이라는 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>프로틴 음료 챙겨 마시는 파 vs 밥으로 채우는 파, 너는 어디야?</li><li>닭가슴살 질릴 때까지 먹어본 사람?</li><li>단백질 챙기려고 시리얼이나 커피에 프로틴 들어간 거 사본 적 있어?</li><li>너라면 운동 안 하는 날엔 단백질 양을 줄여볼 거야?</li><li>단백질 함량 표시부터 보게 되는 편이야, 안 보는 편이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>단백질 덜 먹으면 노화 늦춘다는 연구 2편: FGF21 호르몬 더 파보기</li><li>활동량에 따라 단백질 필요량이 얼마나 다른지</li><li>미국이 단백질 권장량을 거의 두 배로 올린 배경</li><li>아타카마 사막 기록적 꽃 개화</li><li>일본인이 사요나라를 안 쓰는 이유</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>리뷰 연구라 &#39;단백질 줄이면 오래 산다&#39;로 읽히지 않게 사람 수명 연장은 미확인이라는 문장 유지 확인</li><li>단백질 섭취를 줄이라는 권유로 읽히지 않는지 확인 (원문은 활동량·나이별 맞춤 권장을 제안)</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>사람 임상시험에서 단백질을 줄인 사람들의 체중, 체지방, 공복혈당이 개선됐다</b>
+          <q>“Several recent clinical trials have shown that people who reduce their protein intake can lose weight, decrease body fat, and improve fasting blood sugar levels, even when they consume more calories overall.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>FGF21 수치가 높은 쥐가 더 오래 살았다</b>
+          <q>“Studies in mice have shown that animals with elevated FGF21 levels live longer than mice with normal levels.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>논문 350편 넘게 분석한 리뷰에서 단백질을 줄이면 노화 둔화, 대사 개선, 조건에 따라 수명 연장 가능성이 나왔다</b>
+          <q>“After examining more than 350 scientific papers, researchers found evidence that reducing protein intake may help slow biological aging, improve metabolism, and, under certain conditions, extend lifespan.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 앉아 지내는 사람들이 필요 이상으로 단백질을 먹고 있을 수 있다고 본다</b>
+          <q>“But because most people are relatively sedentary, many people are likely consuming more protein than they actually need, which probably has negative health consequences.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단백질 권장은 나이뿐 아니라 활동량에 따라 맞춤화해야 한다는 연구진 제안</b>
+          <q>“We probably need to personalize protein recommendations based not just on age, but also on how physically active people are.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단백질을 줄이면 노화 둔화, 대사 개선, 조건에 따라 수명 연장 가능성이 있다</b>
+          <q>“After examining more than 350 scientific papers, researchers found evidence that reducing protein intake may help slow biological aging, improve metabolism, and, under certain conditions, extend lifespan.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>파리와 설치류 실험에서 칼로리가 같아도 단백질 제한으로 수명이 늘었다</b>
+          <q>“Experiments involving flies and rodents have demonstrated that limiting protein intake can increase lifespan even when total calorie consumption remains unchanged.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단백질 제한이 사람 수명을 늘린다는 것은 입증되지 않았다</b>
+          <q>“These findings do not establish that protein restriction extends human lifespan, but they suggest that changing protein intake can influence processes associated with aging and disease.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>FGF21은 단백질이 제한되면 늘어나는 호르몬이다</b>
+          <q>“One particularly intriguing finding involves fibroblast growth factor 21 (FGF21), a hormone that becomes more abundant when dietary protein is limited.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>FGF21이 높으면 에너지 소비 증가, 혈당 조절 지원, 염증 감소 효과가 있을 수 있다</b>
+          <q>“Higher levels of this hormone can increase energy expenditure, support healthier blood sugar regulation, and reduce inflammation.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람에서 같은 장수 효과가 나타나는지는 아직 풀리지 않은 질문이다</b>
+          <q>“Whether this hormonal response produces the same longevity benefits seen in mice remains an important unanswered question.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>리뷰는 메티오닌, 이소류신, 발린 세 아미노산을 특히 중요하게 꼽았다</b>
+          <q>“The review identifies three amino acids that appear especially important: methionine, isoleucine, and valine.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 아미노산을 과하게 섭취하면 성장 촉진 경로가 자극될 수 있다</b>
+          <q>“Research suggests that excessive intake of these amino acids can stimulate biological pathways that encourage growth.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>성장 관련 경로가 과하거나 오래 활성화되면 비만, 염증 등 노화 관련 문제에 관여할 수 있다</b>
+          <q>“Although growth-related processes are essential for normal development and tissue repair, excessive or prolonged activation of certain pathways may contribute to obesity, inflammation, and other conditions associated with aging.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 활동적인 사람에게 단백질이 근육 성장과 운동 반응에 이롭다는 점이 명백하다고 했다</b>
+          <q>“It&#39;s absolutely crystal clear that there are benefits of protein to muscle growth and exercise response of active individuals”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>임신부와 일부 고령층은 단백질이 더 필요하다</b>
+          <q>“Pregnant women, for example, need additional protein to support fetal development, while some older adults require higher amounts to help maintain muscle and physical function.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주로 앉아 지내는 성인은 단백질을 더해도 추가 이득이 적을 수 있다</b>
+          <q>“For many adults who spend most of their day sitting, however, adding protein to everyday foods may offer little additional benefit.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>리뷰는 350편 넘는 논문을 분석했다</b>
+          <q>“Their analysis brought together findings from more than 350 papers, identifying several biological mechanisms that repeatedly appeared across studies.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 나이뿐 아니라 활동량 기준으로 단백질 권장을 맞춤화해야 한다고 제안한다</b>
+          <q>“We probably need to personalize protein recommendations based not just on age, but also on how physically active people are.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 단백질 권장량을 나이와 활동량에 맞춰 개인화해야 한다고 본다</b>
+          <q>“We probably need to personalize protein recommendations based not just on age, but also on how physically active people are.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="f8294ff012fe">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261108203714.htm" target="_blank" rel="noopener">Eating less protein could slow aging, review of 350 studies finds</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-d53682bd08ee">
+    <div class="head">
+      <h2>S2. LDL 수치 정상인데도 남는 심장 위험, TRL·Lp(a) 단서</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-d53682bd08ee">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;수치 정상이면 안심&#39;이라는 흔한 믿음을 뒤집고, 수치 말고 어떤 입자가 문제일 수 있는지 새 단서를 던지는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">&#39;콜레스테롤 수치 정상이면 안심&#39;이라는 말, 이 연구 보면 좀 달라짐
+수치를 권장 범위로 내려도 심장마비 위험이 남는 사람이 있는데, 스웨덴 연구진이 그 단서를 찾았대
+근데 단서가 LDL 말고 다른 입자 쪽에서 나왔음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">1/ 연구진이 꼽은 건 LDL 말고 지방을 나르는 입자 두 가지, TRL이랑 Lp(a)야. 콜레스테롤이 쌓이는 것 말고 다른 경로로도 염증을 일으키고 혈관을 해칠 수 있어 보이는 입자들이래. 그럼 LDL이랑은 뭐가 다른 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">2/ LDL은 관련 단백질이 주로 동맥벽에 콜레스테롤 쌓이는 쪽과 이어져 있었음. 근데 TRL이랑 Lp(a)는 면역세포를 끌어들일 수 있는 단백질을 싣고 있었대. 염증을 부추길 수 있다는 거. 이걸 어떻게 알아냈을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">3/ 혈액 속 단백질 약 3,000개 측정값을 유전 정보, 장기 건강 기록이랑 비교해서 봤대. TRL이랑 Lp(a)는 서로 다른 입자인데도 단백질 패턴이 꽤 비슷했고, 그 겹치는 패턴이 나중의 심장질환과도 연결돼 보였음. 그래서 세 입자를 한눈에 정리해보면?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">196/500자</span></div>
+      <p class="tp-text">4/ 입자별 요약 정리
+- LDL: 혈중 콜레스테롤 대부분을 나름. 관련 단백질은 동맥벽 콜레스테롤 축적 쪽과 연결
+- TRL: 콜레스테롤과 중성지방을 같이 나르는 입자. Lp(a)와 염증 쪽 단백질 패턴이 겹침
+- Lp(a): LDL과 닮았는데 단백질이 하나 더 붙은 입자. 심장질환 위험 요인으로 이미 알려져 있음
+- 셋 다 apoB 단백질을 가짐</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">153/500자</span></div>
+      <p class="tp-text">5/ 다만 이 연구는 새 치료법이나 바로 쓸 수 있는 혈액 검사를 만든 게 아니래. 이 과정을 재거나 겨냥하면 예방이 나아지는지는 추가 연구가 필요하다고 함. 한국 검진에서 이런 입자까지 따로 보는지는 기사에 없어서 모르겠음. 그럼 LDL 관리는 이제 별 의미 없다는 걸까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">226/500자</span></div>
+      <p class="tp-text">6/ 그건 아니고, 기사 결론은 LDL 관리는 여전히 중요한데 그것만으로는 심혈관 위험의 모든 원인이 안 잡힐 수 있다는 거.
+&#39;수치 정상이면 안심&#39; vs &#39;그래도 이것저것 더 챙겨봄&#39;, 너는 어느 쪽이야?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 한국 검진에서 TRL, Lp(a) 같은 입자까지 따로 검사하는지 기사에 나와 있지 않다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;콜레스테롤 수치 정상이면 안심&#39;이라는 말, 이 연구 보면 좀 달라짐</li><li>나쁜 콜레스테롤을 권장 범위로 내렸는데도 심장 위험이 남는 이유, 단서가 나왔대</li><li>나쁜 콜레스테롤이 범인의 전부가 아니라는 연구가 나옴</li><li>&#39;LDL 수치&#39;만 보지 말고 다른 지방 운반 입자도 따져보는 연구가 나옴</li><li>콜레스테롤은 &#39;쌓이는 문제&#39;만이 아니라 &#39;염증 문제&#39;일 수도 있다는 연구가 나옴</li><li>수치는 정상인데 심장마비? 스웨덴 연구진이 단서를 찾았대</li><li>건강검진 수치가 정상이어도 남는 위험, 혈액 단백질 약 3,000개를 뒤져서 찾아봤대</li><li>&#39;LDL만 낮추면 끝&#39;이 아니라 &#39;남은 위험&#39;을 따로 들여다보기 시작했대</li><li>LDL 말고 TRL, Lp(a)라는 입자 이름 들어봤어? 이 연구의 진짜 주인공들</li><li>나쁜 콜레스테롤 관리를 잘해도 심장 문제가 생기는 사람이 있는 이유</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>&#39;수치 정상이면 안심&#39; vs &#39;그래도 이것저것 더 챙겨봄&#39;, 너는 어느 쪽이야?</li><li>건강 기사 볼 때 제목만 보는 파 vs 끝까지 읽는 파?</li><li>LDL, TRL, Lp(a) 중에 이름 들어본 거 있어?</li><li>&#39;수치만 좋으면 OK&#39;라는 말, 너라면 그대로 믿을 거야?</li><li>이런 건강 연구 글, 요약 먼저 보는 파 vs 처음부터 읽는 파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>Lp(a)가 뭔지, LDL이랑 뭐가 다른지 쉽게 풀기</li><li>중성지방 많은 입자(TRL)는 어떤 입자인지</li><li>콜레스테롤 말고 염증과 혈관 건강 얘기</li><li>단백질 분석(프로테오믹스)으로 건강 위험을 보는 연구들</li><li>심장 건강 관련 해외 연구 더 모아보기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>훅 4번처럼 &#39;입자도 따져본다&#39;는 표현이 새 검사를 받으라는 권유로 읽히지 않게 확인 필요. 원문은 검사법이 확립되지 않았다고 밝힘</li><li>한국 검진에서 이 입자들을 따로 보는지는 원문에 없어 5/에서 모른다고만 처리함. 한국 상황을 단정하는 문장으로 고치면 안 됨</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수치를 권장 범위로 내려도 심장마비 위험이 남는 사람이 있고, 과학자들이 그 이유를 찾았을 수 있다</b>
+          <q>“Even when bad cholesterol is brought down to healthy levels, some people remain at risk of heart attacks, and scientists may have discovered why.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스웨덴 Chalmers 연구진이 LDL 수치를 낮춘 뒤에도 심장질환이 생기는 이유의 단서를 찾았다</b>
+          <q>“Researchers at Chalmers University of Technology in Sweden have uncovered new clues about why some people develop heart disease even after lowering their bad cholesterol to recommended levels.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 염증을 촉진하고 혈관을 손상시키는 것으로 보이는 지방 운반 입자 두 종류를 확인했다</b>
+          <q>“Researchers identified two types of fat-carrying particles that appear to promote inflammation and damage blood vessels through mechanisms beyond cholesterol buildup.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>TRL과 Lp(a)는 LDL 외에 특히 중요한 기여 요인으로 확인됐다</b>
+          <q>“The researchers also identified two particularly important contributors beyond LDL: triglyceride-rich lipoproteins, or TRL, and lipoprotein(a), known as Lp(a).”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>LDL 관련 단백질은 주로 동맥벽 콜레스테롤 축적과 연결됐다</b>
+          <q>“LDL showed a different pattern. Its associated proteins were primarily connected to cholesterol accumulation in artery walls, highlighting an important distinction between the ways these three types of particles may contribute to heart disease.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>TRL과 Lp(a) 입자는 면역세포를 끌어들일 수 있는 단백질을 지니고 있어 염증을 부추길 수 있다</b>
+          <q>“The researchers found that these particles carried proteins capable of attracting immune cells, potentially encouraging inflammation and changes in the structure of blood vessel walls.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈액 속 약 3,000개 단백질 측정값을 유전 정보, 장기 건강 기록과 비교했다</b>
+          <q>“Researchers analyzed measurements of nearly 3,000 proteins found in blood samples and compared the results with genetic information and long-term health records.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>TRL과 Lp(a)는 다른 입자인데도 단백질 패턴이 비슷했고, 그 패턴이 이후 심장질환과 연결돼 보였다</b>
+          <q>“Although these are distinct types of particles, their associated blood protein patterns showed substantial similarities. Those overlapping patterns also appeared to be linked to the later development of heart disease.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>LDL은 혈중 콜레스테롤 대부분을 운반한다</b>
+          <q>“LDL: Low-density lipoprotein transports most of the cholesterol circulating in the blood.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>TRL은 콜레스테롤과 중성지방을 함께 운반한다</b>
+          <q>“TRL: Triglyceride-rich lipoproteins transport cholesterol along with triglycerides, which the body uses as an important energy source.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Lp(a)는 LDL과 닮았지만 apolipoprotein(a) 단백질이 추가로 붙어 있고, 높은 수치는 이미 심장질환 위험 요인으로 인정돼 있다</b>
+          <q>“Lp(a): Lipoprotein(a) resembles an LDL particle but contains an additional protein known as apolipoprotein(a). Higher levels of Lp(a) are already recognized as an established risk factor for coronary heart disease.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>LDL, TRL, Lp(a) 세 입자 모두 apoB 단백질을 가진다</b>
+          <q>“Each contains the structural protein apolipoprotein B, or apoB.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 새 치료법이나 임상용 혈액 검사를 확립하지 않았고 추가 연구가 필요하다</b>
+          <q>“However, the research did not evaluate a new treatment or establish a blood protein test ready for routine clinical use. Additional studies will be needed to determine whether measuring these biological processes, or developing treatments that target them, can improve protection against heart disease.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>LDL 관리는 여전히 중요하지만 콜레스테롤 감소만으로는 모든 심혈관 위험 원인을 다룰 수 없을 수 있다</b>
+          <q>“The results reinforce the importance of controlling LDL cholesterol while revealing why cholesterol reduction alone may not address every source of cardiovascular risk.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="d53682bd08ee">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261109205415.htm" target="_blank" rel="noopener">Why heart attacks can still happen even when bad cholesterol is low</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-cc241df1baef">
+    <div class="head">
+      <h2>S3. 방귀 냄새는 소리가 아니라 뭘 먹었나가 좌우</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-cc241df1baef">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 누구나 겪지만 말 못 하는 방귀 냄새를 &#39;내 식단이 그대로 드러나는 것&#39;으로 풀어주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">86/500자</span></div>
+      <p class="tp-text">방귀 냄새는 소리 크기가 아니라 &#39;뭘 먹었나&#39;가 좌우한대
+미생물학자 설명인데, 소리 큰 방귀가 제일 독한 것도 아니라고 함
+그럼 냄새의 진짜 범인은 뭘까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">1/ 냄새의 범인은 &#39;황&#39;이래. 방귀는 대부분 우리가 마시는 공기와 같은 냄새 없는 기체인데, 황이 들어간 기체 분자가 악취를 만든대. 대표 범인은 썩은 달걀 냄새로 유명한 수소 황화물. 근데 이게 얼마나 적어도 냄새가 날까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">2/ 수소 황화물은 기체 분자 100만 개 중 딱 1개만 있어도 냄새를 낸대. 옥수수 약 1,250개 실은 트럭에서 알갱이 하나 수준이래. 그럼 이 황은 도대체 어디서 올까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">3/ 황은 먹는 데서 와. 고기·유제품·달걀엔 황이 든 아미노산이 많고, 양배추·브로콜리·방울양배추·콜리플라워 같은 채소에도 황 든 분자가 있대. 장내 미생물이 이걸 소화하면 황 기체가 나오는 거. 그럼 소리 큰 방귀는 뭐 때문일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">172/500자</span></div>
+      <p class="tp-text">4/ 방귀 요약 정리
+- 건강한 사람은 하루 14~20번쯤
+- 냄새 담당: 황이 든 기체
+- 양·소리 담당: 사탕, 인공감미료·시럽 든 다이어트 식품, 콩·곡물 같은 고섬유질
+- 냄새 재료: 고기·유제품·달걀, 양배추·브로콜리류
+- 소리 크다고 제일 독한 건 아님
+근데 냄새가 계속 독하면 어떻게 봐야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">153/500자</span></div>
+      <p class="tp-text">5/ 냄새는 식단뿐 아니라 전반적인 건강도 반영한대. 독한 냄새가 계속되면 과민성 대장증후군이나 음식 불내증·민감성 신호일 수 있어서 병원 상담이 필요할 수도 있다고 함. 자기한테 해당되는지는 의사와 상의. 근데 우리 코가 이 냄새를 이렇게 잘 맡는 건 이유가 있대. 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">113/500자</span></div>
+      <p class="tp-text">6/ 우리 코는 황 기체를 감지하는 화학 센서 역할을 하도록 진화한 거래. 이 냄새는 썩는 물질이나 병원체가 있을 수 있는 세균 활동, 늪·동굴·화산 분출구 같은 위험한 환경의 신호일 수 있어서라고 함.</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">222/500자</span></div>
+      <p class="tp-text">7/ 결국 방귀 냄새는 먹은 음식과 장 속 미생물이 하는 일의 결과고, 독한 냄새가 계속되면 병원 얘기가 나올 수 있다는 거야
+방귀 냄새 제일 독하게 만드는 음식 하나만 꼽는다면? 양배추파 vs 고기파
+이런 해외 몸 상식, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 설명을 한 사람이 미생물학자라는 내용(원문 발췌에는 필자 전문 분야가 확인되지 않음)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>방귀 냄새는 소리 크기가 아니라 &#39;뭘 먹었나&#39;가 좌우한대</li><li>방귀 냄새, 크기 말고 &#39;황&#39;부터 보라는 미생물학자 설명이 나옴</li><li>방귀 뀌고 민망했던 사람, 이 설명 보면 좀 달라짐</li><li>양배추 먹은 날 방귀가 독한 데는 이유가 있대</li><li>방귀 소리 큰 게 제일 독한 건 아니래</li><li>건강한 사람은 하루 방귀를 14~20번쯤 뀐대</li><li>방귀 냄새 하나로 내 식단이 읽힌다는 말, 진짜?</li><li>100만 개 중 딱 1개만 있어도 냄새가 난대, 방귀 얘기야</li><li>&#39;방귀 참지 말고 이유부터 알라&#39;는 미생물학자 설명이 나옴</li><li>방귀 냄새가 독한 날, 어제 먹은 것부터 떠올리면 되는 이유</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>방귀 냄새 제일 독하게 만드는 음식 하나만 꼽는다면? 양배추파 vs 고기파</li><li>방귀 뀌고 모른 척해본 적 있는 사람?</li><li>방귀 참기 vs 그냥 뀌기, 너는 어느 쪽이야?</li><li>비행기에서 방귀 참아본 사람?</li><li>방귀 소리 큰 사람 vs 냄새 독한 사람, 같이 있기 더 힘든 쪽은?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>비행기 안에서 방귀가 더 나오는 이유와 냄새 잡는 방석</li><li>몸속 세균 수가 사실 인체 세포 수와 비슷하다는 연구</li><li>방귀 농담이 3,900년 전부터 있었다는 얘기</li><li>아타카마 사막 기록적 꽃 개화</li><li>일본인이 사요나라를 안 쓰는 이유</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>방귀 냄새와 양을 결정하는 가장 큰 요인은 장내 미생물이 먹는 음식이다</b>
+          <q>“The main thing that determines which gases and how much of them are in your farts is what food your gut microbiome gets to eat.”</q>
+          <small>post0 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가장 시끄러운 방귀가 항상 가장 냄새나는 건 아니고 황이 든 방귀가 독하다</b>
+          <q>“However, the loudest fart is not always the stinkiest one. It’s the ones that contain sulfur that pack a smelly punch.”</q>
+          <small>post0 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>방귀는 대부분 공기 중에 있는 것과 같은 냄새 없는 기체로 이루어져 있다</b>
+          <q>“Farts are mostly made up of the same odorless gases found in the air we breathe.”</q>
+          <small>post1 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>방귀 악취의 원인은 황을 포함한 기체 분자다</b>
+          <q>“What makes farts so malodorous is other gas molecules that contain the element sulfur.”</q>
+          <small>post1 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수소 황화물은 썩은 달걀 냄새로 유명하다</b>
+          <q>“One key culprit is hydrogen sulfide, which is famous for smelling like rotten eggs.”</q>
+          <small>post1 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수소 황화물 분자가 다른 기체 분자 100만 개 중 1개만 있어도 냄새를 낸다</b>
+          <q>“Only tiny amounts are required: One molecule of hydrogen sulfide among 1 million other gas molecules has enough power to do the job.”</q>
+          <small>post2 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그 비율은 약 1,250개 옥수수 트럭에서 알갱이 하나에 해당한다</b>
+          <q>“That’s equivalent to one kernel of corn in a truckload of about 1,250 ears, or 10 bricks out of all the bricks that make up the Empire State Building in New York City.”</q>
+          <small>post2 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>메티오닌과 시스테인은 황을 포함하며 고기, 유제품, 달걀에 풍부하다</b>
+          <q>“Two amino acids, methionine and cysteine, contain sulfur, and they are plentiful in meat, dairy, eggs, and to a lesser degree, beans and grains.”</q>
+          <small>post3 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>양배추, 브로콜리, 방울양배추, 콜리플라워에도 황이 든 분자가 있다</b>
+          <q>“Some foods – most notably, vegetables such as cabbage, broccoli, Brussels sprouts and cauliflower – contain other molecules that also have sulfur in them.”</q>
+          <small>post3 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>황이 풍부한 음식을 먹으면 장내 미생물이 소화해 황 기체를 만든다</b>
+          <q>“When you eat sulfur-rich foods, your gut microbes digest them to produce sulfur-containing gases.”</q>
+          <small>post3 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>건강한 사람은 하루 약 14~20번 방귀를 뀐다</b>
+          <q>“A healthy person farts about 14 to 20 times each day.”</q>
+          <small>post4 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사탕, 인공감미료나 시럽이 든 다이어트 식품은 미생물의 소화 방식을 바꿀 수 있다</b>
+          <q>“Some types of foods often referred to as junk food, including candy or diet foods containing artificial sweeteners or syrups, can change the way microbes digest food.”</q>
+          <small>post4 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>콩·곡물 같은 고섬유질 음식은 더 크고 시끄러운 방귀를 만들 수 있다</b>
+          <q>“High-fiber foods such as beans and grains also have this effect. These foods can cause your body to produce more farts that often are bigger and louder.”</q>
+          <small>post4 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>냄새는 식단과 전반적인 건강에 맞춰지며, 지속적인 악취는 과민성 대장증후군이나 음식 불내증의 신호일 수 있다</b>
+          <q>“That can lead to some putrid farts, with the precise smell tuned to your diet – as well as your overall health. In fact, persistent foul-smelling gas can be a sign of illness, such as irritable bowel syndrome or food intolerance or sensitivity, which you might need to see a doctor about.”</q>
+          <small>post5 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코는 황 기체를 감지하는 화학 센서 역할을 하도록 진화한 것이다</b>
+          <q>“Despite farts’ assault on the senses, your ability to detect them means your nose is doing exactly what evolution designed it to do: act as a chemical sensor for sulfur-containing gases.”</q>
+          <small>post6 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 냄새는 썩는 물질, 병원체가 있을 수 있는 세균 활동, 늪·동굴·화산 분출구 같은 위험한 환경의 신호일 수 있다</b>
+          <q>“These smells can signal the presence of rotting substances and bacterial activity that might harbor pathogens that can make you sick, or deadly environments such as swamps, stagnant caves and volcano vents that can suffocate and kill you.”</q>
+          <small>post6 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>방귀 냄새는 식단과 전반적인 건강을 반영하고 지속적인 악취는 병원 상담이 필요할 수 있다</b>
+          <q>“In fact, persistent foul-smelling gas can be a sign of illness, such as irritable bowel syndrome or food intolerance or sensitivity, which you might need to see a doctor about.”</q>
+          <small>post7 · <a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="cc241df1baef">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://theconversation.com/why-do-farts-smell-so-bad-a-microbiologist-explains-the-odors-brewing-in-your-gut-294335" target="_blank" rel="noopener">Why do farts smell so bad? A microbiologist explains the odors brewing in your gut</a></li><li><a href="https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002533" target="_blank" rel="noopener">Revised Estimates for the Number of Human and Bacteria Cells in the Body</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-8951ade953a1">
+    <div class="head">
+      <h2>S4. 고양이 주머니 달린 일본 후드티 Meowgaroo Hoodie 3</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-8951ade953a1">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 고양이 키우는 사람이면 누구나 겪는 &#39;무릎 점령&#39; 상황을 옷 하나로 푼 반전 아이템이라 &#39;이거 뭐야?&#39;와 집사 선물용으로 팔린다</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "고양이 주머니 후드티" · 원문 제품: BIBILAB(일본 브랜드) Meowgaroo Hoodie 3, BIBI-NYAO 컬렉션, ¥8,900(약 $56), Amazon Japan 판매, 회색 M·L, 약 800g<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: yankodesign.com, soranews24.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/8951ade953a1/thread-photo-1111082131-01.jpg" alt="회색 후드티 단품 제품컷(고양이 귀 모양 후드, 파란 끈 끝, 앞주머니, LAB 로고)과 고양이가 들어 있는 주머니 확대 사진" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/8951ade953a1/thread-photo-1111082131-02.jpg" alt="회색 후드티를 입은 사람의 뒷모습과 큰 배 주머니 안에서 자는 주황 고양이, 귀 달린 후드, 가슴 포켓, 하단 LAB 로고가 보인다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261111-pm-d1fcab2e438d/8951ade953a1/thread-photo-1111082131-03.jpg" alt="회색 후드티를 입은 여성이 소파에 앉아 닌텐도 스위치를 하고 있고, 앞주머니 안에 주황 고양이가 들어가 자고 있다. 후드에는 고양이 귀 모양이 달려 있고 &#39;siSi LAB&#39; 로고가 보인다." loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-8951ade953a1">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">노트북 켜면 고양이가 꼭 무릎부터 차지하잖아
+근데 무릎 말고 &#39;주머니&#39;에 넣으라고 만든 후드티가 일본에서 나옴
+처음엔 그냥 큰 주머니인 줄 알았는데, 구조가 좀 달랐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">98/500자</span></div>
+      <p class="tp-text">1/ 이름은 Meowgaroo Hoodie 3. 앞쪽에 캥거루 주머니처럼 생긴 큼직한 상자형 주머니가 달렸고, 덩치 큰 고양이도 들어가게 만들었대. 그냥 주머니랑 뭐가 다를까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">2/ 보통 후드티 주머니와 달리 구조가 잡혀 있어서, 고양이 무게에 옷이 처지는 걸 막는 데 도움이 되게 만들었대. 안쪽은 도톰한 기모 원단이고. 근데 일하다 심심해진 고양이는 어떡할까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">165/500자</span></div>
+      <p class="tp-text">3/ Meowgaroo Hoodie 3 요약 정리
+- 가슴 앞 상자형 고양이 주머니
+- 후드 끈 끝에 고양이 장난감(티저)
+- 가슴에 스마트폰 주머니 (스냅 단추로 폰 크기 조절)
+- 빨 수 있게 빠지는 보아 원단 안감
+- 후드에 고양이 귀 장식
+근데 이 후드티, 사실 처음 나온 게 아니라는데?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">4/ 2015년에 처음 나온 컨셉의 최신 버전이래. 회사 말로는 시리즈가 4만 개 넘게 팔렸고 이번엔 5년 만의 새 버전. 가격은 8,900엔, 회색에 M·L 사이즈고 무게는 약 800g. 지역마다 가격은 다를 수 있대. 이 정도면 선물 후보로 어때?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">186/500자</span></div>
+      <p class="tp-text">5/ 결국 고양이한테 무릎 대신 가슴 앞 주머니를 내주고, 사람은 손을 계속 쓰게 해주는 후드티라는 거.
+이거 선물로 받으면 좋아할 집사 소환해봐
+해외에서 난리 난 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 제품 이름이 Meowgaroo Hoodie 3이라는 주장</li><li>근거 등록 안 된 주장: 해외에서 난리 난 물건이라는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>노트북 켜면 고양이가 꼭 무릎부터 차지하잖아</li><li>고양이 때문에 일 못 한다고? 무릎 말고 &#39;주머니&#39;에 넣으라고 만든 후드티가 나옴</li><li>고양이 쫓아내지 말고 &#39;앉을 자리&#39;부터 만들어주라는 후드티가 일본에서 나옴</li><li>게임하다 고양이가 올라오면 일어서지 말고, 가슴 앞 주머니를 열면 된대</li><li>처음엔 그냥 큰 주머니 후드티인 줄 알았는데, 고양이가 들어가는 상자형이었음</li><li>시리즈 4만 개 넘게 팔린 고양이 주머니 후드티, 5년 만에 새 버전이 나옴</li><li>고양이 키우는 친구 선물 고민이면, 이 후드티 주머니부터 봐</li><li>&#39;캥거루 주머니&#39;를 고양이용으로 쓴 옷이 있대</li><li>고양이 키우는 사람이면 &#39;이거 뭐야?&#39; 할 후드티가 일본에서 나옴</li><li>의자에 앉자마자 올라오는 고양이, 이제 후드티 주머니에 앉히라는 물건이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이 후드티 있으면 살 거야?</li><li>이거 선물로 받으면 좋아할 집사 소환</li><li>고양이가 무릎파야 주머니파야? 너희 고양이는 어느 쪽?</li><li>후드티에 고양이 귀 달린 거, 입을 수 있어 없어?</li><li>고양이 주머니에 넣고 일하기 vs 그냥 무릎에서 일하기, 뭐가 나아?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>고양이와 같이 사는 집을 위한 일본 아이템 더 보기</li><li>집사 선물용으로 해외에서 화제된 물건</li><li>해외에서 화제된 반려동물 물건</li><li>일본인이 사요나라를 안 쓰는 이유</li><li>아타카마 사막 기록적 꽃 개화</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문에 해외 소비자 반응이 없음. 마지막 글의 &#39;난리 난 물건&#39;은 계정 컨셉 문구일 뿐이니 반응이 있었다고 단정하는 문장은 덧붙이지 말 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>고양이가 노트북, 게임 의자, 빈 무릎을 좋아하는 자리로 삼는다</b>
+          <q>“Anyone who owns a cat knows that a laptop, gaming chair, or even an empty lap can quickly become their pet’s favourite place to settle.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일본 브랜드가 고양이를 가까이 두면서 손을 쓸 수 있게 하는 입는 고양이 침대를 내놨다</b>
+          <q>“Japanese brand BIBILAB has found a rather ingenious way to accommodate this feline habit with the Meowgaroo Hoodie 3, a wearable cat bed that lets owners keep their furry companions close without sacrificing the use of their hands.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>후드티 앞쪽에 큼직한 상자형 주머니가 달려 있다</b>
+          <q>“The standout feature of the unique clothing is a large, box-shaped pouch integrated into the front of the hoodie.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>캥거루 주머니처럼 생겼고 덩치 큰 고양이도 들어가도록 설계됐다</b>
+          <q>“Resembling a kangaroo’s pouch, it is designed to accommodate even larger cats comfortably.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>구조가 잡혀 있어 고양이 무게에 옷이 처지는 걸 막는 데 도움이 된다</b>
+          <q>“Unlike an ordinary sweatshirt pocket, the compartment has a structured construction that helps prevent the garment from sagging under the cat’s weight.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>안쪽은 도톰한 기모 원단이다</b>
+          <q>“The thick, brushed interior fabric also provides additional warmth and support, making it a convenient place for a feline companion to settle while the owner works at a computer or plays games.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>후드 끈 끝에 고양이 장난감이 달려 있다</b>
+          <q>“The first is a cat teaser attached to the ends of the hood’s drawstrings.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가슴에 스마트폰 주머니가 있고 스냅 단추로 폰 크기에 맞게 조절한다</b>
+          <q>“The second addition is a dedicated smartphone pocket on the chest. It can be adjusted using snap buttons to accommodate different phone sizes and keeps the device readily accessible for capturing spontaneous moments.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>보아 원단 안감을 빼서 세탁할 수 있다</b>
+          <q>“The cat compartment features a removable, fluffy boa-fabric inner lining that can be taken out for cleaning and washing, helping manage accumulated fur.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>후드에 고양이 귀 장식이 있다</b>
+          <q>“The hood also features decorative cat ears, adding to the garment’s playful character.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2015년에 처음 나온 컨셉의 최신 버전이고 시리즈가 4만 개 넘게 팔렸으며 5년 만의 새 버전이다</b>
+          <q>“Meowgaroo Hoodie 3 is the latest version of a concept BIBILAB first introduced in 2015. According to the company, the series has sold more than 40,000 units, with this new iteration arriving after a five-year gap.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>회색에 M·L 사이즈, 무게는 약 800g이다</b>
+          <q>“Available in grey in medium and large sizes, the hoodie weighs approximately 800 grams.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격은 8,900엔이고 지역에 따라 다를 수 있다</b>
+          <q>“Meowgaroo Hoodie 3 is listed at ¥8,900 (approximately $56) on Amazon Japan, although pricing may vary depending on the region.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="8951ade953a1">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/10/this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-japanese-hoodie-gives-your-cat-a-cozy-pocket-so-you-can-game-or-work-hands-free" target="_blank" rel="noopener">This Japanese hoodie gives your cat a cozy pocket so you can game or work hands-free - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261111-pm";
+  const ORIGINAL = {"b27d11bcb24c": {"caption": "\uace0\uc9c8\ub77c \ub9c8\uc774\ub108\uc2a4 \uc81c\ub85c\ub97c \ubcf4\ub2e4\uac00 \ud654\uc7a5\uc2e4 \ud589\ub82c \ub54c\ubb38\uc5d0 \ud654\uac00 \ub0ac\ub2e4\ub294 \uad00\uac1d\uc774 \uc77c\ubcf8\uc5d0\uc11c \ud654\uc81c\ub2e4. \uc601\ud654 \uc790\uccb4\ub294 \ube44\ud3c9\uac00\uc640 \uad00\uac1d \ubaa8\ub450\uc5d0\uac8c \uc88b\uc740 \ud3c9\uac00\ub97c \ubc1b\uc558\uace0, \uac1c\ubd09 \uccab\ub0a0\uc5d0\ub9cc 9\uc5b5 1\ucc9c\ub9cc \uc5d4(\uc57d 580\ub9cc \ub2ec\ub7ec)\uc744 \ubc8c\uc5b4 \uc77c\ubcf8 \uc2e4\uc0ac \uc601\ud654 \uae30\ub85d\uc744 \uae7c\ub2e4. \uadf8\ub7f0\ub370 \uc77c\ubd80 \uad00\uac1d\uc740 \uc0c1\uc601 \uc911 \ud654\uc7a5\uc2e4\uc5d0 \uac00\ub294 \uc0ac\ub78c\uc774 \ub108\ubb34 \ub9ce\ub2e4\uace0 \ubd88\ub9cc\uc744 \ud138\uc5b4\ub1a8\ub2e4.\n\n\ud1b5\ub85c \ucabd \uc88c\uc11d\uc5d0 \uc549\uc558\ub2e4\ub294 \ud55c SNS \uc774\uc6a9\uc790\ub294 \uc601\ud654\uac00 \uc2dc\uc791\ub418\uace0 \uc5bc\ub9c8 \uc548 \ub3fc \uc0ac\ub78c\ub4e4\uc774 \uc904\uc904\uc774 \ud654\uc7a5\uc2e4\uc5d0 \uac00 \ubab0\uc785\uc774 \uae68\uc84c\ub2e4\uace0 \uc801\uc5c8\ub2e4. \uc774 \uae00\uc5d0\ub294 \uacf5\uac10\ud558\ub294 \uc0ac\ub78c\uc774 \ub2e4\uc218\uc600\uace0, \uc0c1\uc601 \uc911 \ud654\uc7a5\uc2e4\uc5d0 \uac04 \uc0ac\ub78c \uc218\ub97c \uc9c1\uc811 \uc13c \uad00\uac1d\ub3c4 \uc788\uc5c8\ub2e4. \uc0c1\uc601 \uc2dc\uac04\uc740 135\ubd84\uc778\ub370, \ub354 \uae34 172\ubd84\uc9dc\ub9ac \uc601\ud654\ubcf4\ub2e4 \uc790\ub9ac\ub97c \ub72c \uc0ac\ub78c\uc774 \ud6e8\uc52c \ub9ce\uc558\ub2e4\ub294 \uc5b8\uae09\ub3c4 \ub098\uc654\ub2e4.\n\n\uc774\uc720\ub85c\ub294 1950\ub144\ub300\ubd80\ud130 \uc774\uc5b4\uc9c4 \uc2dc\ub9ac\uc988\ub77c \ub098\uc774 \ub4e0 \uad00\uac1d\uc774 \ub9ce\ub2e4\ub294 \uc124, \uacf5\ud734\uc77c \uac1c\ubd09\uc791\uc774\ub77c \ud3c9\uc18c \uc601\ud654\uad00\uc744 \uc798 \uac00\uc9c0 \uc54a\ub294 \uc0ac\ub78c\uc774 \ubab0\ub838\ub2e4\ub294 \uc124\uc774 \ub098\uc654\ub2e4. \uadf9\uc911 \ud30c\uad34 \uc7a5\uba74\uc774 \uc2e4\uc81c \uc7ac\ub09c\uc744 \ub5a0\uc62c\ub9ac\uac8c \ud574 \uc790\ub9ac\ub97c \ub72c \uc0ac\ub78c\ub3c4 \uc788\uc744\uc9c0 \ubaa8\ub978\ub2e4\ub294 \ucd94\uce21\ub3c4 \uc788\ub2e4. \ud55c\ud3b8 \uc601\ud654 \uc804\uc5d0 \ubd09\ud0c4\uc544\uba54 \uc0ac\ud0d5\uc774\ub098 \ub2e4\uc774\ud6c4\ucfe0\ub97c \uba39\uc73c\uba74 \uc88b\ub2e4\ub294 \ub313\uae00\ub3c4 \ub9ce\uc558\uc9c0\ub9cc \uacfc\ud559\uc801 \uadfc\uac70\ub294 \uc5c6\ub2e4.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\uace0\uc9c8\ub77c", "#\uc77c\ubcf8\uc601\ud654\uad00", "#\uc77c\ubcf8\ubb38\ud654", "#\ud574\uc678\ud654\uc81c", "#\uc601\ud654\uad00\ub78c\ub9e4\ub108"], "slides": [["\uace0\uc9c8\ub77c \uc0c1\uc601 \uc911", "**\ud654\uc7a5\uc2e4** \ub300\ub780?!", "---", "\uc77c\ubcf8 \uc601\ud654\uad00\uc5d0\uc11c \uace0\uc9c8\ub77c \ub9c8\uc774\ub108\uc2a4 \uc81c\ub85c\ub97c \ubcf4\ub358 \uad00\uac1d\ub4e4\uc774 \uc0c1\uc601 \uc911 \ud654\uc7a5\uc2e4\uc5d0 \uac00\ub294 \uc0ac\ub78c\uc774 \ub108\ubb34 \ub9ce\ub2e4\uba70 \ubd88\ub9cc\uc744 \ud130\ub728\ub838\ub2e4."], ["\uac1c\ubd09 \uccab\ub0a0", "**9\uc5b5 1\ucc9c\ub9cc \uc5d4**", "---", "\ud654\uc81c\uc791\uc740 \uac1c\ubd09 \uccab\ub0a0\uc5d0\ub9cc 9\uc5b5 1\ucc9c\ub9cc \uc5d4(\uc57d 580\ub9cc \ub2ec\ub7ec)\uc744 \ubc8c\uc5b4 \uc77c\ubcf8 \uc2e4\uc0ac \uc601\ud654 \ud765\ud589 \uae30\ub85d\uc744 \uc0c8\ub85c \uc37c\ub2e4. \ube44\ud3c9\uac00\uc640 \uad00\uac1d \ud3c9\uac00\ub3c4 \ubaa8\ub450 \uc88b\uc558\ub2e4."], ["\ubd88\ub9cc 1\uc21c\uc704\ub294", "**\ud654\uc7a5\uc2e4 \ud589\ub82c**", "---", "\ud55c SNS \uc774\uc6a9\uc790\ub294 \ud1b5\ub85c \ucabd \uc88c\uc11d\uc5d0 \uc549\uc558\ub294\ub370 \uc601\ud654\uac00 \uc2dc\uc791\ub418\uace0 \uc5bc\ub9c8 \uc548 \ub3fc \uc0ac\ub78c\ub4e4\uc774 \uc904\uc904\uc774 \ud654\uc7a5\uc2e4\uc5d0 \uac00 \ubab0\uc785\uc774 \uae68\uc84c\ub2e4\uace0 \uc801\uc5c8\ub2e4. \uc774 \uae00\uc5d0\ub294 \uacf5\uac10\ud558\ub294 \uc0ac\ub78c\uc774 \ub2e4\uc218\uc600\ub2e4."], ["**\uc778\uc6d0\uc218\uae4c\uc9c0**", "\uc138\ub294 \uc0ac\ub78c\ub3c4", "---", "\uc0c1\uc601 \uc911 \ud654\uc7a5\uc2e4\uc5d0 \uac04 \uc0ac\ub78c \uc218\ub97c \uc9c1\uc811 \uc13c \uad00\uac1d\ub3c4 \uc788\uc5c8\ub2e4. \uc77c\ubcf8 \uad00\uac1d \ub2e4\uc218\ub294 \uc81c\uc791\uc9c4\uc5d0 \ub300\ud55c \uc874\uc911\uc73c\ub85c \uc5d4\ub529 \ud06c\ub808\ub527\uae4c\uc9c0 \uc790\ub9ac\ub97c \uc9c0\ud0a4\ub294 \ud3b8\uc774\ub77c \ucc38\uae30\uac00 \ub354 \uc5b4\ub824\uc6e0\ub2e4\ub294 \uc598\uae30\ub3c4 \ub098\uc654\ub2e4."], ["\uc774\uc720\ub97c \ub450\uace0", "**\ucd94\uce21**\uc774 \ubd84\ubd84", "---", "1950\ub144\ub300\ubd80\ud130 \uc774\uc5b4\uc9c4 \uc2dc\ub9ac\uc988\ub77c \ub098\uc774 \ub4e0 \uad00\uac1d\uc774 \ub9ce\uc544\uc11c\ub77c\ub294 \uc124\uc774 \ub098\uc654\ub2e4. \uacf5\ud734\uc77c \uac1c\ubd09\uc791\uc774\ub77c \ud3c9\uc18c \uc601\ud654\uad00\uc744 \uc798 \ucc3e\uc9c0 \uc54a\ub294 \uc0ac\ub78c\uc774 \ubab0\ub838\ub2e4\ub294 \uc124\ub3c4 \uc788\uc5c8\ub2e4."], ["\ucc38\ub294 \ube44\ubc95\uc740", "**\uc0ac\ud0d5**\uacfc \ucc39\uc300\ub5a1?", "---", "\ub313\uae00\uc5d0\ub294 \uc601\ud654 \ubcf4\uae30 \uc804\uc5d0 \ubd09\ud0c4\uc544\uba54 \uc0ac\ud0d5\uc774\ub098 \ub2e4\uc774\ud6c4\ucfe0\ub97c \uba39\uc73c\uba74 \uc694\uc758\ub97c \ub204\ub978\ub2e4\ub294 \uc598\uae30\uac00 \ub9ce\uc558\ub2e4. \uae30\uc0ac\ub294 \uc774\ub97c \ub4b7\ubc1b\uce68\ud560 \uacfc\ud559\uc801 \uadfc\uac70\ub294 \uc5c6\ub2e4\uace0 \uc9da\uc5c8\ub2e4."], ["\ubb3c \ub9ce\uc774 \ub9c8\uc2dc\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uc601\ud654\uad00\uc5d0\uc11c \ud654\uc7a5\uc2e4 \ud0c0\uc774\ubc0d \ub54c\ubb38\uc5d0 \ub298 \uc2e0\uacbd \uc4f0\uc774\ub294 \uce5c\uad6c\ub77c\uba74 \uacf5\uac10\ud560 \uc18c\uc2dd. \uc77c\ubcf8\uc5d0\uc11c\ub3c4 \uc0c1\uc601 \uc911 \ud654\uc7a5\uc2e4 \ud589\ub82c\uc774 \ud654\uc81c\uac00 \ub410\ub2e4."]]}, "c1b0703eff59": {"caption": "\uc791\ubcc4 \uc778\uc0ac\ub85c \uc804 \uc138\uacc4\uac00 \uc544\ub294 \uc0ac\uc694\ub098\ub77c, \uadf8\ub7f0\ub370 \uc77c\ubcf8\uc5d0 \uc0b4\uba74 \uc774 \ub9d0\uc744 \uc9c1\uc811 \ub4e3\ub294 \uc77c\uc740 \uac70\uc758 \uc5c6\ub2e4\uace0 \ud55c\ub2e4. \uc77c\ubcf8 \ub9e4\uccb4 \uc18c\ub77c\ub274\uc2a424\uac00 \uadf8 \uc774\uc720\ub97c \uc18c\uac1c\ud588\ub2e4.\n\n\uc77c\uc0c1\uc5d0\uc11c \uc0ac\uc694\ub098\ub77c\ub97c \ub300\uc2e0\ud558\ub294 \ub9d0\uc740 \uc5ec\ub7ff\uc774\ub2e4. \uce5c\uad6c\ub098 \ub610\ub798\ub07c\ub9ac\ub294 \u0027\uc7c8\u0027\ub97c \uac00\uc7a5 \ud754\ud558\uac8c \uc4f4\ub2e4. \u0027\uadf8\ub807\ub2e4\uba74\u0027\uc744 \ub73b\ud558\ub294 \u0027\uc18c\ub808\uc7c8\u0027\ub97c \uc904\uc778 \ud45c\ud604\uc774\uace0, \ud63c\uc790 \uc4f0\uba74 \ud241\uba85\uc2a4\ub7fd\uac8c \ub4e4\ub9b4 \uc218 \uc788\uc5b4 \ub05d\uc5d0 \u0027\ub124\u0027\ub098 \u0027\ub098\u0027\ub97c \ubd99\uc774\ub294 \uacbd\uc6b0\uac00 \ub9ce\ub2e4. \u0027\ub2e4\uc2dc\u0027\ub97c \ub73b\ud558\ub294 \u0027\ub9c8\ud0c0\u0027\ub3c4 \uc788\ub2e4. \u0027\ub2e4\uc2dc \ub9cc\ub098\uc790\u0027, \u0027\ub0b4\uc77c \ub610 \ubcf4\uc790\u0027\ub97c \uc904\uc778 \ub9d0\uc774\ub2e4. \ub354 \uaca9\uc2dd \uc788\uac8c \ub9d0\ud558\uace0 \uc2f6\ub2e4\uba74 \u0027\uc7c8\u0027 \ub300\uc2e0 \u0027\ub370\uc640\u0027\ub97c \uc4f8 \uc218 \uc788\ub2e4.\n\n\uc9c1\uc7a5\uc5d0\uc11c\ub294 \ub610 \ub2e4\ub974\ub2e4. \ud1f4\uadfc\ud560 \ub54c \ub3d9\ub8cc\ub07c\ub9ac\ub294 \u0027\ud53c\uace4\ud558\uaca0\ub2e4\u0027\uc5d0 \uac00\uae4c\uc6b4 \ub73b\uc758 \u0027\uc624\uce20\uce74\ub808\uc0ac\ub9c8\ub370\uc2a4\u0027\ub97c \ud754\ud788 \uac74\ub128\ub2e4. \ub2e4\ub978 \uc0ac\ub78c\uc774 \uc544\uc9c1 \uc77c\ud558\uace0 \uc788\ub2e4\uba74 \u0027\uba3c\uc800 \uc2e4\ub840\ud569\ub2c8\ub2e4\u0027\ub77c\ub294 \ub73b\uc758 \u0027\uc624\uc0ac\ud0a4\ub2c8 \uc2dc\uce20\ub808\uc774\uc2dc\ub9c8\uc2a4\u0027\ub97c \uc4f0\uace0, \uce5c\ud55c \uc0ac\uc774\ub77c\uba74 \u0027\uc624\uc0ac\ud0a4\ub2c8\u0027\ub85c \uc904\uc774\uae30\ub3c4 \ud55c\ub2e4.\n\n\uc0ac\uc694\ub098\ub77c\uac00 \ub4dc\ubb38 \uae4c\ub2ed\uc740 \ub258\uc559\uc2a4\uac00 \ubb34\uac81\uae30 \ub54c\ubb38\uc774\ub2e4. \uc601\uc601 \uc791\ubcc4\uc77c \uc218\ub3c4 \uc788\uace0, \ub2e4\uc2dc \ub9cc\ub098\uc9c0 \ubabb\ud560 \uac00\ub2a5\uc131\uc774 \ud074 \ub54c \uc8fc\ub85c \uc4f0\ub294 \ub9d0\uc774\ub77c\uace0 \ud55c\ub2e4. \uc878\uc5c5\uc2dd\uc5d0\uc11c \uac01\uc790 \ub2e4\ub978 \ub300\ud559\uc73c\ub85c \ud769\uc5b4\uc9c8 \ub54c\ub098, \ub3d9\ub8cc\uac00 \ud574\uc678\ub85c \uc601\uad6c \uc804\uadfc\ud558\ub294 \uc1a1\ubcc4\ud68c\uc5d0 \uc5b4\uc6b8\ub9b0\ub2e4. \uae30\uc0ac \uc18d \uc0ac\ub840\ub3c4 \uc788\ub2e4. 10\uc6d4 31\uc77c \ubb38\uc744 \ub2eb\uc740 \uac00\ub9c8\ucfe0\ub77c\uc758 \ucf5c\ub4dc\uc2a4\ud1a4 \ub9e4\uc7a5\uc740 \ub3d9\uc77c\ubcf8 \ub9c8\uc9c0\ub9c9 \uc9c0\uc810\uc774\uc5c8\ub294\ub370, \uae30\uc790\uac00 \uc544\uc774\uc2a4\ud06c\ub9bc\uc744 \ubc1b\uc790 \uc9c1\uc6d0\ub4e4\uc774 \uac10\uc0ac \uc778\uc0ac\uc640 \ud568\uaed8 \uc0ac\uc694\ub098\ub77c\ub77c\uace0 \ud588\ub2e4.\n\n\uc77c\ubcf8\uc5b4\ub97c \ubc30\uc6b0\ub294 \uce5c\uad6c\uac00 \uc788\ub2e4\uba74 \uc774 \uc774\uc57c\uae30\ub97c \ubcf4\ub0b4 \ubcf4\uc790.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\uc77c\ubcf8\uc5b4", "#\uc77c\ubcf8\ubb38\ud654", "#\uc0ac\uc694\ub098\ub77c", "#\uc77c\ubcf8\uc5ec\ud589", "#\uc5b8\uc5b4\uc774\uc57c\uae30"], "slides": [["**\uc0ac\uc694\ub098\ub77c\ub97c**", "\uc548 \uc4f4\ub2e4\uace0???", "---", "\uc791\ubcc4 \uc778\uc0ac\ub85c \uc138\uacc4\uc801\uc73c\ub85c \uc720\uba85\ud55c \uc0ac\uc694\ub098\ub77c\ub97c, \uc815\uc791 \uc77c\ubcf8 \ud604\uc9c0\uc5d0\uc11c\ub294 \uc77c\uc0c1\uc5d0\uc11c \uc880\ucc98\ub7fc \ub4e4\uc744 \uc218 \uc5c6\ub2e4\uace0 \ud55c\ub2e4."], ["\uce5c\uad6c\ub07c\ub9ac\ub294", "\uadf8\ub0e5 \u0027**\uc7c8**\u0027", "---", "\uce5c\uad6c\ub098 \ub610\ub798\ub07c\ub9ac \uc791\ubcc4\ud560 \ub54c \uac00\uc7a5 \ud754\ud55c \ub9d0\uc740 \u0027\uc7c8\u0027\ub2e4. \u0027\uadf8\ub807\ub2e4\uba74\u0027\uc744 \ub73b\ud558\ub294 \u0027\uc18c\ub808\uc7c8\u0027\ub97c \uc904\uc778 \ud45c\ud604\uc774\uba70, \ud63c\uc790 \uc4f0\uba74 \ud241\uba85\uc2a4\ub7ec\uc6b8 \uc218 \uc788\uc5b4 \ub05d\uc5d0 \u0027\ub124\u0027\ub098 \u0027\ub098\u0027\ub97c \ubd99\uc774\uae30\ub3c4 \ud55c\ub2e4."], ["\u0027\ub2e4\uc2dc\u0027\ub77c\ub294", "\ub73b\uc758 **\ub9c8\ud0c0**", "---", "\u0027\ub9c8\ud0c0\u0027\ub294 \u0027\ub2e4\uc2dc\u0027\ub77c\ub294 \ub73b\uc73c\ub85c, \u0027\ub2e4\uc2dc \ub9cc\ub098\uc790\u0027\ub098 \u0027\ub0b4\uc77c \ub610 \ubcf4\uc790\u0027\ub97c \uc904\uc778 \ub9d0\uc774\ub2e4. \uc870\uae08 \ub354 \uaca9\uc2dd\uc744 \uac16\ucd94\uace0 \uc2f6\ub2e4\uba74 \u0027\uc7c8\u0027 \ub300\uc2e0 \uac19\uc740 \ub73b\uc758 \u0027\ub370\uc640\u0027\ub97c \uc4f0\uba74 \ub41c\ub2e4."], ["\ud1f4\uadfc\uae38\uc5d4", "**\uc218\uace0\ud588\uc5b4\uc694**", "---", "\ud1f4\uadfc\ud560 \ub54c \ub3d9\ub8cc\ub07c\ub9ac\ub294 \u0027\ud53c\uace4\ud558\uaca0\ub2e4\u0027\uc5d0 \uac00\uae4c\uc6b4 \ub73b\uc758 \u0027\uc624\uce20\uce74\ub808\uc0ac\ub9c8\ub370\uc2a4\u0027\ub97c \ud754\ud788 \uc4f4\ub2e4. \ub0a8\uc774 \uc544\uc9c1 \uc77c\ud558\ub294 \uc911\uc774\ub77c\uba74 \u0027\uba3c\uc800 \uc2e4\ub840\ud569\ub2c8\ub2e4\u0027\ub77c\ub294 \ub73b\uc758 \u0027\uc624\uc0ac\ud0a4\ub2c8 \uc2dc\uce20\ub808\uc774\uc2dc\ub9c8\uc2a4\u0027\ub97c \uac74\ub128\ub2e4."], ["\uc0ac\uc694\ub098\ub77c\ub294", "**\uc601\uc601 \uc774\ubcc4\uae09**", "---", "\uc0ac\uc694\ub098\ub77c\uc5d0\ub294 \uc601\uc601 \uc774\ubcc4\uc77c \uc218\ub3c4 \uc788\ub2e4\ub294 \ubb34\uac70\uc6b4 \ub258\uc559\uc2a4\uac00 \uc788\ub2e4. \uc878\uc5c5 \ud6c4 \uc11c\ub85c \ub2e4\ub978 \ub300\ud559\uc5d0 \uac00\ub294 \uce5c\uad6c\ub4e4\uc774\ub098, \ud574\uc678\ub85c \uc601\uad6c \uc804\uadfc\ud558\ub294 \ub3d9\ub8cc\uc758 \uc1a1\ubcc4\ud68c\uc5d0\uc11c \uc5b4\uc6b8\ub9ac\ub294 \ub9d0\uc774\ub2e4."], ["\uc544\uc774\uc2a4\ud06c\ub9bc\uc9d1", "**\ub9c8\uc9c0\ub9c9 \ub0a0**", "---", "10\uc6d4 31\uc77c \ubb38\uc744 \ub2eb\uc740 \uac00\ub9c8\ucfe0\ub77c\uc758 \ucf5c\ub4dc\uc2a4\ud1a4\uc740 \ub3d9\uc77c\ubcf8 \ub9c8\uc9c0\ub9c9 \uc9c0\uc810\uc774\uc5c8\ub2e4. \ucde8\uc7ac \uae30\uc790\uac00 \uc544\uc774\uc2a4\ud06c\ub9bc\uc744 \ubc1b\uc790 \uc9c1\uc6d0\ub4e4\uc740 \uac10\uc0ac \uc778\uc0ac\uc640 \ud568\uaed8 \u0027\uc0ac\uc694\ub098\ub77c\u0027\ub77c\uace0 \ud588\ub2e4."], ["\uc77c\ubcf8\uc5b4 \ubc30\uc6b0\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc7c8, \ub9c8\ud0c0, \uc624\uce20\uce74\ub808\uc0ac\ub9c8\ub370\uc2a4\ucc98\ub7fc \uc0ac\uc694\ub098\ub77c\ubcf4\ub2e4 \ud6e8\uc52c \uc790\uc8fc \uc4f0\uc774\ub294 \uc791\ubcc4 \uc778\uc0ac\uac00 \ub530\ub85c \uc788\ub2e4\ub294 \uac78 \uc54c\ub824 \uc8fc\uba74 \ubc18\uac00\uc6cc\ud560 \uc77c\ubcf8\uc5b4 \uacf5\ubd80 \uce5c\uad6c\uc5d0\uac8c \uc5b4\uc6b8\ub9ac\ub294 \uc18c\uc2dd"]]}, "dd88cf5bebf8": {"caption": "\uac00\uc7a5 \uba54\ub9c8\ub978 \uacf3\uc774 \uaf43\ubc2d\uc774 \ub410\ub2e4\ub294 \uc18c\uc2dd\uc785\ub2c8\ub2e4. \uce60\ub808 \uc544\ud0c0\uce74\ub9c8 \uc0ac\ub9c9\uc5d0\uc11c \uc57d 200\uc885\uc758 \uaf43\uc774 \ud53c\uc5b4, \uc774\uacf3\uc5d0\uc11c \uae30\ub85d\ub41c \uac83 \uc911 \uac00\uc7a5 \ud070 \uac1c\ud654\uc77c \uc218 \uc788\ub2e4\uace0 \ud569\ub2c8\ub2e4. \ubd88\uacfc \uba87 \uc8fc \uc804\uae4c\uc9c0\ub9cc \ud574\ub3c4 \uc9c0\uad6c\uc5d0\uc11c \uac00\uc7a5 \uac74\uc870\ud55c \uacf3\uc774\uc5c8\ub294\ub370 \ub9d0\uc774\uc8e0.\n\n\ubc30\uacbd\uc5d0\ub294 \uc62c\ud574\uc758 \uc288\ud37c \uc5d8\ub2c8\ub1e8\uac00 \uc788\uc2b5\ub2c8\ub2e4. \uae30\ub85d\uc801\uc778 \ube44\uac00 \ub0b4\ub838\uace0 7~8\uc6d4 \ud64d\uc218\ub85c \ubb3c\uc774 \ub545\uc18d \uae4a\uc774 \uc2a4\uba70\ub4e4\uba74\uc11c, \ud3c9\uc18c \uacc4\uc808\uc131 \ube44\ub85c\ub294 \ub2ff\uc9c0 \uc54a\ub358 \uc528\uc557\uae4c\uc9c0 \uae68\uc6e0\ub2e4\uace0 \ud569\ub2c8\ub2e4. \ubaa8\ub798 \uc544\ub798\uc5d0\uc11c \uc528\uc557\uacfc \ub369\uc774\uc904\uae30\uac00 \uc218\uc2ed \ub144\uac04 \ubb3c\uc744 \uae30\ub2e4\ub824 \uc654\ub2e4\ub294 \uc124\uba85\ub3c4 \uc788\uc2b5\ub2c8\ub2e4.\n\n\uad6d\ub9bd\uacf5\uc6d0 \uad00\ub9ac\uc790\ub294 \uc774\uacf3\uc744 \ube44\uac00 \uc624\uba74 \uc0b4\uc544 \uc788\ub294 \uae30\ub85d\uc774 \ub418\ub294 \ucc9c\uc5f0 \uc528\uc557 \uc740\ud589\uc5d0 \ube44\uc720\ud588\uace0, \uaf43\uc774 \ud55c\uc0b4\uc774\ub97c \ub9c8\uce60 \uc218 \uc788\ub294 \uc2dc\uac04\uc740 \ub300\ub7b5 2~3\uac1c\uc6d4\ubfd0\uc774\ub77c\uace0 \ud588\uc2b5\ub2c8\ub2e4. \uc774\ubc88 \uac1c\ud654\ub294 \ucd5c\uadfc 30\ub144 \uc0ac\uc774 \uac00\uc7a5 \ub113\uace0 \uc120\uba85\ud55c \uc288\ud37c\ube14\ub8f8\uc73c\ub85c \uaf3d\ud788\uba70, \ub178\ub791, \uc8fc\ud669, \uc5f0\ubcf4\ub77c, \ubcf4\ub77c\uc0c9\uc73c\ub85c \ubb3c\ub4e0\ub2e4\uace0 \ud569\ub2c8\ub2e4.\n\n\uaf43\uacfc \ud568\uaed8 \ud30c\ucda9\ub958, \uace4\ucda9, \ubc15\uc950, \uacfc\ub098\ucf54 \uac19\uc740 \ub3d9\ubb3c\uc774 \ucc3e\uc544\uc62c \uc870\uac74\ub3c4 \ub9cc\ub4e4\uc5b4\uc9c0\uace0 \uc788\uc2b5\ub2c8\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uaf43\uc5d0\uc11c \ub098\uc628 \uc528\uc557\uc744 \ubaa8\uc544 \ubbf8\ub798 \uc5f0\uad6c\uc5d0 \uc4f8 \uacc4\ud68d\uc774\uace0, \uc9c0\uc5ed \uc8fc\uc9c0\uc0ac\ub294 \uacf5\uc6d0 \ud655\uc7a5\uacfc \uc720\ub124\uc2a4\ucf54 \uc138\uacc4\uc720\uc0b0 \ub4f1\uc7ac\ub97c \ucd94\uc9c4\ud558\ub824 \ud569\ub2c8\ub2e4.\n\n\ucd9c\ucc98: Good News Network, NPR \uc778\uc6a9 \ubcf4\ub3c4", "hashtags": ["#\uc544\ud0c0\uce74\ub9c8\uc0ac\ub9c9", "#\uce60\ub808", "#\uc288\ud37c\ube14\ub8f8", "#\uc790\uc5f0", "#\ud574\uc678\ub274\uc2a4"], "slides": [["\uac00\uc7a5 \uba54\ub9c8\ub978 \uacf3\uc774", "**\uaf43\ubc2d** \ub410\ub2e4\uace0???", "---", "\uce60\ub808 \uc544\ud0c0\uce74\ub9c8 \uc0ac\ub9c9\uc5d0\uc11c \uc57d 200\uc885\uc758 \uaf43\uc774 \ud55c\uaebc\ubc88\uc5d0 \ud53c\uc5c8\uace0, \uc774\uacf3\uc5d0\uc11c \uae30\ub85d\ub41c \uac83 \uc911 \uac00\uc7a5 \ud070 \uaf43 \uc794\uce58\uc77c \uc218 \uc788\ub2e4\ub294 \uc18c\uc2dd\uc774 \uc804\ud574\uc84c\ub2e4."], ["\uba87 \uc8fc \uc804\ub9cc \ud574\ub3c4", "**\uac00\uc7a5 \uac74\uc870\ud55c \uacf3**", "---", "\uc544\ud0c0\uce74\ub9c8\ub294 \ubd88\uacfc \uba87 \uc8fc \uc804\uae4c\uc9c0 \uc9c0\uad6c\uc5d0\uc11c \uac00\uc7a5 \uac74\uc870\ud55c \uacf3\uc73c\ub85c \ud1b5\ud588\ub2e4. \uc62c\ud574 \uc288\ud37c \uc5d8\ub2c8\ub1e8\ub85c \uae30\ub85d\uc801\uc778 \ube44\uac00 \uc3df\uc544\uc84c\uace0, 7~8\uc6d4 \ud64d\uc218\ub85c \ubb3c\uc774 \ub545\uc18d \uae4a\uc774 \uc2a4\uba70\ub4e4\uc5c8\ub2e4."], ["\uc218\uc2ed \ub144 \uc7a0\ub4e0", "**\uc528\uc557\uc774 \uae7c\ub2e4**", "---", "\ubaa8\ub798 \uc544\ub798 \uc528\uc557\uacfc \ub369\uc774\uc904\uae30\ub294 \ubb3c\uc744 \uae30\ub2e4\ub9ac\uba70 \uc218\uc2ed \ub144\uac04 \ud734\uba74 \uc0c1\ud0dc\ub85c \uc788\uc5c8\ub2e4. \uad6d\ub9bd\uacf5\uc6d0 \uad00\ub9ac\uc790\ub294 \uc774\uacf3\uc744 \ube44\uac00 \uc624\uba74 \uc0b4\uc544\ub098\ub294 \ucc9c\uc5f0 \uc528\uc557 \uc740\ud589\uc5d0 \ube57\ub314\ub2e4."], ["**30\ub144** \ub9cc\uc5d0", "\uac00\uc7a5 \ub113\uace0 \uc120\uba85", "---", "\uc288\ud37c\ube14\ub8f8\uc774\ub77c \ubd88\ub9ac\ub294 \uc774\ubc88 \uac1c\ud654\ub294 \ucd5c\uadfc 30\ub144 \uc0ac\uc774 \uac00\uc7a5 \ub113\uace0 \uc120\uba85\ud55c \uaddc\ubaa8\ub85c \uaf3d\ud78c\ub2e4. \ub2e4\ub9cc \uc774 \uc0ac\ub9c9\uc5d0 \ud3c9\uc18c\ubcf4\ub2e4 \ube44\uac00 \ub9ce\uc774 \ub0b4\ub9ac\uace0 \uc788\uc5b4 \uae30\ub85d\uc774 \uc624\ub798\uac00\uc9c0 \uc54a\uc744 \uc218\ub3c4 \uc788\ub2e4."], ["\uaf43 \ub530\ub77c", "**\ub3d9\ubb3c\ub3c4** \uc654\ub2e4", "---", "NPR\uc5d0 \ub530\ub974\uba74 \uacc4\uc808\uc131 \ube44\uac00 \uc7a6\uc544\uc9c0\uba70 \ud30c\ucda9\ub958, \uace4\ucda9, \ubc15\uc950 \uac19\uc740 \ub2e4\uc591\ud55c \ub3d9\ubb3c\uc774 \uc7a0\uc2dc\ub098\ub9c8 \uba38\ubb3c \uc870\uac74\uc774 \ub9cc\ub4e4\uc5b4\uc9c0\uace0 \uc788\ub2e4. \ub77c\ub9c8\uc758 \uce5c\ucc99\uc778 \uacfc\ub098\ucf54 \uac19\uc740 \ud070 \ub3d9\ubb3c\ub3c4 \ud3ec\ud568\ub41c\ub2e4."], ["\uc528\uc557 \ubaa8\uc73c\uace0", "**\uacf5\uc6d0\ub3c4** \ub113\ud78c\ub2e4", "---", "\uc5f0\uad6c\uc9c4\uc740 \uc218\ubd84\uc774 \ub05d\ub09c \uaf43\uc5d0\uc11c \ub098\uc628 \uc528\uc557\uc744 \uc55e\uc73c\ub85c\uc758 \uc5f0\uad6c\ub97c \uc704\ud574 \ubaa8\uc73c\uace0 \uc788\ub2e4. \uc9c0\uc5ed \uc8fc\uc9c0\uc0ac\ub294 \uc62c\ud574 \uaf43\uc774 \ud540 \uacf3\uae4c\uc9c0 \uacf5\uc6d0\uc744 \ub113\ud788\uace0 \uc720\ub124\uc2a4\ucf54 \uc138\uacc4\uc720\uc0b0 \ub4f1\uc7ac\ub3c4 \ucd94\uc9c4\ud558\ub824 \ud55c\ub2e4."], ["\uc790\uc5f0 \ub2e4\ud050 \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c\uc5d0\uac8c** \ubcf4\ub0b4\uae30", "---", "\uba54\ub9c8\ub978 \uc0ac\ub9c9\uc774 \uae30\ub85d\uc801\uc778 \ube44 \ub4a4\uc5d0 \uc57d 200\uc885\uc758 \uaf43\uc744 \ud53c\uc6e0\ub2e4. \ud48d\uacbd \uc0ac\uc9c4\uc774\ub098 \uc790\uc5f0 \ub2e4\ud050\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>
