@@ -1,0 +1,1657 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.22 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.22 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-2b6ad0a38fb9" data-jump="2b6ad0a38fb9">1</a><a href="#post-3daa0cc815bf" data-jump="3daa0cc815bf">2</a><a href="#post-babd01f85b98" data-jump="babd01f85b98">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-2b6ad0a38fb9" data-id="2b6ad0a38fb9">
+    <div class="head">
+      <h2>1. 고래 숨결 드론 채취로 유전체 해독</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/2b6ad0a38fb9/v1-01.jpg" alt="1장: 고래 숨결로 유전체 해독?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/2b6ad0a38fb9/v1-02.jpg" alt="2장: 찌르지 않고 숨만 받았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/2b6ad0a38fb9/v1-03.jpg" alt="3장: 혹등고래 26마리 숨 샘플 58개" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/2b6ad0a38fb9/v1-04.jpg" alt="4장: 숨 속 DNA의 84%가 고래 것" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/2b6ad0a38fb9/v1-05.jpg" alt="5장: 성별도 맞히고 새 변이 3개" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/2b6ad0a38fb9/v1-06.jpg" alt="6장: 바다 좋아하는 친구 태그" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/2b6ad0a38fb9/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">고래의 숨결만으로 유전체 전체를 해독했다는 소식이에요. 스코틀랜드 세인트앤드루스대가 참여한 국제 연구팀이 소형 드론으로 혹등고래의 숨을 받아 전체 유전체 해독을 완성했습니다. 물리적 개입 없이 해낸 건 이번이 처음이라고 해요. 그동안은 보트에서 다트와 생검으로 조직을 얻어 고래를 방해하거나, 좌초된 개체나 옛 표본을 써야 했습니다. 연구팀은 드론에 멸균 페트리 접시를 달아 캐나다 브리티시컬럼비아주 북부 키티맷 피오르에서 혹등고래 26마리의 숨 샘플 58개를 모았습니다. 샘플의 3분의 1 이상은 보트 없이 육지에서 드론을 날려 얻었고, 숨 속 DNA의 약 84%가 고래의 것이었습니다. 같은 고래를 다른 때에, 2년에 걸쳐 다시 채취해도 같은 유전체가 나왔어요. 이번 연구 전에 공개된 북태평양 혹등고래의 전체 유전체는 단 하나뿐이었습니다. 수석 연구자 에이딘 오마호니 박사는 숨에서 얻은 유전체로 고래들의 혈연 관계를 살피겠다고 밝혔습니다. 숨 시료 DNA의 나머지 약 16%는 기도에 사는 미생물에서 왔다는 점도 확인되어, 한 번의 숨으로 건강을 엿볼 가능성도 열렸습니다. 출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#고래 #혹등고래 #드론 #유전체 #해양생물</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>같은 고래를 다른 때와 2년에 걸쳐 채취해도 같은 유전체가 나왔고, 무리에서는 바람 맨 위쪽 고래를 겨냥해 DNA 섞임을 피했다 <small>애매 · 같은 고래 재채취 시 같은 유전체가 나온 점은 맞다. 다만 원문은 &#39;바람이 오는 쪽(upwind)의 맨 끝 고래&#39;를 겨냥했다는 뜻이며, &#39;바람 맨 위쪽&#39;은 의미가 모호하다. &#39;바람이 오는 쪽 맨 끝 고래&#39;로 고쳐야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 출처가 Good News Network라는 attribution은 제공된 원문 근거에 없다.</li>
+          <li>단일 매체(Good News Network) 기사 기반이라 논문 원문 확인 필요</li><li>핵 유전체는 저커버리지 수준이라 완전 해독 표현 주의</li><li>기사 사진·영상 무단 사용 금지, 고래 사진은 위키미디어 등 허용된 이미지만 사용</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-2b6ad0a38fb9-0">1장</label>
+          <textarea id="s-2b6ad0a38fb9-0" rows="6" data-slide="0">고래 **숨결**로
+유전체 해독?!
+---
+스코틀랜드 세인트앤드루스대가 참여한 국제 연구팀이 드론으로 모은 혹등고래의 숨만으로 전체 유전체 해독을 처음 완성했다.</textarea>
+          
+          <label class="f" for="s-2b6ad0a38fb9-1">2장</label>
+          <textarea id="s-2b6ad0a38fb9-1" rows="6" data-slide="1">찌르지 않고
+**숨만** 받았다
+---
+그동안은 보트에서 다트와 생검으로 조직을 얻거나, 좌초된 개체와 옛 표본을 써야 했다. 이번에는 소형 드론에 멸균 페트리 접시를 달아 고래의 숨 속으로 날렸다.</textarea>
+          
+          <label class="f" for="s-2b6ad0a38fb9-2">3장</label>
+          <textarea id="s-2b6ad0a38fb9-2" rows="6" data-slide="2">혹등고래 26마리
+숨 샘플 **58개**
+---
+캐나다 브리티시컬럼비아주 북부 키티맷 피오르 일대에서 모은 양이다. 샘플의 3분의 1 이상은 보트 없이 육지에서 드론을 날려 얻었다.</textarea>
+          
+          <label class="f" for="s-2b6ad0a38fb9-3">4장</label>
+          <textarea id="s-2b6ad0a38fb9-3" rows="6" data-slide="3">숨 속 DNA의
+**84%**가 고래 것
+---
+같은 고래를 다른 때에, 2년에 걸쳐 다시 채취해도 같은 유전체가 나왔다. 무리 안에서는 바람이 오는 쪽 맨 끝 고래를 겨냥해 다른 개체의 DNA가 섞이지 않게 했다.</textarea>
+          
+          <label class="f" for="s-2b6ad0a38fb9-4">5장</label>
+          <textarea id="s-2b6ad0a38fb9-4" rows="6" data-slide="4">성별도 맞히고
+**새 변이 3개**
+---
+드론으로 얻은 분석은 모든 고래의 성별을 정확히 가려냈고, 기록되지 않았던 미토콘드리아 DNA 변이 세 개도 찾아냈다. 숨으로 구한 유전적 다양성 추정치는 기존 생검과 매우 비슷했다.</textarea>
+          
+          <label class="f" for="s-2b6ad0a38fb9-5">6장</label>
+          <textarea id="s-2b6ad0a38fb9-5" rows="6" data-slide="5">바다 좋아하는
+친구 태그
+---
+고래를 건드리지 않고 드론으로 받은 숨만으로 유전체를 읽어 냈다. 바다와 고래를 좋아하는 친구라면 신기해할 소식</textarea>
+          
+          <label class="f" for="c-2b6ad0a38fb9">본문 (캡션)</label>
+          <textarea id="c-2b6ad0a38fb9" class="caption">고래의 숨결만으로 유전체 전체를 해독했다는 소식이에요. 스코틀랜드 세인트앤드루스대가 참여한 국제 연구팀이 소형 드론으로 혹등고래의 숨을 받아 전체 유전체 해독을 완성했습니다. 물리적 개입 없이 해낸 건 이번이 처음이라고 해요. 그동안은 보트에서 다트와 생검으로 조직을 얻어 고래를 방해하거나, 좌초된 개체나 옛 표본을 써야 했습니다. 연구팀은 드론에 멸균 페트리 접시를 달아 캐나다 브리티시컬럼비아주 북부 키티맷 피오르에서 혹등고래 26마리의 숨 샘플 58개를 모았습니다. 샘플의 3분의 1 이상은 보트 없이 육지에서 드론을 날려 얻었고, 숨 속 DNA의 약 84%가 고래의 것이었습니다. 같은 고래를 다른 때에, 2년에 걸쳐 다시 채취해도 같은 유전체가 나왔어요. 이번 연구 전에 공개된 북태평양 혹등고래의 전체 유전체는 단 하나뿐이었습니다. 수석 연구자 에이딘 오마호니 박사는 숨에서 얻은 유전체로 고래들의 혈연 관계를 살피겠다고 밝혔습니다. 숨 시료 DNA의 나머지 약 16%는 기도에 사는 미생물에서 왔다는 점도 확인되어, 한 번의 숨으로 건강을 엿볼 가능성도 열렸습니다. 출처: Good News Network</textarea>
+          <label class="f" for="t-2b6ad0a38fb9">해시태그</label>
+          <input id="t-2b6ad0a38fb9" type="text" class="tagsin" value="#고래 #혹등고래 #드론 #유전체 #해양생물" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>같은 고래를 다른 때와 2년에 걸쳐 채취해도 같은 유전체가 나왔고, 무리에서는 바람 맨 위쪽 고래를 겨냥해 DNA 섞임을 피했다</b>
+            <q>“Repeat samples from the same whales, collected in different encounters and across two years, gave matching genomes—with the most upwind whale in a group targeted, to avoid mixing DNA from different animals.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>국제 연구팀이 드론으로 모은 고래 숨으로 전체 유전체 해독을 처음 완성했다</b>
+            <q>“The exhale from a whale’s blowhole has been captured by drones, and used to complete the genome sequencing of one of the ocean giants for the first time.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스코틀랜드 세인트앤드루스대 연구진이 국제 연구팀에 참여했다</b>
+            <q>“Researchers from the University of St. Andrews in Scotland were part of an international team to sequence a whole genome using samples from whale breath collected by a small aerial drone.”</q>
+            <small>slide1 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기존에는 다트와 보트 생검, 좌초된 개체나 과거 표본을 이용했다</b>
+            <q>“It marks the first time sequencing has been completed without the use of physical interventions—commonly using darts and biopsies collected by boat, which disturbs the animals, or from stranded mammals or historical specimens.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀이 소형 드론에 멸균 페트리 접시를 달았다</b>
+            <q>“To overcome the collection challenge, the team attached sterile petri dishes to a small drone.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>드론을 고래의 숨 속으로 날렸다</b>
+            <q>“They flew it through the exhaled breaths of one humpback whale at a time, which typically has one to six breaths per surfacing.”</q>
+            <small>slide2 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>브리티시컬럼비아 북부 키티맷 피오르에서 혹등고래 26마리의 숨 샘플 58개를 모았다</b>
+            <q>“They collected 58 blow samples from 26 individual humpback whales in the Kitimat Fjord System in northern British Columbia, Canada.”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고래는 물 위로 올라올 때 보통 한 번에서 여섯 번 숨을 쉰다</b>
+            <q>“They flew it through the exhaled breaths of one humpback whale at a time, which typically has one to six breaths per surfacing.”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>샘플의 3분의 1 이상은 보트 없이 육지에서 드론을 날려 얻었다</b>
+            <q>“More than a third of samples required no boat at all—only flying the drone directly from land.”</q>
+            <small>slide3 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>숨 속 DNA의 약 84%가 고래 자신의 것이었다</b>
+            <q>“Around 84% of the DNA in the blow came from the whale itself.”</q>
+            <small>slide4 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>드론 분석은 모든 고래의 성별을 정확히 가려냈고 기록되지 않은 미토콘드리아 DNA 변이 세 개를 찾았다</b>
+            <q>““The drone-captured genetic analyses correctly determined every whale’s sex and also found three previously undescribed mitochondrial DNA variants.”</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>숨으로 추정한 유전적 다양성이 기존 생검 추정치와 매우 비슷했다</b>
+            <q>“The research team also discovered genetic diversity estimated from blow was very similar to estimates from traditional biopsies—with this particular population showing no evidence of inbreeding beyond a shared ancestry or past population bottlenecks.”</q>
+            <small>slide5 · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이번 연구 전 공개된 북태평양 혹등고래 전체 유전체는 하나뿐이었다</b>
+            <q>“Before the new study, only one North Pacific humpback’s whole genome had ever been publicly available.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>수석 연구자 오마호니 박사는 숨에서 얻은 유전체로 고래들의 혈연 관계를 살피겠다고 밝혔다</b>
+            <q>““We will use these blow-derived genomes to assess kinship and family ties among humpback whales foraging in northern British Columbia,” said lead researcher Dr. Éadin O’Mahony.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>숨 시료 DNA의 약 16%는 기도에 사는 미생물에서 왔고 건강을 엿볼 창이 될 수 있다</b>
+            <q>“The findings, published in the journal Molecular Ecology Resources, also showed that around 16% of the DNA in each blow sample comes largely from the microbes living in the whale’s airways.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 번의 숨으로 고래와 호흡기 마이크로바이옴을 알 수 있다</b>
+            <q>““This means a single breath could tell us about both the whale and its respiratory microbiome, a potential window into health.””</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">Breath of a Whale Captured by Drone Allows Full Genome Sequencing Without Intrusion</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/Whale-spout-by-NorthCoastCetaceanSociety-via-SWNS-.jpeg"</li><li>2장: <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/Drone-captures-whale-snot-sample-on-petrie-dish-NorthCoastCetaceanSociety-SWNS.jpeg"</li><li>3장: <a href="https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/" target="_blank" rel="noopener">Good News Network / </a> — "https://www.goodnewsnetwork.org/wp-content/uploads/2026/11/biologist-launches-drone-over-water-NorthCoastCetaceanSociety-SWNS.jpeg"</li><li>4장: <a href="https://pixabay.com/photos/dna-biology-the-science-dna-helix-7090994/" target="_blank" rel="noopener">Sunriseforever / Pixabay</a> — "laboratory dna"</li><li>5장: <a href="https://pixabay.com/photos/dna-biology-science-dna-helix-163710/" target="_blank" rel="noopener">PublicDomainPictures / Pixabay</a> — "dna helix"</li><li>6장: <a href="https://pixabay.com/photos/beach-birds-sea-ocean-flying-birds-1852945/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "ocean waves"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-3daa0cc815bf" data-id="3daa0cc815bf">
+    <div class="head">
+      <h2>2. 학문의 신 신사에서 축복받은 인스턴트 카레</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 9장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-01.jpg" alt="1장: 신사가 카레를 축복?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-02.jpg" alt="2장: 904년에 세운 학문의 신 신사" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-03.jpg" alt="3장: 냉동건조 수프 회사가 카레를 만들었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-04.jpg" alt="4장: 향신료 20종 이상 레드와인까지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-05.jpg" alt="5장: 11월 6일 사제가 직접 축복" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-06.jpg" alt="6장: 12월 4일 발매 한 팩 400엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-07.jpg" alt="7장: 시험 앞둔 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/product-1121213726-01.jpg" alt="상품 사진: HACHI 로고가 있는 인스턴트 카레 패키지와 밥 위에 카레를 얹은 접시 사진, 배경에는 붉은 사찰 건물과 분홍 꽃나무, 防府天満宮 天神カレー 문구 (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 9</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 1장이 카드 뒤에 같이 들어가요 (soranews24.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">신사가 인스턴트 카레를 축복했다고?! 일본 야마구치현에서 학문의 신을 모시는 신사의 사제들이 새 카레의 첫 생산분을 축복하는 의식을 열었다.
+
+무대는 야마구치현 호후시의 호후텐만구다. 904년에 세워진 이 신사에는 9세기 학자 스가와라노 미치자네가 학문의 신 덴진으로 모셔져 있고, 학생과 수험생 등 학업 성공을 바라는 사람들이 찾아 기도하는 곳이다.
+
+카레를 만든 쪽은 냉동건조 수프를 전문으로 하는 HFD 푸즈다. 모회사 하치가 이미 인스턴트 카레를 만들고 있어 자체 신제품을 구상했고, 호후텐만구와 호후 시청에서 연 시식회의 의견을 반영해 개발했다. 그렇게 나온 호후텐만구 덴진 카레에는 20가지가 넘는 향신료, 깍둑썬 채소, 다진 소고기, 버섯 네 종류로 만든 소스, 레드와인이 들어간다.
+
+11월 6일 신사에서 열린 의식에서는 사제들이 첫 생산분을 축복했다. 하치는 도전하는 모든 사람의 성공을 바라는 마음을 담았다고 밝혔다.
+
+발매일은 12월 4일이며, 하치 온라인 스토어에서는 이미 주문할 수 있다. 1팩은 400엔, 5팩은 1,900엔이다. 소식을 전한 매체는 포장일로부터 2년의 보존 기간이 있어 시험 준비로 요리할 시간이 없을 때 쟁여 두기 좋겠다고 썼다. 다만 모든 팩이 축복받았는지, 첫 생산분만 해당하는지는 분명하지 않다고 한다.
+
+출처: SoraNews24, PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본카레 #인스턴트카레 #일본신사 #해외토픽 #수험생</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>호후는 야마구치현의 마을이며 호후텐만구는 904년에 세워진 신사이다. <small>애매 · 904년 창건과 호후텐만구 설명은 맞지만 원문은 호후를 &#39;town(마을)&#39;이라 하며, 본문의 &#39;호후시&#39; 표기와 행정 구분이 다르다. &#39;시&#39;로 쓰려면 근거 확인이 필요하다.</small></li>
+          <li>근거 등록 안 된 주장: 호후가 시(市)라는 행정 구분이다 (원문은 town으로 표기)</li><li>근거 등록 안 된 주장: 출처가 SoraNews24와 PR Times이다</li><li>근거 등록 안 된 주장: 매체가 시험 준비 중 요리할 시간이 없을 때 쟁여 두기 좋다고 평가했다</li>
+          <li>축복이 모든 판매 제품에 적용되는지 원문상 불분명함</li><li>가격·발매일은 일본 현지 기준이며 변동 가능</li><li>원문 사진은 PR Times 등 제공 이미지로 사용 불가</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-3daa0cc815bf-0">1장</label>
+          <textarea id="s-3daa0cc815bf-0" rows="6" data-slide="0">신사가
+카레를 **축복?!**
+---
+일본 야마구치현의 학문의 신 신사에서 사제들이 새 인스턴트 카레의 첫 생산분을 축복하는 의식을 열었다.</textarea>
+          
+          <label class="f" for="s-3daa0cc815bf-1">2장</label>
+          <textarea id="s-3daa0cc815bf-1" rows="6" data-slide="1">**904년**에 세운
+학문의 신 신사
+---
+야마구치현 호후시의 호후텐만구는 904년에 세워진 신사이다. 9세기 학자 스가와라노 미치자네가 학문의 신 덴진으로 모셔져 있어, 수험생들이 성공을 빌러 찾는다.</textarea>
+          
+          <label class="f" for="s-3daa0cc815bf-2">3장</label>
+          <textarea id="s-3daa0cc815bf-2" rows="6" data-slide="2">냉동건조 수프 회사가
+**카레**를 만들었다
+---
+호후의 HFD 푸즈는 냉동건조 수프 전문 회사이다. 모회사 하치가 인스턴트 카레를 만들고 있어, 호후텐만구와 호후 시청에서 시식 의견을 받아 신제품을 개발했다.</textarea>
+          
+          <label class="f" for="s-3daa0cc815bf-3">4장</label>
+          <textarea id="s-3daa0cc815bf-3" rows="6" data-slide="3">향신료 **20종** 이상
+레드와인까지
+---
+카레에는 20가지가 넘는 향신료와 깍둑썬 채소, 다진 소고기가 들어간다. 버섯 네 종류로 만든 소스와 레드와인도 더했다.</textarea>
+          
+          <label class="f" for="s-3daa0cc815bf-4">5장</label>
+          <textarea id="s-3daa0cc815bf-4" rows="6" data-slide="4">11월 6일
+**사제가 직접 축복**
+---
+11월 6일 신사에서 의식이 열려 사제들이 첫 생산분 카레를 축복했다. 제조사 하치는 도전하는 모든 이의 성공을 바라는 마음으로 만들었다고 밝혔다.</textarea>
+          
+          <label class="f" for="s-3daa0cc815bf-5">6장</label>
+          <textarea id="s-3daa0cc815bf-5" rows="6" data-slide="5">12월 4일 발매
+한 팩 **400엔**
+---
+발매일은 12월 4일이지만 하치 온라인 스토어에서는 이미 주문할 수 있다. 1팩은 400엔, 5팩은 1,900엔이다. 다만 모든 팩이 축복받았는지는 불분명하다.</textarea>
+          
+          <label class="f" for="s-3daa0cc815bf-6">7장</label>
+          <textarea id="s-3daa0cc815bf-6" rows="6" data-slide="6">시험 앞둔 친구한테
+**조용히 보내기**
+---
+학문의 신 신사에서 축복한 카레라는 조합에, 요리할 시간도 없이 공부에 지친 친구가 웃으며 볼 소식</textarea>
+          
+          <label class="f" for="c-3daa0cc815bf">본문 (캡션)</label>
+          <textarea id="c-3daa0cc815bf" class="caption">신사가 인스턴트 카레를 축복했다고?! 일본 야마구치현에서 학문의 신을 모시는 신사의 사제들이 새 카레의 첫 생산분을 축복하는 의식을 열었다.
+
+무대는 야마구치현 호후시의 호후텐만구다. 904년에 세워진 이 신사에는 9세기 학자 스가와라노 미치자네가 학문의 신 덴진으로 모셔져 있고, 학생과 수험생 등 학업 성공을 바라는 사람들이 찾아 기도하는 곳이다.
+
+카레를 만든 쪽은 냉동건조 수프를 전문으로 하는 HFD 푸즈다. 모회사 하치가 이미 인스턴트 카레를 만들고 있어 자체 신제품을 구상했고, 호후텐만구와 호후 시청에서 연 시식회의 의견을 반영해 개발했다. 그렇게 나온 호후텐만구 덴진 카레에는 20가지가 넘는 향신료, 깍둑썬 채소, 다진 소고기, 버섯 네 종류로 만든 소스, 레드와인이 들어간다.
+
+11월 6일 신사에서 열린 의식에서는 사제들이 첫 생산분을 축복했다. 하치는 도전하는 모든 사람의 성공을 바라는 마음을 담았다고 밝혔다.
+
+발매일은 12월 4일이며, 하치 온라인 스토어에서는 이미 주문할 수 있다. 1팩은 400엔, 5팩은 1,900엔이다. 소식을 전한 매체는 포장일로부터 2년의 보존 기간이 있어 시험 준비로 요리할 시간이 없을 때 쟁여 두기 좋겠다고 썼다. 다만 모든 팩이 축복받았는지, 첫 생산분만 해당하는지는 분명하지 않다고 한다.
+
+출처: SoraNews24, PR Times</textarea>
+          <label class="f" for="t-3daa0cc815bf">해시태그</label>
+          <input id="t-3daa0cc815bf" type="text" class="tagsin" value="#일본카레 #인스턴트카레 #일본신사 #해외토픽 #수험생" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/3daa0cc815bf/product-1121213726-01.jpg" alt="" width="56" height="56" loading="lazy"> HACHI 로고가 있는 인스턴트 카레 패키지와 밥 위에 카레를 얹은 접시 사진, 배경에는 붉은 사찰 건물과 분홍 꽃나무, 防府天満宮 天神カレー 문구 · soranews24.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>호후는 야마구치현의 마을이며 호후텐만구는 904년에 세워진 신사이다.</b>
+            <q>“Hofu is a town in Yamaguchi Prefecture, and its most famous feature is Hofu Tenmangu, a Shinto shrine that was established all the way back in the year 904.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>11월 6일 신사에서 사제들이 첫 생산분 카레를 축복하는 의식이 열렸다.</b>
+            <q>“As a symbol of local pride, a photo of Hofu Tenmangu appears on the box, and on November 6, a ceremony was held at the shrine in which priests blessed the initial batch of Hofu Tenmangu Tenjin Curry.”</q>
+            <small>slide1, slide5, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스가와라노 미치자네가 학문의 신 덴진으로 모셔져 있고 수험생 등이 성공을 빌러 찾는다.</b>
+            <q>“Enshrined within is the spirit of Sugawara no Michizane, a 9th century scholar who became deified as the god of learning, acquiring the alternate name Tenjin in the process. Hofu Tenmangu has since become a popular site for students, test-takers, and other people pursuing academic ambitions to visit and pray for success.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>HFD 푸즈는 냉동건조 수프를 전문으로 하는 회사이다.</b>
+            <q>“Less famously, Hofu is also home to HFD Foods, which specializes in freeze-dried soups.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>모회사 하치가 인스턴트 카레를 만들며, 신제품은 호후텐만구와 호후 시청의 시식 의견을 받아 개발됐다.</b>
+            <q>“HFD’s parent company, Hachi, also makes instant curry, and so HFD wanted to whip up a new variety of its own, which it developed with feedback from taste testings held at Hofu Tenmangu and Hofy city hall.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>카레에는 20가지 넘는 향신료, 깍둑썬 채소, 다진 소고기, 버섯 네 종류 소스, 레드와인이 들어간다.</b>
+            <q>“The result is Hofu Tenmangu Tenjin Curry, which boasts a mixture of over 20 spices, diced vegetables, ground beef, a sauce made from four kinds of mushrooms, and red wine.”</q>
+            <small>slide4, summary, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하치는 도전하는 모든 이의 성공을 바라는 마음으로 만들었다고 밝혔다.</b>
+            <q>““This curry is made with our wishes of success for everyone who is challenging themselves, and through this ceremony, we pray that their efforts will lead to success” says Hachi.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>12월 4일 발매이며 온라인 스토어에서 이미 주문 가능하고 1팩 400엔, 5팩 1,900엔이다.</b>
+            <q>“Hofu Tenmangu Tenjin Curry goes on sale December 4, but orders can already be placed through the Hachi online store, with single packs priced at 400 yen (US2.50) here and five-packs for 1,900 yen here.”</q>
+            <small>slide6, summary, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>포장일로부터 2년의 보존 기간이 있다.</b>
+            <q>“With a shelf life of two years from its packaging date, having a few packets in your pantry would definitely be handy if you’re grinding away getting ready for an upcoming test and don’t have time to cook.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>모든 팩이 축복받았는지 첫 생산분만인지는 분명하지 않다.</b>
+            <q>“Note, though, that it’s not clear if all packs will be blessed or just the first batch, so those looking for the maximum good-luck effect might want to put their order in sooner rather than later.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">Instant curry blessed by priests at shrine of god of learning go on sale in Japan</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/4_0fee08.jpg"</li><li>2장: <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/3_bd46b3.jpg"</li><li>3장: <a href="https://pixabay.com/photos/olive-oil-olives-food-oil-natural-968657/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "cooking kitchen"</li><li>4장: <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/11_97a134.jpg?w=640"</li><li>5장: <a href="https://pixabay.com/photos/wedding-dresses-fashion-bride-veil-1486256/" target="_blank" rel="noopener">sfetfedyhghj / Pixabay</a> — "prayer ceremony"</li><li>6장: <a href="https://soranews24.com/2026/11/21/instant-curry-blessed-by-priests-at-shrine-of-god-of-learning-go-on-sale-in-japan/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/2_cb84c7.jpg"</li><li>7장: <a href="https://pixabay.com/photos/computer-pc-workplace-home-office-1185626/" target="_blank" rel="noopener">janeb13 / Pixabay</a> — "study desk"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-babd01f85b98" data-id="babd01f85b98">
+    <div class="head">
+      <h2>3. 박물관 화석에서 나온 흡혈 낙타</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/babd01f85b98/v1-01.jpg" alt="1장: 흡혈 낙타가 진짜 있었다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/babd01f85b98/v1-02.jpg" alt="2장: 주인공은 / 묵은 컬렉션" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/babd01f85b98/v1-03.jpg" alt="3장: 송곳니 길이가 약 40mm" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/babd01f85b98/v1-04.jpg" alt="4장: 무섭게 생겨서 채식주의자" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/babd01f85b98/v1-05.jpg" alt="5장: 그럼 송곳니는 구애용?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/babd01f85b98/v1-06.jpg" alt="6장: 멸종 동물 덕후 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261122-am-95298158c1c8/babd01f85b98/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">흡혈 낙타라는 이름의 신종이 박물관 화석에서 나왔다. 학명은 밤피로카멜루스 웰시(Vampyrocamelus welshi)로, 이름만 새로울 뿐 화석 자체는 거의 한 세기 가까이 박물관에 보관돼 있던 것들이다.
+
+20세기 초 미국자연사박물관의 고생물학자 차일즈 프릭이 낙타과 화석 발굴을 직접 후원했다. 이번 연구진은 그 컬렉션의 낙타과 표본 수만 점을 다시 분석해 낙타 가계도를 새로 손봤고, 그 결과 중 하나가 이 신종이다.
+
+이 동물은 약 1000만~1300만 년 전에 살았고, 뼈는 텍사스와 오클라호마에서 흔하게, 네브래스카에서 가끔 발견됐다. 가장 큰 특징은 약 40mm에 이르는 송곳니다. 무시무시해 보여도 채식을 했다. 연구진은 송곳니를 포식자 방어에 썼을 수도 있지만 수컷이 암컷의 관심을 끄는 데 썼을 가능성이 더 높다고 본다. 암컷에게는 이런 송곳니가 없었기 때문이다.
+
+두개골 외에는 알려진 게 많지 않다. 연구팀은 그동안 애피카멜루스의 뼈로 분류된 것 중 일부가 사실은 이 동물의 것일 수 있다고 말한다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#흡혈낙타 #화석 #고생물학 #멸종동물 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 차일즈 프릭이 미국자연사박물관(AMNH) 소속 고생물학자라는 점</li><li>근거 등록 안 된 주장: 이 신종을 다룬 논문이 New Mexico Museum of Natural History and Science Bulletins에 실린다는 점</li><li>근거 등록 안 된 주장: 이 신종이 새로운 속(genus)이기도 하다는 점</li><li>근거 등록 안 된 주장: 애피카멜루스가 기린처럼 생겼다는 점</li><li>근거 등록 안 된 주장: 연구 인용 출처가 ScienceAlert라는 점</li>
+          <li>송곳니의 용도(구애용)는 연구진의 추정이며 확정된 사실이 아님</li><li>신종 기재 논문(모노그래프)은 아직 출판 예정 단계라고 원문에 적혀 있음</li><li>골격 대부분이 알려지지 않아 실제 생김새는 불확실함</li><li>이미지는 상상 속 모습이므로 실제 복원도처럼 보이지 않게 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-babd01f85b98-0">1장</label>
+          <textarea id="s-babd01f85b98-0" rows="6" data-slide="0">**흡혈 낙타가**
+진짜 있었다???
+---
+박물관에 오래 보관돼 있던 화석을 다시 분석했더니, 송곳니가 날카로운 &#39;흡혈 낙타&#39;라는 이름의 신종이 나왔다.</textarea>
+          
+          <label class="f" for="s-babd01f85b98-1">2장</label>
+          <textarea id="s-babd01f85b98-1" rows="5" data-slide="1">주인공은 / **묵은** 컬렉션
+---
+20세기 초 고생물학자 차일즈 프릭이 낙타과 화석 발굴을 직접 후원했다. 연구진은 그 컬렉션의 낙타과 표본 수만 점을 다시 분석해 낙타 가계도를 손봤다.</textarea>
+          
+          <label class="f" for="s-babd01f85b98-2">3장</label>
+          <textarea id="s-babd01f85b98-2" rows="6" data-slide="2">송곳니 길이가
+약 **40mm**
+---
+두개골은 다른 낙타과와 비슷하지만 송곳니는 약 40mm에 이르고 끝이 뒤로 휘었다. 약 1000만~1300만 년 전에 살았고 뼈는 주로 텍사스와 오클라호마에서 나왔다.</textarea>
+          
+          <label class="f" for="s-babd01f85b98-3">4장</label>
+          <textarea id="s-babd01f85b98-3" rows="6" data-slide="3">무섭게 생겨서
+**채식주의자**
+---
+생김새와 달리 이 동물은 채식을 했다. 가까운 친척 애피카멜루스는 긴 목이 지상 3m 높이까지 닿아 나무 꼭대기를 뜯어 먹었을 수 있다고 한다.</textarea>
+          
+          <label class="f" for="s-babd01f85b98-4">5장</label>
+          <textarea id="s-babd01f85b98-4" rows="6" data-slide="4">그럼 송곳니는
+**구애용**?
+---
+포식자를 막는 데 썼을 수도 있지만, 연구 공동 저자들은 수컷이 암컷의 관심을 끄는 데 썼을 가능성이 더 높다고 본다. 암컷에게는 이 송곳니가 없었다.</textarea>
+          
+          <label class="f" for="s-babd01f85b98-5">6장</label>
+          <textarea id="s-babd01f85b98-5" rows="6" data-slide="5">멸종 동물 덕후
+친구한테 보내기
+---
+거의 한 세기 가까이 박물관에 잠들어 있던 뼈에서 채식하는 흡혈 낙타가 나왔다. 공룡 말고 멸종 동물에 빠진 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-babd01f85b98">본문 (캡션)</label>
+          <textarea id="c-babd01f85b98" class="caption">흡혈 낙타라는 이름의 신종이 박물관 화석에서 나왔다. 학명은 밤피로카멜루스 웰시(Vampyrocamelus welshi)로, 이름만 새로울 뿐 화석 자체는 거의 한 세기 가까이 박물관에 보관돼 있던 것들이다.
+
+20세기 초 미국자연사박물관의 고생물학자 차일즈 프릭이 낙타과 화석 발굴을 직접 후원했다. 이번 연구진은 그 컬렉션의 낙타과 표본 수만 점을 다시 분석해 낙타 가계도를 새로 손봤고, 그 결과 중 하나가 이 신종이다.
+
+이 동물은 약 1000만~1300만 년 전에 살았고, 뼈는 텍사스와 오클라호마에서 흔하게, 네브래스카에서 가끔 발견됐다. 가장 큰 특징은 약 40mm에 이르는 송곳니다. 무시무시해 보여도 채식을 했다. 연구진은 송곳니를 포식자 방어에 썼을 수도 있지만 수컷이 암컷의 관심을 끄는 데 썼을 가능성이 더 높다고 본다. 암컷에게는 이런 송곳니가 없었기 때문이다.
+
+두개골 외에는 알려진 게 많지 않다. 연구팀은 그동안 애피카멜루스의 뼈로 분류된 것 중 일부가 사실은 이 동물의 것일 수 있다고 말한다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-babd01f85b98">해시태그</label>
+          <input id="t-babd01f85b98" type="text" class="tagsin" value="#흡혈낙타 #화석 #고생물학 #멸종동물 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>신종의 이름은 Vampyrocamelus welshi, 즉 &#39;흡혈 낙타&#39;다.</b>
+            <q>“You, my friend, have just met Vampyrocamelus welshi – the &#34;vampire camel&#34;.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이름과 공식 기재는 새롭지만 화석 자체는 거의 한 세기 가까이 박물관에 있었다.</b>
+            <q>“Though the name and formal description are new, the fossils themselves have been gathering dust in museums for the better part of a century.”</q>
+            <small>slide1, slide6, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>차일즈 프릭이 20세기 초 낙타과 화석 발굴을 직접 후원했다.</b>
+            <q>“Childs Frick, a paleontologist at the American Museum of Natural History (AMNH), personally funded many fossil digs in the early 20th century, with a particular interest in camelids – the family that includes modern-day camels, llamas, and alpacas.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진이 프릭 컬렉션의 낙타과 표본 수만 점을 재분석해 낙타 가계도를 갱신했다.</b>
+            <q>“In the new monograph, paleontologists have reanalyzed tens of thousands of camelid specimens held in Frick&#39;s collection, reviewing and updating the camel family tree.”</q>
+            <small>slide2, summary, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약 1000만~1300만 년 전에 살았고 뼈는 텍사스·오클라호마에서 흔히, 네브래스카에서 가끔 발견된다.</b>
+            <q>“It lived roughly 10 to 13 million years ago, with its bones commonly found in Texas and Oklahoma, and occasionally in Nebraska.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두개골은 다른 낙타과와 비슷하지만 송곳니가 약 40mm 길이다.</b>
+            <q>“While its skull looks very similar to other known camelids, its defining feature is what gives it its name: fang-like canines that are roughly 40 millimeters (1.6 inches) long.”</q>
+            <small>slide3, summary, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>송곳니는 끝이 길게 뒤로 휘고 대부분의 표본에서 날카롭다.</b>
+            <q>“The canines are enormous compared to any other known camelid, with a long recurved tip, coming to a sharp terminal point in most specimens,”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>무섭게 생겼지만 채식을 했다.</b>
+            <q>“It may look pretty fearsome, but despite its name (and face), it was a vegetarian.”</q>
+            <small>slide4, slide6, summary, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>애피카멜루스는 긴 다리로 서서 최대 3m 높이까지 닿는 목으로 나무 꼭대기를 뜯었을 수 있다.</b>
+            <q>“Aepycamelus stood on stilt-like legs and might have grazed treetops with its long neck that reached up to 3 meters (10 feet) off the ground.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>송곳니는 포식자 방어용일 수도 있지만 공동 저자들은 수컷이 암컷의 관심을 끄는 데 썼을 가능성이 더 높다고 본다.</b>
+            <q>“It&#39;s possible it used its sharp teeth to defend itself against predators – but according to the study&#39;s co-authors, they were more likely used by males competing for female attention.”</q>
+            <small>slide5, summary, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>암컷에게는 이 송곳니가 없었다.</b>
+            <q>“They may have been using [the fangs] to attract females, because the female animals did not have these,”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두개골 외의 골격은 알려진 것이 많지 않다.</b>
+            <q>“Little is known about the rest of the skeleton beyond the skull; there are a few broken limb and foot bones, but not a lot to go on.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그동안 애피카멜루스의 뼈로 분류된 것 중 상당수가 실제로는 이 동물의 것일 수 있다고 연구팀이 말한다.</b>
+            <q>“The team says that many of the bones attributed to Aepycamelus over the years could actually belong to Vampyrocamelus.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">Bizarre &#39;Vampire Camel&#39; Discovered in Museum Fossils Collected Decades Ago</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/vampire-camel.png"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Inka_stand_at_American_Museum_of_Natural_History_1.jpg" target="_blank" rel="noopener">Vicpeters / Wikimedia Commons · CC BY 4.0</a> — "American Museum of Natural History"</li><li>3장: <a href="https://www.sciencealert.com/bizarre-vampire-camel-discovered-in-museum-fossils-collected-decades-ago" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/Vampire-camel-skull.png"</li><li>4장: <a href="https://www.thebrighterside.news/post/scientists-discover-an-american-vampire-camel-from-13-million-years-ago/" target="_blank" rel="noopener">The Brighter Side of News / </a> — "https://www.thebrighterside.news/uploads/2026/11/vampire-camel-main.png?auto=webp"</li><li>5장: <a href="https://indiandefencereview.com/11-million-year-old-camel-feature/" target="_blank" rel="noopener">Indian Defence Review / </a> — "https://indiandefencereview.com/wp-content/uploads/2026/11/this-11-million-year-old-camel-had-a-terrifying-feature-that-puzzled-scientists-for-decades-scaled.jpg"</li><li>6장: <a href="https://pixabay.com/photos/natural-history-museum-london-2203648/" target="_blank" rel="noopener">PublicCo / Pixabay</a> — "natural history museum"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-b50e072956e2">
+    <div class="head">
+      <h2>S1. AI가 회의 시간은 못 줄인다는 갤럽 조사</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 10
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-b50e072956e2">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 직장인</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: AI가 이메일과 자료 찾기는 줄여줘도 회의 시간은 그대로라는 반전을, 직장인이 매일 겪는 회의와 엮어서 푼다</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">103/500자</span></div>
+      <p class="tp-text">AI가 이메일은 대신 써줘도 회의 시간은 못 줄여준대
+AI 자주 쓰는 직장인 10명 중 8명이 &#39;회의 시간 그대로&#39;라고 답한 조사가 나옴
+근데 AI 때문에 오히려 늘어난 일도 있었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 갤럽이 미국 직장인 21,648명을 조사했더니, AI 자주 쓰는 사람의 83%가 회의 시간은 그대로라고 답함. 협업 시간도 78%는 변화 없었음. 그럼 줄어든 건 뭐였을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">2/ 줄어든 건 정보 모으는 시간(52%)과 글 쓰는 시간(47%)이었음. 여기서 &#39;자주 쓰는 사람&#39;은 AI를 일주일에 몇 번 이상 쓰는 사람이고, 응답자의 32%였음. 그럼 회의는 원래 얼마나 먹고 있었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">3/ 2024년 Reclaim.ai 조사에선 직장인이 일주일에 평균 15시간 가까이 회의에 쓴다고 나왔음. 표준 근무주의 약 37%임. 그럼 일 자체는 편해졌을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">88/500자</span></div>
+      <p class="tp-text">4/ AI 자주 쓰는 사람의 65%는 일에 드는 머리 쓰는 강도가 예전과 비슷하다고 답함. 21%는 줄었고, 14%는 오히려 더 힘들어졌다고 함. 왜 이럴까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">132/500자</span></div>
+      <p class="tp-text">5/ 기사는 AI가 반복 업무를 대신하는 대신 새 일을 만들어서일 수 있다고 봄. 결과를 검토하고 고치는 시간이 늘었다는 사람이 21%, 새 기술·도구를 배우는 시간이 늘었다는 사람도 같은 21%였음. 그럼 회사 쪽 기대치는 올라갔을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">225/500자</span></div>
+      <p class="tp-text">6/ 갤럽 조사 요약 정리
+- 회의 시간 그대로: 83%
+- 동료와 협업 시간 그대로: 78%
+- 고객 응대 시간 그대로: 82%
+- 정보 모으는 시간 줄었다: 52%
+- 글 쓰는 시간 줄었다: 47%
+- AI 도입 조직 직원 중 기대치가 올랐다: 29%
+- AI 자주 쓰는 사람 중 기대치가 올랐다: 36%
+- 따라가려고 AI를 써야 한다는 압박: 33%
+(앞의 다섯 개는 AI 자주 쓰는 사람 기준)</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">207/500자</span></div>
+      <p class="tp-text">7/ 결국 이 조사 말은, AI가 자료 찾기·글쓰기 시간은 줄여줘도 회의 시간은 그대로였다는 거
+
+너라면 회의 줄이는 데 AI가 도움 된다고 봐, 안 된다고 봐?
+
+이런 해외 일터·자기계발 조사, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: AI 자주 쓰는 직장인 10명 중 8명이 &#39;회의 시간 그대로&#39;라고 답했다는 표현(83%를 반올림한 것으로, claims에 별도 항목이 없음)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>AI가 이메일은 대신 써줘도 회의 시간은 못 줄여준대</li><li>AI 자주 쓰는 직장인 10명 중 8명이 &#39;회의 시간 그대로&#39;라고 답했대</li><li>&#39;AI가 일 다 해준다&#39;는 말, 회의 앞에서는 안 통하는 듯</li><li>일주일에 15시간 가까이가 회의라는 조사, AI도 이건 못 건드렸대</li><li>AI 자주 쓰는 직장인, 시간이 줄어든 건 &#39;회의&#39;가 아니라 &#39;자료 찾기와 글쓰기&#39;래</li><li>AI 쓰면 일이 편해진다? 자주 쓰는 사람 65%는 머리 쓰는 강도가 똑같다고 함</li><li>AI가 일을 대신해주는데 검토하고 고치는 시간은 오히려 늘었다는 사람들이 있대</li><li>&#39;AI가 일 시간을 다 줄여준다&#39;가 아니라 &#39;줄어드는 건 일부뿐&#39;이라는 조사가 나옴</li><li>정보 찾는 시간은 줄었는데 회의 시간은 그대로라는 갤럽 조사 결과</li><li>미국 직장인 2만 명 넘게 물어봤더니 AI가 못 줄여준 게 회의였대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>회의 줄이는 데 AI가 도움 된다고 봐, 안 된다고 봐?</li><li>회의 vs 이메일, 둘 중 하나만 없앤다면 뭐 없앨래?</li><li>하루 회의 중에 &#39;이건 메일로 해도 됐는데&#39; 싶었던 적 있는 사람?</li><li>AI가 회의록 정리해주면 회의가 덜 힘들 것 같아, 그래도 똑같을 것 같아?</li><li>회의는 짧게 자주 vs 길게 한 번, 어느 쪽이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>AI 쓰는데 검토하고 고치는 시간이 늘어난 이유</li><li>직장인이 일주일에 회의에 쓰는 시간 더 들여다보기</li><li>AI 쓰라는 압박을 느끼는 직장인들 얘기</li><li>AI가 줄여준 시간은 다 어디로 갔을까</li><li>해외 직장인들은 협업 시간을 어떻게 쓰고 있을까</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI는 숫자 계산, 정보 분석, 이메일 작성은 순식간에 하지만 회의 시간은 못 줄여준다</b>
+          <q>“AI can instantaneously crunch numbers, analyze information, and write emails. One thing it still can’t do? Save you the time spent in meetings.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI 자주 쓰는 사람의 83%가 회의 시간이 그대로라고 답했고 78%는 협업 시간에 변화가 없다고 답했다</b>
+          <q>“But 83% said their time in meetings hasn’t changed, while 78% reported no change in time spent collaborating with coworkers.”</q>
+          <small>post0, post1 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>갤럽이 미국 직장인 21,648명을 조사했다</b>
+          <q>“Gallup surveyed 21,648 U.S. employees and found that among frequent AI users (32% of respondents, who were defined as those who use AI a few times a week or more), 52% spend less time gathering information and 47% spend less time writing.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자주 쓰는 사람은 AI를 일주일에 몇 번 이상 쓰는 사람이고 응답자의 32%이며, 이 중 52%는 정보 모으는 시간이, 47%는 글 쓰는 시간이 줄었다</b>
+          <q>“Gallup surveyed 21,648 U.S. employees and found that among frequent AI users (32% of respondents, who were defined as those who use AI a few times a week or more), 52% spend less time gathering information and 47% spend less time writing.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2024년 Reclaim.ai 조사에서 직장인은 일주일에 평균 15시간 가까이, 표준 근무주의 약 37%를 회의에 쓴다</b>
+          <q>“A 2024 survey by scheduling platform Reclaim.ai, for example, found that employees spend nearly 15 hours a week in meetings on average—roughly 37% of a standard workweek.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI 자주 쓰는 사람의 65%는 일에 드는 정신적 노력이 같고, 21%는 줄었고, 14%는 더 힘들어졌다고 답했다</b>
+          <q>“Nearly two-thirds of frequent AI users (65%) said their roles require about the same mental effort as before, while 21% reported expending less mental effort and 14% claimed their work has become even more demanding.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI가 반복 업무를 대신하는 한편 새 책임을 만들어서일 수 있고, 검토·수정 시간이 늘었다는 사람이 21%, 새 기술·도구 배우는 시간이 늘었다는 사람도 같은 비율이다</b>
+          <q>“This could be because AI is replacing routine tasks while creating new responsibilities: 21% of frequent users said they now spend more time reviewing and correcting work, and the same percentage reported spending more time learning new skills and tools.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI 자주 쓰는 사람의 82%는 고객 응대에 쓰는 시간이 비슷하다</b>
+          <q>“Along with meeting time (and time spent collaborating with coworkers), Gallup also found that 82% of frequent AI users spend about the same amount of time working with customers or clients.”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI를 도입한 조직 직원 중 29%만 AI가 하루 업무량 기대치를 높였다고 답했다</b>
+          <q>“Among employees at organizations that have adopted AI, just 29% told Gallup the technology has raised expectations for how much work they should complete in a day.”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI 자주 쓰는 사람 중 36%는 산출물 기대치가 올랐다고, 33%는 따라가기 위해 AI를 써야 한다는 압박을 느꼈다고 답했다</b>
+          <q>“Frequent AI users are more likely to feel pressure, however: 36% said AI has raised expectations for their output, and 33% said they felt pressure to use the technology to keep up.”</q>
+          <small>post6 · <a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="b50e072956e2">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91646593/the-one-workplace-time-suck-even-ai-cant-fix?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">The one workplace time-suck even artificial intelligence can’t fix</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-35de34367b6a">
+    <div class="head">
+      <h2>S2. 감사는 괜찮은 척이 아니라 작은 것 하나면 된다는 심리 글</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-35de34367b6a">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 심리이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;감사=긍정 강요&#39;라는 통념을 뒤집고, 힘든 사람도 오늘 작은 것 하나만 적으면 시작할 수 있다는 부담 없는 실천법으로 판다</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">91/500자</span></div>
+      <p class="tp-text">감사는 &#39;괜찮은 척&#39;하는 게 아니라 &#39;작은 것 하나&#39;면 된대
+억지로 긍정하지 말고 하나만 떠올리라는 글이 나옴
+근데 상담받던 사람들은 시작할 때 행복하지 않았음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">129/500자</span></div>
+      <p class="tp-text">1/ 상담받던 사람들한테 감사 편지를 쓰게 한 연구가 있었음. 1개월, 3개월 뒤 정신건강이 더 낫다고 보고했고, 3개월 시점 뇌 스캔에서도 감사에 대한 신경 민감도가 더 높게 나왔대. 근데 이 사람들, 시작할 땐 기분이 어땠을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">2/ 행복하지 않았대. 오히려 힘들어하던 사람들이었음. 그래도 고통을 글로 지워버린 게 아니라, 잠깐 옆에 두고 감사할 거리를 찾았다는 거. 슬픈데 감사하는 게 가능해?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">96/500자</span></div>
+      <p class="tp-text">3/ 글에선 감사가 슬픔 &#39;바로 옆집&#39;에 살 수 있다고 함. 누군가를 애도하면서도 그 사람이 내 삶에 있었던 건 감사할 수 있다는 거. 그럼 처음부터 매일 해야 하는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">4/ 아니래. 시작은 작은 것 하나면 되고, 매일 안 해도 된다고 함. 오늘 생각 안 나면 내일 다시 해보면 됨. 유명한 연구도 일주일에 한 번 몇 가지 적게 했는데, 10주 뒤엔 어땠을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">5/ 감사를 적은 그룹이 더 낙관적이고, 몸 불편함도 덜 보고했고, 운동도 더 했대. 비교 그룹은 짜증 나는 일을 적었음. 작은 연습이 측정 가능한 변화로 이어졌다는 거. 그럼 오늘 뭘 하면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">160/500자</span></div>
+      <p class="tp-text">6/ 감사 연구 요약 정리
+- 일주일에 한 번 감사한 일 적기: 10주 뒤 더 낙관적, 신체 불편 보고 감소, 운동 증가
+- 상담 중인 사람의 감사 편지: 1개월·3개월 뒤 정신건강 보고 개선
+- 감사 편지를 직접 전하면 행복감이 몇 주 지속
+- 시작은 작은 것 하나, 매일 안 해도 됨</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">206/500자</span></div>
+      <p class="tp-text">7/ 결국 글이 말하는 건, 괜찮은 척 말고 작은 것 하나만 적어보라는 거. 힘든 날엔 그걸로도 충분한 시작이래.
+
+감사 적기, 매일 쓰는 파 vs 생각날 때 쓰는 파?
+
+이런 해외 심리 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>주변에 있는 걸 알아차리는 감사가 좋은 시작점이라는 결론 <small>애매 · 원문은 &#39;매일 떠올릴 것을 찾아 알아차리는 것이 좋은 시작점&#39;이라는 취지다. &#39;주변에 있는 걸 알아차리는&#39;이라는 표현은 원문에 없는 해석이므로, &#39;힘들게 붙잡아 주는 것을 알아차리는 것이 좋은 시작점&#39;처럼 원문 표현에 맞게 고치는 것이 좋다.</small></li>
+        <li>근거 등록 안 된 주장: 억지로 긍정하지 말고 하나만 떠올리라는 글이라는 설명</li><li>근거 등록 안 된 주장: 힘든 날에는 작은 것 하나로도 충분한 시작이라는 내용</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>감사는 &#39;괜찮은 척&#39;하는 게 아니라 &#39;작은 것 하나&#39;면 된대</li><li>긍정적으로 살자고 다짐하지 말고, 작은 것 하나 적는 것부터 하라는 글이 나옴</li><li>&#39;감사하며 살자&#39;가 왠지 부담스러웠다면, 이 글 좀 보고 가</li><li>상담받던 힘든 사람들이 감사 편지를 썼더니 생긴 일</li><li>감사는 슬픔이랑 같이 있을 수 있대, 바로 옆집처럼</li><li>감사일기, 매일 쓰지 않아도 된다는 말이 나옴</li><li>&#39;Count your blessings&#39;가 위로가 아니라 숙제처럼 들렸다면</li><li>일주일에 한 번 감사한 일 적었더니 10주 뒤 운동을 더 했다는 연구</li><li>기분이 안 좋을 때 감사하라는 말, 이 글은 좀 다르게 말함</li><li>감사를 &#39;느끼는 감정&#39;이 아니라 &#39;근육&#39;으로 보라는 글이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>감사 적기, 매일 쓰는 파 vs 생각날 때 쓰는 파?</li><li>감사일기 한 번이라도 써본 사람?</li><li>오늘 감사한 거 딱 하나만 말하라면?</li><li>감사 편지, 직접 전하기 vs 마음만 간직하기 어느 쪽이야?</li><li>너라면 감사 적기, 아침에 할래 밤에 할래?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>감사 편지를 직접 전하면 행복감이 몇 주 간다는 연구</li><li>슬픔과 감사가 함께 있을 수 있다는 심리 이야기</li><li>상담받던 사람들의 감사 글쓰기, 뇌 스캔 결과</li><li>일주일에 한 번 감사 적기 10주 실험 자세히 보기</li><li>연말에 마음이 무거울 때 읽는 해외 심리 글</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>상담 연구에서 비교 집단이 누구였는지 원문에 없음. 개선 효과를 &#39;감사 편지 때문&#39;이라고 인과로 단정하는 문장 추가 금지</li><li>원문이 Psychology Today 칼럼이라 각 연구의 참가자 규모가 나와 있지 않음. 규모나 효과 크기 숫자를 덧붙이지 말 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>주변에 있는 걸 알아차리는 감사가 좋은 시작점이라는 결론</b>
+          <q>“And according to the science, that’s a perfect place to start.”</q>
+          <small>post7 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>감사는 모든 게 괜찮은 척하는 게 아니다</b>
+          <q>“Gratitude can live right next door to grief; it doesn&#39;t mean pretending everything is fine.”</q>
+          <small>post0 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>상담받던 사람들은 시작할 때 행복하지 않았고 힘들어하고 있었다</b>
+          <q>“The people in counseling weren’t happy when they started. They were struggling.”</q>
+          <small>post0, post2 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>상담 중인 사람들이 감사 편지를 쓴 뒤 1개월과 3개월에 더 나은 정신건강을 보고했고, 3개월 시점 뇌 스캔에서 감사에 대한 신경 민감도가 더 컸다</b>
+          <q>“And in a study of people already in counseling, those who wrote gratitude letters reported better mental health one and three months later. Brain scans taken at the three-month mark showed greater neural sensitivity to gratitude.”</q>
+          <small>post1 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그들은 고통을 글로 지운 게 아니라 잠시 접어두고 감사할 거리를 찾았다</b>
+          <q>“They didn’t write their pain away. They set it aside for a moment and found something to be grateful for.”</q>
+          <small>post2 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>누군가를 애도하면서도 그 사람이 내 삶에 있었음에 감사할 수 있다</b>
+          <q>“You can mourn someone terribly and still be grateful you had them in your life.”</q>
+          <small>post3 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>감사 연습은 작은 것 하나로 시작할 수 있고 매일 해야 한다는 부담이 없다</b>
+          <q>“A gratitude practice can start with appreciating one small thing, with no pressure to do it daily.”</q>
+          <small>post4 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>오늘 하나도 생각나지 않으면 괜찮고 내일 다시 시도하면 된다</b>
+          <q>“And if you can’t think of one today, that’s okay. Wake up tomorrow, wave to your neighbor, and try again.”</q>
+          <small>post4 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>에먼스와 맥컬러프의 연구에서 사람들에게 일주일에 한 번 감사한 일 몇 가지를 적게 했다</b>
+          <q>“In one well-known study, psychologists Robert Emmons and Michael McCullough asked people to write down a few things they were grateful for once a week.”</q>
+          <small>post4 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>10주 뒤 감사 그룹은 더 낙관적이었고 신체 불편을 덜 보고했고 운동도 더 했다</b>
+          <q>“After 10 weeks, the gratitude group felt more optimistic, reported fewer physical complaints, and even exercised more.”</q>
+          <small>post5, post6 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>비교 그룹은 짜증 나는 일에 대해 썼다</b>
+          <q>“Another group wrote about their hassles.”</q>
+          <small>post5 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>감사 편지를 써서 직접 전하면 행복감 상승이 몇 주간 지속됐다</b>
+          <q>“Writing a thank-you letter to someone and delivering it in person gave people a lift in happiness that lasted for weeks.”</q>
+          <small>post6 · <a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="35de34367b6a">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.psychologytoday.com/us/blog/decoding-shame/202611/the-science-of-gratitude" target="_blank" rel="noopener">The Science of Gratitude</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261122-am";
+  const ORIGINAL = {"2b6ad0a38fb9": {"caption": "\uace0\ub798\uc758 \uc228\uacb0\ub9cc\uc73c\ub85c \uc720\uc804\uccb4 \uc804\uccb4\ub97c \ud574\ub3c5\ud588\ub2e4\ub294 \uc18c\uc2dd\uc774\uc5d0\uc694. \uc2a4\ucf54\ud2c0\ub79c\ub4dc \uc138\uc778\ud2b8\uc564\ub4dc\ub8e8\uc2a4\ub300\uac00 \ucc38\uc5ec\ud55c \uad6d\uc81c \uc5f0\uad6c\ud300\uc774 \uc18c\ud615 \ub4dc\ub860\uc73c\ub85c \ud639\ub4f1\uace0\ub798\uc758 \uc228\uc744 \ubc1b\uc544 \uc804\uccb4 \uc720\uc804\uccb4 \ud574\ub3c5\uc744 \uc644\uc131\ud588\uc2b5\ub2c8\ub2e4. \ubb3c\ub9ac\uc801 \uac1c\uc785 \uc5c6\uc774 \ud574\ub0b8 \uac74 \uc774\ubc88\uc774 \ucc98\uc74c\uc774\ub77c\uace0 \ud574\uc694. \uadf8\ub3d9\uc548\uc740 \ubcf4\ud2b8\uc5d0\uc11c \ub2e4\ud2b8\uc640 \uc0dd\uac80\uc73c\ub85c \uc870\uc9c1\uc744 \uc5bb\uc5b4 \uace0\ub798\ub97c \ubc29\ud574\ud558\uac70\ub098, \uc88c\ucd08\ub41c \uac1c\uccb4\ub098 \uc61b \ud45c\ubcf8\uc744 \uc368\uc57c \ud588\uc2b5\ub2c8\ub2e4. \uc5f0\uad6c\ud300\uc740 \ub4dc\ub860\uc5d0 \uba78\uade0 \ud398\ud2b8\ub9ac \uc811\uc2dc\ub97c \ub2ec\uc544 \uce90\ub098\ub2e4 \ube0c\ub9ac\ud2f0\uc2dc\uceec\ub7fc\ube44\uc544\uc8fc \ubd81\ubd80 \ud0a4\ud2f0\ub9f7 \ud53c\uc624\ub974\uc5d0\uc11c \ud639\ub4f1\uace0\ub798 26\ub9c8\ub9ac\uc758 \uc228 \uc0d8\ud50c 58\uac1c\ub97c \ubaa8\uc558\uc2b5\ub2c8\ub2e4. \uc0d8\ud50c\uc758 3\ubd84\uc758 1 \uc774\uc0c1\uc740 \ubcf4\ud2b8 \uc5c6\uc774 \uc721\uc9c0\uc5d0\uc11c \ub4dc\ub860\uc744 \ub0a0\ub824 \uc5bb\uc5c8\uace0, \uc228 \uc18d DNA\uc758 \uc57d 84%\uac00 \uace0\ub798\uc758 \uac83\uc774\uc5c8\uc2b5\ub2c8\ub2e4. \uac19\uc740 \uace0\ub798\ub97c \ub2e4\ub978 \ub54c\uc5d0, 2\ub144\uc5d0 \uac78\uccd0 \ub2e4\uc2dc \ucc44\ucde8\ud574\ub3c4 \uac19\uc740 \uc720\uc804\uccb4\uac00 \ub098\uc654\uc5b4\uc694. \uc774\ubc88 \uc5f0\uad6c \uc804\uc5d0 \uacf5\uac1c\ub41c \ubd81\ud0dc\ud3c9\uc591 \ud639\ub4f1\uace0\ub798\uc758 \uc804\uccb4 \uc720\uc804\uccb4\ub294 \ub2e8 \ud558\ub098\ubfd0\uc774\uc5c8\uc2b5\ub2c8\ub2e4. \uc218\uc11d \uc5f0\uad6c\uc790 \uc5d0\uc774\ub518 \uc624\ub9c8\ud638\ub2c8 \ubc15\uc0ac\ub294 \uc228\uc5d0\uc11c \uc5bb\uc740 \uc720\uc804\uccb4\ub85c \uace0\ub798\ub4e4\uc758 \ud608\uc5f0 \uad00\uacc4\ub97c \uc0b4\ud53c\uaca0\ub2e4\uace0 \ubc1d\ud614\uc2b5\ub2c8\ub2e4. \uc228 \uc2dc\ub8cc DNA\uc758 \ub098\uba38\uc9c0 \uc57d 16%\ub294 \uae30\ub3c4\uc5d0 \uc0ac\ub294 \ubbf8\uc0dd\ubb3c\uc5d0\uc11c \uc654\ub2e4\ub294 \uc810\ub3c4 \ud655\uc778\ub418\uc5b4, \ud55c \ubc88\uc758 \uc228\uc73c\ub85c \uac74\uac15\uc744 \uc5ff\ubcfc \uac00\ub2a5\uc131\ub3c4 \uc5f4\ub838\uc2b5\ub2c8\ub2e4. \ucd9c\ucc98: Good News Network", "hashtags": ["#\uace0\ub798", "#\ud639\ub4f1\uace0\ub798", "#\ub4dc\ub860", "#\uc720\uc804\uccb4", "#\ud574\uc591\uc0dd\ubb3c"], "slides": [["\uace0\ub798 **\uc228\uacb0**\ub85c", "\uc720\uc804\uccb4 \ud574\ub3c5?!", "---", "\uc2a4\ucf54\ud2c0\ub79c\ub4dc \uc138\uc778\ud2b8\uc564\ub4dc\ub8e8\uc2a4\ub300\uac00 \ucc38\uc5ec\ud55c \uad6d\uc81c \uc5f0\uad6c\ud300\uc774 \ub4dc\ub860\uc73c\ub85c \ubaa8\uc740 \ud639\ub4f1\uace0\ub798\uc758 \uc228\ub9cc\uc73c\ub85c \uc804\uccb4 \uc720\uc804\uccb4 \ud574\ub3c5\uc744 \ucc98\uc74c \uc644\uc131\ud588\ub2e4."], ["\ucc0c\ub974\uc9c0 \uc54a\uace0", "**\uc228\ub9cc** \ubc1b\uc558\ub2e4", "---", "\uadf8\ub3d9\uc548\uc740 \ubcf4\ud2b8\uc5d0\uc11c \ub2e4\ud2b8\uc640 \uc0dd\uac80\uc73c\ub85c \uc870\uc9c1\uc744 \uc5bb\uac70\ub098, \uc88c\ucd08\ub41c \uac1c\uccb4\uc640 \uc61b \ud45c\ubcf8\uc744 \uc368\uc57c \ud588\ub2e4. \uc774\ubc88\uc5d0\ub294 \uc18c\ud615 \ub4dc\ub860\uc5d0 \uba78\uade0 \ud398\ud2b8\ub9ac \uc811\uc2dc\ub97c \ub2ec\uc544 \uace0\ub798\uc758 \uc228 \uc18d\uc73c\ub85c \ub0a0\ub838\ub2e4."], ["\ud639\ub4f1\uace0\ub798 26\ub9c8\ub9ac", "\uc228 \uc0d8\ud50c **58\uac1c**", "---", "\uce90\ub098\ub2e4 \ube0c\ub9ac\ud2f0\uc2dc\uceec\ub7fc\ube44\uc544\uc8fc \ubd81\ubd80 \ud0a4\ud2f0\ub9f7 \ud53c\uc624\ub974 \uc77c\ub300\uc5d0\uc11c \ubaa8\uc740 \uc591\uc774\ub2e4. \uc0d8\ud50c\uc758 3\ubd84\uc758 1 \uc774\uc0c1\uc740 \ubcf4\ud2b8 \uc5c6\uc774 \uc721\uc9c0\uc5d0\uc11c \ub4dc\ub860\uc744 \ub0a0\ub824 \uc5bb\uc5c8\ub2e4."], ["\uc228 \uc18d DNA\uc758", "**84%**\uac00 \uace0\ub798 \uac83", "---", "\uac19\uc740 \uace0\ub798\ub97c \ub2e4\ub978 \ub54c\uc5d0, 2\ub144\uc5d0 \uac78\uccd0 \ub2e4\uc2dc \ucc44\ucde8\ud574\ub3c4 \uac19\uc740 \uc720\uc804\uccb4\uac00 \ub098\uc654\ub2e4. \ubb34\ub9ac \uc548\uc5d0\uc11c\ub294 \ubc14\ub78c\uc774 \uc624\ub294 \ucabd \ub9e8 \ub05d \uace0\ub798\ub97c \uaca8\ub0e5\ud574 \ub2e4\ub978 \uac1c\uccb4\uc758 DNA\uac00 \uc11e\uc774\uc9c0 \uc54a\uac8c \ud588\ub2e4."], ["\uc131\ubcc4\ub3c4 \ub9de\ud788\uace0", "**\uc0c8 \ubcc0\uc774 3\uac1c**", "---", "\ub4dc\ub860\uc73c\ub85c \uc5bb\uc740 \ubd84\uc11d\uc740 \ubaa8\ub4e0 \uace0\ub798\uc758 \uc131\ubcc4\uc744 \uc815\ud655\ud788 \uac00\ub824\ub0c8\uace0, \uae30\ub85d\ub418\uc9c0 \uc54a\uc558\ub358 \ubbf8\ud1a0\ucf58\ub4dc\ub9ac\uc544 DNA \ubcc0\uc774 \uc138 \uac1c\ub3c4 \ucc3e\uc544\ub0c8\ub2e4. \uc228\uc73c\ub85c \uad6c\ud55c \uc720\uc804\uc801 \ub2e4\uc591\uc131 \ucd94\uc815\uce58\ub294 \uae30\uc874 \uc0dd\uac80\uacfc \ub9e4\uc6b0 \ube44\uc2b7\ud588\ub2e4."], ["\ubc14\ub2e4 \uc88b\uc544\ud558\ub294", "\uce5c\uad6c \ud0dc\uadf8", "---", "\uace0\ub798\ub97c \uac74\ub4dc\ub9ac\uc9c0 \uc54a\uace0 \ub4dc\ub860\uc73c\ub85c \ubc1b\uc740 \uc228\ub9cc\uc73c\ub85c \uc720\uc804\uccb4\ub97c \uc77d\uc5b4 \ub0c8\ub2e4. \ubc14\ub2e4\uc640 \uace0\ub798\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "3daa0cc815bf": {"caption": "\uc2e0\uc0ac\uac00 \uc778\uc2a4\ud134\ud2b8 \uce74\ub808\ub97c \ucd95\ubcf5\ud588\ub2e4\uace0?! \uc77c\ubcf8 \uc57c\ub9c8\uad6c\uce58\ud604\uc5d0\uc11c \ud559\ubb38\uc758 \uc2e0\uc744 \ubaa8\uc2dc\ub294 \uc2e0\uc0ac\uc758 \uc0ac\uc81c\ub4e4\uc774 \uc0c8 \uce74\ub808\uc758 \uccab \uc0dd\uc0b0\ubd84\uc744 \ucd95\ubcf5\ud558\ub294 \uc758\uc2dd\uc744 \uc5f4\uc5c8\ub2e4.\n\n\ubb34\ub300\ub294 \uc57c\ub9c8\uad6c\uce58\ud604 \ud638\ud6c4\uc2dc\uc758 \ud638\ud6c4\ud150\ub9cc\uad6c\ub2e4. 904\ub144\uc5d0 \uc138\uc6cc\uc9c4 \uc774 \uc2e0\uc0ac\uc5d0\ub294 9\uc138\uae30 \ud559\uc790 \uc2a4\uac00\uc640\ub77c\ub178 \ubbf8\uce58\uc790\ub124\uac00 \ud559\ubb38\uc758 \uc2e0 \ub374\uc9c4\uc73c\ub85c \ubaa8\uc154\uc838 \uc788\uace0, \ud559\uc0dd\uacfc \uc218\ud5d8\uc0dd \ub4f1 \ud559\uc5c5 \uc131\uacf5\uc744 \ubc14\ub77c\ub294 \uc0ac\ub78c\ub4e4\uc774 \ucc3e\uc544 \uae30\ub3c4\ud558\ub294 \uacf3\uc774\ub2e4.\n\n\uce74\ub808\ub97c \ub9cc\ub4e0 \ucabd\uc740 \ub0c9\ub3d9\uac74\uc870 \uc218\ud504\ub97c \uc804\ubb38\uc73c\ub85c \ud558\ub294 HFD \ud478\uc988\ub2e4. \ubaa8\ud68c\uc0ac \ud558\uce58\uac00 \uc774\ubbf8 \uc778\uc2a4\ud134\ud2b8 \uce74\ub808\ub97c \ub9cc\ub4e4\uace0 \uc788\uc5b4 \uc790\uccb4 \uc2e0\uc81c\ud488\uc744 \uad6c\uc0c1\ud588\uace0, \ud638\ud6c4\ud150\ub9cc\uad6c\uc640 \ud638\ud6c4 \uc2dc\uccad\uc5d0\uc11c \uc5f0 \uc2dc\uc2dd\ud68c\uc758 \uc758\uacac\uc744 \ubc18\uc601\ud574 \uac1c\ubc1c\ud588\ub2e4. \uadf8\ub807\uac8c \ub098\uc628 \ud638\ud6c4\ud150\ub9cc\uad6c \ub374\uc9c4 \uce74\ub808\uc5d0\ub294 20\uac00\uc9c0\uac00 \ub118\ub294 \ud5a5\uc2e0\ub8cc, \uae4d\ub451\uc36c \ucc44\uc18c, \ub2e4\uc9c4 \uc18c\uace0\uae30, \ubc84\uc12f \ub124 \uc885\ub958\ub85c \ub9cc\ub4e0 \uc18c\uc2a4, \ub808\ub4dc\uc640\uc778\uc774 \ub4e4\uc5b4\uac04\ub2e4.\n\n11\uc6d4 6\uc77c \uc2e0\uc0ac\uc5d0\uc11c \uc5f4\ub9b0 \uc758\uc2dd\uc5d0\uc11c\ub294 \uc0ac\uc81c\ub4e4\uc774 \uccab \uc0dd\uc0b0\ubd84\uc744 \ucd95\ubcf5\ud588\ub2e4. \ud558\uce58\ub294 \ub3c4\uc804\ud558\ub294 \ubaa8\ub4e0 \uc0ac\ub78c\uc758 \uc131\uacf5\uc744 \ubc14\ub77c\ub294 \ub9c8\uc74c\uc744 \ub2f4\uc558\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\ubc1c\ub9e4\uc77c\uc740 12\uc6d4 4\uc77c\uc774\uba70, \ud558\uce58 \uc628\ub77c\uc778 \uc2a4\ud1a0\uc5b4\uc5d0\uc11c\ub294 \uc774\ubbf8 \uc8fc\ubb38\ud560 \uc218 \uc788\ub2e4. 1\ud329\uc740 400\uc5d4, 5\ud329\uc740 1,900\uc5d4\uc774\ub2e4. \uc18c\uc2dd\uc744 \uc804\ud55c \ub9e4\uccb4\ub294 \ud3ec\uc7a5\uc77c\ub85c\ubd80\ud130 2\ub144\uc758 \ubcf4\uc874 \uae30\uac04\uc774 \uc788\uc5b4 \uc2dc\ud5d8 \uc900\ube44\ub85c \uc694\ub9ac\ud560 \uc2dc\uac04\uc774 \uc5c6\uc744 \ub54c \uc7c1\uc5ec \ub450\uae30 \uc88b\uaca0\ub2e4\uace0 \uc37c\ub2e4. \ub2e4\ub9cc \ubaa8\ub4e0 \ud329\uc774 \ucd95\ubcf5\ubc1b\uc558\ub294\uc9c0, \uccab \uc0dd\uc0b0\ubd84\ub9cc \ud574\ub2f9\ud558\ub294\uc9c0\ub294 \ubd84\uba85\ud558\uc9c0 \uc54a\ub2e4\uace0 \ud55c\ub2e4.\n\n\ucd9c\ucc98: SoraNews24, PR Times", "hashtags": ["#\uc77c\ubcf8\uce74\ub808", "#\uc778\uc2a4\ud134\ud2b8\uce74\ub808", "#\uc77c\ubcf8\uc2e0\uc0ac", "#\ud574\uc678\ud1a0\ud53d", "#\uc218\ud5d8\uc0dd"], "slides": [["\uc2e0\uc0ac\uac00", "\uce74\ub808\ub97c **\ucd95\ubcf5?!**", "---", "\uc77c\ubcf8 \uc57c\ub9c8\uad6c\uce58\ud604\uc758 \ud559\ubb38\uc758 \uc2e0 \uc2e0\uc0ac\uc5d0\uc11c \uc0ac\uc81c\ub4e4\uc774 \uc0c8 \uc778\uc2a4\ud134\ud2b8 \uce74\ub808\uc758 \uccab \uc0dd\uc0b0\ubd84\uc744 \ucd95\ubcf5\ud558\ub294 \uc758\uc2dd\uc744 \uc5f4\uc5c8\ub2e4."], ["**904\ub144**\uc5d0 \uc138\uc6b4", "\ud559\ubb38\uc758 \uc2e0 \uc2e0\uc0ac", "---", "\uc57c\ub9c8\uad6c\uce58\ud604 \ud638\ud6c4\uc2dc\uc758 \ud638\ud6c4\ud150\ub9cc\uad6c\ub294 904\ub144\uc5d0 \uc138\uc6cc\uc9c4 \uc2e0\uc0ac\uc774\ub2e4. 9\uc138\uae30 \ud559\uc790 \uc2a4\uac00\uc640\ub77c\ub178 \ubbf8\uce58\uc790\ub124\uac00 \ud559\ubb38\uc758 \uc2e0 \ub374\uc9c4\uc73c\ub85c \ubaa8\uc154\uc838 \uc788\uc5b4, \uc218\ud5d8\uc0dd\ub4e4\uc774 \uc131\uacf5\uc744 \ube4c\ub7ec \ucc3e\ub294\ub2e4."], ["\ub0c9\ub3d9\uac74\uc870 \uc218\ud504 \ud68c\uc0ac\uac00", "**\uce74\ub808**\ub97c \ub9cc\ub4e4\uc5c8\ub2e4", "---", "\ud638\ud6c4\uc758 HFD \ud478\uc988\ub294 \ub0c9\ub3d9\uac74\uc870 \uc218\ud504 \uc804\ubb38 \ud68c\uc0ac\uc774\ub2e4. \ubaa8\ud68c\uc0ac \ud558\uce58\uac00 \uc778\uc2a4\ud134\ud2b8 \uce74\ub808\ub97c \ub9cc\ub4e4\uace0 \uc788\uc5b4, \ud638\ud6c4\ud150\ub9cc\uad6c\uc640 \ud638\ud6c4 \uc2dc\uccad\uc5d0\uc11c \uc2dc\uc2dd \uc758\uacac\uc744 \ubc1b\uc544 \uc2e0\uc81c\ud488\uc744 \uac1c\ubc1c\ud588\ub2e4."], ["\ud5a5\uc2e0\ub8cc **20\uc885** \uc774\uc0c1", "\ub808\ub4dc\uc640\uc778\uae4c\uc9c0", "---", "\uce74\ub808\uc5d0\ub294 20\uac00\uc9c0\uac00 \ub118\ub294 \ud5a5\uc2e0\ub8cc\uc640 \uae4d\ub451\uc36c \ucc44\uc18c, \ub2e4\uc9c4 \uc18c\uace0\uae30\uac00 \ub4e4\uc5b4\uac04\ub2e4. \ubc84\uc12f \ub124 \uc885\ub958\ub85c \ub9cc\ub4e0 \uc18c\uc2a4\uc640 \ub808\ub4dc\uc640\uc778\ub3c4 \ub354\ud588\ub2e4."], ["11\uc6d4 6\uc77c", "**\uc0ac\uc81c\uac00 \uc9c1\uc811 \ucd95\ubcf5**", "---", "11\uc6d4 6\uc77c \uc2e0\uc0ac\uc5d0\uc11c \uc758\uc2dd\uc774 \uc5f4\ub824 \uc0ac\uc81c\ub4e4\uc774 \uccab \uc0dd\uc0b0\ubd84 \uce74\ub808\ub97c \ucd95\ubcf5\ud588\ub2e4. \uc81c\uc870\uc0ac \ud558\uce58\ub294 \ub3c4\uc804\ud558\ub294 \ubaa8\ub4e0 \uc774\uc758 \uc131\uacf5\uc744 \ubc14\ub77c\ub294 \ub9c8\uc74c\uc73c\ub85c \ub9cc\ub4e4\uc5c8\ub2e4\uace0 \ubc1d\ud614\ub2e4."], ["12\uc6d4 4\uc77c \ubc1c\ub9e4", "\ud55c \ud329 **400\uc5d4**", "---", "\ubc1c\ub9e4\uc77c\uc740 12\uc6d4 4\uc77c\uc774\uc9c0\ub9cc \ud558\uce58 \uc628\ub77c\uc778 \uc2a4\ud1a0\uc5b4\uc5d0\uc11c\ub294 \uc774\ubbf8 \uc8fc\ubb38\ud560 \uc218 \uc788\ub2e4. 1\ud329\uc740 400\uc5d4, 5\ud329\uc740 1,900\uc5d4\uc774\ub2e4. \ub2e4\ub9cc \ubaa8\ub4e0 \ud329\uc774 \ucd95\ubcf5\ubc1b\uc558\ub294\uc9c0\ub294 \ubd88\ubd84\uba85\ud558\ub2e4."], ["\uc2dc\ud5d8 \uc55e\ub454 \uce5c\uad6c\ud55c\ud14c", "**\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30**", "---", "\ud559\ubb38\uc758 \uc2e0 \uc2e0\uc0ac\uc5d0\uc11c \ucd95\ubcf5\ud55c \uce74\ub808\ub77c\ub294 \uc870\ud569\uc5d0, \uc694\ub9ac\ud560 \uc2dc\uac04\ub3c4 \uc5c6\uc774 \uacf5\ubd80\uc5d0 \uc9c0\uce5c \uce5c\uad6c\uac00 \uc6c3\uc73c\uba70 \ubcfc \uc18c\uc2dd"]]}, "babd01f85b98": {"caption": "\ud761\ud608 \ub099\ud0c0\ub77c\ub294 \uc774\ub984\uc758 \uc2e0\uc885\uc774 \ubc15\ubb3c\uad00 \ud654\uc11d\uc5d0\uc11c \ub098\uc654\ub2e4. \ud559\uba85\uc740 \ubc24\ud53c\ub85c\uce74\uba5c\ub8e8\uc2a4 \uc6f0\uc2dc(Vampyrocamelus welshi)\ub85c, \uc774\ub984\ub9cc \uc0c8\ub85c\uc6b8 \ubfd0 \ud654\uc11d \uc790\uccb4\ub294 \uac70\uc758 \ud55c \uc138\uae30 \uac00\uae4c\uc774 \ubc15\ubb3c\uad00\uc5d0 \ubcf4\uad00\ub3fc \uc788\ub358 \uac83\ub4e4\uc774\ub2e4.\n\n20\uc138\uae30 \ucd08 \ubbf8\uad6d\uc790\uc5f0\uc0ac\ubc15\ubb3c\uad00\uc758 \uace0\uc0dd\ubb3c\ud559\uc790 \ucc28\uc77c\uc988 \ud504\ub9ad\uc774 \ub099\ud0c0\uacfc \ud654\uc11d \ubc1c\uad74\uc744 \uc9c1\uc811 \ud6c4\uc6d0\ud588\ub2e4. \uc774\ubc88 \uc5f0\uad6c\uc9c4\uc740 \uadf8 \uceec\ub809\uc158\uc758 \ub099\ud0c0\uacfc \ud45c\ubcf8 \uc218\ub9cc \uc810\uc744 \ub2e4\uc2dc \ubd84\uc11d\ud574 \ub099\ud0c0 \uac00\uacc4\ub3c4\ub97c \uc0c8\ub85c \uc190\ubd24\uace0, \uadf8 \uacb0\uacfc \uc911 \ud558\ub098\uac00 \uc774 \uc2e0\uc885\uc774\ub2e4.\n\n\uc774 \ub3d9\ubb3c\uc740 \uc57d 1000\ub9cc~1300\ub9cc \ub144 \uc804\uc5d0 \uc0b4\uc558\uace0, \ubf08\ub294 \ud14d\uc0ac\uc2a4\uc640 \uc624\ud074\ub77c\ud638\ub9c8\uc5d0\uc11c \ud754\ud558\uac8c, \ub124\ube0c\ub798\uc2a4\uce74\uc5d0\uc11c \uac00\ub054 \ubc1c\uacac\ub410\ub2e4. \uac00\uc7a5 \ud070 \ud2b9\uc9d5\uc740 \uc57d 40mm\uc5d0 \uc774\ub974\ub294 \uc1a1\uacf3\ub2c8\ub2e4. \ubb34\uc2dc\ubb34\uc2dc\ud574 \ubcf4\uc5ec\ub3c4 \ucc44\uc2dd\uc744 \ud588\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uc1a1\uacf3\ub2c8\ub97c \ud3ec\uc2dd\uc790 \ubc29\uc5b4\uc5d0 \uc37c\uc744 \uc218\ub3c4 \uc788\uc9c0\ub9cc \uc218\ucef7\uc774 \uc554\ucef7\uc758 \uad00\uc2ec\uc744 \ub044\ub294 \ub370 \uc37c\uc744 \uac00\ub2a5\uc131\uc774 \ub354 \ub192\ub2e4\uace0 \ubcf8\ub2e4. \uc554\ucef7\uc5d0\uac8c\ub294 \uc774\ub7f0 \uc1a1\uacf3\ub2c8\uac00 \uc5c6\uc5c8\uae30 \ub54c\ubb38\uc774\ub2e4.\n\n\ub450\uac1c\uace8 \uc678\uc5d0\ub294 \uc54c\ub824\uc9c4 \uac8c \ub9ce\uc9c0 \uc54a\ub2e4. \uc5f0\uad6c\ud300\uc740 \uadf8\ub3d9\uc548 \uc560\ud53c\uce74\uba5c\ub8e8\uc2a4\uc758 \ubf08\ub85c \ubd84\ub958\ub41c \uac83 \uc911 \uc77c\ubd80\uac00 \uc0ac\uc2e4\uc740 \uc774 \ub3d9\ubb3c\uc758 \uac83\uc77c \uc218 \uc788\ub2e4\uace0 \ub9d0\ud55c\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\ud761\ud608\ub099\ud0c0", "#\ud654\uc11d", "#\uace0\uc0dd\ubb3c\ud559", "#\uba78\uc885\ub3d9\ubb3c", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["**\ud761\ud608 \ub099\ud0c0\uac00**", "\uc9c4\uc9dc \uc788\uc5c8\ub2e4???", "---", "\ubc15\ubb3c\uad00\uc5d0 \uc624\ub798 \ubcf4\uad00\ub3fc \uc788\ub358 \ud654\uc11d\uc744 \ub2e4\uc2dc \ubd84\uc11d\ud588\ub354\ub2c8, \uc1a1\uacf3\ub2c8\uac00 \ub0a0\uce74\ub85c\uc6b4 \u0027\ud761\ud608 \ub099\ud0c0\u0027\ub77c\ub294 \uc774\ub984\uc758 \uc2e0\uc885\uc774 \ub098\uc654\ub2e4."], ["\uc8fc\uc778\uacf5\uc740 / **\ubb35\uc740** \uceec\ub809\uc158", "---", "20\uc138\uae30 \ucd08 \uace0\uc0dd\ubb3c\ud559\uc790 \ucc28\uc77c\uc988 \ud504\ub9ad\uc774 \ub099\ud0c0\uacfc \ud654\uc11d \ubc1c\uad74\uc744 \uc9c1\uc811 \ud6c4\uc6d0\ud588\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uadf8 \uceec\ub809\uc158\uc758 \ub099\ud0c0\uacfc \ud45c\ubcf8 \uc218\ub9cc \uc810\uc744 \ub2e4\uc2dc \ubd84\uc11d\ud574 \ub099\ud0c0 \uac00\uacc4\ub3c4\ub97c \uc190\ubd24\ub2e4."], ["\uc1a1\uacf3\ub2c8 \uae38\uc774\uac00", "\uc57d **40mm**", "---", "\ub450\uac1c\uace8\uc740 \ub2e4\ub978 \ub099\ud0c0\uacfc\uc640 \ube44\uc2b7\ud558\uc9c0\ub9cc \uc1a1\uacf3\ub2c8\ub294 \uc57d 40mm\uc5d0 \uc774\ub974\uace0 \ub05d\uc774 \ub4a4\ub85c \ud718\uc5c8\ub2e4. \uc57d 1000\ub9cc~1300\ub9cc \ub144 \uc804\uc5d0 \uc0b4\uc558\uace0 \ubf08\ub294 \uc8fc\ub85c \ud14d\uc0ac\uc2a4\uc640 \uc624\ud074\ub77c\ud638\ub9c8\uc5d0\uc11c \ub098\uc654\ub2e4."], ["\ubb34\uc12d\uac8c \uc0dd\uaca8\uc11c", "**\ucc44\uc2dd\uc8fc\uc758\uc790**", "---", "\uc0dd\uae40\uc0c8\uc640 \ub2ec\ub9ac \uc774 \ub3d9\ubb3c\uc740 \ucc44\uc2dd\uc744 \ud588\ub2e4. \uac00\uae4c\uc6b4 \uce5c\ucc99 \uc560\ud53c\uce74\uba5c\ub8e8\uc2a4\ub294 \uae34 \ubaa9\uc774 \uc9c0\uc0c1 3m \ub192\uc774\uae4c\uc9c0 \ub2ff\uc544 \ub098\ubb34 \uaf2d\ub300\uae30\ub97c \ub72f\uc5b4 \uba39\uc5c8\uc744 \uc218 \uc788\ub2e4\uace0 \ud55c\ub2e4."], ["\uadf8\ub7fc \uc1a1\uacf3\ub2c8\ub294", "**\uad6c\uc560\uc6a9**?", "---", "\ud3ec\uc2dd\uc790\ub97c \ub9c9\ub294 \ub370 \uc37c\uc744 \uc218\ub3c4 \uc788\uc9c0\ub9cc, \uc5f0\uad6c \uacf5\ub3d9 \uc800\uc790\ub4e4\uc740 \uc218\ucef7\uc774 \uc554\ucef7\uc758 \uad00\uc2ec\uc744 \ub044\ub294 \ub370 \uc37c\uc744 \uac00\ub2a5\uc131\uc774 \ub354 \ub192\ub2e4\uace0 \ubcf8\ub2e4. \uc554\ucef7\uc5d0\uac8c\ub294 \uc774 \uc1a1\uacf3\ub2c8\uac00 \uc5c6\uc5c8\ub2e4."], ["\uba78\uc885 \ub3d9\ubb3c \ub355\ud6c4", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uac70\uc758 \ud55c \uc138\uae30 \uac00\uae4c\uc774 \ubc15\ubb3c\uad00\uc5d0 \uc7a0\ub4e4\uc5b4 \uc788\ub358 \ubf08\uc5d0\uc11c \ucc44\uc2dd\ud558\ub294 \ud761\ud608 \ub099\ud0c0\uac00 \ub098\uc654\ub2e4. \uacf5\ub8e1 \ub9d0\uace0 \uba78\uc885 \ub3d9\ubb3c\uc5d0 \ube60\uc9c4 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

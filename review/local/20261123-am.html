@@ -1,0 +1,1532 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.23 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.23 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-f31db582746f" data-jump="f31db582746f">1</a><a href="#post-2d60a8d48f23" data-jump="2d60a8d48f23">2</a><a href="#post-bfbbbd129cbf" data-jump="bfbbbd129cbf">3</a>
+      <a href="#threads">🧵 스레드 1</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-f31db582746f" data-id="f31db582746f">
+    <div class="head">
+      <h2>1. GLP-1 비만약, 이탈리아보다 넓은 농지를 해방할 수 있다는 연구</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-01.jpg" alt="1장: 비만약이 농지 해방?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-02.jpg" alt="2장: 식량 시스템은 결국 수요가 움직여" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-03.jpg" alt="3장: 컴퓨터로 시나리오를 돌렸어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-04.jpg" alt="4장: 3200만 헥타르 이탈리아보다 커" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-05.jpg" alt="5장: 식단까지 바꾸면 4600만 헥타르?!" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-06.jpg" alt="6장: 싸진 음식이 변수가 될 수도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-07.jpg" alt="7장: 환경 덕후 친구 한테 보내봐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/f31db582746f/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">비만약이 농지를 해방한다고? GLP-1 계열 비만약이 널리 쓰이면 식량 수요가 줄어 이탈리아보다 약간 넓은 농지가 다른 용도로 쓰일 수 있다는 연구 결과가 나왔다.
+
+식량 시스템은 결국 수요가 움직인다. 사람들이 덜 먹으면 생산자가 반응해 생산, 가격, 무역, 필요한 땅의 크기가 달라진다. 연구진은 컴퓨터 시뮬레이션으로 고소득 국가에만 약이 쓰이는 경우부터 전 세계로 널리 퍼지는 경우까지 여러 시나리오를 살폈다.
+
+비만 성인 사이에서 널리 쓰이면 2050년까지 섭취 칼로리 감소로 연간 최대 660만 건의 사망을 막고, 최대 3200만 헥타르의 농지를 다른 용도로 풀 수 있다고 추정했다. 여기에 더 건강한 식단으로의 전환이 합쳐지면 연간 최대 700만 건의 사망을 피하고 약 4600만 헥타르의 농지가 생길 수 있다고 한다.
+
+다만 변수도 있다. 약 사용자의 수요가 줄면 식품 가격이 내려가고, 그 때문에 약을 쓰지 않는 사람들이 더 먹게 되어 효과 일부가 상쇄될 수 있다. 연구진은 이 결과를 더 많은 사람에게 약을 쓰자는 주장으로 읽는 것은 큰 그림을 놓치는 일이라고 짚었다.
+
+출처: Ars Technica</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#GLP1 #비만약 #위고비 #식량 #환경</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: slide7 &#39;환경 덕후 친구한테 보내봐&#39;의 &#39;의외라&#39; 등 표현은 의견이라 제외하더라도, &#39;환경 관심 친구가 신기해할 소식&#39;은 사실 주장이 아니므로 제외 대상임</li><li>근거 등록 안 된 주장: 출처 &#39;Ars Technica&#39; 표기는 원문에 근거가 있으나 claims 목록에 없음</li><li>근거 등록 안 된 주장: slide1 &#39;비만약 GLP-1&#39; 명칭과 &#39;Ozempic·Wegovy&#39; 등 제품명은 본문에 직접 언급되지 않으나 원문 맥락상 GLP-1 계열 약의 예시로 존재함</li>
+          <li>시뮬레이션 기반 추정치이며 실제 결과가 아님</li><li>원문은 연구진 본인이 쓴 글로 연구 결과를 소개하는 형태</li><li>의약품 관련 내용이므로 복용 권유로 읽히지 않도록 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-f31db582746f-0">1장</label>
+          <textarea id="s-f31db582746f-0" rows="6" data-slide="0">비만약이 **농지**
+해방?!
+---
+비만약 GLP-1이 널리 쓰이면 식량 수요가 줄어, 이탈리아보다 약간 넓은 농지가 다른 용도로 풀릴 수 있다는 연구가 나왔다.</textarea>
+          
+          <label class="f" for="s-f31db582746f-1">2장</label>
+          <textarea id="s-f31db582746f-1" rows="6" data-slide="1">식량 시스템은
+결국 **수요**가 움직여
+---
+식량 시스템은 결국 수요에 이끌린다. 사람들이 덜 먹으면 생산자가 반응해 생산, 가격, 무역, 필요한 땅의 크기가 달라진다.</textarea>
+          
+          <label class="f" for="s-f31db582746f-2">3장</label>
+          <textarea id="s-f31db582746f-2" rows="6" data-slide="2">컴퓨터로
+시나리오를 돌렸어
+---
+연구진은 강력한 컴퓨터 시뮬레이션을 썼다. 고소득 국가에만 약이 쓰이는 경우부터 전 세계로 널리 퍼지는 경우까지 여러 상황을 따졌다.</textarea>
+          
+          <label class="f" for="s-f31db582746f-3">4장</label>
+          <textarea id="s-f31db582746f-3" rows="6" data-slide="3">**3200만 헥타르**
+이탈리아보다 커
+---
+비만 성인 사이에서 널리 쓰이면 2050년까지 농지 최대 3200만 헥타르가 풀릴 수 있다고 추정했다. 연간 사망도 최대 660만 건 막을 수 있다고 봤다.</textarea>
+          
+          <label class="f" for="s-f31db582746f-4">5장</label>
+          <textarea id="s-f31db582746f-4" rows="6" data-slide="4">식단까지 바꾸면
+**4600만 헥타르**?!
+---
+줄어든 섭취에 더 건강한 식단으로의 전환이 더해지면 효과가 가장 컸다. 농지 약 4600만 헥타르가 풀리고 연간 최대 700만 건의 사망을 피할 수 있다고 추정했다.</textarea>
+          
+          <label class="f" for="s-f31db582746f-5">6장</label>
+          <textarea id="s-f31db582746f-5" rows="6" data-slide="5">싸진 음식이
+**변수**가 될 수도
+---
+약 사용자의 수요가 줄면 식품 가격이 내려갈 수 있다. 그러면 약을 쓰지 않는 사람들이 더 먹게 되어 효과 일부가 상쇄될 수도 있다.</textarea>
+          
+          <label class="f" for="s-f31db582746f-6">7장</label>
+          <textarea id="s-f31db582746f-6" rows="6" data-slide="6">**환경** 덕후 친구
+한테 보내봐
+---
+비만약 이야기가 농지와 환경까지 이어진다는 점이 의외라, 환경에 관심 많은 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-f31db582746f">본문 (캡션)</label>
+          <textarea id="c-f31db582746f" class="caption">비만약이 농지를 해방한다고? GLP-1 계열 비만약이 널리 쓰이면 식량 수요가 줄어 이탈리아보다 약간 넓은 농지가 다른 용도로 쓰일 수 있다는 연구 결과가 나왔다.
+
+식량 시스템은 결국 수요가 움직인다. 사람들이 덜 먹으면 생산자가 반응해 생산, 가격, 무역, 필요한 땅의 크기가 달라진다. 연구진은 컴퓨터 시뮬레이션으로 고소득 국가에만 약이 쓰이는 경우부터 전 세계로 널리 퍼지는 경우까지 여러 시나리오를 살폈다.
+
+비만 성인 사이에서 널리 쓰이면 2050년까지 섭취 칼로리 감소로 연간 최대 660만 건의 사망을 막고, 최대 3200만 헥타르의 농지를 다른 용도로 풀 수 있다고 추정했다. 여기에 더 건강한 식단으로의 전환이 합쳐지면 연간 최대 700만 건의 사망을 피하고 약 4600만 헥타르의 농지가 생길 수 있다고 한다.
+
+다만 변수도 있다. 약 사용자의 수요가 줄면 식품 가격이 내려가고, 그 때문에 약을 쓰지 않는 사람들이 더 먹게 되어 효과 일부가 상쇄될 수 있다. 연구진은 이 결과를 더 많은 사람에게 약을 쓰자는 주장으로 읽는 것은 큰 그림을 놓치는 일이라고 짚었다.
+
+출처: Ars Technica</textarea>
+          <label class="f" for="t-f31db582746f">해시태그</label>
+          <input id="t-f31db582746f" type="text" class="tagsin" value="#GLP1 #비만약 #위고비 #식량 #환경" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>GLP-1 비만약이 널리 쓰이면 식량 시스템이 바뀌고 방대한 농지가 풀릴 수 있다</b>
+            <q>“If widely used, our new research suggests these appetite-suppressing medicines could transform the global food system and free up vast areas of agricultural land.”</q>
+            <small>slide1 · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2050년까지 최대 3200만 헥타르 농지가 풀리며 이는 이탈리아보다 약간 넓다</b>
+            <q>“With widespread use of these medicines among adults living with obesity, we estimate that reduced calorie intake could prevent up to 6.6 million deaths each year by 2050, while freeing up as much as 32 million hectares of agricultural land—an area slightly larger than Italy—for other uses.”</q>
+            <small>slide1, slide4 · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사람들이 덜 먹으면 생산자가 반응해 생산, 가격, 무역, 필요한 땅이 달라진다</b>
+            <q>“If people eat less, producers respond, affecting production, prices, trade, and how much land is needed.”</q>
+            <small>slide2 · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>식량 시스템은 결국 수요에 이끌린다</b>
+            <q>“The global food system is ultimately driven by demand.”</q>
+            <small>slide2 · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 고소득 국가 집중 사용부터 전 세계 보급까지 시나리오를 컴퓨터 시뮬레이션으로 탐구했다</b>
+            <q>“We used a powerful computer simulation to explore scenarios ranging from GLP-1 use concentrated in high-income countries to widespread global access.”</q>
+            <small>slide3, caption · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2050년까지 연간 최대 660만 건의 사망을 막을 수 있다고 추정했다</b>
+            <q>“With widespread use of these medicines among adults living with obesity, we estimate that reduced calorie intake could prevent up to 6.6 million deaths each year by 2050, while freeing up as much as 32 million hectares of agricultural land—an area slightly larger than Italy—for other uses.”</q>
+            <small>slide4, caption · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>섭취 감소와 건강한 식단 전환을 합치면 효과가 가장 크며 연간 최대 700만 건 사망 회피, 약 4600만 헥타르 농지 확보</b>
+            <q>“The biggest effects, however, occurred when reduced calorie intake was combined with a shift toward healthier diets. In this scenario, up to 7 million deaths could be avoided each year by 2050, while around 46 million hectares of agricultural land would have become available for other uses.”</q>
+            <small>slide5, caption · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약 사용자의 수요 감소로 음식이 싸질 수 있고 비사용자의 소비가 늘어 효과 일부가 상쇄될 수 있다</b>
+            <q>“Lower demand from GLP-1 users, for instance, could make food cheaper. That sounds positive, but cheaper food could also encourage greater consumption among non-users, offsetting some of the intended benefit.”</q>
+            <small>slide6, caption · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 이 결과를 더 많은 사람에게 약을 쓰자는 논거로 읽는 것은 큰 그림을 놓치는 것이라고 했다</b>
+            <q>“It’s tempting to read these findings as an argument for putting more people on weight-loss medication. That would miss the bigger picture.”</q>
+            <small>caption · <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">GLP-1 drugs could have a surprisingly large environmental payoff</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://arstechnica.com/health/2026/11/glp-1-drugs-could-have-a-surprisingly-large-environmental-payoff/" target="_blank" rel="noopener">Ars Technica / </a> — "https://cdn.arstechnica.net/wp-content/uploads/2025/04/agriculture-1536x864.jpg"</li><li>2장: <a href="https://geographical.co.uk/news/weight-loss-drugs-may-reshape-global-food-systems-new-study-finds" target="_blank" rel="noopener">Geographical / </a> — "https://geographical.co.uk/wp-content/uploads/crops-field-1.webp"</li><li>3장: <a href="https://pixabay.com/photos/server-space-the-server-room-dark-2160321/" target="_blank" rel="noopener">Schäferle / Pixabay</a> — "data center"</li><li>4장: <a href="https://kantan.news/news/glp-1-drugs-could-free-up-32-million-hectares-of-farmland-by-2050" target="_blank" rel="noopener">Kantan.News / </a> — "https://kantan.news/uploads/images/3aa427f3c419ee2c3d692a71071fa53b.jpg"</li><li>5장: <a href="https://pixabay.com/photos/carrots-basket-vegetables-market-673184/" target="_blank" rel="noopener">jackmac34 / Pixabay</a> — "vegetables market"</li><li>6장: <a href="https://pixabay.com/photos/supermarket-stalls-coolers-market-949913/" target="_blank" rel="noopener">ElasticComputeFarm / Pixabay</a> — "grocery shelves"</li><li>7장: <a href="https://pixabay.com/photos/wildlife-marmots-animal-friendship-9797156/" target="_blank" rel="noopener">ahmetyuksek / Pixabay</a> — "green landscape"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-2d60a8d48f23" data-id="2d60a8d48f23">
+    <div class="head">
+      <h2>2. 설탕 배급 세대의 50대 생물학적 나이 연구</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 19 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-01.jpg" alt="1장: 설탕 배급받은 50대가 젊다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-02.jpg" alt="2장: 1953년에 끝난 설탕 배급" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-03.jpg" alt="3장: 5만 4천 명을 비교했다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-04.jpg" alt="4장: 최대 5개월 더 젊었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-05.jpg" alt="5장: 백내장 17% 낮음 신장병 22% 낮음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-06.jpg" alt="6장: 5개월 더 산다는 뜻은 아니야" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-07.jpg" alt="7장: 건강 뉴스 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/2d60a8d48f23/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">설탕 배급이 이어지던 시기에 태어난 영국인들이 50대에 혈액 기준으로 더 젊은 생물학적 프로필을 보였다는 연구가 나왔다. 연구팀은 1953년 9월에 끝난 영국의 설탕 배급을 일종의 자연 실험처럼 활용했다. 몇 해 차이로 태어난 아이들이 서로 다른 영양 환경에서 삶을 시작했기 때문에, 가족에게 수십 년 전 식단을 기억해 달라고 묻지 않고도 비교할 수 있었다.
+
+홍콩중문대 연구팀은 UK Biobank 자료로 성인 54,201명을 분석했다. 평균 50대에 측정한 혈액 수치 아홉 가지와 실제 나이를 합쳐 생물학적 나이를 추정하는 PhenoAge 방식을 썼다. 출생 전에만 노출돼도 생물학적 나이 가속 지표가 약 0.26년, 대략 석 달 낮았고, 노출이 생후 2년 가까이 이어진 집단은 약 5개월 낮았다. 이런 연관성은 여성에게서 더 강했다.
+
+영국 밖에서 태어난 6,105명에게서는 비슷한 패턴이 나타나지 않았다. 병원 기록에서는 나이 관련 백내장 위험이 17퍼센트, 만성 신장병 위험이 22퍼센트 낮았다.
+
+다만 5개월 차이가 수명이 5개월 늘어난다는 뜻은 아니다. 개인별 설탕 섭취량은 알 수 없었고, 어릴 때 설탕을 줄이면 질병이 예방된다는 점을 증명한 연구도 아니다.
+
+출처: ScienceAlert, Nature Communications</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#설탕 #노화 #생물학적나이 #건강 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>영국 밖에서 태어난 6,105명에게서는 비슷한 패턴이 나타나지 않았다 <small>애매 · 영국 밖 출생 6,105명에서 비슷한 패턴이 없었다는 사실은 맞지만, 원문은 더 작은 비교군이라 넓은 시간 변화를 배제할 수 없다는 단서를 달았다. 이 단서를 함께 적으면 정확하다.</small></li>
+          <li>근거 등록 안 된 주장: 연구 결과가 Nature Communications에 게재되었다는 사실</li><li>근거 등록 안 된 주장: 연구팀이 설탕 배급을 자연 실험으로 활용했다는 설명</li><li>근거 등록 안 된 주장: 노출이 생후 2년 가까이 이어진 집단이 약 5개월 낮았다는 주장(claim 7과 별개로 노출 기간 기준을 명시)</li><li>근거 등록 안 된 주장: 출처가 ScienceAlert라는 사실</li>
+          <li>관찰 연구로 인과관계를 증명하지 못함</li><li>생물학적 나이 5개월 차이는 수명 연장을 뜻하지 않음</li><li>참가자 대부분이 백인이라 일반화에 한계</li><li>개인별 설탕 섭취량을 알 수 없었음</li><li>건강 관련 내용이므로 설탕 섭취 조언으로 읽히지 않게 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-2d60a8d48f23-0">1장</label>
+          <textarea id="s-2d60a8d48f23-0" rows="6" data-slide="0">**설탕** 배급받은
+50대가 젊다???
+---
+영국에서 설탕 배급이 이어지던 시기에 태어난 사람들이 50대에 혈액 기준으로 생물학적 나이가 더 젊게 나왔다는 연구가 나왔다.</textarea>
+          
+          <label class="f" for="s-2d60a8d48f23-1">2장</label>
+          <textarea id="s-2d60a8d48f23-1" rows="6" data-slide="1">**1953년**에 끝난
+설탕 배급
+---
+영국 가정은 1953년 9월까지 설탕을 제한된 양만 살 수 있었다. 제한이 풀리자 소비가 크게 늘었고, 몇 해 차이로 태어난 아이들의 초기 영양 환경이 갈렸다.</textarea>
+          
+          <label class="f" for="s-2d60a8d48f23-2">3장</label>
+          <textarea id="s-2d60a8d48f23-2" rows="6" data-slide="2">**5만 4천 명을**
+비교했다
+---
+연구팀은 영국의 대규모 건강 데이터베이스 UK Biobank에서 1951년 10월부터 1956년 3월 사이 태어난 참가자를 골랐다. 배급 시기에 자란 사람과 배급이 끝난 뒤 잉태된 사람을 비교했다.</textarea>
+          
+          <label class="f" for="s-2d60a8d48f23-3">4장</label>
+          <textarea id="s-2d60a8d48f23-3" rows="6" data-slide="3">최대 **5개월**
+더 젊었다
+---
+배급에 노출된 기간이 길수록 생물학적 나이의 차이도 커졌다. 가장 오래 노출된 집단은 기대 나이 대비 생물학적 나이가 노출되지 않은 참가자보다 약 5개월 낮았다.</textarea>
+          
+          <label class="f" for="s-2d60a8d48f23-4">5장</label>
+          <textarea id="s-2d60a8d48f23-4" rows="6" data-slide="4">백내장 **17%** 낮음
+신장병 22% 낮음
+---
+출생 전부터 생후 2년까지 배급에 노출된 사람들은 병원 기록상 나이 관련 백내장 위험이 17퍼센트, 만성 신장병 위험이 22퍼센트 낮은 것과 연관됐다.</textarea>
+          
+          <label class="f" for="s-2d60a8d48f23-5">6장</label>
+          <textarea id="s-2d60a8d48f23-5" rows="6" data-slide="5">5개월 더 산다는
+뜻은 **아니야**
+---
+혈액 측정은 한 시점만 포착해 노화 속도는 알 수 없었다. 개인별 설탕 섭취량도 알 수 없었고, 어릴 때 설탕을 줄이면 질병이 예방된다는 점을 증명한 연구도 아니다.</textarea>
+          
+          <label class="f" for="s-2d60a8d48f23-6">7장</label>
+          <textarea id="s-2d60a8d48f23-6" rows="6" data-slide="6">건강 뉴스 좋아하는
+친구한테 보내기
+---
+설탕 배급과 50대의 생물학적 나이를 잇는 연구지만 예방 효과를 증명한 것은 아니다. 영양과 노화가 궁금한 친구라면 흥미로워할 소식</textarea>
+          
+          <label class="f" for="c-2d60a8d48f23">본문 (캡션)</label>
+          <textarea id="c-2d60a8d48f23" class="caption">설탕 배급이 이어지던 시기에 태어난 영국인들이 50대에 혈액 기준으로 더 젊은 생물학적 프로필을 보였다는 연구가 나왔다. 연구팀은 1953년 9월에 끝난 영국의 설탕 배급을 일종의 자연 실험처럼 활용했다. 몇 해 차이로 태어난 아이들이 서로 다른 영양 환경에서 삶을 시작했기 때문에, 가족에게 수십 년 전 식단을 기억해 달라고 묻지 않고도 비교할 수 있었다.
+
+홍콩중문대 연구팀은 UK Biobank 자료로 성인 54,201명을 분석했다. 평균 50대에 측정한 혈액 수치 아홉 가지와 실제 나이를 합쳐 생물학적 나이를 추정하는 PhenoAge 방식을 썼다. 출생 전에만 노출돼도 생물학적 나이 가속 지표가 약 0.26년, 대략 석 달 낮았고, 노출이 생후 2년 가까이 이어진 집단은 약 5개월 낮았다. 이런 연관성은 여성에게서 더 강했다.
+
+영국 밖에서 태어난 6,105명에게서는 비슷한 패턴이 나타나지 않았다. 병원 기록에서는 나이 관련 백내장 위험이 17퍼센트, 만성 신장병 위험이 22퍼센트 낮았다.
+
+다만 5개월 차이가 수명이 5개월 늘어난다는 뜻은 아니다. 개인별 설탕 섭취량은 알 수 없었고, 어릴 때 설탕을 줄이면 질병이 예방된다는 점을 증명한 연구도 아니다.
+
+출처: ScienceAlert, Nature Communications</textarea>
+          <label class="f" for="t-2d60a8d48f23">해시태그</label>
+          <input id="t-2d60a8d48f23" type="text" class="tagsin" value="#설탕 #노화 #생물학적나이 #건강 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>영국 밖에서 태어난 6,105명에게서는 비슷한 패턴이 나타나지 않았다</b>
+            <q>“The team also examined 6,105 people born outside the UK during the same period. They found no comparable pattern linked to birth timing, although this smaller comparison group couldn&#39;t rule out broader changes over time.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>설탕 배급 시기에 태어난 사람들이 50대에 혈액 기준으로 더 젊은 생물학적 프로필을 보였다</b>
+            <q>“A new study has found that people whose earliest development overlapped with Britain&#39;s sugar rationing had blood measurements in their 50s that suggested a younger biological profile.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영국 가정은 1953년 9월까지 설탕을 제한된 양만 살 수 있었다</b>
+            <q>“To trace that connection, researchers turned to a policy that ended in September 1953. Until then, families in Britain could buy only limited amounts of sugar.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제한이 풀리자 설탕 소비가 크게 늘었다</b>
+            <q>“When household sugar restrictions lifted, consumption rose sharply.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>몇 해 차이로 태어난 아이들은 서로 다른 영양 환경을 만났다</b>
+            <q>“Children born just a few years apart therefore encountered different nutritional environments at the start of their lives.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>UK Biobank 자료를 사용했다</b>
+            <q>“Led by ophthalmology researchers Jason C. Yam and Li Jia Chen at the Chinese University of Hong Kong, the team examined information from UK Biobank, a large health database.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1951년 10월부터 1956년 3월 사이 영국에서 태어난 참가자를 배급 노출 여부로 비교했다</b>
+            <q>“They selected participants born in Britain between October 1951 and March 1956, comparing those exposed to rationing during early development with those conceived after restrictions ended.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>성인 54,201명을 대상으로 한 연구이며 노출이 길수록 생물학적 나이 차이가 컸다</b>
+            <q>“The study of 54,201 adults, published in Nature Communications, found that the longer rationing extended from development before birth into infancy, the greater the difference in biological age.”</q>
+            <small>slide3, slide4 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가장 오래 노출된 집단은 생물학적 나이가 노출되지 않은 참가자보다 약 5개월 낮았다</b>
+            <q>“In the longest-exposed group, biological age relative to the age-expected value was around five months lower than in unexposed participants.”</q>
+            <small>slide4, summary · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>출생 전부터 생후 2년까지 노출되면 백내장 위험 17%, 만성 신장병 위험 22% 낮은 것과 연관됐다</b>
+            <q>“Exposure before birth and into the first two years was associated with a 17 percent lower risk of age-related cataract, a clouding of the eye&#39;s lens, and a 22 percent lower risk of chronic kidney disease.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>혈액 측정은 한 시점만 포착해 노화 속도를 알 수 없었다</b>
+            <q>“Blood measurements captured one period, so they couldn&#39;t reveal how quickly individuals aged over time.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>5개월 차이가 5개월 더 오래 산다는 뜻은 아니다</b>
+            <q>“Nor does the five-month difference mean participants would live five months longer.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개인별 설탕 섭취량은 알 수 없었다</b>
+            <q>“Individual sugar consumption was unknown.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>어릴 때 설탕을 줄이면 질병이 예방된다는 것을 증명한 연구는 아니다</b>
+            <q>“The study doesn&#39;t prove that reducing sugar early in life prevents disease.”</q>
+            <small>slide6, slide7, caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구는 홍콩중문대 연구팀이 이끌었다</b>
+            <q>“Led by ophthalmology researchers Jason C. Yam and Li Jia Chen at the Chinese University of Hong Kong, the team examined information from UK Biobank, a large health database.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전국적인 설탕 공급 변화 덕분에 가족에게 수십 년 전 식사를 묻지 않고도 비교할 수 있었다</b>
+            <q>“The team could use a national shift in sugar availability without asking families to recall meals eaten decades earlier.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>평균 50대에 측정한 혈액 수치를 사용했다</b>
+            <q>“They used blood measurements collected when participants were, on average, in their 50s.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>PhenoAge는 실제 나이와 아홉 가지 측정값을 합쳐 생물학적 나이를 추정한다</b>
+            <q>“A method called PhenoAge combines chronological age with nine measurements, including blood sugar, inflammation markers, and blood cell characteristics.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>출생 전 노출만으로도 생물학적 나이 가속 지표가 약 0.26년(대략 석 달) 낮았다</b>
+            <q>“After accounting for factors including age, sex, birthplace, and maternal smoking around birth, exposure before birth alone was associated with a biological age acceleration measure approximately 0.26 years lower than in unexposed participants. That represents a difference of roughly three months.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연관성은 여성에게서 더 강했다</b>
+            <q>“The association appeared in both sexes, although it was stronger among women.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">People Exposed to Sugar Rationing in Early Life Appear Biologically Younger in Their 50s</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/people-exposed-to-sugar-rationing-in-early-life-appear-biologically-younger-in-their-50s" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/SugarFallingOffSpoonInGoldTones.png"</li><li>2장: <a href="https://pixabay.com/photos/christmas-cookies-xmas-christmas-2918172/" target="_blank" rel="noopener">JillWellington / Pixabay</a> — "sugar bowl"</li><li>3장: <a href="https://pixabay.com/photos/laboratory-analysis-chemistry-2815641/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "laboratory"</li><li>4장: <a href="https://pixabay.com/photos/lab-experiment-test-chemistry-3498584/" target="_blank" rel="noopener">fernandozhiminaicela / Pixabay</a> — "blood test"</li><li>5장: <a href="https://pixabay.com/photos/nurse-hospital-corridor-hospital-10562969/" target="_blank" rel="noopener">Sohidullah007 / Pixabay</a> — "hospital corridor"</li><li>6장: <a href="https://pixabay.com/photos/calendar-meeting-planning-10045176/" target="_blank" rel="noopener">Ralf1403 / Pixabay</a> — "calendar"</li><li>7장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-bfbbbd129cbf" data-id="bfbbbd129cbf">
+    <div class="head">
+      <h2>3. 심해 난파선 탐사에서 발견된 바다의 백룸</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-01.jpg" alt="1장: 바다 밑에 세탁기밭???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-02.jpg" alt="2장: 난파선인 줄 알았는데" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-03.jpg" alt="3장: 흰 상자의 정체는 가전" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-04.jpg" alt="4장: 이름은 딥 클린" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-05.jpg" alt="5장: 컨테이너는 해마다 사라져" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-06.jpg" alt="6장: 그래도 누군가 산다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-07.jpg" alt="7장: 빨래 미루는 친구한테 조용히 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-am-84271efa2b06/bfbbbd129cbf/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">바다 밑 1.5km에서 난파선을 찾던 탐사팀이 만난 건 냉장고와 세탁기가 가득한 해저 평원이었다. 2017년 미국 NOAA 탐사팀은 멕시코만을 지도로 만들고 조사하는 탐사 중이었고, 소나에 잡힌 구조물을 확인하려 원격 조종 잠수정을 보냈다. 큰 구조물 주변에 작은 것들이 흩어진 모습은 가라앉은 배의 특징을 닮아 있었다. 그런데 화면에 나타난 건 녹슨 흰 상자들과 찌그러진 붉은 컨테이너였다. 상자의 정체는 냉장고, 냉동고, 세탁기였고 금속판에는 세탁 설명서가 새겨져 있었다. 한 대원이 세탁기 탈수는 어렵겠다고 농담하자 웃음이 터졌다. 세계해운협회 자료에 따르면 해마다 수백 개에서 1,000개가 넘는 컨테이너가 바다에서 분실된다. NOAA 팀은 이 컨테이너가 폭풍 속에서 배에서 떨어졌을 가능성을 짐작했다. 분실된 컨테이너가 완전히 분해되려면 수백 년 이상 걸릴 수 있다는 연구도 언급됐다. 한편 산호와 히드로충이 금속 구조물에 붙어 있었고, 큰 물고기가 컨테이너 그늘에 머물렀다. 탐사팀은 이 잔해에 &#39;딥 클린&#39;이라는 별명을 붙였다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#심해 #NOAA #난파선 #해외이슈 #신기한뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 원격 조종 잠수정(ROV)을 소나 목표 확인을 위해 보냈다는 주장</li>
+          <li>컨테이너가 떨어진 원인(폭풍)은 NOAA 팀의 추측이며 확정된 사실이 아님</li><li>발견은 2017년 탐사 내용이고 기사는 이후 보도됨</li><li>원문 영상·사진은 사용하지 않았으며 배경 이미지는 스톡·AI 이미지로 대체</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-bfbbbd129cbf-0">1장</label>
+          <textarea id="s-bfbbbd129cbf-0" rows="6" data-slide="0">바다 밑에
+**세탁기밭???**
+---
+2017년 미국 NOAA 탐사팀이 멕시코만 심해에서 난파선을 찾다가 냉장고와 세탁기가 널린 해저 평원을 발견했다.</textarea>
+          
+          <label class="f" for="s-bfbbbd129cbf-1">2장</label>
+          <textarea id="s-bfbbbd129cbf-1" rows="6" data-slide="1">**난파선**인 줄
+알았는데
+---
+2017년 NOAA 탐사팀은 멕시코만 약 1.5km 아래에서 소나에 잡힌 구조물을 확인하러 갔다. 큰 구조물 주변에 작은 것들이 흩어진 모습은 가라앉은 배의 특징을 닮아 있었다.</textarea>
+          
+          <label class="f" for="s-bfbbbd129cbf-2">3장</label>
+          <textarea id="s-bfbbbd129cbf-2" rows="6" data-slide="2">흰 상자의
+정체는 **가전**
+---
+해저에는 녹슨 흰 상자들이 널려 있었다. 찌그러진 붉은 컨테이너에서 쏟아진 냉장고, 냉동고, 세탁기였고 근처 금속판에는 세탁 설명서가 새겨져 있었다.</textarea>
+          
+          <label class="f" for="s-bfbbbd129cbf-3">4장</label>
+          <textarea id="s-bfbbbd129cbf-3" rows="6" data-slide="3">이름은
+**딥 클린**
+---
+탐사팀은 이 잔해에 &#39;딥 클린&#39;이라는 별명을 붙였다. 한 대원이 세탁기 탈수는 어렵겠다고 농담하자 웃음이 터졌다.</textarea>
+          
+          <label class="f" for="s-bfbbbd129cbf-4">5장</label>
+          <textarea id="s-bfbbbd129cbf-4" rows="6" data-slide="4">컨테이너는
+**해마다** 사라져
+---
+세계해운협회 자료에 따르면 해마다 수백 개에서 1,000개가 넘는 컨테이너가 바다에서 분실된다. 운송되는 컨테이너는 약 2억 8,000만 개다.</textarea>
+          
+          <label class="f" for="s-bfbbbd129cbf-5">6장</label>
+          <textarea id="s-bfbbbd129cbf-5" rows="6" data-slide="5">그래도
+**누군가** 산다
+---
+산호와 히드로충이 금속 구조물에 붙어 있었고, 큰 물고기 한 마리는 컨테이너 그늘에 몸을 피했다. 연구에서는 분실된 컨테이너가 완전히 분해되려면 수백 년 이상 걸릴 수 있다고 본다.</textarea>
+          
+          <label class="f" for="s-bfbbbd129cbf-6">7장</label>
+          <textarea id="s-bfbbbd129cbf-6" rows="6" data-slide="6">빨래 미루는 친구한테
+조용히 보내기
+---
+빨래를 자꾸 미루는 친구에게 웃으며 건넬 만한 이야기. 심해 바닥에서 발견된 세탁기와 냉장고, 그리고 세탁 설명서 문구까지 담긴 소식</textarea>
+          
+          <label class="f" for="c-bfbbbd129cbf">본문 (캡션)</label>
+          <textarea id="c-bfbbbd129cbf" class="caption">바다 밑 1.5km에서 난파선을 찾던 탐사팀이 만난 건 냉장고와 세탁기가 가득한 해저 평원이었다. 2017년 미국 NOAA 탐사팀은 멕시코만을 지도로 만들고 조사하는 탐사 중이었고, 소나에 잡힌 구조물을 확인하려 원격 조종 잠수정을 보냈다. 큰 구조물 주변에 작은 것들이 흩어진 모습은 가라앉은 배의 특징을 닮아 있었다. 그런데 화면에 나타난 건 녹슨 흰 상자들과 찌그러진 붉은 컨테이너였다. 상자의 정체는 냉장고, 냉동고, 세탁기였고 금속판에는 세탁 설명서가 새겨져 있었다. 한 대원이 세탁기 탈수는 어렵겠다고 농담하자 웃음이 터졌다. 세계해운협회 자료에 따르면 해마다 수백 개에서 1,000개가 넘는 컨테이너가 바다에서 분실된다. NOAA 팀은 이 컨테이너가 폭풍 속에서 배에서 떨어졌을 가능성을 짐작했다. 분실된 컨테이너가 완전히 분해되려면 수백 년 이상 걸릴 수 있다는 연구도 언급됐다. 한편 산호와 히드로충이 금속 구조물에 붙어 있었고, 큰 물고기가 컨테이너 그늘에 머물렀다. 탐사팀은 이 잔해에 &#39;딥 클린&#39;이라는 별명을 붙였다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-bfbbbd129cbf">해시태그</label>
+          <input id="t-bfbbbd129cbf" type="text" class="tagsin" value="#심해 #NOAA #난파선 #해외이슈 #신기한뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2017년 NOAA 과학자 팀이 난파선일 것으로 생각한 대상을 찾고 있었다</b>
+            <q>“It was 2017, and a team of scientists from the US National Oceanic and Atmospheric Administration (NOAA) were on the hunt for what they thought would be a shipwreck, perhaps containing a lost archaeological trove.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>멕시코만 수면 아래 5,000피트 넘는 깊이에서 낯선 풍경을 마주했다</b>
+            <q>“More than 5,000 feet beneath the surface of the Gulf of Mexico, scientists encountered a truly alien landscape that might just haunt your dreams.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소나가 약 1.5km 아래에서 구조물을 포착했다</b>
+            <q>“Sonar had picked up on some kind of structure about 1.5 kilometers (0.9 miles) down.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>큰 구조물 주변에 작은 것들이 흩어진 모습이 가라앉은 배의 특징을 닮았다</b>
+            <q>“It had the hallmarks of a sunken ship: a large structure surrounded by smaller, loose ones.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>탐사는 멕시코만을 지도화하고 조사하는 Okeanos Explorer 탐사의 일부였다</b>
+            <q>“The remotely operated dive was part of an expedition aboard the Okeanos Explorer to map and survey the Gulf, led by marine biologist Diva Amon and echinodermologist Charles Messing.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>해저에는 녹슨 흰 상자들이 흩어진 모래 평원이 있었다</b>
+            <q>“A barren, sandy plain littered with rusted, white cubes – some busted open with the impact of falling, their plastic intestines and copper arteries exposed.”</q>
+            <small>slide1, slide3, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>찌그러진 붉은 컨테이너 옆구리에서 흰 상자들이 쏟아져 있었다</b>
+            <q>“Then, looming out of the deep blue, the crew encountered the mother of all cuboids: a crumpled red shipping container, with a clutch of yet more white cubes spilling from its flayed side.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>상자들은 냉장고, 냉동고, 세탁기였고 금속판은 세탁 설명서였다</b>
+            <q>“The cubes were a lost payload of white goods: fridges, freezers, washing machines. The inscribed tablet, a set of instructions for doing the laundry.”</q>
+            <small>slide3, summary, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한 대원이 탈수 기능이 작동하지 않을 것 같다고 말해 웃음이 터졌다</b>
+            <q>“&#34;I don&#39;t think the spin cycle is going to be working,&#34; one crew member commented, to an eruption of laughter.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NOAA 팀이 이 잔해에 &#39;딥 클린&#39;이라는 별명을 붙였다</b>
+            <q>“The NOAA crew nicknamed the wreck &#39;Deep Clean&#39;.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>세계해운협회 자료로 해마다 수백 개에서 1,000개 넘는 컨테이너가 분실되고 운송량은 약 2억 8,000만 개다</b>
+            <q>“According to World Shipping Council data, a few hundred to over 1,000 containers are lost at sea each year, out of approximately 280 million transported.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>NOAA 팀은 컨테이너가 폭풍 속 배에서 떨어졌을 수 있다고 추측했다</b>
+            <q>“The NOAA team speculated the container could have come off a ship in stormy weather.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>산호와 히드로충이 금속 구조물에 붙어 있었다</b>
+            <q>“Corals and hydroids cling to the metal structures, their soft bodies rippling in response to the passing ROV.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>큰 물고기가 컨테이너 그늘에 몸을 피했다</b>
+            <q>“A large fish even sheltered in the container&#39;s shadows.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>분실된 컨테이너가 완전히 분해되려면 수백 년 이상 걸릴 수 있다는 연구가 있다</b>
+            <q>“&#34;The research has suggested that lost containers could take hundreds of years to fully degrade in the deep ocean, if not more,&#34; another crew member added.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">Deep-Sea Scientists Hunting a Shipwreck Accidentally Stumbled Across The Ocean&#39;s Backrooms</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/OceanBackroomsWashingMachines-.png"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Gulf_of_Mexico_ETOPO_2022.tif" target="_blank" rel="noopener">NOAA National Centers for Environmental  / Wikimedia Commons · Public domain</a> — "Gulf of Mexico"</li><li>3장: <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/08/EX1711_IMG_20171214T160519Z_ROVHD.jpg"</li><li>4장: <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/08/EX1711_IMG_20171214T155052Z_ROVHD.jpg"</li><li>5장: <a href="https://pixabay.com/photos/container-ship-container-transport-6631117/" target="_blank" rel="noopener">dendoktoor / Pixabay</a> — "shipping container"</li><li>6장: <a href="https://www.sciencealert.com/deep-sea-scientists-hunting-a-shipwreck-accidentally-stumbled-across-the-oceans-backrooms" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/08/EX1711_IMG_20171214T160749Z_ROVHD.jpg"</li><li>7장: <a href="https://pixabay.com/photos/washing-machine-laundry-housework-10577925/" target="_blank" rel="noopener">flutie8211 / Pixabay</a> — "laundry room"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 1개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-81529d25331c">
+    <div class="head">
+      <h2>S1. 첫 끼 시간과 사망 위험 연관 연구 (미국 성인 3만 명)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-81529d25331c">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 8점</span>
+      <span class="chip">주제 태그: 건강상식</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 뭘 먹느냐만 따지던 아침 식사를 &#39;몇 시에 먹느냐&#39;로 뒤집고, 마지막 끼니는 U자라는 반전과 &#39;정답 시간은 아니다&#39;라는 단서까지 줘서 오늘 바로 내 식사 시간을 떠올리게 한다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">117/500자</span></div>
+      <p class="tp-text">&#39;뭘 먹느냐&#39;만이 아니라 &#39;몇 시에 먹느냐&#39;도 봐야 한대
+미국 성인 3만 명 넘게 본 연구에서 첫 끼가 늦을수록 사망 위험이 높은 연관이 나왔음
+근데 마지막 끼니는 늦을수록 나쁜 게 아니라 결과가 좀 달랐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 아침 7~8시에 첫 끼를 먹은 사람과 비교하니, 8~10시는 모든 원인 사망 위험이 10%, 10시~정오는 19%, 정오 넘어서는 29% 높은 연관이 나왔음
+그럼 심혈관 쪽은 어땠을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">2/ 정오 넘어서 처음 먹은 쪽은 심혈관 사망 위험이 46% 높은 연관이었음
+50세 기준 추정 기대수명도 첫 끼가 늦은 그룹이 평균 2.46년 짧았고
+근데 이 숫자, 어떻게 조사한 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">156/500자</span></div>
+      <p class="tp-text">3/ 미국 40세 이상 성인 31,044명 자료(1999~2018)였음. 전날 24시간 동안 먹고 마신 것과 그 시간을 직접 보고했고, 새벽 4시 이후 칼로리 있는 첫 음식이 &#39;첫 끼&#39;
+평균 8.6년 추적하는 동안 7,129명이 사망했음
+그럼 마지막 끼니는 일찍 끝낼수록 좋을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">138/500자</span></div>
+      <p class="tp-text">4/ 마지막 끼니는 U자였음. 7~8시에 끝낸 사람 대비 7시 전에 끝내면 13%, 자정 넘어 먹으면 27% 높은 연관
+자정 이후는 50세 기준 추정 기대수명도 2.35년 짧았고, 모델상 위험이 제일 낮은 건 8시쯤
+그럼 저녁 7~8시가 정답일까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">5/ 연구 책임자는 7~8시가 모두에게 최적이라는 뜻은 아니라고 했음. 8시~자정에 끝낸 사람도 7~8시와 사망 위험 차이가 유의하지 않았고
+너무 일찍 끝내는 건 일정·질병·적은 섭취량을 반영할 수도 있대
+그럼 이 결과, 어디까지 읽어야 할까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">220/500자</span></div>
+      <p class="tp-text">6/ 연구 결과 요약 정리
+- 첫 끼: 7~8시 대비 8~10시 +10%, 10~12시 +19%, 정오 이후 +29% (모든 원인 사망)
+- 정오 이후 첫 끼는 심혈관 사망 +46%
+- 마지막 끼니: 7시 전 +13%, 자정 이후 +27%
+- 일찍 먹는 쪽은 나이 많고 기존 질환이 많은 경향이라, 시계가 건강 상태를 보여주는 걸 수도
+- 연관일 뿐 인과 증명은 아님
+그래서 연구진이 권한 건?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">242/500자</span></div>
+      <p class="tp-text">7/ 연구진 말은 식사·수면 루틴은 일정하게, 첫 끼를 아주 늦게까지 미루지 말고, 잦은 야식은 피하라는 거. 극단적으로 바꾸진 말래
+너는 아침 먹는 파야, 거르는 파야?
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸. 다음 배송: 설탕 배급 세대의 50대 생물학적 나이 연구 얘기
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>중앙값 8.6년 추적 동안 7,129명이 사망했다 <small>애매 · 숫자 7,129명은 맞지만 원문은 중앙값(median) 8.6년 추적인데 본문은 &#39;평균 8.6년&#39;이라고 씀. &#39;중앙값&#39;으로 고칠 것.</small></li>
+        <li>근거 등록 안 된 주장: &#39;뭘 먹느냐&#39;만이 아니라 &#39;몇 시에 먹느냐&#39;도 봐야 한다는 취지의 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>아침은 &#39;뭘 먹느냐&#39;만이 아니라 &#39;몇 시에 먹느냐&#39;도 봐야 한대</li><li>아침 메뉴 고민하기 전에 시계부터 보라는 연구가 나옴</li><li>첫 끼를 정오 넘어서 먹은 사람들, 심혈관 사망 위험 연관이 46%나 높게 나왔대</li><li>&#39;아침 안 먹어도 괜찮다&#39;는 말, 시간 기준으로 보면 좀 달라짐</li><li>미국 성인 3만 명 넘게 봤더니 첫 끼 시간에 따라 사망 위험 연관이 갈렸대</li><li>저녁은 일찍 먹을수록 좋다? 이 연구에선 U자가 나옴</li><li>야식 자주 먹는 사람, 자정 넘기면 위험 연관이 27% 올라간다는 연구</li><li>아침 건강식 고르지 말고 첫 끼 시각부터 챙기라는 연구가 나옴</li><li>해외 연구진이 &#39;7~8시 저녁이 정답은 아니다&#39;라고 선을 그은 이유</li><li>첫 끼가 늦은 그룹은 50세 기준 기대수명이 2.46년 짧았다는 추정이 나왔대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너는 아침 먹는 파야, 거르는 파야?</li><li>저녁 마지막 끼니, 7시 전파 vs 9시 넘어서파?</li><li>야식 끊어본 적 있는 사람?</li><li>하루 중 제일 챙기기 쉬운 끼니는 아침 vs 저녁?</li><li>너라면 첫 끼 시간 바꿔볼 거야, 그대로 둘 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>설탕 배급 세대의 50대 생물학적 나이 연구</li><li>GLP-1 비만약, 이탈리아보다 넓은 농지를 해방할 수 있다는 연구</li><li>건강한 식단 10가지와 느린 생물학적 노화 연구</li><li>늦은 식사가 몸의 생체리듬에 미치는 영향 연구</li><li>식사 시간 제한(먹는 시간대)과 대사 지표 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>연구 결과가 &#39;연관&#39;이라는 점이 반복해서 드러나야 함. 본글과 hook 후보의 &#39;수명·사망 위험&#39; 표현이 인과로 읽히지 않는지 올리기 전에 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>중앙값 8.6년 추적 동안 7,129명이 사망했다</b>
+          <q>“During a median follow-up of 8.6 years, 7,129 participants died, including 2,259 from cardiovascular causes.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 40세 이상 성인 31,044명 자료(1999~2018)를 분석했다</b>
+          <q>“Researchers therefore analyzed data from 31,044 adults aged 40 and older in the US National Health and Nutrition Examination Survey between 1999 and 2018.”</q>
+          <small>post0, post3 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>첫 끼가 7~8시보다 늦을수록 모든 원인 사망 위험이 10%, 19%, 29% 높은 연관</b>
+          <q>“Compared with eating between 7 and 8 am, a first meal between 8 and 10 am was associated with a 10 percent higher risk of death from any cause. The difference rose to 19 percent between 10 am and noon, and 29 percent after noon.”</q>
+          <small>post0, post1, post6 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>정오 이후 첫 끼는 7~8시 대비 심혈관 사망 위험이 46% 높은 연관</b>
+          <q>“Eating for the first time after noon was associated with a 46 percent higher risk of cardiovascular death than eating between 7 and 8 am.”</q>
+          <small>post2, post6 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>50세 기준 첫 끼가 늦은 그룹의 추정 기대수명이 평균 2.46년 짧았다</b>
+          <q>“At age 50, the group with later first meals also had an estimated life expectancy 2.46 years shorter on average.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자가 전날 24시간 동안 먹고 마신 것과 시간을 직접 보고했다</b>
+          <q>“Participants reported everything they ate or drank in the previous 24 hours, including the time of each item.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>새벽 4시 이후 칼로리 있는 첫 음식·음료를 &#39;첫 끼&#39;로 정의했다</b>
+          <q>“The study, published in the European Journal of Clinical Nutrition, defined any calorie-containing food or drink consumed after 4 am as the &#39;first meal,&#39; meaning it was not necessarily a conventional sit-down breakfast.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>마지막 끼니는 U자 관계였고 7시 전에 끝내면 7~8시 대비 13% 높은 연관</b>
+          <q>“Rather than risk simply rising with each later hour, the relationship was U-shaped. Compared with finishing between 7 and 8 pm, eating before 7 pm was associated with a 13 percent higher risk of death from any cause.”</q>
+          <small>post4, post6 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자정 이후 식사는 27% 높은 연관, 50세 기준 추정 기대수명 2.35년 짧음</b>
+          <q>“Meanwhile, eating after midnight was associated with a 27 percent higher risk of death from any cause, and it was linked to an estimated life expectancy 2.35 years shorter at age 50.”</q>
+          <small>post4, post6 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>모델상 위험이 가장 낮은 시점은 오후 8시쯤이었다</b>
+          <q>“The lowest modeled risk was around 8 pm.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>책임 연구자는 저녁 7~8시가 모두에게 최적이라는 뜻은 아니라고 했다</b>
+          <q>“However, this does not mean that 7-8 pm is a universally optimal dinner time for everyone,”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>8시~자정에 끝낸 사람은 7~8시와 사망 위험 차이가 유의하지 않았다</b>
+          <q>“Finishing eating between 8 pm and midnight was not linked to a significantly higher mortality risk than finishing between 7 and 8 pm.”</q>
+          <small>post5, post6 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>아주 이른 마지막 끼니는 일정·질병·적은 섭취량을 반영할 수 있다</b>
+          <q>“But a very early last meal could reflect schedules, illness, or lower energy intake.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일찍 먹는 사람은 나이가 많고 기존 질환이 많은 경향이 있어 시계가 건강 상태를 보여주는 것일 수 있다</b>
+          <q>“Early eaters tended to be older, eat less often, and have more existing illness, so the clock may reveal something about their health rather than cause it.”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>결과는 연관성이지 인과 증명이 아니다</b>
+          <q>“The findings show an association, not proof that changing the clock changes a person&#39;s fate.”</q>
+          <small>post0, post6 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 식사·수면 루틴을 일정하게, 첫 끼를 아주 늦게까지 미루지 않고, 잦은 야식을 피하라는 해석을 제시했다</b>
+          <q>“A practical interpretation is to maintain regular eating and sleeping routines, avoid routinely delaying the first meal until very late in the day, and avoid frequent late-night eating, while also prioritizing overall dietary quality and lifestyle.”</q>
+          <small>post7 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 극단적으로 식사 시간을 바꾸지 말라고 했다</b>
+          <q>“Based on these findings alone, people should not make extreme changes to their eating schedules,”</q>
+          <small>post7 · <a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="81529d25331c">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/a-massive-study-links-the-time-you-eat-breakfast-to-how-long-youll-live" target="_blank" rel="noopener">A Massive Study Links The Time You Eat Breakfast to How Long You&#39;ll Live</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261123-am";
+  const ORIGINAL = {"2d60a8d48f23": {"caption": "\uc124\ud0d5 \ubc30\uae09\uc774 \uc774\uc5b4\uc9c0\ub358 \uc2dc\uae30\uc5d0 \ud0dc\uc5b4\ub09c \uc601\uad6d\uc778\ub4e4\uc774 50\ub300\uc5d0 \ud608\uc561 \uae30\uc900\uc73c\ub85c \ub354 \uc80a\uc740 \uc0dd\ubb3c\ud559\uc801 \ud504\ub85c\ud544\uc744 \ubcf4\uc600\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4. \uc5f0\uad6c\ud300\uc740 1953\ub144 9\uc6d4\uc5d0 \ub05d\ub09c \uc601\uad6d\uc758 \uc124\ud0d5 \ubc30\uae09\uc744 \uc77c\uc885\uc758 \uc790\uc5f0 \uc2e4\ud5d8\ucc98\ub7fc \ud65c\uc6a9\ud588\ub2e4. \uba87 \ud574 \ucc28\uc774\ub85c \ud0dc\uc5b4\ub09c \uc544\uc774\ub4e4\uc774 \uc11c\ub85c \ub2e4\ub978 \uc601\uc591 \ud658\uacbd\uc5d0\uc11c \uc0b6\uc744 \uc2dc\uc791\ud588\uae30 \ub54c\ubb38\uc5d0, \uac00\uc871\uc5d0\uac8c \uc218\uc2ed \ub144 \uc804 \uc2dd\ub2e8\uc744 \uae30\uc5b5\ud574 \ub2ec\ub77c\uace0 \ubb3b\uc9c0 \uc54a\uace0\ub3c4 \ube44\uad50\ud560 \uc218 \uc788\uc5c8\ub2e4.\n\n\ud64d\ucf69\uc911\ubb38\ub300 \uc5f0\uad6c\ud300\uc740 UK Biobank \uc790\ub8cc\ub85c \uc131\uc778 54,201\uba85\uc744 \ubd84\uc11d\ud588\ub2e4. \ud3c9\uade0 50\ub300\uc5d0 \uce21\uc815\ud55c \ud608\uc561 \uc218\uce58 \uc544\ud649 \uac00\uc9c0\uc640 \uc2e4\uc81c \ub098\uc774\ub97c \ud569\uccd0 \uc0dd\ubb3c\ud559\uc801 \ub098\uc774\ub97c \ucd94\uc815\ud558\ub294 PhenoAge \ubc29\uc2dd\uc744 \uc37c\ub2e4. \ucd9c\uc0dd \uc804\uc5d0\ub9cc \ub178\ucd9c\ub3fc\ub3c4 \uc0dd\ubb3c\ud559\uc801 \ub098\uc774 \uac00\uc18d \uc9c0\ud45c\uac00 \uc57d 0.26\ub144, \ub300\ub7b5 \uc11d \ub2ec \ub0ae\uc558\uace0, \ub178\ucd9c\uc774 \uc0dd\ud6c4 2\ub144 \uac00\uae4c\uc774 \uc774\uc5b4\uc9c4 \uc9d1\ub2e8\uc740 \uc57d 5\uac1c\uc6d4 \ub0ae\uc558\ub2e4. \uc774\ub7f0 \uc5f0\uad00\uc131\uc740 \uc5ec\uc131\uc5d0\uac8c\uc11c \ub354 \uac15\ud588\ub2e4.\n\n\uc601\uad6d \ubc16\uc5d0\uc11c \ud0dc\uc5b4\ub09c 6,105\uba85\uc5d0\uac8c\uc11c\ub294 \ube44\uc2b7\ud55c \ud328\ud134\uc774 \ub098\ud0c0\ub098\uc9c0 \uc54a\uc558\ub2e4. \ubcd1\uc6d0 \uae30\ub85d\uc5d0\uc11c\ub294 \ub098\uc774 \uad00\ub828 \ubc31\ub0b4\uc7a5 \uc704\ud5d8\uc774 17\ud37c\uc13c\ud2b8, \ub9cc\uc131 \uc2e0\uc7a5\ubcd1 \uc704\ud5d8\uc774 22\ud37c\uc13c\ud2b8 \ub0ae\uc558\ub2e4.\n\n\ub2e4\ub9cc 5\uac1c\uc6d4 \ucc28\uc774\uac00 \uc218\uba85\uc774 5\uac1c\uc6d4 \ub298\uc5b4\ub09c\ub2e4\ub294 \ub73b\uc740 \uc544\ub2c8\ub2e4. \uac1c\uc778\ubcc4 \uc124\ud0d5 \uc12d\ucde8\ub7c9\uc740 \uc54c \uc218 \uc5c6\uc5c8\uace0, \uc5b4\ub9b4 \ub54c \uc124\ud0d5\uc744 \uc904\uc774\uba74 \uc9c8\ubcd1\uc774 \uc608\ubc29\ub41c\ub2e4\ub294 \uc810\uc744 \uc99d\uba85\ud55c \uc5f0\uad6c\ub3c4 \uc544\ub2c8\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert, Nature Communications", "hashtags": ["#\uc124\ud0d5", "#\ub178\ud654", "#\uc0dd\ubb3c\ud559\uc801\ub098\uc774", "#\uac74\uac15", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["**\uc124\ud0d5** \ubc30\uae09\ubc1b\uc740", "50\ub300\uac00 \uc80a\ub2e4???", "---", "\uc601\uad6d\uc5d0\uc11c \uc124\ud0d5 \ubc30\uae09\uc774 \uc774\uc5b4\uc9c0\ub358 \uc2dc\uae30\uc5d0 \ud0dc\uc5b4\ub09c \uc0ac\ub78c\ub4e4\uc774 50\ub300\uc5d0 \ud608\uc561 \uae30\uc900\uc73c\ub85c \uc0dd\ubb3c\ud559\uc801 \ub098\uc774\uac00 \ub354 \uc80a\uac8c \ub098\uc654\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4."], ["**1953\ub144**\uc5d0 \ub05d\ub09c", "\uc124\ud0d5 \ubc30\uae09", "---", "\uc601\uad6d \uac00\uc815\uc740 1953\ub144 9\uc6d4\uae4c\uc9c0 \uc124\ud0d5\uc744 \uc81c\ud55c\ub41c \uc591\ub9cc \uc0b4 \uc218 \uc788\uc5c8\ub2e4. \uc81c\ud55c\uc774 \ud480\ub9ac\uc790 \uc18c\ube44\uac00 \ud06c\uac8c \ub298\uc5c8\uace0, \uba87 \ud574 \ucc28\uc774\ub85c \ud0dc\uc5b4\ub09c \uc544\uc774\ub4e4\uc758 \ucd08\uae30 \uc601\uc591 \ud658\uacbd\uc774 \uac08\ub838\ub2e4."], ["**5\ub9cc 4\ucc9c \uba85\uc744**", "\ube44\uad50\ud588\ub2e4", "---", "\uc5f0\uad6c\ud300\uc740 \uc601\uad6d\uc758 \ub300\uaddc\ubaa8 \uac74\uac15 \ub370\uc774\ud130\ubca0\uc774\uc2a4 UK Biobank\uc5d0\uc11c 1951\ub144 10\uc6d4\ubd80\ud130 1956\ub144 3\uc6d4 \uc0ac\uc774 \ud0dc\uc5b4\ub09c \ucc38\uac00\uc790\ub97c \uace8\ub790\ub2e4. \ubc30\uae09 \uc2dc\uae30\uc5d0 \uc790\ub780 \uc0ac\ub78c\uacfc \ubc30\uae09\uc774 \ub05d\ub09c \ub4a4 \uc789\ud0dc\ub41c \uc0ac\ub78c\uc744 \ube44\uad50\ud588\ub2e4."], ["\ucd5c\ub300 **5\uac1c\uc6d4**", "\ub354 \uc80a\uc5c8\ub2e4", "---", "\ubc30\uae09\uc5d0 \ub178\ucd9c\ub41c \uae30\uac04\uc774 \uae38\uc218\ub85d \uc0dd\ubb3c\ud559\uc801 \ub098\uc774\uc758 \ucc28\uc774\ub3c4 \ucee4\uc84c\ub2e4. \uac00\uc7a5 \uc624\ub798 \ub178\ucd9c\ub41c \uc9d1\ub2e8\uc740 \uae30\ub300 \ub098\uc774 \ub300\ube44 \uc0dd\ubb3c\ud559\uc801 \ub098\uc774\uac00 \ub178\ucd9c\ub418\uc9c0 \uc54a\uc740 \ucc38\uac00\uc790\ubcf4\ub2e4 \uc57d 5\uac1c\uc6d4 \ub0ae\uc558\ub2e4."], ["\ubc31\ub0b4\uc7a5 **17%** \ub0ae\uc74c", "\uc2e0\uc7a5\ubcd1 22% \ub0ae\uc74c", "---", "\ucd9c\uc0dd \uc804\ubd80\ud130 \uc0dd\ud6c4 2\ub144\uae4c\uc9c0 \ubc30\uae09\uc5d0 \ub178\ucd9c\ub41c \uc0ac\ub78c\ub4e4\uc740 \ubcd1\uc6d0 \uae30\ub85d\uc0c1 \ub098\uc774 \uad00\ub828 \ubc31\ub0b4\uc7a5 \uc704\ud5d8\uc774 17\ud37c\uc13c\ud2b8, \ub9cc\uc131 \uc2e0\uc7a5\ubcd1 \uc704\ud5d8\uc774 22\ud37c\uc13c\ud2b8 \ub0ae\uc740 \uac83\uacfc \uc5f0\uad00\ub410\ub2e4."], ["5\uac1c\uc6d4 \ub354 \uc0b0\ub2e4\ub294", "\ub73b\uc740 **\uc544\ub2c8\uc57c**", "---", "\ud608\uc561 \uce21\uc815\uc740 \ud55c \uc2dc\uc810\ub9cc \ud3ec\ucc29\ud574 \ub178\ud654 \uc18d\ub3c4\ub294 \uc54c \uc218 \uc5c6\uc5c8\ub2e4. \uac1c\uc778\ubcc4 \uc124\ud0d5 \uc12d\ucde8\ub7c9\ub3c4 \uc54c \uc218 \uc5c6\uc5c8\uace0, \uc5b4\ub9b4 \ub54c \uc124\ud0d5\uc744 \uc904\uc774\uba74 \uc9c8\ubcd1\uc774 \uc608\ubc29\ub41c\ub2e4\ub294 \uc810\uc744 \uc99d\uba85\ud55c \uc5f0\uad6c\ub3c4 \uc544\ub2c8\ub2e4."], ["\uac74\uac15 \ub274\uc2a4 \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc124\ud0d5 \ubc30\uae09\uacfc 50\ub300\uc758 \uc0dd\ubb3c\ud559\uc801 \ub098\uc774\ub97c \uc787\ub294 \uc5f0\uad6c\uc9c0\ub9cc \uc608\ubc29 \ud6a8\uacfc\ub97c \uc99d\uba85\ud55c \uac83\uc740 \uc544\ub2c8\ub2e4. \uc601\uc591\uacfc \ub178\ud654\uac00 \uad81\uae08\ud55c \uce5c\uad6c\ub77c\uba74 \ud765\ubbf8\ub85c\uc6cc\ud560 \uc18c\uc2dd"]]}, "bfbbbd129cbf": {"caption": "\ubc14\ub2e4 \ubc11 1.5km\uc5d0\uc11c \ub09c\ud30c\uc120\uc744 \ucc3e\ub358 \ud0d0\uc0ac\ud300\uc774 \ub9cc\ub09c \uac74 \ub0c9\uc7a5\uace0\uc640 \uc138\ud0c1\uae30\uac00 \uac00\ub4dd\ud55c \ud574\uc800 \ud3c9\uc6d0\uc774\uc5c8\ub2e4. 2017\ub144 \ubbf8\uad6d NOAA \ud0d0\uc0ac\ud300\uc740 \uba55\uc2dc\ucf54\ub9cc\uc744 \uc9c0\ub3c4\ub85c \ub9cc\ub4e4\uace0 \uc870\uc0ac\ud558\ub294 \ud0d0\uc0ac \uc911\uc774\uc5c8\uace0, \uc18c\ub098\uc5d0 \uc7a1\ud78c \uad6c\uc870\ubb3c\uc744 \ud655\uc778\ud558\ub824 \uc6d0\uaca9 \uc870\uc885 \uc7a0\uc218\uc815\uc744 \ubcf4\ub0c8\ub2e4. \ud070 \uad6c\uc870\ubb3c \uc8fc\ubcc0\uc5d0 \uc791\uc740 \uac83\ub4e4\uc774 \ud769\uc5b4\uc9c4 \ubaa8\uc2b5\uc740 \uac00\ub77c\uc549\uc740 \ubc30\uc758 \ud2b9\uc9d5\uc744 \ub2ee\uc544 \uc788\uc5c8\ub2e4. \uadf8\ub7f0\ub370 \ud654\uba74\uc5d0 \ub098\ud0c0\ub09c \uac74 \ub179\uc2a8 \ud770 \uc0c1\uc790\ub4e4\uacfc \ucc0c\uadf8\ub7ec\uc9c4 \ubd89\uc740 \ucee8\ud14c\uc774\ub108\uc600\ub2e4. \uc0c1\uc790\uc758 \uc815\uccb4\ub294 \ub0c9\uc7a5\uace0, \ub0c9\ub3d9\uace0, \uc138\ud0c1\uae30\uc600\uace0 \uae08\uc18d\ud310\uc5d0\ub294 \uc138\ud0c1 \uc124\uba85\uc11c\uac00 \uc0c8\uaca8\uc838 \uc788\uc5c8\ub2e4. \ud55c \ub300\uc6d0\uc774 \uc138\ud0c1\uae30 \ud0c8\uc218\ub294 \uc5b4\ub835\uaca0\ub2e4\uace0 \ub18d\ub2f4\ud558\uc790 \uc6c3\uc74c\uc774 \ud130\uc84c\ub2e4. \uc138\uacc4\ud574\uc6b4\ud611\ud68c \uc790\ub8cc\uc5d0 \ub530\ub974\uba74 \ud574\ub9c8\ub2e4 \uc218\ubc31 \uac1c\uc5d0\uc11c 1,000\uac1c\uac00 \ub118\ub294 \ucee8\ud14c\uc774\ub108\uac00 \ubc14\ub2e4\uc5d0\uc11c \ubd84\uc2e4\ub41c\ub2e4. NOAA \ud300\uc740 \uc774 \ucee8\ud14c\uc774\ub108\uac00 \ud3ed\ud48d \uc18d\uc5d0\uc11c \ubc30\uc5d0\uc11c \ub5a8\uc5b4\uc84c\uc744 \uac00\ub2a5\uc131\uc744 \uc9d0\uc791\ud588\ub2e4. \ubd84\uc2e4\ub41c \ucee8\ud14c\uc774\ub108\uac00 \uc644\uc804\ud788 \ubd84\ud574\ub418\ub824\uba74 \uc218\ubc31 \ub144 \uc774\uc0c1 \uac78\ub9b4 \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c\ub3c4 \uc5b8\uae09\ub410\ub2e4. \ud55c\ud3b8 \uc0b0\ud638\uc640 \ud788\ub4dc\ub85c\ucda9\uc774 \uae08\uc18d \uad6c\uc870\ubb3c\uc5d0 \ubd99\uc5b4 \uc788\uc5c8\uace0, \ud070 \ubb3c\uace0\uae30\uac00 \ucee8\ud14c\uc774\ub108 \uadf8\ub298\uc5d0 \uba38\ubb3c\ub800\ub2e4. \ud0d0\uc0ac\ud300\uc740 \uc774 \uc794\ud574\uc5d0 \u0027\ub525 \ud074\ub9b0\u0027\uc774\ub77c\ub294 \ubcc4\uba85\uc744 \ubd99\uc600\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uc2ec\ud574", "#NOAA", "#\ub09c\ud30c\uc120", "#\ud574\uc678\uc774\uc288", "#\uc2e0\uae30\ud55c\ub274\uc2a4"], "slides": [["\ubc14\ub2e4 \ubc11\uc5d0", "**\uc138\ud0c1\uae30\ubc2d???**", "---", "2017\ub144 \ubbf8\uad6d NOAA \ud0d0\uc0ac\ud300\uc774 \uba55\uc2dc\ucf54\ub9cc \uc2ec\ud574\uc5d0\uc11c \ub09c\ud30c\uc120\uc744 \ucc3e\ub2e4\uac00 \ub0c9\uc7a5\uace0\uc640 \uc138\ud0c1\uae30\uac00 \ub110\ub9b0 \ud574\uc800 \ud3c9\uc6d0\uc744 \ubc1c\uacac\ud588\ub2e4."], ["**\ub09c\ud30c\uc120**\uc778 \uc904", "\uc54c\uc558\ub294\ub370", "---", "2017\ub144 NOAA \ud0d0\uc0ac\ud300\uc740 \uba55\uc2dc\ucf54\ub9cc \uc57d 1.5km \uc544\ub798\uc5d0\uc11c \uc18c\ub098\uc5d0 \uc7a1\ud78c \uad6c\uc870\ubb3c\uc744 \ud655\uc778\ud558\ub7ec \uac14\ub2e4. \ud070 \uad6c\uc870\ubb3c \uc8fc\ubcc0\uc5d0 \uc791\uc740 \uac83\ub4e4\uc774 \ud769\uc5b4\uc9c4 \ubaa8\uc2b5\uc740 \uac00\ub77c\uc549\uc740 \ubc30\uc758 \ud2b9\uc9d5\uc744 \ub2ee\uc544 \uc788\uc5c8\ub2e4."], ["\ud770 \uc0c1\uc790\uc758", "\uc815\uccb4\ub294 **\uac00\uc804**", "---", "\ud574\uc800\uc5d0\ub294 \ub179\uc2a8 \ud770 \uc0c1\uc790\ub4e4\uc774 \ub110\ub824 \uc788\uc5c8\ub2e4. \ucc0c\uadf8\ub7ec\uc9c4 \ubd89\uc740 \ucee8\ud14c\uc774\ub108\uc5d0\uc11c \uc3df\uc544\uc9c4 \ub0c9\uc7a5\uace0, \ub0c9\ub3d9\uace0, \uc138\ud0c1\uae30\uc600\uace0 \uadfc\ucc98 \uae08\uc18d\ud310\uc5d0\ub294 \uc138\ud0c1 \uc124\uba85\uc11c\uac00 \uc0c8\uaca8\uc838 \uc788\uc5c8\ub2e4."], ["\uc774\ub984\uc740", "**\ub525 \ud074\ub9b0**", "---", "\ud0d0\uc0ac\ud300\uc740 \uc774 \uc794\ud574\uc5d0 \u0027\ub525 \ud074\ub9b0\u0027\uc774\ub77c\ub294 \ubcc4\uba85\uc744 \ubd99\uc600\ub2e4. \ud55c \ub300\uc6d0\uc774 \uc138\ud0c1\uae30 \ud0c8\uc218\ub294 \uc5b4\ub835\uaca0\ub2e4\uace0 \ub18d\ub2f4\ud558\uc790 \uc6c3\uc74c\uc774 \ud130\uc84c\ub2e4."], ["\ucee8\ud14c\uc774\ub108\ub294", "**\ud574\ub9c8\ub2e4** \uc0ac\ub77c\uc838", "---", "\uc138\uacc4\ud574\uc6b4\ud611\ud68c \uc790\ub8cc\uc5d0 \ub530\ub974\uba74 \ud574\ub9c8\ub2e4 \uc218\ubc31 \uac1c\uc5d0\uc11c 1,000\uac1c\uac00 \ub118\ub294 \ucee8\ud14c\uc774\ub108\uac00 \ubc14\ub2e4\uc5d0\uc11c \ubd84\uc2e4\ub41c\ub2e4. \uc6b4\uc1a1\ub418\ub294 \ucee8\ud14c\uc774\ub108\ub294 \uc57d 2\uc5b5 8,000\ub9cc \uac1c\ub2e4."], ["\uadf8\ub798\ub3c4", "**\ub204\uad70\uac00** \uc0b0\ub2e4", "---", "\uc0b0\ud638\uc640 \ud788\ub4dc\ub85c\ucda9\uc774 \uae08\uc18d \uad6c\uc870\ubb3c\uc5d0 \ubd99\uc5b4 \uc788\uc5c8\uace0, \ud070 \ubb3c\uace0\uae30 \ud55c \ub9c8\ub9ac\ub294 \ucee8\ud14c\uc774\ub108 \uadf8\ub298\uc5d0 \ubab8\uc744 \ud53c\ud588\ub2e4. \uc5f0\uad6c\uc5d0\uc11c\ub294 \ubd84\uc2e4\ub41c \ucee8\ud14c\uc774\ub108\uac00 \uc644\uc804\ud788 \ubd84\ud574\ub418\ub824\uba74 \uc218\ubc31 \ub144 \uc774\uc0c1 \uac78\ub9b4 \uc218 \uc788\ub2e4\uace0 \ubcf8\ub2e4."], ["\ube68\ub798 \ubbf8\ub8e8\ub294 \uce5c\uad6c\ud55c\ud14c", "\uc870\uc6a9\ud788 \ubcf4\ub0b4\uae30", "---", "\ube68\ub798\ub97c \uc790\uafb8 \ubbf8\ub8e8\ub294 \uce5c\uad6c\uc5d0\uac8c \uc6c3\uc73c\uba70 \uac74\ub12c \ub9cc\ud55c \uc774\uc57c\uae30. \uc2ec\ud574 \ubc14\ub2e5\uc5d0\uc11c \ubc1c\uacac\ub41c \uc138\ud0c1\uae30\uc640 \ub0c9\uc7a5\uace0, \uadf8\ub9ac\uace0 \uc138\ud0c1 \uc124\uba85\uc11c \ubb38\uad6c\uae4c\uc9c0 \ub2f4\uae34 \uc18c\uc2dd"]]}, "f31db582746f": {"caption": "\ube44\ub9cc\uc57d\uc774 \ub18d\uc9c0\ub97c \ud574\ubc29\ud55c\ub2e4\uace0? GLP-1 \uacc4\uc5f4 \ube44\ub9cc\uc57d\uc774 \ub110\ub9ac \uc4f0\uc774\uba74 \uc2dd\ub7c9 \uc218\uc694\uac00 \uc904\uc5b4 \uc774\ud0c8\ub9ac\uc544\ubcf4\ub2e4 \uc57d\uac04 \ub113\uc740 \ub18d\uc9c0\uac00 \ub2e4\ub978 \uc6a9\ub3c4\ub85c \uc4f0\uc77c \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c \uacb0\uacfc\uac00 \ub098\uc654\ub2e4.\n\n\uc2dd\ub7c9 \uc2dc\uc2a4\ud15c\uc740 \uacb0\uad6d \uc218\uc694\uac00 \uc6c0\uc9c1\uc778\ub2e4. \uc0ac\ub78c\ub4e4\uc774 \ub35c \uba39\uc73c\uba74 \uc0dd\uc0b0\uc790\uac00 \ubc18\uc751\ud574 \uc0dd\uc0b0, \uac00\uaca9, \ubb34\uc5ed, \ud544\uc694\ud55c \ub545\uc758 \ud06c\uae30\uac00 \ub2ec\ub77c\uc9c4\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \ucef4\ud4e8\ud130 \uc2dc\ubbac\ub808\uc774\uc158\uc73c\ub85c \uace0\uc18c\ub4dd \uad6d\uac00\uc5d0\ub9cc \uc57d\uc774 \uc4f0\uc774\ub294 \uacbd\uc6b0\ubd80\ud130 \uc804 \uc138\uacc4\ub85c \ub110\ub9ac \ud37c\uc9c0\ub294 \uacbd\uc6b0\uae4c\uc9c0 \uc5ec\ub7ec \uc2dc\ub098\ub9ac\uc624\ub97c \uc0b4\ud3c8\ub2e4.\n\n\ube44\ub9cc \uc131\uc778 \uc0ac\uc774\uc5d0\uc11c \ub110\ub9ac \uc4f0\uc774\uba74 2050\ub144\uae4c\uc9c0 \uc12d\ucde8 \uce7c\ub85c\ub9ac \uac10\uc18c\ub85c \uc5f0\uac04 \ucd5c\ub300 660\ub9cc \uac74\uc758 \uc0ac\ub9dd\uc744 \ub9c9\uace0, \ucd5c\ub300 3200\ub9cc \ud5e5\ud0c0\ub974\uc758 \ub18d\uc9c0\ub97c \ub2e4\ub978 \uc6a9\ub3c4\ub85c \ud480 \uc218 \uc788\ub2e4\uace0 \ucd94\uc815\ud588\ub2e4. \uc5ec\uae30\uc5d0 \ub354 \uac74\uac15\ud55c \uc2dd\ub2e8\uc73c\ub85c\uc758 \uc804\ud658\uc774 \ud569\uccd0\uc9c0\uba74 \uc5f0\uac04 \ucd5c\ub300 700\ub9cc \uac74\uc758 \uc0ac\ub9dd\uc744 \ud53c\ud558\uace0 \uc57d 4600\ub9cc \ud5e5\ud0c0\ub974\uc758 \ub18d\uc9c0\uac00 \uc0dd\uae38 \uc218 \uc788\ub2e4\uace0 \ud55c\ub2e4.\n\n\ub2e4\ub9cc \ubcc0\uc218\ub3c4 \uc788\ub2e4. \uc57d \uc0ac\uc6a9\uc790\uc758 \uc218\uc694\uac00 \uc904\uba74 \uc2dd\ud488 \uac00\uaca9\uc774 \ub0b4\ub824\uac00\uace0, \uadf8 \ub54c\ubb38\uc5d0 \uc57d\uc744 \uc4f0\uc9c0 \uc54a\ub294 \uc0ac\ub78c\ub4e4\uc774 \ub354 \uba39\uac8c \ub418\uc5b4 \ud6a8\uacfc \uc77c\ubd80\uac00 \uc0c1\uc1c4\ub420 \uc218 \uc788\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uc774 \uacb0\uacfc\ub97c \ub354 \ub9ce\uc740 \uc0ac\ub78c\uc5d0\uac8c \uc57d\uc744 \uc4f0\uc790\ub294 \uc8fc\uc7a5\uc73c\ub85c \uc77d\ub294 \uac83\uc740 \ud070 \uadf8\ub9bc\uc744 \ub193\uce58\ub294 \uc77c\uc774\ub77c\uace0 \uc9da\uc5c8\ub2e4.\n\n\ucd9c\ucc98: Ars Technica", "hashtags": ["#GLP1", "#\ube44\ub9cc\uc57d", "#\uc704\uace0\ube44", "#\uc2dd\ub7c9", "#\ud658\uacbd"], "slides": [["\ube44\ub9cc\uc57d\uc774 **\ub18d\uc9c0**", "\ud574\ubc29?!", "---", "\ube44\ub9cc\uc57d GLP-1\uc774 \ub110\ub9ac \uc4f0\uc774\uba74 \uc2dd\ub7c9 \uc218\uc694\uac00 \uc904\uc5b4, \uc774\ud0c8\ub9ac\uc544\ubcf4\ub2e4 \uc57d\uac04 \ub113\uc740 \ub18d\uc9c0\uac00 \ub2e4\ub978 \uc6a9\ub3c4\ub85c \ud480\ub9b4 \uc218 \uc788\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4."], ["\uc2dd\ub7c9 \uc2dc\uc2a4\ud15c\uc740", "\uacb0\uad6d **\uc218\uc694**\uac00 \uc6c0\uc9c1\uc5ec", "---", "\uc2dd\ub7c9 \uc2dc\uc2a4\ud15c\uc740 \uacb0\uad6d \uc218\uc694\uc5d0 \uc774\ub04c\ub9b0\ub2e4. \uc0ac\ub78c\ub4e4\uc774 \ub35c \uba39\uc73c\uba74 \uc0dd\uc0b0\uc790\uac00 \ubc18\uc751\ud574 \uc0dd\uc0b0, \uac00\uaca9, \ubb34\uc5ed, \ud544\uc694\ud55c \ub545\uc758 \ud06c\uae30\uac00 \ub2ec\ub77c\uc9c4\ub2e4."], ["\ucef4\ud4e8\ud130\ub85c", "\uc2dc\ub098\ub9ac\uc624\ub97c \ub3cc\ub838\uc5b4", "---", "\uc5f0\uad6c\uc9c4\uc740 \uac15\ub825\ud55c \ucef4\ud4e8\ud130 \uc2dc\ubbac\ub808\uc774\uc158\uc744 \uc37c\ub2e4. \uace0\uc18c\ub4dd \uad6d\uac00\uc5d0\ub9cc \uc57d\uc774 \uc4f0\uc774\ub294 \uacbd\uc6b0\ubd80\ud130 \uc804 \uc138\uacc4\ub85c \ub110\ub9ac \ud37c\uc9c0\ub294 \uacbd\uc6b0\uae4c\uc9c0 \uc5ec\ub7ec \uc0c1\ud669\uc744 \ub530\uc84c\ub2e4."], ["**3200\ub9cc \ud5e5\ud0c0\ub974**", "\uc774\ud0c8\ub9ac\uc544\ubcf4\ub2e4 \ucee4", "---", "\ube44\ub9cc \uc131\uc778 \uc0ac\uc774\uc5d0\uc11c \ub110\ub9ac \uc4f0\uc774\uba74 2050\ub144\uae4c\uc9c0 \ub18d\uc9c0 \ucd5c\ub300 3200\ub9cc \ud5e5\ud0c0\ub974\uac00 \ud480\ub9b4 \uc218 \uc788\ub2e4\uace0 \ucd94\uc815\ud588\ub2e4. \uc5f0\uac04 \uc0ac\ub9dd\ub3c4 \ucd5c\ub300 660\ub9cc \uac74 \ub9c9\uc744 \uc218 \uc788\ub2e4\uace0 \ubd24\ub2e4."], ["\uc2dd\ub2e8\uae4c\uc9c0 \ubc14\uafb8\uba74", "**4600\ub9cc \ud5e5\ud0c0\ub974**?!", "---", "\uc904\uc5b4\ub4e0 \uc12d\ucde8\uc5d0 \ub354 \uac74\uac15\ud55c \uc2dd\ub2e8\uc73c\ub85c\uc758 \uc804\ud658\uc774 \ub354\ud574\uc9c0\uba74 \ud6a8\uacfc\uac00 \uac00\uc7a5 \ucef8\ub2e4. \ub18d\uc9c0 \uc57d 4600\ub9cc \ud5e5\ud0c0\ub974\uac00 \ud480\ub9ac\uace0 \uc5f0\uac04 \ucd5c\ub300 700\ub9cc \uac74\uc758 \uc0ac\ub9dd\uc744 \ud53c\ud560 \uc218 \uc788\ub2e4\uace0 \ucd94\uc815\ud588\ub2e4."], ["\uc2f8\uc9c4 \uc74c\uc2dd\uc774", "**\ubcc0\uc218**\uac00 \ub420 \uc218\ub3c4", "---", "\uc57d \uc0ac\uc6a9\uc790\uc758 \uc218\uc694\uac00 \uc904\uba74 \uc2dd\ud488 \uac00\uaca9\uc774 \ub0b4\ub824\uac08 \uc218 \uc788\ub2e4. \uadf8\ub7ec\uba74 \uc57d\uc744 \uc4f0\uc9c0 \uc54a\ub294 \uc0ac\ub78c\ub4e4\uc774 \ub354 \uba39\uac8c \ub418\uc5b4 \ud6a8\uacfc \uc77c\ubd80\uac00 \uc0c1\uc1c4\ub420 \uc218\ub3c4 \uc788\ub2e4."], ["**\ud658\uacbd** \ub355\ud6c4 \uce5c\uad6c", "\ud55c\ud14c \ubcf4\ub0b4\ubd10", "---", "\ube44\ub9cc\uc57d \uc774\uc57c\uae30\uac00 \ub18d\uc9c0\uc640 \ud658\uacbd\uae4c\uc9c0 \uc774\uc5b4\uc9c4\ub2e4\ub294 \uc810\uc774 \uc758\uc678\ub77c, \ud658\uacbd\uc5d0 \uad00\uc2ec \ub9ce\uc740 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

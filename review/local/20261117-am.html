@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.17 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.17 오전 검수</span> <span id="progress">0 / 0 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-22ea1ee24695">
+    <div class="head">
+      <h2>S1. MIT 연구: 타이밍 맞춘 핑크 노이즈가 수면 중 뇌척수액 파동을 키움</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 18
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-22ea1ee24695">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 소리 켜놓고 자는 습관 얘기가 아니라, 뇌파 정점에 맞춘 50밀리초짜리 소리가 밤사이 뇌 청소 파동을 키웠다는 반전</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">102/500자</span></div>
+      <p class="tp-text">자는 동안 들리는 소리는 무조건 숙면 방해인 줄 알았지?
+MIT 연구에선 타이밍 맞춘 아주 짧은 소리가 밤사이 뇌 청소 파동을 키웠대
+근데 그냥 틀어놓는 소리랑은 얘기가 좀 달랐음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">118/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 자는 사람한테 아주 짧은 핑크 노이즈를 들려줬더니 느린 뇌파도, 뇌척수액 파동도 커졌대. 건강한 성인 14명 대상이었고, 소리가 작아서 참가자들이 깨지도 않았음. 근데 뇌척수액 파동이 대체 뭔데?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">150/500자</span></div>
+      <p class="tp-text">2/ 뇌는 깨어 있는 동안 젖산이나 쓸모없어진 단백질 같은 노폐물이 쌓이는데, 잘 때 뇌척수액이 파동처럼 오가면서 이걸 치우는 걸 돕는대. 느린 뇌파가 혈관을 좁혔다 넓혔다 하게 만들어서 일종의 펌프처럼 액체를 밀어낸다는 설명. 그럼 소리는 여기에 어떻게 끼어들었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">3/ 핵심은 타이밍이었음. 소리 한 번이 50밀리초짜리인데, 자는 사람의 느린 뇌파가 정점일 때 맞춰서 넣었대. 연구를 이끈 로라 루이스 교수는 그네에 비유함. 딱 맞는 순간에 밀어줘야 더 멀리 간다고. 근데 자는 사람 뇌파의 그 순간을 어떻게 잡았을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">126/500자</span></div>
+      <p class="tp-text">4/ 걸림돌은 fMRI의 강한 자기장이 뇌파 측정을 방해한다는 거였음. 연구진은 간섭을 100밀리초 안에 지우는 방법을 만들고, 다음 정점이 언제 올지 예측하는 알고리즘까지 설계했대. 그럼 이게 진짜 노폐물 제거로 이어졌을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">175/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 대상: 건강한 성인 14명
+- 소리: 50밀리초짜리 핑크 노이즈를 느린 뇌파 정점에 맞춰 재생
+- 결과: 느린 뇌파와 뇌척수액 파동이 둘 다 커짐
+- 아직 모름: 노폐물이 실제로 더 빠졌는지, 수면의 질이 좋아졌는지는 이번 연구에서 직접 확인 못 함
+그럼 연구진은 다음에 뭘 보려는 걸까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">184/500자</span></div>
+      <p class="tp-text">6/ 다음 단계는 이 파동 증가가 더 개운한 잠으로 이어지는지, 특히 불면증 있는 사람한테 그런지 보는 거래. 해로운 물질을 더 잘 치우게 되는지도 확인하려 함. 제1저자 레빗은 헤드밴드 같은 가정용 기기를 개발하려는 회사도 차렸대. 한국에서 이런 기기를 볼 수 있을지는 기사에 안 나옴. 그래서 지금 챙길 건 딱 한 줄이었음 ↓</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">224/500자</span></div>
+      <p class="tp-text">7/ 결국 지금 확인된 건 뇌파 타이밍에 맞춘 짧은 소리가 뇌척수액 파동을 키웠다는 데까지. 잘 자게 해주는지는 아직 연구 중이래.
+너는 자는 동안 소리 켜두는 편? 켜두는 파 vs 조용해야 자는 파
+이런 해외 수면·뇌 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 기사에 한국에서 이런 기기를 볼 수 있을지에 대한 내용이 나오지 않는다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>자는 동안 들리는 소리는 무조건 숙면 방해인 줄 알았지? 타이밍 맞춘 소리가 뇌 청소 파동을 키웠다는 연구가 나옴</li><li>밤사이 뇌 청소 파동을 소리로 키웠다는 연구가 나옴. 지금까지 이런 방법은 없었대</li><li>자는 동안 나는 소리는 방해가 아니라 &#39;그네 밀어주는 손&#39;일 수도 있대</li><li>더 오래 자는 게 아니라, 자는 동안 뇌 파동을 키워보자는 연구가 나옴</li><li>소리 켜놓고 자는 사람들, 이 연구는 &#39;켜놓는 소리&#39;가 아니라 &#39;맞춘 소리&#39;를 봤대</li><li>매일 자는 그 시간에 뇌가 청소 중이라는데, 소리로 그걸 키웠대</li><li>자는 사람 뇌에 50밀리초짜리 소리를 넣으면 생기는 일</li><li>수면 중 소음은 &#39;무조건 나쁜 것&#39;이 아니라 &#39;타이밍 문제&#39;일 수도 있다는 연구</li><li>자는 동안 소리가 들리면 깨는 줄 알았는데, 14명 실험에선 안 깼대</li><li>빗소리 같은 핑크 노이즈를 뇌파에 맞춰 넣었더니 뇌척수액 파동이 커졌대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>너는 자는 동안 소리 켜두는 편? 켜두는 파 vs 조용해야 자는 파</li><li>잘 때 빗소리 같은 소리 틀어본 사람?</li><li>수면 중 소리 들려주는 헤드밴드, 나온다면 써볼 거야?</li><li>잠들기 전 마지막으로 보는 게 폰이다 vs 아니다, 어느 쪽?</li><li>자는 동안 소리가 들려도 잘 자는 편이야, 예민한 편이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>깊은 잠에서 나오는 느린 뇌파가 뇌 청소와 어떻게 이어지는지</li><li>2019년 fMRI로 수면 중 뇌척수액 움직임을 처음 관찰한 연구</li><li>알츠하이머와 아밀로이드·타우 단백질 쌓임, 수면과의 연관</li><li>핑크 노이즈와 화이트 노이즈는 뭐가 다른지</li><li>불면증 있는 사람의 잠이 더 개운해질 수 있을지 보는 후속 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>핑크 노이즈를 그냥 틀어놓고 자면 효과 있다는 뜻으로 읽힐 수 있음. 원문은 뇌파 정점에 맞춘 50밀리초 소리만 다룸</li><li>&#39;뇌 청소&#39;는 뇌척수액 파동을 가리키는 표현. 노폐물이 실제로 더 제거됐는지는 원문이 직접 확인 못 했다고 함</li><li>6/의 &#39;한국에서 볼 수 있을지는 기사에 안 나옴&#39;은 기사 기준 서술이라, 한국 출시 여부를 암시하지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>MIT 연구진이 수면 중 타이밍 맞춘 핑크 노이즈가 뇌 청소 파동을 강화할 수 있음을 발견함</b>
+          <q>“MIT scientists discovered that carefully timed bursts of gentle pink noise during sleep can strengthen the brain&#39;s natural cleaning waves, which help flush away potentially harmful waste.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>건강한 자원자 14명 대상 실험에서 느린 뇌파와 뇌척수액 파동이 모두 커짐</b>
+          <q>“The researchers tested their approach in 14 healthy volunteers. They found that the carefully timed sounds increased the size of both the brain&#39;s slow electrical waves and the accompanying CSF waves.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소리가 작아서 참가자를 깨우지 않았음</b>
+          <q>“Importantly, the sounds were quiet enough that they did not wake the participants.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>깨어 있는 동안 뇌에 젖산과 쓸모없어진 단백질 같은 노폐물이 쌓임</b>
+          <q>“While we go about our daily activities, the brain gradually accumulates waste, including lactic acid and proteins that are no longer useful.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쉬는 동안 뇌척수액 파동이 뇌를 오가며 노폐물 제거를 도움</b>
+          <q>“As we rest, waves of cerebrospinal fluid (CSF) move through the brain, helping remove waste and maintain healthy brain function.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>느린 뇌파는 혈관의 수축·확장과 연관되어 뇌척수액을 밀어내는 펌프 효과를 만듦</b>
+          <q>“Slow electrical waves were associated with blood vessels narrowing and widening, creating a pumping effect that pushes CSF out of the brain.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>핑크 노이즈 한 번의 길이는 50밀리초</b>
+          <q>“To test the idea, the team used extremely short bursts of pink noise, each lasting just 50 milliseconds.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소리는 자는 사람의 느린 뇌파가 정점일 때 맞춰 넣어야 했음</b>
+          <q>“The researchers needed to deliver each burst of sound when a sleeping participant&#39;s slow brain waves reached their peak.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>로라 루이스가 연구를 이끈 교신저자임</b>
+          <q>“Lewis led the research as senior author.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>루이스가 그네를 맞는 순간에 밀어야 더 멀리 간다는 비유를 듦</b>
+          <q>“Similar to a child on a swing, if you push them when they&#39;re at the right moment in their movement, you can make that swing go farther,”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>fMRI의 강한 자기장이 EEG 측정을 방해함</b>
+          <q>“The powerful magnetic fields used in fMRI interfere with EEG recordings, making it difficult to detect the brain&#39;s electrical signals accurately and quickly enough to synchronize the sound.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 100밀리초 안에 간섭을 제거하는 방법과 다음 정점을 예측하는 알고리즘을 만듦</b>
+          <q>“The team addressed this problem by creating a method that removes interference from EEG signals in less than 100 milliseconds. They also designed an algorithm capable of predicting when the next slow wave peak would occur, compensating for the small delay introduced by processing the signals.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>더 강한 뇌척수액 파동이 실제로 노폐물을 더 제거했는지, 수면의 질을 높였는지는 직접 확인되지 않음</b>
+          <q>“However, the study did not directly establish whether the stronger CSF waves actually removed more waste or improved sleep quality.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 뇌척수액 흐름 증가가 불면증 있는 사람에게 더 개운한 수면으로 이어지는지 알아보려 함</b>
+          <q>“The researchers now want to investigate whether increasing CSF flow leads to more refreshing, restorative sleep, particularly for people who struggle with insomnia.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>해로운 물질을 치우는 뇌의 능력을 높일 수 있는지도 확인하려 함</b>
+          <q>“Another major goal is to determine whether the technique can improve the brain&#39;s ability to clear harmful substances.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조슈아 레빗이 제1저자임</b>
+          <q>“The findings were published in Science Translational Medicine, with Joshua Levitt serving as lead author.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>레빗이 헤드밴드 형태일 수 있는 가정용 기기를 개발하려는 회사를 차림</b>
+          <q>“Levitt has launched a company that aims to develop a home device, potentially in the form of a headband, that would deliver sound at the appropriate moments during sleep to increase CSF flow.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>현재 확인된 건 뇌 활동에 맞춘 소리가 뇌척수액 파동을 바꿀 수 있다는 것까지</b>
+          <q>“For now, the results demonstrate that a simple auditory stimulus, when precisely synchronized with brain activity, can alter the fluid waves associated with the brain&#39;s nighttime cleaning process.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="22ea1ee24695">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261115085533.htm" target="_blank" rel="noopener">MIT scientists discover a surprising way to boost the brain’s nighttime cleaning system</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-d3e06dccb2fd">
+    <div class="head">
+      <h2>S2. 렘수면 늘리는 초음파 패치 NEUSLeeP</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-d3e06dccb2fd">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 수면</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 매일 하는 &#39;잠&#39;을 약·수술 없이 건드린다는 점과 &#39;43분 빨리, 16분 더&#39;라는 구체적 숫자를 앞세우되, 아직 연구 단계라는 한계를 같이 전하는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">잠 고민, 약이나 수술이 아니라 &#39;붙이는 패치&#39;로 풀어보려는 연구가 나옴
+초음파로 뇌 깊은 곳을 건드려서 렘수면에 더 빨리 들어가게 했대
+근데 몇 분이나 달라졌는지 숫자가 나왔음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">1/ 28명이 참여한 연구에서 패치를 쓴 사람들은 렘수면에 평균 43분 빨리 들어갔고, 그 단계에 약 16분 더 머물렀대.
+근데 잠 잘 자는 사람한테만 된 결과였을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">2/ 아니, 건강하게 자는 사람이랑 일부 수면 어려움이 있는 참가자 둘 다에서 관찰됐대.
+착용감도 편했고 부작용은 최소였다고 해.
+그럼 이 패치는 어떻게 작동하는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">3/ 이름은 NEUSLeeP. 피부에 붙는 부드러운 패치인데, 초음파 자극이랑 뇌 활동을 실시간으로 재는 전극이 같이 들어 있대.
+초음파로 수술 없이 뇌 깊은 곳까지 닿게 한다는 거야.
+그럼 렘수면은 왜 굳이 늘리려는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">4/ 렘수면은 생생한 꿈이 대부분 나오는 단계고, 감정 처리나 기억 정리, 스트레스 적응에 역할을 한대.
+우울, 불안, PTSD랑 렘수면 문제가 연결돼 있다는 얘기도 나옴.
+그럼 이 패치로 그런 증상까지 좋아지는 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">186/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 28명 대상 연구, 렘수면 진입 평균 43분 빨라지고 약 16분 더 머묾
+- 건강한 사람, 일부 수면 어려움 있는 참가자 모두에서 관찰
+- 건강한 참가자는 심박변이도도 좋아졌음
+- 한계: 규모가 작아서 더 큰 시험이 필요함
+- 마음 건강 증상이 나아지는지는 아직 확인 안 됨
+그럼 이 패치, 언제쯤 쓸 수 있을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">216/500자</span></div>
+      <p class="tp-text">6/ 아직은 연구진이 시장에 내놓을 방법을 알아보고 특허를 출원한 단계래. 결국 더 큰 시험에서 효과가 이어지는지 확인돼야 한다는 거.
+자는 동안 뇌파 재주는 패치, 써볼래 vs 패스?
+이런 해외 수면·건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>약이나 수술에 기대지 않고 수면 단계를 개선할 수 있는 웨어러블 패치가 나왔다 <small>애매 · 원문은 약이나 수술에 기대지 않는 간단한 방법을 &#39;제공할 수 있다(could offer)&#39;고 한 것이고, 실제로 나온 제품이라는 뜻은 아니다. &#39;나왔다&#39;는 표현을 &#39;연구 단계의 기기가 제안됐다&#39;로 고치는 것이 좋다.</small></li>
+        
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>잠 고민, 약이나 수술이 아니라 &#39;붙이는 패치&#39;로 풀어보려는 연구가 나옴</li><li>렘수면, 약 없이 &#39;피부에 붙이는 패치&#39;로 늘렸다는 연구가 나옴</li><li>렘수면에 들어가는 시간이 평균 43분 빨라졌대, 패치 하나로</li><li>수면을 재는 걸 넘어서 &#39;렘수면을 늘려주는&#39; 패치까지 나왔대</li><li>&#39;몇 시간 잤나&#39;만 보던 수면, 렘수면 단계까지 건드리는 연구가 나옴</li><li>&#39;렘수면은 그냥 꿈 꾸는 시간이 아니다&#39; 연구진이 이런 말까지 함</li><li>잠 때문에 고민이면, 약도 수술도 안 쓰는 방법을 연구 중인 팀이 있대</li><li>자는 동안 초음파가 뇌 깊은 곳을 건드린다면 믿겠어?</li><li>&#39;꿈꾸는 단계&#39;를 초음파로 건드렸더니 어떻게 됐냐면</li><li>매일 하는 잠인데, 렘수면에 43분 빨리 들어가게 하는 패치가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>자는 동안 뇌파 재주는 패치, 써볼래 vs 패스?</li><li>수면 앱이나 스마트워치로 잠 기록해본 사람?</li><li>꿈 기억나는 편 vs 거의 안 나는 편?</li><li>아침형 vs 올빼미형, 어느 쪽이야?</li><li>잠 잘 자게 도와주는 습관 중 제일 믿는 거 하나만 꼽는다면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>렘수면 말고 깊은 잠은 뭐가 다른지 쉽게 풀기</li><li>수면이 감정 조절이랑 어떻게 이어지는지 다룬 연구</li><li>수면 측정 웨어러블은 얼마나 정확한지 보는 연구</li><li>우리가 꿈을 꾸는 이유를 다룬 연구</li><li>초음파로 뇌를 다루는 다른 연구 소식</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>건강 연구라 &#39;패치가 렘수면을 늘려 스트레스·마음 건강이 좋아진다&#39;로 읽히지 않는지 확인 (원문은 증상 개선 미확인, 28명 소규모)</li><li>&#39;붙이는 패치&#39;가 이미 살 수 있는 제품처럼 읽힐 수 있어 연구·상용화 모색 단계라는 점이 유지되는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>약이나 수술에 기대지 않고 수면 단계를 개선할 수 있는 웨어러블 패치가 나왔다</b>
+          <q>“A new wearable patch could offer a surprisingly simple way to improve one of the most important stages of sleep, without relying on medication or surgery.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>패치는 초음파로 뇌 깊은 곳을 자극해 렘수면에 더 빨리 들어가고 더 오래 머물게 돕는다</b>
+          <q>“Developed by researchers led by the University of Texas at Austin, the device uses gentle ultrasound waves to stimulate regions deep inside the brain, helping people enter REM sleep sooner and spend more time in this restorative stage.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>28명 연구에서 렘수면 진입이 평균 43분 빨라지고 약 16분 더 머물렀다</b>
+          <q>“In a study involving 28 participants, published in Nature Communications, people using the patch entered REM sleep an average of 43 minutes sooner and spent approximately 16 additional minutes in that stage.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>건강한 사람과 일부 수면 어려움이 있는 참가자 모두에서 개선이 관찰됐고 착용감이 편하며 부작용이 최소였다</b>
+          <q>“These improvements were observed in both healthy sleepers and participants experiencing certain sleep difficulties. The volunteers also reported that the patch was comfortable to wear, with minimal adverse effects.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>NEUSLeeP은 피부에 붙는 부드러운 패치로 초음파 자극과 뇌 활동을 실시간 측정하는 전극을 결합했다</b>
+          <q>“Known as NEUSLeeP, the soft patch attaches to the skin and combines ultrasound stimulation with electrodes that monitor brain activity in real time.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초음파로 침습적 시술 없이 뇌 표면 아래 영역에 닿는다</b>
+          <q>“It uses ultrasound, a form of sound energy with frequencies beyond human hearing, to reach areas beneath the surface of the brain without requiring an invasive procedure.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>렘수면은 생생한 꿈이 대부분 나오는 단계이며 감정 처리, 기억 정리, 스트레스 적응에 역할을 한다</b>
+          <q>“REM sleep, short for rapid eye movement sleep, is the stage when most vivid dreaming occurs. It also plays an important role in processing emotions, consolidating memories, and adapting to stress.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>렘수면 문제는 우울, 불안, PTSD와 연관된 것으로 알려져 있다</b>
+          <q>“These possibilities are especially interesting because REM sleep disturbances have been linked to depression, anxiety, and post-traumatic stress disorder (PTSD).”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>건강한 참가자에서 초음파 자극이 심박변이도를 개선했다</b>
+          <q>“Among healthy participants, ultrasound stimulation improved heart rate variability, a measure of the natural differences in time between consecutive heartbeats.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>규모가 작아 더 큰 시험이 필요하다</b>
+          <q>“The findings are encouraging, although the relatively small study means that larger trials will be needed to determine how consistently the technology works and whether its benefits persist over time.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>마음 건강 장애 증상을 개선하는지는 아직 확인되지 않았다</b>
+          <q>“However, the researchers have not yet established whether NEUSLeeP can improve symptoms of mental health disorders.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 시장에 내놓을 방법을 알아보고 있고 특허를 출원했다</b>
+          <q>“Working with the university&#39;s commercialization unit, Discovery to Impact, the researchers are exploring how to bring the device to market and have filed a patent application covering the technology.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="d3e06dccb2fd">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261116014842.htm" target="_blank" rel="noopener">New wearable ultrasound patch boosts REM sleep without drugs or surgery</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261117-am";
+  const ORIGINAL = {};
+  const TOTAL = 0;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

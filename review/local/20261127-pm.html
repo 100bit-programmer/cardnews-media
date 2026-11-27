@@ -1,0 +1,2173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.27 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.27 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-b92d59142969" data-jump="b92d59142969">1</a><a href="#post-98f829cd2d59" data-jump="98f829cd2d59">2</a><a href="#post-b91439dd810e" data-jump="b91439dd810e">3</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-b92d59142969" data-id="b92d59142969">
+    <div class="head">
+      <h2>1. 일본 서점 마루젠 준쿠도 50주년 서점 1박 행사</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 9 · 애매 2
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b92d59142969/v1-01.jpg" alt="1장: 서점에서 밤새 캠핑???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b92d59142969/v1-02.jpg" alt="2장: 책 50만 권 속에서 하룻밤" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b92d59142969/v1-03.jpg" alt="3장: 잠은 돗자리 위 독서는 금지" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b92d59142969/v1-04.jpg" alt="4장: 읽으려면 통로로 나가야" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b92d59142969/v1-05.jpg" alt="5장: 공짜인데 책은 3권 사야 해" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b92d59142969/v1-06.jpg" alt="6장: 책 좋아하는 친구 태그해서 알려줘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b92d59142969/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">서점에서 밤새 캠핑이라니, 진짜 있었던 일이다.
+
+일본 서점 체인 마루젠 준쿠도가 창업 50주년을 기념해 &#39;마루젠 준쿠도에 살아보기&#39; 행사를 열었다. 장소는 창업지인 고베 산노미야 점. 11월 21일부터 22일까지 1박 2일 일정이었고, 선정된 10명이 9층짜리 매장에서 하룻밤을 보냈다. 이 매장에는 약 50만 권의 책이 있다.
+
+참가자들은 두 명이 한 팀으로 약 4.86㎡ 돗자리를 &#39;본거지&#39;로 받았고 침낭은 직접 챙겼다. 돗자리 위에서는 먹고 마시고(술 제외) 자는 것만 가능했고, 책을 읽으려면 매장 통로로 나가야 했다. 일본에서는 비닐 포장되지 않은 책을 서서 읽는 &#39;다치요미&#39;가 어느 정도 용인된다고 한다.
+
+참가비는 무료였지만 나갈 때 책을 3권 이상 사야 했다. 다섯 팀만 추첨으로 뽑혔고, 다음 모집은 2027년 9월 말~10월 초로 보인다. 일본 네티즌 중에는 &#39;재밌겠다&#39;는 반응도 있었지만, 딱딱한 바닥에서 자면 몸이 아플 것 같다는 반응도 있었다.
+
+책벌레 친구가 떠오른다면 태그해 보자.
+
+출처: SoraNews24, 丸善ジュンク堂書店劇場(X), PR Times</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본 #서점 #마루젠준쿠도 #고베 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>비닐 포장되지 않은 책을 서서 읽는 다치요미는 일본 서점에서 어느 정도 용인된다 <small>애매 · 원문은 비닐 포장되지 않은 책을 서서 읽는 다치요미가 일본 서점과 편의점에서 어느 정도 용인된다는 내용이다. 카드는 &#39;서점에서 용인&#39;으로 줄였으나 편의점 언급이 빠졌고, 큰 문제는 없다. &#39;비닐 포장되지 않은&#39;이라는 조건은 맞다.</small></li><li>다음 모집은 2027년 9월 말~10월 초로 보인다 <small>애매 · 원문은 &#39;2027년 9월 말~10월 초로 보인다&#39;는 추정이다. 카드의 &#39;보인다&#39; 표현은 추정으로 적절하나, 확정된 일정처럼 읽히지 않도록 유지해야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 출처 명시: SoraNews24, 丸善ジュンク堂書店劇場(X), PR Times 및 &#39;책벌레 친구 태그&#39; 문구는 근거 목록에 없는 출처 표기다.</li><li>근거 등록 안 된 주장: &#39;서점에서 밤새 캠핑이라니, 진짜 있었던 일이다&#39; 및 &#39;책벌레 친구가 두고두고 부러워할 소식&#39; 등 표현은 사실 주장이 아니므로 제외.</li><li>근거 등록 안 된 주장: &#39;9층짜리 매장&#39;은 근거에 있으나 카드 slide2의 &#39;선정된 10명이 이곳에서 하룻밤을 통째로 보냈다&#39;는 claim 0과 일치하므로 추가 주장 없음.</li><li>근거 등록 안 된 주장: &#39;일본 서점 체인 마루젠 준쿠도&#39; 체인 여부 및 &#39;일본 서점 체인&#39;이라는 설명은 claims 목록에 명시되지 않은 배경 정보다.</li><li>근거 등록 안 된 주장: &#39;가져와야 했다&#39;처럼 침낭 준비가 의무였는지 여부는 claim 2의 &#39;안내받았다&#39;와 원문 &#39;were told to bring&#39;으로 뒷받침되나, 카드 slide3의 &#39;침낭은 직접 가져와야 했다&#39;는 반드시 필요한 조건인지 여부가 불명확하다.</li>
+          <li>다음 모집 시기(2027년 9월 말~10월 초)는 매체의 추정이라 확정이 아님</li><li>원문 기사 사진과 트윗 이미지는 사용하지 말 것</li><li>마루젠 준쿠도 로고·상표가 이미지에 노출되지 않도록 주의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b92d59142969-0">1장</label>
+          <textarea id="s-b92d59142969-0" rows="6" data-slide="0">서점에서
+밤새 **캠핑**???
+---
+일본 서점 체인 마루젠 준쿠도가 창업 50주년을 맞아 추첨으로 뽑은 독자 10명에게 매장에서 하룻밤을 보내게 했다.</textarea>
+          
+          <label class="f" for="s-b92d59142969-1">2장</label>
+          <textarea id="s-b92d59142969-1" rows="6" data-slide="1">책 **50만 권**
+속에서 하룻밤
+---
+고베 산노미야에 있는 창업지 매장에서 열린 행사다. 9층짜리 매장에는 약 50만 권의 책이 있고, 선정된 10명이 이곳에서 하룻밤을 통째로 보냈다.</textarea>
+          
+          <label class="f" for="s-b92d59142969-2">3장</label>
+          <textarea id="s-b92d59142969-2" rows="6" data-slide="2">잠은 **돗자리** 위
+독서는 금지
+---
+두 명이 한 팀이 되어 약 4.86㎡짜리 돗자리 한 장을 &#39;본거지&#39;로 받았고, 침낭은 직접 가져와야 했다. 돗자리 위에서는 먹고 마시고(술 제외) 자는 것만 허용됐다.</textarea>
+          
+          <label class="f" for="s-b92d59142969-3">4장</label>
+          <textarea id="s-b92d59142969-3" rows="6" data-slide="3">읽으려면
+**통로**로 나가야
+---
+시트 위에서는 책을 읽을 수 없어서, 참가자는 매장 통로를 돌아다니며 읽고 돌아와 잠들어야 했다. 일본에서는 비닐 포장되지 않은 책을 서서 읽는 &#39;다치요미&#39;가 어느 정도 용인된다.</textarea>
+          
+          <label class="f" for="s-b92d59142969-4">5장</label>
+          <textarea id="s-b92d59142969-4" rows="6" data-slide="4">공짜인데
+책은 **3권** 사야 해
+---
+참가비는 무료였지만 나갈 때 책을 3권 이상 사 달라는 조건이 붙었다. 추첨으로 다섯 팀만 들어갈 수 있었고, 다음 모집은 2027년 9월 말~10월 초로 보인다.</textarea>
+          
+          <label class="f" for="s-b92d59142969-5">6장</label>
+          <textarea id="s-b92d59142969-5" rows="6" data-slide="5">책 좋아하는 친구
+**태그해서** 알려줘
+---
+서점 한가운데서 책을 읽다 잠드는 하룻밤이라니, 책벌레 친구가 두고두고 부러워할 소식</textarea>
+          
+          <label class="f" for="c-b92d59142969">본문 (캡션)</label>
+          <textarea id="c-b92d59142969" class="caption">서점에서 밤새 캠핑이라니, 진짜 있었던 일이다.
+
+일본 서점 체인 마루젠 준쿠도가 창업 50주년을 기념해 &#39;마루젠 준쿠도에 살아보기&#39; 행사를 열었다. 장소는 창업지인 고베 산노미야 점. 11월 21일부터 22일까지 1박 2일 일정이었고, 선정된 10명이 9층짜리 매장에서 하룻밤을 보냈다. 이 매장에는 약 50만 권의 책이 있다.
+
+참가자들은 두 명이 한 팀으로 약 4.86㎡ 돗자리를 &#39;본거지&#39;로 받았고 침낭은 직접 챙겼다. 돗자리 위에서는 먹고 마시고(술 제외) 자는 것만 가능했고, 책을 읽으려면 매장 통로로 나가야 했다. 일본에서는 비닐 포장되지 않은 책을 서서 읽는 &#39;다치요미&#39;가 어느 정도 용인된다고 한다.
+
+참가비는 무료였지만 나갈 때 책을 3권 이상 사야 했다. 다섯 팀만 추첨으로 뽑혔고, 다음 모집은 2027년 9월 말~10월 초로 보인다. 일본 네티즌 중에는 &#39;재밌겠다&#39;는 반응도 있었지만, 딱딱한 바닥에서 자면 몸이 아플 것 같다는 반응도 있었다.
+
+책벌레 친구가 떠오른다면 태그해 보자.
+
+출처: SoraNews24, 丸善ジュンク堂書店劇場(X), PR Times</textarea>
+          <label class="f" for="t-b92d59142969">해시태그</label>
+          <input id="t-b92d59142969" type="text" class="tagsin" value="#일본 #서점 #마루젠준쿠도 #고베 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>비닐 포장되지 않은 책을 서서 읽는 다치요미는 일본 서점에서 어느 정도 용인된다</b>
+            <q>“While standing around reading unpurchased books, known as tachiyomi (literally “standing reading”) can be a little surprising to visitors used to stricter retail cultures, it is a somewhat tolerated daily sight in Japanese bookstores and convenience stores, so long as the books aren’t shrink-wrapped, meaning these overnight guests could treat the store as a large library with all of the latest novels.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>다음 모집은 2027년 9월 말~10월 초로 보인다</b>
+            <q>“With the 2026 iteration all wrapped up, anyone wanting to try their hand will have to wait until late September to early October 2027, which seems to be the annual time period for applications opening up.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마루젠 준쿠도가 창업 50주년을 기념해 고베 산노미야의 창업지 매장에서 행사를 열었고, 하룻밤 동안 선정된 10명이 약 50만 권의 책이 있는 9층 매장에서 밤을 보냈다</b>
+            <q>“To celebrate its 50th anniversary, the company held its Try Living at Maruzen Junkudo event at its original flagship location in Kobe’s Sannomiya district, where for one night only, ten selected guests got to spend the entire night in the nine-story store that houses roughly 500,000 books.”</q>
+            <small>slide1, slide2, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>행사는 11월 21일부터 22일까지 1박 2일로 고베 산노미야 점에서 열렸다</b>
+            <q>“ジュンク堂書店50周年の今年は、創業の地・神戸のジュンク堂書店 三宮店で11/21～11/22の1泊2日で開催。”</q>
+            <small>caption · <a href="http://blog.esuteru.com/archives/10588387.html" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>두 명이 한 팀으로 약 4.86㎡ 돗자리를 본거지로 받았고 침낭은 직접 가져오도록 안내받았다</b>
+            <q>“Instead of reclining chairs or comfortable mattresses, pairs of guests were assigned a roughly 4.86 meters squared (about 52 square feet) picnic sheet as their ‘home base’ between the shelves on the sales floor and were told to bring their own sleeping bags.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>돗자리 위에서는 먹기, 마시기(술 제외), 자기만 허용되고 독서는 금지였다</b>
+            <q>“The house rules explained were quite specific: eating, drinking (no alcohol), and sleeping are strictly confined to the tarp, but actual reading on the tarp is banned to avoid any snack spillage on the merchandise.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>책을 읽으려면 매장 통로를 돌아다니다 돌아와 자야 했다</b>
+            <q>“In other words, you have to wander the aisles to get your bedtime story fix before heading back to camp to snooze.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>참가는 무료였지만 나갈 때 책을 3권 이상 사 달라는 요청이 있었다</b>
+            <q>“Participation was technically free, but guests were asked to buy at least three books on their way out, which seems like a fair trade off for such a unique experience.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>추첨으로 다섯 팀, 총 10명만 참가할 수 있었다</b>
+            <q>“Since spots were capped at just five pairs via lottery, for a total of ten guests, getting in took quite a bit of luck.”</q>
+            <small>hook, slide5, caption · <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 네티즌 중에는 재밌겠다는 반응이 있었다</b>
+            <q>“・こんなイベントあるんだ。楽しそう。”</q>
+            <small>caption · <a href="http://blog.esuteru.com/archives/10588387.html" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>딱딱한 바닥에서 자면 몸이 아플 것 같다는 반응도 있었다</b>
+            <q>“・固い床で寝たら肩や腰痛めるしこんなに明るいと寝つきも悪いでしょ”</q>
+            <small>caption · <a href="http://blog.esuteru.com/archives/10588387.html" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">Japanese bookstore chain Maruzen Junkudo lets lucky bookworms camp overnight in their aisles</a> (기사)</li><li><a href="http://blog.esuteru.com/archives/10588387.html" target="_blank" rel="noopener">本屋『丸善ジュンク堂』に住んでみるイベント！その様子がコチラｗｗｗｗ</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/27/japanese-bookstore-chain-maruzen-junkudo-lets-lucky-bookworms-camp-overnight-in-their-aisles/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/imgi_1_27516-139-f38975f069c924f2b502e9b5903d90ae-1000x750-1.jpg"</li><li>2장: <a href="https://www.japantrends.com/stay-overnight-junkudo-bookstore-tokyo/" target="_blank" rel="noopener">Japan Trends / </a> — "https://www.japantrends.com/japan-trends/wp-content/uploads/2014/10/junkudo-stay-overnight-sleep-book-store-shop-tokyo-2.jpg"</li><li>3장: <a href="https://pixabay.com/photos/picnic-apples-grapes-flowers-hat-10410610/" target="_blank" rel="noopener">em0rix / Pixabay</a> — "picnic blanket"</li><li>4장: <a href="https://pixabay.com/photos/books-library-room-school-study-2596809/" target="_blank" rel="noopener">StockSnap / Pixabay</a> — "bookshelf aisle"</li><li>5장: <a href="https://pixabay.com/photos/library-wisdom-reading-knowledge-7720589/" target="_blank" rel="noopener">mirkostoedter / Pixabay</a> — "stack of books"</li><li>6장: <a href="https://pixabay.com/photos/a-book-pages-read-training-novel-5178205/" target="_blank" rel="noopener">Kranich17 / Pixabay</a> — "reading book"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-98f829cd2d59" data-id="98f829cd2d59">
+    <div class="head">
+      <h2>2. 엘리베이터 정비사 부족, 연봉 11만 달러에도 사람이 없다</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 14
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-01.jpg" alt="1장: 엘리베이터 고칠 사람 없다?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-02.jpg" alt="2장: 평균 연봉 11만 달러" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-03.jpg" alt="3장: 견습만 4년 그다음 면허" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-04.jpg" alt="4장: 고장 원인은 10번 중 9번 문" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-05.jpg" alt="5장: 몇 주째 멈춘 건 부품 탓도 커" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-06.jpg" alt="6장: 배달이 1층까지만?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-07.jpg" alt="7장: 건물 관리하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/98f829cd2d59/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">엘리베이터가 멈췄을 때 고치러 오는 사람이 줄고 있다. 미국에서 승강기 정비사 부족은 이미 널리 알려진 문제이고, 다른 여러 나라에서도 마찬가지라고 한다.
+
+시카고에서 47년 넘게 승강기를 고쳐 온 짐 렘베시스는 처음 일을 시작할 때와 비교하면 상황이 완전히 달라졌다고 말한다. 미국 정비사의 평균 연봉은 11만 달러지만, 업계에서는 새 인력을 끌어들이기 어렵다고 한다. 4년짜리 견습 과정과 여러 주의 자격증·면허 요건이 첫 관문이다.
+
+고장의 열 번 중 아홉은 문에서 생긴다는 점도 흥미롭다. 다만 수리가 몇 주씩 밀리는 건 대개 부품 때문이라는 설명도 있다. 유압 실린더 교체품을 만드는 데에만 6~12주가 걸린다고 한다.
+
+영국에서도 사정은 비슷하다. 영국 업계 인사는 상황이 나쁘고 더 나빠지고 있다고 말했고, 업계 단체는 영국에 현재 승강기·에스컬레이터 견습생이 259명 있다고 밝혔다.
+
+건물을 관리하는 친구, 고층 아파트에 사는 친구에게 보내 보자.
+
+출처: BBC News</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#엘리베이터 #해외이슈 #직업 #인력난 #정비사</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처가 BBC News라는 사실</li><li>근거 등록 안 된 주장: 문은 계속 오가는 부품이라 마모가 크다는 설명(슬라이드4)</li>
+          <li>BBC 단일 기사 기반이며 미국 상황 중심의 증언이 많음</li><li>수리 지연의 원인에 대해 인력 부족과 부품 부족 주장이 엇갈림</li><li>대형 승강기 업체 측은 미국 인력 수급이 건강하다고 주장해 업계 내 시각 차이 있음</li><li>달러 금액은 원문 표기를 그대로 사용하고 원화 환산은 하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-98f829cd2d59-0">1장</label>
+          <textarea id="s-98f829cd2d59-0" rows="6" data-slide="0">**엘리베이터**
+고칠 사람 없다?!
+---
+미국에서 엘리베이터와 에스컬레이터를 고치는 정비사가 부족한 문제가 갈수록 심해지고, 다른 여러 나라도 같은 고민을 안고 있다.</textarea>
+          
+          <label class="f" for="s-98f829cd2d59-1">2장</label>
+          <textarea id="s-98f829cd2d59-1" rows="6" data-slide="1">평균 연봉
+**11만 달러**
+---
+미국 엘리베이터 정비사의 평균 연봉은 11만 달러, 영국 돈으로 약 8만 3천 파운드다. 그런데도 업계 사람들은 새 인력을 끌어들이기 어렵다고 말한다.</textarea>
+          
+          <label class="f" for="s-98f829cd2d59-2">3장</label>
+          <textarea id="s-98f829cd2d59-2" rows="6" data-slide="2">견습만 **4년**
+그다음 면허
+---
+전미엘리베이터계약자협회 회장은 4년짜리 견습 과정이 첫 번째 관문이라고 말한다. 여러 주에서는 일을 시작하기 전에 자격증이나 면허도 요구한다.</textarea>
+          
+          <label class="f" for="s-98f829cd2d59-3">4장</label>
+          <textarea id="s-98f829cd2d59-3" rows="6" data-slide="3">고장 원인은
+10번 중 **9번** 문
+---
+베테랑 정비사 짐 렘베시스는 고장 열에 아홉은 문이 문제라고 말한다. 문은 계속 오가는 부품이라 카트에 부딪히고 먼지와 이물질이 들어가 가장 크게 시달린다고 한다.</textarea>
+          
+          <label class="f" for="s-98f829cd2d59-4">5장</label>
+          <textarea id="s-98f829cd2d59-4" rows="6" data-slide="4">몇 주째 멈춘 건
+**부품** 탓도 커
+---
+전미엘리베이터계약자협회 회장은 수리가 몇 주, 몇 달 밀리는 건 대개 인력보다 특정 부품을 구하기 어려워서라고 본다. 유압 실린더 교체품을 만드는 데만 6~12주가 걸린다.</textarea>
+          
+          <label class="f" for="s-98f829cd2d59-5">6장</label>
+          <textarea id="s-98f829cd2d59-5" rows="6" data-slide="5">배달이
+**1층까지만**?
+---
+데이브 쿠퍼 영국 건물설비 엔지니어 협회 회장은 상황이 나쁘고 더 나빠지고 있다고 말한다. 엘리베이터가 멈췄다는 이유로 1층 위 집으로의 배달을 거절한 음식 배달 업체도 있었다고 한다.</textarea>
+          
+          <label class="f" for="s-98f829cd2d59-6">7장</label>
+          <textarea id="s-98f829cd2d59-6" rows="6" data-slide="6">건물 관리하는
+**친구한테** 보내기
+---
+고층 건물에 살거나 건물을 관리하는 친구라면 크게 공감할 이야기. 엘리베이터를 고치는 사람이 왜 이렇게 귀한 존재인지 보여주는 소식</textarea>
+          
+          <label class="f" for="c-98f829cd2d59">본문 (캡션)</label>
+          <textarea id="c-98f829cd2d59" class="caption">엘리베이터가 멈췄을 때 고치러 오는 사람이 줄고 있다. 미국에서 승강기 정비사 부족은 이미 널리 알려진 문제이고, 다른 여러 나라에서도 마찬가지라고 한다.
+
+시카고에서 47년 넘게 승강기를 고쳐 온 짐 렘베시스는 처음 일을 시작할 때와 비교하면 상황이 완전히 달라졌다고 말한다. 미국 정비사의 평균 연봉은 11만 달러지만, 업계에서는 새 인력을 끌어들이기 어렵다고 한다. 4년짜리 견습 과정과 여러 주의 자격증·면허 요건이 첫 관문이다.
+
+고장의 열 번 중 아홉은 문에서 생긴다는 점도 흥미롭다. 다만 수리가 몇 주씩 밀리는 건 대개 부품 때문이라는 설명도 있다. 유압 실린더 교체품을 만드는 데에만 6~12주가 걸린다고 한다.
+
+영국에서도 사정은 비슷하다. 영국 업계 인사는 상황이 나쁘고 더 나빠지고 있다고 말했고, 업계 단체는 영국에 현재 승강기·에스컬레이터 견습생이 259명 있다고 밝혔다.
+
+건물을 관리하는 친구, 고층 아파트에 사는 친구에게 보내 보자.
+
+출처: BBC News</textarea>
+          <label class="f" for="t-98f829cd2d59">해시태그</label>
+          <input id="t-98f829cd2d59" type="text" class="tagsin" value="#엘리베이터 #해외이슈 #직업 #인력난 #정비사" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>미국 승강기 정비사 부족 문제는 널리 알려져 있고 다른 여러 나라에서도 문제이며 시간이 지나며 더 심해졌다</b>
+            <q>“The widely reported shortage of lift and escalator mechanics in the US, which is also a problem in many other countries, has got worse over time, he adds”</q>
+            <small>slide1, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>미국 엘리베이터 정비사의 평균 연봉은 11만 달러(약 8만 3천 파운드)이고, 업계 사람들은 새 인력 유치가 어렵다고 말한다</b>
+            <q>“In the US, the average salary for a lift mechanic, external is $110,000 (£83,000). And yet people in the industry say it is difficult to attract new workers.”</q>
+            <small>slide2, summary, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전미엘리베이터계약자협회 회장 매트 홀린스헤드가 좋은 정비사 찾기가 더 어려워지고 있다고 말했다</b>
+            <q>“Finding good lift technicians is &#34;becoming more difficult&#34; says Matt Hollinshead, president of the US National Association for Elevator Contractors.”</q>
+            <small>slide3, slide5 · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>4년짜리 견습 과정이 첫 번째 관문이다</b>
+            <q>“&#34;We have a four-year apprenticeship,&#34; he says. That&#39;s the first hurdle.”</q>
+            <small>slide3, summary, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>여러 주에서 승강기 작업 전에 자격증이나 면허를 요구한다</b>
+            <q>“And many states require certification or licensing before you can work on lifts.”</q>
+            <small>slide3, summary, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>렘베시스는 시카고에서 47년 넘게 승강기를 수리하고 개선해 왔다</b>
+            <q>“When a lift stops working in Chicago, frazzled building managers might get a visit from Jim Lembesis. For more than 47 years, Lembesis has repaired and upgraded lifts.”</q>
+            <small>slide4, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>렘베시스는 처음 일을 시작할 때와 비교하면 상황이 완전히 달라졌다고 말한다</b>
+            <q>“It&#39;s been like night and day compared to when I started.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>렘베시스는 열 번 중 아홉은 문이 문제라고 말한다</b>
+            <q>“Nine times out of 10, the problem is with the doors, says Lembesis. These components repeatedly move back and forth.”</q>
+            <small>slide4, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>문에는 카트가 부딪히고 먼지와 이물질이 들어가 가장 크게 시달린다</b>
+            <q>“&#34;People hit them with carts, and dirt and debris [falls into them],&#34; says Lembesis. &#34;[The doors] take the most beating.&#34;”</q>
+            <small>slide4 · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>수리가 몇 주, 몇 달 지연되는 건 대개 인력 부족이 아니라 특정 부품을 구하기 어려워서일 가능성이 높다고 홀린스헤드가 말한다</b>
+            <q>“Hollinshead says that weeks or months-long delays to lift repairs are not typically due to staff shortages but that, in such cases, it&#39;s likely that a particular part isn&#39;t readily available.”</q>
+            <small>slide5, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>유압 실린더 교체품을 만드는 데 6~12주가 걸린다</b>
+            <q>“Manufacturing a replacement hydraulic cylinder takes six to 12 weeks, he notes.”</q>
+            <small>slide5, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>데이브 쿠퍼는 영국 건물설비 엔지니어 협회 회장이며 영국의 상황이 나쁘고 더 나빠지고 있다고 말했다</b>
+            <q>“&#34;It is bad and getting worse,&#34; says Dave Cooper, president of the Chartered Institution of Building Services Engineers, who is also chief executive of a lift and escalator engineering consultancy.”</q>
+            <small>slide6, caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>엘리베이터가 멈췄다는 이유로 1층 위 집 배달을 거절한 음식 배달 업체도 있었다</b>
+            <q>“&#34;We&#39;ve known food delivery companies to refuse to deliver to flats above the ground floor because the lift is out of service.&#34;”</q>
+            <small>slide6, summary · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영국에는 현재 활동 중인 승강기·에스컬레이터 견습생이 259명 있다</b>
+            <q>“There are currently 259 active lift and escalator apprentices in the UK, the body adds.”</q>
+            <small>caption · <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">Why there&#39;s a shortage of lift and escalator mechanics</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">BBC / </a> — "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/8c0e/live/0c8a5940-e7e0-11f1-99a1-253766e7ad8b.jpg"</li><li>2장: <a href="https://pixabay.com/photos/puzzle-money-business-finance-2500328/" target="_blank" rel="noopener">qimono / Pixabay</a> — "dollar bills"</li><li>3장: <a href="https://pixabay.com/photos/confused-muddled-illogical-880735/" target="_blank" rel="noopener">stevepb / Pixabay</a> — "workshop tools"</li><li>4장: <a href="https://www.bbc.co.uk/news/articles/c52e8k19y94mo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">BBC / </a> — "https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/4787/live/70194d90-e8e4-11f1-a094-5fdc692f3e33.jpg"</li><li>5장: <a href="https://pixabay.com/photos/macro-cogwheel-gear-engine-vintage-1452987/" target="_blank" rel="noopener">Pavlofox / Pixabay</a> — "machine parts"</li><li>6장: <a href="https://pixabay.com/photos/apartments-architecture-balconies-1845884/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "apartment building"</li><li>7장: <a href="https://pixabay.com/photos/tianjin-sunset-city-aerial-view-2185510/" target="_blank" rel="noopener">asmuSe / Pixabay</a> — "high rise"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b91439dd810e" data-id="b91439dd810e">
+    <div class="head">
+      <h2>3. 37년 추수감사절 음식 나눈 글로리아, 마을이 새 차 선물</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-01.jpg" alt="1장: 37년 밥 짓더니 새 차가???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-02.jpg" alt="2장: 1988년의 작은 마음 하나" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-03.jpg" alt="3장: 식사만 나눈 게 아니었어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-04.jpg" alt="4장: 7월 29일, 트럭이 망가졌다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-05.jpg" alt="5장: 목표 1만 5천 달러, 결과는 2만 7천" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-06.jpg" alt="6장: 한 푼 한 푼이 다 사랑이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-07.jpg" alt="7장: 따뜻한 소식 필요한 친구에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/b91439dd810e/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">37년 동안 추수감사절 음식을 나눠온 여성에게 마을이 새 차를 선물했다는 소식입니다.
+
+주인공은 미국 텍사스의 글로리아 케너드입니다. 1988년 대학에서 일하던 시절 누군가를 도와야겠다는 생각으로 시작한 추수감사절 식사가 지금은 해마다 2,000명이 넘는 사람을 먹이는 행사로 자랐습니다. 새해 첫날에도 비슷한 식사를 준비하고, 지난 16년간 매주 푸드 팬트리에서 자원봉사를 해 왔다고 합니다.
+
+그런데 7월 29일, 성경 공부와 합창 연습에 가던 길에 다른 차가 케너드의 트럭을 들이받아 차가 완전히 망가졌습니다. 보험금만으로는 대체할 차를 사기 어려워 친구들에게 이동을 기대야 했습니다. 이 소식을 들은 브리지 미니스트리스가 1만 5천 달러를 목표로 고펀드미 모금을 열었습니다.
+
+반응은 뜨거웠습니다. 10월까지 후원자 174명이 1만 7,700달러 넘게 모았고, 지역 업체 켄트 무어 캐비닛이 1만 달러를 더해 총액은 2만 7천 달러를 넘었습니다. 10월 30일 금요일, 친구들과 지지자들이 케너드의 집에 모여 새 기아 차를 깜짝 선물했습니다. 케너드는 집 앞에서 감사 인사를 전했습니다.
+
+출처: Good News Network</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#미담 #추수감사절 #해외뉴스 #훈훈한소식 #기부</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 엠마 브리지스의 직책(개발·아웃리치 코디네이터)에 대한 주장</li><li>근거 등록 안 된 주장: 출처가 Good News Network라는 주장</li><li>근거 등록 안 된 주장: 케너드가 해마다 2,000명 넘는 식사를 직접 요리한다는 주장의 세부 표현(cooks for 2,000 people)</li>
+          <li>종교적 표현(신앙 동기)이 원문에 포함되어 있어 카드에서는 최소화함</li><li>원문 발행일이 2026-11-26인데 사건 날짜는 10월 30일로 기재되어 있어 시점 확인 필요</li><li>실제 인물 사진·기사 사진 사용 금지</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b91439dd810e-0">1장</label>
+          <textarea id="s-b91439dd810e-0" rows="6" data-slide="0">37년 밥 짓더니
+**새 차**가???
+---
+미국 텍사스에서 37년간 추수감사절 음식을 나눠온 여성에게 마을 사람들이 모금해 새 차를 선물했다.</textarea>
+          
+          <label class="f" for="s-b91439dd810e-1">2장</label>
+          <textarea id="s-b91439dd810e-1" rows="6" data-slide="1">1988년의
+작은 마음 하나
+---
+글로리아 케너드는 1988년 텍사스 A&amp;M 대학에서 일하던 시절 누군가를 도와야겠다고 마음먹었다. 그렇게 시작한 추수감사절 식사는 지금 2,000명이 넘는 사람을 먹이는 행사가 됐다.</textarea>
+          
+          <label class="f" for="s-b91439dd810e-2">3장</label>
+          <textarea id="s-b91439dd810e-2" rows="6" data-slide="2">식사만 나눈 게
+아니었어
+---
+케너드는 새해 첫날에도 비슷한 식사를 준비한다. 지난 16년 동안은 매주 브리지 미니스트리스 푸드 팬트리에서 자원봉사도 해 왔다.</textarea>
+          
+          <label class="f" for="s-b91439dd810e-3">4장</label>
+          <textarea id="s-b91439dd810e-3" rows="6" data-slide="3">**7월 29일**,
+트럭이 망가졌다
+---
+성경 공부와 합창 연습에 가던 길에 다른 차가 그의 트럭을 들이받아 차가 완전히 망가졌다. 보험금으로는 새 차를 사기에 모자라 친구들에게 이동을 기대야 했다.</textarea>
+          
+          <label class="f" for="s-b91439dd810e-4">5장</label>
+          <textarea id="s-b91439dd810e-4" rows="6" data-slide="4">목표 1만 5천 달러,
+결과는 **2만 7천**
+---
+브리지 미니스트리스가 고펀드미 모금을 열었다. 10월까지 후원자 174명이 1만 7,700달러 넘게 보탰고, 지역 업체의 1만 달러 기부로 총액은 2만 7천 달러를 넘었다.</textarea>
+          
+          <label class="f" for="s-b91439dd810e-5">6장</label>
+          <textarea id="s-b91439dd810e-5" rows="6" data-slide="5">한 푼 한 푼이
+다 사랑이래
+---
+담당자 엠마 브리지스는 모인 돈 한 푼이 글로리아가 마음을 쓴 삶 하나하나를 뜻한다고 말했다. 40년 넘게 알아 온 사람들의 댓글도 모금 페이지에 남았다고 한다.</textarea>
+          
+          <label class="f" for="s-b91439dd810e-6">7장</label>
+          <textarea id="s-b91439dd810e-6" rows="6" data-slide="6">따뜻한 소식 필요한
+친구에게 보내기
+---
+37년간 나눈 마음이 마을의 선물로 돌아온 이야기라, 요즘 훈훈한 소식이 그리운 친구에게 보내기 좋은 소식</textarea>
+          
+          <label class="f" for="c-b91439dd810e">본문 (캡션)</label>
+          <textarea id="c-b91439dd810e" class="caption">37년 동안 추수감사절 음식을 나눠온 여성에게 마을이 새 차를 선물했다는 소식입니다.
+
+주인공은 미국 텍사스의 글로리아 케너드입니다. 1988년 대학에서 일하던 시절 누군가를 도와야겠다는 생각으로 시작한 추수감사절 식사가 지금은 해마다 2,000명이 넘는 사람을 먹이는 행사로 자랐습니다. 새해 첫날에도 비슷한 식사를 준비하고, 지난 16년간 매주 푸드 팬트리에서 자원봉사를 해 왔다고 합니다.
+
+그런데 7월 29일, 성경 공부와 합창 연습에 가던 길에 다른 차가 케너드의 트럭을 들이받아 차가 완전히 망가졌습니다. 보험금만으로는 대체할 차를 사기 어려워 친구들에게 이동을 기대야 했습니다. 이 소식을 들은 브리지 미니스트리스가 1만 5천 달러를 목표로 고펀드미 모금을 열었습니다.
+
+반응은 뜨거웠습니다. 10월까지 후원자 174명이 1만 7,700달러 넘게 모았고, 지역 업체 켄트 무어 캐비닛이 1만 달러를 더해 총액은 2만 7천 달러를 넘었습니다. 10월 30일 금요일, 친구들과 지지자들이 케너드의 집에 모여 새 기아 차를 깜짝 선물했습니다. 케너드는 집 앞에서 감사 인사를 전했습니다.
+
+출처: Good News Network</textarea>
+          <label class="f" for="t-b91439dd810e">해시태그</label>
+          <input id="t-b91439dd810e" type="text" class="tagsin" value="#미담 #추수감사절 #해외뉴스 #훈훈한소식 #기부" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>케너드는 37년 동안 추수감사절 식사를 나눠 왔고, 마을이 이에 보답하려 했다</b>
+            <q>“After 37 years of eating Gloria Kennard’s Thanksgiving dinners, a Texas community was hungry to return the kindness.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>마을이 2만 7천 달러 넘게 모금해 새 차를 사 주려 했다</b>
+            <q>“The devout woman cooks for 2,000 people every year, but as she prepared for this year’s Turkey Day, the town was busy raising over $27,000 to buy “Miss Gloria” a new car.”</q>
+            <small>slide1, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1988년 작은 시작이 2,000명 넘게 먹이는 연례 행사로 자랐다</b>
+            <q>“What began as a small gesture by Kennard in 1988 has grown into an annual tradition that now feeds more than 2,000 people.”</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>케너드는 텍사스 A&amp;M 대학에서 일하던 시절 누군가를 도와야겠다고 생각해 추수감사절 식사를 시작했다</b>
+            <q>““I was working at Texas A&amp;M University, and I was just sitting on my rump doing nothing,” Kennard recalled. “And God built to me, you need to help someone. And I come up with the Thanksgiving meal. Been doing it ever since.””</q>
+            <small>slide2, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새해 첫날 식사와 지난 16년간 매주 푸드 팬트리 자원봉사를 한다</b>
+            <q>“She pairs this immense cooking effort with a similar New Year’s Day meal and weekly volunteer shifts at The Bridge Ministries food pantry for the past 16 years.”</q>
+            <small>slide3, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>7월 29일 성경 공부와 합창 연습에 가다 다른 차가 트럭을 들이받아 완전히 망가졌다</b>
+            <q>“On July 29th, while driving to Bible study and choir rehearsal, another vehicle collided with her truck, totaling it.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>보험금이 부족해 친구들에게 이동을 의존해야 했다</b>
+            <q>“Kennard’s insurance payout wasn’t enough to cover a replacement, leaving her reliant on friends for rides.”</q>
+            <small>slide4, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>브리지 미니스트리스가 1만 5천 달러 목표로 고펀드미를 열었다</b>
+            <q>“The Bridge Ministries stepped in, launching a GoFundMe with a $15,000 goal—enough, they hoped, for a vehicle that was both safe and reliable.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월까지 후원자 174명이 1만 7,700달러 넘게 냈고 업체 기부로 2만 7천 달러를 넘었다</b>
+            <q>“By October, 174 donors had contributed more than $17,700, and local business Kent Moore Cabinets added a $10,000 donation, pushing the total above $27,000.”</q>
+            <small>slide5, caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>브리지스는 모인 돈 한 푼이 글로리아가 마음을 쓴 삶을 뜻한다고 말했고 40년 넘게 알아 온 사람들의 댓글이 있다고 했다</b>
+            <q>““I think every dollar represents a life that Miss Gloria has touched. So many people love her,” Bridges said. “On GoFundMe, you can see the comments of people who have known her for over 40 years.””</q>
+            <small>slide6 · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>10월 30일 금요일 친구들과 지지자들이 케너드의 집에서 새 기아 차로 깜짝 선물을 했다</b>
+            <q>“Friends and supporters gathered at Kennard’s home on Friday, Oct. 30th to surprise her with the new Kia, just weeks before another Thanksgiving feast.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>케너드가 집 앞에서 지역 뉴스에 감사 인사를 전했다</b>
+            <q>““Thank you so very much, community. And God bless you,” Kennard told local news from her driveway, eyes a-glitter standing next to a 2027 Kia Seltos SUV.”</q>
+            <small>caption · <a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.goodnewsnetwork.org/town-rewards-a-woman-whose-thanksgiving-meal-feeds-thousands-with-a-new-car/" target="_blank" rel="noopener">Town Rewards a Woman Whose Thanksgiving Meal Feeds Thousands with a New Car</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://unheardvoicesmag.com/2026/11/09/gloria-kennard-new-car-community-raises-27000/" target="_blank" rel="noopener">Unheard Voices Magazine / </a> — "https://unheardvoicesmag.com/wp-content/uploads/2026/11/Gloria-Kennard-new-car.webp"</li><li>2장: <a href="https://pixabay.com/photos/kitchen-home-interior-modern-room-2165756/" target="_blank" rel="noopener">ClickerHappy / Pixabay</a> — "home kitchen"</li><li>3장: <a href="https://pixabay.com/photos/jam-fruit-jars-fruit-jams-428094/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "food pantry"</li><li>4장: <a href="https://pixabay.com/photos/accident-driver-escape-police-1497298/" target="_blank" rel="noopener">Alexas_Fotos / Pixabay</a> — "car accident"</li><li>5장: <a href="https://pixabay.com/photos/donation-donate-ukraine-symbol-7647719/" target="_blank" rel="noopener">Alexandra_Koch / Pixabay</a> — "donation jar"</li><li>6장: <a href="https://pixabay.com/photos/people-joy-smile-holiday-friends-2295052/" target="_blank" rel="noopener">StarFlames / Pixabay</a> — "friends gathering"</li><li>7장: <a href="https://pixabay.com/photos/tulip-bouquet-pink-tulips-3189210/" target="_blank" rel="noopener">adonyig / Pixabay</a> — "gift car key"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-4a2c96269fe4">
+    <div class="head">
+      <h2>S1. AI 안 쓰면 눈치 보이는 직장인 48%</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 8
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-4a2c96269fe4">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 직장생활</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;AI 쓰는 걸 들킬까 봐&#39;가 아니라 &#39;안 쓴다고 평가받을까 봐&#39; 걱정하는 쪽으로 뒤집힌 직장 분위기와 &#39;쓰는 척&#39;이라는 새 현상</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">94/500자</span></div>
+      <p class="tp-text">회사에서 AI 쓰면 눈치 보인다? 이제 반대래
+안 써서 평가받을까 걱정하는 직장인이 48%, 써서 걱정하는 사람은 20%
+근데 이 눈치 때문에 생긴 이상한 일이 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">107/500자</span></div>
+      <p class="tp-text">1/ 직장인 48%가 &#39;AI를 충분히 안 쓴다고 평가받을까&#39; 걱정한대. 반대로 &#39;쓴다고 평가받을까&#39; 걱정하는 사람은 20%. AI가 막 들어왔을 땐 정반대였다는데, 지금은 실제로 얼마나 쓸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">73/500자</span></div>
+      <p class="tp-text">2/ 지금 직장에서 AI 쓰는 사람은 74%. 2024년엔 29%였대. 근데 이 쓰라는 압박이 이상한 일거리를 만들었다는데, 뭘까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">3/ AI를 안 쓰면서 쓰는 척하는 직장인이 생겼대. 기사는 이걸 새로운 잡일이라고 표현함. 별도 조사(소프트웨어 회사 Visier)에선 거의 절반(48%)이 동료나 상사에게 AI 사용이나 전문성을 부풀린 적 있다고 답함. 그럼 AI에 쓰는 돈은 얼마나 커졌을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">4/ AI에 쓰는 돈은 올해 2조 5,900억 달러로 전망, 2025년보다 47% 늘어난대. 기사는 AI 도입이 이제 개인 선택이 아니라 직장 분위기와 기대치를 바꾸는 중이라고 봄. 근데 이 조사, 누가 몇 명한테 물어본 걸까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">184/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 안 써서 평가받을까 걱정 48% vs 써서 걱정 20%
+- 직장 AI 사용 2024년 29% → 74%
+- AI 사용·전문성 부풀린 적 있음 48% (Visier 별도 조사)
+- 조사: LSE·Protiviti 보고서, 전문직 3,001명, 2026년 3~5월
+- 기사 결론: 직원 AI 도입 지원은 아직 숙제</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">234/500자</span></div>
+      <p class="tp-text">6/ 결국 기사가 짚은 건, AI 쓰라는 압박이 커지면서 안 쓴다고 눈치 보거나 쓰는 척까지 하는 일이 생겼는데 회사의 직원 지원은 아직 숙제라는 거
+AI 안 쓰는 동료 vs 쓰는 척하는 동료, 더 이해되는 쪽은?
+이런 해외 직장 트렌드 조사, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: Visier가 소프트웨어 회사라는 사실</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>회사에서 AI 쓰면 눈치 보인다? 이제 반대래</li><li>AI 쓴다고 눈치 보던 시대가 아니라 &#39;안 쓴다고&#39; 눈치 보는 시대래</li><li>직장인 48%가 &#39;AI 안 쓴다고 평가받을까 봐&#39; 걱정한대</li><li>회사에서 AI 쓰는 사람이 29%에서 74%로, 2년 만에 이렇게 바뀜</li><li>회사에서 AI 쓰는 척하는 사람, 생각보다 많대</li><li>&#39;AI 쓰는 척&#39;이 새로운 잡일이 됐다는 말까지 나옴</li><li>직장인 절반 가까이가 AI 사용을 부풀린 적 있다고 답한 조사가 나옴</li><li>AI 안 쓰면 눈치 보이는 직장, 조사로 숫자가 나옴</li><li>전자레인지 생선 눈치보다 무서운 새 직장 공포가 생겼대</li><li>AI를 &#39;쓴다&#39;보다 &#39;안 쓴다&#39;가 더 눈치 보이는 회사, 숫자는 어느 정도일까?</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>AI 안 쓰는 동료 vs 쓰는 척하는 동료, 더 이해되는 쪽은?</li><li>회사에서 AI 쓰는 거, 티 내는 편이야 조용히 쓰는 편이야?</li><li>AI 안 쓰고도 일 잘하는 사람, 본 적 있어?</li><li>상사가 AI 썼냐고 물으면 너라면 솔직히 말할 거야?</li><li>회사의 AI 도입, 환영파 vs 부담파 중 어디야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>직장인 AI 도입 압박, 회사들은 직원 지원을 어떻게 하고 있을까</li><li>AI 쓰는 척하는 직장인이 늘어나는 이유</li><li>엘리베이터 정비사 부족, 연봉 11만 달러에도 사람이 없다</li><li>일본 서점 마루젠 준쿠도 50주년 서점 1박 행사</li><li>37년 추수감사절 음식 나눈 글로리아, 마을이 새 차 선물</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>Visier 조사의 표본·시기·방법이 원문에 없어 &#39;거의 절반&#39;을 직장인 전체로 일반화하지 않았는지 확인 필요</li><li>&#39;2조 5,900억 달러&#39; 환산이 원문 $2.59 trillion과 일치하는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI 안 쓴다고 평가받을까 걱정하는 사람이 48%, 쓴다고 평가받을까 걱정하는 사람이 20%</b>
+          <q>“Now the opposite is true: 48% worry about being judged for not using AI enough, compared with 20% who worry about being judged for using it.”</q>
+          <small>post0 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI가 처음 직장에 들어왔을 땐 쓰는 것에 대한 평가를 더 걱정했고 지금은 반대</b>
+          <q>“When AI first entered workplaces, more workers feared judgment or being caught out for using the technology.”</q>
+          <small>post1 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>직장에서 AI 쓰는 사람이 74%이고 2024년엔 29%였다</b>
+          <q>“Almost three quarters of those surveyed (74%) now use AI at work, up from 29% in 2024.”</q>
+          <small>post2 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI 도입 압박이 쓰는 척하는 새로운 잡일을 만들었다</b>
+          <q>“But the pressure to adopt AI in workflows has birthed a new kind of busywork—workers are pretending to use AI even when they aren&#39;t.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Visier 별도 조사에서 거의 절반(48%)이 AI 사용이나 전문성을 동료·상사에게 부풀렸다고 답했다</b>
+          <q>“A separate report by software firm Visier found nearly half of workers (48%) said they have “exaggerated their AI usage or expertise to colleagues or leadership” to keep up with expectations.”</q>
+          <small>post3 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AI 지출은 올해 2.59조 달러로 전망되며 2025년보다 47% 늘고, AI 도입은 개인 선택이 아니라 직장 규범과 기대를 바꾸고 있다</b>
+          <q>“With AI spending forecast to grow to $2.59 trillion this year—up 47% from 2025—the AI transition is no longer a personal choice, but is transforming workplace norms and expectations.”</q>
+          <small>post4 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>LSE와 Protiviti의 3번째 연례 보고서가 2026년 3~5월 전문직 3,001명을 조사했다</b>
+          <q>“That’s according to the third annual Inclusion Initiative report from London School of Economics (LSE) and consulting firm Protiviti, which surveyed 3,001 professional employees between March and May 2026.”</q>
+          <small>post5 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조직이 AI 도입 직원 지원 면에서 아직 해야 할 일이 남아 있다</b>
+          <q>“While organizations understand the importance of equipping their workforces with AI tools, there is still work to be done when it comes to supporting employees with AI adoption.”</q>
+          <small>post5, post6 · <a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="4a2c96269fe4">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.fastcompany.com/91648591/some-people-dont-use-ai-at-work-and-feel-judged-for-it?partner=rss&amp;utm_source=rss&amp;utm_medium=feed&amp;utm_campaign=rss+fastcompany&amp;utm_content=rss" target="_blank" rel="noopener">Some people don’t use AI at work—and feel judged for it</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-5e3f8f205f78">
+    <div class="head">
+      <h2>S2. 캐나다 의료진이 미술관 방문을 처방하는 밴쿠버 프로그램</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-5e3f8f205f78">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;쉬는 것도 숙제처럼 하는&#39; 사람들에게 의료진이 미술관 입장권을 처방하는 낯선 장면과 &#39;천천히 보기&#39;라는 방식을 보여주되, 효과는 단정하지 않고 &#39;이런 시도가 있다&#39;로 전한다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">77/500자</span></div>
+      <p class="tp-text">쉬는 것도 숙제처럼 하게 되는 사람, 캐나다에선 의료진이 미술관을 처방해준대
+근데 그냥 그림 구경하는 게 아니었음. 방식이 좀 특이했음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">124/500자</span></div>
+      <p class="tp-text">1/ 처방받으면 본인이랑 동행 한 명이 밴쿠버 미술관에 무료로 들어갈 수 있대.
+2025년에 캐나다 자연처방 프로그램 PaRx가 이 미술관까지 넓어진 거야. 보통 PaRx는 야외에서 시간 보내라는 처방인데, 왜 미술관일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">114/500자</span></div>
+      <p class="tp-text">2/ 미술관에는 자연에서 영감을 받은 작품이 있어서, 미술을 자연으로 들어가는 입구로 쓴 거래.
+갤러리 공동대표 말로는 자연처방 프로그램과 미술기관의 협업은 세계 최초라고 함. 그럼 가서 뭘 하라는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">182/500자</span></div>
+      <p class="tp-text">3/ 처방 요약 정리
+- 발급: 의사·간호사·치료사 같은 의료 제공자
+- 혜택: 본인+동행 1명 무료 입장, 안내 가이드
+- 방식: &#39;천천히 보기&#39;, 상상하기, 몸 움직이기
+- 방문 후: 근처 자연 공간 추천, 필요하면 카셰어 무료 이용 시간
+- 처방전만 갖고 있으면 계속 재방문 가능
+그럼 직접 처방하는 사람은 뭐라고 할까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">4/ 이 처방을 직접 내리는 심리학자 칼라 프라이는 자기 처방을 거절한 사람은 아직 없었다고 해.
+사람들은 &#39;천천히 보는 게 개입이라고?&#39; 하고 놀라다가, &#39;계속 갈아 넣지 않고 내 삶을 그냥 감상해도 되네&#39; 하는 대화로 이어진대. 그럼 이 처방이 노린 건 뭘까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">157/500자</span></div>
+      <p class="tp-text">5/ 목표는 스트레스, 불안, 사회적 고립을 줄이는 거래.
+이런 활동 처방을 &#39;사회적 처방&#39;이라고 하는데, 약 처방을 보완하는 방식이고 음악 수업·운동·가드닝도 포함됨.
+다만 이 미술관 처방의 효과를 검증한 결과는 기사에 안 나와서, 지금은 &#39;이런 시도가 있다&#39;까지만 확인된 거야.</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">201/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄. 프라이 말처럼 더 나아지려고 계속 갈아 넣기보다, 천천히 보고 감상하는 것도 하나의 방법이라는 거.
+쉬는 날엔 미술관파 vs 산책파, 너는 어디야?
+이런 해외 웰빙·생활 소식 계속 배달함. 팔로우해두면 피드에 뜸.
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 미술관 처방의 효과를 검증한 결과는 기사에 나오지 않아 &#39;이런 시도가 있다&#39;까지만 확인된다는 주장</li><li>근거 등록 안 된 주장: 미술을 자연으로 들어가는 입구로 쓴다는 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>쉬는 것도 숙제처럼 하게 되는 사람, 캐나다에선 의료진이 미술관을 처방해준대</li><li>쉬는 것도 &#39;버티기&#39;가 아니라 &#39;천천히 보기&#39;부터라는 처방이 캐나다에서 나옴</li><li>더 나아지려고 계속 애쓰지 말고, 그림 앞에서 천천히 보라는 처방이 있대</li><li>병원에서 &#39;미술관 다녀오세요&#39; 하고 처방전을 써준대. 진짜로</li><li>&#39;성장은 힘들고 비싸야 한다&#39;는 생각, 이 심리학자는 좀 다르게 봄</li><li>미술관 입장권이 처방전이 되면 생기는 일</li><li>해외엔 의료진이 미술관 무료 입장을 처방해주는 데가 있대</li><li>한 심리학자가 낸 미술관 처방은 아직 거절한 사람이 없대</li><li>주말에 쉰다고 누워만 있었다면, 캐나다 의료진은 다른 걸 처방함</li><li>세계 최초라는 &#39;미술관 처방&#39;, 받으면 나 말고 한 명 더 무료</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>쉬는 날엔 미술관파 vs 산책파, 너는 어디야?</li><li>의료진이 미술관 입장권 처방해주면 갈 거야, 말 거야?</li><li>미술관에서 그림 하나 앞에 5분 넘게 서 있어 본 사람?</li><li>미술관은 혼자파 vs 같이파?</li><li>쉴 때 천천히 걷기 vs 그냥 누워있기, 어느 쪽이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>2편: 사회적 처방, 영국에선 어떻게 하는지 (내일 새벽 배달)</li><li>&#39;천천히 보기&#39; 가이드북에 나온 질문들 얘기</li><li>일본 서점 마루젠 준쿠도 50주년 서점 1박 행사</li><li>엘리베이터 정비사 부족, 연봉 11만 달러에도 사람이 없다</li><li>37년 추수감사절 음식 나눈 글로리아, 마을이 새 차 선물</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>미술관 처방의 효과를 뒷받침하는 연구 근거가 원문에 없음. 글에서는 목표와 시도로만 전했으니 효과를 단정하는 문구가 추가되지 않았는지 확인</li><li>&#39;세계 최초&#39;는 갤러리 공동대표의 주장이고, &#39;거절한 사람 없음&#39;은 심리학자 한 명의 경험임. 출처가 드러나게 쓴 표현을 유지할 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처방을 받아 미술관에서 작품을 보는 사람들이 있다</b>
+          <q>“But in this case, the view isn’t from the trail. It is a painting by Canadian artist Emily Carr on display in the Vancouver Art Gallery, and some of those who are experiencing it are doing so because it was prescribed by their health care provider.”</q>
+          <small>post0 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처방 시 본인과 동행 1명이 무료 입장하고 안내 가이드를 받는다</b>
+          <q>“The prescription to Vancouver Art Gallery includes free admission for the prescription holder and a guest, as well as a printed guide that offers prompts and questions to consider—for example, to notice the varied shades of green Carr used, or imagine a walk along a trail she painted—along with research about the benefits of experiencing nature.”</q>
+          <small>post1 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2025년 갤러리가 BC Parks Foundation과 협력해 PaRx를 갤러리까지 확장했다</b>
+          <q>“In 2025, the gallery partnered with BC Parks Foundation to extend PaRx, Canada’s national nature prescription program, to include the gallery.”</q>
+          <small>post1 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>PaRx 처방은 보통 야외에서 시간을 보내는 처방이다</b>
+          <q>“Typically, these prescriptions are for time outdoors, with added benefits, like free transportation, to reduce barriers to access.”</q>
+          <small>post1 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자연 영감을 받은 미술 작품을 통해 자연 시간을 처방하며, 의사·간호사·치료사 등이 처방한다</b>
+          <q>“The process starts when a health care provider like a doctor, nurse, or therapist determines that a patient might benefit from a prescription to spend time in nature, including around the nature-inspired visual art at the gallery.”</q>
+          <small>post2 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>갤러리 공동대표에 따르면 자연처방 프로그램과 예술기관의 협업은 세계 최초다</b>
+          <q>“Using art as an entry point into nature as a formal intervention is novel—the first collaboration of its kind between a nature prescription program and an arts institution in the world, according to Sirish Rao, the gallery’s co-CEO and executive director.”</q>
+          <small>post2 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 천천히 보기, 상상 연습, 몸 움직임으로 안내된다</b>
+          <q>“Participants are guided through “slow looking” as the act of learning through observation, imagination exercises, and physical movement—yes, swaying in an art gallery is encouraged.”</q>
+          <small>post3 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>방문 후 근처 자연 공간을 이어가도록 권하고 필요하면 무료 카셰어 시간을 제공한다</b>
+          <q>“After the visit, guests are invited to continue the immersion at a local nature space, with free carshare minutes to get there if needed.”</q>
+          <small>post3 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>처방전을 갖고 있으면 원하는 만큼 갤러리에 다시 올 수 있다</b>
+          <q>“And they can return to the gallery as often as they like by retaining their original prescription.”</q>
+          <small>post3 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>칼라 프라이는 웨스트밴쿠버의 심리학자이고 이 처방을 내리는 전문가 중 한 명이다</b>
+          <q>“Carla Fry is a West Vancouver psychologist and educator with more than 20 years of clinical experience.”</q>
+          <small>post4 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>프라이는 자신의 처방을 거절한 사람이 아직 없었다고 말한다</b>
+          <q>“As yet, no one has declined her prescription.”</q>
+          <small>post4 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>프라이에 따르면 사람들은 천천히 보고 느끼는 것이 개입이라는 점에 놀란다</b>
+          <q>““They’re surprised that something so seemingly simplistic as slowing down and really looking, really living in front of the art or in nature is actually an intervention,” Fry says.”</q>
+          <small>post4 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>그 놀람이 &#39;내 삶을 그냥 감상해도 된다&#39;는 대화로 이어진다</b>
+          <q>“It opens up an entire conversation—‘I can just appreciate my life and not always be grinding to make it better.’”</q>
+          <small>post4 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 처방은 스트레스, 불안, 사회적 고립을 줄이도록 설계되었다</b>
+          <q>“The formal prescription to nature through art is designed to reduce stress, anxiety, and social isolation.”</q>
+          <small>post5 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사회적 처방은 임상 치료와 약 처방을 보완하는 세계적 움직임이다</b>
+          <q>“This is an example of social prescribing, a worldwide movement that serves as a complement to clinical care and typical medication prescriptions by prescribing from a wide range of activities that support physical and mental health.”</q>
+          <small>post5 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사회적 처방에는 음악 수업, 운동, 가드닝 프로그램도 포함될 수 있다</b>
+          <q>“Beyond art galleries and nature walks, this can include music classes, exercise sessions, or gardening programs.”</q>
+          <small>post5 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>프라이는 계속 애쓰지 않고 삶을 감상하는 것도 방법이라는 대화로 이어진다고 전한다</b>
+          <q>“It opens up an entire conversation—‘I can just appreciate my life and not always be grinding to make it better.’”</q>
+          <small>post6 · <a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="5e3f8f205f78">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://greatergood.berkeley.edu/article/item/when_your_doctor_prescribes_a_visit_to_an_art_gallery" target="_blank" rel="noopener">When Your Doctor Prescribes a Visit to an Art Gallery</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-63498919afe0">
+    <div class="head">
+      <h2>S3. 멀티태스킹 남녀 차이, 실력 아닌 대화 응답 차이</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 12
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-63498919afe0">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;여자가 멀티태스킹 더 잘한다&#39;는 흔한 통념이 실력 차이가 아니라 &#39;대화 질문에 답하느냐&#39;의 차이에서 생겼을 수 있다는 반전</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">&#39;여자가 멀티태스킹 더 잘한다&#39;는 말, 실력 차이가 아닐 수도 있대
+주방에서 요리하고 전화번호 찾게 하면서 대화 질문까지 던진 실험이 있었는데
+갈린 건 딱 하나였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">1/ 네 가지 활동은 남녀 결과가 비슷했는데 대화 질문만 달랐대. 남자는 질문에 답을 안 하고 넘어간 경우가 여자의 두 배 넘게 많았다고. 근데 답을 한 경우엔 어땠을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">2/ 답을 한 경우엔 속도도, 답변의 질도 여자랑 비슷했대. 답을 하면 똑같이 했다는 얘기. 그럼 옆에서 이걸 지켜본 사람들은 남자를 어떻게 평가했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">3/ 실험 영상을 본 관찰자 160명은 남자가 통제력이 낮고, 성과가 나쁘고, 노력도 덜 하고, 덜 기민하다고 평가했대. 덜 행복하고 덜 즐기는 걸로도 봤고. 그럼 연구진은 이 통념이 어디서 왔다고 봤을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">148/500자</span></div>
+      <p class="tp-text">4/ 연구진 해석은 대화 참여가 남들 눈에 잘 띄어서, 다른 일 성적이 비슷해도 남자가 멀티태스킹을 못하는 인상이 생길 수 있다는 거. 다만 여자가 대화에 더 적극적이라는 설명은 이번 연구가 직접 확인한 건 아니라 조심해서 봐야 한대. 실험 전체는 아래에 정리함 ↓</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">194/500자</span></div>
+      <p class="tp-text">5/ 실험 요약 정리
+- 참가자: 남성 41명, 여성 37명
+- 동시에 한 일: 레시피 따라 하기, 전화번호 찾기, 숫자·글자 맞추기, 슬라이드에서 단어 찾기, 대화 질문 답하기
+- 대화 질문은 20초마다 하나씩
+- 다섯 가지 중 네 가지는 결과 비슷
+- 대화 질문은 남성이 답 안 한 비율이 두 배 넘음
+- 관찰자 160명은 남성을 더 낮게 평가</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">217/500자</span></div>
+      <p class="tp-text">6/ 결국 연구진 말은 멀티태스킹 실력 자체보다 &#39;대화에 답하느냐&#39;가 눈에 띄는 차이라는 거. 그게 인상을 갈랐을 수 있다는 거고
+
+일하면서 누가 말 걸면 바로 답하는 편 vs 일단 흘려듣는 편?
+
+이런 해외 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 연구는 학술지 Psychological Research에 게재되었다</li><li>근거 등록 안 된 주장: 연구진은 멀티태스킹 실력 자체보다 대화 질문에 답하는지 여부가 눈에 띄는 차이를 만든다고 봤다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;여자가 멀티태스킹 더 잘한다&#39;는 말, 실력 차이가 아닐 수도 있대</li><li>멀티태스킹은 성별이 아니라 &#39;대답하느냐&#39;에서 갈렸다는 연구가 나옴</li><li>멀티태스킹 못한다는 인상, 실력이 아니라 &#39;말에 답을 안 해서&#39;일 수 있대</li><li>요리하고 전화번호 찾으면서 대화까지 시켰더니 갈린 건 딱 하나였음</li><li>네 가지 일은 비슷하게 해냈는데, 남이 보기엔 달랐다는 실험이 나옴</li><li>대화 질문을 그냥 넘긴 비율이 두 배 넘었다는데, 누구였게?</li><li>&#39;멀티태스킹 잘하는 사람&#39; 인상은 대답하느냐에서 갈릴 수 있대</li><li>일하면서 누가 말 걸면 흘려듣는 편이야? 이 실험 보면 좀 찔림</li><li>관찰자 160명이 영상 보고 남자를 낮게 평가했는데, 실력은 비슷했대</li><li>멀티태스킹 통념이 어디서 왔는지 찾아봤다는 실험이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>일하면서 누가 말 걸면 바로 답하는 편 vs 일단 흘려듣는 편?</li><li>요리하면서 대화까지 동시에 되는 사람?</li><li>멀티태스킹 잘한다는 말 들어본 사람?</li><li>요리하면서 전화번호 찾기랑 대화, 너라면 뭐부터 놓칠 것 같아?</li><li>통화하면서 다른 일 하는 거 가능파 vs 불가능파?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>멀티태스킹 연구 후속: 일상에서 여러 일 동시에 할 때 또 뭐가 다를까</li><li>일본 서점 마루젠 준쿠도 50주년 서점 1박 행사</li><li>엘리베이터 정비사 부족, 연봉 11만 달러에도 사람이 없다</li><li>37년 추수감사절 음식 나눈 글로리아, 마을이 새 차 선물</li><li>해외 연구가 뒤집은 또 다른 흔한 통념</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>성별 비교 소재라 &#39;남자는 대답 안 한다&#39;는 식의 편견으로 읽힐 수 있음. 평균적 경향과 관찰자 평가라는 점을 유지해야 함</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>흔히 여자가 멀티태스킹을 더 잘한다고 믿지만 기존 연구에서는 남녀 차이가 작고 일관되지 않았다</b>
+          <q>“Although women are widely believed to be better at multitasking than men, previous research has found only minor and inconsistent differences between the sexes, raising doubts about the accuracy of this popular assumption.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>남녀는 다섯 활동 중 네 가지에서 비슷한 결과를 냈고 대화에서만 차이가 났다</b>
+          <q>“Men and women achieved comparable results on four of the five activities.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>남성이 대화 질문에 답하지 않은 경우가 여성의 두 배 넘게 많았다</b>
+          <q>“Men left conversational questions unanswered more than twice as often as women.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>남성이 답한 경우 응답 속도와 질은 여성과 비슷했다</b>
+          <q>“When men did answer, their responses were just as fast and of comparable quality to those given by women.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰자 160명이 영상을 보고 참가자를 평가했다</b>
+          <q>“In a second experiment, the researchers recruited 160 observers to determine whether differences in multitasking behavior were noticeable to others.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰자들은 남성을 통제력이 낮고 성과가 나쁘며 노력과 기민함이 덜하고 덜 행복하고 덜 즐기는 것으로 평가했다</b>
+          <q>“Observers rated men as having less control over the activities, performing more poorly, putting in less effort, and being less alert than women. They also perceived men as less happy and as deriving less enjoyment from the experience.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대화 참여는 남들 눈에 잘 띄어서 다른 일 성적이 비슷해도 남성이 멀티태스킹을 못한다는 인상을 줄 수 있다</b>
+          <q>“Because conversational engagement is easily noticed by others, this difference may create the impression that men are less effective at multitasking, even when their performance on other activities is comparable to that of women.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>여성이 대화에 더 적극적일 수 있다는 설명은 이번 연구가 직접 확인한 것이 아니라 조심해서 봐야 한다</b>
+          <q>“The researchers suggest that women may, on average, be more inclined to engage in communication during social interactions. However, the study did not directly investigate this possibility, so the explanation should be treated with caution.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>첫 실험의 참가자는 남성 41명과 여성 37명이었다</b>
+          <q>“The first experiment involved 41 men and 37 women.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들은 레시피 따라 하기, 전화번호 찾기, 숫자와 글자 맞추기, 슬라이드에서 단어 찾기, 대화 질문 답하기를 했다</b>
+          <q>“Participants were asked to follow a recipe in a kitchen setting, look up phone numbers, match numbers with letters, watch a slideshow for specific words, and answer conversational questions.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>대화 질문은 20초마다 하나씩 나왔다</b>
+          <q>“A new question was posed every 20 seconds (e.g., &#34;Would you rather lose all of your money and valuables or all of the pictures you have ever taken, and why?&#34;).”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 대화 능력에서만 유의미한 성별 차이가 있었다고 결론지었다</b>
+          <q>“&#34;Taken together, our data confirm that there are no substantial sex differences in cognitive visual-manual tasks, but that significant sex differences do exist in the ability to hold a conversation while multitasking,&#34; explains André Szameitat.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="63498919afe0">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261125045306.htm" target="_blank" rel="noopener">The surprising reason women seem better at multitasking than men</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-73defed4a2e4">
+    <div class="head">
+      <h2>S4. 투명 CD 플레이어 Long Time No See Too</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 21
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-73defed4a2e4">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 스트리밍 시대에 &#39;음악을 소유한다&#39;는 콘셉트의 투명 CD 플레이어. 디스크가 도는 게 보이고 스피커도 되는데, 가격과 판매처가 궁금해지는 물건</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "투명 CD 플레이어 블루투스" · 원문 제품: NINM Lab &#39;Long Time No See Too&#39; HK$988(약 $127), NINM Lab 온라인 스토어(홍콩), 11월 25일 배송 시작. 2-Way Steel Stand HK$198, 번들 HK$1,128. 참고: POPDISC HK$429, FiiO DM13 약 $165<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: newatlas.com, yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/73defed4a2e4/thread-photo-1127082623-01.jpg" alt="투명 케이스 형태의 CD 플레이어 위에 빨간 원형 스피커가 붙어 있고, 빨간 CD가 보이며, 손에 든 스마트폰에 Spotify 화면이 떠 있는 장면. 뒤쪽에는 책장과 식물이 있다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/73defed4a2e4/thread-photo-1127082623-02.jpg" alt="투명 케이스의 CD 플레이어 위에 CD가 올려져 있고, 옆에 투명 원형 스피커가 놓여 있는 모습" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261127-pm-e038cf636f58/73defed4a2e4/thread-photo-1127082623-03.jpg" alt="투명한 본체 위에 올려진 원형 투명 스피커 부분의 클로즈업. 스피커 격자와 안쪽 진동판이 보이고, 아래쪽에 투명 본체와 내부 부품이 함께 보인다." loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-73defed4a2e4">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">116/500자</span></div>
+      <p class="tp-text">CD 사는 Z세대·밀레니얼 절반쯤이 정작 CD 플레이어가 없대
+그런 와중에 홍콩에서 디스크 도는 게 다 보이는 투명 플레이어가 나옴
+폰 소리도 받아서 스피커로 쓰는데, 소니 얘기까지 같이 나온 이유가 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">105/500자</span></div>
+      <p class="tp-text">1/ 홍콩 NINM Lab이 낸 Long Time No See Too는 투명한 주얼케이스 모양 CD 플레이어야. 뚜껑이 투명해서 돌아가는 디스크가 그대로 보임. 근데 소리는 어디서 나올까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">2/ 2020년 원조는 스피커 뚜껑이 디스크를 덮어서 정작 보여주려던 게 가려졌대. 이번엔 둥근 스피커가 모서리에 자석으로 붙고, 안에 서브우퍼가 들어 있어서 더 깊은 베이스라고 NINM은 말함. 그럼 스펙은 어떨까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">187/500자</span></div>
+      <p class="tp-text">3/ 스펙 요약 정리
+- 블루투스 5.3, 양방향 (CD를 에어팟으로 보내기 / 폰 소리를 받아 스피커로 재생)
+- 3.5mm 단자도 있음
+- CD, CD-R, CD-RW, MP3 디스크 재생
+- 전원은 USB-C 또는 AA 건전지 2개
+- 크기 138 x 138 x 32mm, 무게 341.5g
+
+근데 왜 소니 얘기가 같이 나왔을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">147/500자</span></div>
+      <p class="tp-text">4/ 소니가 7월에 2028년 1월부터 새 플레이스테이션 게임은 디스크로 안 낸다고 발표했대. 구매한 영화 수백 편을 라이선스 만료로 라이브러리에서 빼고 환불도 안 해줬다는 얘기도 같이 나옴. 반면 CD는 선반에 있으면 로그인 없이 재생됨. 그럼 가격은 얼마일까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">160/500자</span></div>
+      <p class="tp-text">5/ 가격은 HK$988, 약 $127이야. NINM Lab 온라인 스토어에서 팔고 배송은 11월 25일부터 시작. CD 보관 겸용 스탠드는 HK$198, 플레이어랑 묶으면 HK$1,128. 미국 구매자는 홍콩 스토어에서 주문해서 배송비·수입 비용을 확인하라고 함. 아쉬운 점은 없을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">6/ 배터리 지속시간이랑 스피커 출력은 아직 공개 안 됐대. 오디오 CD 끊김 방지 메모리도 원조 60초에서 15초로 줄었음. 경쟁품으로는 약 $165짜리 FiiO DM13이 언급됨. 그래서 결론은?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">187/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 이 플레이어의 포인트는 &#39;로그인 없이 내 선반에서 그대로 재생되는 음악&#39;이야.
+
+이거 있으면 살 거야, 스트리밍으로 충분해?
+
+해외에서 난리 난 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>CD 사는 Z세대·밀레니얼 절반쯤이 정작 CD 플레이어가 없대</li><li>음악은 &#39;구독&#39;이 아니라 &#39;소유&#39;라는 투명 CD 플레이어가 나옴</li><li>처음엔 그냥 CD 케이스인 줄 알았는데 플레이어였음</li><li>소니는 디스크를 버린다는데, 홍콩의 한 회사는 CD 플레이어를 새로 만들었대</li><li>구매한 영화도 환불 없이 빠지는 시대에, CD로 답한 물건이 나옴</li><li>서랍 속 구워둔 CD, 드디어 갈 곳이 생겼대</li><li>에어팟이랑도 연결되는 투명 CD 플레이어가 있대</li><li>CD 플레이어 하나에 $127인데, 폰 소리 받는 스피커도 됨</li><li>음악은 빌리지 말고 소유하라는 듯한 플레이어가 해외에서 화제</li><li>로그인 없이 내 선반에서 그대로 재생되는 음악, 이걸 다시 찾는 사람들</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 있으면 살 거야, 스트리밍으로 충분해?</li><li>CD파 vs 스트리밍파, 어느 쪽이야?</li><li>집에 아직 CD 남아 있는 사람?</li><li>이거 선물로 받으면 좋아할 사람 소환</li><li>투명한 물건 vs 일반 물건, 너는 어느 쪽이야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>NINM Lab의 카세트 플레이어 IT&#39;S OK, IT&#39;S REAL 얘기</li><li>NINM Lab의 보급형 POPDISC 얘기</li><li>다음 배송: 일본 서점 마루젠 준쿠도 50주년 서점 1박 행사 얘기</li><li>다음 배송: 엘리베이터 정비사 부족, 연봉 11만 달러에도 사람이 없다는 얘기</li><li>다음 배송: 37년 추수감사절 음식 나눈 글로리아, 마을이 새 차 선물한 얘기</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>소니의 영화 삭제·환불 불가 내용은 원문 매체 서술이라 올리기 전 교차 확인 필요</li><li>배송 시작일(11월 25일)과 가격은 기사 게시 시점 기준이라 변동 가능성 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Z세대·밀레니얼 CD 구매자 중 절반쯤은 CD 플레이어가 없다</b>
+          <q>“Luminate’s 2026 midyear report found that about half of Gen Z and millennial CD buyers don’t own a CD player, which leaves a lot of discs sitting in shrink wrap with nothing to spin them.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>홍콩 NINM Lab이 투명한 CD 플레이어를 냈다</b>
+          <q>“Its new Long Time No See Too is a transparent, jewel case shaped CD player with a detachable magnetic Bluetooth speaker, and it costs HK$988, roughly $127.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폰 소리를 받아 스피커로 쓸 수 있다</b>
+          <q>“When the CD collection needs a break, the player becomes a desk speaker for podcasts.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>투명 뚜껑으로 돌아가는 디스크가 보인다</b>
+          <q>“The Long Time No See Too leans into that stubbornness with a see-through lid that puts the spinning disc on display, plus two-way Bluetooth 5.3 so your AirPods still get invited to the party.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주얼케이스 모양의 투명 CD 플레이어다</b>
+          <q>“Its new Long Time No See Too is a transparent, jewel case shaped CD player with a detachable magnetic Bluetooth speaker, and it costs HK$988, roughly $127.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2020년 원조는 스피커 뚜껑이 디스크를 가렸다</b>
+          <q>“Every time you wanted to share an album with the room, the one thing the transparent body existed to show disappeared under a tinted cover.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이번 모델은 둥근 스피커가 모서리에 자석으로 붙고 서브우퍼가 들어 있으며 NINM은 더 깊은 베이스라고 말한다</b>
+          <q>“The Too replaces that lid with a round speaker puck that clings magnetically to the player’s corner and hides a subwoofer inside, which NINM says delivers deeper bass and fuller sound.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>블루투스 5.3 양방향으로 에어팟에 보내거나 폰 소리를 받아 재생한다</b>
+          <q>“The Too upgrades to Bluetooth 5.3 and runs both ways, meaning it can send a disc to your AirPods or receive audio from your phone and play it through the puck.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>3.5mm 단자가 있고 CD, CD-R, CD-RW, MP3 디스크를 읽는다</b>
+          <q>“A 3.5mm jack stays on board for wired headphones, and the drive reads standard CDs, CD-Rs, CD-RWs, and MP3 discs, so your burned mixes from 2004 still have a home.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전원은 USB-C 또는 AA 건전지 2개</b>
+          <q>“Power arrives over USB-C, goodbye Micro USB, or two AA batteries, and the player charges Ni-MH rechargeables inside the chassis.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>크기 138 x 138 x 32mm, 무게 341.5g</b>
+          <q>“The player measures 5.4 x 5.4 x 1.3 inches (138 x 138 x 32 mm) and weighs 12 oz (341.5 g).”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소니가 7월에 2028년 1월부터 새 플레이스테이션 게임을 디스크로 내지 않겠다고 발표했다</b>
+          <q>“It stopped making recordable Blu-rays and MiniDiscs, and this July it announced that new PlayStation games won’t come on discs at all from January 2028.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>소니가 구매한 영화 수백 편을 라이선스 만료로 라이브러리에서 빼고 환불해주지 않았다</b>
+          <q>“Sony made that painfully clear when it began pulling hundreds of purchased movies from PlayStation libraries over an expired licensing deal, with no refunds.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>CD는 선반에 있으면 로그인을 요구하지 않는다</b>
+          <q>“It sits on your shelf, plays the same way in 2046 as it did in 1996, and never asks you to log in.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격 HK$988(약 $127), NINM Lab 온라인 스토어, 배송은 11월 25일부터</b>
+          <q>“The Long Time No See Too costs HK$988, roughly $127, through NINM Lab’s online store, with shipping starting November 25.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스탠드는 HK$198, 플레이어와 묶으면 HK$1,128</b>
+          <q>“A matching 2-Way Steel Stand that doubles as CD storage runs HK$198, about $25, or HK$1,128, about $145, bundled with the player.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미국 구매자는 홍콩 스토어에서 주문하며 배송·수입 비용을 확인해야 한다</b>
+          <q>“US buyers will be ordering from NINM’s Hong Kong storefront, so check shipping and import fees before you get attached.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>배터리 지속시간과 스피커 출력은 아직 공개되지 않았다</b>
+          <q>“NINM hasn’t published battery life or speaker output yet, so hold those questions for now.”</q>
+          <small>post6 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>오디오 CD 끊김 방지 메모리가 원조 60초에서 15초로 줄었다</b>
+          <q>“Anti-skip protection, the memory buffer that keeps music playing when the laser gets jostled, drops from 60 seconds on the original to 15 seconds for audio CDs, while MP3 discs still get 120.”</q>
+          <small>post6 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>경쟁품으로 약 $165짜리 FiiO DM13이 언급된다</b>
+          <q>“The obvious rival is FiiO’s DM13, a Discman style player that sells for about $165 with Bluetooth and chases audiophiles with balanced outputs.”</q>
+          <small>post6 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>CD는 로그인을 요구하지 않고 선반에서 그대로 재생된다</b>
+          <q>“It sits on your shelf, plays the same way in 2046 as it did in 1996, and never asks you to log in.”</q>
+          <small>post7 · <a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="73defed4a2e4">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/26/this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=this-see-through-cd-player-is-a-127-middle-finger-to-the-era-of-streaming-and-not-owning-music" target="_blank" rel="noopener">This see-through CD player is a $127 middle finger to the era of streaming (and not owning) music</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261127-pm";
+  const ORIGINAL = {"98f829cd2d59": {"caption": "\uc5d8\ub9ac\ubca0\uc774\ud130\uac00 \uba48\ucdc4\uc744 \ub54c \uace0\uce58\ub7ec \uc624\ub294 \uc0ac\ub78c\uc774 \uc904\uace0 \uc788\ub2e4. \ubbf8\uad6d\uc5d0\uc11c \uc2b9\uac15\uae30 \uc815\ube44\uc0ac \ubd80\uc871\uc740 \uc774\ubbf8 \ub110\ub9ac \uc54c\ub824\uc9c4 \ubb38\uc81c\uc774\uace0, \ub2e4\ub978 \uc5ec\ub7ec \ub098\ub77c\uc5d0\uc11c\ub3c4 \ub9c8\ucc2c\uac00\uc9c0\ub77c\uace0 \ud55c\ub2e4.\n\n\uc2dc\uce74\uace0\uc5d0\uc11c 47\ub144 \ub118\uac8c \uc2b9\uac15\uae30\ub97c \uace0\uccd0 \uc628 \uc9d0 \ub818\ubca0\uc2dc\uc2a4\ub294 \ucc98\uc74c \uc77c\uc744 \uc2dc\uc791\ud560 \ub54c\uc640 \ube44\uad50\ud558\uba74 \uc0c1\ud669\uc774 \uc644\uc804\ud788 \ub2ec\ub77c\uc84c\ub2e4\uace0 \ub9d0\ud55c\ub2e4. \ubbf8\uad6d \uc815\ube44\uc0ac\uc758 \ud3c9\uade0 \uc5f0\ubd09\uc740 11\ub9cc \ub2ec\ub7ec\uc9c0\ub9cc, \uc5c5\uacc4\uc5d0\uc11c\ub294 \uc0c8 \uc778\ub825\uc744 \ub04c\uc5b4\ub4e4\uc774\uae30 \uc5b4\ub835\ub2e4\uace0 \ud55c\ub2e4. 4\ub144\uc9dc\ub9ac \uacac\uc2b5 \uacfc\uc815\uacfc \uc5ec\ub7ec \uc8fc\uc758 \uc790\uaca9\uc99d\u00b7\uba74\ud5c8 \uc694\uac74\uc774 \uccab \uad00\ubb38\uc774\ub2e4.\n\n\uace0\uc7a5\uc758 \uc5f4 \ubc88 \uc911 \uc544\ud649\uc740 \ubb38\uc5d0\uc11c \uc0dd\uae34\ub2e4\ub294 \uc810\ub3c4 \ud765\ubbf8\ub86d\ub2e4. \ub2e4\ub9cc \uc218\ub9ac\uac00 \uba87 \uc8fc\uc529 \ubc00\ub9ac\ub294 \uac74 \ub300\uac1c \ubd80\ud488 \ub54c\ubb38\uc774\ub77c\ub294 \uc124\uba85\ub3c4 \uc788\ub2e4. \uc720\uc555 \uc2e4\ub9b0\ub354 \uad50\uccb4\ud488\uc744 \ub9cc\ub4dc\ub294 \ub370\uc5d0\ub9cc 6~12\uc8fc\uac00 \uac78\ub9b0\ub2e4\uace0 \ud55c\ub2e4.\n\n\uc601\uad6d\uc5d0\uc11c\ub3c4 \uc0ac\uc815\uc740 \ube44\uc2b7\ud558\ub2e4. \uc601\uad6d \uc5c5\uacc4 \uc778\uc0ac\ub294 \uc0c1\ud669\uc774 \ub098\uc058\uace0 \ub354 \ub098\ube60\uc9c0\uace0 \uc788\ub2e4\uace0 \ub9d0\ud588\uace0, \uc5c5\uacc4 \ub2e8\uccb4\ub294 \uc601\uad6d\uc5d0 \ud604\uc7ac \uc2b9\uac15\uae30\u00b7\uc5d0\uc2a4\uceec\ub808\uc774\ud130 \uacac\uc2b5\uc0dd\uc774 259\uba85 \uc788\ub2e4\uace0 \ubc1d\ud614\ub2e4.\n\n\uac74\ubb3c\uc744 \uad00\ub9ac\ud558\ub294 \uce5c\uad6c, \uace0\uce35 \uc544\ud30c\ud2b8\uc5d0 \uc0ac\ub294 \uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4 \ubcf4\uc790.\n\n\ucd9c\ucc98: BBC News", "hashtags": ["#\uc5d8\ub9ac\ubca0\uc774\ud130", "#\ud574\uc678\uc774\uc288", "#\uc9c1\uc5c5", "#\uc778\ub825\ub09c", "#\uc815\ube44\uc0ac"], "slides": [["**\uc5d8\ub9ac\ubca0\uc774\ud130**", "\uace0\uce60 \uc0ac\ub78c \uc5c6\ub2e4?!", "---", "\ubbf8\uad6d\uc5d0\uc11c \uc5d8\ub9ac\ubca0\uc774\ud130\uc640 \uc5d0\uc2a4\uceec\ub808\uc774\ud130\ub97c \uace0\uce58\ub294 \uc815\ube44\uc0ac\uac00 \ubd80\uc871\ud55c \ubb38\uc81c\uac00 \uac08\uc218\ub85d \uc2ec\ud574\uc9c0\uace0, \ub2e4\ub978 \uc5ec\ub7ec \ub098\ub77c\ub3c4 \uac19\uc740 \uace0\ubbfc\uc744 \uc548\uace0 \uc788\ub2e4."], ["\ud3c9\uade0 \uc5f0\ubd09", "**11\ub9cc \ub2ec\ub7ec**", "---", "\ubbf8\uad6d \uc5d8\ub9ac\ubca0\uc774\ud130 \uc815\ube44\uc0ac\uc758 \ud3c9\uade0 \uc5f0\ubd09\uc740 11\ub9cc \ub2ec\ub7ec, \uc601\uad6d \ub3c8\uc73c\ub85c \uc57d 8\ub9cc 3\ucc9c \ud30c\uc6b4\ub4dc\ub2e4. \uadf8\ub7f0\ub370\ub3c4 \uc5c5\uacc4 \uc0ac\ub78c\ub4e4\uc740 \uc0c8 \uc778\ub825\uc744 \ub04c\uc5b4\ub4e4\uc774\uae30 \uc5b4\ub835\ub2e4\uace0 \ub9d0\ud55c\ub2e4."], ["\uacac\uc2b5\ub9cc **4\ub144**", "\uadf8\ub2e4\uc74c \uba74\ud5c8", "---", "\uc804\ubbf8\uc5d8\ub9ac\ubca0\uc774\ud130\uacc4\uc57d\uc790\ud611\ud68c \ud68c\uc7a5\uc740 4\ub144\uc9dc\ub9ac \uacac\uc2b5 \uacfc\uc815\uc774 \uccab \ubc88\uc9f8 \uad00\ubb38\uc774\ub77c\uace0 \ub9d0\ud55c\ub2e4. \uc5ec\ub7ec \uc8fc\uc5d0\uc11c\ub294 \uc77c\uc744 \uc2dc\uc791\ud558\uae30 \uc804\uc5d0 \uc790\uaca9\uc99d\uc774\ub098 \uba74\ud5c8\ub3c4 \uc694\uad6c\ud55c\ub2e4."], ["\uace0\uc7a5 \uc6d0\uc778\uc740", "10\ubc88 \uc911 **9\ubc88** \ubb38", "---", "\ubca0\ud14c\ub791 \uc815\ube44\uc0ac \uc9d0 \ub818\ubca0\uc2dc\uc2a4\ub294 \uace0\uc7a5 \uc5f4\uc5d0 \uc544\ud649\uc740 \ubb38\uc774 \ubb38\uc81c\ub77c\uace0 \ub9d0\ud55c\ub2e4. \ubb38\uc740 \uacc4\uc18d \uc624\uac00\ub294 \ubd80\ud488\uc774\ub77c \uce74\ud2b8\uc5d0 \ubd80\ub52a\ud788\uace0 \uba3c\uc9c0\uc640 \uc774\ubb3c\uc9c8\uc774 \ub4e4\uc5b4\uac00 \uac00\uc7a5 \ud06c\uac8c \uc2dc\ub2ec\ub9b0\ub2e4\uace0 \ud55c\ub2e4."], ["\uba87 \uc8fc\uc9f8 \uba48\ucd98 \uac74", "**\ubd80\ud488** \ud0d3\ub3c4 \ucee4", "---", "\uc804\ubbf8\uc5d8\ub9ac\ubca0\uc774\ud130\uacc4\uc57d\uc790\ud611\ud68c \ud68c\uc7a5\uc740 \uc218\ub9ac\uac00 \uba87 \uc8fc, \uba87 \ub2ec \ubc00\ub9ac\ub294 \uac74 \ub300\uac1c \uc778\ub825\ubcf4\ub2e4 \ud2b9\uc815 \ubd80\ud488\uc744 \uad6c\ud558\uae30 \uc5b4\ub824\uc6cc\uc11c\ub77c\uace0 \ubcf8\ub2e4. \uc720\uc555 \uc2e4\ub9b0\ub354 \uad50\uccb4\ud488\uc744 \ub9cc\ub4dc\ub294 \ub370\ub9cc 6~12\uc8fc\uac00 \uac78\ub9b0\ub2e4."], ["\ubc30\ub2ec\uc774", "**1\uce35\uae4c\uc9c0\ub9cc**?", "---", "\ub370\uc774\ube0c \ucfe0\ud37c \uc601\uad6d \uac74\ubb3c\uc124\ube44 \uc5d4\uc9c0\ub2c8\uc5b4 \ud611\ud68c \ud68c\uc7a5\uc740 \uc0c1\ud669\uc774 \ub098\uc058\uace0 \ub354 \ub098\ube60\uc9c0\uace0 \uc788\ub2e4\uace0 \ub9d0\ud55c\ub2e4. \uc5d8\ub9ac\ubca0\uc774\ud130\uac00 \uba48\ucdc4\ub2e4\ub294 \uc774\uc720\ub85c 1\uce35 \uc704 \uc9d1\uc73c\ub85c\uc758 \ubc30\ub2ec\uc744 \uac70\uc808\ud55c \uc74c\uc2dd \ubc30\ub2ec \uc5c5\uccb4\ub3c4 \uc788\uc5c8\ub2e4\uace0 \ud55c\ub2e4."], ["\uac74\ubb3c \uad00\ub9ac\ud558\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "\uace0\uce35 \uac74\ubb3c\uc5d0 \uc0b4\uac70\ub098 \uac74\ubb3c\uc744 \uad00\ub9ac\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \ud06c\uac8c \uacf5\uac10\ud560 \uc774\uc57c\uae30. \uc5d8\ub9ac\ubca0\uc774\ud130\ub97c \uace0\uce58\ub294 \uc0ac\ub78c\uc774 \uc65c \uc774\ub807\uac8c \uadc0\ud55c \uc874\uc7ac\uc778\uc9c0 \ubcf4\uc5ec\uc8fc\ub294 \uc18c\uc2dd"]]}, "b91439dd810e": {"caption": "37\ub144 \ub3d9\uc548 \ucd94\uc218\uac10\uc0ac\uc808 \uc74c\uc2dd\uc744 \ub098\ub220\uc628 \uc5ec\uc131\uc5d0\uac8c \ub9c8\uc744\uc774 \uc0c8 \ucc28\ub97c \uc120\ubb3c\ud588\ub2e4\ub294 \uc18c\uc2dd\uc785\ub2c8\ub2e4.\n\n\uc8fc\uc778\uacf5\uc740 \ubbf8\uad6d \ud14d\uc0ac\uc2a4\uc758 \uae00\ub85c\ub9ac\uc544 \ucf00\ub108\ub4dc\uc785\ub2c8\ub2e4. 1988\ub144 \ub300\ud559\uc5d0\uc11c \uc77c\ud558\ub358 \uc2dc\uc808 \ub204\uad70\uac00\ub97c \ub3c4\uc640\uc57c\uaca0\ub2e4\ub294 \uc0dd\uac01\uc73c\ub85c \uc2dc\uc791\ud55c \ucd94\uc218\uac10\uc0ac\uc808 \uc2dd\uc0ac\uac00 \uc9c0\uae08\uc740 \ud574\ub9c8\ub2e4 2,000\uba85\uc774 \ub118\ub294 \uc0ac\ub78c\uc744 \uba39\uc774\ub294 \ud589\uc0ac\ub85c \uc790\ub790\uc2b5\ub2c8\ub2e4. \uc0c8\ud574 \uccab\ub0a0\uc5d0\ub3c4 \ube44\uc2b7\ud55c \uc2dd\uc0ac\ub97c \uc900\ube44\ud558\uace0, \uc9c0\ub09c 16\ub144\uac04 \ub9e4\uc8fc \ud478\ub4dc \ud32c\ud2b8\ub9ac\uc5d0\uc11c \uc790\uc6d0\ubd09\uc0ac\ub97c \ud574 \uc654\ub2e4\uace0 \ud569\ub2c8\ub2e4.\n\n\uadf8\ub7f0\ub370 7\uc6d4 29\uc77c, \uc131\uacbd \uacf5\ubd80\uc640 \ud569\ucc3d \uc5f0\uc2b5\uc5d0 \uac00\ub358 \uae38\uc5d0 \ub2e4\ub978 \ucc28\uac00 \ucf00\ub108\ub4dc\uc758 \ud2b8\ub7ed\uc744 \ub4e4\uc774\ubc1b\uc544 \ucc28\uac00 \uc644\uc804\ud788 \ub9dd\uac00\uc84c\uc2b5\ub2c8\ub2e4. \ubcf4\ud5d8\uae08\ub9cc\uc73c\ub85c\ub294 \ub300\uccb4\ud560 \ucc28\ub97c \uc0ac\uae30 \uc5b4\ub824\uc6cc \uce5c\uad6c\ub4e4\uc5d0\uac8c \uc774\ub3d9\uc744 \uae30\ub300\uc57c \ud588\uc2b5\ub2c8\ub2e4. \uc774 \uc18c\uc2dd\uc744 \ub4e4\uc740 \ube0c\ub9ac\uc9c0 \ubbf8\ub2c8\uc2a4\ud2b8\ub9ac\uc2a4\uac00 1\ub9cc 5\ucc9c \ub2ec\ub7ec\ub97c \ubaa9\ud45c\ub85c \uace0\ud380\ub4dc\ubbf8 \ubaa8\uae08\uc744 \uc5f4\uc5c8\uc2b5\ub2c8\ub2e4.\n\n\ubc18\uc751\uc740 \ub728\uac70\uc6e0\uc2b5\ub2c8\ub2e4. 10\uc6d4\uae4c\uc9c0 \ud6c4\uc6d0\uc790 174\uba85\uc774 1\ub9cc 7,700\ub2ec\ub7ec \ub118\uac8c \ubaa8\uc558\uace0, \uc9c0\uc5ed \uc5c5\uccb4 \ucf04\ud2b8 \ubb34\uc5b4 \uce90\ube44\ub2db\uc774 1\ub9cc \ub2ec\ub7ec\ub97c \ub354\ud574 \ucd1d\uc561\uc740 2\ub9cc 7\ucc9c \ub2ec\ub7ec\ub97c \ub118\uc5c8\uc2b5\ub2c8\ub2e4. 10\uc6d4 30\uc77c \uae08\uc694\uc77c, \uce5c\uad6c\ub4e4\uacfc \uc9c0\uc9c0\uc790\ub4e4\uc774 \ucf00\ub108\ub4dc\uc758 \uc9d1\uc5d0 \ubaa8\uc5ec \uc0c8 \uae30\uc544 \ucc28\ub97c \uae5c\uc9dd \uc120\ubb3c\ud588\uc2b5\ub2c8\ub2e4. \ucf00\ub108\ub4dc\ub294 \uc9d1 \uc55e\uc5d0\uc11c \uac10\uc0ac \uc778\uc0ac\ub97c \uc804\ud588\uc2b5\ub2c8\ub2e4.\n\n\ucd9c\ucc98: Good News Network", "hashtags": ["#\ubbf8\ub2f4", "#\ucd94\uc218\uac10\uc0ac\uc808", "#\ud574\uc678\ub274\uc2a4", "#\ud6c8\ud6c8\ud55c\uc18c\uc2dd", "#\uae30\ubd80"], "slides": [["37\ub144 \ubc25 \uc9d3\ub354\ub2c8", "**\uc0c8 \ucc28**\uac00???", "---", "\ubbf8\uad6d \ud14d\uc0ac\uc2a4\uc5d0\uc11c 37\ub144\uac04 \ucd94\uc218\uac10\uc0ac\uc808 \uc74c\uc2dd\uc744 \ub098\ub220\uc628 \uc5ec\uc131\uc5d0\uac8c \ub9c8\uc744 \uc0ac\ub78c\ub4e4\uc774 \ubaa8\uae08\ud574 \uc0c8 \ucc28\ub97c \uc120\ubb3c\ud588\ub2e4."], ["1988\ub144\uc758", "\uc791\uc740 \ub9c8\uc74c \ud558\ub098", "---", "\uae00\ub85c\ub9ac\uc544 \ucf00\ub108\ub4dc\ub294 1988\ub144 \ud14d\uc0ac\uc2a4 A\u0026M \ub300\ud559\uc5d0\uc11c \uc77c\ud558\ub358 \uc2dc\uc808 \ub204\uad70\uac00\ub97c \ub3c4\uc640\uc57c\uaca0\ub2e4\uace0 \ub9c8\uc74c\uba39\uc5c8\ub2e4. \uadf8\ub807\uac8c \uc2dc\uc791\ud55c \ucd94\uc218\uac10\uc0ac\uc808 \uc2dd\uc0ac\ub294 \uc9c0\uae08 2,000\uba85\uc774 \ub118\ub294 \uc0ac\ub78c\uc744 \uba39\uc774\ub294 \ud589\uc0ac\uac00 \ub410\ub2e4."], ["\uc2dd\uc0ac\ub9cc \ub098\ub208 \uac8c", "\uc544\ub2c8\uc5c8\uc5b4", "---", "\ucf00\ub108\ub4dc\ub294 \uc0c8\ud574 \uccab\ub0a0\uc5d0\ub3c4 \ube44\uc2b7\ud55c \uc2dd\uc0ac\ub97c \uc900\ube44\ud55c\ub2e4. \uc9c0\ub09c 16\ub144 \ub3d9\uc548\uc740 \ub9e4\uc8fc \ube0c\ub9ac\uc9c0 \ubbf8\ub2c8\uc2a4\ud2b8\ub9ac\uc2a4 \ud478\ub4dc \ud32c\ud2b8\ub9ac\uc5d0\uc11c \uc790\uc6d0\ubd09\uc0ac\ub3c4 \ud574 \uc654\ub2e4."], ["**7\uc6d4 29\uc77c**,", "\ud2b8\ub7ed\uc774 \ub9dd\uac00\uc84c\ub2e4", "---", "\uc131\uacbd \uacf5\ubd80\uc640 \ud569\ucc3d \uc5f0\uc2b5\uc5d0 \uac00\ub358 \uae38\uc5d0 \ub2e4\ub978 \ucc28\uac00 \uadf8\uc758 \ud2b8\ub7ed\uc744 \ub4e4\uc774\ubc1b\uc544 \ucc28\uac00 \uc644\uc804\ud788 \ub9dd\uac00\uc84c\ub2e4. \ubcf4\ud5d8\uae08\uc73c\ub85c\ub294 \uc0c8 \ucc28\ub97c \uc0ac\uae30\uc5d0 \ubaa8\uc790\ub77c \uce5c\uad6c\ub4e4\uc5d0\uac8c \uc774\ub3d9\uc744 \uae30\ub300\uc57c \ud588\ub2e4."], ["\ubaa9\ud45c 1\ub9cc 5\ucc9c \ub2ec\ub7ec,", "\uacb0\uacfc\ub294 **2\ub9cc 7\ucc9c**", "---", "\ube0c\ub9ac\uc9c0 \ubbf8\ub2c8\uc2a4\ud2b8\ub9ac\uc2a4\uac00 \uace0\ud380\ub4dc\ubbf8 \ubaa8\uae08\uc744 \uc5f4\uc5c8\ub2e4. 10\uc6d4\uae4c\uc9c0 \ud6c4\uc6d0\uc790 174\uba85\uc774 1\ub9cc 7,700\ub2ec\ub7ec \ub118\uac8c \ubcf4\ud0f0\uace0, \uc9c0\uc5ed \uc5c5\uccb4\uc758 1\ub9cc \ub2ec\ub7ec \uae30\ubd80\ub85c \ucd1d\uc561\uc740 2\ub9cc 7\ucc9c \ub2ec\ub7ec\ub97c \ub118\uc5c8\ub2e4."], ["\ud55c \ud47c \ud55c \ud47c\uc774", "\ub2e4 \uc0ac\ub791\uc774\ub798", "---", "\ub2f4\ub2f9\uc790 \uc5e0\ub9c8 \ube0c\ub9ac\uc9c0\uc2a4\ub294 \ubaa8\uc778 \ub3c8 \ud55c \ud47c\uc774 \uae00\ub85c\ub9ac\uc544\uac00 \ub9c8\uc74c\uc744 \uc4f4 \uc0b6 \ud558\ub098\ud558\ub098\ub97c \ub73b\ud55c\ub2e4\uace0 \ub9d0\ud588\ub2e4. 40\ub144 \ub118\uac8c \uc54c\uc544 \uc628 \uc0ac\ub78c\ub4e4\uc758 \ub313\uae00\ub3c4 \ubaa8\uae08 \ud398\uc774\uc9c0\uc5d0 \ub0a8\uc558\ub2e4\uace0 \ud55c\ub2e4."], ["\ub530\ub73b\ud55c \uc18c\uc2dd \ud544\uc694\ud55c", "\uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4\uae30", "---", "37\ub144\uac04 \ub098\ub208 \ub9c8\uc74c\uc774 \ub9c8\uc744\uc758 \uc120\ubb3c\ub85c \ub3cc\uc544\uc628 \uc774\uc57c\uae30\ub77c, \uc694\uc998 \ud6c8\ud6c8\ud55c \uc18c\uc2dd\uc774 \uadf8\ub9ac\uc6b4 \uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4\uae30 \uc88b\uc740 \uc18c\uc2dd"]]}, "b92d59142969": {"caption": "\uc11c\uc810\uc5d0\uc11c \ubc24\uc0c8 \ucea0\ud551\uc774\ub77c\ub2c8, \uc9c4\uc9dc \uc788\uc5c8\ub358 \uc77c\uc774\ub2e4.\n\n\uc77c\ubcf8 \uc11c\uc810 \uccb4\uc778 \ub9c8\ub8e8\uc820 \uc900\ucfe0\ub3c4\uac00 \ucc3d\uc5c5 50\uc8fc\ub144\uc744 \uae30\ub150\ud574 \u0027\ub9c8\ub8e8\uc820 \uc900\ucfe0\ub3c4\uc5d0 \uc0b4\uc544\ubcf4\uae30\u0027 \ud589\uc0ac\ub97c \uc5f4\uc5c8\ub2e4. \uc7a5\uc18c\ub294 \ucc3d\uc5c5\uc9c0\uc778 \uace0\ubca0 \uc0b0\ub178\ubbf8\uc57c \uc810. 11\uc6d4 21\uc77c\ubd80\ud130 22\uc77c\uae4c\uc9c0 1\ubc15 2\uc77c \uc77c\uc815\uc774\uc5c8\uace0, \uc120\uc815\ub41c 10\uba85\uc774 9\uce35\uc9dc\ub9ac \ub9e4\uc7a5\uc5d0\uc11c \ud558\ub8fb\ubc24\uc744 \ubcf4\ub0c8\ub2e4. \uc774 \ub9e4\uc7a5\uc5d0\ub294 \uc57d 50\ub9cc \uad8c\uc758 \ucc45\uc774 \uc788\ub2e4.\n\n\ucc38\uac00\uc790\ub4e4\uc740 \ub450 \uba85\uc774 \ud55c \ud300\uc73c\ub85c \uc57d 4.86\u33a1 \ub3d7\uc790\ub9ac\ub97c \u0027\ubcf8\uac70\uc9c0\u0027\ub85c \ubc1b\uc558\uace0 \uce68\ub0ad\uc740 \uc9c1\uc811 \ucc59\uacbc\ub2e4. \ub3d7\uc790\ub9ac \uc704\uc5d0\uc11c\ub294 \uba39\uace0 \ub9c8\uc2dc\uace0(\uc220 \uc81c\uc678) \uc790\ub294 \uac83\ub9cc \uac00\ub2a5\ud588\uace0, \ucc45\uc744 \uc77d\uc73c\ub824\uba74 \ub9e4\uc7a5 \ud1b5\ub85c\ub85c \ub098\uac00\uc57c \ud588\ub2e4. \uc77c\ubcf8\uc5d0\uc11c\ub294 \ube44\ub2d0 \ud3ec\uc7a5\ub418\uc9c0 \uc54a\uc740 \ucc45\uc744 \uc11c\uc11c \uc77d\ub294 \u0027\ub2e4\uce58\uc694\ubbf8\u0027\uac00 \uc5b4\ub290 \uc815\ub3c4 \uc6a9\uc778\ub41c\ub2e4\uace0 \ud55c\ub2e4.\n\n\ucc38\uac00\ube44\ub294 \ubb34\ub8cc\uc600\uc9c0\ub9cc \ub098\uac08 \ub54c \ucc45\uc744 3\uad8c \uc774\uc0c1 \uc0ac\uc57c \ud588\ub2e4. \ub2e4\uc12f \ud300\ub9cc \ucd94\ucca8\uc73c\ub85c \ubf51\ud614\uace0, \ub2e4\uc74c \ubaa8\uc9d1\uc740 2027\ub144 9\uc6d4 \ub9d0~10\uc6d4 \ucd08\ub85c \ubcf4\uc778\ub2e4. \uc77c\ubcf8 \ub124\ud2f0\uc98c \uc911\uc5d0\ub294 \u0027\uc7ac\ubc0c\uaca0\ub2e4\u0027\ub294 \ubc18\uc751\ub3c4 \uc788\uc5c8\uc9c0\ub9cc, \ub531\ub531\ud55c \ubc14\ub2e5\uc5d0\uc11c \uc790\uba74 \ubab8\uc774 \uc544\ud50c \uac83 \uac19\ub2e4\ub294 \ubc18\uc751\ub3c4 \uc788\uc5c8\ub2e4.\n\n\ucc45\ubc8c\ub808 \uce5c\uad6c\uac00 \ub5a0\uc624\ub978\ub2e4\uba74 \ud0dc\uadf8\ud574 \ubcf4\uc790.\n\n\ucd9c\ucc98: SoraNews24, \u4e38\u5584\u30b8\u30e5\u30f3\u30af\u5802\u66f8\u5e97\u5287\u5834(X), PR Times", "hashtags": ["#\uc77c\ubcf8", "#\uc11c\uc810", "#\ub9c8\ub8e8\uc820\uc900\ucfe0\ub3c4", "#\uace0\ubca0", "#\ud574\uc678\uc774\uc288"], "slides": [["\uc11c\uc810\uc5d0\uc11c", "\ubc24\uc0c8 **\ucea0\ud551**???", "---", "\uc77c\ubcf8 \uc11c\uc810 \uccb4\uc778 \ub9c8\ub8e8\uc820 \uc900\ucfe0\ub3c4\uac00 \ucc3d\uc5c5 50\uc8fc\ub144\uc744 \ub9de\uc544 \ucd94\ucca8\uc73c\ub85c \ubf51\uc740 \ub3c5\uc790 10\uba85\uc5d0\uac8c \ub9e4\uc7a5\uc5d0\uc11c \ud558\ub8fb\ubc24\uc744 \ubcf4\ub0b4\uac8c \ud588\ub2e4."], ["\ucc45 **50\ub9cc \uad8c**", "\uc18d\uc5d0\uc11c \ud558\ub8fb\ubc24", "---", "\uace0\ubca0 \uc0b0\ub178\ubbf8\uc57c\uc5d0 \uc788\ub294 \ucc3d\uc5c5\uc9c0 \ub9e4\uc7a5\uc5d0\uc11c \uc5f4\ub9b0 \ud589\uc0ac\ub2e4. 9\uce35\uc9dc\ub9ac \ub9e4\uc7a5\uc5d0\ub294 \uc57d 50\ub9cc \uad8c\uc758 \ucc45\uc774 \uc788\uace0, \uc120\uc815\ub41c 10\uba85\uc774 \uc774\uacf3\uc5d0\uc11c \ud558\ub8fb\ubc24\uc744 \ud1b5\uc9f8\ub85c \ubcf4\ub0c8\ub2e4."], ["\uc7a0\uc740 **\ub3d7\uc790\ub9ac** \uc704", "\ub3c5\uc11c\ub294 \uae08\uc9c0", "---", "\ub450 \uba85\uc774 \ud55c \ud300\uc774 \ub418\uc5b4 \uc57d 4.86\u33a1\uc9dc\ub9ac \ub3d7\uc790\ub9ac \ud55c \uc7a5\uc744 \u0027\ubcf8\uac70\uc9c0\u0027\ub85c \ubc1b\uc558\uace0, \uce68\ub0ad\uc740 \uc9c1\uc811 \uac00\uc838\uc640\uc57c \ud588\ub2e4. \ub3d7\uc790\ub9ac \uc704\uc5d0\uc11c\ub294 \uba39\uace0 \ub9c8\uc2dc\uace0(\uc220 \uc81c\uc678) \uc790\ub294 \uac83\ub9cc \ud5c8\uc6a9\ub410\ub2e4."], ["\uc77d\uc73c\ub824\uba74", "**\ud1b5\ub85c**\ub85c \ub098\uac00\uc57c", "---", "\uc2dc\ud2b8 \uc704\uc5d0\uc11c\ub294 \ucc45\uc744 \uc77d\uc744 \uc218 \uc5c6\uc5b4\uc11c, \ucc38\uac00\uc790\ub294 \ub9e4\uc7a5 \ud1b5\ub85c\ub97c \ub3cc\uc544\ub2e4\ub2c8\uba70 \uc77d\uace0 \ub3cc\uc544\uc640 \uc7a0\ub4e4\uc5b4\uc57c \ud588\ub2e4. \uc77c\ubcf8\uc5d0\uc11c\ub294 \ube44\ub2d0 \ud3ec\uc7a5\ub418\uc9c0 \uc54a\uc740 \ucc45\uc744 \uc11c\uc11c \uc77d\ub294 \u0027\ub2e4\uce58\uc694\ubbf8\u0027\uac00 \uc5b4\ub290 \uc815\ub3c4 \uc6a9\uc778\ub41c\ub2e4."], ["\uacf5\uc9dc\uc778\ub370", "\ucc45\uc740 **3\uad8c** \uc0ac\uc57c \ud574", "---", "\ucc38\uac00\ube44\ub294 \ubb34\ub8cc\uc600\uc9c0\ub9cc \ub098\uac08 \ub54c \ucc45\uc744 3\uad8c \uc774\uc0c1 \uc0ac \ub2ec\ub77c\ub294 \uc870\uac74\uc774 \ubd99\uc5c8\ub2e4. \ucd94\ucca8\uc73c\ub85c \ub2e4\uc12f \ud300\ub9cc \ub4e4\uc5b4\uac08 \uc218 \uc788\uc5c8\uace0, \ub2e4\uc74c \ubaa8\uc9d1\uc740 2027\ub144 9\uc6d4 \ub9d0~10\uc6d4 \ucd08\ub85c \ubcf4\uc778\ub2e4."], ["\ucc45 \uc88b\uc544\ud558\ub294 \uce5c\uad6c", "**\ud0dc\uadf8\ud574\uc11c** \uc54c\ub824\uc918", "---", "\uc11c\uc810 \ud55c\uac00\uc6b4\ub370\uc11c \ucc45\uc744 \uc77d\ub2e4 \uc7a0\ub4dc\ub294 \ud558\ub8fb\ubc24\uc774\ub77c\ub2c8, \ucc45\ubc8c\ub808 \uce5c\uad6c\uac00 \ub450\uace0\ub450\uace0 \ubd80\ub7ec\uc6cc\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

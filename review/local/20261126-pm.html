@@ -1,0 +1,2269 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.26 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.26 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-51058228dcad" data-jump="51058228dcad">1</a><a href="#post-5590e30f9417" data-jump="5590e30f9417">2</a><a href="#post-b41dbdfdd8c2" data-jump="b41dbdfdd8c2">3</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-51058228dcad" data-id="51058228dcad">
+    <div class="head">
+      <h2>1. 도쿄 신형 개찰구, 찍지 않고 그냥 통과</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 14
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-01.jpg" alt="1장: 개찰구를 그냥 통과???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-02.jpg" alt="2장: 전파로 알아본다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-03.jpg" alt="3장: 가입은 따로 필요 없어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-04.jpg" alt="4장: 먼저 400명이 써본다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-05.jpg" alt="5장: 2028년 봄 40개 역 설치" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-06.jpg" alt="6장: 2032년 3월 약 550개 역" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-07.jpg" alt="7장: 도쿄 자주 가는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/51058228dcad/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">개찰구에 스마트폰을 찍지 않고 그냥 걸어서 통과한다면 어떨까. JR동일본이 바로 그런 신형 개찰구를 도입하겠다고 발표했다.
+
+핵심은 초광대역(UWB) 무선통신 기술이다. 호환되는 스마트폰이 접촉 없이 개찰구와 통신하고, 기존 단말기보다 먼 거리에서도 기기를 정확한 위치로 감지한다. 새로 가입할 필요 없이 기존 모바일 Suica 계정만 있으면 되고, 처리 속도는 지금의 터치 방식과 비슷한 수준이라고 한다. 새 개찰구에는 스마트폰용 터치 방식과 통과 방식이 함께 갖춰지며, 실물 Suica 카드와 다른 IC카드는 지금처럼 터치 단말기를 쓴다.
+
+일정도 구체적이다. 2027년 4월 10일부터 2028년 2월 29일까지 14개 역에서 시범 운영을 하고, 정기권을 가진 약 400명이 참가한다. 2028년 봄부터는 도쿄권 40개 역에 설치하며, 여기에는 야마노테선 전 역이 포함된다. 이후 2032년 3월 말까지 자동 개찰구가 있는 약 550개 역으로 넓히는 것이 목표다. 2030년대 중반에는 GPS 기반 스마트폰 개찰구도 계획하고 있다.
+
+이 모든 움직임은 Suica를 생활 서비스로 넓히려는 &#39;Suica Renaissance&#39; 구상의 일부다.
+
+출처: SoraNews24, JR동일본 보도자료</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#도쿄여행 #일본여행 #Suica #JR동일본 #일본교통</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 출처 표기: 기사 출처가 SoraNews24와 JR동일본 보도자료라는 주장</li>
+          <li>모든 일정(2027년 시범 운영, 2028년 설치, 2032년 목표)은 JR동일본의 계획으로 변경될 수 있음</li><li>원문은 SoraNews24 기사이며 JR동일본 보도자료에 기반함</li><li>원문 기사 사진·영상은 사용하지 않음</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-51058228dcad-0">1장</label>
+          <textarea id="s-51058228dcad-0" rows="6" data-slide="0">개찰구를
+그냥 **통과**???
+---
+도쿄의 JR동일본이 스마트폰을 꺼내 찍지 않아도 지나갈 수 있는 신형 개찰구를 도입한다고 발표했다.</textarea>
+          
+          <label class="f" for="s-51058228dcad-1">2장</label>
+          <textarea id="s-51058228dcad-1" rows="6" data-slide="1">**전파로**
+알아본다
+---
+초광대역(UWB) 무선통신 기술을 쓴다. 호환되는 스마트폰이 접촉 없이 개찰구와 통신하는 방식이다. 기존 단말기보다 먼 거리에서도 기기 위치를 정확히 잡아낸다.</textarea>
+          
+          <label class="f" for="s-51058228dcad-2">3장</label>
+          <textarea id="s-51058228dcad-2" rows="6" data-slide="2">**가입은**
+따로 필요 없어
+---
+별도로 가입할 필요는 없다. 지금 쓰는 모바일 Suica 계정만 있으면 이용할 수 있다. JR동일본은 처리 속도도 현재의 터치 방식과 비슷한 수준이라고 밝혔다.</textarea>
+          
+          <label class="f" for="s-51058228dcad-3">4장</label>
+          <textarea id="s-51058228dcad-3" rows="6" data-slide="3">먼저 **400명이**
+써본다
+---
+2027년 4월 10일부터 2028년 2월 29일까지 14개 역에서 시범 운영한다. 구간 정기권을 가진 약 400명이 참가하며, 샤프와 함께 만든 앱이 든 스마트폰을 받는다.</textarea>
+          
+          <label class="f" for="s-51058228dcad-4">5장</label>
+          <textarea id="s-51058228dcad-4" rows="6" data-slide="4">2028년 봄
+**40개 역** 설치
+---
+2028년 봄부터 도쿄 일대 40개 역에 설치한다. 야마노테선 전 역과 나리타공항 방면 JR동일본 역, 하네다공항 방면 도쿄모노레일 역이 첫 대상이다.</textarea>
+          
+          <label class="f" for="s-51058228dcad-5">6장</label>
+          <textarea id="s-51058228dcad-5" rows="6" data-slide="5">2032년 3월
+약 **550개 역**
+---
+이후 재래선과 신칸센 역까지 넓혀 2032년 3월 말까지 자동 개찰구가 있는 약 550개 역 전부에 넣는 것이 목표다. 2030년대 중반에는 GPS 기반 개찰구도 계획 중이다.</textarea>
+          
+          <label class="f" for="s-51058228dcad-6">7장</label>
+          <textarea id="s-51058228dcad-6" rows="6" data-slide="6">도쿄 자주 가는
+친구한테 보내기
+---
+야마노테선 전 역이 첫 설치 대상에 들어 있어, 도쿄를 자주 오가는 친구라면 반가워할 소식</textarea>
+          
+          <label class="f" for="c-51058228dcad">본문 (캡션)</label>
+          <textarea id="c-51058228dcad" class="caption">개찰구에 스마트폰을 찍지 않고 그냥 걸어서 통과한다면 어떨까. JR동일본이 바로 그런 신형 개찰구를 도입하겠다고 발표했다.
+
+핵심은 초광대역(UWB) 무선통신 기술이다. 호환되는 스마트폰이 접촉 없이 개찰구와 통신하고, 기존 단말기보다 먼 거리에서도 기기를 정확한 위치로 감지한다. 새로 가입할 필요 없이 기존 모바일 Suica 계정만 있으면 되고, 처리 속도는 지금의 터치 방식과 비슷한 수준이라고 한다. 새 개찰구에는 스마트폰용 터치 방식과 통과 방식이 함께 갖춰지며, 실물 Suica 카드와 다른 IC카드는 지금처럼 터치 단말기를 쓴다.
+
+일정도 구체적이다. 2027년 4월 10일부터 2028년 2월 29일까지 14개 역에서 시범 운영을 하고, 정기권을 가진 약 400명이 참가한다. 2028년 봄부터는 도쿄권 40개 역에 설치하며, 여기에는 야마노테선 전 역이 포함된다. 이후 2032년 3월 말까지 자동 개찰구가 있는 약 550개 역으로 넓히는 것이 목표다. 2030년대 중반에는 GPS 기반 스마트폰 개찰구도 계획하고 있다.
+
+이 모든 움직임은 Suica를 생활 서비스로 넓히려는 &#39;Suica Renaissance&#39; 구상의 일부다.
+
+출처: SoraNews24, JR동일본 보도자료</textarea>
+          <label class="f" for="t-51058228dcad">해시태그</label>
+          <input id="t-51058228dcad" type="text" class="tagsin" value="#도쿄여행 #일본여행 #Suica #JR동일본 #일본교통" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>JR동일본이 스마트폰을 찍지 않고 개찰구를 통과할 수 있는 새 시스템을 도입한다고 발표했다</b>
+            <q>“Now, JR East is continuing to improve efficiency by announcing it will soon introduce a new system that allows passengers to walk straight through the gates without having to tap anything at all.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>신형 개찰구는 UWB 무선통신 기술을 써서 호환 스마트폰이 접촉 없이 통신한다</b>
+            <q>“The new walk-through ticket gates use ultra-wideband (UWB) wireless communication technology, which allows compatible smartphones to communicate with ticket gates without the need for physical contact.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>UWB는 기존 단말기보다 먼 거리에서 높은 위치 정확도로 기기를 감지한다</b>
+            <q>“Unlike conventional Suica readers, which require passengers to hold their phones close to a designated sensor, UWB can detect a compatible device from a greater distance and with a high degree of positioning accuracy.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새로 가입할 필요 없이 기존 모바일 Suica 계정만 있으면 이용할 수 있다</b>
+            <q>“Though the technology is being upgraded, users won’t have to sign up for anything new, as their existing Mobile Suica account is all that’s needed to use the new system.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>JR동일본은 처리 속도가 현재 터치 방식과 비슷하다고 밝혔다</b>
+            <q>“The balance and any commuter passes on the app will continue to work as usual, and JR East says the processing speed will be on par with current tap-and-go technology.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2027년 4월 10일부터 2028년 2월 29일까지 14개 역에서 시범 운영한다</b>
+            <q>“Before the rollout, JR East will be trialling the system from April 10, 2027 until February 29, 2028 at the following 14 stations.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>구간 정기권을 가진 약 400명이 시범 운영에 참가한다</b>
+            <q>“Around 400 selected participants with commuter passes covering journeys between the participating stations will take part in the initial trial.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>참가자는 샤프와 함께 개발한 앱이 든 호환 스마트폰을 받는다</b>
+            <q>“They will be provided with compatible smartphones equipped with a special app developed in cooperation with Sharp.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2028년 봄부터 도쿄권 40개 역에 설치된다</b>
+            <q>“According to JR East, the walk-through gates are set to be installed at 40 stations across the Tokyo metropolitan area from spring 2028, as the first stage of a wider rollout.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>첫 40개 역에는 야마노테선 전 역, 나리타공항 방면 JR동일본 역, 하네다공항 방면 도쿄모노레일 역이 포함된다</b>
+            <q>“The initial 40 stations will include every station on the JR Yamanote Line, the central loop line that runs around the city, as well as JR East stations serving Narita Airport and Tokyo Monorail stations serving Haneda Airport.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2032년 3월 말까지 자동 개찰구가 있는 약 550개 역 전부에 도입하는 것이 목표다</b>
+            <q>“Following the spring 2028 rollout, JR East plans to expand the technology to conventional railway and Shinkansen stations across its entire network, with the goal of introducing the walk-through system at every station that currently has automatic ticket gates, estimated to be around 550 stations, by the end of March 2032.”</q>
+            <small>slide6 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2030년대 중반에 GPS 기반 스마트폰 개찰구 도입을 계획하고 있다</b>
+            <q>“The company says it’s looking even further ahead, with plans to introduce a GPS-based smartphone ticket gate system, provisionally named Smartphone Ticket Gates, in the mid-2030s.”</q>
+            <small>slide6 · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>새 개찰구에는 터치 방식과 통과 방식이 함께 갖춰지고 실물 카드는 기존 터치 단말기를 쓴다</b>
+            <q>“The new gates will be equipped with both tap-and-go and walk-through options for smartphone users, while physical Suica cards and other IC cards will continue to use conventional touch-and-go readers.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 움직임은 Suica를 생활 서비스로 넓히려는 Suica Renaissance 구상의 일부다</b>
+            <q>“These new developments are all part of JR East’s wider “Suica Renaissance” initiative, which aims to expand Suica from a transport and small-payment system into a more comprehensive “everyday lifestyle service”.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">New Tokyo train station ticket gates let you walk through without tapping anything at all</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/26/new-tokyo-train-station-ticket-gates-let-you-walk-through-without-tapping-anything-at-all/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/Suica-Tokyo-new-walk-through-train-station-ticket-gates-Mobile-app-no-tap-and-go-public-transport-Japan-travel-news-1.jpeg"</li><li>2장: <a href="https://pixabay.com/photos/wifi-wireless-device-wi-fi-1371030/" target="_blank" rel="noopener">tejasp / Pixabay</a> — "wireless signal"</li><li>3장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li><li>4장: <a href="https://pixabay.com/photos/tokyo-japan-city-urban-subway-9826329/" target="_blank" rel="noopener">strohmi / Pixabay</a> — "commuters"</li><li>5장: <a href="https://pixabay.com/photos/rail-railroad-countryside-railway-234318/" target="_blank" rel="noopener">CodeCondo / Pixabay</a> — "railway platform"</li><li>6장: <a href="https://pixabay.com/photos/advertisement-billboard-outside-1839246/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "city rail map"</li><li>7장: <a href="https://pixabay.com/photos/tokyo-japan-buildings-city-8650941/" target="_blank" rel="noopener">LoboStudioHamburg / Pixabay</a> — "tokyo skyline"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-5590e30f9417" data-id="5590e30f9417">
+    <div class="head">
+      <h2>2. 지구의 임시 위성 2026 QQ8과 1878년의 예측</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/5590e30f9417/v1-01.jpg" alt="1장: 지구에 새 임시 위성???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/5590e30f9417/v1-02.jpg" alt="2장: 2026 QQ8, 몇 미터 바위" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/5590e30f9417/v1-03.jpg" alt="3장: 바위야, 쓰레기야?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/5590e30f9417/v1-04.jpg" alt="4장: 햇빛이 밀어서 정체를 밝혔다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/5590e30f9417/v1-05.jpg" alt="5장: 1878년에 예측한 궤도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/5590e30f9417/v1-06.jpg" alt="6장: 별 보는 친구한테 떠나기 전에 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/5590e30f9417/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">지구에 임시 위성이 하나 생겼다. 이름은 2026 QQ8, 지름이 몇 미터에 불과한 작은 바위다. 올해 4월 지구 궤도에 들어왔고 12월 7일 떠날 것으로 예측된다.
+
+헝가리 콘콜리 천문대의 천문학자가 8월 19일 처음 확인했지만, 자연물인지 우주 쓰레기인지 바로 가리기 어려웠다. QQ8은 확인 목록에서 두 번 빠졌고, 공식 발표는 10월 29일에야 나왔다.
+
+연구진은 햇빛이 미는 힘의 영향과 빛 반사 패턴으로 자연물임을 확인했다. 머문 기간은 약 7.5개월로, 앞서 확인된 두 플라이바이가 각각 한 달 정도 지구에 묶여 있었던 것과 비교된다. 이 긴 체류는 1878년 조지 윌리엄 힐이 제안한 궤도 덕분이고, 이런 궤도가 실제로 관측된 건 처음이다.
+
+재미있는 건 이름표다. 지구와 함께 도는 관점에서는 4분의 3바퀴만 돌아 플라이바이로 분류되지만, 입체 궤적의 굽음으로 세면 한 바퀴를 넘는다는 계산도 나왔다. 또 아폴로 17호 비행사들이 1972년에 채취한 현무암 시료 두 개와 색이 잘 맞아 달에서 떨어져 나온 조각일 가능성도 거론됐지만, 소행성과도 일치해 결론은 나지 않았다.
+
+출처: ScienceAlert, arXiv</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#천문학 #지구 #위성 #우주 #과학뉴스</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>1972년 아폴로 17호 현무암 시료 두 개가 특히 잘 맞았다 <small>애매 · 원문은 아폴로 17호 현무암 시료와 반사 특성이 잘 맞았다고 하며 &#39;색&#39;은 근사 표현이다. 달 기원 가능성 제시로는 충분하나 &#39;색이 맞았다&#39;로 단순화하면 뉘앙스가 약간 달라진다.</small></li>
+          <li>근거 등록 안 된 주장: 연구진이 햇빛 복사압과 빛 반사 패턴으로 자연물임을 확인했다는 주장(원문은 자연물과 부합한다고 할 뿐 확정이 아니다)</li><li>근거 등록 안 된 주장: 출처가 ScienceAlert와 arXiv라는 주장</li>
+          <li>출처 논문 2건은 arXiv 프리프린트로 동료 심사를 거치지 않았음</li><li>QQ8을 미니문으로 부를 수 있는지는 궤도 계산 방식에 따라 결과가 갈림</li><li>달에서 떨어져 나온 조각이라는 가설은 결정적이지 않음</li><li>체류 기간과 이탈 날짜는 예측치임</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-5590e30f9417-0">1장</label>
+          <textarea id="s-5590e30f9417-0" rows="6" data-slide="0">지구에 새
+**임시 위성**???
+---
+지구 궤도에 몇 미터 크기의 작은 바위가 임시 위성처럼 들어와 있고, 1878년에 예측된 궤도를 처음 보여줬다.</textarea>
+          
+          <label class="f" for="s-5590e30f9417-1">2장</label>
+          <textarea id="s-5590e30f9417-1" rows="6" data-slide="1">2026 QQ8,
+**몇 미터** 바위
+---
+이름은 2026 QQ8이다. 지름이 몇 미터에 불과한 작은 바위로, 올해 4월 지구 궤도에 들어왔고 12월 7일 떠날 것으로 예측된다.</textarea>
+          
+          <label class="f" for="s-5590e30f9417-2">3장</label>
+          <textarea id="s-5590e30f9417-2" rows="6" data-slide="2">바위야,
+**쓰레기**야?
+---
+발견 당시 천문학자들은 자연물인지 우주 쓰레기인지 바로 가리지 못했다. 인공물로 의심된 천체는 확인 목록에서 빠지는데, QQ8은 두 번이나 제외됐다.</textarea>
+          
+          <label class="f" for="s-5590e30f9417-3">4장</label>
+          <textarea id="s-5590e30f9417-3" rows="6" data-slide="3">**햇빛이** 밀어서
+정체를 밝혔다
+---
+움직임을 정밀하게 추적해 햇빛이 미는 힘의 영향을 쟀더니, 일반적인 우주 쓰레기라기엔 너무 작았다. 반사하는 빛의 패턴도 암석질 S형 소행성과 가까웠다.</textarea>
+          
+          <label class="f" for="s-5590e30f9417-4">5장</label>
+          <textarea id="s-5590e30f9417-4" rows="6" data-slide="4">**1878년에**
+예측한 궤도
+---
+QQ8은 7.5개월 머물러 이론상 모델링된 플라이바이 중 가장 오래 머무는 0.3퍼센트에 든다. 1878년 조지 윌리엄 힐이 제안한 궤도가 관측된 건 처음이다.</textarea>
+          
+          <label class="f" for="s-5590e30f9417-5">6장</label>
+          <textarea id="s-5590e30f9417-5" rows="6" data-slide="5">별 보는 친구한테
+떠나기 전에 보내기
+---
+1878년에 예측된 궤도를 처음 보여준 작은 바위는 12월 7일 지구를 떠날 것으로 예측된다. 별 보기를 좋아하는 친구라면 신기해할 소식</textarea>
+          
+          <label class="f" for="c-5590e30f9417">본문 (캡션)</label>
+          <textarea id="c-5590e30f9417" class="caption">지구에 임시 위성이 하나 생겼다. 이름은 2026 QQ8, 지름이 몇 미터에 불과한 작은 바위다. 올해 4월 지구 궤도에 들어왔고 12월 7일 떠날 것으로 예측된다.
+
+헝가리 콘콜리 천문대의 천문학자가 8월 19일 처음 확인했지만, 자연물인지 우주 쓰레기인지 바로 가리기 어려웠다. QQ8은 확인 목록에서 두 번 빠졌고, 공식 발표는 10월 29일에야 나왔다.
+
+연구진은 햇빛이 미는 힘의 영향과 빛 반사 패턴으로 자연물임을 확인했다. 머문 기간은 약 7.5개월로, 앞서 확인된 두 플라이바이가 각각 한 달 정도 지구에 묶여 있었던 것과 비교된다. 이 긴 체류는 1878년 조지 윌리엄 힐이 제안한 궤도 덕분이고, 이런 궤도가 실제로 관측된 건 처음이다.
+
+재미있는 건 이름표다. 지구와 함께 도는 관점에서는 4분의 3바퀴만 돌아 플라이바이로 분류되지만, 입체 궤적의 굽음으로 세면 한 바퀴를 넘는다는 계산도 나왔다. 또 아폴로 17호 비행사들이 1972년에 채취한 현무암 시료 두 개와 색이 잘 맞아 달에서 떨어져 나온 조각일 가능성도 거론됐지만, 소행성과도 일치해 결론은 나지 않았다.
+
+출처: ScienceAlert, arXiv</textarea>
+          <label class="f" for="t-5590e30f9417">해시태그</label>
+          <input id="t-5590e30f9417" type="text" class="tagsin" value="#천문학 #지구 #위성 #우주 #과학뉴스" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>1972년 아폴로 17호 현무암 시료 두 개가 특히 잘 맞았다</b>
+            <q>“Two basalt samples collected by the Apollo 17 astronauts in 1972 were particularly good matches.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2026 QQ8은 지름이 몇 미터인 작은 바위이고 올해 4월 지구 궤도에 들어왔다</b>
+            <q>“Its name is 2026 QQ8 – a small rock just a few meters across. It slipped into Earth orbit in April of this year, but its stay will be a short one.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>QQ8은 12월 7일 떠날 것으로 예측되며 약 150년 전 예측된 궤도 구성을 처음 보여줬다</b>
+            <q>“It is predicted to depart again on 7 December 2026 – but in its very brief time accompanying Earth, it has already given astronomers their first glimpse of a curious orbital configuration predicted nearly 150 years ago.”</q>
+            <small>slide1, slide2, slide6, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>천문학자들은 처음에 QQ8이 자연물인지 우주 쓰레기인지 바로 가리지 못했다</b>
+            <q>“While the object&#39;s orbital relationship with Earth was immediately apparent, its identity was not – and astronomers could not immediately establish whether it was a natural object or a piece of space junk.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>인공물로 의심되는 천체는 확인 목록에서 빠지며 QQ8은 두 번 제외됐다</b>
+            <q>“Objects suspected of being artificial – as most objects in Earth orbit are – are routinely removed from the Minor Planet Center&#39;s Near-Earth Object Confirmation Page, which astronomers use to coordinate follow-up observations of newly discovered objects. QQ8 was removed twice.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>햇빛 복사압의 영향이 일반적인 우주 쓰레기로 보기엔 너무 작았고 자연물 범위에 들어갔다</b>
+            <q>“That effect was much too small to be consistent with typical space debris, but well within the range expected for a natural object.”</q>
+            <small>slide4, summary, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>반사 패턴이 암석질 S형 소행성과 매우 비슷했다</b>
+            <q>“By measuring QQ8&#39;s brightness through four different filters using the Nordic Optical Telescope in the Canary Islands, the researchers were able to determine that its pattern of reflectance was a close match to that of S-type asteroids – rocky objects rich in silicate minerals.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>QQ8의 7.5개월 체류는 이론 모델링된 플라이바이 중 가장 오래 머무는 0.3퍼센트에 든다</b>
+            <q>“QQ8&#39;s comparatively lengthy 7.5-month sojourn puts it among the longest-lasting 0.3 percent of theoretically modeled flybys.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>앞서 확인된 두 플라이바이는 각각 약 한 달 동안 지구에 묶여 있었다</b>
+            <q>“The two previously identified temporarily captured flybys, 2022 NX1 and 2024 PT5, were gravitationally bound to Earth for only about a month each.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1878년 조지 윌리엄 힐이 최대 월령 궤도라는 궤도 구성을 처음 제안했다</b>
+            <q>“And the reason for this lies in a curious orbital configuration first proposed in 1878 by US astronomer and mathematician George William Hill, known as an orbit of maximum lunation.”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>QQ8은 이런 궤도가 존재한다는 첫 관측 증거이다</b>
+            <q>“QQ8 represents the first observational evidence that such orbits exist.”</q>
+            <small>slide5, summary, caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>헝가리 콘콜리 천문대의 천문학자가 8월 19일 처음 확인했다</b>
+            <q>“The first identification was made on 19 August 2026 by astronomer Krisztián Sárneczky at the Konkoly Observatory in Hungary – but it didn&#39;t take long for problems to emerge.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>소행성센터는 10월 29일에야 공식 발표했다</b>
+            <q>“It wasn&#39;t until October 29 that the Minor Planet Center officially announced the discovery of Earth&#39;s newest natural satellite, giving it the designation 2026 QQ8 and the classification Temporarily Captured Object.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지구와 함께 도는 관점에서는 약 4분의 3바퀴만 돌아 플라이바이로 분류된다</b>
+            <q>“From this perspective, QQ8 travels only about three-quarters of the way around Earth during its capture, technically making it a temporarily captured flyby rather than a minimoon.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>입체 궤적의 굽음으로 세면 한 바퀴를 넘는다는 계산이 있다</b>
+            <q>“In a separate preprint led by astronomer Bryce Bolin of Eureka Scientific, researchers calculated that QQ8 completes more than one revolution.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일치가 결정적이지 않으며 암석질 소행성과도 일치한다</b>
+            <q>“The match isn&#39;t conclusive, though – the measurements are also consistent with a rocky asteroid.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">Earth&#39;s Strange New Moonlet Has Revealed Something Astronomers Predicted in 1878</a> (기사)</li><li><a href="https://arxiv.org/abs/2611.27770" target="_blank" rel="noopener">2026 QQ8: Earth&#39;s temporary flyby of maximum lunation</a> (1차 출처)</li><li><a href="https://arxiv.org/abs/2611.31213" target="_blank" rel="noopener">VLT, Keck, and Gemini characterization of the temporarily captured flyby 2026 QQ$_8$</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/moonlet.png"</li><li>2장: <a href="https://pixabay.com/photos/planet-moon-spherical-space-sphere-3331451/" target="_blank" rel="noopener">Mikkehouse / Pixabay</a> — "asteroid"</li><li>3장: <a href="https://pixabay.com/photos/french-fries-potato-fast-food-chips-2640743/" target="_blank" rel="noopener">Fotorech / Pixabay</a> — "space junk"</li><li>4장: <a href="https://pixabay.com/photos/flowers-meadow-sunlight-summer-276014/" target="_blank" rel="noopener">Larisa-K / Pixabay</a> — "sunlight"</li><li>5장: <a href="https://www.sciencealert.com/confirmed-earth-has-picked-up-another-temporary-moonlet-and-its-orbit-is-wild" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/qq8-orbit.png"</li><li>6장: <a href="https://pixabay.com/photos/star-trails-night-stars-rotation-1846734/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "night sky stars"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-b41dbdfdd8c2" data-id="b41dbdfdd8c2">
+    <div class="head">
+      <h2>3. 고구마 자연산 GMO</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 19
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/b41dbdfdd8c2/v1-01.jpg" alt="1장: 고구마가 원래 GMO???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/b41dbdfdd8c2/v1-02.jpg" alt="2장: 전 세계 고구마에 낯선 DNA 발견" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/b41dbdfdd8c2/v1-03.jpg" alt="3장: 범인은 흙 속 세균이었어" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/b41dbdfdd8c2/v1-04.jpg" alt="4장: 고구마한테도 득이 됐나봐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/b41dbdfdd8c2/v1-05.jpg" alt="5장: 땅 위 식물 12% GMO일 수도" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/b41dbdfdd8c2/v1-06.jpg" alt="6장: GMO 무섭다는 친구한테 보내" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/b41dbdfdd8c2/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">고구마가 사람보다 먼저 유전자 변형을 겪었다는 연구가 화제다. 2015년 연구에서 전 세계 재배 고구마가 외부 DNA를 품고 있다는 사실이 확인됐는데, 분석한 재배종에서는 모두 나타났고 야생 친척종에서는 나타나지 않았다. 이 DNA를 넣은 주인공은 아그로박테리움이라는 토양 세균이다. 이 세균은 식물에 감염될 때 자기 DNA 조각을 세포에 옮기고, 식물은 번식할 때 이 유전자를 후손에게 물려줄 수도 있다. 1970년대 후반 이 능력이 발견되면서 과학자들은 병을 일으키는 유전자를 뺀 T-DNA로 식물을 개량할 수 있다는 아이디어를 얻었다. 올해 10월 Planta에 실린 연구는 고구마의 세균 유래 유전자가 온도 변화를 견디고 병에 맞서며 산화 손상을 줄이는 데 도움이 될 수 있다고 밝혔다. 2025년 연구도 고구마에서 조직 성장과 항산화 물질 생산을 도울 수 있는 세균 유래 유전자 두 개를 찾았다. 고대 사람들이 좋은 작물을 골라 심으면서 이 과정이 빨라졌을 수도 있다는 해석이다. 올해 8월 논문은 자연 발생 GMO 식물 2,600종 이상을 찾아냈고, 연구팀은 육상식물 종의 12%가 세균이 넣은 DNA를 가졌을 수 있다고 추정한다. 시나몬, 후추, 커피에도 그런 유전자가 있다고 한다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#고구마 #GMO #유전자 #과학뉴스 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 고구마가 수천 년 전 중남미 사람들에 의해 재배됐다는 사실</li><li>근거 등록 안 된 주장: 애기장대는 유전공학에서 널리 쓰이는 모델 식물이라는 사실</li><li>근거 등록 안 된 주장: 아그로박테리움의 T-DNA가 세포 핵으로 들어가 식물이 그 유전자를 읽고 발현할 수 있다는 내용</li><li>근거 등록 안 된 주장: 진화 과정에서 해로운 세균 유전자는 사라지고 유익한 유전자는 남았을 수 있다는 해석</li><li>근거 등록 안 된 주장: T-DNA가 식물 유전체를 영구히 바꾼다는 설명 외에 원문의 &#39;식물이 외부 병원체의 유전자를 읽고 발현할 수 있다&#39;는 내용</li>
+          <li>단일 출처(ScienceAlert) 기반이며 원문에 &#39;may&#39;, &#39;could&#39; 등 추정 표현이 많아 단정하지 않도록 주의</li><li>원문이 인용한 연구(Planta, 2015·2025 논문 등)는 직접 확인하지 않음</li><li>GMO 관련 주제로 안전성 논쟁과 연결되지 않도록 표현 유의</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-b41dbdfdd8c2-0">1장</label>
+          <textarea id="s-b41dbdfdd8c2-0" rows="6" data-slide="0">고구마가
+원래 **GMO**???
+---
+사람이 유전자 변형 작물을 만들기 훨씬 전에, 다른 생물이 이미 고구마의 유전자를 바꿔 놓았다는 연구가 나왔다.</textarea>
+          
+          <label class="f" for="s-b41dbdfdd8c2-1">2장</label>
+          <textarea id="s-b41dbdfdd8c2-1" rows="6" data-slide="1">전 세계 고구마에
+**낯선 DNA** 발견
+---
+2015년 연구진이 전 세계 재배 고구마를 분석했더니 외부 DNA가 들어 있었다. 일부는 식물 안에서 실제로 작동했고, 분석한 재배종에는 모두 있었지만 야생 친척종에는 없었다.</textarea>
+          
+          <label class="f" for="s-b41dbdfdd8c2-2">3장</label>
+          <textarea id="s-b41dbdfdd8c2-2" rows="6" data-slide="2">범인은 흙 속
+**세균**이었어
+---
+주인공은 아그로박테리움이라는 작은 토양 세균이다. 식물 조직을 감염시키면 자기 DNA 일부를 식물 세포에 옮겨 넣고, 이 유전자는 식물의 유전체를 영구히 바꿀 수 있다.</textarea>
+          
+          <label class="f" for="s-b41dbdfdd8c2-3">4장</label>
+          <textarea id="s-b41dbdfdd8c2-3" rows="6" data-slide="3">고구마한테도
+**득**이 됐나봐
+---
+올해 10월 Planta에 실린 연구에 따르면 세균에서 온 이 유전자는 온도 변화를 견디고 병에 맞서며 산화 손상을 줄이는 데 도움이 될 수 있다. 애기장대에 넣어 시험했을 때도 여러모로 이로워 보였다.</textarea>
+          
+          <label class="f" for="s-b41dbdfdd8c2-4">5장</label>
+          <textarea id="s-b41dbdfdd8c2-4" rows="6" data-slide="4">땅 위 식물 **12%**
+GMO일 수도
+---
+올해 8월 논문은 자연 발생 GMO 식물을 2,600종 넘게 찾아냈다. 연구팀은 육상식물 종의 12%가 세균이 넣은 DNA를 가졌을 수 있다고 추정한다. 크랜베리에도 같은 세균의 유전자가 있다.</textarea>
+          
+          <label class="f" for="s-b41dbdfdd8c2-5">6장</label>
+          <textarea id="s-b41dbdfdd8c2-5" rows="6" data-slide="5">GMO 무섭다는
+친구한테 보내
+---
+GMO가 부자연스럽다고 말하는 친구라면 신기해할 소식. 현대 GMO 제품이 사실은 자연에서 일어나는 아주 자연스러운 과정에 바탕을 둔다는 이야기</textarea>
+          
+          <label class="f" for="c-b41dbdfdd8c2">본문 (캡션)</label>
+          <textarea id="c-b41dbdfdd8c2" class="caption">고구마가 사람보다 먼저 유전자 변형을 겪었다는 연구가 화제다. 2015년 연구에서 전 세계 재배 고구마가 외부 DNA를 품고 있다는 사실이 확인됐는데, 분석한 재배종에서는 모두 나타났고 야생 친척종에서는 나타나지 않았다. 이 DNA를 넣은 주인공은 아그로박테리움이라는 토양 세균이다. 이 세균은 식물에 감염될 때 자기 DNA 조각을 세포에 옮기고, 식물은 번식할 때 이 유전자를 후손에게 물려줄 수도 있다. 1970년대 후반 이 능력이 발견되면서 과학자들은 병을 일으키는 유전자를 뺀 T-DNA로 식물을 개량할 수 있다는 아이디어를 얻었다. 올해 10월 Planta에 실린 연구는 고구마의 세균 유래 유전자가 온도 변화를 견디고 병에 맞서며 산화 손상을 줄이는 데 도움이 될 수 있다고 밝혔다. 2025년 연구도 고구마에서 조직 성장과 항산화 물질 생산을 도울 수 있는 세균 유래 유전자 두 개를 찾았다. 고대 사람들이 좋은 작물을 골라 심으면서 이 과정이 빨라졌을 수도 있다는 해석이다. 올해 8월 논문은 자연 발생 GMO 식물 2,600종 이상을 찾아냈고, 연구팀은 육상식물 종의 12%가 세균이 넣은 DNA를 가졌을 수 있다고 추정한다. 시나몬, 후추, 커피에도 그런 유전자가 있다고 한다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-b41dbdfdd8c2">해시태그</label>
+          <input id="t-b41dbdfdd8c2" type="text" class="tagsin" value="#고구마 #GMO #유전자 #과학뉴스 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>다른 생물이 사람보다 훨씬 전에 GMO 식물을 만들고 있었다</b>
+            <q>“Other organisms were creating GMO plants millions of years before we began splicing foreign DNA into crops.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고구마는 사람이 재배하기 전에 이미 다른 생물이 유전자를 건드렸다</b>
+            <q>“The sweet potato was cultivated thousands of years ago by people in Central and South America, yet another organism had tampered with its genes long before our species came along and plucked it from the soil.”</q>
+            <small>slide1 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2015년 전 세계 재배 고구마에서 외부 DNA가 발견됐고 일부는 실제로 발현되고 있었다</b>
+            <q>“In 2015, researchers discovered that cultivated sweet potatoes from around the world contained foreign DNA, some of which was actively expressed by the plant.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>분석한 모든 재배종에서 관찰됐고 야생 친척종에서는 관찰되지 않았다</b>
+            <q>“This &#34;rather remarkable&#34; genetic insertion was observed in every single cultivated crop analyzed, but not in any wild relatives.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>범인은 아그로박테리움이라는 작은 토양 세균이다</b>
+            <q>“The genetic engineer in question is a tiny soil microbe called Agrobacterium.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 세균은 식물 조직을 감염시킬 때 자기 DNA 일부를 숙주 세포에 옮긴다</b>
+            <q>“When it infects plant tissue, it can transfer a small segment of its own DNA into the host&#39;s cells.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>옮겨진 유전자는 식물의 유전체를 영구히 바꿀 수 있다</b>
+            <q>“This is called transfer DNA, or T-DNA, and the foreign genes can enter a cell&#39;s nucleus, permanently altering the plant&#39;s genome.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>식물은 번식할 때 T-DNA를 물려줄 수도 있다</b>
+            <q>“It can even pass the T-DNA on when it reproduces.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 10월 Planta 연구에서 세균 유래 유전자가 온도 변화 대응, 병 방어, 산화 손상 감소에 도움이 될 수 있다고 밝혔다</b>
+            <q>“In October of this year, scientists published new evidence in Planta that shows a foreign gene in sweet potatoes, naturally acquired from Agrobacterium, could help plants withstand temperature changes, defend against disease, and reduce oxidative damage.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 유전자를 애기장대에 넣어 시험했고 여러모로 이로워 보였다</b>
+            <q>“The authors tested this gene in thale cress (Arabidopsis thaliana), which is a widely used model plant for genetic engineering. It seemed to benefit the plant in numerous ways.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 8월 논문이 자연 발생 GMO 식물 2,600종 넘게 찾아냈다</b>
+            <q>“In August of this year, for instance, researchers published a paper that identified more than 2,600 species of naturally occurring GMO plants.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구팀은 육상식물 종의 12%가 세균이 넣은 DNA를 가졌을 수 있다고 추정한다</b>
+            <q>“The team estimates that 12 percent of all land plant species may carry DNA inserted by bacteria.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>크랜베리에도 아그로박테리움의 유전자가 있다</b>
+            <q>“There&#39;s another key plate on the Thanksgiving table that also contains genes from Agrobacterium: cranberries (Vaccinium macrocarpon).”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>GMO는 부자연스럽다고 비난받지만 사실 아주 자연스러운 과정에 바탕을 둔다</b>
+            <q>“While these products are often vilified for being unnatural, they are actually based on a very natural process.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1970년대 후반 T-DNA가 발견되면서 과학자들이 식물 개량 아이디어를 얻었다</b>
+            <q>“When it was discovered in the late 1970s, it gave scientists an idea.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>병을 일으키는 유전자를 제거한 T-DNA로 식물을 개량할 수 있다는 아이디어</b>
+            <q>“If humans could remove the disease-causing genes from T-DNA, it could theoretically allow us to genetically engineer plants for the better.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>2025년 연구에서 조직 성장과 항산화 물질 생산을 도울 수 있는 세균 유래 유전자 두 개를 찾았다</b>
+            <q>“These results are supported by another study in 2025 that found two bacterial-derived genes in sweet potato that may actually help tissue growth and antioxidant production.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고대 사람들이 좋은 세균 유전자를 가진 작물을 골라 과정을 빠르게 했을 수 있다</b>
+            <q>“When ancient humans began cultivating these crops, they may have even unwittingly sped up the process by selecting the crops with the best bacterial genes.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>시나몬, 후추, 커피에도 세균에서 온 외부 유전자가 있다</b>
+            <q>“These foreign genes are in the cinnamon of our pumpkin pies, the pepper we crack over our turkey, and the coffee we sip after a good meal with friends and family.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">Another Organism Created GMO Sweet Potatoes Long Before Humans</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/GettyImages-2227427125-2560x1440-1.jpg"</li><li>2장: <a href="https://www.kqed.org/bayareabites/95854/natural-gmo-sweet-potato-genetically-modified-8000-years-ago" target="_blank" rel="noopener">KQED / </a> — "https://media.npr.org/assets/img/2015/05/05/14-19685-large1_wide-85c49642f4b3c59b083b96537dc0542b6aab1d99.jpg?s=1400&amp;c=85&amp;f=jpeg"</li><li>3장: <a href="https://pixabay.com/photos/soil-cracks-clay-earth-dry-desert-5342049/" target="_blank" rel="noopener">oleg_mit / Pixabay</a> — "soil"</li><li>4장: <a href="https://www.sciencealert.com/another-organism-created-gmo-sweet-potatoes-long-before-humans" target="_blank" rel="noopener">ScienceAlert / </a> — "https://www.sciencealert.com/images/2026/11/GettyImages-2298755686-1-2560x1440-1-2048x1152.jpg"</li><li>5장: <a href="https://pixabay.com/photos/forest-trees-fog-moss-forest-floor-1258845/" target="_blank" rel="noopener">cocoparisienne / Pixabay</a> — "forest"</li><li>6장: <a href="https://pixabay.com/photos/thanksgiving-dinner-dinner-7600226/" target="_blank" rel="noopener">30726203 / Pixabay</a> — "thanksgiving dinner"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-44a935f462e4">
+    <div class="head">
+      <h2>S1. 20대부터 오르는 공복 혈당과 중년 인지 기능 (CARDIA 30년 추적)</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-44a935f462e4">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;당뇨만 아니면 괜찮다&#39;는 통념을 뒤집고, 뇌 건강이 65세 이후의 문제가 아니라 20대 혈당 흐름과 이어질 수 있다는 점을 짚는다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">&#39;당뇨만 아니면 괜찮다&#39;는 말, 30년 추적 연구 보면 좀 달라짐
+20대부터 공복 혈당이 천천히 올라간 사람들은 당뇨가 없었는데도 50대 중반 기억력·처리 속도 점수가 더 낮았대
+그럼 혈당이 얼마에서 얼마로 올랐을 때 그랬을까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">148/500자</span></div>
+      <p class="tp-text">1/ 점수가 낮았던 그룹은 공복 혈당이 20대 때 85 mg/dL 근처에서 시작해 중년엔 110~115까지 올라간 사람들이야. 당뇨 진단은 안 받았는데도 혈당이 낮게 유지된 사람들보다 기억력·처리 속도·실행 기능 점수가 낮았대. 이 연구는 누굴 어떻게 따라간 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">138/500자</span></div>
+      <p class="tp-text">2/ 미국 CARDIA 연구야. 1985~86년에 4개 도시에서 18~30세를 모아 평균 55세가 될 때까지 30년 동안 공복 혈당을 반복해서 쟀대. 총 2,808명이고 마지막엔 전원이 인지 검사를 받았어. 그럼 혈당 흐름은 몇 갈래로 나뉘었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">186/500자</span></div>
+      <p class="tp-text">3/ 혈당 흐름 요약 정리
+- 낮게 유지(56%): 80~85 mg/dL
+- 중간 유지(38%): 90~100 mg/dL
+- 점점 상승(5.6%): 85에서 110~115까지
+- 따로 345명은 30년 사이 2형 당뇨 진단 (공복 126 이상)
+점수가 낮았던 건 &#39;점점 상승&#39; 그룹이랑 당뇨 그룹이었음
+그럼 뇌 사진엔 뭐가 보였을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">135/500자</span></div>
+      <p class="tp-text">4/ 뇌 MRI는 605명이 찍었어. 30년 사이 2형 당뇨가 생긴 사람들은 혈당이 낮게 유지된 사람들보다 뇌 전체 회백질이 적고 비정상 백질 조직은 더 많았대. 둘 다 뇌 노화·인지 저하랑 가까운 지표래. 연구진은 이 결과를 어떻게 봤을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">5/ 연구진도 선을 그었어. 혈당을 일찍 관리하면 인지 저하를 막거나 늦출 수 있는지는 앞으로 더 연구해봐야 한대. 이건 추적 관찰 연구라 &#39;혈당이 오르면 뇌가 망가진다&#39;고 단정할 수는 없어. 그럼 결국 챙겨갈 건 뭘까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">243/500자</span></div>
+      <p class="tp-text">6/ 연구진 말은 혈당이 인지 기능에 영향을 주는 시기가 65세보다 훨씬 이를 수 있으니 젊을 때부터 챙겨볼 만하다는 거. 나한테 맞는 관리는 의사랑 상의.
+20대부터 혈당 챙기는 거, 벌써부터 유난이다 vs 해둘 만하다, 너는 어느 쪽?
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 연구는 추적 관찰 연구이다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>&#39;당뇨만 아니면 괜찮다&#39;는 말, 30년 추적 연구 보면 좀 달라짐</li><li>뇌 건강은 나이 들어서 챙기는 게 아니라 20대 혈당부터 볼 수 있다는 연구가 나옴</li><li>당뇨 진단 안 받아도 혈당이 천천히 오르면 50대 기억력 점수가 달랐대</li><li>혈당은 당뇨 걸린 뒤가 아니라 오르기 시작할 때부터 봐야 한다는 연구가 나옴</li><li>미국 2,808명을 30년 따라갔더니 혈당 곡선이 중년 뇌 점수를 갈랐대</li><li>&#39;혈당은 나중에 챙기면 되지&#39; 하는 20대, 이 연구 한번 봐</li><li>공복 혈당 85에서 110으로, 그 30년 사이 뇌 점수에 생긴 일</li><li>연구자 말이 &#39;혈당이 뇌 건강에 중요한 시기, 우리 생각보다 빠를 수 있다&#39;야</li><li>중년 기억력·처리 속도 점수가 20대 때부터의 혈당 흐름이랑 이어져 있었음</li><li>혈당 관리는 당뇨 되고 나서 하는 거라고? 이 연구는 좀 다르게 말함</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>20대부터 혈당 챙기는 거, 벌써부터 유난이다 vs 해둘 만하다, 너는 어느 쪽?</li><li>&#39;당뇨만 아니면 괜찮다&#39;고 생각했던 사람 손?</li><li>공복 혈당을 한 번도 재본 적 없는 사람?</li><li>너라면 이 연구 보고 평소 식습관 돌아볼 거야, 그냥 넘길 거야?</li><li>건강 연구 중에 &#39;이건 진짜 더 일찍 알았어야 했다&#39; 싶은 거 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>미국심장협회 &#39;Life&#39;s Essential 8&#39;은 뭘 챙기라는 걸까</li><li>혈당 말고 젊을 때부터 중년 뇌에 영향을 줄 수 있다는 위험요인 연구</li><li>공복 혈당이 오르는 흐름, 연구에서는 어떻게 구분했나</li><li>도쿄 신형 개찰구, 찍지 않고 그냥 통과</li><li>지구의 임시 위성 2026 QQ8과 1878년의 예측</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>관찰 연구라 &#39;혈당이 올라서 인지 저하가 생긴다&#39;는 인과로 읽히지 않는지 올리기 전에 확인</li><li>점점 상승 그룹은 전체의 5.6%(138명)로 작은 집단이라 &#39;젊은 사람 대부분&#39;으로 읽히지 않게 주의</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>당뇨가 없었지만 혈당이 85에서 110~115까지 오른 그룹이 55세 무렵 기억력·처리 속도·실행 기능 점수가 낮았다</b>
+          <q>“Among adults who never developed Type 2 diabetes over 30 years, those whose fasting blood sugar gradually rose from normal (~85 mg/dL) into the prediabetic range (~110–115 mg/dL) scored significantly worse in memory, processing speed, and executive function by age 55 than peers with lower-stable glucose.”</q>
+          <small>post0, post1 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>1985~86년 미국 4개 도시에서 18~30세를 모아 평균 55세까지 30년간 공복 혈당을 반복 측정했다</b>
+          <q>“Enrolled between 1985 and 1986 at ages 18 to 30 across four U.S. cities, participants underwent repeated fasting blood glucose measurements over 30 years until reaching an average age of 55.”</q>
+          <small>post2 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>CARDIA 코호트 2,808명을 추적했다</b>
+          <q>“the study tracked metabolic and cognitive trajectories across 2,808 participants in the landmark Coronary Artery Risk Development in Young Adults (CARDIA) cohort.”</q>
+          <small>post2 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>30년 시점에 전원이 인지 검사를 받았고 605명이 뇌 MRI를 찍었다</b>
+          <q>“At the 30-year mark, all participants completed comprehensive neuropsychological testing, and a subset of 605 participants underwent brain magnetic resonance imaging (MRI).”</q>
+          <small>post2, post4 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>낮게 유지 그룹은 56%, 80~85 mg/dL</b>
+          <q>“Lower-Stable Glucose (56%): Fasting blood sugar remained steady around 80–85 mg/dL throughout early and middle adulthood.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>중간 유지 그룹은 38%, 90~100 mg/dL</b>
+          <q>“Moderate-Stable Glucose (38%): Fasting levels stayed consistent around 90–100 mg/dL.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>점점 상승 그룹은 5.6%, 85에서 110~115까지</b>
+          <q>“Increasing Glucose (5.6%): Fasting levels started near 85 mg/dL in young adulthood and climbed progressively into the prediabetic range (110–115 mg/dL) by midlife.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>345명은 30년 사이 2형 당뇨(공복 126 이상)가 생겼다</b>
+          <q>“An additional 345 participants developed Type 2 diabetes (fasting glucose ≥126 mg/dL) during the 30-year follow-up.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>점점 상승 그룹과 당뇨 그룹 모두 낮게 유지 그룹보다 인지 점수가 낮았다</b>
+          <q>“Even after adjusting for demographic and lifestyle factors, both the increasing-glucose group and the Type 2 diabetes group performed significantly worse on tests of memory, processing speed, executive function, and global cognition compared with the lower-stable glucose group.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>2형 당뇨가 생긴 사람들은 회백질 부피가 작고 비정상 백질 조직이 많았다</b>
+          <q>“Brain MRI scans of 605 participants showed that individuals who developed Type 2 diabetes during the 30-year follow-up had reduced total gray matter volume and increased abnormal white matter tissue compared to those with lower-stable blood sugar.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>회백질 감소와 비정상 백질은 뇌 노화·인지 저하와 가까운 지표다</b>
+          <q>“Furthermore, MRI scans revealed tangible anatomical footprints among participants who developed Type 2 diabetes, who exhibited less total gray matter and more abnormal white matter tissue, markers closely tied to accelerated brain aging and cognitive decline.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈당을 일찍 관리하면 인지 저하를 막거나 늦출 수 있는지는 앞으로 연구가 볼 과제다</b>
+          <q>““Future research should evaluate whether monitoring and managing increasing glucose levels earlier in adulthood can prevent or delay cognitive decline and structural brain changes,” said senior author Yaffe.”</q>
+          <small>post5 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>혈당 변화가 65세보다 훨씬 일찍 인지 기능에 영향을 줄 수 있고, 젊을 때부터의 관리가 뇌 건강 보호에 도움이 될 수 있다</b>
+          <q>“Researchers note that changes in glucose metabolism begin affecting cognitive performance much earlier than age 65. Monitoring and managing blood sugar trajectories starting in young adulthood, using healthy nutrition, physical activity, and cardiovascular risk control, may help protect midlife and late-life brain health.”</q>
+          <small>post6 · <a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="44a935f462e4">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://neurosciencenews.com/blood-sugar-cognition-aging-32441/" target="_blank" rel="noopener">Rising Blood Sugar in Young Adults Hurts Midlife Brain Health</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-08a48a46c363">
+    <div class="head">
+      <h2>S2. 격일 단식 쥐, 같은 칼로리 식단과 달리 당뇨 역전</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16 · 애매 2
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-08a48a46c363">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 총칼로리가 같아도 &#39;언제 먹고 언제 쉬느냐&#39;에 따라 결과가 갈렸다는 반전. 사람 연구가 아니라 쥐 연구라는 선은 지켜야 함</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">101/500자</span></div>
+      <p class="tp-text">칼로리만 맞추면 되는 줄 알았는데, 총칼로리가 같아도 결과가 갈린 쥐 연구가 나옴
+고지방 식단 그대로 먹은 쥐도 5주 안에 당뇨가 역전됐다는데
+근데 그 식사 시간표가 좀 의외였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">123/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 고지방 식단은 그대로 두고 하루걸러 하루만 먹이고 사이엔 완전히 굶긴 당뇨 쥐는 5주 안에 당뇨가 역전됐대. 같은 총칼로리를 매일 나눠 먹은 쥐는 역전 못 했고. 그럼 체중이나 에너지 소모가 달랐던 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">125/500자</span></div>
+      <p class="tp-text">2/ 아니었음. 두 그룹 다 체중 증가가 멈췄고, 최종 체중도 에너지 소모량도 비슷했대. 인슐린 반응도 비슷해졌고. 근데 5주 뒤 혈당이 정상으로 돌아온 건 굶는 날이 있던 쪽뿐이었음. 그럼 췌장 안에선 무슨 일이 있었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">3/ 굶는 날엔 혈당이 먹는 날보다 최소 45% 떨어지고 인슐린도 같이 내려갔대. 연구진은 인슐린 만드는 세포가 계속 일하다가 쉴 수 있었던 패턴으로 읽었음. 근데 쉬면 인슐린 재고가 바닥나지 않을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">4/ 안 그랬음. 저장된 인슐린은 굶는 날이나 먹는 날이나 비슷했대. 쉬면서도 쓴 만큼 다시 채우고 있었다는 얘기. 5주 뒤엔 다른 그룹보다 저장 인슐린이 85% 넘게 많았음. 그럼 이게 사람한테도 통할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">142/500자</span></div>
+      <p class="tp-text">5/ 사람 쪽 힌트는 연구진이 인용한 이전 연구에 있었음. 과체중에 인슐린 저항성이 있는 성인은 변형된 격일 단식에서 꾸준히 칼로리를 줄일 때보다 인슐린이 더 크게 떨어졌대. 다만 이번 실험에 포함된 건 아님. 그럼 이번 연구가 확인한 것과 못 한 것은?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>6번 글 · 요약 정리</span>
+        <span class="len">175/500자</span></div>
+      <p class="tp-text">6/ 연구 결과 요약 정리
+- 대상: 인슐린 세포가 스트레스에 약한 유전적 결함이 있는 수컷 쥐
+- 하루걸러 고지방식 + 사이엔 단식: 5주 뒤 혈당 정상
+- 같은 총칼로리를 매일 먹은 쥐: 역전 안 됨
+- 굶은 쪽은 저장 인슐린이 85% 넘게 더 많음
+- 한계: 단식을 멈춘 뒤 유지 여부는 모름, 사람은 미검증</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">234/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 쥐에서 &#39;칼로리뿐 아니라 세포가 쉬는 타이밍도 중요할 수 있다&#39;가 나온 단계고, 사람은 시험이 더 필요하대. 당뇨가 있으면 식단 바꾸기 전에 의사랑 상의.
+하루 세 끼파 vs 두 끼파, 너는 어느 쪽?
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>두 그룹은 체중, 에너지 소모, 인슐린 민감도가 비슷했다 <small>애매 · 체중, 에너지 소모, 인슐린 민감도 유사는 원문과 일치하나, 원문은 두 식단의 단백질 등 영양소 차이도 저자가 인정했다고 명시한다. 본문은 &#39;체중·에너지·인슐린 반응이 비슷했다&#39;로 한정하고 영양 차이 한계를 함께 적을 필요가 있다.</small></li><li>단식 쥐의 췌장 세포는 다른 그룹보다 저장 인슐린이 85% 넘게 많았다 <small>애매 · 원문은 단식 쥐의 섬(islet)이 다른 그룹보다 85% 넘게 많은 저장 인슐린을 가졌다고 하며, 5주 뒤 기준이다. 본문의 &#39;저장 인슐린 85% 넘게 많음&#39;은 대체로 맞으나 췌장 섬 기준이고 시점(5주 뒤)을 명시하면 정확하다.</small></li>
+        <li>근거 등록 안 된 주장: 고지방 식단을 그대로 먹은 쥐도 5주 안에 당뇨가 역전됐다는 카드 문구 중 &#39;고지방 식단 그대로&#39;는 단식 그룹에 해당하므로 정확한 귀속 확인 필요</li><li>근거 등록 안 된 주장: 굶는 날 혈당 하락 및 인슐린 하락이 세포가 쉬는 패턴이라는 해석에서 &#39;인슐린 만드는 세포가 계속 일하다가 쉴 수 있었던 패턴&#39;이라는 표현은 원문 해석과 일치하나 추가 설명 없음</li><li>근거 등록 안 된 주장: 단식 쥐에서 프로인슐린 생성이 늘었고 스트레스 신호는 오르지 않았다는 내용(원문 context)은 claims에 포함되지 않음</li><li>근거 등록 안 된 주장: 고지방 식단을 더 오래 먹은 쥐의 저장 인슐린이 급감했다는 내용은 카드에서 언급되지 않으나 원문에 있음</li><li>근거 등록 안 된 주장: 실험 설정: 5~11주령까지 고지방 식단으로 당뇨 유도, 이후 5주간 세 가지 계획 적용, 쥐 개별 사육 및 먹이 무게 측정 등 방법론 주장이 카드에 포함됨</li><li>근거 등록 안 된 주장: 그룹 크기 3~15마리, 계속 고지방 그룹 5마리 등 표본 수 주장이 카드에 포함되어 있지 않음</li><li>근거 등록 안 된 주장: 저널 Molecular Metabolism 게재라는 출처 정보가 카드에 포함되어 있지 않음</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>칼로리만 맞추면 되는 줄 알았는데, 총칼로리가 같아도 결과가 갈린 쥐 연구가 나옴</li><li>다이어트 식단, &#39;뭘 얼마나&#39;가 아니라 &#39;언제 먹나&#39;도 봐야 한다는 쥐 연구가 나옴</li><li>고지방 식단을 그대로 먹었는데 5주 안에 당뇨가 역전된 쥐가 있대</li><li>하루 세 끼 챙겨 먹는 게 당연한 줄 알았는데, 굶는 날을 낀 쥐만 혈당이 정상으로 돌아왔대</li><li>&#39;적게 먹으면 되지&#39;라는 말, 같은 칼로리로 맞춰 비교해보니 결과가 갈렸대</li><li>칼로리를 똑같이 맞췄는데 한쪽만 혈당이 정상으로 돌아왔어</li><li>&#39;뭘 먹느냐&#39;만큼 &#39;언제 쉬느냐&#39;도 봐야 할 수 있다는 연구가 나옴</li><li>고지방 식단 그대로인데 췌장 속 인슐린 저장량이 85% 넘게 늘었대</li><li>식단 얘기, 이제 칼로리 말고 &#39;시간표&#39;로 보는 연구가 나옴. 아직은 쥐 단계지만</li><li>밥을 매일 챙겨 먹는 게 항상 답일까? 인슐린 세포에게 쉬는 날을 줬더니 달라졌대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>하루 세 끼파 vs 두 끼파, 너는 어느 쪽?</li><li>저녁 먹고 야식 하는 편 vs 저녁 이후엔 안 먹는 편, 어느 쪽?</li><li>식단 얘기에서 칼로리 vs 먹는 시간, 너는 뭐가 더 중요해 보여?</li><li>굶는 날 만드는 식단, 너라면 해볼 거야?</li><li>평일 vs 주말, 식사 시간이 더 불규칙한 쪽은?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>격일 단식 vs 꾸준한 칼로리 줄이기, 사람 대상 연구에선 어땠나</li><li>대사증후군 성인에게 격일 단식을 시켜본 연구 결과</li><li>인슐린 만드는 세포를 쉬게 한다는 게 몸속에서 어떤 의미인지</li><li>고지방 식단을 오래 먹은 쥐는 단식 효과가 줄어들 수 있다는 얘기</li><li>단식을 멈춘 뒤에도 당뇨 역전이 유지되는지 보는 후속 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>쥐 연구 결과가 사람에게도 통하는 것처럼 읽히지 않는지 확인 필요</li><li>격일 단식을 당뇨 환자에게 권하는 것처럼 읽히지 않는지 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>두 그룹은 체중, 에너지 소모, 인슐린 민감도가 비슷했다</b>
+          <q>“Both stopped gaining weight, finished at the same body weight, burned about the same amount of energy, and became similarly sensitive to insulin, the hormone that moves sugar out of the blood.”</q>
+          <small>post2 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>단식 쥐의 췌장 세포는 다른 그룹보다 저장 인슐린이 85% 넘게 많았다</b>
+          <q>“their islets, the clusters of insulin-making cells in the pancreas, held more than 85% more stored insulin than the other groups.”</q>
+          <small>post4 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 총칼로리를 매일 먹은 쥐는 당뇨가 역전되지 않았다</b>
+          <q>“A separate group switched to a lower-calorie diet eaten daily, consumed the same total calories as the fasting group, and failed to reverse its diabetes.”</q>
+          <small>post0 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>고지방 식단을 먹은 당뇨 쥐가 5주 안에 당뇨가 역전됐다</b>
+          <q>“Diabetic mice kept eating a diet loaded with fat, yet their diabetes reversed within five weeks.”</q>
+          <small>post0 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루걸러 먹고 사이엔 완전히 굶은 쥐의 당뇨가 역전됐다</b>
+          <q>“What changed was the schedule: the mice ate only every other day and fasted completely in between.”</q>
+          <small>post1 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>5주째 혈당이 정상으로 돌아온 건 단식 그룹뿐이었다</b>
+          <q>“By week five, only the fasting group’s blood sugar had returned to normal, whether measured at random or after a fast.”</q>
+          <small>post2 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>굶는 날엔 혈당이 최소 45% 떨어지고 인슐린도 같이 내려갔다</b>
+          <q>“On fasting days, blood sugar in the alternate-day mice fell by at least 45% from feeding-day levels, and insulin dropped with it.”</q>
+          <small>post3 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 이 패턴을 세포가 쉬는 시간으로 해석했다</b>
+          <q>“The authors read that pattern as a break for the cells, which no longer faced constant demand.”</q>
+          <small>post3 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>저장된 인슐린은 굶는 날과 먹는 날 비슷했고 세포가 다시 채우고 있었다</b>
+          <q>“Even so, stored insulin stayed about the same on fasting and feeding days, indicating the cells were refilling what they released.”</q>
+          <small>post4 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>과체중·인슐린 저항성 성인은 변형 격일 단식에서 꾸준한 칼로리 줄이기보다 인슐린이 더 크게 떨어졌다</b>
+          <q>“In one, adults with overweight and insulin resistance saw bigger drops in insulin on modified alternate-day fasting than on steady calorie cutting.”</q>
+          <small>post5 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이전 사람 연구들은 이번 실험에 포함되지 않았다</b>
+          <q>“Neither was part of this experiment.”</q>
+          <small>post5 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인슐린 세포가 스트레스에 약한 유전적 결함이 있는 쥐를 썼다</b>
+          <q>“That contrast comes from a University of Michigan study of mice bred with a mild genetic flaw that leaves their insulin-producing cells prone to stress.”</q>
+          <small>post6 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수컷 쥐만 연구했다</b>
+          <q>“Only males were studied, because only males in this strain develop diabetes on a high-fat diet.”</q>
+          <small>post6 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>단식 쥐만 5주째 혈당이 정상으로 돌아왔다</b>
+          <q>“By week five, only the fasting group’s blood sugar had returned to normal, whether measured at random or after a fast.”</q>
+          <small>post6 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구가 5주에 끝나 단식을 멈춘 뒤 유지 여부는 알 수 없다</b>
+          <q>“The study also ended at five weeks, so whether the mice stayed diabetes-free after fasting stopped is unknown, and some lab measurements relied on as few as three or four mice per group.”</q>
+          <small>post6 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람에서 같은 효과가 있는지는 사람 대상 시험이 필요하다</b>
+          <q>“Human trials would have to show whether the same rest works in people.”</q>
+          <small>post7 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 쥐들에서는 칼로리만큼 세포가 쉬는 시점도 중요했을 수 있다</b>
+          <q>“in these mice, when the cells got a break may have mattered alongside how many calories were eaten.”</q>
+          <small>post7 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>당뇨가 있다면 식단을 바꾸거나 단식을 시작하기 전에 의사와 상의해야 한다</b>
+          <q>“Anyone with diabetes should talk with a doctor before changing their diet or starting a fasting routine.”</q>
+          <small>post7 · <a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="08a48a46c363">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/meal-timing-may-reverse-diabetes/" target="_blank" rel="noopener">Meal Timing May Help Reverse Diabetes, Mouse Study Hints</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-fea0dbedb716">
+    <div class="head">
+      <h2>S3. 추수감사절 장바구니 Aldi vs Whole Foods 56달러 차이</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 14 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-fea0dbedb716">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 메뉴를 줄이지 않아도 &#39;어느 마트 가냐&#39;만 바꾸면 같은 장바구니가 56달러 넘게 갈린다는 장보기 비교</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">99/500자</span></div>
+      <p class="tp-text">장보기 아끼려면 메뉴를 줄이는 게 아니라 &#39;어느 마트 가냐&#39;부터 바꾸라는 얘기가 나옴
+같은 10개 품목이 한 곳은 32달러, 한 곳은 89달러였대
+그럼 이 차이는 어디서 났을까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">1/ 미국 추수감사절 장바구니 10개 품목이 Aldi에선 32.79달러, Whole Foods에선 89.42달러였대. Aldi 버전으로 거의 세 번 살 수 있는 돈 차이. 그럼 다른 마트들은 어디쯤이었을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">168/500자</span></div>
+      <p class="tp-text">2/ 금융 사이트 FinanceBuzz가 11개 체인에서 같은 목록(8인분)을 세금 전 가격으로 비교했는데 평균은 55.95달러. Aldi와 Walmart(36.39달러)는 40달러 아래였고, Publix는 83.00달러로 Whole Foods 다음이었음. 그럼 돈이 제일 많이 나간 품목은 뭐였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">155/500자</span></div>
+      <p class="tp-text">3/ 모든 매장에서 제일 비싼 품목은 칠면조였음. 12파운드 냉동 칠면조가 Walmart 10.08달러, Aldi·Target 11.88달러인데 Whole Foods는 29.88달러(전체의 약 3분의 1), Publix는 43.80달러. 이 칠면조 값, 앞으로는 오를까 내릴까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">174/500자</span></div>
+      <p class="tp-text">4/ 전망은 전문가끼리도 갈렸음. 버지니아커먼웰스대 Jeff Shockley 교수는 육류 가공 인력 부족 때문에 신선육이 특히 비쌀 거라고 봤고, 미네소타대 Necati Ertekin 부교수는 Wells Fargo 보고서를 근거로 칠면조·통조림 채소가 작년보다 2~3% 쌀 거라고 했대. 그래서 한눈에 정리하면?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">226/500자</span></div>
+      <p class="tp-text">5/ 요약 정리
+- 같은 10개 품목(8인분), 세금 전 가격
+- Aldi 32.79 / Walmart 36.39 / H-E-B 42.14달러
+- Publix 83.00 / Whole Foods 89.42달러
+- 11개 체인 평균 55.95달러
+- 모든 매장에서 제일 비싼 건 칠면조
+- 상업 사이트 가격 조사라 논문은 아니고, 지역·시기마다 달라질 수 있음
+그럼 이 장바구니값은 해마다 어떻게 변했을까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">6/ 이 사이트가 추적한 평균 장바구니는 2023년 44.57달러에서 2026년 55.95달러로 26% 올랐대. 같은 기간 일반 물가 상승은 약 9.5%였다고. 그럼 한국 마트들도 같은 장바구니로 비교하면 이 정도 차이가 날까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">212/500자</span></div>
+      <p class="tp-text">7/ 결국 메뉴를 줄이기 전에 어느 마트에서 사는지부터 보라는 거. 같은 목록이 56달러 넘게 갈렸다니까.
+장볼 때 대형마트 vs 온라인몰 vs 가성비 매장, 너는 어디파야?
+이런 해외 물가·장보기 비교, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>Aldi와 Walmart(36.39달러)는 40달러 아래, H-E-B는 42.14달러였다 <small>애매 · H-E-B 42.14달러는 일치한다. 다만 원문 표기는 &#39;Aldi and Walmart ($36.39)&#39;이고 Aldi는 앞에서 32.79달러로 따로 나오므로, 36.39달러는 Walmart 수치로만 쓰고 Aldi와 함께 묶지 않는 것이 정확하다.</small></li>
+        <li>근거 등록 안 된 주장: Jeff Shockley는 버지니아커먼웰스대(Virginia Commonwealth University) 교수라는 소속 주장</li><li>근거 등록 안 된 주장: Necati Ertekin은 미네소타대(University of Minnesota) 부교수라는 소속 주장</li><li>근거 등록 안 된 주장: 메뉴를 줄이기보다 마트 선택이 장보기 비용을 더 좌우한다는 게시물의 프레이밍</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>장보기 아끼려면 메뉴를 줄이는 게 아니라 &#39;어느 마트 가냐&#39;부터 바꾸라는 얘기가 나옴</li><li>같은 장바구니가 32달러 vs 89달러, 이게 진짜 같은 물건이야?</li><li>장바구니를 줄이지 말고 마트부터 바꿔보라는 가격 조사가 나옴</li><li>&#39;어차피 마트 다 비슷하지&#39; 했다면, 이 가격 비교 보면 좀 달라짐</li><li>똑같은 10개 품목을 담았는데 계산대에서 56달러가 갈렸대</li><li>Whole Foods에서 한 번 살 돈이면 Aldi에선 거의 세 번 산대</li><li>물가 오른다고 장바구니만 줄이고 있었다면, 이 비교부터 보면 좋음</li><li>메뉴 하나 안 빼고도 아낄 수 있다는 장보기 비교가 나옴</li><li>해외에선 같은 명절 장보기가 마트마다 이렇게 차이 난대</li><li>칠면조 한 마리가 월마트 10달러, Publix 43달러라는 비교</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>장볼 때 대형마트 vs 온라인몰 vs 가성비 매장, 너는 어디파야?</li><li>같은 물건이 더 싸다면 먼 마트까지 가는 편이야, 안 가는 편이야?</li><li>장보러 가기 전에 가격 비교부터 하는 편이야, 그냥 가는 편이야?</li><li>명절 음식은 직접 요리 vs 완성된 밀키트, 너라면 어느 쪽이야?</li><li>이 정도 가격 차이면 너라면 단골 마트 갈아탈 거야?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>2편: 직접 요리 vs 완성된 명절 밀키트, 1인당 5달러부터 25달러까지 비교</li><li>칠면조 값 전망이 전문가마다 갈린 이유</li><li>도쿄 신형 개찰구, 찍지 않고 그냥 통과</li><li>지구의 임시 위성 2026 QQ8과 1878년의 예측</li><li>고구마 자연산 GMO</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>출처 FinanceBuzz는 신용카드 광고가 붙은 상업 금융 사이트의 가격 조사이고 논문이 아님. 본문에 그 점을 밝혔는지 확인</li><li>미국 마트 가격 기준이라 한국 마트에도 같은 차이가 난다고 읽히지 않게 한국 관련 문장은 질문으로만 처리했는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>Aldi와 Walmart(36.39달러)는 40달러 아래, H-E-B는 42.14달러였다</b>
+          <q>“Aldi and Walmart ($36.39) both came in under $40, and H-E-B landed at $42.14.”</q>
+          <small>post2, post5 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 10개 품목 장바구니가 Aldi 32.79달러, Whole Foods 89.42달러였다</b>
+          <q>“The same 10-item Thanksgiving grocery list for eight people cost $32.79 at Aldi and $89.42 at Whole Foods, with an average of $55.95 across 11 major chains.”</q>
+          <small>post0, post1, post5 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Whole Foods 금액은 Aldi 버전을 거의 세 번 살 수 있는 돈이다</b>
+          <q>“Take the same list to Whole Foods and it climbs to $89.42, nearly enough to buy the Aldi version of dinner three times.”</q>
+          <small>post1 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>FinanceBuzz가 11개 체인에서 같은 목록을 세금 전 가격으로 비교했고 평균은 55.95달러였다</b>
+          <q>“Across all of them, enough food to feed eight people averaged $55.95 before tax.”</q>
+          <small>post2, post5 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Publix는 83.00달러로 Whole Foods 다음으로 비쌌다</b>
+          <q>“At the expensive end, Albertsons reached $71.04, and Publix, at $83.00, trailed only Whole Foods.”</q>
+          <small>post2, post5 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>칠면조가 모든 매장에서 가장 큰 지출이었다</b>
+          <q>“Turkey was the single largest expense at every store, FinanceBuzz found, and pumpkin pie was usually the second-priciest item.”</q>
+          <small>post3, post5 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>12파운드 냉동 칠면조가 Walmart 10.08달러, Aldi·Target 11.88달러, Whole Foods 29.88달러(전체의 약 3분의 1)였다</b>
+          <q>“a 12-pound frozen turkey cost $10.08 at Walmart and $11.88 at both Aldi and Target, compared with $29.88 at Whole Foods, where it made up about a third of the total.”</q>
+          <small>post3 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Publix의 칠면조는 43.80달러로 Walmart의 4배 넘게 비쌌다</b>
+          <q>“Publix charged the most for the bird at $43.80, more than four times the Walmart price.”</q>
+          <small>post3 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Jeff Shockley 교수는 육류 가공 인력 부족으로 신선육이 매우 비쌀 거라고 봤다</b>
+          <q>“Jeff Shockley, a supply chain professor at Virginia Commonwealth University, expects meat to hurt: “Fresh meats, this year in particular, will be sky-high primarily due to labor shortages in the meat processing industry.””</q>
+          <small>post4 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Necati Ertekin 부교수는 Wells Fargo 보고서를 근거로 칠면조와 통조림 채소가 작년보다 2~3% 쌀 거라고 했다</b>
+          <q>“He cited a recent Wells Fargo Agri-Food Institute report projecting that turkey and canned vegetables will cost roughly 2% to 3% less than last year, and he credited better supply and stiffer price competition among retailers during the holiday season.”</q>
+          <small>post4 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>조사는 상업 금융 사이트의 웹사이트 가격 기반이고 논문이 아니며 지역별로 가격이 다르다</b>
+          <q>“These are pre-tax prices taken from store websites by a commercial personal finance site, not a peer-reviewed study, and local prices will vary.”</q>
+          <small>post5 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추적한 평균 장바구니가 2023년 44.57달러에서 2026년 55.95달러로 26% 올랐다</b>
+          <q>“Its yearly tracking shows its average basket grew from $44.57 in 2023 to $55.95 in 2026, a 26% jump.”</q>
+          <small>post6 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 기간 일반 물가 상승은 약 9.5%였다</b>
+          <q>“Over the same stretch, general inflation rose around 9.5%, according to the Bureau of Labor Statistics’ CPI Inflation Calculator, the company reported.”</q>
+          <small>post6 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>같은 목록이 계산대에 따라 56달러 넘게 갈렸다</b>
+          <q>“With FinanceBuzz’s tracked Thanksgiving basket rising faster than inflation, the identical list of turkey, potatoes and pie still swung by more than $56 depending on the checkout line.”</q>
+          <small>post0, post7 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가장 큰 절약은 레시피를 줄이는 것보다 어느 마트에 가느냐에서 나올 수 있다</b>
+          <q>“For many households, the biggest savings this November may come from the parking lot they pull into, not the recipes they cut.”</q>
+          <small>post0, post7 · <a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="fea0dbedb716">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/aldi-beats-whole-foods-same-thanksgiving-shopping-list-heres-how-other-top-supermarkets-compare/" target="_blank" rel="noopener">Aldi Beats Whole Foods By $56 On The Same Thanksgiving Shopping List. Here’s How Other Top Supermarkets Compare</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-a791014ae085">
+    <div class="head">
+      <h2>S4. 카세트 모양 블루투스 스피커 Side A, 믹스테이프 선물용</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-a791014ae085">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 스피커인 줄 모르게 생긴 카세트 모양에 직접 만든 믹스를 담아 주는 선물 아이디어로 팔린다</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "카세트 모양 블루투스 스피커" · 원문 제품: Side A Cassette Speaker, Yanko Design Shop 판매, $49 (배송비·세금 별도), 블랙프라이데이에 $20 캘린더 증정<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: shop.yankodesign.com, yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/a791014ae085/thread-photo-1126082608-01.jpg" alt="카세트 테이프 케이스 모양의 스피커 단품이 Maxell UR10 카세트 더미 위 정면에 놓여 있음. 라벨에 &#39;OPT90 CASSETTE SPEAKER&#39;, &#39;SIDE A&#39;, &#39;Bluetooth Speaker&#39; 표기, 하단에 &#39;Bluetooth Connection / SD CARD / Type-C&#39; 문구가 보임" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/a791014ae085/thread-photo-1126082608-02.jpg" alt="투명 케이스에 담긴 카세트 모양 스피커가 정면으로 놓여 있고, 본체에 &#39;OPT 90&#39;, &#39;SIDE A&#39;, &#39;CASSETTE SPEAKER&#39;, &#39;Bluetooth Connection / SD CARD / Type-C&#39; 표기가 보인다. 주변에 투명 카세트들이 쌓여 있다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261126-pm-cd24d65f9425/a791014ae085/thread-photo-1126082608-03.jpg" alt="투명 케이스의 카세트 모양 물건이 비스듬히 놓여 있고, 검은 라벨과 원형 릴 무늬가 보이며, 한쪽 끝에 USB-C 포트와 파란 불빛이 보인다." loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-a791014ae085">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">85/500자</span></div>
+      <p class="tp-text">기프트카드 말고 선물 뭐 주지 싶을 때
+카세트테이프 같은데 사실 블루투스 스피커인 물건이 있음
+근데 진짜 포인트는 선물을 뜯는 순간에 있다는 얘기였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">109/500자</span></div>
+      <p class="tp-text">1/ 이름은 Side A Cassette Speaker. 투명 껍데기에 가짜 릴 두 개, &#39;Side A&#39; 라벨까지 달린 주머니 크기 블루투스 스피커임. 근데 소리 나오는 구멍은 대체 어디 있을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">127/500자</span></div>
+      <p class="tp-text">2/ 답은 가짜 릴 하나를 빙 두른 작은 구멍들임. 나머지가 너무 테이프 같아서 스피커 그릴인 줄 알아보는 데 잠깐 걸린대. 투명 케이스를 열면 라벨이 앞으로 보이게 세워주는 스탠드로도 변신함. 그럼 선물은 어떻게 하라는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">3/ 소개한 글의 제안은 직접 만든 믹스를 같이 주라는 거. 5~6곡이면 충분하고 손으로 쓴 트랙리스트도 곁들이래. 폰으로 블루투스 재생해도 되고, MP3를 microSD 카드에 넣으면 폰 없이도 나옴. 근데 진짜 카세트테이프도 틀 수 있을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">175/500자</span></div>
+      <p class="tp-text">4/ 요약 정리
+- 가격: $49 (배송비·세금 별도)
+- 크기: 케이스 포함 너비 4인치 조금 넘음
+- 되는 것: 블루투스 재생, microSD의 MP3 재생
+- 안 되는 것: 진짜 카세트테이프 재생
+- 소개글 평: 책상에서 음악 틀어두기엔 좋고 파티용은 아님
+- 소개글 평: 선물 포장해도 뭔지 안 들키는 크기</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">186/500자</span></div>
+      <p class="tp-text">5/ 결국 소개글 요지는 기프트카드 대신 직접 만든 믹스가 담긴 스피커로 마음을 돌려주자는 거
+
+이거 선물로 받으면 좋아할 사람 소환해줘
+
+해외에서 눈길 끈 신기한 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외에서 눈길 끈 신기한 물건을 계속 가져온다는 글쓴이의 자기 소개성 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>기프트카드 말고 선물 뭐 주지 싶을 때, 카세트테이프처럼 생긴 스피커에 믹스를 담아 주라는 글이 나옴</li><li>카세트테이프인 줄 알았는데 블루투스 스피커라는 게 실화?</li><li>선물 고민될 땐 물건부터 사지 말고 믹스부터 만들라는 글이 나옴</li><li>크리스마스에 필요한 거 없다면서 새벽에 노래 보내는 친구, 그 친구한테 딱이라는 물건</li><li>스피커 구멍이 이렇게 안 보일 수가 있나 싶은 카세트 스피커</li><li>&#39;스피커&#39;라고 적힌 상자에 든 스피커는 이 순간을 못 만든다는 말, 무슨 뜻일까</li><li>선물을 받은 사람이 모양만 보고 헛짚게 만드는 스피커가 있음</li><li>49달러짜리 카세트 스피커, 비싸도 이것만은 따로 포장하라는 이유</li><li>케이스를 열면 스탠드로 변하는 카세트, 정체는 주머니 속 스피커</li><li>노래 보내주는 친구한테 이번엔 노래를 물건으로 돌려주라는 글이 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해줘</li><li>카세트 모양 스피커 vs 평범한 스피커, 선물로 받는다면 어느 쪽?</li><li>믹스테이프나 믹스 플레이리스트 선물해본 사람?</li><li>이거 있으면 살 거야?</li><li>너라면 믹스 첫 곡으로 뭐 넣을래?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>해외에서 화제 된 레트로 감성 선물템 또 하나</li><li>도쿄 신형 개찰구, 찍지 않고 그냥 통과</li><li>지구의 임시 위성 2026 QQ8과 1878년의 예측</li><li>고구마 자연산 GMO</li><li>해외에서 화제 된 책상 위 소품</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>원문이 판매처에서 쓴 소개글이라 홍보 성격이 강함. 가격 $49와 재생 방식은 원문 기준이며 한국 판매 여부는 확인 안 됨</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>카세트처럼 생긴 주머니 크기 블루투스 스피커</b>
+          <q>“My pick is the Side A Cassette Speaker, a pocket-sized Bluetooth speaker from the Yanko Design Shop.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기프트카드는 해낼 일은 하지만 끝까지 들었다는 마음까지 전하진 못한다는 글쓴이의 시각</b>
+          <q>“A gift card would get the job done, but it doesn’t quite say, “Yes, I did listen all the way through.””</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>받는 사람이 모양을 알아보고도 뭘 열었는지 헛짚는 첫 순간이 이 물건의 값어치라는 소개글 주장</b>
+          <q>“What makes it worth picking over a regular little speaker is that first moment when your friend recognizes the shape and still guesses wrong about what they’ve opened.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>투명 껍데기, 가짜 릴 두 개, Side A 라벨이 달린 카세트 모양</b>
+          <q>“It looks like a cassette, complete with a transparent shell, two imitation reels, and a Side A label.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>주머니 크기 블루투스 스피커인 Side A Cassette Speaker</b>
+          <q>“My pick is the Side A Cassette Speaker, a pocket-sized Bluetooth speaker from the Yanko Design Shop.”</q>
+          <small>post1 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가짜 릴 하나 둘레의 작은 구멍들이 스피커 그릴이고, 나머지가 너무 테이프 같아서 알아보는 데 잠깐 걸린다</b>
+          <q>“My favorite detail is the ring of tiny holes around one of the imitation reels. It takes a second to register as a speaker grille because the rest of the object is so committed to looking like a tape.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>투명 케이스를 열면 라벨이 앞으로 보이게 스피커를 세워주는 스탠드가 된다</b>
+          <q>“Flip it open and it doubles as a stand, holding the speaker upright with its label facing out.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>직접 만든 믹스를 함께 주면 더 개인적인 선물이 된다는 제안</b>
+          <q>“I’d wrap it with a short mix I made myself. That gives you something more personal than another gadget, and it’s a way to return the favor to the friend or sibling who’s been finding good music for you all year.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>믹스는 5~6곡이면 충분하다</b>
+          <q>“Five or six tracks will do.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>손으로 쓴 트랙리스트에 곡 설명을 곁들이는 제안</b>
+          <q>“The handwritten list is where I’d explain one particularly questionable choice, preferably in a note short enough to fit in the margin.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>폰으로 블루투스 재생하는 쉬운 방법</b>
+          <q>“The easy one is to make a playlist, tuck the track list into the wrapping, and play the first song from your phone over Bluetooth when they open it.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>MP3를 microSD 카드에 넣으면 폰 없이 재생된다</b>
+          <q>“If you already have the songs as MP3 files, you can load them onto a microSD card and let the speaker play them without a phone.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격은 배송비와 세금 전 $49</b>
+          <q>“It’s listed at $49 before shipping and tax.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>케이스 포함 너비가 4인치 조금 넘고 책상용에 맞고 파티용은 아니라는 평가</b>
+          <q>“And at a little over four inches across in its case, it’s the speaker I’d pick for keeping music on while you clear off your desk, not the one I’d bring to a party.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>진짜 카세트테이프는 재생하지 못한다</b>
+          <q>“It doesn’t play real cassettes, so I’d skip it if your friend has been looking for something to play the tapes they keep picking up at thrift stores.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>크기 덕분에 포장해도 선물의 정체가 들키지 않는다</b>
+          <q>“For a stocking gift, though, that size means you can wrap it without giving the surprise away.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요지는 기프트카드 대신 직접 만든 믹스를 담은 스피커를 주자는 것</b>
+          <q>“I’d wrap it with a short mix I made myself. That gives you something more personal than another gadget, and it’s a way to return the favor to the friend or sibling who’s been finding good music for you all year.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="a791014ae085">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/25/a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-cassette-shaped-bluetooth-speaker-worth-making-a-mixtape-for" target="_blank" rel="noopener">A Cassette-Shaped Bluetooth Speaker Worth Making a Mixtape For</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261126-pm";
+  const ORIGINAL = {"51058228dcad": {"caption": "\uac1c\ucc30\uad6c\uc5d0 \uc2a4\ub9c8\ud2b8\ud3f0\uc744 \ucc0d\uc9c0 \uc54a\uace0 \uadf8\ub0e5 \uac78\uc5b4\uc11c \ud1b5\uacfc\ud55c\ub2e4\uba74 \uc5b4\ub5a8\uae4c. JR\ub3d9\uc77c\ubcf8\uc774 \ubc14\ub85c \uadf8\ub7f0 \uc2e0\ud615 \uac1c\ucc30\uad6c\ub97c \ub3c4\uc785\ud558\uaca0\ub2e4\uace0 \ubc1c\ud45c\ud588\ub2e4.\n\n\ud575\uc2ec\uc740 \ucd08\uad11\ub300\uc5ed(UWB) \ubb34\uc120\ud1b5\uc2e0 \uae30\uc220\uc774\ub2e4. \ud638\ud658\ub418\ub294 \uc2a4\ub9c8\ud2b8\ud3f0\uc774 \uc811\ucd09 \uc5c6\uc774 \uac1c\ucc30\uad6c\uc640 \ud1b5\uc2e0\ud558\uace0, \uae30\uc874 \ub2e8\ub9d0\uae30\ubcf4\ub2e4 \uba3c \uac70\ub9ac\uc5d0\uc11c\ub3c4 \uae30\uae30\ub97c \uc815\ud655\ud55c \uc704\uce58\ub85c \uac10\uc9c0\ud55c\ub2e4. \uc0c8\ub85c \uac00\uc785\ud560 \ud544\uc694 \uc5c6\uc774 \uae30\uc874 \ubaa8\ubc14\uc77c Suica \uacc4\uc815\ub9cc \uc788\uc73c\uba74 \ub418\uace0, \ucc98\ub9ac \uc18d\ub3c4\ub294 \uc9c0\uae08\uc758 \ud130\uce58 \ubc29\uc2dd\uacfc \ube44\uc2b7\ud55c \uc218\uc900\uc774\ub77c\uace0 \ud55c\ub2e4. \uc0c8 \uac1c\ucc30\uad6c\uc5d0\ub294 \uc2a4\ub9c8\ud2b8\ud3f0\uc6a9 \ud130\uce58 \ubc29\uc2dd\uacfc \ud1b5\uacfc \ubc29\uc2dd\uc774 \ud568\uaed8 \uac16\ucdb0\uc9c0\uba70, \uc2e4\ubb3c Suica \uce74\ub4dc\uc640 \ub2e4\ub978 IC\uce74\ub4dc\ub294 \uc9c0\uae08\ucc98\ub7fc \ud130\uce58 \ub2e8\ub9d0\uae30\ub97c \uc4f4\ub2e4.\n\n\uc77c\uc815\ub3c4 \uad6c\uccb4\uc801\uc774\ub2e4. 2027\ub144 4\uc6d4 10\uc77c\ubd80\ud130 2028\ub144 2\uc6d4 29\uc77c\uae4c\uc9c0 14\uac1c \uc5ed\uc5d0\uc11c \uc2dc\ubc94 \uc6b4\uc601\uc744 \ud558\uace0, \uc815\uae30\uad8c\uc744 \uac00\uc9c4 \uc57d 400\uba85\uc774 \ucc38\uac00\ud55c\ub2e4. 2028\ub144 \ubd04\ubd80\ud130\ub294 \ub3c4\ucfc4\uad8c 40\uac1c \uc5ed\uc5d0 \uc124\uce58\ud558\uba70, \uc5ec\uae30\uc5d0\ub294 \uc57c\ub9c8\ub178\ud14c\uc120 \uc804 \uc5ed\uc774 \ud3ec\ud568\ub41c\ub2e4. \uc774\ud6c4 2032\ub144 3\uc6d4 \ub9d0\uae4c\uc9c0 \uc790\ub3d9 \uac1c\ucc30\uad6c\uac00 \uc788\ub294 \uc57d 550\uac1c \uc5ed\uc73c\ub85c \ub113\ud788\ub294 \uac83\uc774 \ubaa9\ud45c\ub2e4. 2030\ub144\ub300 \uc911\ubc18\uc5d0\ub294 GPS \uae30\ubc18 \uc2a4\ub9c8\ud2b8\ud3f0 \uac1c\ucc30\uad6c\ub3c4 \uacc4\ud68d\ud558\uace0 \uc788\ub2e4.\n\n\uc774 \ubaa8\ub4e0 \uc6c0\uc9c1\uc784\uc740 Suica\ub97c \uc0dd\ud65c \uc11c\ube44\uc2a4\ub85c \ub113\ud788\ub824\ub294 \u0027Suica Renaissance\u0027 \uad6c\uc0c1\uc758 \uc77c\ubd80\ub2e4.\n\n\ucd9c\ucc98: SoraNews24, JR\ub3d9\uc77c\ubcf8 \ubcf4\ub3c4\uc790\ub8cc", "hashtags": ["#\ub3c4\ucfc4\uc5ec\ud589", "#\uc77c\ubcf8\uc5ec\ud589", "#Suica", "#JR\ub3d9\uc77c\ubcf8", "#\uc77c\ubcf8\uad50\ud1b5"], "slides": [["\uac1c\ucc30\uad6c\ub97c", "\uadf8\ub0e5 **\ud1b5\uacfc**???", "---", "\ub3c4\ucfc4\uc758 JR\ub3d9\uc77c\ubcf8\uc774 \uc2a4\ub9c8\ud2b8\ud3f0\uc744 \uaebc\ub0b4 \ucc0d\uc9c0 \uc54a\uc544\ub3c4 \uc9c0\ub098\uac08 \uc218 \uc788\ub294 \uc2e0\ud615 \uac1c\ucc30\uad6c\ub97c \ub3c4\uc785\ud55c\ub2e4\uace0 \ubc1c\ud45c\ud588\ub2e4."], ["**\uc804\ud30c\ub85c**", "\uc54c\uc544\ubcf8\ub2e4", "---", "\ucd08\uad11\ub300\uc5ed(UWB) \ubb34\uc120\ud1b5\uc2e0 \uae30\uc220\uc744 \uc4f4\ub2e4. \ud638\ud658\ub418\ub294 \uc2a4\ub9c8\ud2b8\ud3f0\uc774 \uc811\ucd09 \uc5c6\uc774 \uac1c\ucc30\uad6c\uc640 \ud1b5\uc2e0\ud558\ub294 \ubc29\uc2dd\uc774\ub2e4. \uae30\uc874 \ub2e8\ub9d0\uae30\ubcf4\ub2e4 \uba3c \uac70\ub9ac\uc5d0\uc11c\ub3c4 \uae30\uae30 \uc704\uce58\ub97c \uc815\ud655\ud788 \uc7a1\uc544\ub0b8\ub2e4."], ["**\uac00\uc785\uc740**", "\ub530\ub85c \ud544\uc694 \uc5c6\uc5b4", "---", "\ubcc4\ub3c4\ub85c \uac00\uc785\ud560 \ud544\uc694\ub294 \uc5c6\ub2e4. \uc9c0\uae08 \uc4f0\ub294 \ubaa8\ubc14\uc77c Suica \uacc4\uc815\ub9cc \uc788\uc73c\uba74 \uc774\uc6a9\ud560 \uc218 \uc788\ub2e4. JR\ub3d9\uc77c\ubcf8\uc740 \ucc98\ub9ac \uc18d\ub3c4\ub3c4 \ud604\uc7ac\uc758 \ud130\uce58 \ubc29\uc2dd\uacfc \ube44\uc2b7\ud55c \uc218\uc900\uc774\ub77c\uace0 \ubc1d\ud614\ub2e4."], ["\uba3c\uc800 **400\uba85\uc774**", "\uc368\ubcf8\ub2e4", "---", "2027\ub144 4\uc6d4 10\uc77c\ubd80\ud130 2028\ub144 2\uc6d4 29\uc77c\uae4c\uc9c0 14\uac1c \uc5ed\uc5d0\uc11c \uc2dc\ubc94 \uc6b4\uc601\ud55c\ub2e4. \uad6c\uac04 \uc815\uae30\uad8c\uc744 \uac00\uc9c4 \uc57d 400\uba85\uc774 \ucc38\uac00\ud558\uba70, \uc0e4\ud504\uc640 \ud568\uaed8 \ub9cc\ub4e0 \uc571\uc774 \ub4e0 \uc2a4\ub9c8\ud2b8\ud3f0\uc744 \ubc1b\ub294\ub2e4."], ["2028\ub144 \ubd04", "**40\uac1c \uc5ed** \uc124\uce58", "---", "2028\ub144 \ubd04\ubd80\ud130 \ub3c4\ucfc4 \uc77c\ub300 40\uac1c \uc5ed\uc5d0 \uc124\uce58\ud55c\ub2e4. \uc57c\ub9c8\ub178\ud14c\uc120 \uc804 \uc5ed\uacfc \ub098\ub9ac\ud0c0\uacf5\ud56d \ubc29\uba74 JR\ub3d9\uc77c\ubcf8 \uc5ed, \ud558\ub124\ub2e4\uacf5\ud56d \ubc29\uba74 \ub3c4\ucfc4\ubaa8\ub178\ub808\uc77c \uc5ed\uc774 \uccab \ub300\uc0c1\uc774\ub2e4."], ["2032\ub144 3\uc6d4", "\uc57d **550\uac1c \uc5ed**", "---", "\uc774\ud6c4 \uc7ac\ub798\uc120\uacfc \uc2e0\uce78\uc13c \uc5ed\uae4c\uc9c0 \ub113\ud600 2032\ub144 3\uc6d4 \ub9d0\uae4c\uc9c0 \uc790\ub3d9 \uac1c\ucc30\uad6c\uac00 \uc788\ub294 \uc57d 550\uac1c \uc5ed \uc804\ubd80\uc5d0 \ub123\ub294 \uac83\uc774 \ubaa9\ud45c\ub2e4. 2030\ub144\ub300 \uc911\ubc18\uc5d0\ub294 GPS \uae30\ubc18 \uac1c\ucc30\uad6c\ub3c4 \uacc4\ud68d \uc911\uc774\ub2e4."], ["\ub3c4\ucfc4 \uc790\uc8fc \uac00\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc57c\ub9c8\ub178\ud14c\uc120 \uc804 \uc5ed\uc774 \uccab \uc124\uce58 \ub300\uc0c1\uc5d0 \ub4e4\uc5b4 \uc788\uc5b4, \ub3c4\ucfc4\ub97c \uc790\uc8fc \uc624\uac00\ub294 \uce5c\uad6c\ub77c\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd"]]}, "5590e30f9417": {"caption": "\uc9c0\uad6c\uc5d0 \uc784\uc2dc \uc704\uc131\uc774 \ud558\ub098 \uc0dd\uacbc\ub2e4. \uc774\ub984\uc740 2026 QQ8, \uc9c0\ub984\uc774 \uba87 \ubbf8\ud130\uc5d0 \ubd88\uacfc\ud55c \uc791\uc740 \ubc14\uc704\ub2e4. \uc62c\ud574 4\uc6d4 \uc9c0\uad6c \uada4\ub3c4\uc5d0 \ub4e4\uc5b4\uc654\uace0 12\uc6d4 7\uc77c \ub5a0\ub0a0 \uac83\uc73c\ub85c \uc608\uce21\ub41c\ub2e4.\n\n\ud5dd\uac00\ub9ac \ucf58\ucf5c\ub9ac \ucc9c\ubb38\ub300\uc758 \ucc9c\ubb38\ud559\uc790\uac00 8\uc6d4 19\uc77c \ucc98\uc74c \ud655\uc778\ud588\uc9c0\ub9cc, \uc790\uc5f0\ubb3c\uc778\uc9c0 \uc6b0\uc8fc \uc4f0\ub808\uae30\uc778\uc9c0 \ubc14\ub85c \uac00\ub9ac\uae30 \uc5b4\ub824\uc6e0\ub2e4. QQ8\uc740 \ud655\uc778 \ubaa9\ub85d\uc5d0\uc11c \ub450 \ubc88 \ube60\uc84c\uace0, \uacf5\uc2dd \ubc1c\ud45c\ub294 10\uc6d4 29\uc77c\uc5d0\uc57c \ub098\uc654\ub2e4.\n\n\uc5f0\uad6c\uc9c4\uc740 \ud587\ube5b\uc774 \ubbf8\ub294 \ud798\uc758 \uc601\ud5a5\uacfc \ube5b \ubc18\uc0ac \ud328\ud134\uc73c\ub85c \uc790\uc5f0\ubb3c\uc784\uc744 \ud655\uc778\ud588\ub2e4. \uba38\ubb38 \uae30\uac04\uc740 \uc57d 7.5\uac1c\uc6d4\ub85c, \uc55e\uc11c \ud655\uc778\ub41c \ub450 \ud50c\ub77c\uc774\ubc14\uc774\uac00 \uac01\uac01 \ud55c \ub2ec \uc815\ub3c4 \uc9c0\uad6c\uc5d0 \ubb36\uc5ec \uc788\uc5c8\ub358 \uac83\uacfc \ube44\uad50\ub41c\ub2e4. \uc774 \uae34 \uccb4\ub958\ub294 1878\ub144 \uc870\uc9c0 \uc70c\ub9ac\uc5c4 \ud790\uc774 \uc81c\uc548\ud55c \uada4\ub3c4 \ub355\ubd84\uc774\uace0, \uc774\ub7f0 \uada4\ub3c4\uac00 \uc2e4\uc81c\ub85c \uad00\uce21\ub41c \uac74 \ucc98\uc74c\uc774\ub2e4.\n\n\uc7ac\ubbf8\uc788\ub294 \uac74 \uc774\ub984\ud45c\ub2e4. \uc9c0\uad6c\uc640 \ud568\uaed8 \ub3c4\ub294 \uad00\uc810\uc5d0\uc11c\ub294 4\ubd84\uc758 3\ubc14\ud034\ub9cc \ub3cc\uc544 \ud50c\ub77c\uc774\ubc14\uc774\ub85c \ubd84\ub958\ub418\uc9c0\ub9cc, \uc785\uccb4 \uada4\uc801\uc758 \uad7d\uc74c\uc73c\ub85c \uc138\uba74 \ud55c \ubc14\ud034\ub97c \ub118\ub294\ub2e4\ub294 \uacc4\uc0b0\ub3c4 \ub098\uc654\ub2e4. \ub610 \uc544\ud3f4\ub85c 17\ud638 \ube44\ud589\uc0ac\ub4e4\uc774 1972\ub144\uc5d0 \ucc44\ucde8\ud55c \ud604\ubb34\uc554 \uc2dc\ub8cc \ub450 \uac1c\uc640 \uc0c9\uc774 \uc798 \ub9de\uc544 \ub2ec\uc5d0\uc11c \ub5a8\uc5b4\uc838 \ub098\uc628 \uc870\uac01\uc77c \uac00\ub2a5\uc131\ub3c4 \uac70\ub860\ub410\uc9c0\ub9cc, \uc18c\ud589\uc131\uacfc\ub3c4 \uc77c\uce58\ud574 \uacb0\ub860\uc740 \ub098\uc9c0 \uc54a\uc558\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert, arXiv", "hashtags": ["#\ucc9c\ubb38\ud559", "#\uc9c0\uad6c", "#\uc704\uc131", "#\uc6b0\uc8fc", "#\uacfc\ud559\ub274\uc2a4"], "slides": [["\uc9c0\uad6c\uc5d0 \uc0c8", "**\uc784\uc2dc \uc704\uc131**???", "---", "\uc9c0\uad6c \uada4\ub3c4\uc5d0 \uba87 \ubbf8\ud130 \ud06c\uae30\uc758 \uc791\uc740 \ubc14\uc704\uac00 \uc784\uc2dc \uc704\uc131\ucc98\ub7fc \ub4e4\uc5b4\uc640 \uc788\uace0, 1878\ub144\uc5d0 \uc608\uce21\ub41c \uada4\ub3c4\ub97c \ucc98\uc74c \ubcf4\uc5ec\uc92c\ub2e4."], ["2026 QQ8,", "**\uba87 \ubbf8\ud130** \ubc14\uc704", "---", "\uc774\ub984\uc740 2026 QQ8\uc774\ub2e4. \uc9c0\ub984\uc774 \uba87 \ubbf8\ud130\uc5d0 \ubd88\uacfc\ud55c \uc791\uc740 \ubc14\uc704\ub85c, \uc62c\ud574 4\uc6d4 \uc9c0\uad6c \uada4\ub3c4\uc5d0 \ub4e4\uc5b4\uc654\uace0 12\uc6d4 7\uc77c \ub5a0\ub0a0 \uac83\uc73c\ub85c \uc608\uce21\ub41c\ub2e4."], ["\ubc14\uc704\uc57c,", "**\uc4f0\ub808\uae30**\uc57c?", "---", "\ubc1c\uacac \ub2f9\uc2dc \ucc9c\ubb38\ud559\uc790\ub4e4\uc740 \uc790\uc5f0\ubb3c\uc778\uc9c0 \uc6b0\uc8fc \uc4f0\ub808\uae30\uc778\uc9c0 \ubc14\ub85c \uac00\ub9ac\uc9c0 \ubabb\ud588\ub2e4. \uc778\uacf5\ubb3c\ub85c \uc758\uc2ec\ub41c \ucc9c\uccb4\ub294 \ud655\uc778 \ubaa9\ub85d\uc5d0\uc11c \ube60\uc9c0\ub294\ub370, QQ8\uc740 \ub450 \ubc88\uc774\ub098 \uc81c\uc678\ub410\ub2e4."], ["**\ud587\ube5b\uc774** \ubc00\uc5b4\uc11c", "\uc815\uccb4\ub97c \ubc1d\ud614\ub2e4", "---", "\uc6c0\uc9c1\uc784\uc744 \uc815\ubc00\ud558\uac8c \ucd94\uc801\ud574 \ud587\ube5b\uc774 \ubbf8\ub294 \ud798\uc758 \uc601\ud5a5\uc744 \uc7c0\ub354\ub2c8, \uc77c\ubc18\uc801\uc778 \uc6b0\uc8fc \uc4f0\ub808\uae30\ub77c\uae30\uc5d4 \ub108\ubb34 \uc791\uc558\ub2e4. \ubc18\uc0ac\ud558\ub294 \ube5b\uc758 \ud328\ud134\ub3c4 \uc554\uc11d\uc9c8 S\ud615 \uc18c\ud589\uc131\uacfc \uac00\uae4c\uc6e0\ub2e4."], ["**1878\ub144\uc5d0**", "\uc608\uce21\ud55c \uada4\ub3c4", "---", "QQ8\uc740 7.5\uac1c\uc6d4 \uba38\ubb3c\ub7ec \uc774\ub860\uc0c1 \ubaa8\ub378\ub9c1\ub41c \ud50c\ub77c\uc774\ubc14\uc774 \uc911 \uac00\uc7a5 \uc624\ub798 \uba38\ubb34\ub294 0.3\ud37c\uc13c\ud2b8\uc5d0 \ub4e0\ub2e4. 1878\ub144 \uc870\uc9c0 \uc70c\ub9ac\uc5c4 \ud790\uc774 \uc81c\uc548\ud55c \uada4\ub3c4\uac00 \uad00\uce21\ub41c \uac74 \ucc98\uc74c\uc774\ub2e4."], ["\ubcc4 \ubcf4\ub294 \uce5c\uad6c\ud55c\ud14c", "\ub5a0\ub098\uae30 \uc804\uc5d0 \ubcf4\ub0b4\uae30", "---", "1878\ub144\uc5d0 \uc608\uce21\ub41c \uada4\ub3c4\ub97c \ucc98\uc74c \ubcf4\uc5ec\uc900 \uc791\uc740 \ubc14\uc704\ub294 12\uc6d4 7\uc77c \uc9c0\uad6c\ub97c \ub5a0\ub0a0 \uac83\uc73c\ub85c \uc608\uce21\ub41c\ub2e4. \ubcc4 \ubcf4\uae30\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "b41dbdfdd8c2": {"caption": "\uace0\uad6c\ub9c8\uac00 \uc0ac\ub78c\ubcf4\ub2e4 \uba3c\uc800 \uc720\uc804\uc790 \ubcc0\ud615\uc744 \uacaa\uc5c8\ub2e4\ub294 \uc5f0\uad6c\uac00 \ud654\uc81c\ub2e4. 2015\ub144 \uc5f0\uad6c\uc5d0\uc11c \uc804 \uc138\uacc4 \uc7ac\ubc30 \uace0\uad6c\ub9c8\uac00 \uc678\ubd80 DNA\ub97c \ud488\uace0 \uc788\ub2e4\ub294 \uc0ac\uc2e4\uc774 \ud655\uc778\ub410\ub294\ub370, \ubd84\uc11d\ud55c \uc7ac\ubc30\uc885\uc5d0\uc11c\ub294 \ubaa8\ub450 \ub098\ud0c0\ub0ac\uace0 \uc57c\uc0dd \uce5c\ucc99\uc885\uc5d0\uc11c\ub294 \ub098\ud0c0\ub098\uc9c0 \uc54a\uc558\ub2e4. \uc774 DNA\ub97c \ub123\uc740 \uc8fc\uc778\uacf5\uc740 \uc544\uadf8\ub85c\ubc15\ud14c\ub9ac\uc6c0\uc774\ub77c\ub294 \ud1a0\uc591 \uc138\uade0\uc774\ub2e4. \uc774 \uc138\uade0\uc740 \uc2dd\ubb3c\uc5d0 \uac10\uc5fc\ub420 \ub54c \uc790\uae30 DNA \uc870\uac01\uc744 \uc138\ud3ec\uc5d0 \uc62e\uae30\uace0, \uc2dd\ubb3c\uc740 \ubc88\uc2dd\ud560 \ub54c \uc774 \uc720\uc804\uc790\ub97c \ud6c4\uc190\uc5d0\uac8c \ubb3c\ub824\uc904 \uc218\ub3c4 \uc788\ub2e4. 1970\ub144\ub300 \ud6c4\ubc18 \uc774 \ub2a5\ub825\uc774 \ubc1c\uacac\ub418\uba74\uc11c \uacfc\ud559\uc790\ub4e4\uc740 \ubcd1\uc744 \uc77c\uc73c\ud0a4\ub294 \uc720\uc804\uc790\ub97c \ube80 T-DNA\ub85c \uc2dd\ubb3c\uc744 \uac1c\ub7c9\ud560 \uc218 \uc788\ub2e4\ub294 \uc544\uc774\ub514\uc5b4\ub97c \uc5bb\uc5c8\ub2e4. \uc62c\ud574 10\uc6d4 Planta\uc5d0 \uc2e4\ub9b0 \uc5f0\uad6c\ub294 \uace0\uad6c\ub9c8\uc758 \uc138\uade0 \uc720\ub798 \uc720\uc804\uc790\uac00 \uc628\ub3c4 \ubcc0\ud654\ub97c \uacac\ub514\uace0 \ubcd1\uc5d0 \ub9de\uc11c\uba70 \uc0b0\ud654 \uc190\uc0c1\uc744 \uc904\uc774\ub294 \ub370 \ub3c4\uc6c0\uc774 \ub420 \uc218 \uc788\ub2e4\uace0 \ubc1d\ud614\ub2e4. 2025\ub144 \uc5f0\uad6c\ub3c4 \uace0\uad6c\ub9c8\uc5d0\uc11c \uc870\uc9c1 \uc131\uc7a5\uacfc \ud56d\uc0b0\ud654 \ubb3c\uc9c8 \uc0dd\uc0b0\uc744 \ub3c4\uc6b8 \uc218 \uc788\ub294 \uc138\uade0 \uc720\ub798 \uc720\uc804\uc790 \ub450 \uac1c\ub97c \ucc3e\uc558\ub2e4. \uace0\ub300 \uc0ac\ub78c\ub4e4\uc774 \uc88b\uc740 \uc791\ubb3c\uc744 \uace8\ub77c \uc2ec\uc73c\uba74\uc11c \uc774 \uacfc\uc815\uc774 \ube68\ub77c\uc84c\uc744 \uc218\ub3c4 \uc788\ub2e4\ub294 \ud574\uc11d\uc774\ub2e4. \uc62c\ud574 8\uc6d4 \ub17c\ubb38\uc740 \uc790\uc5f0 \ubc1c\uc0dd GMO \uc2dd\ubb3c 2,600\uc885 \uc774\uc0c1\uc744 \ucc3e\uc544\ub0c8\uace0, \uc5f0\uad6c\ud300\uc740 \uc721\uc0c1\uc2dd\ubb3c \uc885\uc758 12%\uac00 \uc138\uade0\uc774 \ub123\uc740 DNA\ub97c \uac00\uc84c\uc744 \uc218 \uc788\ub2e4\uace0 \ucd94\uc815\ud55c\ub2e4. \uc2dc\ub098\ubaac, \ud6c4\ucd94, \ucee4\ud53c\uc5d0\ub3c4 \uadf8\ub7f0 \uc720\uc804\uc790\uac00 \uc788\ub2e4\uace0 \ud55c\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uace0\uad6c\ub9c8", "#GMO", "#\uc720\uc804\uc790", "#\uacfc\ud559\ub274\uc2a4", "#\ud574\uc678\uc774\uc288"], "slides": [["\uace0\uad6c\ub9c8\uac00", "\uc6d0\ub798 **GMO**???", "---", "\uc0ac\ub78c\uc774 \uc720\uc804\uc790 \ubcc0\ud615 \uc791\ubb3c\uc744 \ub9cc\ub4e4\uae30 \ud6e8\uc52c \uc804\uc5d0, \ub2e4\ub978 \uc0dd\ubb3c\uc774 \uc774\ubbf8 \uace0\uad6c\ub9c8\uc758 \uc720\uc804\uc790\ub97c \ubc14\uafd4 \ub193\uc558\ub2e4\ub294 \uc5f0\uad6c\uac00 \ub098\uc654\ub2e4."], ["\uc804 \uc138\uacc4 \uace0\uad6c\ub9c8\uc5d0", "**\ub0af\uc120 DNA** \ubc1c\uacac", "---", "2015\ub144 \uc5f0\uad6c\uc9c4\uc774 \uc804 \uc138\uacc4 \uc7ac\ubc30 \uace0\uad6c\ub9c8\ub97c \ubd84\uc11d\ud588\ub354\ub2c8 \uc678\ubd80 DNA\uac00 \ub4e4\uc5b4 \uc788\uc5c8\ub2e4. \uc77c\ubd80\ub294 \uc2dd\ubb3c \uc548\uc5d0\uc11c \uc2e4\uc81c\ub85c \uc791\ub3d9\ud588\uace0, \ubd84\uc11d\ud55c \uc7ac\ubc30\uc885\uc5d0\ub294 \ubaa8\ub450 \uc788\uc5c8\uc9c0\ub9cc \uc57c\uc0dd \uce5c\ucc99\uc885\uc5d0\ub294 \uc5c6\uc5c8\ub2e4."], ["\ubc94\uc778\uc740 \ud759 \uc18d", "**\uc138\uade0**\uc774\uc5c8\uc5b4", "---", "\uc8fc\uc778\uacf5\uc740 \uc544\uadf8\ub85c\ubc15\ud14c\ub9ac\uc6c0\uc774\ub77c\ub294 \uc791\uc740 \ud1a0\uc591 \uc138\uade0\uc774\ub2e4. \uc2dd\ubb3c \uc870\uc9c1\uc744 \uac10\uc5fc\uc2dc\ud0a4\uba74 \uc790\uae30 DNA \uc77c\ubd80\ub97c \uc2dd\ubb3c \uc138\ud3ec\uc5d0 \uc62e\uaca8 \ub123\uace0, \uc774 \uc720\uc804\uc790\ub294 \uc2dd\ubb3c\uc758 \uc720\uc804\uccb4\ub97c \uc601\uad6c\ud788 \ubc14\uafc0 \uc218 \uc788\ub2e4."], ["\uace0\uad6c\ub9c8\ud55c\ud14c\ub3c4", "**\ub4dd**\uc774 \ub410\ub098\ubd10", "---", "\uc62c\ud574 10\uc6d4 Planta\uc5d0 \uc2e4\ub9b0 \uc5f0\uad6c\uc5d0 \ub530\ub974\uba74 \uc138\uade0\uc5d0\uc11c \uc628 \uc774 \uc720\uc804\uc790\ub294 \uc628\ub3c4 \ubcc0\ud654\ub97c \uacac\ub514\uace0 \ubcd1\uc5d0 \ub9de\uc11c\uba70 \uc0b0\ud654 \uc190\uc0c1\uc744 \uc904\uc774\ub294 \ub370 \ub3c4\uc6c0\uc774 \ub420 \uc218 \uc788\ub2e4. \uc560\uae30\uc7a5\ub300\uc5d0 \ub123\uc5b4 \uc2dc\ud5d8\ud588\uc744 \ub54c\ub3c4 \uc5ec\ub7ec\ubaa8\ub85c \uc774\ub85c\uc6cc \ubcf4\uc600\ub2e4."], ["\ub545 \uc704 \uc2dd\ubb3c **12%**", "GMO\uc77c \uc218\ub3c4", "---", "\uc62c\ud574 8\uc6d4 \ub17c\ubb38\uc740 \uc790\uc5f0 \ubc1c\uc0dd GMO \uc2dd\ubb3c\uc744 2,600\uc885 \ub118\uac8c \ucc3e\uc544\ub0c8\ub2e4. \uc5f0\uad6c\ud300\uc740 \uc721\uc0c1\uc2dd\ubb3c \uc885\uc758 12%\uac00 \uc138\uade0\uc774 \ub123\uc740 DNA\ub97c \uac00\uc84c\uc744 \uc218 \uc788\ub2e4\uace0 \ucd94\uc815\ud55c\ub2e4. \ud06c\ub79c\ubca0\ub9ac\uc5d0\ub3c4 \uac19\uc740 \uc138\uade0\uc758 \uc720\uc804\uc790\uac00 \uc788\ub2e4."], ["GMO \ubb34\uc12d\ub2e4\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4", "---", "GMO\uac00 \ubd80\uc790\uc5f0\uc2a4\ub7fd\ub2e4\uace0 \ub9d0\ud558\ub294 \uce5c\uad6c\ub77c\uba74 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd. \ud604\ub300 GMO \uc81c\ud488\uc774 \uc0ac\uc2e4\uc740 \uc790\uc5f0\uc5d0\uc11c \uc77c\uc5b4\ub098\ub294 \uc544\uc8fc \uc790\uc5f0\uc2a4\ub7ec\uc6b4 \uacfc\uc815\uc5d0 \ubc14\ud0d5\uc744 \ub454\ub2e4\ub294 \uc774\uc57c\uae30"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

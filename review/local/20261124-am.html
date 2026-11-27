@@ -1,0 +1,1745 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.24 오전</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.24 오전 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-8aad99591807" data-jump="8aad99591807">1</a><a href="#post-e6e069e2d58d" data-jump="e6e069e2d58d">2</a><a href="#post-5aa06ed3bf1d" data-jump="5aa06ed3bf1d">3</a>
+      <a href="#threads">🧵 스레드 2</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-8aad99591807" data-id="8aad99591807">
+    <div class="head">
+      <h2>1. 오사카 고분 축제의 티라노 달리기 예선</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/8aad99591807/v1-01.jpg" alt="1장: 고분 축제에 티라노 질주?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/8aad99591807/v1-02.jpg" alt="2장: 고대 무덤이 가득한 오사카" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/8aad99591807/v1-03.jpg" alt="3장: 이름부터 하니코토" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/8aad99591807/v1-04.jpg" alt="4장: 티라노 옷 입고 달린다고?" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/8aad99591807/v1-05.jpg" alt="5장: 예선 통과하면 지바로 간다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/8aad99591807/v1-06.jpg" alt="6장: 공룡 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/8aad99591807/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">고분 공원에서 티라노사우루스가 달린다면 믿어지는가. 일본 공휴일 연휴였던 11월 23일, 오사카 이마조즈카 고분 공원에서 &#39;고분 페스트 하니코토&#39;가 열렸다. 고대 일본의 무덤을 기리는 지역 축제다.
+
+이름의 하니코토는 하니와와 마스코트의 일본어 발음을 합친 말이다. 하니와는 고분에 망자와 함께 묻혔던 고대 점토 조각이다.
+
+이 축제는 몇 해째 전국 티라노사우루스 달리기 대회 &#39;티라노 페스트&#39;의 서일본 예선을 맡고 있다. 남녀 1·2위와 와일드카드 한 명은 2027년 3월 20일 지바현 후나바시 경마장에서 열리는 제3회 대회에 진출한다. 제1회 대회의 여자 우승자와 제2회 대회의 남자 우승자가 모두 이 축제 예선 출신이었다.
+
+예선은 기록을 재는 달리기에, 바닥에 놓인 하니와 조각을 줍는 &#39;하니와 캡처 레이스&#39;가 더해진 방식이다. 올해 행사는 끝났지만 매체는 내년에도 돌아올 것이라고 전했다.
+
+출처: SoraNews24 (원문 PR TIMES)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본여행 #오사카 #티라노사우루스 #해외반응 #이색축제</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 축제의 이름이 &#39;고분 페스트 하니코토&#39;이다.</li><li>근거 등록 안 된 주장: 축제는 고대 일본의 무덤을 기리는 지역 축제이다.</li><li>근거 등록 안 된 주장: 출처는 SoraNews24(원문 PR TIMES)이다.</li>
+          <li>단일 매체(SoraNews24) 기사에만 근거함</li><li>&#39;아마도&#39;, &#39;넘어질 것&#39; 등 기자의 추측 표현은 사실로 쓰지 않음</li><li>기사 사진은 사용하지 말고 위키미디어 등 허락된 이미지만 사용할 것</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-8aad99591807-0">1장</label>
+          <textarea id="s-8aad99591807-0" rows="6" data-slide="0">고분 축제에
+**티라노 질주?!**
+---
+일본 오사카의 고분 공원에서 열린 축제에서 티라노사우루스 의상을 입은 사람들이 달리는 대회 예선이 함께 열렸다.</textarea>
+          
+          <label class="f" for="s-8aad99591807-1">2장</label>
+          <textarea id="s-8aad99591807-1" rows="6" data-slide="1">**고대 무덤이**
+가득한 오사카
+---
+고분은 주로 왕족을 위한 고대 무덤이다. 오사카는 고대 일본의 수도였고 나라, 교토 같은 옛 수도와 가까워 고분이 여럿 흩어져 있다. 크고 열쇠구멍 같은 모양이라 항공사진에서도 눈에 띈다.</textarea>
+          
+          <label class="f" for="s-8aad99591807-2">3장</label>
+          <textarea id="s-8aad99591807-2" rows="6" data-slide="2">이름부터
+하니코토
+---
+하니코토는 하니와와 마스코트의 일본어 발음을 합친 말이다. 하니와는 고분에 망자와 함께 묻던 고대 점토 조각으로, 저승에서 망자를 지켜 주는 역할을 했다.</textarea>
+          
+          <label class="f" for="s-8aad99591807-3">4장</label>
+          <textarea id="s-8aad99591807-3" rows="6" data-slide="3">티라노 옷 입고
+**달린다고?**
+---
+이 축제는 몇 해째 전국 티라노사우루스 달리기 대회 &#39;티라노 페스트&#39;의 서일본 예선을 열고 있다. 커다란 티라노 의상을 입은 남녀노소가 달린다.</textarea>
+          
+          <label class="f" for="s-8aad99591807-4">5장</label>
+          <textarea id="s-8aad99591807-4" rows="6" data-slide="4">예선 통과하면
+**지바로 간다**
+---
+남녀 1·2위와 와일드카드 한 명이 2027년 3월 20일 지바현 후나바시 경마장의 제3회 대회에 나간다. 예선은 기록 경쟁에 바닥의 하니와를 줍는 규칙이 더해진다.</textarea>
+          
+          <label class="f" for="s-8aad99591807-5">6장</label>
+          <textarea id="s-8aad99591807-5" rows="6" data-slide="5">공룡 좋아하는
+친구한테 보내기
+---
+고대 무덤 축제에서 티라노 달리기 예선이 열린다니, 역사와 공룡을 둘 다 좋아하는 친구가 신기해할 소식</textarea>
+          
+          <label class="f" for="c-8aad99591807">본문 (캡션)</label>
+          <textarea id="c-8aad99591807" class="caption">고분 공원에서 티라노사우루스가 달린다면 믿어지는가. 일본 공휴일 연휴였던 11월 23일, 오사카 이마조즈카 고분 공원에서 &#39;고분 페스트 하니코토&#39;가 열렸다. 고대 일본의 무덤을 기리는 지역 축제다.
+
+이름의 하니코토는 하니와와 마스코트의 일본어 발음을 합친 말이다. 하니와는 고분에 망자와 함께 묻혔던 고대 점토 조각이다.
+
+이 축제는 몇 해째 전국 티라노사우루스 달리기 대회 &#39;티라노 페스트&#39;의 서일본 예선을 맡고 있다. 남녀 1·2위와 와일드카드 한 명은 2027년 3월 20일 지바현 후나바시 경마장에서 열리는 제3회 대회에 진출한다. 제1회 대회의 여자 우승자와 제2회 대회의 남자 우승자가 모두 이 축제 예선 출신이었다.
+
+예선은 기록을 재는 달리기에, 바닥에 놓인 하니와 조각을 줍는 &#39;하니와 캡처 레이스&#39;가 더해진 방식이다. 올해 행사는 끝났지만 매체는 내년에도 돌아올 것이라고 전했다.
+
+출처: SoraNews24 (원문 PR TIMES)</textarea>
+          <label class="f" for="t-8aad99591807">해시태그</label>
+          <input id="t-8aad99591807" type="text" class="tagsin" value="#일본여행 #오사카 #티라노사우루스 #해외반응 #이색축제" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>축제는 오사카 이마조즈카 고분 공원에서 열렸다.</b>
+            <q>“In Osaka, that meant it was time once again for Kofun Fest Hanicotto, a regional festival celebrating ancient Japanese graves at Imajozuka Kofun Park.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>축제에서 티라노사우루스 의상을 입고 달리는 대회 예선이 열린다.</b>
+            <q>“For a few years now, Kofun Fest Hanicotto has also been the host of the West Japan qualifying round of the Tyranno Fest national Tyrannosaurus rex race.”</q>
+            <small>slide1 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>11월 23일은 일본 공휴일로 연휴였고 축제가 열렸다.</b>
+            <q>“Monday 23 November is a public holiday in Japan, creating a long weekend this year, which is always a good time to hold a major event.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고분은 주로 왕족을 위한 고대 무덤이다.</b>
+            <q>“A kofun is an ancient tomb typically reserved for royalty.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오사카는 고대 일본의 수도였고 나라, 교토 같은 옛 수도와 인접해 고분이 여럿 있다.</b>
+            <q>“Since Osaka was an ancient capital of Japan and adjacent to other historical capitals like Nara and Kyoto, the city is dotted with quite a few of them, easily spotted in aerial photos due to their large sizes and distinctive, keyhole-like shapes.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고분은 크고 열쇠구멍 같은 모양이라 항공사진에서 눈에 띈다.</b>
+            <q>“Since Osaka was an ancient capital of Japan and adjacent to other historical capitals like Nara and Kyoto, the city is dotted with quite a few of them, easily spotted in aerial photos due to their large sizes and distinctive, keyhole-like shapes.”</q>
+            <small>slide2 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하니코토는 하니와와 마스코트의 일본어 발음을 합친 말이다.</b>
+            <q>“As for “Hanicotto,” that is a combination of the words “haniwa” and the Japanese pronunciation of “mascot.””</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>하니와는 고분에 망자와 함께 묻혔고 저승에서 망자를 보호하는 역할이었다.</b>
+            <q>“These figures were buried with the deceased in kofun to help protect them in the afterlife.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>몇 해째 이 축제가 티라노 페스트 서일본 예선을 열고 있다.</b>
+            <q>“For a few years now, Kofun Fest Hanicotto has also been the host of the West Japan qualifying round of the Tyranno Fest national Tyrannosaurus rex race.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>남녀노소가 큰 티라노 의상을 입고 달린다.</b>
+            <q>“This is the only qualifying race of its kind on this side of Japan and promises to bring the very best in men, women, and children who run around while wearing a big T-Rex costume.”</q>
+            <small>slide4 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>남녀 1·2위와 와일드카드 한 명이 2027년 3월 20일 지바현 후나바시 경마장의 제3회 대회에 진출한다.</b>
+            <q>“The first and second-place male and female racers, as well as one wildcard entrant who wins the MIP (Most Impressive Participant) award, advance to Tyranno Fest Vol. 3 on 20 March, 2027 at Funabashi Racecourse in Chiba Prefecture.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>예선은 기록 경주에 바닥의 하니와를 줍는 하니와 캡처 레이스가 결합된 방식이다.</b>
+            <q>“These qualifying rounds, however, are standard time trial races, combined with Kofun Fest Hanicotto’s signature Haniwa Capture Race, where the Tyrannosaurus Rexes have to also pick up haniwa statues on the ground, and probably fall down a lot in the process.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>제1회 대회 여자 우승자와 제2회 대회 남자 우승자가 이 축제 예선 출신이다.</b>
+            <q>“At Tyranno Fest Vol. 1, the women’s champion came from Kofun Fest Hanicotto, as did the men’s champ in Tyranno Fest Vol. 2.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>주 후원사는 현대식 다케다 스타일 고분 묘지로 화제가 된 묘지 운영사 젠포코엔후다.</b>
+            <q>“The main sponsor of this event is none other than Zenpo-Koenfu, a grave operator that has made headlines for their award-winning modern Takeda-style kofun tombs.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>올해 행사는 끝났지만 내년에도 돌아올 것이라고 매체는 전했다.</b>
+            <q>“Although this year’s event is behind us now, it’s sure to return next year, bigger and more ancient than ever.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">Tomb festival in Osaka holds qualifying tyrannosaurus race and ancient clay sculpture chase</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/main_df3c8e.png"</li><li>2장: <a href="https://commons.wikimedia.org/wiki/File:Ishibutai-kofun_Asuka_Nara_pref05n4592.jpg" target="_blank" rel="noopener">663highland / Wikimedia Commons · CC BY 2.5</a> — "Kofun"</li><li>3장: <a href="https://commons.wikimedia.org/wiki/File:Haniwa_Figure_(Copy)_(30028010196).jpg" target="_blank" rel="noopener">Gary Todd from Xinzheng, China / Wikimedia Commons · CC0</a> — "Haniwa"</li><li>4장: <a href="https://soranews24.com/2026/11/24/tomb-festival-in-osaka-holds-qualifying-tyrannosaurus-race-and-ancient-clay-sculpture-chase/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/sub25.png?w=640"</li><li>5장: <a href="https://commons.wikimedia.org/wiki/File:Funabashi_Racecourse_Aerial_view.jpg" target="_blank" rel="noopener">ブルーノ・プラス / Wikimedia Commons · CC BY 4.0</a> — "Funabashi Racecourse"</li><li>6장: <a href="https://pixabay.com/photos/dinosaur-birds-fantasy-giants-7109899/" target="_blank" rel="noopener">intetzlaff / Pixabay</a> — "dinosaur toy"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-e6e069e2d58d" data-id="e6e069e2d58d">
+    <div class="head">
+      <h2>2. 스시로 뉴욕 1호점, 일본 가격의 4배</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 13
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 7장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/e6e069e2d58d/v1-01.jpg" alt="1장: 회전초밥이 일본의 4배???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/e6e069e2d58d/v1-02.jpg" alt="2장: 첫날부터 긴 줄 ㄷㄷ" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/e6e069e2d58d/v1-03.jpg" alt="3장: 참치 한 접시 약 800엔" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/e6e069e2d58d/v1-04.jpg" alt="4장: 비쌀 만도 하긴 해" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/e6e069e2d58d/v1-05.jpg" alt="5장: 일본 반응은 싸늘해" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/e6e069e2d58d/v1-06.jpg" alt="6장: 초밥 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/e6e069e2d58d/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 7</span></div>
+
+    
+    <div class="body">
+      <p class="cap">회전초밥 체인 스시로가 미국 1호점을 열자마자 가격 때문에 일본에서 화제가 됐다. 뉴욕 매장은 11월 19일 첫 손님을 맞았고, 개점 시간인 오전 11시보다 몇 시간 일찍 도착한 사람도 있을 만큼 긴 줄이 늘어섰다.
+
+일본의 방식은 상당 부분 그대로 가져왔다. 주문용 대형 터치스크린 패널을 쓰고, 일본에서는 흔하지만 미국 식당에서는 드문 팁 없는 정책도 도입했다. 다만 가격은 전혀 저렴하지 않다. 참치 같은 기본 초밥이 접시당 5달러부터, 오토로는 10달러로 각각 약 800엔과 1,600엔이다. 일본에서는 참치 한 접시가 180엔이고 대부분의 초밥이 210엔 이하라서, 미국 가격은 대략 4배 수준이다.
+
+기사는 이 가격이 무조건 과하다고만 보지는 않았다. 엔화가 달러 대비 매우 약한 상태이고, 1호점이 미국에서도 비싼 도시의 맨해튼에 있기 때문이다. 5~10접시를 먹는다고 치면 한 끼에 25~50달러 정도가 된다는 계산도 소개했다.
+
+그래도 일본 온라인 반응은 놀라움 쪽에 가까웠다. &#39;접시당 800엔이라니, 미국 물가 무섭다&#39;는 반응부터 &#39;오래 못 갈 것 같다&#39;는 반응까지 나왔다. 일본에서 스시로를 고급 식당으로 보는 사람은 없기 때문이다.
+
+출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#회전초밥 #스시로 #뉴욕맛집 #일본vs미국 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 스시로가 일본의 대표적인 회전초밥 체인이라는 소개 (slide1)</li><li>근거 등록 안 된 주장: 출처가 SoraNews24라는 정보 (본문 출처 표기)</li>
+          <li>환율과 가격 비교는 기사 작성 시점(2026년 11월) 기준이라 이후 달라질 수 있음</li><li>일본 온라인 반응은 일부 게시글 사례이며 전체 여론이 아님</li><li>브랜드명(스시로)이 카드 본문에 등장하므로 상표 사용에 유의</li><li>뉴욕 현지 손님들의 가격 반응은 기사에서도 아직 알 수 없다고 밝힘</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-e6e069e2d58d-0">1장</label>
+          <textarea id="s-e6e069e2d58d-0" rows="6" data-slide="0">회전초밥이
+일본의 **4배**???
+---
+일본 회전초밥 체인 스시로가 11월 19일 뉴욕에 미국 1호점을 열었는데, 접시 가격이 일본의 약 4배라 화제가 됐다.</textarea>
+          
+          <label class="f" for="s-e6e069e2d58d-1">2장</label>
+          <textarea id="s-e6e069e2d58d-1" rows="6" data-slide="1">첫날부터
+**긴 줄** ㄷㄷ
+---
+스시로 미국 1호점은 뉴욕에서 11월 19일 첫 손님을 맞았다. 오전 11시 개점보다 몇 시간 일찍 와서 기다린 사람도 있을 만큼 줄이 길었다.</textarea>
+          
+          <label class="f" for="s-e6e069e2d58d-2">3장</label>
+          <textarea id="s-e6e069e2d58d-2" rows="6" data-slide="2">참치 한 접시
+약 **800엔**
+---
+뉴욕 매장은 참치 같은 기본 초밥이 접시당 5달러부터, 오토로는 10달러다. 일본에서는 참치 한 접시가 180엔이고 대부분의 초밥이 210엔 이하다.</textarea>
+          
+          <label class="f" for="s-e6e069e2d58d-3">4장</label>
+          <textarea id="s-e6e069e2d58d-3" rows="6" data-slide="3">비쌀 만도
+하긴 해
+---
+엔화가 달러 대비 매우 약한 상태이고, 첫 매장은 미국에서도 가장 비싼 축에 드는 도시의 맨해튼에 있다. 기사는 그래서 가격이 높은 게 자연스럽다고 짚었다.</textarea>
+          
+          <label class="f" for="s-e6e069e2d58d-4">5장</label>
+          <textarea id="s-e6e069e2d58d-4" rows="6" data-slide="4">일본 반응은
+**싸늘해**
+---
+일본 온라인에서는 &#39;접시당 800엔이라니, 미국 물가 무섭다&#39;는 반응과 &#39;오래 못 갈 것 같다&#39;는 반응이 나왔다. 일본에서 스시로를 고급 식당으로 여기는 사람은 없다는 점이 배경이다.</textarea>
+          
+          <label class="f" for="s-e6e069e2d58d-5">6장</label>
+          <textarea id="s-e6e069e2d58d-5" rows="6" data-slide="5">초밥 좋아하는
+친구한테 보내기
+---
+일본 회전초밥을 즐겨 먹는 친구라면 4배로 뛴 가격표에 깜짝 놀랄 소식</textarea>
+          
+          <label class="f" for="c-e6e069e2d58d">본문 (캡션)</label>
+          <textarea id="c-e6e069e2d58d" class="caption">회전초밥 체인 스시로가 미국 1호점을 열자마자 가격 때문에 일본에서 화제가 됐다. 뉴욕 매장은 11월 19일 첫 손님을 맞았고, 개점 시간인 오전 11시보다 몇 시간 일찍 도착한 사람도 있을 만큼 긴 줄이 늘어섰다.
+
+일본의 방식은 상당 부분 그대로 가져왔다. 주문용 대형 터치스크린 패널을 쓰고, 일본에서는 흔하지만 미국 식당에서는 드문 팁 없는 정책도 도입했다. 다만 가격은 전혀 저렴하지 않다. 참치 같은 기본 초밥이 접시당 5달러부터, 오토로는 10달러로 각각 약 800엔과 1,600엔이다. 일본에서는 참치 한 접시가 180엔이고 대부분의 초밥이 210엔 이하라서, 미국 가격은 대략 4배 수준이다.
+
+기사는 이 가격이 무조건 과하다고만 보지는 않았다. 엔화가 달러 대비 매우 약한 상태이고, 1호점이 미국에서도 비싼 도시의 맨해튼에 있기 때문이다. 5~10접시를 먹는다고 치면 한 끼에 25~50달러 정도가 된다는 계산도 소개했다.
+
+그래도 일본 온라인 반응은 놀라움 쪽에 가까웠다. &#39;접시당 800엔이라니, 미국 물가 무섭다&#39;는 반응부터 &#39;오래 못 갈 것 같다&#39;는 반응까지 나왔다. 일본에서 스시로를 고급 식당으로 보는 사람은 없기 때문이다.
+
+출처: SoraNews24</textarea>
+          <label class="f" for="t-e6e069e2d58d">해시태그</label>
+          <input id="t-e6e069e2d58d" type="text" class="tagsin" value="#회전초밥 #스시로 #뉴욕맛집 #일본vs미국 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스시로 미국 1호점이 뉴욕에서 11월 19일 첫 손님을 맞았다</b>
+            <q>“The chain’s first-ever branch on U.S. soil, located in New York, welcomed its first customers on November 19 with long lines of diners waiting to get in.”</q>
+            <small>slide1, slide2, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스시로의 미국 가격은 일본의 약 4배다</b>
+            <q>“In other words, Sushiro is charging about four times as much in the U.S. as it does in Japan.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>개점 몇 시간 전부터 와서 기다린 사람도 있었다</b>
+            <q>“Sushiro wasn’t hurting for customers on its opening day, with some people arriving hours before its 11 a.m. opening in order to be some of the first seated.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>뉴욕 매장은 기본 초밥이 접시당 5달러부터, 오토로는 10달러다</b>
+            <q>“That doesn’t meant that Sushiro is positioning itself as a budget restaurant in the States, though, as its prices start from US$5 a plate for standard types of sushi like maguro (tuna), and more expensive ingredients, like otoro (extra-fatty tuna) cost US$10.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>5달러와 10달러는 각각 약 800엔과 1,600엔이다</b>
+            <q>“Those prices convert to about 800 and 1,600 yen.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에서는 참치 한 접시가 180엔이고 대부분의 초밥이 210엔 이하다</b>
+            <q>“…you can get a plate of maguro for 180 yen, and the vast majority of its sushi can be had for 210 yen or less.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>엔화가 달러 대비 매우 약해 미국 가격이 높은 것은 자연스럽다</b>
+            <q>“Right off the bat, the yen is extremely weak versus the U.S. dollar right now, so it’s natural for prices to be higher in the U.S.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>첫 매장은 미국에서 가장 비싼 도시 중 하나의 가장 비싼 동네 중 하나인 맨해튼에 있다</b>
+            <q>“In addition, Sushiro’s first American branch is in Manhattan, one of the most expensive neighborhoods in one of the most expensive cities in the country.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 온라인에서 &#39;접시당 800엔이라니, 미국 물가 무섭다&#39;는 반응이 나왔다</b>
+            <q>““800 yen a plate? Man, America is expensive…””</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본 온라인에서 &#39;오래 못 갈 것 같다&#39;는 반응이 나왔다</b>
+            <q>““I don’t think it’s gonna last.””</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에서 스시로를 고급 식당으로 여기는 사람은 없다</b>
+            <q>“However, no one in Japan considers Sushiro to be high-end dining.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>스시로는 주문용 대형 터치스크린 패널과 팁 없는 정책을 일본에서 가져왔다</b>
+            <q>“Sushiro has brought over several aspects of the chain’s dining experience from Japan, including large tough-screen panels for placing orders and a no-tipping policy, which is the norm in Japan but a rarity for restaurants in America.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>5~10접시를 먹으면 뉴욕 스시로에서 한 끼에 25~50달러가 든다</b>
+            <q>“If we figure an average-sized sushi meal is going to be somewhere within the range of 5 to 10 plates, that’s make a meal at Sushiro New York cost US$25-US$50.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">Conveyor belt sushi chain Sushiro quadruples its prices for first branch in America</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/23/conveyor-belt-sushi-chain-sushiro-quadruples-its-prices-for-first-branch-in-america/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/0_1615ea.jpg?w=1000&amp;h=525&amp;crop=1"</li><li>2장: <a href="https://pixabay.com/photos/architecture-avenue-buildings-city-1846023/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "city street"</li><li>3장: <a href="https://pixabay.com/photos/sushi-sushi-rolls-japanese-cuisine-4956246/" target="_blank" rel="noopener">Mayorga-Photo / Pixabay</a> — "sushi plate"</li><li>4장: <a href="https://commons.wikimedia.org/wiki/File:Manhattan_1931.jpg" target="_blank" rel="noopener">Unknown authorUnknown author / Wikimedia Commons · Public domain</a> — "Manhattan"</li><li>5장: <a href="https://pixabay.com/photos/hands-phone-smartphone-electronics-1851218/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "smartphone screen"</li><li>6장: <a href="https://pixabay.com/photos/wine-pizza-food-wine-glass-drink-7046276/" target="_blank" rel="noopener">NadinShlyueva / Pixabay</a> — "sushi restaurant"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-5aa06ed3bf1d" data-id="5aa06ed3bf1d">
+    <div class="head">
+      <h2>3. 4색 문제 174년 만에 가장 빠른 풀이</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 19
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-01.jpg" alt="1장: 174년 묵은 퍼즐 가장 빠른 풀이?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-02.jpg" alt="2장: 이웃한 땅은 다른 색으로" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-03.jpg" alt="3장: 증명은 있는데 색칠은 느렸다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-04.jpg" alt="4장: 출발점이 엄청 많았다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-05.jpg" alt="5장: 지도가 10배면 계산도 10배" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-06.jpg" alt="6장: 튜브와 치즈에도 쓸 수 있대?!" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-07.jpg" alt="7장: 수학 좋아하는 친구에게 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261124-am-a9823651e6e3/5aa06ed3bf1d/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">174년 된 지도 색칠 문제에 가장 빠른 풀이가 나왔다. 이웃한 지역이 같은 색이 되지 않게 지도를 칠하는 데 네 가지 색이면 충분한지 묻는 &#39;4색 문제&#39;는 1852년 프랜시스 거스리가 처음 제시했다. 1879년에 첫 증명이 발표됐지만 나중에 오류가 있는 것으로 드러났고, 1976년에야 완전한 증명이 나왔다. 다만 이 증명은 컴퓨터 계산에 크게 의존해 다른 수학자들이 검증하기 어렵다는 논란이 있었다. 1997년에는 더 이해하기 쉬운 증명이 나왔지만 큰 지도에서는 계산이 오래 걸렸다. 이번 연구는 코펜하겐대학교와 덴마크공과대학교(DTU) 교수들이 국제 동료들과 약 10년간 매달린 결과다. 핵심은 색칠을 시작할 수 있는 작은 구간, 즉 축소 가능 구성이 지도 안에 하나가 아니라 놀랄 만큼 많다는 발견이다. 시작점이 많아지니 지도가 커져도 계산이 덜 느려진다. 지역 수가 10배 늘면 계산도 약 10배만 느려지는데, 이전 방식은 약 100배 느려졌다. 토루프 교수는 최소 1,000명의 수학자가 이 문제에 매달렸을 것으로 짐작하며 이를 &#39;4색 병&#39;이라 불렀다. 첫 논문은 FOCS&#39;26에서 최우수 논문상을 받았고, 이후 공개된 후속 논문은 선형 시간으로 풀 수 있음을 보였다고 한다. 연구진은 구멍 난 표면에도 적용될 수 있어 의미가 4색 정리를 넘어설 것으로 본다. 출처: ScienceAlert, 코펜하겐대학교 보도자료, arXiv</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#수학 #4색정리 #과학뉴스 #알고리즘 #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 174년이라는 기간은 1852년부터 2026년까지의 계산값으로, 원문에는 &#39;more than a century and a half&#39;라고만 되어 있다(슬라이드1, 슬라이드7, 제목 근거 없음)</li><li>근거 등록 안 된 주장: 출처로 언급된 ScienceAlert, 코펜하겐대학교 보도자료, arXiv는 원문에 근거가 있으나 개별 사실 주장으로 판정하지 않았다</li>
+          <li>1997년 증명 시기가 원문에 따라 1996년으로도 표기됨(보도자료 내 불일치). 카드에는 ScienceAlert 기준 1997년 사용</li><li>&#39;가장 빠른 풀이&#39;는 보도자료의 최적(선형 시간) 알고리즘 표현을 바탕으로 한 것으로, FOCS 논문 자체는 거의 선형 시간(O(n log n))이고 선형 시간 결과는 후속 논문</li><li>후속 논문의 선형 시간 주장은 연구진 발표 기준이며 독립 검증 여부는 원문에 없음</li><li>카드 속 인용·반응은 모두 연구진 본인의 말이므로 외부 평가가 아님</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-5aa06ed3bf1d-0">1장</label>
+          <textarea id="s-5aa06ed3bf1d-0" rows="6" data-slide="0">**174년** 묵은 퍼즐
+가장 빠른 풀이?!
+---
+지도를 네 가지 색만으로 칠할 수 있는지 묻는 문제에서, 덴마크 교수 두 명이 포함된 국제 연구팀이 색을 훨씬 빨리 찾는 알고리즘을 내놓았다.</textarea>
+          
+          <label class="f" for="s-5aa06ed3bf1d-1">2장</label>
+          <textarea id="s-5aa06ed3bf1d-1" rows="6" data-slide="1">이웃한 땅은
+**다른 색**으로
+---
+지도의 모든 지역을 칠하되 이웃한 두 곳이 같은 색이 되지 않게 하려면 네 가지 색이면 충분할까. 영국 수학자 프랜시스 거스리가 1852년 이 가능성을 제시했다.</textarea>
+          
+          <label class="f" for="s-5aa06ed3bf1d-2">3장</label>
+          <textarea id="s-5aa06ed3bf1d-2" rows="6" data-slide="2">증명은 있는데
+색칠은 **느렸다**
+---
+완전한 증명은 1976년에 나왔지만 컴퓨터 계산에 크게 의존해 검증이 어렵다는 논란이 있었다. 1997년의 더 이해하기 쉬운 증명도 큰 지도에서는 계산이 오래 걸렸다.</textarea>
+          
+          <label class="f" for="s-5aa06ed3bf1d-3">4장</label>
+          <textarea id="s-5aa06ed3bf1d-3" rows="6" data-slide="3">출발점이
+**엄청 많았다**
+---
+연구팀은 색칠을 시작할 수 있는 작은 구간인 &#39;축소 가능 구성&#39;이 지도에 하나가 아니라 놀랄 만큼 많다고 밝혔다. 출발점이 많을수록 색을 더 빨리 계산할 수 있다.</textarea>
+          
+          <label class="f" for="s-5aa06ed3bf1d-4">5장</label>
+          <textarea id="s-5aa06ed3bf1d-4" rows="6" data-slide="4">지도가 **10배**면
+계산도 10배
+---
+이전 방식은 지역 수가 10배 늘면 계산이 약 100배 느려졌다. 새 방식은 이차 시간에서 선형 시간으로 바뀌어 약 10배만 느려진다.</textarea>
+          
+          <label class="f" for="s-5aa06ed3bf1d-5">6장</label>
+          <textarea id="s-5aa06ed3bf1d-5" rows="6" data-slide="5">튜브와 **치즈**에도
+쓸 수 있대?!
+---
+연구진은 이 아이디어가 평평한 지도뿐 아니라 수영 튜브나 에멘탈 치즈처럼 구멍 난 표면에도 적용될 수 있다고 본다. 첫 논문은 FOCS에서 최우수 논문상을 받았다.</textarea>
+          
+          <label class="f" for="s-5aa06ed3bf1d-6">7장</label>
+          <textarea id="s-5aa06ed3bf1d-6" rows="6" data-slide="6">수학 좋아하는
+**친구에게** 보내기
+---
+지도 색칠 하나에 174년을 쏟은 수학자들의 이야기라, 수학 덕후 친구가 신기해할 소식. 치즈와 튜브 얘기까지 나와 수학이 어려운 친구도 흥미로워할 이야기</textarea>
+          
+          <label class="f" for="c-5aa06ed3bf1d">본문 (캡션)</label>
+          <textarea id="c-5aa06ed3bf1d" class="caption">174년 된 지도 색칠 문제에 가장 빠른 풀이가 나왔다. 이웃한 지역이 같은 색이 되지 않게 지도를 칠하는 데 네 가지 색이면 충분한지 묻는 &#39;4색 문제&#39;는 1852년 프랜시스 거스리가 처음 제시했다. 1879년에 첫 증명이 발표됐지만 나중에 오류가 있는 것으로 드러났고, 1976년에야 완전한 증명이 나왔다. 다만 이 증명은 컴퓨터 계산에 크게 의존해 다른 수학자들이 검증하기 어렵다는 논란이 있었다. 1997년에는 더 이해하기 쉬운 증명이 나왔지만 큰 지도에서는 계산이 오래 걸렸다. 이번 연구는 코펜하겐대학교와 덴마크공과대학교(DTU) 교수들이 국제 동료들과 약 10년간 매달린 결과다. 핵심은 색칠을 시작할 수 있는 작은 구간, 즉 축소 가능 구성이 지도 안에 하나가 아니라 놀랄 만큼 많다는 발견이다. 시작점이 많아지니 지도가 커져도 계산이 덜 느려진다. 지역 수가 10배 늘면 계산도 약 10배만 느려지는데, 이전 방식은 약 100배 느려졌다. 토루프 교수는 최소 1,000명의 수학자가 이 문제에 매달렸을 것으로 짐작하며 이를 &#39;4색 병&#39;이라 불렀다. 첫 논문은 FOCS&#39;26에서 최우수 논문상을 받았고, 이후 공개된 후속 논문은 선형 시간으로 풀 수 있음을 보였다고 한다. 연구진은 구멍 난 표면에도 적용될 수 있어 의미가 4색 정리를 넘어설 것으로 본다. 출처: ScienceAlert, 코펜하겐대학교 보도자료, arXiv</textarea>
+          <label class="f" for="t-5aa06ed3bf1d">해시태그</label>
+          <input id="t-5aa06ed3bf1d" type="text" class="tagsin" value="#수학 #4색정리 #과학뉴스 #알고리즘 #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>덴마크 교수 두 명이 포함된 국제 연구팀이 지도를 효율적으로 4색 칠하는 최적 알고리즘을 찾았다</b>
+            <q>“Now, an international team of mathematicians, including two Danish professors, has achieved the first major breakthrough in 30 years: they have found the optimal algorithm to efficiently four-colour any map.”</q>
+            <small>slide1 · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지도의 모든 지역을 이웃한 곳이 같은 색이 되지 않게 네 가지 색만으로 칠할 수 있는지가 문제다</b>
+            <q>“The Four Color Theorem is one of the most famous (and long-standing) puzzles in math: is it possible to use just four colors to shade in all of the regions on any map, with no two neighboring areas sharing the same color?”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>영국 수학자 프랜시스 거스리가 1852년 이 가능성을 제시했다</b>
+            <q>“English mathematician Francis Guthrie first suggested it might be possible in 1852, but a full proof wasn&#39;t presented until 1976.”</q>
+            <small>slide2 · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1976년 완전한 증명이 나왔지만 컴퓨터 계산에 크게 의존해 검증이 어렵다는 논란이 있었다</b>
+            <q>“A full proof was finally found in 1976, so now we had a four colour theorem, but the proof was controversial because it relied heavily on computer calculations that other mathematicians found difficult to verify.”</q>
+            <small>slide3 · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1997년의 더 이해하기 쉬운 증명은 큰 지도에서 계산이 오래 걸렸다</b>
+            <q>“A more accessible proof arrived in 1997, less reliant on computer calculations that were difficult to verify, but its algorithms took a long time to compute on larger maps.”</q>
+            <small>slide3 · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>축소 가능 구성이 지도에 하나가 아니라 놀랄 만큼 많다</b>
+            <q>“We show that graphs do not contain just one handle, but an astonishing number of them. Nobody knew that before.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>출발점이 많을수록 색을 더 빨리 계산할 수 있다</b>
+            <q>“The more starting points there are, the faster the coloring can be calculated.”</q>
+            <small>slide4 · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>축소 가능 구성은 색칠을 시작할 수 있는 작은 구간이다</b>
+            <q>“These are small sections of a graph that give mathematicians a place to start when working out a colouring.”</q>
+            <small>slide4 · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>지역 수가 10배 늘면 새 방식은 계산이 약 10배, 이전 방식은 약 100배 느려진다</b>
+            <q>“This means that if a map contains ten times as many regions, the computation only becomes about ten times slower. With the previous algorithm, it would have become about 100 times slower.”</q>
+            <small>slide5 · 인용문 유사 일치(99.5) · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이차 시간에서 선형 시간으로 바뀌었다</b>
+            <q>“We have gone from what mathematicians call quadratic time to linear time”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>이 아이디어는 평평한 지도 외에 다른 표면에도 적용될 수 있다</b>
+            <q>“The remarkable thing is that because there are so many handles, the idea can also be applied to other kinds of surfaces besides a flat map.”</q>
+            <small>slide6 · 인용문 유사 일치(99.3) · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>수영 튜브나 에멘탈 치즈처럼 구멍 난 표면이 예로 언급됐다</b>
+            <q>“For example, surfaces with holes, such as a swim ring or a piece of Emmental cheese.”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>첫 논문이 FOCS&#39;26에서 최우수 논문상을 받았다</b>
+            <q>“The first paper about the research has just been presented at one of the world’s leading conferences in theoretical computer science, FOCS’26, where it received the Best Paper Award.”</q>
+            <small>slide6 · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>1879년 첫 증명이 발표됐지만 나중에 오류가 드러났다</b>
+            <q>“The first claimed proof was published in 1879 by Alfred Kempe but was later shown to contain an error.”</q>
+            <small>caption · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>코펜하겐대와 DTU 교수 두 명이 국제 동료들과 약 10년간 이 문제에 매달렸다</b>
+            <q>“Mikkel Thorup and his research colleagues, including Carsten Thomassen, Ken-ichi Kawarabayashi and Bojan Mohar, have worked on the Four Colour Problem for around ten years.”</q>
+            <small>caption · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>토루프 교수는 최소 1,000명의 수학자가 이 문제에 매달렸을 것으로 짐작한다</b>
+            <q>“I would guess that at least 1,000 mathematicians have caught the four-colour disease, spending months trying to make it work but never quite succeeding.”</q>
+            <small>caption · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>토루프 교수는 이를 &#39;4색 병&#39;이라 부른다</b>
+            <q>“Thorup calls it “the four-colour disease”:”</q>
+            <small>caption · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>후속 논문은 선형 시간으로 풀 수 있음을 보였다</b>
+            <q>“Shortly after the FOCS paper was published, the researchers released a follow-up paper, Four-Coloring Planar Graphs in Linear Time, demonstrating that the Four Colour Problem can be solved not merely in near-linear time, but in optimal linear time.”</q>
+            <small>caption · <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 결과가 4색 정리를 훨씬 넘어서는 의미를 가질 수 있다고 믿는다</b>
+            <q>“That is why we believe the result could have significance far beyond the Four Color Theorem.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/a-famous-174-year-old-math-problem-just-got-its-fastest-possible-solution" target="_blank" rel="noopener">A Famous 174-Year-Old Math Problem Just Got Its Fastest Possible Solution</a> (기사)</li><li><a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">Breakthrough: Danish researchers find efficient solution to famous 174-year-old mathematical headache</a> (1차 출처)</li><li><a href="https://arxiv.org/abs/2603.24880" target="_blank" rel="noopener">The Four Color Theorem with Linearly Many Reducible Configurations and Near-Linear Time Coloring</a> (1차 출처)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">Ritzau / </a> — "https://via.ritzau.dk/data/images/public/13561237/15284557/8e5a04e8-2b91-4133-a035-2f56fbb051eb-w_960.jpg"</li><li>2장: <a href="https://via.ritzau.dk/pressemeddelelse/15284557/breakthrough-danish-researchers-find-efficient-solution-to-famous-174-year-old-mathematical-headache?publisherId=13561237&amp;lang=en" target="_blank" rel="noopener">Ritzau / </a> — "https://via.ritzau.dk/data/images/public/13561237/15284557/e74475d2-9c91-4f9c-9b8b-a1a465e321d3-w_960.jpg"</li><li>3장: <a href="https://pixabay.com/photos/code-coding-computer-data-1839406/" target="_blank" rel="noopener">Pexels / Pixabay</a> — "computer code"</li><li>4장: <a href="https://pixabay.com/photos/puzzle-pieces-puzzle-share-game-7696621/" target="_blank" rel="noopener">congerdesign / Pixabay</a> — "puzzle pieces"</li><li>5장: <a href="https://pixabay.com/photos/hands-money-palm-trifle-coins-4604066/" target="_blank" rel="noopener">AlLes / Pixabay</a> — "stopwatch"</li><li>6장: <a href="https://www.scientificamerican.com/article/which-million-dollar-math-problem-could-ai-solve-next/" target="_blank" rel="noopener">Scientific American / </a> — "https://static.scientificamerican.com/dam/asset/0fba7f9c-93dc-4a03-a1f1-e40ef261cc25/thumbnail/webimage-MeshTriangleCC.png?m=1789486605.221&amp;w=800"</li><li>7장: <a href="https://pixabay.com/photos/iphone-hand-screen-smartphone-apps-410311/" target="_blank" rel="noopener">JESHOOTS-com / Pixabay</a> — "smartphone"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 2개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-afc54c8232df">
+    <div class="head">
+      <h2>S1. 당분 음료 3주, 좋아함은 그대로인데 로고 반응만 빨라진 실험</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 19
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-afc54c8232df">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;좋아서 마신다&#39;는 통념과 달리, 말로 물은 취향은 그대로인데 병 로고 반응만 달라졌다는 반전. 매일 마시는 음료 습관과 바로 이어진다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">당분 음료 매일 한 병 3주 마셨더니, 좋아하는 마음은 그대로인데 병 로고 반응만 빨라졌대
+말로 물어보면 변화가 없었는데 태블릿 테스트에선 달랐음
+그럼 뭘로 알아낸 걸까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">1/ 결과부터. 당분 그룹은 3주 뒤 처음보다 약 36밀리초 빨리 반응했고, 첫날엔 거의 같았던 대조군보다 약 35밀리초 앞섰음. 몇 백분의 일 초 차이를 어떻게 쟀을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">2/ 18~30세 160명을 무작위로 나눠 하루 10온스 한 병씩 마시게 했음. 85명은 설탕 27g, 111칼로리짜리 음료, 75명은 맛은 같은데 설탕·칼로리·인공감미료가 없는 음료. 그럼 병에 붙은 기호는 뭐였을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">152/500자</span></div>
+      <p class="tp-text">3/ 병마다 처음엔 아무 의미 없던 흑백 기호가 붙어 있었음. 3주 전후로 태블릿에 자기 음료 기호가 뜨면 좌우를 탭하고, X가 겹쳐 뜨면 참는 테스트를 했대. 맞힌 시도에서 더 빨리 탭하면 그 기호를 향한 동기가 강해진 간접 신호로 봤음. 그럼 말로 물어본 건 어땠을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">138/500자</span></div>
+      <p class="tp-text">4/ 결과 요약 정리
+- 로고 반응: 당분 그룹 약 36밀리초 빨라짐
+- 좋아함·원함·단맛 점수: 그룹 차이 없음
+- 몸무게·혈당·운동·식단: 차이 없음
+- 갈망·칼로리 섭취: 두 그룹 다 줄었음(본인 보고 기준)
+그럼 뇌 스캔에선 뭐가 보였을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">5/ 쓸 만한 뇌 스캔은 122명분이었음. 당분 그룹은 빨리 탭한 사람일수록 보상 관련 뇌 영역 활동이 더 커지는 경향이었고, 대조군은 반대 패턴이었대. 근데 둘 다 단독으로 설 만큼 강하진 않았음. 그럼 이 결과, 어디까지 믿어도 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">134/500자</span></div>
+      <p class="tp-text">6/ 중독됐다는 얘기는 아님. 이 실험으로는 실험실 밖에서 더 마시게 되는지 알 수 없고, 자유롭게 고를 때 더 마시는지도 테스트하지 않았음. 코로나로 모집이 일찍 멈춰서 230명 계획이 160명이 됐대. 그럼 결국 연구가 말하는 건 뭘까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">246/500자</span></div>
+      <p class="tp-text">7/ 연구 쪽 해석은, 실제 로고나 자판기 불빛에서도 같은 일이 생긴다면 얼마나 좋아하는지만으로는 얼마나 끌리는지 알기 어려울 수 있다는 거. 다만 더 마시게 되는지는 안 봤음.
+카페 가면 늘 시키는 메뉴 있는 파 vs 매번 바꾸는 파?
+이런 해외 건강·식습관 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>당분 음료 매일 한 병 3주 마셨더니, 좋아하는 마음은 그대로인데 병 로고 반응만 빨라졌대</li><li>음료 습관, &#39;좋아서&#39;가 아니라 &#39;로고 반응&#39;에서 먼저 달라졌다는 연구가 나옴</li><li>&#39;좋아서 마신다&#39;는 말, 3주 실험에선 좀 다르게 나왔음</li><li>36밀리초. 당분 음료를 3주 마신 사람들이 병 기호를 보고 빨라진 시간</li><li>말로는 변화 없음, 손은 빨라짐. 하루 한 병 3주 실험 결과</li><li>매일 마시는 음료가 몸무게는 안 바꿨는데 반응 속도는 바꿨대</li><li>얼마나 좋아하냐고 물어봐도 안 잡히는 음료 습관이 있다는 연구가 나옴</li><li>음료 취향은 그대로인데 로고 보는 속도만 달라졌대. 160명 3주 실험</li><li>자판기 불빛, 병 로고... 이게 진짜 반응에 영향을 줄까? 3주 실험 결과</li><li>입맛 말고 &#39;눈&#39;이 먼저 반응했다는 당분 음료 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>카페 가면 늘 시키는 메뉴 있는 파 vs 매번 바꾸는 파?</li><li>병 디자인 보고 끌려서 사본 적 있는 사람?</li><li>너라면 3주 동안 매일 같은 음료 마시는 실험 참가할 거야?</li><li>음료 고를 때 로고·디자인 vs 맛 후기, 뭐부터 봐?</li><li>자판기 앞에서 마시려던 음료를 바꿔본 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>2편: 단맛 vs 칼로리, 로고 반응을 키운 건 어느 쪽일까</li><li>동물 연구가 먼저 보여준 &#39;보상 단서&#39; 이야기</li><li>무가당 음료와 가당 음료, 해외 연구에서 비교된 결과들</li><li>식음료 브랜딩과 뇌 반응을 다룬 다른 해외 연구</li><li>해외 식습관 연구, 말로 보고한 것과 실제 행동이 달랐던 사례</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>로고 반응 증가가 &#39;중독&#39;이나 &#39;더 마시게 됨&#39;으로 읽히지 않도록 6/·7/ 문구를 확인할 것</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>하루 한 병씩 3주 마신 당분 음료가 병 기호에 대한 반응을 빠르게 했고 좋아함·원함 평가는 변하지 않았다</b>
+          <q>“A sugary drink every day for three weeks made young adults quicker to respond to the logo-style symbol on its bottle, even though their ratings of how much they liked and wanted the drink did not change.”</q>
+          <small>post0 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>속도 증가는 태블릿 테스트에서 나타났고 본인이 말한 의견에선 나타나지 않았다</b>
+          <q>“The speedup appeared on a tablet test, not in anyone’s stated opinions.”</q>
+          <small>post0 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>당분 그룹은 마지막 방문에서 처음보다 약 36밀리초 빨리 탭했다</b>
+          <q>“By the final visit, people in the sugar group were tapping about 36 milliseconds faster than at the start, a few hundredths of a second.”</q>
+          <small>post1 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>첫날 거의 같았던 두 그룹에서 당분 그룹이 대조군보다 약 35밀리초 앞섰다</b>
+          <q>“The two groups had been nearly identical on day one, yet the sugar group finished about 35 milliseconds ahead of the controls.”</q>
+          <small>post1 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>18~30세 성인 160명을 무작위로 배정해 하루 10온스 병을 마시게 했다</b>
+          <q>“Researchers randomly assigned 160 adults, ages 18 to 30 (96 of them women), to drink a 10-ounce bottle of either a sugary beverage or an unsweetened version every day.”</q>
+          <small>post2 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>85명은 설탕 27g, 111칼로리 음료를 받았다</b>
+          <q>“Of those, 85 received the sugary version, which held 27 grams of sugar and 111 calories.”</q>
+          <small>post2 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>75명은 맛은 같고 설탕·칼로리·인공감미료가 없는 음료를 받았다</b>
+          <q>“The other 75 received a drink with matching flavor but no sugar, no calories, and no artificial sweetener.”</q>
+          <small>post2 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>각 음료에 처음엔 의미 없던 흑백 기호가 붙었다</b>
+          <q>“Each drink wore its own black-and-white symbol, a cue that meant nothing at the start.”</q>
+          <small>post3 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>3주 전후로 자기 음료 기호가 뜨면 태블릿 좌우를 탭하고 X가 뜨면 참았다</b>
+          <q>“Before and after the three weeks, they tapped the left or right side of a tablet when their drink’s symbol appeared, holding back if an X showed up over it.”</q>
+          <small>post3 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>맞힌 시도에서 빠른 탭을 기호를 향한 동기가 더 강하다는 간접 신호로 봤다</b>
+          <q>“Quicker taps on the correct tries were treated by the researchers as an indirect sign of stronger motivation toward the symbol.”</q>
+          <small>post3 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>좋아함·원함·단맛·강도 점수와 몸무게·혈당·운동·식단에 그룹 차이가 없었다</b>
+          <q>“Liking, wanting, sweetness, and intensity scores for the sugary drink showed no group differences after three weeks, and weight, blood sugar, exercise habits, and diet did not differ either.”</q>
+          <small>post4 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>본인 보고 갈망과 칼로리 섭취는 두 그룹 모두 줄었다</b>
+          <q>“Self-reported cravings and calorie intake fell in both groups, and the authors suspect the calorie drop comes from how people report their eating.”</q>
+          <small>post4 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쓸 만한 뇌 스캔은 122명분이었다</b>
+          <q>“Usable brain scans came from 122 participants.”</q>
+          <small>post5 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>당분 그룹은 빨리 탭한 사람일수록 보상 관련 영역 활동 증가가 컸고 대조군은 반대 패턴이었다</b>
+          <q>“In the sugar group, faster tappers tended to show bigger increases in activity in that reward-related region when viewing their drink’s symbol, while controls showed the opposite pattern.”</q>
+          <small>post5 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>뇌 패턴은 각각 단독으로 설 만큼 강하지 않았다</b>
+          <q>“The groups differed by more than chance would explain, but neither pattern was strong enough to stand alone, and scans cannot show which brain chemical, such as dopamine, was involved.”</q>
+          <small>post5 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 결과가 누군가 중독됐거나 실험실 밖에서 더 마실 거라는 걸 보여주지 않는다</b>
+          <q>“Nothing here shows that anyone grew hooked or would drink more away from the lab.”</q>
+          <small>post6 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자유롭게 고를 때 더 마셨는지는 테스트하지 않았다</b>
+          <q>“It also never tested whether anyone drank more when free to choose.”</q>
+          <small>post6 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코로나로 모집이 일찍 멈춰 230명 계획이 160명이 됐다</b>
+          <q>“Volunteers were young and relatively few, and enrollment stopped early during the COVID-19 pandemic, leaving 160 people instead of the 230 originally planned.”</q>
+          <small>post6 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>실제 로고나 자판기 불빛에서도 같은 학습이 일어난다면 얼마나 좋아하는지는 얼마나 끌리는지를 거의 말해주지 못할 수 있다</b>
+          <q>“But if the same learning happens with real logos and vending machine lights, how much a person likes a drink could say little about how strongly it pulls on them.”</q>
+          <small>post7 · <a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="afc54c8232df">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/sugary-drinks-sharpened-reactions-logos/" target="_blank" rel="noopener">Three Weeks Of Sugary Drinks Sharpened Reactions To Logos</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-cd45e33a3311">
+    <div class="head">
+      <h2>S2. PM2.5 미세먼지와 치매 위험 25%, 50만 명 기록과 쥐 실험</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-cd45e33a3311">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 미세먼지는 심장·호흡기 문제로만 알던 일상 노출이 50만 명 기록과 쥐 실험에서 뇌 손상 및 치매 위험과 이어졌다는 반전</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">미세먼지, 심장이랑 호흡기 문제만 있는 줄 알았는데 뇌 얘기까지 나옴
+영국 성인 약 50만 명을 추적했더니 공기가 가장 나쁜 지역 사람들이 치매에 걸릴 가능성이 25% 더 높았대
+근데 쥐 실험에서 뇌 안에 벌어진 일이 더 충격이었음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">179/500자</span></div>
+      <p class="tp-text">1/ 사람 쪽 결과부터. 영국 바이오뱅크 성인 약 50만 명을 최대 14년 추적했더니, 공기가 가장 나쁜 지역 3분의 1에 사는 사람이 가장 깨끗한 3분의 1보다 알츠하이머나 관련 치매에 걸릴 가능성이 25% 높았음. 나이·흡연·당뇨 같은 걸 보정하고도 나온 결과야. 그럼 유전적으로 치매 위험이 낮은 사람은 괜찮았을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">104/500자</span></div>
+      <p class="tp-text">2/ 유전 위험이 높든 낮든 공기 오염이 심하면 치매 위험이 올라갔대. 근데 이건 기록을 본 연구라 &#39;연관&#39;까지만 말할 수 있음. 그래서 연구진이 쥐로 직접 실험을 해봄. 어떻게 했을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">93/500자</span></div>
+      <p class="tp-text">3/ 클리블랜드의 실제 바깥 공기를 5개월 동안 쥐한테 마시게 했대. 초미세먼지는 세계에서 가장 오염된 도시 수준으로 농축해서. 그랬더니 쥐 뇌에서는 뭐가 망가졌을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">169/500자</span></div>
+      <p class="tp-text">4/ 쥐 실험 결과 요약 정리
+- 뇌 면역세포(미세아교세포)의 유전자 작동이 바뀌어 염증 상태로
+- 혈액뇌장벽 구조가 무너짐
+- 세포 에너지 지표 NAD+/NADH 비율이 급감
+- 기억을 담당하는 해마에서 새로 생긴 신경세포가 더 많이 죽음
+그럼 치매의 상징인 아밀로이드 플라크가 없는 쥐는 멀쩡했을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">5/ 아니었음. 플라크가 아예 없는 건강한 쥐에서도 기억력 저하와 알츠하이머 비슷한 세포 손상이 나왔대. 알츠하이머가 생기도록 만든 쥐는 같은 공기에서 플라크 쌓이는 속도까지 빨라졌고. 그럼 한국에 사는 우리한테는 어떤 의미일까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">111/500자</span></div>
+      <p class="tp-text">6/ 이건 영국 기록과 쥐 실험이라서, 한국 사람한테 같은 숫자가 나온다고는 말할 수 없음. 그래도 우리가 매일 마시는 미세먼지 얘기라 그냥 넘기긴 어렵지. 그래서 이 연구에서 챙겨갈 한 줄은 뭘까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">235/500자</span></div>
+      <p class="tp-text">7/ 결국 연구진 말은 미세먼지가 사람 기록에서도 쥐 실험에서도 뇌 손상과 이어졌고, 흔하면서 바꿀 수 있는 노출이라는 거. 자기한테 맞는 건 의사와 상의하고.
+미세먼지 심한 날 마스크 쓰는 파 vs 그냥 나가는 파, 너는?
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구진이 쥐 실험을 인과관계를 직접 검증하기 위해 수행했다는 주장</li><li>근거 등록 안 된 주장: 사람 기록 연구는 연관성까지만 말할 수 있다는 방법론적 주장</li><li>근거 등록 안 된 주장: 사람 기록에서도 미세먼지가 뇌 손상과 이어졌다는 주장(원문 사람 데이터는 치매 위험 연관만 보고함)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>미세먼지, 심장이랑 호흡기 문제만 있는 줄 알았는데 뇌 얘기까지 나옴</li><li>치매 위험, 유전자만이 아니라 &#39;매일 마시는 공기&#39;도 변수래</li><li>&#39;유전적으로 치매 위험 낮으니까 괜찮다&#39;는 말, 이 연구 보면 좀 달라짐</li><li>공기 가장 나쁜 동네 vs 가장 깨끗한 동네, 치매 가능성이 25% 차이 났대</li><li>숨 쉬는 것만으로 뇌 면역세포가 &#39;재프로그래밍&#39;된다는 연구가 나옴</li><li>치매는 플라크가 쌓여야 시작되는 줄 알았는데, 플라크 없는 쥐도 미세먼지에 기억력이 떨어졌대</li><li>미세먼지는 폐만 상하게 하는 게 아니라 뇌 속 면역세포까지 건드린대</li><li>50만 명 기록으로 보니 미세먼지는 &#39;그냥 탁한 공기&#39;가 아니었음</li><li>5개월 동안 세계에서 가장 오염된 도시 수준 공기를 마신 쥐 뇌에서 벌어진 일</li><li>미세먼지 심한 날 숨 쉬는 게 뇌한테 어떤 일인지 연구로 나왔대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>미세먼지 심한 날 마스크 쓰는 파 vs 그냥 나가는 파, 너는?</li><li>미세먼지 앱 매일 확인하는 사람?</li><li>공기 좋은 시골 vs 편한 도심, 너라면 어디 살래?</li><li>미세먼지 심한 날 환기하는 파 vs 안 하는 파?</li><li>공기청정기 쓰는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>미세먼지와 치매 위험, 다른 나라 연구에서는 어떻게 나왔을까</li><li>뇌 면역세포 미세아교세포는 평소에 무슨 일을 할까</li><li>치매 위험과 이어졌다는 다른 일상 환경 요인 연구</li><li>실내 공기와 뇌 건강을 다룬 해외 연구</li><li>해마의 새 신경세포가 기억에 하는 역할</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>초미세먼지(PM2.5)는 오래전부터 심혈관·호흡기 질환의 주요 원인으로 알려져 왔다</b>
+          <q>“Microscopic soot, industrial emissions, and wildfire smoke, collectively categorized as fine particulate matter 2.5 (PM2.5), have long been recognized as major drivers of cardiovascular and respiratory disease.”</q>
+          <small>post0 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>영국 바이오뱅크 성인 약 50만 명을 최대 14년 추적했다</b>
+          <q>“To quantify how long-term air pollution exposure shapes dementia risk across diverse genetic backgrounds, the researchers analyzed medical and environmental records from roughly 500,000 adults enrolled in the UK Biobank, tracked for up to 14 years.”</q>
+          <small>post0, post1 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가장 오염된 3분의 1 지역 거주자는 가장 깨끗한 3분의 1보다 알츠하이머나 관련 치매 가능성이 25% 높았고, 나이·흡연·당뇨 등을 보정했다</b>
+          <q>“Even after controlling for confounding variables, including age, smoking status, diabetes, and socioeconomic factors—people residing in the most polluted third of geographic regions were 25% more likely to develop Alzheimer’s disease or a related dementia than those living in the cleanest third.”</q>
+          <small>post0, post1 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>유전적 위험이 높든 낮든 대기오염이 심하면 치매 위험이 높아졌다</b>
+          <q>“Crucially, high air pollution elevated dementia risk regardless of whether an individual carried high or low inherited genetic risk for Alzheimer’s.”</q>
+          <small>post2 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>클리블랜드 실제 바깥 공기를 5개월간 쥐에게 노출했고 PM2.5를 세계에서 가장 오염된 도시 수준으로 농축했다</b>
+          <q>“To test causation directly, the investigators exposed mice to real-world outdoor Cleveland air for five months, concentrating PM2.5 particles to match levels recorded in the world’s most heavily polluted urban centers.”</q>
+          <small>post3 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>오염이 미세아교세포의 유전자 작동을 바꿔 염증 상태로 몰아갔다</b>
+          <q>“Pollution fundamentally altered which genes were switched on and off inside microglia—the brain’s resident immune cells responsible for clearing cellular debris and fighting infection—pushing them into a disrupted, inflammatory state.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>쥐에서 혈액뇌장벽 구조가 무너지고 신경염증이 지속됐다</b>
+          <q>“Treated mice developed structural breakdown of the protective blood-brain barrier alongside sustained neuroinflammation.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>NAD+/NADH 비율이 급감하고 해마에서 새로 생긴 신경세포의 죽음이 빨라졌다</b>
+          <q>“Polluted brains exhibited a sharp drop in the NAD+/NADH ratio, a critical metabolic indicator of cellular energy resilience, accompanied by accelerated death of newly born neurons in the hippocampus, the brain’s primary hub for learning and memory.”</q>
+          <small>post4 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>아밀로이드 플라크가 없는 건강한 쥐에서도 기억력 저하와 알츠하이머 비슷한 세포 손상이 나타났다</b>
+          <q>“Remarkably, these memory deficits and Alzheimer’s-like cellular injuries emerged in healthy mice completely devoid of amyloid plaques.”</q>
+          <small>post5 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>알츠하이머 병리를 보이도록 만든 쥐는 같은 오염 공기에서 아밀로이드 플라크 축적이 빨라졌다</b>
+          <q>“When the researchers exposed mice genetically engineered to develop Alzheimer’s pathology to the same polluted air, the particles inflicted identical neuroinflammatory and metabolic damage while simultaneously accelerating amyloid plaque accumulation.”</q>
+          <small>post5 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사람 데이터와 쥐 실험 데이터가 PM2.5를 흔하고 바꿀 수 있는 노출로서 환경 신경독성 물질로 본다</b>
+          <q>“These population-scale data in humans and experimental data in mice support PM2.5 as an environmental neurotoxicant and define microglial regulatory programs through which genetic background shapes the biological response to a common and modifiable exposure.”</q>
+          <small>post7 · <a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="cd45e33a3311">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://neurosciencenews.com/air-pollution-neuroinflammation-dementia-32433/" target="_blank" rel="noopener">Air Pollution Reprograms Brain Immune Cells, Raises Dementia Risk by 25%</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261124-am";
+  const ORIGINAL = {"5aa06ed3bf1d": {"caption": "174\ub144 \ub41c \uc9c0\ub3c4 \uc0c9\uce60 \ubb38\uc81c\uc5d0 \uac00\uc7a5 \ube60\ub978 \ud480\uc774\uac00 \ub098\uc654\ub2e4. \uc774\uc6c3\ud55c \uc9c0\uc5ed\uc774 \uac19\uc740 \uc0c9\uc774 \ub418\uc9c0 \uc54a\uac8c \uc9c0\ub3c4\ub97c \uce60\ud558\ub294 \ub370 \ub124 \uac00\uc9c0 \uc0c9\uc774\uba74 \ucda9\ubd84\ud55c\uc9c0 \ubb3b\ub294 \u00274\uc0c9 \ubb38\uc81c\u0027\ub294 1852\ub144 \ud504\ub79c\uc2dc\uc2a4 \uac70\uc2a4\ub9ac\uac00 \ucc98\uc74c \uc81c\uc2dc\ud588\ub2e4. 1879\ub144\uc5d0 \uccab \uc99d\uba85\uc774 \ubc1c\ud45c\ub410\uc9c0\ub9cc \ub098\uc911\uc5d0 \uc624\ub958\uac00 \uc788\ub294 \uac83\uc73c\ub85c \ub4dc\ub7ec\ub0ac\uace0, 1976\ub144\uc5d0\uc57c \uc644\uc804\ud55c \uc99d\uba85\uc774 \ub098\uc654\ub2e4. \ub2e4\ub9cc \uc774 \uc99d\uba85\uc740 \ucef4\ud4e8\ud130 \uacc4\uc0b0\uc5d0 \ud06c\uac8c \uc758\uc874\ud574 \ub2e4\ub978 \uc218\ud559\uc790\ub4e4\uc774 \uac80\uc99d\ud558\uae30 \uc5b4\ub835\ub2e4\ub294 \ub17c\ub780\uc774 \uc788\uc5c8\ub2e4. 1997\ub144\uc5d0\ub294 \ub354 \uc774\ud574\ud558\uae30 \uc26c\uc6b4 \uc99d\uba85\uc774 \ub098\uc654\uc9c0\ub9cc \ud070 \uc9c0\ub3c4\uc5d0\uc11c\ub294 \uacc4\uc0b0\uc774 \uc624\ub798 \uac78\ub838\ub2e4. \uc774\ubc88 \uc5f0\uad6c\ub294 \ucf54\ud39c\ud558\uac90\ub300\ud559\uad50\uc640 \ub374\ub9c8\ud06c\uacf5\uacfc\ub300\ud559\uad50(DTU) \uad50\uc218\ub4e4\uc774 \uad6d\uc81c \ub3d9\ub8cc\ub4e4\uacfc \uc57d 10\ub144\uac04 \ub9e4\ub2ec\ub9b0 \uacb0\uacfc\ub2e4. \ud575\uc2ec\uc740 \uc0c9\uce60\uc744 \uc2dc\uc791\ud560 \uc218 \uc788\ub294 \uc791\uc740 \uad6c\uac04, \uc989 \ucd95\uc18c \uac00\ub2a5 \uad6c\uc131\uc774 \uc9c0\ub3c4 \uc548\uc5d0 \ud558\ub098\uac00 \uc544\ub2c8\ub77c \ub180\ub784 \ub9cc\ud07c \ub9ce\ub2e4\ub294 \ubc1c\uacac\uc774\ub2e4. \uc2dc\uc791\uc810\uc774 \ub9ce\uc544\uc9c0\ub2c8 \uc9c0\ub3c4\uac00 \ucee4\uc838\ub3c4 \uacc4\uc0b0\uc774 \ub35c \ub290\ub824\uc9c4\ub2e4. \uc9c0\uc5ed \uc218\uac00 10\ubc30 \ub298\uba74 \uacc4\uc0b0\ub3c4 \uc57d 10\ubc30\ub9cc \ub290\ub824\uc9c0\ub294\ub370, \uc774\uc804 \ubc29\uc2dd\uc740 \uc57d 100\ubc30 \ub290\ub824\uc84c\ub2e4. \ud1a0\ub8e8\ud504 \uad50\uc218\ub294 \ucd5c\uc18c 1,000\uba85\uc758 \uc218\ud559\uc790\uac00 \uc774 \ubb38\uc81c\uc5d0 \ub9e4\ub2ec\ub838\uc744 \uac83\uc73c\ub85c \uc9d0\uc791\ud558\uba70 \uc774\ub97c \u00274\uc0c9 \ubcd1\u0027\uc774\ub77c \ubd88\ub800\ub2e4. \uccab \ub17c\ubb38\uc740 FOCS\u002726\uc5d0\uc11c \ucd5c\uc6b0\uc218 \ub17c\ubb38\uc0c1\uc744 \ubc1b\uc558\uace0, \uc774\ud6c4 \uacf5\uac1c\ub41c \ud6c4\uc18d \ub17c\ubb38\uc740 \uc120\ud615 \uc2dc\uac04\uc73c\ub85c \ud480 \uc218 \uc788\uc74c\uc744 \ubcf4\uc600\ub2e4\uace0 \ud55c\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uad6c\uba4d \ub09c \ud45c\uba74\uc5d0\ub3c4 \uc801\uc6a9\ub420 \uc218 \uc788\uc5b4 \uc758\ubbf8\uac00 4\uc0c9 \uc815\ub9ac\ub97c \ub118\uc5b4\uc124 \uac83\uc73c\ub85c \ubcf8\ub2e4. \ucd9c\ucc98: ScienceAlert, \ucf54\ud39c\ud558\uac90\ub300\ud559\uad50 \ubcf4\ub3c4\uc790\ub8cc, arXiv", "hashtags": ["#\uc218\ud559", "#4\uc0c9\uc815\ub9ac", "#\uacfc\ud559\ub274\uc2a4", "#\uc54c\uace0\ub9ac\uc998", "#\ud574\uc678\uc774\uc288"], "slides": [["**174\ub144** \ubb35\uc740 \ud37c\uc990", "\uac00\uc7a5 \ube60\ub978 \ud480\uc774?!", "---", "\uc9c0\ub3c4\ub97c \ub124 \uac00\uc9c0 \uc0c9\ub9cc\uc73c\ub85c \uce60\ud560 \uc218 \uc788\ub294\uc9c0 \ubb3b\ub294 \ubb38\uc81c\uc5d0\uc11c, \ub374\ub9c8\ud06c \uad50\uc218 \ub450 \uba85\uc774 \ud3ec\ud568\ub41c \uad6d\uc81c \uc5f0\uad6c\ud300\uc774 \uc0c9\uc744 \ud6e8\uc52c \ube68\ub9ac \ucc3e\ub294 \uc54c\uace0\ub9ac\uc998\uc744 \ub0b4\ub193\uc558\ub2e4."], ["\uc774\uc6c3\ud55c \ub545\uc740", "**\ub2e4\ub978 \uc0c9**\uc73c\ub85c", "---", "\uc9c0\ub3c4\uc758 \ubaa8\ub4e0 \uc9c0\uc5ed\uc744 \uce60\ud558\ub418 \uc774\uc6c3\ud55c \ub450 \uacf3\uc774 \uac19\uc740 \uc0c9\uc774 \ub418\uc9c0 \uc54a\uac8c \ud558\ub824\uba74 \ub124 \uac00\uc9c0 \uc0c9\uc774\uba74 \ucda9\ubd84\ud560\uae4c. \uc601\uad6d \uc218\ud559\uc790 \ud504\ub79c\uc2dc\uc2a4 \uac70\uc2a4\ub9ac\uac00 1852\ub144 \uc774 \uac00\ub2a5\uc131\uc744 \uc81c\uc2dc\ud588\ub2e4."], ["\uc99d\uba85\uc740 \uc788\ub294\ub370", "\uc0c9\uce60\uc740 **\ub290\ub838\ub2e4**", "---", "\uc644\uc804\ud55c \uc99d\uba85\uc740 1976\ub144\uc5d0 \ub098\uc654\uc9c0\ub9cc \ucef4\ud4e8\ud130 \uacc4\uc0b0\uc5d0 \ud06c\uac8c \uc758\uc874\ud574 \uac80\uc99d\uc774 \uc5b4\ub835\ub2e4\ub294 \ub17c\ub780\uc774 \uc788\uc5c8\ub2e4. 1997\ub144\uc758 \ub354 \uc774\ud574\ud558\uae30 \uc26c\uc6b4 \uc99d\uba85\ub3c4 \ud070 \uc9c0\ub3c4\uc5d0\uc11c\ub294 \uacc4\uc0b0\uc774 \uc624\ub798 \uac78\ub838\ub2e4."], ["\ucd9c\ubc1c\uc810\uc774", "**\uc5c4\uccad \ub9ce\uc558\ub2e4**", "---", "\uc5f0\uad6c\ud300\uc740 \uc0c9\uce60\uc744 \uc2dc\uc791\ud560 \uc218 \uc788\ub294 \uc791\uc740 \uad6c\uac04\uc778 \u0027\ucd95\uc18c \uac00\ub2a5 \uad6c\uc131\u0027\uc774 \uc9c0\ub3c4\uc5d0 \ud558\ub098\uac00 \uc544\ub2c8\ub77c \ub180\ub784 \ub9cc\ud07c \ub9ce\ub2e4\uace0 \ubc1d\ud614\ub2e4. \ucd9c\ubc1c\uc810\uc774 \ub9ce\uc744\uc218\ub85d \uc0c9\uc744 \ub354 \ube68\ub9ac \uacc4\uc0b0\ud560 \uc218 \uc788\ub2e4."], ["\uc9c0\ub3c4\uac00 **10\ubc30**\uba74", "\uacc4\uc0b0\ub3c4 10\ubc30", "---", "\uc774\uc804 \ubc29\uc2dd\uc740 \uc9c0\uc5ed \uc218\uac00 10\ubc30 \ub298\uba74 \uacc4\uc0b0\uc774 \uc57d 100\ubc30 \ub290\ub824\uc84c\ub2e4. \uc0c8 \ubc29\uc2dd\uc740 \uc774\ucc28 \uc2dc\uac04\uc5d0\uc11c \uc120\ud615 \uc2dc\uac04\uc73c\ub85c \ubc14\ub00c\uc5b4 \uc57d 10\ubc30\ub9cc \ub290\ub824\uc9c4\ub2e4."], ["\ud29c\ube0c\uc640 **\uce58\uc988**\uc5d0\ub3c4", "\uc4f8 \uc218 \uc788\ub300?!", "---", "\uc5f0\uad6c\uc9c4\uc740 \uc774 \uc544\uc774\ub514\uc5b4\uac00 \ud3c9\ud3c9\ud55c \uc9c0\ub3c4\ubfd0 \uc544\ub2c8\ub77c \uc218\uc601 \ud29c\ube0c\ub098 \uc5d0\uba58\ud0c8 \uce58\uc988\ucc98\ub7fc \uad6c\uba4d \ub09c \ud45c\uba74\uc5d0\ub3c4 \uc801\uc6a9\ub420 \uc218 \uc788\ub2e4\uace0 \ubcf8\ub2e4. \uccab \ub17c\ubb38\uc740 FOCS\uc5d0\uc11c \ucd5c\uc6b0\uc218 \ub17c\ubb38\uc0c1\uc744 \ubc1b\uc558\ub2e4."], ["\uc218\ud559 \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c\uc5d0\uac8c** \ubcf4\ub0b4\uae30", "---", "\uc9c0\ub3c4 \uc0c9\uce60 \ud558\ub098\uc5d0 174\ub144\uc744 \uc3df\uc740 \uc218\ud559\uc790\ub4e4\uc758 \uc774\uc57c\uae30\ub77c, \uc218\ud559 \ub355\ud6c4 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd. \uce58\uc988\uc640 \ud29c\ube0c \uc598\uae30\uae4c\uc9c0 \ub098\uc640 \uc218\ud559\uc774 \uc5b4\ub824\uc6b4 \uce5c\uad6c\ub3c4 \ud765\ubbf8\ub85c\uc6cc\ud560 \uc774\uc57c\uae30"]]}, "8aad99591807": {"caption": "\uace0\ubd84 \uacf5\uc6d0\uc5d0\uc11c \ud2f0\ub77c\ub178\uc0ac\uc6b0\ub8e8\uc2a4\uac00 \ub2ec\ub9b0\ub2e4\uba74 \ubbff\uc5b4\uc9c0\ub294\uac00. \uc77c\ubcf8 \uacf5\ud734\uc77c \uc5f0\ud734\uc600\ub358 11\uc6d4 23\uc77c, \uc624\uc0ac\uce74 \uc774\ub9c8\uc870\uc988\uce74 \uace0\ubd84 \uacf5\uc6d0\uc5d0\uc11c \u0027\uace0\ubd84 \ud398\uc2a4\ud2b8 \ud558\ub2c8\ucf54\ud1a0\u0027\uac00 \uc5f4\ub838\ub2e4. \uace0\ub300 \uc77c\ubcf8\uc758 \ubb34\ub364\uc744 \uae30\ub9ac\ub294 \uc9c0\uc5ed \ucd95\uc81c\ub2e4.\n\n\uc774\ub984\uc758 \ud558\ub2c8\ucf54\ud1a0\ub294 \ud558\ub2c8\uc640\uc640 \ub9c8\uc2a4\ucf54\ud2b8\uc758 \uc77c\ubcf8\uc5b4 \ubc1c\uc74c\uc744 \ud569\uce5c \ub9d0\uc774\ub2e4. \ud558\ub2c8\uc640\ub294 \uace0\ubd84\uc5d0 \ub9dd\uc790\uc640 \ud568\uaed8 \ubb3b\ud614\ub358 \uace0\ub300 \uc810\ud1a0 \uc870\uac01\uc774\ub2e4.\n\n\uc774 \ucd95\uc81c\ub294 \uba87 \ud574\uc9f8 \uc804\uad6d \ud2f0\ub77c\ub178\uc0ac\uc6b0\ub8e8\uc2a4 \ub2ec\ub9ac\uae30 \ub300\ud68c \u0027\ud2f0\ub77c\ub178 \ud398\uc2a4\ud2b8\u0027\uc758 \uc11c\uc77c\ubcf8 \uc608\uc120\uc744 \ub9e1\uace0 \uc788\ub2e4. \ub0a8\ub140 1\u00b72\uc704\uc640 \uc640\uc77c\ub4dc\uce74\ub4dc \ud55c \uba85\uc740 2027\ub144 3\uc6d4 20\uc77c \uc9c0\ubc14\ud604 \ud6c4\ub098\ubc14\uc2dc \uacbd\ub9c8\uc7a5\uc5d0\uc11c \uc5f4\ub9ac\ub294 \uc81c3\ud68c \ub300\ud68c\uc5d0 \uc9c4\ucd9c\ud55c\ub2e4. \uc81c1\ud68c \ub300\ud68c\uc758 \uc5ec\uc790 \uc6b0\uc2b9\uc790\uc640 \uc81c2\ud68c \ub300\ud68c\uc758 \ub0a8\uc790 \uc6b0\uc2b9\uc790\uac00 \ubaa8\ub450 \uc774 \ucd95\uc81c \uc608\uc120 \ucd9c\uc2e0\uc774\uc5c8\ub2e4.\n\n\uc608\uc120\uc740 \uae30\ub85d\uc744 \uc7ac\ub294 \ub2ec\ub9ac\uae30\uc5d0, \ubc14\ub2e5\uc5d0 \ub193\uc778 \ud558\ub2c8\uc640 \uc870\uac01\uc744 \uc90d\ub294 \u0027\ud558\ub2c8\uc640 \ucea1\ucc98 \ub808\uc774\uc2a4\u0027\uac00 \ub354\ud574\uc9c4 \ubc29\uc2dd\uc774\ub2e4. \uc62c\ud574 \ud589\uc0ac\ub294 \ub05d\ub0ac\uc9c0\ub9cc \ub9e4\uccb4\ub294 \ub0b4\ub144\uc5d0\ub3c4 \ub3cc\uc544\uc62c \uac83\uc774\ub77c\uace0 \uc804\ud588\ub2e4.\n\n\ucd9c\ucc98: SoraNews24 (\uc6d0\ubb38 PR TIMES)", "hashtags": ["#\uc77c\ubcf8\uc5ec\ud589", "#\uc624\uc0ac\uce74", "#\ud2f0\ub77c\ub178\uc0ac\uc6b0\ub8e8\uc2a4", "#\ud574\uc678\ubc18\uc751", "#\uc774\uc0c9\ucd95\uc81c"], "slides": [["\uace0\ubd84 \ucd95\uc81c\uc5d0", "**\ud2f0\ub77c\ub178 \uc9c8\uc8fc?!**", "---", "\uc77c\ubcf8 \uc624\uc0ac\uce74\uc758 \uace0\ubd84 \uacf5\uc6d0\uc5d0\uc11c \uc5f4\ub9b0 \ucd95\uc81c\uc5d0\uc11c \ud2f0\ub77c\ub178\uc0ac\uc6b0\ub8e8\uc2a4 \uc758\uc0c1\uc744 \uc785\uc740 \uc0ac\ub78c\ub4e4\uc774 \ub2ec\ub9ac\ub294 \ub300\ud68c \uc608\uc120\uc774 \ud568\uaed8 \uc5f4\ub838\ub2e4."], ["**\uace0\ub300 \ubb34\ub364\uc774**", "\uac00\ub4dd\ud55c \uc624\uc0ac\uce74", "---", "\uace0\ubd84\uc740 \uc8fc\ub85c \uc655\uc871\uc744 \uc704\ud55c \uace0\ub300 \ubb34\ub364\uc774\ub2e4. \uc624\uc0ac\uce74\ub294 \uace0\ub300 \uc77c\ubcf8\uc758 \uc218\ub3c4\uc600\uace0 \ub098\ub77c, \uad50\ud1a0 \uac19\uc740 \uc61b \uc218\ub3c4\uc640 \uac00\uae4c\uc6cc \uace0\ubd84\uc774 \uc5ec\ub7ff \ud769\uc5b4\uc838 \uc788\ub2e4. \ud06c\uace0 \uc5f4\uc1e0\uad6c\uba4d \uac19\uc740 \ubaa8\uc591\uc774\ub77c \ud56d\uacf5\uc0ac\uc9c4\uc5d0\uc11c\ub3c4 \ub208\uc5d0 \ub748\ub2e4."], ["\uc774\ub984\ubd80\ud130", "\ud558\ub2c8\ucf54\ud1a0", "---", "\ud558\ub2c8\ucf54\ud1a0\ub294 \ud558\ub2c8\uc640\uc640 \ub9c8\uc2a4\ucf54\ud2b8\uc758 \uc77c\ubcf8\uc5b4 \ubc1c\uc74c\uc744 \ud569\uce5c \ub9d0\uc774\ub2e4. \ud558\ub2c8\uc640\ub294 \uace0\ubd84\uc5d0 \ub9dd\uc790\uc640 \ud568\uaed8 \ubb3b\ub358 \uace0\ub300 \uc810\ud1a0 \uc870\uac01\uc73c\ub85c, \uc800\uc2b9\uc5d0\uc11c \ub9dd\uc790\ub97c \uc9c0\ucf1c \uc8fc\ub294 \uc5ed\ud560\uc744 \ud588\ub2e4."], ["\ud2f0\ub77c\ub178 \uc637 \uc785\uace0", "**\ub2ec\ub9b0\ub2e4\uace0?**", "---", "\uc774 \ucd95\uc81c\ub294 \uba87 \ud574\uc9f8 \uc804\uad6d \ud2f0\ub77c\ub178\uc0ac\uc6b0\ub8e8\uc2a4 \ub2ec\ub9ac\uae30 \ub300\ud68c \u0027\ud2f0\ub77c\ub178 \ud398\uc2a4\ud2b8\u0027\uc758 \uc11c\uc77c\ubcf8 \uc608\uc120\uc744 \uc5f4\uace0 \uc788\ub2e4. \ucee4\ub2e4\ub780 \ud2f0\ub77c\ub178 \uc758\uc0c1\uc744 \uc785\uc740 \ub0a8\ub140\ub178\uc18c\uac00 \ub2ec\ub9b0\ub2e4."], ["\uc608\uc120 \ud1b5\uacfc\ud558\uba74", "**\uc9c0\ubc14\ub85c \uac04\ub2e4**", "---", "\ub0a8\ub140 1\u00b72\uc704\uc640 \uc640\uc77c\ub4dc\uce74\ub4dc \ud55c \uba85\uc774 2027\ub144 3\uc6d4 20\uc77c \uc9c0\ubc14\ud604 \ud6c4\ub098\ubc14\uc2dc \uacbd\ub9c8\uc7a5\uc758 \uc81c3\ud68c \ub300\ud68c\uc5d0 \ub098\uac04\ub2e4. \uc608\uc120\uc740 \uae30\ub85d \uacbd\uc7c1\uc5d0 \ubc14\ub2e5\uc758 \ud558\ub2c8\uc640\ub97c \uc90d\ub294 \uaddc\uce59\uc774 \ub354\ud574\uc9c4\ub2e4."], ["\uacf5\ub8e1 \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uace0\ub300 \ubb34\ub364 \ucd95\uc81c\uc5d0\uc11c \ud2f0\ub77c\ub178 \ub2ec\ub9ac\uae30 \uc608\uc120\uc774 \uc5f4\ub9b0\ub2e4\ub2c8, \uc5ed\uc0ac\uc640 \uacf5\ub8e1\uc744 \ub458 \ub2e4 \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uac00 \uc2e0\uae30\ud574\ud560 \uc18c\uc2dd"]]}, "e6e069e2d58d": {"caption": "\ud68c\uc804\ucd08\ubc25 \uccb4\uc778 \uc2a4\uc2dc\ub85c\uac00 \ubbf8\uad6d 1\ud638\uc810\uc744 \uc5f4\uc790\ub9c8\uc790 \uac00\uaca9 \ub54c\ubb38\uc5d0 \uc77c\ubcf8\uc5d0\uc11c \ud654\uc81c\uac00 \ub410\ub2e4. \ub274\uc695 \ub9e4\uc7a5\uc740 11\uc6d4 19\uc77c \uccab \uc190\ub2d8\uc744 \ub9de\uc558\uace0, \uac1c\uc810 \uc2dc\uac04\uc778 \uc624\uc804 11\uc2dc\ubcf4\ub2e4 \uba87 \uc2dc\uac04 \uc77c\ucc0d \ub3c4\ucc29\ud55c \uc0ac\ub78c\ub3c4 \uc788\uc744 \ub9cc\ud07c \uae34 \uc904\uc774 \ub298\uc5b4\uc130\ub2e4.\n\n\uc77c\ubcf8\uc758 \ubc29\uc2dd\uc740 \uc0c1\ub2f9 \ubd80\ubd84 \uadf8\ub300\ub85c \uac00\uc838\uc654\ub2e4. \uc8fc\ubb38\uc6a9 \ub300\ud615 \ud130\uce58\uc2a4\ud06c\ub9b0 \ud328\ub110\uc744 \uc4f0\uace0, \uc77c\ubcf8\uc5d0\uc11c\ub294 \ud754\ud558\uc9c0\ub9cc \ubbf8\uad6d \uc2dd\ub2f9\uc5d0\uc11c\ub294 \ub4dc\ubb38 \ud301 \uc5c6\ub294 \uc815\ucc45\ub3c4 \ub3c4\uc785\ud588\ub2e4. \ub2e4\ub9cc \uac00\uaca9\uc740 \uc804\ud600 \uc800\ub834\ud558\uc9c0 \uc54a\ub2e4. \ucc38\uce58 \uac19\uc740 \uae30\ubcf8 \ucd08\ubc25\uc774 \uc811\uc2dc\ub2f9 5\ub2ec\ub7ec\ubd80\ud130, \uc624\ud1a0\ub85c\ub294 10\ub2ec\ub7ec\ub85c \uac01\uac01 \uc57d 800\uc5d4\uacfc 1,600\uc5d4\uc774\ub2e4. \uc77c\ubcf8\uc5d0\uc11c\ub294 \ucc38\uce58 \ud55c \uc811\uc2dc\uac00 180\uc5d4\uc774\uace0 \ub300\ubd80\ubd84\uc758 \ucd08\ubc25\uc774 210\uc5d4 \uc774\ud558\ub77c\uc11c, \ubbf8\uad6d \uac00\uaca9\uc740 \ub300\ub7b5 4\ubc30 \uc218\uc900\uc774\ub2e4.\n\n\uae30\uc0ac\ub294 \uc774 \uac00\uaca9\uc774 \ubb34\uc870\uac74 \uacfc\ud558\ub2e4\uace0\ub9cc \ubcf4\uc9c0\ub294 \uc54a\uc558\ub2e4. \uc5d4\ud654\uac00 \ub2ec\ub7ec \ub300\ube44 \ub9e4\uc6b0 \uc57d\ud55c \uc0c1\ud0dc\uc774\uace0, 1\ud638\uc810\uc774 \ubbf8\uad6d\uc5d0\uc11c\ub3c4 \ube44\uc2fc \ub3c4\uc2dc\uc758 \ub9e8\ud574\ud2bc\uc5d0 \uc788\uae30 \ub54c\ubb38\uc774\ub2e4. 5~10\uc811\uc2dc\ub97c \uba39\ub294\ub2e4\uace0 \uce58\uba74 \ud55c \ub07c\uc5d0 25~50\ub2ec\ub7ec \uc815\ub3c4\uac00 \ub41c\ub2e4\ub294 \uacc4\uc0b0\ub3c4 \uc18c\uac1c\ud588\ub2e4.\n\n\uadf8\ub798\ub3c4 \uc77c\ubcf8 \uc628\ub77c\uc778 \ubc18\uc751\uc740 \ub180\ub77c\uc6c0 \ucabd\uc5d0 \uac00\uae4c\uc6e0\ub2e4. \u0027\uc811\uc2dc\ub2f9 800\uc5d4\uc774\ub77c\ub2c8, \ubbf8\uad6d \ubb3c\uac00 \ubb34\uc12d\ub2e4\u0027\ub294 \ubc18\uc751\ubd80\ud130 \u0027\uc624\ub798 \ubabb \uac08 \uac83 \uac19\ub2e4\u0027\ub294 \ubc18\uc751\uae4c\uc9c0 \ub098\uc654\ub2e4. \uc77c\ubcf8\uc5d0\uc11c \uc2a4\uc2dc\ub85c\ub97c \uace0\uae09 \uc2dd\ub2f9\uc73c\ub85c \ubcf4\ub294 \uc0ac\ub78c\uc740 \uc5c6\uae30 \ub54c\ubb38\uc774\ub2e4.\n\n\ucd9c\ucc98: SoraNews24", "hashtags": ["#\ud68c\uc804\ucd08\ubc25", "#\uc2a4\uc2dc\ub85c", "#\ub274\uc695\ub9db\uc9d1", "#\uc77c\ubcf8vs\ubbf8\uad6d", "#\ud574\uc678\uc774\uc288"], "slides": [["\ud68c\uc804\ucd08\ubc25\uc774", "\uc77c\ubcf8\uc758 **4\ubc30**???", "---", "\uc77c\ubcf8 \ud68c\uc804\ucd08\ubc25 \uccb4\uc778 \uc2a4\uc2dc\ub85c\uac00 11\uc6d4 19\uc77c \ub274\uc695\uc5d0 \ubbf8\uad6d 1\ud638\uc810\uc744 \uc5f4\uc5c8\ub294\ub370, \uc811\uc2dc \uac00\uaca9\uc774 \uc77c\ubcf8\uc758 \uc57d 4\ubc30\ub77c \ud654\uc81c\uac00 \ub410\ub2e4."], ["\uccab\ub0a0\ubd80\ud130", "**\uae34 \uc904** \u3137\u3137", "---", "\uc2a4\uc2dc\ub85c \ubbf8\uad6d 1\ud638\uc810\uc740 \ub274\uc695\uc5d0\uc11c 11\uc6d4 19\uc77c \uccab \uc190\ub2d8\uc744 \ub9de\uc558\ub2e4. \uc624\uc804 11\uc2dc \uac1c\uc810\ubcf4\ub2e4 \uba87 \uc2dc\uac04 \uc77c\ucc0d \uc640\uc11c \uae30\ub2e4\ub9b0 \uc0ac\ub78c\ub3c4 \uc788\uc744 \ub9cc\ud07c \uc904\uc774 \uae38\uc5c8\ub2e4."], ["\ucc38\uce58 \ud55c \uc811\uc2dc", "\uc57d **800\uc5d4**", "---", "\ub274\uc695 \ub9e4\uc7a5\uc740 \ucc38\uce58 \uac19\uc740 \uae30\ubcf8 \ucd08\ubc25\uc774 \uc811\uc2dc\ub2f9 5\ub2ec\ub7ec\ubd80\ud130, \uc624\ud1a0\ub85c\ub294 10\ub2ec\ub7ec\ub2e4. \uc77c\ubcf8\uc5d0\uc11c\ub294 \ucc38\uce58 \ud55c \uc811\uc2dc\uac00 180\uc5d4\uc774\uace0 \ub300\ubd80\ubd84\uc758 \ucd08\ubc25\uc774 210\uc5d4 \uc774\ud558\ub2e4."], ["\ube44\uc300 \ub9cc\ub3c4", "\ud558\uae34 \ud574", "---", "\uc5d4\ud654\uac00 \ub2ec\ub7ec \ub300\ube44 \ub9e4\uc6b0 \uc57d\ud55c \uc0c1\ud0dc\uc774\uace0, \uccab \ub9e4\uc7a5\uc740 \ubbf8\uad6d\uc5d0\uc11c\ub3c4 \uac00\uc7a5 \ube44\uc2fc \ucd95\uc5d0 \ub4dc\ub294 \ub3c4\uc2dc\uc758 \ub9e8\ud574\ud2bc\uc5d0 \uc788\ub2e4. \uae30\uc0ac\ub294 \uadf8\ub798\uc11c \uac00\uaca9\uc774 \ub192\uc740 \uac8c \uc790\uc5f0\uc2a4\ub7fd\ub2e4\uace0 \uc9da\uc5c8\ub2e4."], ["\uc77c\ubcf8 \ubc18\uc751\uc740", "**\uc2f8\ub298\ud574**", "---", "\uc77c\ubcf8 \uc628\ub77c\uc778\uc5d0\uc11c\ub294 \u0027\uc811\uc2dc\ub2f9 800\uc5d4\uc774\ub77c\ub2c8, \ubbf8\uad6d \ubb3c\uac00 \ubb34\uc12d\ub2e4\u0027\ub294 \ubc18\uc751\uacfc \u0027\uc624\ub798 \ubabb \uac08 \uac83 \uac19\ub2e4\u0027\ub294 \ubc18\uc751\uc774 \ub098\uc654\ub2e4. \uc77c\ubcf8\uc5d0\uc11c \uc2a4\uc2dc\ub85c\ub97c \uace0\uae09 \uc2dd\ub2f9\uc73c\ub85c \uc5ec\uae30\ub294 \uc0ac\ub78c\uc740 \uc5c6\ub2e4\ub294 \uc810\uc774 \ubc30\uacbd\uc774\ub2e4."], ["\ucd08\ubc25 \uc88b\uc544\ud558\ub294", "\uce5c\uad6c\ud55c\ud14c \ubcf4\ub0b4\uae30", "---", "\uc77c\ubcf8 \ud68c\uc804\ucd08\ubc25\uc744 \uc990\uaca8 \uba39\ub294 \uce5c\uad6c\ub77c\uba74 4\ubc30\ub85c \ub6f4 \uac00\uaca9\ud45c\uc5d0 \uae5c\uc9dd \ub180\ub784 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

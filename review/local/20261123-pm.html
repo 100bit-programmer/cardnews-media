@@ -1,0 +1,2167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.23 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.23 오후 검수</span> <span id="progress">0 / 3 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      <a href="#post-2c4fff3584b7" data-jump="2c4fff3584b7">1</a><a href="#post-534bf8279c53" data-jump="534bf8279c53">2</a><a href="#post-86e194139376" data-jump="86e194139376">3</a>
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+  
+  
+  <article class="post" id="post-2c4fff3584b7" data-id="2c4fff3584b7">
+    <div class="head">
+      <h2>1. 60년 만에 분리된 옥소보레인</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 12 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 8장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-01.jpg" alt="1장: 60년간 못 잡던 분자가 잡혔다???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-02.jpg" alt="2장: 붕소와 산소의 삼중결합" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-03.jpg" alt="3장: 의도 안 했는데 생겨버렸다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-04.jpg" alt="4장: 전자가 넉넉한 곁가지의 힘" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-05.jpg" alt="5장: 실온에서도 멀쩡한 결정" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-06.jpg" alt="6장: 다들 포기했던 분야였다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-07.jpg" alt="7장: 화학 좋아하는 친구한테 보내기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/2c4fff3584b7/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 8</span></div>
+
+    
+    <div class="body">
+      <p class="cap">60년 넘게 찾아 헤맨 분자가 마침내 손에 잡혔다. 독일 율리우스 막시밀리안 뷔르츠부르크 대학교와 인도 테즈푸르 대학교 연구진이 옥소보레인 화합물 세 가지를 실온에서 결정 형태로 합성했다고 Nature Chemistry에 발표했다.
+
+옥소보레인은 붕소와 산소가 삼중결합으로 이어진 분자로, 너무 불안정하고 반응성이 커서 극한 조건이 아니면 관찰하기 어렵다고 여겨졌다. 연구진은 붕소가 든 반응성 높은 화합물 디보라쿠뮬렌을 여러 일반 시약과 섞는 실험을 하다가 이 분자가 뜻밖에 생겨나는 것을 발견했다.
+
+안정성의 열쇠는 분자에 붙은 보릴레닐기였다. 전자가 풍부한 이 원자 집단이 전자 밀도를 나눠 주면서 전하의 불균형을 줄였고, 백금 같은 추가 금속도 필요하지 않았다. 생성된 결정은 주황색과 노란색을 띠었다.
+
+앞으로는 지금까지 만든 세 가지 외에 옥소보레인을 더 만들고 생성 과정을 더 이해하는 연구가 이어질 전망이다. 연구진은 같은 방식이 지금까지 포착하기 어려웠던 다른 분자에도 쓰일 수 있다고 본다. 다만 약이나 소재 같은 분야에서 짚을 만한 구체적인 성과는 아직 없다.
+
+출처: ScienceAlert</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#과학 #화학 #옥소보레인 #NatureChemistry #해외이슈</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>연구진은 보릴레닐기 안정화 방식이 지금까지 포착하기 어려웠던 다른 분자에도 쓰일 수 있다고 제안했다 <small>애매 · 원문은 과학자들이 작동 원리를 완전히 이해한 뒤에야 다른 분자에 쓰일 수 있다고 조건을 달았다. 본문은 조건 없이 쓰일 수 있다고 써서 뉘앙스가 과장된다. &#39;가능성을 제안했다&#39;는 식으로 조건을 명시하는 것이 좋다.</small></li>
+          <li>근거 등록 안 된 주장: 독일 뷔르츠부르크 대학교와 인도 테즈푸르 대학교라는 기관명</li><li>근거 등록 안 된 주장: 홀거 브라운슈바이크라는 화학자의 소속(뷔르츠부르크 대학교)</li><li>근거 등록 안 된 주장: 출처가 ScienceAlert라는 점</li>
+          <li>화학 용어(옥소보레인, 디보라쿠뮬렌, 보릴레닐기)는 음역이라 표기가 매체마다 다를 수 있음</li><li>응용 성과(약·소재)는 아직 확인되지 않았으므로 실용화를 암시하지 않도록 주의</li><li>안정화 방식의 다른 분자 적용 가능성은 연구진의 제안일 뿐 검증된 사실이 아님</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-2c4fff3584b7-0">1장</label>
+          <textarea id="s-2c4fff3584b7-0" rows="6" data-slide="0">**60년간** 못 잡던
+분자가 잡혔다???
+---
+독일과 인도 연구진이 60년 넘게 너무 불안정해 존재하기 어렵다고 여겨진 옥소보레인 분자를 실온에서 결정으로 만들어 냈다.</textarea>
+          
+          <label class="f" for="s-2c4fff3584b7-1">2장</label>
+          <textarea id="s-2c4fff3584b7-1" rows="6" data-slide="1">붕소와 산소의
+**삼중결합**
+---
+옥소보레인은 붕소와 산소가 삼중결합으로 묶인 분자다. 연구자들은 60년 넘게 찾아 왔지만, 너무 불안정하고 반응성이 커서 극한 조건 밖에선 관찰하기 어렵다고 여겨졌다.</textarea>
+          
+          <label class="f" for="s-2c4fff3584b7-2">3장</label>
+          <textarea id="s-2c4fff3584b7-2" rows="6" data-slide="2">의도 안 했는데
+**생겨버렸다**
+---
+연구진은 붕소가 든 반응성 높은 화합물 디보라쿠뮬렌을 여러 일반 시약과 섞다가 이 분자가 뜻밖에 생기는 것을 발견했다. 결과는 Nature Chemistry에 실렸다.</textarea>
+          
+          <label class="f" for="s-2c4fff3584b7-3">4장</label>
+          <textarea id="s-2c4fff3584b7-3" rows="6" data-slide="3">**전자가** 넉넉한
+곁가지의 힘
+---
+분자에 붙은 보릴레닐기는 전자가 풍부해서 전자 밀도를 나눠 주고, 전하의 불균형을 줄였다. 백금 같은 추가 금속은 이번에는 필요하지 않았다.</textarea>
+          
+          <label class="f" for="s-2c4fff3584b7-4">5장</label>
+          <textarea id="s-2c4fff3584b7-4" rows="6" data-slide="4">실온에서도
+**멀쩡한** 결정
+---
+만들어진 것은 주황색과 노란색을 띤 고체 결정이었다. X선 결정학과 분광법, 컴퓨터 시뮬레이션으로 분석하니 붕소-산소 삼중결합이 매우 강하게 만들어졌음이 확인됐다.</textarea>
+          
+          <label class="f" for="s-2c4fff3584b7-5">6장</label>
+          <textarea id="s-2c4fff3584b7-5" rows="6" data-slide="5">다들 **포기했던**
+분야였다
+---
+화학자 홀거 브라운슈바이크는 이 분야 거의 모두가 옥소보레인을 포기한 상태였다고 말했다. 다만 약이나 소재 쪽의 구체적인 성과는 아직 없다.</textarea>
+          
+          <label class="f" for="s-2c4fff3584b7-6">7장</label>
+          <textarea id="s-2c4fff3584b7-6" rows="6" data-slide="6">화학 좋아하는
+**친구한테** 보내기
+---
+60년 넘게 다들 포기했던 분자가 실험 중 뜻밖에 모습을 드러냈다. 화학이나 과학 뉴스를 좋아하는 친구와 함께 놀라 보기 좋은 소식</textarea>
+          
+          <label class="f" for="c-2c4fff3584b7">본문 (캡션)</label>
+          <textarea id="c-2c4fff3584b7" class="caption">60년 넘게 찾아 헤맨 분자가 마침내 손에 잡혔다. 독일 율리우스 막시밀리안 뷔르츠부르크 대학교와 인도 테즈푸르 대학교 연구진이 옥소보레인 화합물 세 가지를 실온에서 결정 형태로 합성했다고 Nature Chemistry에 발표했다.
+
+옥소보레인은 붕소와 산소가 삼중결합으로 이어진 분자로, 너무 불안정하고 반응성이 커서 극한 조건이 아니면 관찰하기 어렵다고 여겨졌다. 연구진은 붕소가 든 반응성 높은 화합물 디보라쿠뮬렌을 여러 일반 시약과 섞는 실험을 하다가 이 분자가 뜻밖에 생겨나는 것을 발견했다.
+
+안정성의 열쇠는 분자에 붙은 보릴레닐기였다. 전자가 풍부한 이 원자 집단이 전자 밀도를 나눠 주면서 전하의 불균형을 줄였고, 백금 같은 추가 금속도 필요하지 않았다. 생성된 결정은 주황색과 노란색을 띠었다.
+
+앞으로는 지금까지 만든 세 가지 외에 옥소보레인을 더 만들고 생성 과정을 더 이해하는 연구가 이어질 전망이다. 연구진은 같은 방식이 지금까지 포착하기 어려웠던 다른 분자에도 쓰일 수 있다고 본다. 다만 약이나 소재 같은 분야에서 짚을 만한 구체적인 성과는 아직 없다.
+
+출처: ScienceAlert</textarea>
+          <label class="f" for="t-2c4fff3584b7">해시태그</label>
+          <input id="t-2c4fff3584b7" type="text" class="tagsin" value="#과학 #화학 #옥소보레인 #NatureChemistry #해외이슈" autocapitalize="off">
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>연구진은 보릴레닐기 안정화 방식이 지금까지 포착하기 어려웠던 다른 분자에도 쓰일 수 있다고 제안했다</b>
+            <q>“The researchers suggest that the extra borylenyl group stability trick could be used with other molecules that have so far been difficult to catch, once scientists have fully figured out how it works.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>옥소보레인을 60년 넘게 화학자들이 찾아 왔다</b>
+            <q>“Chemists have been on the lookout for molecules called oxoboranes for more than 60 years.”</q>
+            <small>slide1, slide2, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>독일과 인도 연구진이 옥소보레인 화합물 세 가지를 실온에서 결정으로 합성했다</b>
+            <q>“Now researchers from the Julius Maximilian University of Würzburg in Germany and Tezpur University in India have made a major breakthrough, synthesizing three oxoborane compounds as crystals at room temperature.”</q>
+            <small>slide1, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>옥소보레인은 붕소-산소 삼중결합으로 이루어졌고 너무 불안정하고 반응성이 커서 극한 조건 밖에서는 관찰하기 어렵다고 여겨졌다</b>
+            <q>“Made up of boron-oxygen triple bonds, oxoboranes were thought to be too unstable and reactive to exist long enough to be observed outside of very extreme conditions.”</q>
+            <small>slide2, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>연구진은 디보라쿠뮬렌을 여러 일반 시약과 섞는 실험을 하다 이 분자를 발견했고 결과를 Nature Chemistry에 발표했다</b>
+            <q>“Publishing their results in Nature Chemistry, the team discovered them while experimenting with diboracumulene, a highly reactive compound containing boron, after mixing it with several standard chemical reagents.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>분자가 뜻밖에 형성되었다</b>
+            <q>“That&#39;s when the elusive molecules were unexpectedly formed: A little serendipity had helped the chemists find the solution to a 60-year-old problem.”</q>
+            <small>slide3, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>전자가 풍부한 보릴레닐기가 전자 밀도를 나눠 전하의 불균형을 줄인다</b>
+            <q>“As that extra group is rich in electrons, it&#39;s able to share some of the electron density, reducing the imbalance of electrical charge that usually means oxoboranes are gone almost before they&#39;ve arrived.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>백금 안정화와 달리 추가 금속이 필요하지 않았다</b>
+            <q>“Unlike the platinum stabilization, no additional metals were required, and the extra stability came from the intrinsic properties of the molecules themselves.”</q>
+            <small>slide4, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>반응에서 주황색과 노란색 고체 결정이 생겼고 X선 결정학과 분광법 등으로 분석했다</b>
+            <q>“The reactions produced solid crystals, colored orange and yellow, which the researchers analyzed using techniques including X-ray crystallography (which checks the atomic arrangement) and spectroscopy (which studies the molecular structure).”</q>
+            <small>slide5, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>컴퓨터 시뮬레이션도 활용했고 분석 결과 붕소-산소 삼중결합이 매우 강하게 만들어졌음이 확인됐다</b>
+            <q>“Computer simulations were also used to help understand why the molecules had emerged and remained stable. Altogether, the analysis showed that boron-oxygen triple bonds had been created, and with exceptional strength.”</q>
+            <small>slide5 · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>홀거 브라운슈바이크는 이 분야 거의 모두가 옥소보레인을 포기했었다고 말했다</b>
+            <q>“Nearly everybody in the field had given up on oxoboranes, as they were thought to be just too unstable to be isolated,”</q>
+            <small>slide6 · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>약이나 소재 쪽에서 짚을 만한 구체적인 성과는 아직 없다</b>
+            <q>“There&#39;s no specific advance that we can point to yet, in terms of drugs or materials, for example, but the experts are just getting started.”</q>
+            <small>slide6, caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>앞으로 세 가지 외의 옥소보레인을 더 만들고 생성 과정을 더 이해하는 작업이 시작될 수 있다</b>
+            <q>“Now work can begin to try and produce more oxoboranes besides the three produced so far, and understand more about the creation process.”</q>
+            <small>caption · <a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://www.sciencealert.com/after-60-years-chemists-finally-isolate-elusive-molecules-thought-too-unstable-to-survive" target="_blank" rel="noopener">After 60 Years, Chemists Finally Isolate Elusive Molecules Thought Too Unstable to Survive</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://www.uni-wuerzburg.de/en/news-and-events/news/detail/news/oxoboranes/" target="_blank" rel="noopener">뷔르츠부르크대학교 / </a> — "https://www.technology.org/texorgwp/wp-content/uploads/2026/11/Oxoborane-w-OhneKI.jpg"</li><li>2장: <a href="https://www.sciencedaily.com/releases/2026/11/261103003205.htm" target="_blank" rel="noopener">ScienceDaily / </a> — "https://scitechdaily.com/images/Newly-Prepared-Oxoborane.jpg"</li><li>3장: <a href="https://pixabay.com/photos/lab-research-chemistry-test-217043/" target="_blank" rel="noopener">PublicDomainPictures / Pixabay</a> — "chemistry flask"</li><li>4장: <a href="https://pixabay.com/photos/lab-experiment-test-chemistry-3498584/" target="_blank" rel="noopener">fernandozhiminaicela / Pixabay</a> — "test tubes"</li><li>5장: <a href="https://pixabay.com/photos/ice-cold-snowflakes-ice-crystals-1997289/" target="_blank" rel="noopener">Pezibear / Pixabay</a> — "crystals"</li><li>6장: <a href="https://pixabay.com/photos/notebooks-composition-math-science-9676392/" target="_blank" rel="noopener">BrickBard / Pixabay</a> — "science notebook"</li><li>7장: <a href="https://pixabay.com/photos/analysis-biochemistry-biologist-2030265/" target="_blank" rel="noopener">Kost9n4 / Pixabay</a> — "microscope"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="1번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-534bf8279c53" data-id="534bf8279c53">
+    <div class="head">
+      <h2>2. 하루 3시간만 여는 도쿄 야마가타 소바집</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 15
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 9장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/v1-01.jpg" alt="1장: 하루 3시간만 여는 소바집???" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/v1-02.jpg" alt="2장: 센다이에서 반해 도쿄까지 왔다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/v1-03.jpg" alt="3장: 고기는 닭, 육수도 닭" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/v1-04.jpg" alt="4장: 평일 점심만 주말은 휴무" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/v1-05.jpg" alt="5장: 큰 사이즈가 면만 600g?!" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/v1-06.jpg" alt="6장: 도쿄 평일 점심 일정 있으면 저장" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/product-1123081423-01.jpg" alt="상품 사진: 파란 그릇에 담긴 냉소바 위에 닭고기 슬라이스와 파채(대파 채), 튀김 조각(새우 등 튀김으로 보이는 것)이 올라간 모습 (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/product-1123081423-02.jpg" alt="상품 사진: 젓가락으로 집은 튀김(오징어 다리 튀김 추정)이 소바 위에 올라가 있고, 파채와 회색빛 소바면이 함께 보임 (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/v1-07.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 9</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 2장이 카드 뒤에 같이 들어가요 (soranews24.com). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">하루 세 시간, 그것도 평일에만 문을 여는 소바집이 도쿄에 생겼다. 니쿠소바 토시치 한조몬점은 센다이 본점과 같은 오전 11시~오후 2시에만 영업하고 토·일·공휴일은 쉰다. 소라뉴스24의 P.K. 산준 기자는 센다이에서 이 집의 소바를 처음 먹고 반했는데, 그날은 날이 너무 추워 직원이 따뜻한 니쿠소바를 권했다고 한다. 원래 이 가게의 대표 메뉴는 차가운 니쿠소바라 아쉬움이 남았고, 도쿄 지점 소식에 재도전에 나섰다. 한조몬역에서 걸어 5분쯤 가자 열 명 정도의 줄이 서 있었지만, 서서 먹는 자리가 넉넉해 회전이 빨라 기다린 시간은 15분 정도였다. 기자는 큰 사이즈(1,050엔)에 오징어 다리 튀김인 게소텐(250엔 추가)을 얹었고, 면이 600g이나 되는 줄은 미처 몰랐다고 한다. 국물은 맑은 황금빛에 단맛이 났고, 아주 차갑지 않은 미지근한 온도였다. 껍질째 간 메밀로 만든 면은 얇고 흰 도쿄의 흔한 면과 대조적이었다. 평일 점심에 도쿄를 지날 계획이 있다면 저장해 두자. 출처: SoraNews24</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">도쿄맛집 소바 일본여행 야마가타소바 일본맛집</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          
+          <li>근거 등록 안 된 주장: 니쿠소바 토시치 한조몬점이 센다이 본점과 같은 오전 11시~오후 2시에만 영업한다는 주장은 원문에 명시되지 않았다.</li><li>근거 등록 안 된 주장: 국물이 맑은 황금빛이라는 묘사</li><li>근거 등록 안 된 주장: 센다이 가게가 본점이라는 주장</li><li>근거 등록 안 된 주장: 기자가 큰 사이즈의 면이 600g인 줄 몰랐다는 주장의 맥락 설명</li>
+          <li>단일 출처(SoraNews24) 기사에 의존함</li><li>영업시간과 휴무일은 바뀔 수 있어 방문 전 확인 필요</li><li>가격은 기사 작성 시점 기준</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-534bf8279c53-0">1장</label>
+          <textarea id="s-534bf8279c53-0" rows="6" data-slide="0">하루 **3시간만**
+여는 소바집???
+---
+평일 오전 11시부터 오후 2시까지 세 시간만 여는 야마가타 소바집이 도쿄에 첫 지점을 열었다.</textarea>
+          
+          <label class="f" for="s-534bf8279c53-1">2장</label>
+          <textarea id="s-534bf8279c53-1" rows="6" data-slide="1">센다이에서 반해
+**도쿄**까지 왔다
+---
+소라뉴스24의 P.K. 산준 기자는 센다이에서 처음 야마가타 소바를 먹고 반했다. 그 가게인 니쿠소바 토시치가 올해 도쿄에 첫 지점을 냈다는 사실을 뒤늦게 알게 됐다.</textarea>
+          
+          <label class="f" for="s-534bf8279c53-2">3장</label>
+          <textarea id="s-534bf8279c53-2" rows="6" data-slide="2">고기는 **닭**,
+육수도 닭
+---
+간판 메뉴는 닭고기를 올린 니쿠소바다. 고기는 알 낳기를 마친 닭으로, 감칠맛이 깊고 식감이 단단하다고 한다. 육수도 닭으로 만든 것으로 보인다.</textarea>
+          
+          <label class="f" for="s-534bf8279c53-3">4장</label>
+          <textarea id="s-534bf8279c53-3" rows="6" data-slide="3">**평일** 점심만
+주말은 휴무
+---
+영업시간은 오전 11시부터 오후 2시까지 세 시간뿐이다. 토요일, 일요일, 공휴일은 쉬어서 평일에만 갈 수 있다. 한조몬역에서 걸어 5분쯤 걸린다.</textarea>
+          
+          <label class="f" for="s-534bf8279c53-4">5장</label>
+          <textarea id="s-534bf8279c53-4" rows="6" data-slide="4">큰 사이즈가
+면만 **600g**?!
+---
+기자가 고른 큰 사이즈는 1,050엔에 면이 600g이나 됐다. 껍질째 간 메밀로 만든 면은 도쿄에서 흔한 얇고 흰 면과 달리 굵고 쫄깃하다.</textarea>
+          
+          <label class="f" for="s-534bf8279c53-5">6장</label>
+          <textarea id="s-534bf8279c53-5" rows="6" data-slide="5">도쿄 평일 점심
+일정 있으면 **저장**
+---
+평일 낮 11시부터 2시까지만 여는 가게라 일정을 짜기 전에 다시 확인해야 할 정보. 한조몬역에서 걸어 5분이라는 위치도 함께 담아 둘 만한 내용.</textarea>
+          
+          <label class="f" for="c-534bf8279c53">본문 (캡션)</label>
+          <textarea id="c-534bf8279c53" class="caption">하루 세 시간, 그것도 평일에만 문을 여는 소바집이 도쿄에 생겼다. 니쿠소바 토시치 한조몬점은 센다이 본점과 같은 오전 11시~오후 2시에만 영업하고 토·일·공휴일은 쉰다. 소라뉴스24의 P.K. 산준 기자는 센다이에서 이 집의 소바를 처음 먹고 반했는데, 그날은 날이 너무 추워 직원이 따뜻한 니쿠소바를 권했다고 한다. 원래 이 가게의 대표 메뉴는 차가운 니쿠소바라 아쉬움이 남았고, 도쿄 지점 소식에 재도전에 나섰다. 한조몬역에서 걸어 5분쯤 가자 열 명 정도의 줄이 서 있었지만, 서서 먹는 자리가 넉넉해 회전이 빨라 기다린 시간은 15분 정도였다. 기자는 큰 사이즈(1,050엔)에 오징어 다리 튀김인 게소텐(250엔 추가)을 얹었고, 면이 600g이나 되는 줄은 미처 몰랐다고 한다. 국물은 맑은 황금빛에 단맛이 났고, 아주 차갑지 않은 미지근한 온도였다. 껍질째 간 메밀로 만든 면은 얇고 흰 도쿄의 흔한 면과 대조적이었다. 평일 점심에 도쿄를 지날 계획이 있다면 저장해 두자. 출처: SoraNews24</textarea>
+          <label class="f" for="t-534bf8279c53">해시태그</label>
+          <input id="t-534bf8279c53" type="text" class="tagsin" value="도쿄맛집 소바 일본여행 야마가타소바 일본맛집" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/product-1123081423-01.jpg" alt="" width="56" height="56" loading="lazy"> 파란 그릇에 담긴 냉소바 위에 닭고기 슬라이스와 파채(대파 채), 튀김 조각(새우 등 튀김으로 보이는 것)이 올라간 모습 · soranews24.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/534bf8279c53/product-1123081423-02.jpg" alt="" width="56" height="56" loading="lazy"> 젓가락으로 집은 튀김(오징어 다리 튀김 추정)이 소바 위에 올라가 있고, 파채와 회색빛 소바면이 함께 보임 · soranews24.com</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>니쿠소바 토시치 도쿄 지점은 평일 오전 11시부터 오후 2시까지 영업한다</b>
+            <q>“Open: 11:00 a.m.–2:00 p.m.”</q>
+            <small>slide1, slide4, summary, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>토요일, 일요일, 공휴일은 휴무다</b>
+            <q>“Closed: Saturdays, Sundays, and national holidays”</q>
+            <small>slide1, slide4, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>센다이에서 먹은 가게가 올해 도쿄에 첫 지점을 열었다</b>
+            <q>“he discovered that the very shop he ate at in Sendai had opened its first Tokyo branch this year.”</q>
+            <small>slide1, slide2, summary · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>P.K. 산준 기자가 야마가타 소바를 처음 먹고 반했다</b>
+            <q>“Our Japanese-language reporter P.K. Sanjun recently had his first experience with Yamagata soba, and was instantly addicted.”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>기자가 처음 먹은 곳은 센다이였다</b>
+            <q>“as his first ever Yamagata soba was actually eaten in Sendai, Miyagi (its neighboring prefecture).”</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>가게 이름은 니쿠소바 토시치이며 간판 메뉴는 니쿠소바다</b>
+            <q>“The name of the shop P.K. ate at in Sendai was Nikusoba Toshichi, and just as it suggests, the specialty of the shop is ‘nikusoba’ (literally ‘meat soba’).”</q>
+            <small>slide2, slide3 · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>고기는 알 낳기를 마친 닭이고 감칠맛이 깊고 식감이 단단하며 육수도 닭으로 만든 것으로 보인다</b>
+            <q>“The meat in question is chicken, but more specifically chickens that have finished laying eggs, which are known as oyadori and have a deep umami and firm texture, and the broth is also apparently made from chicken.”</q>
+            <small>slide3 · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>한조몬역에서 걸어 5분쯤 걸리고 열 명 정도의 줄이 있었다</b>
+            <q>“After walking about five minutes from Hanzomon Station, P.K. arrived at the Hanzomon Branch and was greeted by a line of about ten people that had formed in front of the shop.”</q>
+            <small>slide4, slide6, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>큰 사이즈는 면이 600g이다</b>
+            <q>“What he hadn’t realized was that the large serving has an incredible 600 grams (about 1.3 pounds) of soba, and the even larger ‘dekkai’ size has 800 grams (nearly 1.8 pounds).”</q>
+            <small>slide5, summary, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>큰 사이즈는 1,050엔이고 게소텐 토핑은 250엔 추가다</b>
+            <q>“P.K. ordered the Nikusoba Large Serving (1,050 yen [US$6.57], and topped it with gesoten (deep-fried squid tentacle tempura, a beloved regional pairing in Yamagata) for an additional 250 yen.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>껍질째 간 메밀 면은 도쿄의 얇고 흰 면과 대조적이다</b>
+            <q>“This soba, ground from the buckwheat seed together with its inner husk, is in stark contrast to the thin, white noodles you’ll often see at other places in Tokyo.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>면이 쫄깃하다</b>
+            <q>“The soba has the chewiness it looks like it would have—the type you savor by chewing rather than for how smoothly it goes down the throat.”</q>
+            <small>slide5 · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>원래 대표 메뉴는 차가운 니쿠소바인데 센다이에서는 추운 날이라 따뜻한 것을 권했다</b>
+            <q>“However, P.K. had a lingering regret: the original specialty of the store is cold nikusoba, but Sendai on that day was terrifyingly cold, so the staff recommended the warm nikusoba instead.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>서서 먹는 자리가 많아 회전이 빨라 기다린 시간은 약 15분이었다</b>
+            <q>“Just like in the Sendai store, there was plenty of standing-room eating space, so the turnover is a lot faster than might be expected, meaning that P.K. only had about 15 minutes to wait before his turn arrived.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>국물은 단맛이 나고 아주 차갑지 않은 미지근한 온도였다</b>
+            <q>“Taking a sip of the soup, it’s a sweet taste and a temperature that isn’t ice-cold as you might expect, but rather around ‘lukewarm’.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">Open just three hours a day, a new Tokyo soba joint serves up wildly addictive regional noodles</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/imgi_349_hanzo02.jpg"</li><li>2장: <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/imgi_370_hanzo00.jpg?w=640"</li><li>3장: <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/imgi_401_hanzo06.jpg?w=640"</li><li>4장: <a href="https://pixabay.com/photos/clocks-time-idea-concept-257911/" target="_blank" rel="noopener">jarmoluk / Pixabay</a> — "wall clock"</li><li>5장: <a href="https://soranews24.com/2026/11/23/open-just-three-hours-a-day-a-new-tokyo-soba-joint-serves-up-wildly-addictive-regional-noodles/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/imgi_394_hanzo05.jpg?w=640"</li><li>6장: <a href="https://pixabay.com/photos/tokyo-woman-market-city-people-4436914/" target="_blank" rel="noopener">thepoorphotographer / Pixabay</a> — "tokyo street"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="2번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+  
+  
+  <article class="post" id="post-86e194139376" data-id="86e194139376">
+    <div class="head">
+      <h2>3. 곰 퇴치용 사과술 베어 프루프 사이더</h2>
+      <span class="badge b-attention">
+        확인 필요
+        · 확인 11 · 애매 1
+      </span>
+    </div>
+
+    
+    
+
+    <div class="carousel-wrap">
+      <div class="carousel" tabindex="0" aria-label="카드 10장, 옆으로 넘겨보기">
+        <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-01.jpg" alt="1장: 곰 막으려고 사과술 마시라고?!" ><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-02.jpg" alt="2장: 올해의 한자가 곰이었던 일본" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-03.jpg" alt="3장: 빈 농장에서 곰 밥상 차려짐" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-04.jpg" alt="4장: 아오모리 사과가 곰 자석이래" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-05.jpg" alt="5장: 못 쓰는 사과로 술을 빚었다" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-06.jpg" alt="6장: 수익금은 빈 농장 정비에" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-07.jpg" alt="7장: 술자리 좋아하는 친구 태그하기" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/product-1123081711-01.jpg" alt="상품 사진: 갈색 유리병 사이더 한 병이 회색 배경 위에 놓여 있고, 라벨에 BEARPROOF CIDER, 곰과 사과가 그려진 빨간 삼각 경고 표지, 7% ALC/VOL, 330ml 표기가 보인다. (soranews24.com)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/product-1123081711-02.jpg" alt="상품 사진: 회색 배경의 키 비주얼: 갈색 병 사이더 한 병(빨간 곰 퇴치 라벨), 큰 영문 제목 BEARPROOF CIDER, 일본어 카피와 제품 정보 문구 (ssu.co.jp)" class="product" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/v1-08.jpg" alt="마지막 장" loading="lazy">
+      </div>
+    </div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span class="counter">1 / 10</span></div>
+
+    <p class="meta prod-note">🛍 상품 사진 2장이 카드 뒤에 같이 들어가요 (soranews24.com, ssu.co.jp). 출처는 캡션에 자동 표기. 빼고 싶으면 '문구 고치기'에서 체크를 풀고 승인.</p>
+    <div class="body">
+      <p class="cap">곰을 막겠다며 사과술을 마시라고 하는 캠페인이 일본에서 나왔다. 오니팜, 하바스 재팬, 서니사이드업 세 곳이 11월 19일 ‘베어 프루프 사이더’를 내놓았다. 목표는 일본에서 사람과 곰이 마주치는 일을 줄이는 것이다.
+
+배경에는 곰 목격과 공격이 최근 몇 년간 크게 늘었다는 현실이 있다. 2025년 올해의 한자도 ‘곰’이었다. 시골 인구가 줄면서 고령 농민이 땅을 떠났고, 작물이 제멋대로 자라는 빈 땅이 배고픈 곰을 산에서 끌어내린다는 설명이다. 사과로 유명한 북부 아오모리는 해마다 수백만 개가 시장에 나가지만 품질이 떨어지거나 그냥 떨어져 버린 사과도 많아, 과수원이 곰을 부르는 자석이 된다.
+
+이 사이더는 그런 사과를 알코올 7% 음료로 빚은 것이다. 사과를 최대한 소진하면 곰이 과수원에 들어올 이유가 줄어든다는 구상이다. 오니팜은 판매 수익으로 버려진 농장을 정비해 곰과 다른 야생동물의 은신처나 통로가 되지 않게 할 계획이다.
+
+현재 판매처는 도쿄와 히로사키 두 도시뿐이다. 일본어로 ‘사이다’라고 하면 스프라이트 같은 탄산음료를 건네받기 쉽고, 사과로 만든 사이더는 ‘시도루’라고 불러야 한다고 한다.
+
+출처: SoraNews24 (PR Times 제공 자료)</p>
+      <button class="more" type="button">캡션 더 보기</button>
+      <p class="tags">#일본 #곰 #사이더 #해외토픽 #아오모리</p>
+
+      
+      <div class="check">
+        <b>먼저 확인할 것</b>
+        <ul>
+          <li>시골 인구 감소와 고령 농민의 농지 포기가 곰 문제의 주요 요인이다 <small>애매 · 근거는 시골 인구 감소와 고령 농민의 농지 포기를 &#39;a driving factor&#39;(여러 요인 중 하나)라고 한다. &#39;주요 요인&#39;은 과장이므로 &#39;주요 요인 중 하나&#39;로 고쳐야 한다.</small></li>
+          <li>근거 등록 안 된 주장: 출처 표기: SoraNews24 기사이며 PR Times 제공 자료라는 사실</li><li>근거 등록 안 된 주장: 시골 인구 감소와 고령 농민 이탈로 빈 땅이 늘었다는 주장(근거는 농지 포기를 말하나 &#39;빈 땅이 늘었다&#39;는 명시되지 않음)</li>
+          <li>주류 관련 소재라 미성년자 노출·음주 권유로 읽히지 않게 주의</li><li>곰 피해(공격) 소재는 사고·인명 피해와 연결될 수 있어 가볍게만 소비되지 않도록 주의</li><li>원문 사진은 PR Times 제공 이미지라 사용 불가, 대체 스톡 사진 필요</li><li>판매처가 도쿄·히로사키로 한정되어 있어 한국 독자 구매 안내로 오해 금지</li>
+        </ul>
+      </div>
+      
+
+      
+      <details class="box">
+        <summary>문구 고치기</summary>
+        <div class="in">
+          <p class="meta">장마다 <b>---</b> 위는 큰 제목, 아래는 본문이에요. <b>**이렇게**</b> 별표 두 개로 감싼 말은 노란 글씨가 돼요. 문구를 많이 바꾼 장은 배경도 내용에 맞는 실제 사진 → 없으면 무료 사진으로 새로 찾아요.</p>
+          <p class="meta"><b>$$배경 지시$$</b> 달러 두 개로 감싼 말은 카드에 안 들어가고, 그 장 배경을 새로 만들 때만 참고해요. 예: <code>$$극장 앞 긴 줄, 밤, 따뜻한 조명$$</code> (캡션 칸에 쓰면 표지 배경에 적용). 실존 인물·캐릭터·로고는 비슷한 분위기의 일반 장면으로 바꿔서 만들어요.</p>
+          <p class="meta"><b>실제 사진</b> <code>$$해당 파르페 사진 찾아서 넣어줘$$</code> 처럼 쓰면 공식 홈페이지·보도자료 사진을 먼저 찾아 넣고 출처를 캡션에 붙여요. 주소를 알면 <code>$$이미지: https://… / 출처: USJ 공식$$</code>. 못 찾으면 배경은 그대로 두고 알림에 ❗로 알려줘요.</p>
+          <p class="meta">고친 채로 승인하면 카드를 다시 그려요.</p>
+          
+          <label class="f" for="s-86e194139376-0">1장</label>
+          <textarea id="s-86e194139376-0" rows="6" data-slide="0">곰 막으려고
+**사과술** 마시라고?!
+---
+일본 기업 세 곳이 곰과 사람의 마주침을 줄이겠다며 알코올 사과 사이다를 11월 19일 출시했다.</textarea>
+          
+          <label class="f" for="s-86e194139376-1">2장</label>
+          <textarea id="s-86e194139376-1" rows="6" data-slide="1">올해의 한자가
+**곰이었던** 일본
+---
+일본에서는 최근 몇 년간 곰 목격과 공격이 눈에 띄게 늘었다. 그 여파로 2025년 일본의 올해의 한자로 ‘곰’이 뽑혔을 정도다.</textarea>
+          
+          <label class="f" for="s-86e194139376-2">3장</label>
+          <textarea id="s-86e194139376-2" rows="6" data-slide="2">빈 농장에서
+**곰 밥상** 차려짐
+---
+시골 인구가 줄고 고령 농민이 땅을 떠나면서 빈 땅이 늘었다. 그런 곳에서도 작물이 제멋대로 자라, 배고픈 곰이 산에서 내려온다.</textarea>
+          
+          <label class="f" for="s-86e194139376-3">4장</label>
+          <textarea id="s-86e194139376-3" rows="6" data-slide="3">아오모리 사과가
+**곰 자석**이래
+---
+사과로 유명한 북부 아오모리는 해마다 수백만 개가 시장에 나가지만, 품질이 떨어지거나 그냥 떨어져 버린 사과도 많다. 이 과수원들이 곰을 끌어들이는 자석 노릇을 한다.</textarea>
+          
+          <label class="f" for="s-86e194139376-4">5장</label>
+          <textarea id="s-86e194139376-4" rows="6" data-slide="4">못 쓰는 사과로
+**술**을 빚었다
+---
+베어 프루프 사이더는 이런 사과를 알코올 7% 음료로 빚은 제품이다. 사과를 많이 소진할수록 곰이 과수원을 찾을 이유가 줄어든다는 구상이다.</textarea>
+          
+          <label class="f" for="s-86e194139376-5">6장</label>
+          <textarea id="s-86e194139376-5" rows="6" data-slide="5">수익금은
+**빈 농장** 정비에
+---
+오니팜은 사이더 판매 수익으로 버려진 농장 상태를 개선하겠다고 한다. 곰 같은 야생동물의 은신처나 이동 통로가 되지 않게 하려는 취지다.</textarea>
+          
+          <label class="f" for="s-86e194139376-6">7장</label>
+          <textarea id="s-86e194139376-6" rows="6" data-slide="6">술자리 좋아하는
+**친구** 태그하기
+---
+못 쓰는 사과로 빚어 곰과의 마주침을 줄이고, 수익금으로 빈 농장까지 손보겠다는 발상이 담겼다. 술자리를 좋아하는 친구에게 보내면 반가워할 소식</textarea>
+          
+          <label class="f" for="c-86e194139376">본문 (캡션)</label>
+          <textarea id="c-86e194139376" class="caption">곰을 막겠다며 사과술을 마시라고 하는 캠페인이 일본에서 나왔다. 오니팜, 하바스 재팬, 서니사이드업 세 곳이 11월 19일 ‘베어 프루프 사이더’를 내놓았다. 목표는 일본에서 사람과 곰이 마주치는 일을 줄이는 것이다.
+
+배경에는 곰 목격과 공격이 최근 몇 년간 크게 늘었다는 현실이 있다. 2025년 올해의 한자도 ‘곰’이었다. 시골 인구가 줄면서 고령 농민이 땅을 떠났고, 작물이 제멋대로 자라는 빈 땅이 배고픈 곰을 산에서 끌어내린다는 설명이다. 사과로 유명한 북부 아오모리는 해마다 수백만 개가 시장에 나가지만 품질이 떨어지거나 그냥 떨어져 버린 사과도 많아, 과수원이 곰을 부르는 자석이 된다.
+
+이 사이더는 그런 사과를 알코올 7% 음료로 빚은 것이다. 사과를 최대한 소진하면 곰이 과수원에 들어올 이유가 줄어든다는 구상이다. 오니팜은 판매 수익으로 버려진 농장을 정비해 곰과 다른 야생동물의 은신처나 통로가 되지 않게 할 계획이다.
+
+현재 판매처는 도쿄와 히로사키 두 도시뿐이다. 일본어로 ‘사이다’라고 하면 스프라이트 같은 탄산음료를 건네받기 쉽고, 사과로 만든 사이더는 ‘시도루’라고 불러야 한다고 한다.
+
+출처: SoraNews24 (PR Times 제공 자료)</textarea>
+          <label class="f" for="t-86e194139376">해시태그</label>
+          <input id="t-86e194139376" type="text" class="tagsin" value="#일본 #곰 #사이더 #해외토픽 #아오모리" autocapitalize="off">
+          
+          <p class="f">같이 올릴 상품 사진 (체크 해제하면 빠져요)</p>
+          
+          <label class="pp"><input type="checkbox" checked data-product="0"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/product-1123081711-01.jpg" alt="" width="56" height="56" loading="lazy"> 갈색 유리병 사이더 한 병이 회색 배경 위에 놓여 있고, 라벨에 BEARPROOF CIDER, 곰과 사과가 그려진 빨간 삼각 경고 표지, 7% ALC/VOL, 330ml 표기가 보인다. · soranews24.com</label>
+          
+          <label class="pp"><input type="checkbox" checked data-product="1"> <img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/86e194139376/product-1123081711-02.jpg" alt="" width="56" height="56" loading="lazy"> 회색 배경의 키 비주얼: 갈색 병 사이더 한 병(빨간 곰 퇴치 라벨), 큰 영문 제목 BEARPROOF CIDER, 일본어 카피와 제품 정보 문구 · ssu.co.jp</label>
+          
+          
+        </div>
+      </details>
+      
+
+      <details class="box">
+        <summary>근거 · 출처 전체 보기</summary>
+        <div class="in">
+          
+          <div class="claim">
+            <span class="v v-partial">애매</span>
+            <b>시골 인구 감소와 고령 농민의 농지 포기가 곰 문제의 주요 요인이다</b>
+            <q>“A driving factor of this problem has been steadily declining populations in rural areas, including aging farmers abandoning their land as they become unable to care for it any longer.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오니팜, 하바스 재팬, 서니사이드업이 11월 19일 사람과 곰의 마주침을 줄이려는 알코올 음료 베어 프루프 사이더를 출시했다</b>
+            <q>“On 19 November, Oni-Farm, Havas Japan K.K., and Sunny Side Up released Bear Proof Cider, an alcoholic beverage created with the goal of reducing the number of encounters between people and bears in Japan.”</q>
+            <small>slide1, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본에서 곰 목격과 공격이 최근 몇 년간 크게 늘었고 2025년 올해의 한자가 ‘곰’이었다</b>
+            <q>“The number of bear sightings and attacks has risen dramatically in Japan over the past few years, so much so that the Kanji of the Year for 2025 was “bear.””</q>
+            <small>slide2, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>작물이 제멋대로 자라는 빈 땅이 배고픈 곰을 산에서 끌어들인다</b>
+            <q>“These now-empty lots, where food still grows wildly, attract hungry bears from the mountains.”</q>
+            <small>slide3, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>아오모리는 사과로 유명하며 해마다 시장에 나가는 수백만 개 중 상품성이 떨어지거나 방치된 사과가 많다</b>
+            <q>“For example, the northern prefecture of Aomori is famous for its production of apples, but among the millions that go to market each year, many are deemed substandard or have simply fallen by the wayside.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>그 때문에 아오모리의 과수원은 곰을 끌어들이는 자석 같은 곳이 된다</b>
+            <q>“This makes Aomori’s orchards veritable bear magnets.”</q>
+            <small>slide4, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>베어 프루프 사이더는 쓰지 못하는 사과를 알코올 7% 음료로 빚은 제품이다</b>
+            <q>“Bear Proof Cider makes use of these otherwise unusable apples by brewing them into a delicious drink with seven percent alcohol.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사과를 최대한 소진하면 곰이 과수원에 들어올 동기가 줄어든다</b>
+            <q>“By using up as many of the apples as possible, the incentive for bears to wander into orchards is reduced, so the more cider we drink, the lower the risk of bears becomes.”</q>
+            <small>slide5, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>오니팜은 판매 수익으로 버려진 농장을 개선해 곰 등 야생동물의 은신처나 통로가 되지 않게 한다</b>
+            <q>“Oni Farm will use the proceeds from sales of it to improve the state of abandoned farms and ensure they don’t become hideouts or conduits for bears and other wild animals.”</q>
+            <small>slide6, caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>현재 도쿄와 히로사키에서만 판매한다</b>
+            <q>“Currently, it is only sold in the cities of Tokyo and Hirosaki, Aomori, and if you want to find some in either of these places, it’ll be important to know how this works in Japanese.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>일본어로 ‘사이다’를 달라고 하면 스프라이트를 받기 쉽다</b>
+            <q>“If you go into a shop and ask for some “cider” or “saida” in Japanese, you’ll likely be handed a bottle of Sprite.”</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <div class="claim">
+            <span class="v v-supported">확인</span>
+            <b>사과 사이더는 일본에서 ‘시도루’라고 발음한다</b>
+            <q>“However, there is also apple cider in Japan, but that is pronounced as “shidoru” which is based on the French name of “cidre.””</q>
+            <small>caption · <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">원문</a></small>
+          </div>
+          
+          <label class="f">원출처</label>
+          <ul class="plain">
+            <li><a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">Bear Proof Cider invites everyone to drink their bears away</a> (기사)</li>
+            
+          </ul>
+          
+          
+          <label class="f">배경 이미지 (내용 사진 우선, 없으면 무료 사진)</label>
+          <ul class="plain">
+            <li>1장: <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/main_8e24d7.png"</li><li>2장: <a href="https://pixabay.com/photos/mountains-mountain-landscape-forest-10459797/" target="_blank" rel="noopener">janfried / Pixabay</a> — "forest mountain"</li><li>3장: <a href="https://pixabay.com/photos/barn-abandoned-farm-homestead-216372/" target="_blank" rel="noopener">FlashBuddy / Pixabay</a> — "abandoned farm"</li><li>4장: <a href="https://pixabay.com/photos/apples-apple-tree-fruits-orchard-2788651/" target="_blank" rel="noopener">pixel2013 / Pixabay</a> — "apple orchard"</li><li>5장: <a href="https://soranews24.com/2026/11/23/bear-proof-cider-invites-everyone-to-drink-their-bears-away/" target="_blank" rel="noopener">SoraNews24 / </a> — "https://soranews24.com/wp-content/uploads/sites/3/2026/11/sub4_4a8613.png"</li><li>6장: <a href="https://pixabay.com/photos/tree-field-sunset-clouds-sky-736875/" target="_blank" rel="noopener">Bessi / Pixabay</a> — "farmland"</li><li>7장: <a href="https://pixabay.com/photos/people-joy-smile-holiday-friends-2295052/" target="_blank" rel="noopener">StarFlames / Pixabay</a> — "friends toast"</li>
+          </ul>
+          
+        </div>
+      </details>
+    </div>
+
+    <div class="decide" role="group" aria-label="3번 게시 여부">
+      <button class="no" type="button" aria-pressed="false">반려</button>
+      <button class="yes" type="button" aria-pressed="false">승인</button>
+    </div>
+  </article>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-f34527714356">
+    <div class="head">
+      <h2>S1. 무릎 골관절염, 무릎 운동에 코어 운동을 더한 임상시험</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 17
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-f34527714356">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 무릎이 아프면 무릎 운동만 하지 말고 코어 운동을 같이 해보라는 임상시험 결과로, 매일 운동하는 사람 누구나 자기 루틴에 대입해볼 수 있다</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">89/500자</span></div>
+      <p class="tp-text">무릎 운동은 &#39;무릎만&#39;이 아니라 &#39;배까지 같이&#39; 해야 한대
+무릎 골관절염 환자 100명으로 한 임상시험에서 나온 얘기
+그럼 무릎 운동에 뭘 더했더니 달라졌을까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">1/ 12주 뒤 두 그룹 다 가만히 있을 때 통증은 줄었대. 근데 무릎 운동에 코어 운동을 더한 그룹이 신체 기능 검사도 더 좋아졌고, 움직일 때 통증도 덜하다고 답했음. 삶의 질 개선도 더 컸고. 왜 배 운동이 무릎에 영향을 줬을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">122/500자</span></div>
+      <p class="tp-text">2/ 연구진도 이유는 정확히 모른대. 다만 자세 조절이 좋아지면 운동할 때 몸의 중심이 안정돼서 하체에 가는 부담이 줄었을 수 있다고 봄. 참고로 연골이 닳는 걸 막아주는 건 아니라고 함. 그럼 어떤 코어 운동이었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">3/ 코어 운동은 복부 브레이싱, 글루트 브릿지, 팔뚝 플랭크, 누워서 팔 들기, 힐 탭, 데드버그 비슷한 팔다리 번갈아 움직이기였음. 이걸 무릎 재활 운동과 같이 했대. 그럼 참가자는 어떤 사람들이었을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">203/500자</span></div>
+      <p class="tp-text">4/ 연구 요약 정리
+- 대상: 40~80세, 경증~중등도 무릎 골관절염 100명
+- 기간: 12주
+- A그룹: 무릎 중심 재활 (4주간 주 3회 45분 감독 운동, 이후 8주는 집에서)
+- B그룹: 무릎 재활 + 코어 운동
+- 결과: 둘 다 가만히 있을 때 통증 감소, B그룹이 신체 기능·움직일 때 통증·삶의 질에서 더 개선
+이 결과, 이 시험 하나뿐이었을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">182/500자</span></div>
+      <p class="tp-text">5/ 올해 나온 다른 무작위 시험들도 비슷했대. 파키스탄 환자 48명 시험에선 무릎 운동에 코어 안정화 운동을 더하니 12주 뒤 통증, 무릎 움직임, 삶의 질이 더 좋아졌고. 환자 100명 연구에선 코어 운동이 발·발목 강화 운동을 더하는 것보다 더 효과적이었음. 다만 다 규모가 작은 시험이야. 그럼 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">222/500자</span></div>
+      <p class="tp-text">6/ 결국 이 연구들 말은 골관절염 치료에서 관절만 건드리는 게 최선이 아닐 수 있다는 거. 내 무릎에 맞는지는 의사랑 상의해봐.
+무릎 운동할 때 코어도 같이 하는 편이야, 무릎만 하는 편이야?
+이런 해외 건강·운동 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 연구가 Scientific Reports에 발표되었고 방법론이 엄격하게 설계되었다</li><li>근거 등록 안 된 주장: 무릎 중심 재활 운동에는 점진적 근력, 관절가동범위, 직다리 올리기와 대퇴사두근 강화 등 기능 운동이 포함되었다</li><li>근거 등록 안 된 주장: 코어 운동이 무릎 골관절염 치료에서 간과된 치료법일 수 있다</li><li>근거 등록 안 된 주장: 골관절염 환자에서 코어 운동의 안전성과 효과를 보여주는 연구가 치료 권고에 반영되지 않았다는 연구진 주장</li><li>근거 등록 안 된 주장: 연구진은 생체역학적 적응이 통증, 신체 기능, 삶의 질의 더 큰 개선을 설명할 수 있다고 결론지었다</li><li>근거 등록 안 된 주장: 자세 조절 개선 가설은 이전 연구들에 의해 뒷받침된다</li><li>근거 등록 안 된 주장: 연골이 닳으면 관절 움직임이 제한되고 서 있거나 앉아 있을 때도 통증이 생길 수 있다</li><li>근거 등록 안 된 주장: 우리 몸은 연결되어 있으며 사지의 기능은 몸통의 안정성에 기반한다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>무릎 운동은 &#39;무릎만&#39;이 아니라 &#39;배까지 같이&#39; 해야 한대</li><li>무릎 아프다고 무릎 운동만 하지 말고 코어도 같이 하라는 임상시험이 나옴</li><li>무릎 통증, 무릎이 아니라 &#39;배 근육&#39;에서 답이 나왔다는 연구</li><li>&#39;무릎 재활엔 무릎 운동&#39;이라는 공식, 이 임상시험 보면 좀 달라짐</li><li>플랭크가 무릎 통증에 영향을 줬다는 연구가 있대</li><li>무릎 환자 100명한테 코어 운동을 더했더니 움직일 때 통증이 달라졌대</li><li>무릎 골관절염 치료에서 관절만 건드리는 게 최선이 아닐 수 있다는 연구</li><li>헬스장에서 무릎 운동만 열심히 하고 있다면 이 연구 한번 봐</li><li>무릎 걱정되면 하체만 파지 말고 복부부터 챙기라는 얘기가 나옴</li><li>&#39;무릎 운동만 한 그룹 vs 코어까지 한 그룹&#39;, 12주 뒤 결과가 갈렸음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>무릎 운동할 때 코어도 같이 하는 편이야, 무릎만 하는 편이야?</li><li>플랭크 vs 글루트 브릿지, 둘 중 더 자주 하는 운동은?</li><li>운동할 때 하체 먼저 하는 파야, 코어 먼저 하는 파야?</li><li>데드버그 해본 사람?</li><li>운동 루틴에 코어 운동 넣어둔 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>코어 운동이 발·발목 강화보다 나았다는 100명 연구 더 자세히</li><li>무릎 골관절염에서 운동이 통증에 미치는 영향 연구</li><li>운동 루틴에서 코어 운동이 놓치기 쉬운 이유</li><li>코어 운동으로 하체 부담이 줄 수 있다는 자세 조절 연구</li><li>해외에서 나온 다른 재활 운동 임상시험 소식</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>ScienceAlert 기사만 근거로 삼았고 논문 원문은 확인하지 못했다. 소규모 시험이라는 점과 연구진도 이유를 모른다는 점을 유지해야 한다</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>인도에서 진행된 무작위 대조 임상시험에서 복부 운동이 무릎에 영향을 줄 수 있다는 결과가 나왔다</b>
+          <q>“A randomized controlled trial in India has now found that working out the abdominal muscles may have a trickle-down effect for the knees.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 경증~중등도 무릎 골관절염이 있는 40~80세 100명이다</b>
+          <q>“The trial involved 100 participants, aged 40 to 80, with mild to moderate knee osteoarthritis.”</q>
+          <small>post0, post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>12주 뒤 두 그룹 모두 가만히 있을 때 통증이 유의하게 줄었다</b>
+          <q>“After the 12-week intervention period, both groups demonstrated significant reductions in resting pain.”</q>
+          <small>post1, post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코어 운동을 같이 한 그룹이 신체 기능 검사에서 더 좋아졌고 움직일 때 통증도 덜하다고 보고했다</b>
+          <q>“But it was the group that also partook in core training that demonstrated greater improvements in physical function tests and reported less pain when moving about.”</q>
+          <small>post1, post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코어 운동 그룹은 삶의 질 개선도 더 컸다</b>
+          <q>“Importantly, this group also reported greater improvements in their quality of life.”</q>
+          <small>post1, post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 코어 운동이 이런 효과를 낸 이유를 모른다</b>
+          <q>“The authors of the study don&#39;t know why core training led to these benefits, but they suggest that an improvement in posture control may help stabilize the body&#39;s core during exercise, putting less strain on the lower limbs.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자세 조절 개선이 운동 중 몸의 중심을 안정시켜 하체 부담을 줄였을 수 있다는 것이 연구진의 추정이다</b>
+          <q>“The authors of the study don&#39;t know why core training led to these benefits, but they suggest that an improvement in posture control may help stabilize the body&#39;s core during exercise, putting less strain on the lower limbs.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복부 강화가 연골 퇴행을 막아주지는 않는다</b>
+          <q>“Strengthening the abdomen won&#39;t stop cartilage from degenerating, but in this particular trial, when core exercises were added to typical rehabilitation programs, it improved physical function more than conventional exercises alone.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코어 운동에는 복부 브레이싱, 글루트 브릿지, 팔뚝 플랭크, 누워서 팔 들기, 힐 탭, 데드버그 비슷한 팔다리 교대 동작이 포함됐다</b>
+          <q>“The core exercises included abdominal bracing, glute bridges, forearm planks, arm raises while lying down, heel taps, and alternating arm-and-leg movements similar to dead bugs.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코어 운동 그룹은 기존 무릎 중심 재활 운동과 코어 운동을 함께 했다</b>
+          <q>“This one involved a mix of conventional knee-based rehabilitation exercises and progressive core-targeting exercises.”</q>
+          <small>post3, post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무릎 중심 재활 그룹은 12주 프로그램에 참여했다</b>
+          <q>“Roughly half the group were randomized to partake in conventional knee-focused rehabilitation for 12 weeks.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무릎 중심 재활 그룹은 4주간 주 3회 45분 감독 운동을 했다</b>
+          <q>“During the trial, this half of the group partook in 45 minutes of supervised exercise three times a week for four weeks.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이후 8주는 집에서 혼자 운동을 이어갔다</b>
+          <q>“Participants then continued these exercises at home on their own for an additional 8 weeks.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>올해 여러 무작위 임상시험 결과가 나오기 시작했다</b>
+          <q>“This year, the results of several randomized clinical trials have begun to roll in.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>파키스탄 환자 48명 시험에서 무릎 운동에 코어 안정화 운동을 더하니 12주 뒤 통증, 무릎 움직임, 삶의 질이 더 개선됐다</b>
+          <q>“One trial among 48 patients with knee osteoarthritis in Pakistan, for example, also found that adding core stability training to knee exercises produced greater improvements in pain, knee mobility, and quality of life after 12 weeks.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>환자 100명 연구에서 코어 운동 추가가 발·발목 강화 추가보다 더 효과적이었다</b>
+          <q>“Plus, a larger study of 100 patients found that adding core exercises to conventional knee rehabilitation was more effective than adding foot-and-ankle strengthening.”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 시험들은 규모가 작지만 관절만 겨냥하는 치료가 최선이 아닐 수 있음을 시사한다</b>
+          <q>“These randomized trials are small, but their findings suggest that exclusively targeting the joints during osteoarthritis treatment may not be the best move.”</q>
+          <small>post5, post6 · <a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="f34527714356">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/one-type-of-exercise-could-be-an-overlooked-treatment-for-knee-osteoarthritis-clinical-trial-finds" target="_blank" rel="noopener">One Type of Exercise Could Be an Overlooked Treatment For Knee Osteoarthritis, Clinical Trial Finds</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-334e2d66d1cb">
+    <div class="head">
+      <h2>S2. 핀란드 10대 뇌 스캔: 스크린 타임과 기억 영역</h2>
+      <span class="badge b-ok">
+        근거 확인 완료 · 확인 20
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-334e2d66d1cb">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 건강</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;폰 오래 보면 뇌가 줄어든다&#39;는 통념에 대해, 기억 영역은 작고 판단 영역은 컸다는 엇갈린 결과로 보여주는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">95/500자</span></div>
+      <p class="tp-text">스마트폰 많이 보면 뇌가 줄어든다는 말, 핀란드 연구는 결과가 좀 갈렸어
+스크린 타임 많은 10대는 기억 관련 영역이 작았는데
+오히려 더 커진 영역도 있었대. 어디였을까?</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">152/500자</span></div>
+      <p class="tp-text">1/ 핀란드 10대 44명을 MRI로 찍어봤더니, 스크린 타임이 많을수록 기억에 관여하는 내측두엽 부피가 작았대. 통계 보정을 거쳐도 유지된 결과. 근데 같은 아이들에서 움직임 계획과 결정을 맡는 전두엽 두 곳은 오히려 더 컸음. 그럼 &#39;스크린이 뇌를 키운다&#39;는 얘기일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">192/500자</span></div>
+      <p class="tp-text">2/ 그건 아니래. 관찰 연구라서 연관성만 볼 수 있고 스크린이 뇌를 바꿨다고는 말 못 함. 연구진도 전두엽 결과엔 놀랐다고. 가능한 설명 하나는 스크린도 다 같지 않다는 것. 게임·문제 푸는 앱이랑 영상 보기 같은 수동적인 활동은 뇌를 다르게 자극할 수 있다는 거. 근데 설문엔 뭘 봤는지가 빠져 있었음. 그럼 하루에 대체 몇 시간을 봤을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">137/500자</span></div>
+      <p class="tp-text">3/ 평균 하루 9시간 넘게였대. 폰·태블릿·컴퓨터·TV를 다 합친 시간. 참가자는 16~19세 44명이고, 시간은 설문으로 본인이 적어낸 거라 정확하지 않을 수 있음. 자료도 2018~2019년 거. 그럼 체력이나 운동은 뇌랑 어떤 관계였을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">160/500자</span></div>
+      <p class="tp-text">4/ 체력 좋은 아이들은 두정엽이 더 컸는데, 기억 관련 영역은 오히려 작게 나왔대. 근데 이 기억 쪽 결과는 보정하니까 유지가 안 돼서 연구진도 확인이 더 필요한 초기 신호로 봄. 일상적인 운동량은 보정 후엔 뇌 구조랑 거의 연관이 없었고. 그럼 이 연구, 어디까지만 받아들이면 될까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">182/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 대상: 핀란드 10대 44명(16~19세), MRI 촬영
+- 스크린 타임 많을수록: 기억 관련 내측두엽은 작고, 전두엽 두 곳은 큼
+- 체력: 두정엽은 큼, 기억 관련 영역 결과는 보정 후 유지 안 됨
+- 한계: 한 시점만 본 관찰 연구, 설문 기반이라 원인은 못 밝힘
+그래서 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">226/500자</span></div>
+      <p class="tp-text">6/ 결국 스크린 타임과 기억 관련 영역 크기가 연결돼 보이긴 하는데, 그게 생각하고 기억하는 데 어떤 의미인지는 아직 모른다는 게 연구 쪽 얘기야.
+영상 보는 파 vs 게임하는 파, 너는 어느 쪽이야?
+이런 해외 건강·뇌 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>스마트폰 많이 보면 뇌가 줄어든다는 말, 핀란드 연구는 결과가 좀 갈렸어</li><li>스크린 타임은 &#39;뇌가 줄어든다&#39;가 아니라 &#39;줄어든 곳 따로, 커진 곳 따로&#39;였다는 연구가 나옴</li><li>폰 하루 9시간 넘게 쓴 10대 뇌를 찍어봤더니 기억 쪽은 작고 판단 쪽은 컸대</li><li>스크롤 오래 하면 뇌에 안 좋다던 말, 연구진도 놀란 결과가 나왔대</li><li>스크린 타임, &#39;몇 시간&#39;만이 아니라 &#39;뭘 보느냐&#39;가 다를 수 있다는 연구가 나옴</li><li>&#39;스크린은 뇌에 그냥 나쁘다&#39;는 말, 이 핀란드 연구는 그렇게 딱 잘라 말하지 않음</li><li>하루 9시간 넘게 화면 본 10대들, 뇌 스캔에서 갈린 두 가지</li><li>기억 담당 영역은 작고 판단 담당 영역은 컸다? 폰 오래 쓴 10대 뇌 스캔</li><li>체력이 좋으면 뇌도 다 좋을 거란 생각, 핀란드 10대 뇌 스캔은 좀 다르게 나왔음</li><li>폰 오래 보는 게 걱정이면 이 연구는 알아두자, 뇌 스캔 결과가 한쪽으로만 안 나왔대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>영상 보는 파 vs 게임하는 파, 너는 어느 쪽이야?</li><li>폰 화면 시간 알림, 켜놓은 파 vs 꺼놓은 파?</li><li>하루 9시간 넘는다는 거 보고 &#39;에이 설마&#39; vs &#39;나도 그럴 듯&#39;, 어느 쪽이야?</li><li>폰 볼 때 숏폼파 vs 긴 영상파, 너는?</li><li>하루 동안 폰 없이 버티기, 가능하다 vs 불가능하다?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>운동은 얼마나 세게 해야 뇌에 영향이 있을까</li><li>영상 보기 vs 게임, 뇌에 다르게 작용할까</li><li>60년 만에 분리된 옥소보레인</li><li>하루 3시간만 여는 도쿄 야마가타 소바집</li><li>곰 퇴치용 사과술 베어 프루프 사이더</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>44명 소규모 관찰 연구라 &#39;스크린이 기억 영역을 줄인다&#39;는 인과로 읽히지 않는지 확인</li><li>핀란드 10대 대상 결과를 한국 청소년이나 20~30대에 그대로 적용하는 표현으로 읽히지 않는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스크린 타임 많은 10대는 기억 관련 뇌 영역 부피가 작았지만 전두엽 일부는 더 컸다</b>
+          <q>“Teens who rack up more hours on phones and tablets show smaller volumes in a deep brain region tied to memory, according to a new study out of Finland. But those same screen-heavy teens also had larger volumes in parts of the frontal lobe linked to planning, focus, and self-control, a result that sits awkwardly with the familiar assumption that screens are simply bad for the developing brain.”</q>
+          <small>post0 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>핀란드 10대 44명(16~19세)이 대상이었다</b>
+          <q>“Researchers worked with 44 healthy adolescents ages 16 to 19, including 25 females and 19 males.”</q>
+          <small>post1 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자들이 MRI 뇌 스캔을 받았다</b>
+          <q>“Each teen underwent a detailed MRI brain scan, and a doctor trained in reading brain images checked every scan for anything unusual before the data moved forward.”</q>
+          <small>post1 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스크린 타임이 많을수록 기억 관련 내측두엽 부피가 작았다</b>
+          <q>“Both were tied to smaller volumes in the medial temporal lobe, a deep brain region involved in memory and one of the last areas of the brain to fully mature.”</q>
+          <small>post1 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>내측두엽 결과는 통계 보정 후에도 유지됐다</b>
+          <q>“These links held up after the researchers adjusted for the many comparisons they ran, which makes the pattern more statistically convincing.”</q>
+          <small>post1 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스크린 타임이 많을수록 움직임 계획과 결정을 맡는 전두엽 두 곳 부피가 더 컸다</b>
+          <q>“At the same time, more screen time and more device use were both tied to larger volumes in two parts of the frontal lobe that handle planning movement and making decisions.”</q>
+          <small>post1 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>관찰 연구라 연관성만 확인할 수 있고 스크린 타임이 뇌 변화를 일으킨다고 보여주지 못한다</b>
+          <q>“It can identify associations but cannot show that screen time causes brain changes, and its small, largely higher-education Finnish sample limits how widely the results apply.”</q>
+          <small>post2 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>전두엽 결과는 연구진에게도 놀라웠다</b>
+          <q>“Frontal lobe results, which linked screens to larger rather than smaller volumes, surprised the researchers given earlier assumptions about screen use and brain health.”</q>
+          <small>post2 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스크린 종류에 따라 뇌 자극이 다를 수 있으나 설문은 무엇을 봤는지 구분하지 않았다</b>
+          <q>“One possible explanation offered in the study is that not all screen time affects the brain the same way. Interactive or goal-directed activities, such as gaming or problem-solving apps, may stimulate the brain differently than passive activities like watching videos, though the questionnaire used here did not separate out what teens were actually doing on their screens.”</q>
+          <small>post2 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>평균 하루 9시간 넘는 스크린 타임을 보고했다</b>
+          <q>“On average, the group reported more than nine hours of total screen time daily, with boys reporting more computer use than girls.”</q>
+          <small>post3 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스크린 타임은 폰·태블릿·컴퓨터·TV 시청 시간을 설문으로 물었다</b>
+          <q>“To capture screen habits, teens filled out questionnaires asking how many hours a day they spent on phones, tablets, computers, and TV.”</q>
+          <small>post3 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스크린 타임은 본인이 적은 설문이라 정확하지 않을 수 있다</b>
+          <q>“Screen time and physical activity were measured through self-reported questionnaires, which can be affected by memory errors or a desire to give socially acceptable answers.”</q>
+          <small>post3 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>자료는 2018~2019년에 수집됐다</b>
+          <q>“Data collected between 2018 and 2019 may not reflect screen habits today.”</q>
+          <small>post3 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>참가자는 16~19세 44명이다</b>
+          <q>“Researchers worked with 44 healthy adolescents ages 16 to 19, including 25 females and 19 males.”</q>
+          <small>post3 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체력이 높은 10대는 두정엽이 더 컸고 보정 후에도 유지됐다</b>
+          <q>“Teens with higher fitness scores had larger parietal lobe volumes, a result that also held up after the adjustment.”</q>
+          <small>post4 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체력과 기억 관련 영역 작음의 연관은 보정 후 유지되지 않아 초기 신호로 본다</b>
+          <q>“Unlike the screen time results, these fitness-related memory findings did not survive the adjustment, so the researchers describe them as early signals that need confirmation in future work.”</q>
+          <small>post4 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>일상적인 신체활동은 보정 후 뇌 구조와 거의 연관이 없었다</b>
+          <q>“Overall daily physical activity showed almost no meaningful connection to brain structure once the researchers accounted for the chance of false results.”</q>
+          <small>post4 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한 시점만 본 설계라 스크린 타임이나 체력이 뇌 구조 변화를 일으키는지 확인할 수 없다</b>
+          <q>“A cross-sectional design captured a single snapshot in time and cannot establish whether screen time or fitness actually causes changes in brain structure.”</q>
+          <small>post5 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>요약: 핀란드 10대 44명 대상 연구</b>
+          <q>“Researchers worked with 44 healthy adolescents ages 16 to 19, including 25 females and 19 males.”</q>
+          <small>post5 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>크기 차이가 생각·기억·감정에 어떤 의미인지 과학자들은 아직 모른다</b>
+          <q>“The honest answer is that scientists still don’t know what these size differences mean for how well a teenager thinks, remembers, or feels.”</q>
+          <small>post6 · <a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="334e2d66d1cb">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://studyfinds.com/teens-who-scroll-more-had-smaller-memory-region-brain-scans-show/" target="_blank" rel="noopener">Teens Who Scroll More Had Smaller Memory Region, Brain Scans Show</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-4bf3c21bbde6">
+    <div class="head">
+      <h2>S3. 미세플라스틱이 물과 만나 반응성 분자를 만든다는 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-4bf3c21bbde6">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 과학이야기</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 플라스틱은 안정적이라는 통념을 뒤집고, 생수·전자레인지 같은 일상 장면과 이어지는 반응 경로를 보여주되 사람 질병의 원인이라는 증명은 아니라고 선을 긋는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">플라스틱은 &#39;안 변하는 물질&#39;이 아니라 &#39;물이랑 만나면 반응하는 물질&#39;일 수 있대
+컬럼비아대·UC버클리 연구팀이 네이처에 낸 연구야
+근데 이 반응이 나오는 조건이 우리 일상이랑 꽤 겹쳤음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">115/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 아주 작게 쪼개진 플라스틱이 물과 닿으면 반응성이 큰 분자(ROS)가 저절로 생긴대. 연구진 말로는 동물·사람 조직을 손상시킬 수 있는 종류야. 근데 왜 하필 &#39;작아질수록&#39; 문제일까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">133/500자</span></div>
+      <p class="tp-text">2/ 큰 플라스틱이 미세·나노플라스틱으로 쪼개지면 겉면적이 엄청 늘어나. 물과 닿는 면이 많아지니 반응할 자리도 많아지는 거지. 원래 플라스틱은 화학적으로 안정적이라 잘 반응 안 한다고 여겨졌는데 말이야. 그럼 물은 여기서 뭘 하는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">3/ 연구진은 물이 구경꾼이 아니라 반응에 직접 참여하는 주인공이라고 했어. 물을 밀어내는 플라스틱 표면에 닿으면 전자가 오가기 쉬운 환경이 되고, 거기서 반응성 라디칼이 만들어진다는 설명이야. 근데 이게 사람 병의 원인이라는 뜻일까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">183/500자</span></div>
+      <p class="tp-text">4/ 연구 요약 정리
+- 발견: 미세플라스틱이 물과 닿으면 ROS가 저절로 생김
+- 이유: 쪼개질수록 표면적이 크게 늘어남
+- 조건: 물을 밀어내는 플라스틱 표면에서 전자가 오가며 라디칼 형성
+- 연구진이 짚은 환경: 생수, 혈류
+- 한계: 사람 질병의 원인이라는 증명은 아님
+그럼 일상에선 뭐가 미세플라스틱을 만든다고 했을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">5/ 공저자는 전자레인지 가열, 보관 중 생수병이 햇빛을 받는 것 같은 일상 과정도 미세플라스틱을 만들 수 있다고 짚었어. 배달 용기 쓸 일 많은 우리한텐 어떨까? 이 기사엔 용기 종류별 얘기는 없었음. 그럼 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">255/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 미세플라스틱이 물과 닿으면 반응성 분자가 생기는 경로가 새로 나온 거고, 사람 병의 원인이라는 증명은 아직 아님.
+전자레인지 돌릴 때 용기째 돌리는 파 vs 그릇에 옮기는 파?
+이런 해외 건강 연구 쉽게 풀어서 계속 배달함. 2편: 생수 한 병 속 플라스틱 입자 얘기, 내일 새벽 배달. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 이 기사엔 용기 종류별 얘기는 없었다는 내용</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>플라스틱은 &#39;안 변하는 물질&#39;이 아니라 &#39;물이랑 만나면 반응하는 물질&#39;일 수 있대</li><li>생수병 속 물, 그냥 &#39;담겨 있는&#39; 게 아니라 플라스틱과 &#39;반응하는&#39; 중일 수 있대</li><li>미세플라스틱, 몸에 쌓이기만 하는 게 아니라 &#39;뭔가를 만든다&#39;는 연구가 나옴</li><li>&#39;플라스틱은 화학적으로 안정적&#39;이라는 말, 이 연구 보면 좀 달라짐</li><li>미세플라스틱 걱정이 &#39;얼마나 쌓이나&#39;에서 &#39;물이랑 만나 뭘 만드나&#39;로 넘어가는 연구가 나옴</li><li>전자레인지 가열, 햇빛 받은 생수병… 미세플라스틱이 생길 수 있다고 연구진이 짚은 일상</li><li>&#39;물은 구경꾼이 아니라 주인공&#39;이라는 연구진 말, 플라스틱 얘기였음</li><li>생수 한 리터에서 입자 24만 개를 찾아낸 연구팀이 이번엔 그 입자가 물과 만나면 어떻게 되는지 밝혔대</li><li>해외에선 미국 정부가 1억 4,400만 달러짜리 미세플라스틱 대응에 나섰대</li><li>미세플라스틱과 심장마비·뇌졸중 연관 보고, 그 이유 후보가 하나 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>전자레인지 돌릴 때 용기째 돌리는 파 vs 그릇에 옮기는 파?</li><li>생수 사 먹는 파 vs 정수기·끓인 물 파, 너는 어디야?</li><li>배달 음식 받으면 용기째 먹는 편이야, 옮겨 담는 편이야?</li><li>생수 박스를 햇빛 드는 곳에 둬본 적 있는 사람?</li><li>&#39;사람 병과의 연결은 아직&#39;이라는 말 듣고도 플라스틱 줄일 마음 생겨?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>생수 한 병 속 플라스틱 입자 24만 개, 2024년 레이저 현미경 연구</li><li>미국 EPA가 미세플라스틱을 먹는물 우려 오염물질 목록에 처음 올린 이야기</li><li>전자레인지 가열과 햇빛 노출, 일상 속 미세플라스틱 생성 과정</li><li>물과 반응하지 않도록 플라스틱 화학 구조를 다시 설계하는 연구 방향</li><li>미세플라스틱과 심장마비·뇌졸중·치매 연관을 보고한 연구들</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>본글·요약에서 반응성 분자 생성이 사람 질병의 원인이라는 인과로 읽히지 않는지 확인 (원문은 질병 원인 증명은 아니라고 명시)</li><li>5/의 배달 용기 언급은 원문에 없는 한국 상황 연결이라 용기별 안전성 주장으로 읽히지 않는지 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>컬럼비아대와 UC버클리 연구팀이 네이처에 발표한 연구</b>
+          <q>“Researchers at Columbia University and the University of California, Berkeley identified the chemical processes behind this phenomenon in a new study published in Nature.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>플라스틱은 화학적으로 안정적이라 주변과 반응하지 않을 것으로 여겨져 왔다</b>
+          <q>“Plastic is used in everything from food packaging and water bottles to children&#39;s toys, largely because it is considered chemically stable and unlikely to react with its surroundings.”</q>
+          <small>post0, post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>미세플라스틱이 물과 상호작용하면 ROS가 저절로 생성되며 생수나 혈류에서도 물과 만난다</b>
+          <q>“Our research found that when microplastics interact with water, as they do when they&#39;re in bottled water, or when they&#39;re absorbed into our bloodstream, they spontaneously generate what we call reactive oxygen species (ROS),”</q>
+          <small>post1, post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>ROS는 동물과 사람 조직을 손상시킬 수 있는 분자다</b>
+          <q>“ROS are textbook examples of the kinds of molecules that can damage animal and human tissue.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>플라스틱이 쪼개져 미세·나노플라스틱이 되면 노출 표면적이 크게 늘어난다</b>
+          <q>“As larger plastic objects fragment into microplastics and even smaller nanoplastics, the amount of exposed surface area increases dramatically.”</q>
+          <small>post2, post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>물은 반응에서 구경꾼이 아니라 핵심 역할을 한다</b>
+          <q>“Water is a key active player here, rather than just a spectator.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>많은 플라스틱은 물을 밀어내는 소수성 표면을 가진다</b>
+          <q>“Many plastics are hydrophobic, meaning their surfaces repel water.”</q>
+          <small>post3, post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>물과 플라스틱 표면의 상호작용이 전자 이동을 촉진해 반응성 라디칼이 형성된다</b>
+          <q>“The researchers found that these interactions can encourage electrons to move between chemical species, allowing highly reactive radicals to form.”</q>
+          <small>post3, post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 발견이 특정 질병을 사람에게 일으킨다는 것을 입증하지는 않는다</b>
+          <q>“The findings offer a possible explanation for some of the harmful effects associated with microplastic exposure, although they do not establish that this process causes specific diseases in humans.”</q>
+          <small>post3, post4, post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>공저자가 전자레인지 가열, 보관 중 생수병의 햇빛 노출 등 일상 과정이 미세플라스틱을 만들 수 있다고 언급했다</b>
+          <q>“In addition, various uses and processes in our daily lives can generate microplastics, including microwave heating, sunlight exposure of bottled water during storage.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구팀이 2024년 연구에서 생수 1리터당 평균 약 24만 개의 플라스틱 조각을 검출했다</b>
+          <q>“Using this technology, they found an average of approximately 240,000 detectable plastic fragments in a single liter of bottled water (mostly nanometer-sized plastic, nanoplastics).”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="4bf3c21bbde6">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261120075549.htm" target="_blank" rel="noopener">Microplastics may be more dangerous than we thought. Scientists just discovered why</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-7f4bbd286a5f">
+    <div class="head">
+      <h2>S4. Kodak SlideTag, 사진 띄우는 작은 트래커</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 11
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-7f4bbd286a5f">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 트래커인데 화면이 달려 사진·메모를 띄운다는 반전에, 랜덤박스와 시크릿 에디션이 더해져 &#39;갖고 싶다/선물하고 싶다&#39;를 자극하는 작은 Kodak 수집품</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "미니 디지털 액자" · 원문 제품: Kodak SlideTag (제작 Reto, Charmera 후속). 개당 $34.99 랜덤박스, 8종 세트 $279.92, 9번째 시크릿 에디션은 개별 박스 한정(메탈릭 마감). Kodak Memory Link 앱 연동, CR2032 전지, 1.54인치 컬러 E Ink. 판매처는 원문에 &#39;Kodak also sells&#39;로만 언급, 구체적 쇼핑몰 없음.<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: kodak.retopro.co, petapixel.com, digitaltrends.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/7f4bbd286a5f/thread-photo-1123082941-01.jpg" alt="여러 색상의 Kodak Charmera 키체인 디지털 카메라들(검정, 노랑, 빨강, 투명, 파랑, 흰색 등)과 노란 포장 상자가 산악 배경 위에 놓여 있음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/7f4bbd286a5f/thread-photo-1123082941-02.jpg" alt="은색 금속 테두리의 작은 사각 기기로, 상단에 &#39;Kodachrome&#39; 글자, 중앙 E Ink 화면에 개 한 마리가 가을 풀밭에 서 있는 사진, 하단에 &#39;Kodak SlideTag&#39; 표기가 보인다." loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261123-pm-26c46f286ad1/7f4bbd286a5f/thread-photo-1123082941-03.jpg" alt="여러 개의 Kodak SlideTag 키체인 디스플레이 제품과 패키지 구성: 필름 슬라이드 프레임 모양 키링 본체들, 키링 고리, 노란색 Kodak Memory Pocket 케이스, &#39;KODAK SLIDETAG Keychain Photo Display and Tracker&#39; 박스, 그리고 홍보 전단지" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-7f4bbd286a5f">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">86/500자</span></div>
+      <p class="tp-text">트래커가 사진도 띄워준다면 갖고 싶어질까?
+Kodak이 작은 디지털 액자 겸 위치추적기를 내놨대
+근데 추적 기능은 에어태그랑 어디서 갈리는지가 포인트임 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">1/ 이름은 Kodak SlideTag. 작은 Kodak 카메라 Charmera 다음으로 나온 물건인데, 애플 Find My나 구글 Find Hub 네트워크에 붙는 블루투스 트래커 기능까지 있대. 그럼 화면엔 뭘 띄울 수 있을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">2/ 화면은 1.54인치 컬러 E Ink에 240 x 240이고, 사진은 폰에서 블루투스로 최대 12장까지 넣어 돌려볼 수 있대. 짧은 할 일 목록, 연락처, 카운트다운 타이머, QR코드도 띄울 수 있음. 그럼 트래커 성능은 에어태그만큼 될까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">3/ 에어태그나 구글 Pixel Tag는 UWB, Channel Sounding 같은 기능으로 찾기 쉽게 만드는데, SlideTag는 기본 블루투스만 쓴대. 탁 트인 곳에서 최대 30미터, 가까이 가면 75데시벨 부저가 울림. 그럼 얼마에 어떻게 파는 걸까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">220/500자</span></div>
+      <p class="tp-text">4/ 요약 정리
+- 정체: 작은 디지털 액자 + 블루투스 트래커
+- 화면: 1.54인치 컬러 E Ink, 사진 최대 12장 (색 재현은 LCD·OLED만큼 정확하진 않음)
+- 추적: 기본 블루투스, 야외 최대 30m, 75dB 부저
+- 배터리: 교체 쉬운 CR2032 코인 전지
+- 가격: 개당 $34.99, 랜덤박스 방식
+- 세트: 8종 $279.92, 9번째 시크릿 에디션은 개별 박스에서만</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">178/500자</span></div>
+      <p class="tp-text">5/ 결국 추적은 기본 블루투스 수준이고, 사진이나 메모를 띄우는 게 이 물건의 차별점이래
+이거 선물로 받으면 좋아할 사람 소환해봐
+해외에서 화제 된 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외에서 화제가 되었다는 주장</li><li>근거 등록 안 된 주장: 사진이나 메모를 띄우는 기능이 이 제품의 차별점이라는 해석(원문은 Charmera가 사진·영상 촬영에 그쳤던 것과 대비해 SlideTag가 한 걸음 더 나아갔다고만 서술)</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>트래커가 사진도 띄워준다면 갖고 싶어질까?</li><li>트래커는 삐 소리만 나는 물건인 줄 알았는데, 이건 화면이 달렸대</li><li>작은 디지털 액자인 줄 알았는데 위치추적기도 된대</li><li>Kodak이 이번엔 카메라가 아니라 &#39;액자&#39;를 내놨대</li><li>&#39;찾는 물건&#39;이 아니라 &#39;보여주는 물건&#39;으로 먼저 눈에 들어오는 트래커</li><li>트래커는 그냥 달고 다니는 게 아니라 &#39;사진을 띄워두는&#39; 시대가 온 건가</li><li>개당 $34.99인데 뭐가 걸릴지 모르는 랜덤박스라는 Kodak 신상</li><li>8종 세트가 $279.92인데도 시크릿 에디션은 개별 박스에서만 나온대</li><li>에어태그만큼 정교하진 않은데 눈길을 끄는 이유, 화면에 있음</li><li>선물하고 싶어지는 작은 Kodak 신상, 근데 트래커 성능은 좀 다르대</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해봐</li><li>랜덤박스로 나오면 하나만 살 거야, 세트로 살 거야?</li><li>에어태그 파 vs 사진 뜨는 트래커 파?</li><li>트래커 화면에 제일 먼저 띄우고 싶은 건 사진 vs QR코드?</li><li>랜덤박스 뽑기 좋아하는 사람?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>작은 Kodak 카메라 Charmera는 어떤 물건인지</li><li>에어태그·Pixel Tag가 쓰는 UWB는 뭐가 다른지</li><li>하루 3시간만 여는 도쿄 야마가타 소바집 얘기</li><li>곰 퇴치용 사과술 베어 프루프 사이더 얘기</li><li>60년 만에 분리된 옥소보레인 얘기</li></ol>
+        
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>Kodak SlideTag는 Charmera 다음으로 나온 작은 디지털 액자</b>
+          <q>“After expanding its Charmera collection with a Millennium Edition featuring Y2K-inspired designs earlier this year, Reto’s follow-up to its tiny Kodak camera is an equally small digital photo frame you can use to display your shots.”</q>
+          <small>post0, post1 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>SlideTag는 애플 Find My 또는 구글 Find Hub와 호환되는 블루투스 트래커 기능도 한다</b>
+          <q>“It also functions as a Bluetooth tracker that’s compatible with either Apple’s Find My or Google’s Find Hub tracking networks.”</q>
+          <small>post0, post1 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>추적 기능은 에어태그나 Pixel Tag만큼 기능적이지 않다</b>
+          <q>“As a tracker it’s not quite as functional as an Apple AirTag or Google’s Pixel Tag, which use features like ultra wideband (UWB) and Channel Sounding to make them easier to find.”</q>
+          <small>post0, post3 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>화면은 1.54인치 컬러 E Ink이고 해상도는 240 x 240</b>
+          <q>“Instead of film, the SlideTag features a 1.54-inch color E Ink screen that mixes six colored inks to display photos at a resolution of 240 x 240.”</q>
+          <small>post2, post4 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사진은 블루투스로 최대 12장 전송해 돌려볼 수 있고 색 재현은 LCD나 OLED만큼 정확하지 않다</b>
+          <q>“The color reproduction won’t be as accurate as an LCD or OLED screen, but the SlideTag can hold and cycle up to 12 photos transferred to the device over Bluetooth from Kodak’s Memory Link app running on a mobile device.”</q>
+          <small>post2, post4 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>할 일 목록, 연락처, 카운트다운 타이머, QR코드도 띄울 수 있다</b>
+          <q>“You can also use it to display a short to-do list, contact details, a countdown timer, or a QR code linking to wherever you want.”</q>
+          <small>post2 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기본 블루투스로 야외 최대 30미터, 75데시벨 부저</b>
+          <q>“The SlideTag sticks to basic Bluetooth with a range of up to 30 meters out in the open and a 75-decibel buzzer to help locate it when you’re close.”</q>
+          <small>post3, post4, post5 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>배터리는 교체하기 쉬운 CR2032 코인 전지</b>
+          <q>“Battery life will vary depending on how frequently you use tracking features or refresh the displayed image, but the SlideTag uses a common CR2032 coin cell battery that’s easy to replace.”</q>
+          <small>post4 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>개당 $34.99이고 디자인이 랜덤박스로 판매된다</b>
+          <q>“The Kodak SlideTag will be available for $34.99 each and, like the Charmera, will feature a series of retro designs distributed in mystery boxes so you don’t know which one you’re going to get.”</q>
+          <small>post4 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>8종 세트는 $279.92이고 9번째 시크릿 에디션은 개별 박스에서만 나온다</b>
+          <q>“Kodak also sells a complete set of all eight vintage designs for $279.92 if you don’t like mysteries; however, there’s a ninth “secret edition” only available in the individual boxes with a sleek metallic finish.”</q>
+          <small>post4 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>사진이나 메모를 블루투스로 폰에서 옮겨 개인화할 수 있다</b>
+          <q>“You can personalize the SlideTag with a photo slideshow, message, or QR code transferred from your phone over Bluetooth.”</q>
+          <small>post5 · <a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="7f4bbd286a5f">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.theverge.com/tech/1038650/kodak-slidetag-keychain-photo-display-tracker-find-my-hub-google-apple-e-ink" target="_blank" rel="noopener">Kodak’s next collectible is a tiny digital photo frame that doubles as a tracker</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261123-pm";
+  const ORIGINAL = {"2c4fff3584b7": {"caption": "60\ub144 \ub118\uac8c \ucc3e\uc544 \ud5e4\ub9e8 \ubd84\uc790\uac00 \ub9c8\uce68\ub0b4 \uc190\uc5d0 \uc7a1\ud614\ub2e4. \ub3c5\uc77c \uc728\ub9ac\uc6b0\uc2a4 \ub9c9\uc2dc\ubc00\ub9ac\uc548 \ubdd4\ub974\uce20\ubd80\ub974\ud06c \ub300\ud559\uad50\uc640 \uc778\ub3c4 \ud14c\uc988\ud478\ub974 \ub300\ud559\uad50 \uc5f0\uad6c\uc9c4\uc774 \uc625\uc18c\ubcf4\ub808\uc778 \ud654\ud569\ubb3c \uc138 \uac00\uc9c0\ub97c \uc2e4\uc628\uc5d0\uc11c \uacb0\uc815 \ud615\ud0dc\ub85c \ud569\uc131\ud588\ub2e4\uace0 Nature Chemistry\uc5d0 \ubc1c\ud45c\ud588\ub2e4.\n\n\uc625\uc18c\ubcf4\ub808\uc778\uc740 \ubd95\uc18c\uc640 \uc0b0\uc18c\uac00 \uc0bc\uc911\uacb0\ud569\uc73c\ub85c \uc774\uc5b4\uc9c4 \ubd84\uc790\ub85c, \ub108\ubb34 \ubd88\uc548\uc815\ud558\uace0 \ubc18\uc751\uc131\uc774 \ucee4\uc11c \uadf9\ud55c \uc870\uac74\uc774 \uc544\ub2c8\uba74 \uad00\ucc30\ud558\uae30 \uc5b4\ub835\ub2e4\uace0 \uc5ec\uaca8\uc84c\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \ubd95\uc18c\uac00 \ub4e0 \ubc18\uc751\uc131 \ub192\uc740 \ud654\ud569\ubb3c \ub514\ubcf4\ub77c\ucfe0\ubbac\ub80c\uc744 \uc5ec\ub7ec \uc77c\ubc18 \uc2dc\uc57d\uacfc \uc11e\ub294 \uc2e4\ud5d8\uc744 \ud558\ub2e4\uac00 \uc774 \ubd84\uc790\uac00 \ub73b\ubc16\uc5d0 \uc0dd\uaca8\ub098\ub294 \uac83\uc744 \ubc1c\uacac\ud588\ub2e4.\n\n\uc548\uc815\uc131\uc758 \uc5f4\uc1e0\ub294 \ubd84\uc790\uc5d0 \ubd99\uc740 \ubcf4\ub9b4\ub808\ub2d0\uae30\uc600\ub2e4. \uc804\uc790\uac00 \ud48d\ubd80\ud55c \uc774 \uc6d0\uc790 \uc9d1\ub2e8\uc774 \uc804\uc790 \ubc00\ub3c4\ub97c \ub098\ub220 \uc8fc\uba74\uc11c \uc804\ud558\uc758 \ubd88\uade0\ud615\uc744 \uc904\uc600\uace0, \ubc31\uae08 \uac19\uc740 \ucd94\uac00 \uae08\uc18d\ub3c4 \ud544\uc694\ud558\uc9c0 \uc54a\uc558\ub2e4. \uc0dd\uc131\ub41c \uacb0\uc815\uc740 \uc8fc\ud669\uc0c9\uacfc \ub178\ub780\uc0c9\uc744 \ub760\uc5c8\ub2e4.\n\n\uc55e\uc73c\ub85c\ub294 \uc9c0\uae08\uae4c\uc9c0 \ub9cc\ub4e0 \uc138 \uac00\uc9c0 \uc678\uc5d0 \uc625\uc18c\ubcf4\ub808\uc778\uc744 \ub354 \ub9cc\ub4e4\uace0 \uc0dd\uc131 \uacfc\uc815\uc744 \ub354 \uc774\ud574\ud558\ub294 \uc5f0\uad6c\uac00 \uc774\uc5b4\uc9c8 \uc804\ub9dd\uc774\ub2e4. \uc5f0\uad6c\uc9c4\uc740 \uac19\uc740 \ubc29\uc2dd\uc774 \uc9c0\uae08\uae4c\uc9c0 \ud3ec\ucc29\ud558\uae30 \uc5b4\ub824\uc6e0\ub358 \ub2e4\ub978 \ubd84\uc790\uc5d0\ub3c4 \uc4f0\uc77c \uc218 \uc788\ub2e4\uace0 \ubcf8\ub2e4. \ub2e4\ub9cc \uc57d\uc774\ub098 \uc18c\uc7ac \uac19\uc740 \ubd84\uc57c\uc5d0\uc11c \uc9da\uc744 \ub9cc\ud55c \uad6c\uccb4\uc801\uc778 \uc131\uacfc\ub294 \uc544\uc9c1 \uc5c6\ub2e4.\n\n\ucd9c\ucc98: ScienceAlert", "hashtags": ["#\uacfc\ud559", "#\ud654\ud559", "#\uc625\uc18c\ubcf4\ub808\uc778", "#NatureChemistry", "#\ud574\uc678\uc774\uc288"], "slides": [["**60\ub144\uac04** \ubabb \uc7a1\ub358", "\ubd84\uc790\uac00 \uc7a1\ud614\ub2e4???", "---", "\ub3c5\uc77c\uacfc \uc778\ub3c4 \uc5f0\uad6c\uc9c4\uc774 60\ub144 \ub118\uac8c \ub108\ubb34 \ubd88\uc548\uc815\ud574 \uc874\uc7ac\ud558\uae30 \uc5b4\ub835\ub2e4\uace0 \uc5ec\uaca8\uc9c4 \uc625\uc18c\ubcf4\ub808\uc778 \ubd84\uc790\ub97c \uc2e4\uc628\uc5d0\uc11c \uacb0\uc815\uc73c\ub85c \ub9cc\ub4e4\uc5b4 \ub0c8\ub2e4."], ["\ubd95\uc18c\uc640 \uc0b0\uc18c\uc758", "**\uc0bc\uc911\uacb0\ud569**", "---", "\uc625\uc18c\ubcf4\ub808\uc778\uc740 \ubd95\uc18c\uc640 \uc0b0\uc18c\uac00 \uc0bc\uc911\uacb0\ud569\uc73c\ub85c \ubb36\uc778 \ubd84\uc790\ub2e4. \uc5f0\uad6c\uc790\ub4e4\uc740 60\ub144 \ub118\uac8c \ucc3e\uc544 \uc654\uc9c0\ub9cc, \ub108\ubb34 \ubd88\uc548\uc815\ud558\uace0 \ubc18\uc751\uc131\uc774 \ucee4\uc11c \uadf9\ud55c \uc870\uac74 \ubc16\uc5d0\uc120 \uad00\ucc30\ud558\uae30 \uc5b4\ub835\ub2e4\uace0 \uc5ec\uaca8\uc84c\ub2e4."], ["\uc758\ub3c4 \uc548 \ud588\ub294\ub370", "**\uc0dd\uaca8\ubc84\ub838\ub2e4**", "---", "\uc5f0\uad6c\uc9c4\uc740 \ubd95\uc18c\uac00 \ub4e0 \ubc18\uc751\uc131 \ub192\uc740 \ud654\ud569\ubb3c \ub514\ubcf4\ub77c\ucfe0\ubbac\ub80c\uc744 \uc5ec\ub7ec \uc77c\ubc18 \uc2dc\uc57d\uacfc \uc11e\ub2e4\uac00 \uc774 \ubd84\uc790\uac00 \ub73b\ubc16\uc5d0 \uc0dd\uae30\ub294 \uac83\uc744 \ubc1c\uacac\ud588\ub2e4. \uacb0\uacfc\ub294 Nature Chemistry\uc5d0 \uc2e4\ub838\ub2e4."], ["**\uc804\uc790\uac00** \ub109\ub109\ud55c", "\uacc1\uac00\uc9c0\uc758 \ud798", "---", "\ubd84\uc790\uc5d0 \ubd99\uc740 \ubcf4\ub9b4\ub808\ub2d0\uae30\ub294 \uc804\uc790\uac00 \ud48d\ubd80\ud574\uc11c \uc804\uc790 \ubc00\ub3c4\ub97c \ub098\ub220 \uc8fc\uace0, \uc804\ud558\uc758 \ubd88\uade0\ud615\uc744 \uc904\uc600\ub2e4. \ubc31\uae08 \uac19\uc740 \ucd94\uac00 \uae08\uc18d\uc740 \uc774\ubc88\uc5d0\ub294 \ud544\uc694\ud558\uc9c0 \uc54a\uc558\ub2e4."], ["\uc2e4\uc628\uc5d0\uc11c\ub3c4", "**\uba40\uca61\ud55c** \uacb0\uc815", "---", "\ub9cc\ub4e4\uc5b4\uc9c4 \uac83\uc740 \uc8fc\ud669\uc0c9\uacfc \ub178\ub780\uc0c9\uc744 \ub764 \uace0\uccb4 \uacb0\uc815\uc774\uc5c8\ub2e4. X\uc120 \uacb0\uc815\ud559\uacfc \ubd84\uad11\ubc95, \ucef4\ud4e8\ud130 \uc2dc\ubbac\ub808\uc774\uc158\uc73c\ub85c \ubd84\uc11d\ud558\ub2c8 \ubd95\uc18c-\uc0b0\uc18c \uc0bc\uc911\uacb0\ud569\uc774 \ub9e4\uc6b0 \uac15\ud558\uac8c \ub9cc\ub4e4\uc5b4\uc84c\uc74c\uc774 \ud655\uc778\ub410\ub2e4."], ["\ub2e4\ub4e4 **\ud3ec\uae30\ud588\ub358**", "\ubd84\uc57c\uc600\ub2e4", "---", "\ud654\ud559\uc790 \ud640\uac70 \ube0c\ub77c\uc6b4\uc288\ubc14\uc774\ud06c\ub294 \uc774 \ubd84\uc57c \uac70\uc758 \ubaa8\ub450\uac00 \uc625\uc18c\ubcf4\ub808\uc778\uc744 \ud3ec\uae30\ud55c \uc0c1\ud0dc\uc600\ub2e4\uace0 \ub9d0\ud588\ub2e4. \ub2e4\ub9cc \uc57d\uc774\ub098 \uc18c\uc7ac \ucabd\uc758 \uad6c\uccb4\uc801\uc778 \uc131\uacfc\ub294 \uc544\uc9c1 \uc5c6\ub2e4."], ["\ud654\ud559 \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c\ud55c\ud14c** \ubcf4\ub0b4\uae30", "---", "60\ub144 \ub118\uac8c \ub2e4\ub4e4 \ud3ec\uae30\ud588\ub358 \ubd84\uc790\uac00 \uc2e4\ud5d8 \uc911 \ub73b\ubc16\uc5d0 \ubaa8\uc2b5\uc744 \ub4dc\ub7ec\ub0c8\ub2e4. \ud654\ud559\uc774\ub098 \uacfc\ud559 \ub274\uc2a4\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc640 \ud568\uaed8 \ub180\ub77c \ubcf4\uae30 \uc88b\uc740 \uc18c\uc2dd"]]}, "534bf8279c53": {"caption": "\ud558\ub8e8 \uc138 \uc2dc\uac04, \uadf8\uac83\ub3c4 \ud3c9\uc77c\uc5d0\ub9cc \ubb38\uc744 \uc5ec\ub294 \uc18c\ubc14\uc9d1\uc774 \ub3c4\ucfc4\uc5d0 \uc0dd\uacbc\ub2e4. \ub2c8\ucfe0\uc18c\ubc14 \ud1a0\uc2dc\uce58 \ud55c\uc870\ubaac\uc810\uc740 \uc13c\ub2e4\uc774 \ubcf8\uc810\uacfc \uac19\uc740 \uc624\uc804 11\uc2dc~\uc624\ud6c4 2\uc2dc\uc5d0\ub9cc \uc601\uc5c5\ud558\uace0 \ud1a0\u00b7\uc77c\u00b7\uacf5\ud734\uc77c\uc740 \uc270\ub2e4. \uc18c\ub77c\ub274\uc2a424\uc758 P.K. \uc0b0\uc900 \uae30\uc790\ub294 \uc13c\ub2e4\uc774\uc5d0\uc11c \uc774 \uc9d1\uc758 \uc18c\ubc14\ub97c \ucc98\uc74c \uba39\uace0 \ubc18\ud588\ub294\ub370, \uadf8\ub0a0\uc740 \ub0a0\uc774 \ub108\ubb34 \ucd94\uc6cc \uc9c1\uc6d0\uc774 \ub530\ub73b\ud55c \ub2c8\ucfe0\uc18c\ubc14\ub97c \uad8c\ud588\ub2e4\uace0 \ud55c\ub2e4. \uc6d0\ub798 \uc774 \uac00\uac8c\uc758 \ub300\ud45c \uba54\ub274\ub294 \ucc28\uac00\uc6b4 \ub2c8\ucfe0\uc18c\ubc14\ub77c \uc544\uc26c\uc6c0\uc774 \ub0a8\uc558\uace0, \ub3c4\ucfc4 \uc9c0\uc810 \uc18c\uc2dd\uc5d0 \uc7ac\ub3c4\uc804\uc5d0 \ub098\uc130\ub2e4. \ud55c\uc870\ubaac\uc5ed\uc5d0\uc11c \uac78\uc5b4 5\ubd84\ucbe4 \uac00\uc790 \uc5f4 \uba85 \uc815\ub3c4\uc758 \uc904\uc774 \uc11c \uc788\uc5c8\uc9c0\ub9cc, \uc11c\uc11c \uba39\ub294 \uc790\ub9ac\uac00 \ub109\ub109\ud574 \ud68c\uc804\uc774 \ube68\ub77c \uae30\ub2e4\ub9b0 \uc2dc\uac04\uc740 15\ubd84 \uc815\ub3c4\uc600\ub2e4. \uae30\uc790\ub294 \ud070 \uc0ac\uc774\uc988(1,050\uc5d4)\uc5d0 \uc624\uc9d5\uc5b4 \ub2e4\ub9ac \ud280\uae40\uc778 \uac8c\uc18c\ud150(250\uc5d4 \ucd94\uac00)\uc744 \uc5b9\uc5c8\uace0, \uba74\uc774 600g\uc774\ub098 \ub418\ub294 \uc904\uc740 \ubbf8\ucc98 \ubab0\ub790\ub2e4\uace0 \ud55c\ub2e4. \uad6d\ubb3c\uc740 \ub9d1\uc740 \ud669\uae08\ube5b\uc5d0 \ub2e8\ub9db\uc774 \ub0ac\uace0, \uc544\uc8fc \ucc28\uac11\uc9c0 \uc54a\uc740 \ubbf8\uc9c0\uadfc\ud55c \uc628\ub3c4\uc600\ub2e4. \uaecd\uc9c8\uc9f8 \uac04 \uba54\ubc00\ub85c \ub9cc\ub4e0 \uba74\uc740 \uc587\uace0 \ud770 \ub3c4\ucfc4\uc758 \ud754\ud55c \uba74\uacfc \ub300\uc870\uc801\uc774\uc5c8\ub2e4. \ud3c9\uc77c \uc810\uc2ec\uc5d0 \ub3c4\ucfc4\ub97c \uc9c0\ub0a0 \uacc4\ud68d\uc774 \uc788\ub2e4\uba74 \uc800\uc7a5\ud574 \ub450\uc790. \ucd9c\ucc98: SoraNews24", "hashtags": ["\ub3c4\ucfc4\ub9db\uc9d1", "\uc18c\ubc14", "\uc77c\ubcf8\uc5ec\ud589", "\uc57c\ub9c8\uac00\ud0c0\uc18c\ubc14", "\uc77c\ubcf8\ub9db\uc9d1"], "slides": [["\ud558\ub8e8 **3\uc2dc\uac04\ub9cc**", "\uc5ec\ub294 \uc18c\ubc14\uc9d1???", "---", "\ud3c9\uc77c \uc624\uc804 11\uc2dc\ubd80\ud130 \uc624\ud6c4 2\uc2dc\uae4c\uc9c0 \uc138 \uc2dc\uac04\ub9cc \uc5ec\ub294 \uc57c\ub9c8\uac00\ud0c0 \uc18c\ubc14\uc9d1\uc774 \ub3c4\ucfc4\uc5d0 \uccab \uc9c0\uc810\uc744 \uc5f4\uc5c8\ub2e4."], ["\uc13c\ub2e4\uc774\uc5d0\uc11c \ubc18\ud574", "**\ub3c4\ucfc4**\uae4c\uc9c0 \uc654\ub2e4", "---", "\uc18c\ub77c\ub274\uc2a424\uc758 P.K. \uc0b0\uc900 \uae30\uc790\ub294 \uc13c\ub2e4\uc774\uc5d0\uc11c \ucc98\uc74c \uc57c\ub9c8\uac00\ud0c0 \uc18c\ubc14\ub97c \uba39\uace0 \ubc18\ud588\ub2e4. \uadf8 \uac00\uac8c\uc778 \ub2c8\ucfe0\uc18c\ubc14 \ud1a0\uc2dc\uce58\uac00 \uc62c\ud574 \ub3c4\ucfc4\uc5d0 \uccab \uc9c0\uc810\uc744 \ub0c8\ub2e4\ub294 \uc0ac\uc2e4\uc744 \ub4a4\ub2a6\uac8c \uc54c\uac8c \ub410\ub2e4."], ["\uace0\uae30\ub294 **\ub2ed**,", "\uc721\uc218\ub3c4 \ub2ed", "---", "\uac04\ud310 \uba54\ub274\ub294 \ub2ed\uace0\uae30\ub97c \uc62c\ub9b0 \ub2c8\ucfe0\uc18c\ubc14\ub2e4. \uace0\uae30\ub294 \uc54c \ub0b3\uae30\ub97c \ub9c8\uce5c \ub2ed\uc73c\ub85c, \uac10\uce60\ub9db\uc774 \uae4a\uace0 \uc2dd\uac10\uc774 \ub2e8\ub2e8\ud558\ub2e4\uace0 \ud55c\ub2e4. \uc721\uc218\ub3c4 \ub2ed\uc73c\ub85c \ub9cc\ub4e0 \uac83\uc73c\ub85c \ubcf4\uc778\ub2e4."], ["**\ud3c9\uc77c** \uc810\uc2ec\ub9cc", "\uc8fc\ub9d0\uc740 \ud734\ubb34", "---", "\uc601\uc5c5\uc2dc\uac04\uc740 \uc624\uc804 11\uc2dc\ubd80\ud130 \uc624\ud6c4 2\uc2dc\uae4c\uc9c0 \uc138 \uc2dc\uac04\ubfd0\uc774\ub2e4. \ud1a0\uc694\uc77c, \uc77c\uc694\uc77c, \uacf5\ud734\uc77c\uc740 \uc26c\uc5b4\uc11c \ud3c9\uc77c\uc5d0\ub9cc \uac08 \uc218 \uc788\ub2e4. \ud55c\uc870\ubaac\uc5ed\uc5d0\uc11c \uac78\uc5b4 5\ubd84\ucbe4 \uac78\ub9b0\ub2e4."], ["\ud070 \uc0ac\uc774\uc988\uac00", "\uba74\ub9cc **600g**?!", "---", "\uae30\uc790\uac00 \uace0\ub978 \ud070 \uc0ac\uc774\uc988\ub294 1,050\uc5d4\uc5d0 \uba74\uc774 600g\uc774\ub098 \ub410\ub2e4. \uaecd\uc9c8\uc9f8 \uac04 \uba54\ubc00\ub85c \ub9cc\ub4e0 \uba74\uc740 \ub3c4\ucfc4\uc5d0\uc11c \ud754\ud55c \uc587\uace0 \ud770 \uba74\uacfc \ub2ec\ub9ac \uad75\uace0 \ucac4\uae43\ud558\ub2e4."], ["\ub3c4\ucfc4 \ud3c9\uc77c \uc810\uc2ec", "\uc77c\uc815 \uc788\uc73c\uba74 **\uc800\uc7a5**", "---", "\ud3c9\uc77c \ub0ae 11\uc2dc\ubd80\ud130 2\uc2dc\uae4c\uc9c0\ub9cc \uc5ec\ub294 \uac00\uac8c\ub77c \uc77c\uc815\uc744 \uc9dc\uae30 \uc804\uc5d0 \ub2e4\uc2dc \ud655\uc778\ud574\uc57c \ud560 \uc815\ubcf4. \ud55c\uc870\ubaac\uc5ed\uc5d0\uc11c \uac78\uc5b4 5\ubd84\uc774\ub77c\ub294 \uc704\uce58\ub3c4 \ud568\uaed8 \ub2f4\uc544 \ub458 \ub9cc\ud55c \ub0b4\uc6a9."]]}, "86e194139376": {"caption": "\uacf0\uc744 \ub9c9\uaca0\ub2e4\uba70 \uc0ac\uacfc\uc220\uc744 \ub9c8\uc2dc\ub77c\uace0 \ud558\ub294 \ucea0\ud398\uc778\uc774 \uc77c\ubcf8\uc5d0\uc11c \ub098\uc654\ub2e4. \uc624\ub2c8\ud31c, \ud558\ubc14\uc2a4 \uc7ac\ud32c, \uc11c\ub2c8\uc0ac\uc774\ub4dc\uc5c5 \uc138 \uacf3\uc774 11\uc6d4 19\uc77c \u2018\ubca0\uc5b4 \ud504\ub8e8\ud504 \uc0ac\uc774\ub354\u2019\ub97c \ub0b4\ub193\uc558\ub2e4. \ubaa9\ud45c\ub294 \uc77c\ubcf8\uc5d0\uc11c \uc0ac\ub78c\uacfc \uacf0\uc774 \ub9c8\uc8fc\uce58\ub294 \uc77c\uc744 \uc904\uc774\ub294 \uac83\uc774\ub2e4.\n\n\ubc30\uacbd\uc5d0\ub294 \uacf0 \ubaa9\uaca9\uacfc \uacf5\uaca9\uc774 \ucd5c\uadfc \uba87 \ub144\uac04 \ud06c\uac8c \ub298\uc5c8\ub2e4\ub294 \ud604\uc2e4\uc774 \uc788\ub2e4. 2025\ub144 \uc62c\ud574\uc758 \ud55c\uc790\ub3c4 \u2018\uacf0\u2019\uc774\uc5c8\ub2e4. \uc2dc\uace8 \uc778\uad6c\uac00 \uc904\uba74\uc11c \uace0\ub839 \ub18d\ubbfc\uc774 \ub545\uc744 \ub5a0\ub0ac\uace0, \uc791\ubb3c\uc774 \uc81c\uba4b\ub300\ub85c \uc790\ub77c\ub294 \ube48 \ub545\uc774 \ubc30\uace0\ud508 \uacf0\uc744 \uc0b0\uc5d0\uc11c \ub04c\uc5b4\ub0b4\ub9b0\ub2e4\ub294 \uc124\uba85\uc774\ub2e4. \uc0ac\uacfc\ub85c \uc720\uba85\ud55c \ubd81\ubd80 \uc544\uc624\ubaa8\ub9ac\ub294 \ud574\ub9c8\ub2e4 \uc218\ubc31\ub9cc \uac1c\uac00 \uc2dc\uc7a5\uc5d0 \ub098\uac00\uc9c0\ub9cc \ud488\uc9c8\uc774 \ub5a8\uc5b4\uc9c0\uac70\ub098 \uadf8\ub0e5 \ub5a8\uc5b4\uc838 \ubc84\ub9b0 \uc0ac\uacfc\ub3c4 \ub9ce\uc544, \uacfc\uc218\uc6d0\uc774 \uacf0\uc744 \ubd80\ub974\ub294 \uc790\uc11d\uc774 \ub41c\ub2e4.\n\n\uc774 \uc0ac\uc774\ub354\ub294 \uadf8\ub7f0 \uc0ac\uacfc\ub97c \uc54c\ucf54\uc62c 7% \uc74c\ub8cc\ub85c \ube5a\uc740 \uac83\uc774\ub2e4. \uc0ac\uacfc\ub97c \ucd5c\ub300\ud55c \uc18c\uc9c4\ud558\uba74 \uacf0\uc774 \uacfc\uc218\uc6d0\uc5d0 \ub4e4\uc5b4\uc62c \uc774\uc720\uac00 \uc904\uc5b4\ub4e0\ub2e4\ub294 \uad6c\uc0c1\uc774\ub2e4. \uc624\ub2c8\ud31c\uc740 \ud310\ub9e4 \uc218\uc775\uc73c\ub85c \ubc84\ub824\uc9c4 \ub18d\uc7a5\uc744 \uc815\ube44\ud574 \uacf0\uacfc \ub2e4\ub978 \uc57c\uc0dd\ub3d9\ubb3c\uc758 \uc740\uc2e0\ucc98\ub098 \ud1b5\ub85c\uac00 \ub418\uc9c0 \uc54a\uac8c \ud560 \uacc4\ud68d\uc774\ub2e4.\n\n\ud604\uc7ac \ud310\ub9e4\ucc98\ub294 \ub3c4\ucfc4\uc640 \ud788\ub85c\uc0ac\ud0a4 \ub450 \ub3c4\uc2dc\ubfd0\uc774\ub2e4. \uc77c\ubcf8\uc5b4\ub85c \u2018\uc0ac\uc774\ub2e4\u2019\ub77c\uace0 \ud558\uba74 \uc2a4\ud504\ub77c\uc774\ud2b8 \uac19\uc740 \ud0c4\uc0b0\uc74c\ub8cc\ub97c \uac74\ub124\ubc1b\uae30 \uc27d\uace0, \uc0ac\uacfc\ub85c \ub9cc\ub4e0 \uc0ac\uc774\ub354\ub294 \u2018\uc2dc\ub3c4\ub8e8\u2019\ub77c\uace0 \ubd88\ub7ec\uc57c \ud55c\ub2e4\uace0 \ud55c\ub2e4.\n\n\ucd9c\ucc98: SoraNews24 (PR Times \uc81c\uacf5 \uc790\ub8cc)", "hashtags": ["#\uc77c\ubcf8", "#\uacf0", "#\uc0ac\uc774\ub354", "#\ud574\uc678\ud1a0\ud53d", "#\uc544\uc624\ubaa8\ub9ac"], "slides": [["\uacf0 \ub9c9\uc73c\ub824\uace0", "**\uc0ac\uacfc\uc220** \ub9c8\uc2dc\ub77c\uace0?!", "---", "\uc77c\ubcf8 \uae30\uc5c5 \uc138 \uacf3\uc774 \uacf0\uacfc \uc0ac\ub78c\uc758 \ub9c8\uc8fc\uce68\uc744 \uc904\uc774\uaca0\ub2e4\uba70 \uc54c\ucf54\uc62c \uc0ac\uacfc \uc0ac\uc774\ub2e4\ub97c 11\uc6d4 19\uc77c \ucd9c\uc2dc\ud588\ub2e4."], ["\uc62c\ud574\uc758 \ud55c\uc790\uac00", "**\uacf0\uc774\uc5c8\ub358** \uc77c\ubcf8", "---", "\uc77c\ubcf8\uc5d0\uc11c\ub294 \ucd5c\uadfc \uba87 \ub144\uac04 \uacf0 \ubaa9\uaca9\uacfc \uacf5\uaca9\uc774 \ub208\uc5d0 \ub744\uac8c \ub298\uc5c8\ub2e4. \uadf8 \uc5ec\ud30c\ub85c 2025\ub144 \uc77c\ubcf8\uc758 \uc62c\ud574\uc758 \ud55c\uc790\ub85c \u2018\uacf0\u2019\uc774 \ubf51\ud614\uc744 \uc815\ub3c4\ub2e4."], ["\ube48 \ub18d\uc7a5\uc5d0\uc11c", "**\uacf0 \ubc25\uc0c1** \ucc28\ub824\uc9d0", "---", "\uc2dc\uace8 \uc778\uad6c\uac00 \uc904\uace0 \uace0\ub839 \ub18d\ubbfc\uc774 \ub545\uc744 \ub5a0\ub098\uba74\uc11c \ube48 \ub545\uc774 \ub298\uc5c8\ub2e4. \uadf8\ub7f0 \uacf3\uc5d0\uc11c\ub3c4 \uc791\ubb3c\uc774 \uc81c\uba4b\ub300\ub85c \uc790\ub77c, \ubc30\uace0\ud508 \uacf0\uc774 \uc0b0\uc5d0\uc11c \ub0b4\ub824\uc628\ub2e4."], ["\uc544\uc624\ubaa8\ub9ac \uc0ac\uacfc\uac00", "**\uacf0 \uc790\uc11d**\uc774\ub798", "---", "\uc0ac\uacfc\ub85c \uc720\uba85\ud55c \ubd81\ubd80 \uc544\uc624\ubaa8\ub9ac\ub294 \ud574\ub9c8\ub2e4 \uc218\ubc31\ub9cc \uac1c\uac00 \uc2dc\uc7a5\uc5d0 \ub098\uac00\uc9c0\ub9cc, \ud488\uc9c8\uc774 \ub5a8\uc5b4\uc9c0\uac70\ub098 \uadf8\ub0e5 \ub5a8\uc5b4\uc838 \ubc84\ub9b0 \uc0ac\uacfc\ub3c4 \ub9ce\ub2e4. \uc774 \uacfc\uc218\uc6d0\ub4e4\uc774 \uacf0\uc744 \ub04c\uc5b4\ub4e4\uc774\ub294 \uc790\uc11d \ub178\ub987\uc744 \ud55c\ub2e4."], ["\ubabb \uc4f0\ub294 \uc0ac\uacfc\ub85c", "**\uc220**\uc744 \ube5a\uc5c8\ub2e4", "---", "\ubca0\uc5b4 \ud504\ub8e8\ud504 \uc0ac\uc774\ub354\ub294 \uc774\ub7f0 \uc0ac\uacfc\ub97c \uc54c\ucf54\uc62c 7% \uc74c\ub8cc\ub85c \ube5a\uc740 \uc81c\ud488\uc774\ub2e4. \uc0ac\uacfc\ub97c \ub9ce\uc774 \uc18c\uc9c4\ud560\uc218\ub85d \uacf0\uc774 \uacfc\uc218\uc6d0\uc744 \ucc3e\uc744 \uc774\uc720\uac00 \uc904\uc5b4\ub4e0\ub2e4\ub294 \uad6c\uc0c1\uc774\ub2e4."], ["\uc218\uc775\uae08\uc740", "**\ube48 \ub18d\uc7a5** \uc815\ube44\uc5d0", "---", "\uc624\ub2c8\ud31c\uc740 \uc0ac\uc774\ub354 \ud310\ub9e4 \uc218\uc775\uc73c\ub85c \ubc84\ub824\uc9c4 \ub18d\uc7a5 \uc0c1\ud0dc\ub97c \uac1c\uc120\ud558\uaca0\ub2e4\uace0 \ud55c\ub2e4. \uacf0 \uac19\uc740 \uc57c\uc0dd\ub3d9\ubb3c\uc758 \uc740\uc2e0\ucc98\ub098 \uc774\ub3d9 \ud1b5\ub85c\uac00 \ub418\uc9c0 \uc54a\uac8c \ud558\ub824\ub294 \ucde8\uc9c0\ub2e4."], ["\uc220\uc790\ub9ac \uc88b\uc544\ud558\ub294", "**\uce5c\uad6c** \ud0dc\uadf8\ud558\uae30", "---", "\ubabb \uc4f0\ub294 \uc0ac\uacfc\ub85c \ube5a\uc5b4 \uacf0\uacfc\uc758 \ub9c8\uc8fc\uce68\uc744 \uc904\uc774\uace0, \uc218\uc775\uae08\uc73c\ub85c \ube48 \ub18d\uc7a5\uae4c\uc9c0 \uc190\ubcf4\uaca0\ub2e4\ub294 \ubc1c\uc0c1\uc774 \ub2f4\uacbc\ub2e4. \uc220\uc790\ub9ac\ub97c \uc88b\uc544\ud558\ub294 \uce5c\uad6c\uc5d0\uac8c \ubcf4\ub0b4\uba74 \ubc18\uac00\uc6cc\ud560 \uc18c\uc2dd"]]}};
+  const TOTAL = 3;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>

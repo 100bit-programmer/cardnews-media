@@ -1,0 +1,1474 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#121A3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="외신 검수">
+<link rel="icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png"><link rel="apple-touch-icon" href="https://100bit-programmer.github.io/cardnews-media/brand/logo.png">
+<title>검수 2026.11.21 오후</title>
+<style>
+  :root {
+    --bg: #F3F4F6; --panel: #FFFFFF; --ink: #16181D; --dim: #5F6572; --line: #E2E4E9; --soft: #F6F7F9;
+    --ok: #12703F; --ok-bg: #E3F5EC; --warn: #8A5200; --warn-bg: #FFF1D6; --bad: #B42318; --bad-bg: #FDE7E5;
+    --act: #2346D8; --navy: #121A3A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0D0F14; --panel: #171A21; --ink: #ECEEF2; --dim: #9AA1AD; --line: #2A2F38; --soft: #1E222A;
+      --ok: #5BD69B; --ok-bg: #12301F; --warn: #F2B44B; --warn-bg: #33270F; --bad: #FF8A80; --bad-bg: #3A1513; --act: #8CA6FF; }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; word-break: keep-all; }
+  a { color: var(--act); }
+  button { font: inherit; }
+  button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--act); outline-offset: 2px; }
+
+  /* 상단: 진행 상황 + 게시물 바로가기 */
+  .top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .top-inner { max-width: 640px; margin: 0 auto; padding: 10px 16px; }
+  .top h1 { font-size: 17px; margin: 0; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .top h1 span { font-size: 14px; font-weight: 600; color: var(--dim); }
+  .top h1 .ttl { flex: 1; min-width: 0; }
+  .back { flex: none; align-self: center; display: inline-flex; align-items: center; height: 32px; padding: 0 12px 0 8px; margin-left: -6px;
+    border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 14px; font-weight: 700; }
+  .jump { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; min-width: 44px; height: 36px; padding: 0 12px; border-radius: 99px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .jump a.approve { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .jump a.reject { background: var(--bad-bg); border-color: var(--bad-bg); color: var(--bad); text-decoration: line-through; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 12px 0 140px; display: grid; gap: 16px; }
+  .post { background: var(--panel); border-block: 1px solid var(--line); }
+  @media (min-width: 660px) { .post { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; } main { padding-inline: 10px; } }
+  .post.decided-reject .carousel, .post.decided-reject .body { opacity: 0.45; }
+
+  .head { padding: 14px 16px 10px; }
+  .head h2 { font-size: 18px; line-height: 1.4; margin: 0 0 6px; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+  .b-ok { color: var(--ok); background: var(--ok-bg); }
+  .b-attention { color: var(--warn); background: var(--warn-bg); }
+  .b-reject { color: var(--bad); background: var(--bad-bg); }
+
+  /* 인스타처럼 한 장씩 넘겨보기 */
+  .carousel-wrap { position: relative; background: #000; }
+  .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carousel::-webkit-scrollbar { display: none; }
+  /* 카드 비율 그대로 (지금은 1:1). 예전 4:5 카드가 섞여도 잘리지 않게 contain */
+  .carousel img { flex: none; width: 100%; aspect-ratio: 1080 / 1080; object-fit: contain; scroll-snap-align: center; display: block; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 5px; padding: 10px 0 0; }
+  .counter { font-size: 12px; font-weight: 700; color: var(--dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--act); }
+
+  .body { padding: 10px 16px 0; }
+  .cap { white-space: pre-line; font-size: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .cap.open { display: block; }
+  .more { background: none; border: 0; color: var(--dim); padding: 8px 0; min-height: 44px; font-weight: 600; cursor: pointer; }
+  .tags { color: var(--act); font-size: 14px; margin: 0; }
+
+  .check { margin-top: 12px; background: var(--warn-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+  .check b { color: var(--warn); }
+  .check ul { margin: 6px 0 0; padding-left: 18px; font-size: 14.5px; }
+  .check li { margin: 4px 0; }
+  .check small { color: var(--dim); display: block; }
+
+  details.box { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+  details.box > summary { list-style: none; cursor: pointer; padding: 12px 14px; min-height: 48px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  details.box > summary::-webkit-details-marker { display: none; }
+  details.box > summary::after { content: "펼치기"; font-size: 13px; font-weight: 600; color: var(--dim); }
+  details.box[open] > summary::after { content: "접기"; }
+  details.box .in { padding: 0 14px 14px; }
+  label.f { display: block; font-size: 13px; color: var(--dim); font-weight: 700; margin: 12px 0 4px; }
+  textarea, input[type=text], input[type=password] { width: 100%; font: inherit; font-size: 16px; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  textarea { resize: vertical; }
+  textarea.caption { min-height: 220px; }
+
+  .claim { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14.5px; }
+  .claim:first-child { border-top: 0; }
+  .v { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; margin-right: 6px; }
+  .v-supported { color: var(--ok); background: var(--ok-bg); }
+  .v-partial { color: var(--warn); background: var(--warn-bg); }
+  .v-unsupported { color: var(--bad); background: var(--bad-bg); }
+  .claim q { display: block; margin-top: 4px; color: var(--dim); font-size: 13.5px; quotes: none; }
+  .claim small, .meta { display: block; color: var(--dim); font-size: 13px; margin-top: 2px; }
+  ul.plain { padding-left: 18px; margin: 6px 0 0; font-size: 14.5px; }
+
+  /* 결정 버튼: 엄지로 누르기 좋게 크게 */
+  .decide { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; padding: 14px 16px 16px; }
+  .decide button { min-height: 52px; border-radius: 12px; font-size: 17px; font-weight: 800; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel); color: var(--ink); }
+  .decide .yes[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .decide .no[aria-pressed=true] { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .decide button:disabled { opacity: .6; cursor: default; }
+
+  /* 하단 보내기 바 */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .bar .summary { flex: 1; min-width: 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
+  .bar .send { min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; background: var(--act); color: #fff; font-weight: 800; cursor: pointer; flex: none; }
+  .bar .send:disabled { opacity: .45; cursor: default; }
+
+  .settings { max-width: 640px; margin: 8px auto 0; padding: 0 16px; }
+  .settings details.box { background: var(--panel); }
+  .settings p { font-size: 14px; color: var(--dim); margin: 0 0 8px; }
+  /* 처리 끝난 게시물: 완성본 안내 */
+  .final { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; background: var(--ok-bg); }
+  .final.rej { background: var(--bad-bg); }
+  .final b { font-size: 16px; }
+  .final p { margin: 4px 0 10px; font-size: 14px; color: var(--dim); }
+  .final-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .final-btns button { min-height: 46px; border-radius: 10px; border: 0; background: var(--ok); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .final-btns button.copy { background: var(--panel); color: var(--ink); border: 2px solid var(--line); }
+  .final-btns button.posted { grid-column: 1 / -1; background: transparent; color: var(--ok); border: 2px dashed var(--ok); }
+  .final-btns button.posted[aria-pressed=true] { background: var(--ok); color: #fff; border-style: solid; }
+  .done { max-width: 640px; margin: 0 auto; padding: 12px 16px; display: none; }
+  .done.show { display: block; }
+  .done div { background: var(--ok-bg); color: var(--ink); border-radius: 12px; padding: 12px 14px; }
+
+  /* 스레드 글: 한 칸씩 복사해서 '스레드에 추가'로 이어 붙이기 */
+  .thr { margin: 0 16px 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+  .thr-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 4px; }
+  .thr-head b { font-size: 16px; margin-right: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
+  .chip.hot { color: var(--act); border-color: var(--act); }
+  .thr-note { font-size: 13.5px; color: var(--dim); margin: 2px 0 8px; }
+  .tp { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px; margin-top: 8px; }
+  .tp.save { border-color: var(--warn); }
+  .tp-label { font-size: 12px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tp-label .len { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tp-label .len.over { color: var(--bad); }
+  .tp-text { white-space: pre-wrap; font-size: 15px; margin: 4px 0 6px; }
+  .tp button.cp, .thr-btns button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 800; cursor: pointer; }
+  .tp button.cp { width: 100%; }
+  .tp button.cp.copied, .thr-btns button.copied { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .thr-btns button.tposted[aria-pressed=true] { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .thr .check { margin-top: 10px; }
+  .thr details.box { background: var(--panel); }
+  .thr ol { margin: 6px 0 0; padding-left: 22px; font-size: 14.5px; }
+  .thr ol li { margin: 4px 0; }
+  .tsec { max-width: 640px; margin: 0 auto; }
+  .tsec > h2 { font-size: 18px; margin: 8px 16px 4px; }
+  .tsec > p { margin: 0 16px 8px; font-size: 14px; color: var(--dim); }
+  .tpost { background: var(--panel); border-block: 1px solid var(--line); padding: 14px 0 4px; margin-bottom: 16px; }
+  @media (min-width: 660px) { .tpost { border: 1px solid var(--line); border-radius: 16px; } }
+  .tpost .head { padding-top: 0; }
+label.pp{display:flex;align-items:center;gap:10px;min-height:44px;font-size:14px}label.pp img{border-radius:8px;object-fit:cover}.prod-note{margin:6px 16px 0}
+.tph-row{display:flex;gap:8px;overflow-x:auto;margin:6px 0}.tph-row img{height:120px;border-radius:10px;flex:none}button.savephotos{min-height:44px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-inner">
+    <h1><a class="back" id="back" href="index.html">‹ 목록</a><span class="ttl" style="font-size:inherit;font-weight:inherit;color:inherit">2026.11.21 오후 검수</span> <span id="progress">0 / 0 결정</span></h1>
+    <nav class="jump" aria-label="게시물 바로가기">
+      
+      <a href="#threads">🧵 스레드 4</a>
+    </nav>
+  </div>
+</div>
+
+<div class="done" id="done"><div id="doneMsg"></div></div>
+
+<main>
+
+
+<div class="tsec" id="threads">
+  <h2>🧵 스레드 전용 글 4개</h2>
+  <p>카드로 안 만든 소재 중 스레드에서 끌릴 만한 것. 원문 근거 대조를 거쳤어요. 승인 없이 복사해서 바로 올리면 돼요.</p>
+  
+  
+  <article class="tpost" id="thread-235c47d9da00">
+    <div class="head">
+      <h2>S1. 수면 시간보다 규칙성이 심장에 더 중요할 수 있다는 연구</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 10 · 애매 1
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-235c47d9da00">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">노하우형 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강과학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 몇 시간 잤나만 따지던 사람에게 &#39;자고 일어나는 시간을 일정하게&#39;라는 오늘 밤부터 할 수 있는 행동을 던지는 각도</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">110/500자</span></div>
+      <p class="tp-text">잠은 &#39;몇 시간 자느냐&#39;가 아니라 &#39;얼마나 규칙적이냐&#39;가 심장에 더 중요할 수 있대
+시간만 따지지 말고 규칙부터 보라는 연구가 나옴
+근데 불규칙한 잠이 위험이랑 얼마나 이어졌는지 숫자가 꽤 셌음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">108/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 평균 수면 시간은 심장마비·심부전·뇌졸중 같은 심혈관 질환 위험과 뚜렷한 연관이 없었대. 대신 불규칙한 잠에서는 연관이 나왔음. 그럼 얼마나 들쭉날쭉해야 그런 결과였을까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">121/500자</span></div>
+      <p class="tp-text">2/ 밤마다 수면 시간이 들쭉날쭉한 폭이 29분 커질 때마다 심혈관 질환 위험이 24% 높게 연관됐대. 취침 시간·기상 시간 편차도 20~23% 높은 위험과 이어졌고. 근데 왜 불규칙한 잠이 심장이랑 이어진다는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">112/500자</span></div>
+      <p class="tp-text">3/ 연구진은 불규칙한 일정이 생체리듬 어긋남을 반복해서 만들고, 실험 조건에서는 이게 혈압을 올리고 혈당 조절을 방해한다고 설명했대. 근데 이건 설명일 뿐이고 이 연구가 원인을 증명한 건 아니었음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">154/500자</span></div>
+      <p class="tp-text">4/ 조심해서 봐야 해. 관찰 연구라 원인과 결과는 입증 못 했고, AHA 발표 자료엔 학회 발표용 초록이라 예비 결과로 본다고 적혀 있음. 연구에 참여 안 한 전문가도 규칙성이 독립적으로 원인이 된다는 데이터는 아직 부족하다고 했대. 그럼 연구진이 실제로 권한 건 뭐였을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">189/500자</span></div>
+      <p class="tp-text">5/ 연구 요약 정리
+- 대상: 미국 성인 1만여 명(나이 중앙값 53세), 핏빗 수면 기록
+- 평균 수면 시간: 심혈관 질환 위험과 뚜렷한 연관 없음
+- 수면 시간 편차 29분 증가: 위험 24% 높음
+- 취침·기상 시간 편차: 위험 20~23% 높음
+- 연구진 제안: 취침·기상 시간 일정하게
+- 한계: 관찰 연구라 인과는 단정 못 함</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">238/500자</span></div>
+      <p class="tp-text">6/ 챙겨갈 한 줄: 연구진은 잠자는 시간만 보지 말고 취침·기상 시간을 일정하게 맞추는 게 누구나 할 수 있고 심장에 도움 될 수 있는 방법이라고 봤어.
+주말에도 평일이랑 비슷한 시간에 일어나는 편? 늦잠파 vs 칼기상파
+이런 해외 건강·수면 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        <li>연구에 참여하지 않은 AHA 전문가는 수면 규칙성이 심혈관 질환 위험에 인과적·독립적 영향을 준다는 데이터가 아직 부족하다고 했다 <small>애매 · 내용(수면 규칙성의 인과적·독립적 영향을 뒷받침할 데이터가 부족하다)은 원문과 일치한다. 다만 발언자는 AHA 소속이 아니라 컬럼비아대 교수인 독립 전문가로 소개된다. &#39;연구에 참여하지 않은 AHA 전문가&#39;라는 표현은 소속을 잘못 적은 것이므로 &#39;연구에 참여하지 않은 독립 전문가&#39;로 고쳐야 한다.</small></li>
+        <li>근거 등록 안 된 주장: 연구진은 심혈관 건강 평가에서 수면 시간과 함께 수면 규칙성도 평가해야 한다고 말했다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>잠은 &#39;몇 시간 자느냐&#39;가 아니라 &#39;얼마나 규칙적이냐&#39;가 심장에 더 중요할 수 있대</li><li>8시간 채우는 것만 따지지 말고 &#39;같은 시간에 자고 일어나기&#39;부터 보라는 연구가 나옴</li><li>평균 수면 시간은 별 연관이 없었는데 &#39;들쭉날쭉한 잠&#39;은 심장 위험이랑 연관이 나왔대</li><li>수면 시간 편차가 29분 커질 때마다 심혈관 위험이 24% 높게 연관됐다는 연구</li><li>&#39;8시간 자야 한다&#39;는 말, 이 연구 보면 좀 달라짐</li><li>몇 시간 잤는지보다 &#39;얼마나 일정하게 잤는지&#39;를 핏빗 데이터로 본 연구가 나왔어</li><li>금요일 밤에 좀 늦게 자는 것도 불규칙 수면의 예로 꼽힌 연구가 있음</li><li>수면 앱에서 시간만 보고 있다면, 이 연구는 한 번 볼 만함</li><li>주말에 늦게 자고 늦게 일어나는 습관, 심장 연구에서는 이렇게 봤대</li><li>수면 시간은 별 연관이 없었다는데 불규칙한 잠은 있었다고? 심장 연구의 의외의 결과</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>주말에도 평일이랑 비슷한 시간에 일어나는 편? 늦잠파 vs 칼기상파</li><li>수면 시간 vs 규칙성, 너라면 하나만 챙긴다면 뭐?</li><li>수면 기록 앱이나 스마트워치로 잠 체크해본 사람?</li><li>일정한 시간에 자고 일어나기, 일주일 해볼 의향 있어?</li><li>주말에 늦게 자는 편 vs 평일 리듬 그대로 가는 편?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>주말 늦잠, 몰아서 자면 정말 보충될까? 연구로 보기</li><li>수면 시간 말고 또 뭘 봐야 할까: 수면의 질·타이밍 이야기</li><li>교대근무자의 불규칙한 잠, 심장 연구에서는 어떻게 볼까</li><li>웨어러블로 잠을 재는 연구, 얼마나 믿을 수 있을까</li><li>수면 사이클이 길거나 많을 때 심장 위험은 어떻게 달랐나</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>출처 간 상충: 기사(sciencealert)는 학술지 게재 연구로, AHA 보도자료는 동료 심사 전 학회 초록(예비 결과)으로 설명함. 본문엔 AHA 발표 자료 기준으로만 적었으니 게재 여부 확인 필요</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-partial">애매</span>
+          <b>연구에 참여하지 않은 AHA 전문가는 수면 규칙성이 심혈관 질환 위험에 인과적·독립적 영향을 준다는 데이터가 아직 부족하다고 했다</b>
+          <q>“we are still lacking the data to support a causal, independent impact of sleep regularity on cardiovascular disease risk”</q>
+          <small>post4 · <a href="https://newsroom.heart.org/news/is-a-consistent-sleep-schedule-important-to-heart-health" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>새 연구가 수면 일정의 규칙성이 수면 시간보다 심장 건강에 더 중요한 고려 사항일 수 있다고 시사한다</b>
+          <q>“In fact, new research suggests the consistency of your sleeping schedule is a more important consideration for heart health than the amount of time you spend in bed.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>평균 수면 시간은 주요 심혈관 질환 위험과 유의미한 연관이 없었다</b>
+          <q>“The results showed that average sleep duration was not significantly associated with a greater risk of major cardiovascular conditions – including heart attack, heart failure, cardiomyopathy, and ischemic stroke (collectively called the CVD composite).”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>불규칙한 수면은 심혈관 질환 위험과 연관을 보였다</b>
+          <q>“Irregular sleep, on the other hand, did show a link, with each one-standard-deviation increase (29 minutes) in night-to-night variability in people&#39;s sleep duration corresponding to a 24 percent higher risk of the CVD composite.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>수면 시간 편차가 29분 커질 때마다 심혈관 질환 위험이 24% 높았다</b>
+          <q>“Irregular sleep, on the other hand, did show a link, with each one-standard-deviation increase (29 minutes) in night-to-night variability in people&#39;s sleep duration corresponding to a 24 percent higher risk of the CVD composite.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>취침·기상 시간 등의 편차는 약 20~23% 높은 위험과 연관됐다</b>
+          <q>“Other indicators of inconsistent sleeping patterns also showed associations with cardiovascular problems, with greater variability in bedtime, waking time, and sleep midpoint being linked to approximately 20–23 percent higher risk.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 불규칙한 일정이 반복적인 생체리듬 불일치를 일으키고, 실험 조건에서 혈압을 올리고 혈당 조절을 방해한다고 설명했다</b>
+          <q>“Irregular schedules impose recurrent circadian misalignment, which raises blood pressure and impairs glucose regulation under experimental conditions”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>이 연구는 관찰 연구여서 원인과 결과를 입증하지 못한다</b>
+          <q>“Study limitations include that, as an observational study, it could not establish cause and effect.”</q>
+          <small>post3 · <a href="https://newsroom.heart.org/news/is-a-consistent-sleep-schedule-important-to-heart-health" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>AHA 발표 자료는 해당 연구가 학회 발표용 초록이며 정식 논문으로 게재되기 전까지 예비 결과로 본다고 밝혔다</b>
+          <q>“The findings are considered preliminary until published as a full manuscript in a peer-reviewed scientific journal.”</q>
+          <small>post4 · <a href="https://newsroom.heart.org/news/is-a-consistent-sleep-schedule-important-to-heart-health" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구는 미국 성인 1만여 명(나이 중앙값 53세)의 핏빗 데이터와 전자 건강 기록을 분석했다</b>
+          <q>“analyzed Fitbit tracker data and electronic health records from over 10,000 American adults (median age 53) enrolled in the National Institutes of Health All of Us Research Program”</q>
+          <small>post5 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 일정한 취침·기상 시간이 누구나 할 수 있고 심장과 혈관을 보호하는 데 도움이 될 수 있는 실천 가능한 방법이라고 말했다</b>
+          <q>“having a regular sleep schedule – consistent bedtimes, wake times, and sleep duration from night to night – is a practical, actionable step anyone can take that may help protect their heart and blood vessels”</q>
+          <small>post6 · <a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="235c47d9da00">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/this-one-sleep-factor-matters-more-than-how-many-hours-you-get-study-suggests" target="_blank" rel="noopener">This One Sleep Factor Matters More Than How Many Hours You Get, Study Suggests</a></li><li><a href="https://newsroom.heart.org/news/is-a-consistent-sleep-schedule-important-to-heart-health" target="_blank" rel="noopener">Is a consistent sleep schedule important to heart health?</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-99718cd3760d">
+    <div class="head">
+      <h2>S2. 복근 크기와 허리 통증: CT 3만 3천 건 분석</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 16
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-99718cd3760d">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강연구</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: 매일 하는 복근 운동이 허리를 지켜준다는 믿음을 3만 3천 건 CT 분석이 흔들고, 차이는 근육 양이 아니라 근육 대 복부 지방 비율에서 나왔다는 반전</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">복근 운동 열심히 하면 허리 안 아플 줄 알았는데, CT 3만 3천 건은 다른 얘기를 함
+허리 통증 있는 사람이 배 근육이 더 적지 않았대
+근데 다른 쪽에서 차이가 하나 나왔음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">100/500자</span></div>
+      <p class="tp-text">1/ 연구진은 허리 통증 그룹이 복근·허리 근육이 더 약할 거라고 예상했대. 근데 근육 양도, 배 지방 분포도 두 그룹이 차이가 없었음. 어떻게 비교했길래 이런 결과가 나온 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">140/500자</span></div>
+      <p class="tp-text">2/ 연구진이 딥러닝 모델로 23,508명의 복부 CT 3만 3,500건 넘게 분석함. 허리 통증 진단받은 2,622명을 성별·나이·BMI가 같은 2,577명과 비교했고, 기존 영상 연구 대부분보다 약 25배 큰 규모였음. 그럼 아무 차이도 없었을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">3/ 차이가 나온 건 딱 하나, &#39;근육 대 배 지방 비율&#39;이었음. 허리 통증 그룹이 평균적으로 이 비율이 유의하게 낮았대. BMI를 비슷하게 맞춰도 배 속 근육·지방 비율은 다를 수 있다는 해석임. 그럼 이 차이는 얼마나 컸을까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">131/500자</span></div>
+      <p class="tp-text">4/ 차이는 아주 작았음. 효과 크기(partial η2)가 0.0037로 &#39;매우 작다&#39;고 나왔대. 연구진도 근육이 안 중요하다는 뜻은 아니고, 근육 크기 차이가 더 국소적일 수 있다고 말함. 그럼 이 결과를 어디까지 받아들여야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>5번 글 · 요약 정리</span>
+        <span class="len">190/500자</span></div>
+      <p class="tp-text">5/ 연구 결과 요약 정리
+- 대상: 복부 CT 3만 3,500건 넘게(23,508명)
+- 허리 통증 2,622명 vs 비슷한 2,577명
+- 근육 양·복부 지방 분포: 차이 없음
+- 근육 대 복부 지방 비율: 통증 그룹이 낮음(효과 크기 매우 작음)
+- 병원 한 곳의 2013~2018년 CT 기록
+그럼 코어 운동은 아예 소용없다는 걸까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">6/ 그건 아님. 코어 안정화 운동을 본 체계적 리뷰(무작위 시험 5건, 환자 275명)에서는 단기 효과가 확인됐고, 이 운동의 목표는 &#39;척추를 조절하는 능력을 되찾는 것&#39;이었음. 다만 장기 효과는 아직 불분명함. 그럼 결국 뭘 챙겨가면 될까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">224/500자</span></div>
+      <p class="tp-text">7/ 챙겨갈 한 줄: 복근을 키우는 것만으로는 허리 통증의 충분한 해결책이 아닐 수 있다는 거. 자기한테 맞는 운동은 의사랑 상의하고.
+복근 운동 매일 하는 파 vs 안 하는 파, 어느 쪽이야?
+이런 해외 건강 연구, 쉽게 풀어서 새벽마다 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해당 계정이 해외 건강 연구를 새벽마다 계속 배달한다는 게시 주기 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>복근 운동 열심히 하면 허리 안 아플 줄 알았는데, CT 3만 3천 건은 다른 얘기를 함</li><li>복근이 크다고 허리 통증이 피해 가는 건 아니래, 3만 3천 건 CT가 보여준 것</li><li>허리 통증, 복근 &#39;크기&#39;가 아니라 &#39;근육 대 지방 비율&#39;을 봐야 할 수 있다는 연구가 나옴</li><li>복근 힘만 키우지 말고 &#39;조절&#39;부터 보라는 쪽 연구들과 맞아떨어지는 결과가 나옴</li><li>식스팩이 허리를 지켜준다고 믿었다면 이 CT 연구부터 봐</li><li>허리 아픈 사람 2,622명 CT를 뜯어봤더니 복근이 더 작지 않았음</li><li>코어 운동 해야 한다는 말, 33,500건 CT 앞에서 좀 흔들림</li><li>허리 아픈 사람과 안 아픈 사람, 배 근육 양은 비슷했는데 딱 하나가 달랐음</li><li>복근 운동이 허리 통증의 정답이 아닐 수도 있다는 연구, 꽤 큰 규모로 나옴</li><li>&#39;복근이 약해서 허리가 아프다&#39;는 말, AI가 CT로 확인해봤더니</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>복근 운동 매일 하는 파 vs 안 하는 파, 어느 쪽이야?</li><li>플랭크 vs 크런치, 복근 운동 하나만 고르라면?</li><li>복근 운동 루틴 따로 챙겨서 하는 사람?</li><li>이 연구 보고 운동 루틴 바꿀 거야, 그대로 갈 거야?</li><li>허리 생각하면 운동 쪽이 먼저 vs 쉬는 쪽이 먼저?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>2편: 허리 통증은 &#39;전체 근육&#39;이 아니라 개별 근육·부위별 변화를 봐야 한다는 얘기</li><li>근육은 10년마다 5~10%씩 줄어든다는 CT 분석, 몇 살부터 줄까</li><li>코어 안정화 운동은 어떤 순서로 진행하나: 누운 자세에서 서서 하는 동작까지</li><li>근육 대 복부 지방 비율, BMI랑 어떻게 다를까</li><li>허리 통증의 90%는 뚜렷한 원인이 없다는데, 그럼 어떻게 관리하나</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>연구에서 잰 &#39;근육 양&#39;은 CT 단면 기준 전체 골격근 면적이라 복근만의 크기가 아님. 본문은 &#39;배 근육&#39;으로 풀어 썼으니 &#39;복근 크기&#39;로만 읽히게 고치지 않도록 확인</li><li>근육 대 복부 지방 비율 차이는 통계적으로 유의하지만 효과 크기가 매우 작음. 본문에 명시했으니 &#39;핵심 원인&#39;처럼 강하게 바꾸지 않도록 확인</li><li>코어 안정화 운동 리뷰는 다섯 연구 중 네 개가 다른 치료를 병행했고 단기 결과뿐임. &#39;효과 있다&#39;로 단정하는 표현으로 바꾸지 않도록 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>허리 통증이 있는 사람이 배 근육이 더 약할 가능성이 더 크지 않았다</b>
+          <q>“It appeared that patients with back pain were no more likely to have weaker abdominal muscles.”</q>
+          <small>post0 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진이 복부 CT 3만 3,500건 넘게(23,508명)를 분석했다</b>
+          <q>“Marusich and colleagues used a deep learning model to sift through more than 33,500 abdominal CT scans from 23,508 patients.”</q>
+          <small>post0, post2, post5 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 허리 통증 그룹이 복근과 허리 근육이 더 약할 거라고 예상했다</b>
+          <q>“Marusich and their team expected that those with lower back pain would have weaker abdominal and back muscles.”</q>
+          <small>post1 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근육 양과 복부 지방 분포에서 두 그룹의 차이가 없었다</b>
+          <q>“In the largest investigation of its kind, enabled by AI, we did not see differences in muscle quantity or distribution of abdominal fat between the low back pain and control groups.”</q>
+          <small>post1, post5 · <a href="https://journals.plos.org/digitalhealth/article?id=10.1371/journal.pdig.0001788" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>허리 통증 진단을 받은 사람은 2,622명이었다</b>
+          <q>“Using electronic health records, the authors found that 2,622 participants had been diagnosed with lower back pain.”</q>
+          <small>post2, post5 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>허리 통증이 없는 2,577명이 성별·나이·BMI가 같은 비교 그룹이었다</b>
+          <q>“This group was then compared with 2,577 participants of the same sex, age, and BMI who did not have lower back pain.”</q>
+          <small>post2, post5 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>기존 영상 연구 대부분보다 약 25배 큰 규모였다</b>
+          <q>“Most prior imaging studies on low back pain are roughly 25 times smaller in size.”</q>
+          <small>post2 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>허리 통증 그룹이 평균적으로 근육 대 복부 지방 비율이 유의하게 낮았다</b>
+          <q>“However, on average, the low back pain group had a significantly lower ratio of muscle to abdominal fat.”</q>
+          <small>post3, post5 · <a href="https://journals.plos.org/digitalhealth/article?id=10.1371/journal.pdig.0001788" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>BMI를 맞춰도 배 속 근육·지방 비율은 다를 수 있다는 해석</b>
+          <q>“This suggests that even though participants with back pain were matched to someone with a similar BMI, they may not have had the same muscle-to-fat ratio in their abdomen.”</q>
+          <small>post3 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>근육 대 복부 지방 비율 차이는 효과 크기가 매우 작았다(partial η2 = 0.0037)</b>
+          <q>“The Muscle/TAT ratio of the LBP cohort was significantly lower than the control cohort (LBP: 0.353 (0.249–0.537); Control: 0.376 (0.262–0.589); p &lt; 0.0001); however, the effect size was very small (partial η2 = 0.0037).”</q>
+          <small>post4, post5 · <a href="https://journals.plos.org/digitalhealth/article?id=10.1371/journal.pdig.0001788" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구진은 근육이 중요하지 않다는 뜻은 아니며 근육 크기 차이가 더 국소적일 수 있다고 했다</b>
+          <q>“This finding doesn&#39;t dismiss muscle as unimportant, but it does underscore the complexity of low back pain and how any differences in muscle size may be more localized.”</q>
+          <small>post4 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>CT는 2013~2018년 한 3차 병원의 일상 진료에서 얻은 것이다</b>
+          <q>“Images were acquired during routine clinical care at a single tertiary care center between 2013 and 2018.”</q>
+          <small>post5 · <a href="https://journals.plos.org/digitalhealth/article?id=10.1371/journal.pdig.0001788" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코어 안정화 운동 리뷰는 무작위 시험 5건, 환자 275명을 포함했다</b>
+          <q>“Five RCTs were included in this systematic review that included total of 275 patients ranging from ages 18-60, with a total of 123 patients receiving a CSE treatment compared to either a control group or another intervention (Table 2).”</q>
+          <small>post6 · <a href="https://ijspt.scholasticahq.com/article/37251-a-systematic-review-of-the-effectiveness-of-core-stability-exercises-in-patients-with-non-specific-low-back-pain" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코어 안정화 운동의 목표는 척추를 조절하는 능력을 되찾는 것이다</b>
+          <q>“The goal of CSE is to improve and recover the ability to control the spine.”</q>
+          <small>post6 · <a href="https://ijspt.scholasticahq.com/article/37251-a-systematic-review-of-the-effectiveness-of-core-stability-exercises-in-patients-with-non-specific-low-back-pain" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>코어 안정화 운동의 임상 효과는 단기에서 확인됐고 장기 효과는 불분명하다</b>
+          <q>“While the clinical benefit of CSE has was demonstrated in the short term, the long-term effects remain unclear.”</q>
+          <small>post6 · <a href="https://ijspt.scholasticahq.com/article/37251-a-systematic-review-of-the-effectiveness-of-core-stability-exercises-in-patients-with-non-specific-low-back-pain" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복근을 키우는 것만으로는 허리 통증의 충분한 해결책이 아닐 수 있다</b>
+          <q>“The findings, published in PLOS Digital Health, suggest that weak abdominal muscles are not necessarily the cause of low back pain, and strengthening them may not be a sufficient solution on its own.”</q>
+          <small>post7 · <a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="99718cd3760d">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencealert.com/bigger-abs-may-not-protect-against-back-pain-after-all-surprising-ct-study-finds" target="_blank" rel="noopener">Study of 33,500 CT Scans Challenges a Common Assumption About Ab Strength And Back Pain</a></li><li><a href="https://journals.plos.org/digitalhealth/article?id=10.1371/journal.pdig.0001788" target="_blank" rel="noopener">Deep learning reveals relationships between muscle and adipose tissue and their associations with age, body mass index, and low back pain: A cross-sectional study in 10,835 subjects</a></li><li><a href="https://ijspt.scholasticahq.com/article/37251-a-systematic-review-of-the-effectiveness-of-core-stability-exercises-in-patients-with-non-specific-low-back-pain" target="_blank" rel="noopener">A Systematic Review of the Effectiveness of Core Stability Exercises in Patients with Non-Specific Low Back Pain | Published in International Journal of Sports Physical Therapy</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-9a3c8fa711d1">
+    <div class="head">
+      <h2>S3. 키토 vs 지중해식 vs 저지방, 같은 체중 감량에서 간지방 67% 감소</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 15
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-9a3c8fa711d1">
+    <div class="thr-head">
+      <b>🧵 스레드 글</b>
+      <span class="chip hot">정보성 · 끌림 7점</span>
+      <span class="chip">주제 태그: 건강과학</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;살만 빠지면 된다&#39;는 통념을 뒤집는 연구. 같은 만큼 빼도 뭘 먹고 뺐냐에 따라 간지방과 당뇨 전단계 결과가 달랐다는 점이 팔린다.</p>
+    
+    
+    
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">106/500자</span></div>
+      <p class="tp-text">다이어트는 &#39;얼마나 빼냐&#39;뿐 아니라 &#39;뭘 먹고 빼냐&#39;도 따진다는 연구가 나옴
+체중을 비슷하게 뺀 세 식단을 비교했더니 간지방 줄어든 폭이 꽤 달랐대
+근데 제일 많이 줄어든 식단이 의외였음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">97/500자</span></div>
+      <p class="tp-text">1/ 결과부터 말하면, 키토 식단 그룹은 간지방이 평균 67% 줄었대. 지중해식이랑 저지방 식단 그룹은 둘 다 45%였고. 근데 이 세 그룹, 정말 같은 만큼 살을 뺀 걸까?</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">145/500자</span></div>
+      <p class="tp-text">2/ 연구는 비만에 당뇨 전단계, 지방간이 있는 성인 42명이 대상이었어. 무작위로 세 식단 중 하나에 배정했고, 식사는 연구팀이 전부 제공함. 칼로리를 조절해서 세 그룹 다 체중의 약 10%를 뺐고, 4~5개월 걸렸대. 그럼 세 식단은 뭐가 그렇게 달랐을까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>3번 글 · 요약 정리</span>
+        <span class="len">208/500자</span></div>
+      <p class="tp-text">3/ 식단 비교 요약 정리
+- 칼로리 중 탄수화물: 키토 4% / 지중해식 50% / 저지방 70%
+- 칼로리 중 지방: 키토 73% / 지중해식 35% / 저지방 15%
+- 간지방 감소: 키토 67% / 지중해식 45% / 저지방 45%
+- 당뇨 전단계 기준 벗어남: 키토 약 50% / 지중해식 29% / 저지방 7%
+근데 연구진이 제일 놀랐다는 결과는 따로 있었음 ↓</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>4번 글</span>
+        <span class="len">130/500자</span></div>
+      <p class="tp-text">4/ 제일 놀랐다는 건 이거야. 칼로리의 4분의 3 가까이를 지방으로 먹었는데도, 연구 기간 동안 키토 그룹은 혈중 지방이나 콜레스테롤이 늘지 않았대. 연구 첫 저자가 이걸 가장 놀라운 결과로 꼽았고. 근데 간지방은 왜 더 줄었을까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">128/500자</span></div>
+      <p class="tp-text">5/ 연구팀이 24시간 동안 반복해서 채혈하고 호르몬을 봤는데, 키토 그룹에서 글루카곤이 제일 많이 늘고 인슐린은 제일 많이 줄었대. 글루카곤은 간에 쌓인 지방을 줄이는 걸 돕는 호르몬이고. 그럼 이거 다들 키토 하라는 얘기일까?</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>6번 글</span>
+        <span class="len">136/500자</span></div>
+      <p class="tp-text">6/ 그렇게 단정하긴 일러. 참가자가 42명이고 기간도 4~5개월이라 더 길고 큰 연구가 필요하다고 해. 키토 식단은 동물성 포화지방을 꽤 먹을 수도 있다는 설명도 있고. 자기한테 맞는지는 의사랑 상의해야 해. 그럼 결국 연구진 말은 뭐였을까?</p>
+      <button class="cp" type="button">6번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>7번 글</span>
+        <span class="len">237/500자</span></div>
+      <p class="tp-text">7/ 결국 핵심은, 체중을 비슷하게 뺀 사람들 사이에서도 식단 구성에 따라 간지방이랑 혈당 변화가 달랐다는 거. 살 빠진 숫자만 보면 놓치는 게 있을 수 있다는 얘기야.
+
+다이어트한다면 밥 줄이는 파 vs 기름기 줄이는 파?
+
+이런 해외 건강 연구, 쉽게 풀어서 계속 배달함. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">7번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 체중 감량이 비슷했던 세 그룹 사이에서 식단 구성에 따라 혈당 변화도 달랐다</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>다이어트는 &#39;얼마나 빼냐&#39;뿐 아니라 &#39;뭘 먹고 빼냐&#39;도 따진다는 연구가 나옴</li><li>같은 10%를 빼도 간지방은 67% vs 45%로 갈렸대</li><li>체중계 숫자만 보지 말고 &#39;뭘 먹고 빼는지&#39;도 보라는 연구가 나옴</li><li>&#39;살만 빠지면 건강해진다&#39;는 말, 이 임상시험 보면 좀 달라짐</li><li>다이어트할 때 &#39;밥을 줄이느냐 기름을 줄이느냐&#39;로 결과가 갈렸다는 연구</li><li>칼로리의 73%를 지방으로 먹었는데 콜레스테롤이 안 늘었다는 연구</li><li>같은 만큼 살 빼고도 당뇨 전단계를 벗어난 비율이 7% vs 약 50%였대</li><li>살 빼는 데만 집중하지 말고 식단 구성부터 보라는 연구가 나옴</li><li>식사를 전부 연구팀이 챙겨준 다이어트 실험에서 나온 의외의 결과</li><li>체중 감량이 같아도 몸속 결과는 같지 않다는 연구가 나옴</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>다이어트한다면 밥 줄이는 파 vs 기름기 줄이는 파?</li><li>탄수화물 줄이는 식단, 해본 적 있어?</li><li>다이어트할 때 체중계 숫자 vs 식단 구성, 너는 어디에 더 신경 써?</li><li>밥, 빵, 면 중에 하나만 줄여야 한다면 뭐 줄일 거야?</li><li>식사를 전부 챙겨준다면 4개월 식단 실험 참가할 의향 있어?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>지중해식 식단이 지방간에 어떤 영향을 줬는지 보는 연구</li><li>당뇨 전단계에서 벗어나는 데 체중 감량이 얼마나 도움 되는지 보는 연구</li><li>GLP-1 약 시대에 식단 구성이 다시 주목받는 이유</li><li>저탄수 식단의 장기 효과를 보는 연구</li><li>간 건강과 생활습관을 다룬 해외 연구</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>본글의 &#39;뭘 먹고 빼냐&#39; 표현이 키토 식단 권유로 읽히지 않는지 확인 필요(42명, 4~5개월짜리 소규모 연구)</li><li>6/에서 키토의 포화지방 언급과 &#39;의사랑 상의&#39; 문구가 원문 범위를 넘지 않는지 최종 확인</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>세 식단 그룹이 비슷한 체중을 뺐는데도 키토 그룹의 간지방 감소 폭이 더 컸다</b>
+          <q>“Researchers found that people following a very low-carbohydrate, high-fat diet experienced substantially greater reductions in liver fat than those eating Mediterranean or low-fat diets, even though all three groups lost similar amounts of weight.”</q>
+          <small>post0 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>키토 그룹 간지방 평균 67% 감소, 지중해식·저지방 그룹은 45% 감소</b>
+          <q>“Participants following keto experienced an average 67% reduction in liver fat, compared with a 45% reduction in both the Mediterranean and low-fat groups.”</q>
+          <small>post1 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 대상은 비만, 당뇨 전단계, 지방간이 있는 성인 42명</b>
+          <q>“To compare their effects, Klein and his colleagues recruited 42 adults with obesity, prediabetes, and fatty liver disease.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>무작위 배정이었고 연구팀이 모든 식사를 제공했다</b>
+          <q>“Participants were randomly assigned to follow one of three diets: ketogenic, Mediterranean, or a low-fat diet emphasizing plant-based foods. To ensure that participants followed their assigned eating plans, the research team supplied all their meals and arranged weekly consultations with a dietitian.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>칼로리를 조절해 세 그룹 모두 체중의 약 10%를 뺐고 4~5개월 걸렸다</b>
+          <q>“Researchers adjusted calorie intake individually so that participants across all three groups lost approximately 10% of their starting body weight. Reaching this target took about four to five months.”</q>
+          <small>post2 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>키토 그룹은 칼로리의 탄수화물 4%, 지방 73%, 지중해식은 탄수화물 50%, 지방 35%</b>
+          <q>“In the ketogenic group, carbohydrates accounted for just 4% of daily calories, while fat supplied 73%. The Mediterranean group received 50% of its calories from carbohydrates and 35% from fat.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>저지방(식물 중심) 그룹은 칼로리의 탄수화물 70%, 지방 15%</b>
+          <q>“The plant-forward group consumed 70% of its calories from carbohydrates and 15% from fat.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>당뇨 전단계 기준을 벗어난 비율은 키토 약 50%, 지중해식 29%, 저지방 7%</b>
+          <q>“After the weight-loss intervention, approximately 50% of participants assigned to the ketogenic diet no longer met the criteria for prediabetes. By comparison, that milestone was reached by 29% of those on the Mediterranean diet and just 7% of those following the low-fat, plant-forward diet.”</q>
+          <small>post3 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>지방을 거의 4분의 3 먹었는데도 키토 그룹은 혈중 지방이나 콜레스테롤이 늘지 않았다</b>
+          <q>“Despite getting nearly three-quarters of their calories from fat, the keto participants did not show an increase in blood fat or cholesterol levels during the study.”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>연구 첫 저자가 혈중 지방·콜레스테롤이 늘지 않은 것을 가장 놀라운 결과로 꼽았다</b>
+          <q>“The most surprising finding was that participants in the ketogenic diet group didn&#39;t experience an increase in blood fat or cholesterol levels despite consuming the most fat”</q>
+          <small>post4 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>24시간 동안 반복 채혈해 호르몬 변화를 관찰했다</b>
+          <q>“To investigate these effects, the researchers collected blood samples repeatedly over a 24-hour period, allowing them to observe changes in hormones involved in energy metabolism.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>키토 그룹에서 글루카곤이 가장 크게 늘고 인슐린이 가장 크게 줄었다</b>
+          <q>“The ketogenic group showed the greatest increase in glucagon, a hormone that helps regulate the body&#39;s energy supply and promotes the reduction of fat stored in the liver. Participants on keto also experienced the largest decrease in insulin levels, another change that can help reduce liver fat accumulation.”</q>
+          <small>post5 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>시험이 비교적 작고 4~5개월이라 더 길고 큰 연구가 필요하다</b>
+          <q>“Although the trial was relatively small and lasted only four to five months, its carefully controlled design offers evidence that dietary composition can play an important role in metabolic health. Longer studies involving more participants will be needed to determine whether the benefits persist and how different diets compare over time.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>키토 식단은 포화지방을 포함한 동물성 지방을 상당량 포함할 수 있다</b>
+          <q>“Ketogenic diets, meanwhile, can include considerable amounts of fat from animal products, including saturated fat.”</q>
+          <small>post6 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>체중 감량이 비슷해도 먹는 음식의 종류가 대사 건강에 영향을 줄 수 있다</b>
+          <q>“The findings, published in the journal Cell Metabolism, suggest that the types of foods people eat can influence metabolic health in ways that extend beyond the number of pounds they lose.”</q>
+          <small>post7 · <a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="9a3c8fa711d1">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.sciencedaily.com/releases/2026/11/261120070904.htm" target="_blank" rel="noopener">Keto diet slashes liver fat by 67% in just 4 months</a></li></ul>
+    </div>
+  </article>
+  
+  
+  <article class="tpost" id="thread-cf11e99a615e">
+    <div class="head">
+      <h2>S4. 스테이플 없는 스테이플러 PaperLock</h2>
+      <span class="badge b-attention">
+        확인 필요 · 확인 13
+      </span>
+    </div>
+    
+  
+  <section class="thr" data-thread="solo-cf11e99a615e">
+    <div class="thr-head">
+      <b>🛍 해외 화제템</b>
+      <span class="chip hot">정보성 · 끌림 6점</span>
+      <span class="chip">주제 태그: 해외토픽</span>
+    </div>
+    <p class="thr-note">본글을 올리고, 이어지는 글은 '스레드에 추가'로 하나씩 붙여요. 팔리는 각도: &#39;스테이플 없이 어떻게 찍어?&#39;라는 반전 + 노트 세 권, 펜 열 자루를 이미 선물한 문구 덕후 친구에게 줄 선물감</p>
+    <p class="thr-note">🔎 <b>나중에 쿠팡 링크 찾을 때:</b> 검색어 "스테이플 없는 스테이플러" · 원문 제품: PaperLock Stapler, $35, Yanko Design Shop에서 판매, 블랙프라이데이 기간 $20짜리 달력 증정, 3.43인치, 복사지 최대 5장<br>지금은 링크 없이 올려서 반응만 봐요. 댓글에 "어디서 사?"가 몇 개 달리는지 세어두면 나중에 링크 붙일 때 기준이 돼요.</p>
+    
+    
+    
+    <div class="tphotos">
+      <p class="thr-note">📷 <b>본글에 같이 붙일 제품 사진 3장</b> · 출처: shop.yankodesign.com</p>
+      <div class="tph-row"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261121-pm-e3415a88bcdd/cf11e99a615e/thread-photo-1121081830-01.jpg" alt="가죽 데스크 패드 위에 놓인 투명 블랙 스테이플러 본체와 빨간 부품, 뒤쪽 투명 케이스 제품, 왼쪽 손목시계, 아래쪽 나무 펜 두 자루" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261121-pm-e3415a88bcdd/cf11e99a615e/thread-photo-1121081830-02.jpg" alt="검은 종이 가장자리 위에 투명한 검은색 소형 기기를 올려 누르는 손 클로즈업, 손가락이 레버를 잡고 있음" loading="lazy"><img src="https://100bit-programmer.github.io/cardnews-media/media/20261121-pm-e3415a88bcdd/cf11e99a615e/thread-photo-1121081830-03.jpg" alt="책상 위 검은 펠트 매트에 놓인 투명 본체의 작은 기계형 물체, 빨간 부품과 검은 레버가 보이고 왼쪽에는 가위, 뒤쪽에는 노트북과 원형 물체가 흐릿하게 보임" loading="lazy"></div>
+      <button class="savephotos" type="button" data-name="oesin-thread-solo-cf11e99a615e">사진 3장 저장</button>
+    </div>
+    
+    
+    <div class="tp">
+      <div class="tp-label"><span>본글</span>
+        <span class="len">76/500자</span></div>
+      <p class="tp-text">스테이플러인데 &#39;스테이플&#39;이 안 들어간대
+종이를 잘라서 서로 끼워버리는 방식이라는데
+문구 덕후 친구 선물로 추천까지 나온 이유가 있음 ↓</p>
+      <button class="cp" type="button">본글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>1번 글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">1/ 이름은 PaperLock Stapler. 금속 침 대신 종이 자체를 자르고 서로 끼워서 묶는 작은 책상 도구야. 복사지 기준 최대 5장까지 묶게 만들어졌고, 채워 넣을 침이 없대. 근데 생김새도 좀 특이함 ↓</p>
+      <button class="cp" type="button">1번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>2번 글</span>
+        <span class="len">119/500자</span></div>
+      <p class="tp-text">2/ 몸체가 투명해서 움직이는 부품이 그대로 보인대. 묶일 자리를 보여주는 창이 있고, 모서리엔 종이 맞추는 가이드도 있음. 레버는 엄지로 누르거나 손에 쥐고 짜는 두 가지 방식. 그럼 이게 왜 선물감이라는 걸까?</p>
+      <button class="cp" type="button">2번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>3번 글</span>
+        <span class="len">144/500자</span></div>
+      <p class="tp-text">3/ 해외 매체는 문구 좋아하는 친구한테 어울린다고 봤어. 한 문장으로 설명하고 직접 보여줄 수 있는 선물이라는 거. 길이는 3.43인치라 책상도 안 차지한다고. 가격은 $35, 블랙프라이데이엔 $20짜리 달력 증정이래. 근데 사기 전에 알아둘 한계는 뭘까?</p>
+      <button class="cp" type="button">3번 글 복사</button>
+    </div>
+    
+    <div class="tp save">
+      <div class="tp-label"><span>4번 글 · 요약 정리</span>
+        <span class="len">159/500자</span></div>
+      <p class="tp-text">4/ PaperLock 요약 정리
+- 방식: 종이를 자르고 끼워서 고정
+- 용량: 복사지 최대 5장
+- 길이: 3.43인치
+- 가격: $35
+- 주의: 종이가 잘리니까 원본 그대로 둬야 하는 서류엔 안 맞음
+- 어울리는 사람: 문구 진짜 좋아하는 친구
+그래서 이걸 누구한테 줘야 할까?</p>
+      <button class="cp" type="button">4번 글 복사</button>
+    </div>
+    
+    <div class="tp">
+      <div class="tp-label"><span>5번 글</span>
+        <span class="len">200/500자</span></div>
+      <p class="tp-text">5/ 결국 매체 말은, 문구 진짜 좋아하는 친구한테 줄 선물감이라는 거야. 5장까지고 종이가 잘린다는 건 알고 사라는 얘기도 함.
+이거 선물로 받으면 좋아할 사람 소환해봐
+해외에서 난리 난 물건, 계속 가져옴. 팔로우해두면 피드에 뜸
+
+이런 해외토픽, 인스타엔 카드 한 장으로 매일 정리해 둠 (저장용) 👉 instagram.com/oesin_saebyeok</p>
+      <button class="cp" type="button">5번 글 복사</button>
+    </div>
+    
+    <div class="thr-btns">
+      <button class="cpall" type="button">전부 한 번에 복사</button>
+      <button class="tposted" type="button" aria-pressed="false">스레드에 올렸어요</button>
+    </div>
+    
+    
+    <div class="check">
+      <b>먼저 확인할 것</b>
+      <ul>
+        
+        
+        <li>근거 등록 안 된 주장: 해외에서 난리 난 물건이라는 인기·화제성 주장</li>
+      </ul>
+    </div>
+    
+    <details class="box">
+      <summary>첫 줄 후보 · 댓글 질문 · 다음 편 · 메모</summary>
+      <div class="in">
+        <label class="f">첫 줄 후보 10개 (마음에 드는 걸로 본글 첫 줄을 바꿔도 돼요)</label>
+        <ol><li>스테이플러인데 &#39;스테이플&#39;이 안 들어간대</li><li>스테이플러는 침이 있어야 찍는 줄 알았지?</li><li>침 채울 일 없는 스테이플러, 문구 덕후 선물감으로 나왔대</li><li>문구 덕후 친구한테 노트 세 권, 펜 열 자루 줬으면 이제 이걸 줘</li><li>스테이플러가 종이를 &#39;뚫는&#39; 게 아니라 &#39;끼운대&#39;</li><li>필요할 때만 꼭 사라지는 스테이플 침, 이 스테이플러엔 아예 없음</li><li>&#39;스테이플 없이 어떻게 찍어?&#39; 싶은 스테이플러가 해외에서 선물감으로 올라왔대</li><li>금속 침이 아니라 &#39;종이 자체&#39;로 묶는 책상템이 나옴</li><li>3.43인치짜리 작은 스테이플러, 근데 침이 없음</li><li>&#39;스테이플러엔 스테이플&#39;이라는 공식이 깨졌음</li></ol>
+        <label class="f">댓글 부르는 질문 후보</label>
+        <ol><li>이거 선물로 받으면 좋아할 사람 소환해봐</li><li>스테이플 없는 스테이플러, 있으면 살 거야?</li><li>종이 잘리는 거 괜찮다 vs 찝찝하다, 어느 쪽?</li><li>5장 한도면 쓸 만하다 vs 아쉽다?</li><li>책상 위에 두고 싶은 문구템 하나만 꼽는다면?</li></ol>
+        <label class="f">다음 편 후보 (올릴 순서대로)</label>
+        <ol><li>해외에서 화제인 책상 위 문구 아이템</li><li>문구 덕후 선물로 좋을 만한 해외 화제템</li><li>크리스마스 양말에 넣기 좋은 작은 선물템</li><li>해외에서 난리 난 작은 생활 소품</li><li>스테이플 없이 종이 묶는 다른 물건</li></ol>
+        <label class="f">작성 메모 (참고용)</label>
+        <ul class="plain"><li>가격 $35와 블랙프라이데이 달력 증정은 2026-11-20 기사 기준이라 올리는 시점에는 달라졌을 수 있음</li></ul>
+      </div>
+    </details>
+    
+    <details class="box">
+      <summary>근거 · 출처 보기</summary>
+      <div class="in">
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>PaperLock Stapler는 금속 침을 넣는 대신 종이 자체를 자르고 서로 끼워서 묶는다</b>
+          <q>“The PaperLock Stapler is a small desk tool with an unusual trick: it cuts and interlocks the paper itself instead of inserting a metal staple.”</q>
+          <small>post0, post1 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>스타킹 선물(양말 선물)로 좋은 출발점이라는 매체 평가</b>
+          <q>“That’s a good starting point for a stocking stuffer.”</q>
+          <small>post0 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>복사지 최대 5장까지 묶도록 설계됐고 채워 넣을 침이 없다</b>
+          <q>“It’s designed to bind up to five sheets of copy paper, with no staples to replenish.”</q>
+          <small>post1, post4 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>몸체가 투명해서 움직이는 부품이 보인다</b>
+          <q>“PaperLock’s transparent housing exposes its moving parts.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>묶일 위치를 보여주는 창과 종이 위치를 잡는 모서리 가이드가 있다</b>
+          <q>“A viewing window shows where the binding point will land, while a corner guide helps position the sheets.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>레버는 엄지로 누르거나 손바닥으로 쥐는 두 방식을 지원한다</b>
+          <q>“The lever supports two approaches: pressing it with your thumb while the tool rests on a surface, or squeezing it in your palm.”</q>
+          <small>post2 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>길이 3.43인치로 작아서 받는 사람 책상을 차지하지 않는다</b>
+          <q>“At 3.43 inches long, the body is compact enough to make the stocking-stuffer idea credible without taking over the recipient’s desk afterward.”</q>
+          <small>post3, post4 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>문구를 진짜 좋아하는 친구에게 어울린다는 매체 의견</b>
+          <q>“I’d reserve it for the friend who genuinely enjoys stationery.”</q>
+          <small>post3, post4, post5 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>한 문장으로 설명하고 시연할 수 있는 선물이라는 매체 의견</b>
+          <q>“You’re giving your friend something they can explain in a sentence, demonstrate, and find a reason to keep.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>가격은 $35이다</b>
+          <q>“PaperLock is listed at $35 in the Yanko Design Shop.”</q>
+          <small>post3, post4 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>블랙프라이데이에 주문마다 $20짜리 달력을 무료로 준다</b>
+          <q>“Click Here to Buy Now: $35. Black Friday: Free $20 calendar with every order.”</q>
+          <small>post3 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>종이를 자르는 방식이라 종이를 그대로 둬야 할 때는 맞지 않는다</b>
+          <q>“And because the mechanism cuts the paper, it isn’t appropriate when the sheets need to remain unaltered.”</q>
+          <small>post4 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+        <div class="claim">
+          <span class="v v-supported">확인</span>
+          <b>매체는 사기 전에 이 한계를 알고 싶다고 했다</b>
+          <q>“I’d rather know that boundary before buying.”</q>
+          <small>post5 · <a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">원문</a></small>
+        </div>
+        
+      </div>
+    </details>
+    
+  </section>
+
+    <div class="thr promote" style="background:transparent;border:0;padding-top:0">
+      <button class="cp promote-btn" type="button" data-thread-id="cf11e99a615e">📸 스레드에서 터졌어요 → 인스타 카드로 만들기</button>
+      <p class="thr-note">누르면 같은 원문으로 카드뉴스를 만들어 새 검수 페이지에 올려요 (5~10분). 원글에 달 댓글 문구도 같이 와요.</p>
+    </div>
+    <div class="thr" style="background:transparent;border:0;padding-top:0">
+      <label class="f">원출처</label>
+      <ul class="plain"><li><a href="https://www.yankodesign.com/2026/11/20/a-stapler-without-staples-makes-a-clever-stocking-stuffer/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=a-stapler-without-staples-makes-a-clever-stocking-stuffer" target="_blank" rel="noopener">A Stapler Without Staples Makes a Clever Stocking Stuffer - Yanko Design</a></li></ul>
+    </div>
+  </article>
+  
+</div>
+
+</main>
+
+<div class="settings">
+  <details class="box" id="settings">
+    <summary>GitHub 토큰 설정</summary>
+    <div class="in">
+      <p>cardnews 저장소의 Actions 쓰기 권한만 있는 토큰. 이 기기의 브라우저에만 저장돼요. 기기마다 한 번씩 넣어주세요.</p>
+      <label class="f" for="token">토큰</label>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_...">
+      <p class="meta" id="tokenState"></p>
+    </div>
+  </details>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <span class="summary" id="summary" role="status" aria-live="polite">카드를 넘겨보고 승인·반려를 골라주세요.</span>
+    <button class="send" id="send" type="button" disabled>보내기</button>
+  </div>
+</div>
+
+<script>
+  const REPO = "100bit-programmer/cardnews";
+  const BATCH = "20261121-pm";
+  const ORIGINAL = {};
+  const TOTAL = 0;
+  document.getElementById("back").addEventListener("click", e => { e.currentTarget.href = "index.html?t=" + Date.now(); });
+  const SERVER = {};   // 이미 처리된 결정 {id: "approve"|"reject"}
+  const DONE_N = Object.keys(SERVER).length;
+  const LOCKED = new Set([]);   // 이미 인스타에 올라간 게시물
+  const REV = 0;
+  const store = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const tokenInput = $("#token"), tokenState = $("#tokenState"), settings = $("#settings");
+  const sendBtn = $("#send"), summary = $("#summary"), progress = $("#progress");
+
+  function showTokenState() {
+    tokenState.textContent = tokenInput.value.trim() ? "이 기기에 토큰이 저장돼 있어요." : "아직 토큰이 없어요.";
+  }
+  tokenInput.value = store.get("gh_token");
+  showTokenState();
+  tokenInput.addEventListener("input", () => { store.set("gh_token", tokenInput.value.trim()); showTokenState(); });
+
+  // 결정은 이 기기에 임시 저장 (새로고침해도 유지)
+  const KEY = "decisions:" + BATCH;
+  let decisions = {};
+  try { decisions = JSON.parse(store.get(KEY) || "{}"); } catch { decisions = {}; }
+  Object.assign(decisions, SERVER);
+  // 처리 결과가 반영될 때마다(REV) 키가 바뀌어서, 같은 배치를 몇 번이든 다시 검수해 보낼 수 있다
+  // '보냈어요' 표시는 서버가 아직 처리하기 전까지만 유효하다 (처리되면 REV·DONE_N 이 바뀌어서 자동으로 풀림)
+  const SENT_KEY = "sent:" + BATCH;
+  const LOCK_MS = 12 * 60 * 1000;   // 보낸 뒤 이 시간 안에 처리 결과가 안 오면 잠금을 풀고 다시 보낼 수 있게
+  let sent = "", sentAt = 0, staleSent = false;
+  {
+    const raw = store.get(SENT_KEY);
+    let v = null;
+    try { v = JSON.parse(raw); } catch {}
+    if (v && v.rev === REV && v.done === DONE_N) {
+      // 처리가 취소·실패해서 결과가 안 온 채로 오래 잠겨 있으면 풀어준다 (시각 기록이 없는 예전 기록도 풀림)
+      if (v.at && Date.now() - v.at < LOCK_MS) { sent = v.when; sentAt = v.at; }
+      else { staleSent = true; store.set(SENT_KEY, ""); }
+    }
+  }
+  function hasEdits(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const cap = $(".caption", post);
+    if (!cap) return false;
+    if (cap.value !== orig.caption) return true;
+    if ($(".tagsin", post).value.split(/\s+/).filter(Boolean).join(" ") !== orig.hashtags.join(" ")) return true;
+    if (post.querySelector("input[data-product]:not(:checked)")) return true;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(x => x.trim()).filter(Boolean));
+    return JSON.stringify(slides) !== JSON.stringify(orig.slides);
+  }
+  // 보낼 것: 결정이 서버와 달라졌거나, 예약된 게시물의 문구를 고친 것
+  const fresh = () => Object.keys(decisions).filter(id => !LOCKED.has(id) && decisions[id]
+    && (decisions[id] !== SERVER[id] || (decisions[id] === "approve" && hasEdits(id))));
+
+  function paint() {
+    document.querySelectorAll(".post").forEach(post => {
+      const id = post.dataset.id, d = decisions[id];
+      const pb = $(".final .posted", post);
+      if (pb) { pb.setAttribute("aria-pressed", d === "posted"); pb.textContent = d === "posted" ? "직접 올림으로 표시 (보내기 눌러야 반영)" : "인스타에 직접 올렸어요"; }
+      $(".yes", post).setAttribute("aria-pressed", d === "approve");
+      $(".no", post).setAttribute("aria-pressed", d === "reject");
+      const sv = SERVER[id];
+      $(".yes", post).textContent = sv === "approve" ? (d === "approve" && hasEdits(id) ? "수정해서 승인" : "승인됨")
+        : sv === "reject" ? "다시 승인" : "승인";
+      $(".no", post).textContent = sv === "approve" ? "예약 취소"
+        : sv === "reject" ? "반려됨" : "반려";
+      post.classList.toggle("decided-reject", d === "reject");
+      const j = document.querySelector(`[data-jump="${id}"]`);
+      j.classList.toggle("approve", d === "approve");
+      j.classList.toggle("reject", d === "reject");
+    });
+    const vals = Object.values(decisions);
+    const yes = vals.filter(v => v === "approve").length, no = vals.filter(v => v === "reject").length;
+    progress.textContent = `${vals.length} / ${TOTAL} 결정`;
+    if (!sent) {
+      const n = fresh().length;
+      if (DONE_N) summary.textContent = n ? `바꾼 게시물 ${n}개를 보낼게요` : "예약된 것도 고치거나 취소할 수 있어요.";
+      else summary.textContent = vals.length ? `승인 ${yes} · 반려 ${no}` + (vals.length < TOTAL ? ` · 남은 ${TOTAL - vals.length}개는 그대로 둬요` : "") : "카드를 넘겨보고 승인·반려를 골라주세요.";
+      sendBtn.disabled = n === 0;
+    }
+    store.set(KEY, JSON.stringify(decisions));
+  }
+
+  document.querySelectorAll(".post").forEach((post, i, all) => {
+    const id = post.dataset.id;
+    const pick = (val) => {
+      if (sent || LOCKED.has(id)) return;
+      if (SERVER[id]) decisions[id] = decisions[id] === val ? SERVER[id] : val;   // 처리된 게시물은 '결정 없음'으로 못 돌림
+      else if (decisions[id] === val) delete decisions[id]; else decisions[id] = val;
+      paint();
+      // 처음 고를 때는 다음 게시물로 넘어가기
+      if (!SERVER[id] && decisions[id] && all[i + 1]) setTimeout(() => all[i + 1].scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+    };
+    $(".yes", post).onclick = () => pick("approve");
+    $(".no", post).onclick = () => pick("reject");
+    if (LOCKED.has(id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    post.querySelectorAll("textarea, input.tagsin").forEach(el => el.addEventListener("input", paint));
+
+    // 완성본 저장 · 캡션 복사 (수동 업로드용)
+    const save = $(".final .save", post), copy = $(".final .copy", post), posted = $(".final .posted", post);
+    // 직접 올린 게시물 표시 → 자동 업로드 대기열에서 빠진다 (나중에 API 연결 시 중복 업로드 방지)
+    if (posted) posted.onclick = () => { if (sent) return; decisions[id] = decisions[id] === "posted" ? SERVER[id] : "posted"; paint(); };
+    if (save) {
+      let files = null;
+      const load = () => files || (files = Promise.all([...post.querySelectorAll(".carousel img")].map(async (img, k) => {
+        const blob = await (await fetch(img.src)).blob();
+        return new File([blob], `oesin-${id}-${k + 1}.jpg`, { type: "image/jpeg" });
+      })));
+      load().catch(() => { files = null; });   // 미리 받아둬야 폰 공유창이 바로 뜬다
+      save.onclick = async () => {
+        const label = save.textContent;
+        try {
+          const fs = await load();
+          if (navigator.canShare && navigator.canShare({ files: fs })) {
+            await navigator.share({ files: fs });
+          } else {
+            fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+          }
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+          files = null; save.textContent = "저장 실패, 다시 눌러주세요";
+          setTimeout(() => save.textContent = label, 2500);
+        }
+      };
+      copy.onclick = async () => {
+        const text = $(".final-cap", post).value;
+        try { await navigator.clipboard.writeText(text); }
+        catch { const t = $(".final-cap", post); t.hidden = false; t.select(); document.execCommand("copy"); t.hidden = true; }
+        copy.textContent = "복사됨";
+        setTimeout(() => copy.textContent = "캡션 복사", 2000);
+      };
+    }
+
+    // 카드 넘김 표시
+    const car = $(".carousel", post), counter = $(".counter", post), dots = post.querySelectorAll(".dots i");
+    car.addEventListener("scroll", () => {
+      const n = Math.round(car.scrollLeft / car.clientWidth);
+      counter.textContent = `${n + 1} / ${dots.length}`;
+      dots.forEach((d, k) => d.classList.toggle("on", k === n));
+    }, { passive: true });
+
+    // 캡션 더 보기
+    const cap = $(".cap", post), more = $(".more", post);
+    more.onclick = () => { const o = cap.classList.toggle("open"); more.textContent = o ? "캡션 접기" : "캡션 더 보기"; };
+  });
+
+  function collect(id) {
+    const post = document.getElementById("post-" + id), orig = ORIGINAL[id];
+    const out = { id, action: decisions[id] };
+    if (out.action !== "approve") return out;
+    const caption = $(".caption", post).value;
+    if (caption !== orig.caption) out.caption = caption;
+    const tags = $(".tagsin", post).value.split(/\s+/).filter(Boolean);
+    if (tags.join(" ") !== orig.hashtags.join(" ")) out.hashtags = tags;
+    const slides = [...post.querySelectorAll("textarea[data-slide]")].map(t => t.value.split("\n").map(s => s.trim()).filter(Boolean));
+    if (JSON.stringify(slides) !== JSON.stringify(orig.slides)) out.slides = slides;
+    const drop = [...post.querySelectorAll("input[data-product]:not(:checked)")].map(x => +x.dataset.product);
+    if (drop.length) out.drop_products = drop;
+    return out;
+  }
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  function unlock(msg) {
+    sent = ""; store.set(SENT_KEY, "");
+    sendBtn.textContent = "보내기";
+    document.querySelectorAll(".post").forEach(post => {
+      if (!LOCKED.has(post.dataset.id)) post.querySelectorAll(".decide button").forEach(b => b.disabled = false);
+    });
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+    paint();
+  }
+  // 보낸 처리(approve)가 취소·실패로 끝났는지 GitHub에 물어본다. 끝났는데 성공이 하나도 없으면 true
+  async function sendFailed() {
+    const token = tokenInput.value.trim();
+    if (!token || !sentAt) return false;
+    try {
+      const since = new Date(sentAt - 60000).toISOString().slice(0, 19) + "Z";
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/runs?per_page=20&created=%3E%3D${since}`,
+        { headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }, cache: "no-store" });
+      if (!r.ok) return false;
+      const runs = (await r.json()).workflow_runs || [];
+      if (!runs.length) return false;
+      return runs.every(x => x.status === "completed") && !runs.some(x => x.conclusion === "success");
+    } catch { return false; }
+  }
+  const RETRY_MSG = "보낸 게 처리되지 않았어요 (취소되거나 실패). 고른 내용은 그대로 남아 있으니 <b>보내기</b>를 한 번 더 눌러주세요.";
+
+  // 보낸 뒤: 서버 처리 결과(REV 증가)가 올라오는지 15초마다 확인 → 올라오면 새 버전 주소로 자동 이동.
+  // GitHub Pages 는 같은 주소를 최대 10분 캐시하므로 주소 뒤에 ?v=번호 를 붙여서 새로 받는다.
+  // 처리가 취소·실패했거나 12분이 지나도 결과가 없으면 잠금을 풀어서 다시 보낼 수 있게 한다.
+  function waitForUpdate() {
+    let n = 0;
+    const t = setInterval(async () => {
+      n += 1;
+      try {
+        const r = await fetch(location.pathname + "?poll=" + Date.now(), { cache: "no-store" });
+        const m = (await r.text()).match(/const REV = (\d+);/);
+        if (m && Number(m[1]) > REV) { clearInterval(t); location.replace(location.pathname + "?v=" + m[1]); return; }
+      } catch {}
+      if (n % 4 === 0 && await sendFailed()) { clearInterval(t); unlock(RETRY_MSG); return; }
+      if (Date.now() - sentAt > LOCK_MS) { clearInterval(t); unlock("처리 결과가 아직 안 왔어요. 잠금을 풀었으니 필요하면 <b>보내기</b>를 다시 눌러주세요."); }
+    }, 15000);
+  }
+
+  function markSent(msg) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = "보냄";
+    document.querySelectorAll(".decide button").forEach(b => b.disabled = true);
+    $("#doneMsg").innerHTML = msg;
+    $("#done").classList.add("show");
+  }
+  if (DONE_N) {
+    const ok = Object.values(SERVER).filter(v => v === "approve").length;
+    $("#doneMsg").innerHTML = `처리 완료 · 승인 ${ok}개 예약됨, 반려 ${DONE_N - ok}개. 승인한 게시물은 아래에 완성본으로 바뀌어 있어요.`
+      + (DONE_N < TOTAL ? ` 남은 ${TOTAL - DONE_N}개는 아직 고를 수 있어요.` : "")
+      + " 예약된 것도 다시 고치거나 취소할 수 있어요.";
+    $("#done").classList.add("show");
+  }
+  if (staleSent) {
+    $("#doneMsg").innerHTML = RETRY_MSG;
+    $("#done").classList.add("show");
+  }
+  if (sent) {
+    waitForUpdate();
+    markSent(`${sent}에 보냈어요. 처리 중이에요. 완성본이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+    summary.textContent = "이미 보낸 배치예요.";
+  }
+
+  sendBtn.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) {
+      summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요.";
+      settings.open = true; settings.scrollIntoView({ behavior: "smooth", block: "center" }); tokenInput.focus();
+      return;
+    }
+    const payload = fresh().map(collect);
+    if (!payload.length) { summary.textContent = "새로 고른 게시물이 없어요."; return; }
+    sendBtn.disabled = true;
+    summary.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/approve.yml/dispatches`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, decisions: JSON.stringify(payload) } }),
+      });
+      if (r.status === 204) {
+        const when = new Date().toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+        sentAt = Date.now();
+        store.set(SENT_KEY, JSON.stringify({ rev: REV, done: DONE_N, when, at: sentAt }));
+        summary.textContent = "보냈어요. 1~3분 뒤 예약돼요.";
+        waitForUpdate();
+        markSent(`보냈어요. 처리에 2~4분 걸려요. 완성본(고친 문구·AI 표지·예약 시간)이 준비되면 이 페이지가 자동으로 바뀌어요. <a href="https://github.com/${REPO}/actions/workflows/approve.yml" target="_blank" rel="noopener">처리 상황 보기</a>`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const t = await r.text();
+        summary.textContent = r.status === 401 || r.status === 403 || r.status === 404
+          ? `보내지 못했어요 (${r.status}). 토큰이 만료됐거나 권한이 부족해요.`
+          : `보내지 못했어요 (${r.status}): ${t.slice(0, 120)}`;
+        sendBtn.disabled = false;
+      }
+    } catch (e) {
+      summary.textContent = "네트워크 오류로 보내지 못했어요. 다시 눌러주세요.";
+      sendBtn.disabled = false;
+    }
+  };
+
+  // 스레드 글 복사 · '올렸어요' 표시 (이 기기에만 저장)
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); const ok = document.execCommand("copy"); t.remove(); return ok;
+    }
+  }
+  function flash(btn, msg) {
+    const label = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = msg; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = label; btn.classList.remove("copied"); }, 1800);
+  }
+  document.querySelectorAll(".thr[data-thread]").forEach(box => {
+    const key = "thread-posted:" + BATCH + ":" + box.dataset.thread;
+    const parts = [...box.querySelectorAll(".tp-text")].map(p => p.textContent);
+    box.querySelectorAll(".tp button.cp").forEach((b, k) => b.onclick = async () => { if (await copyText(parts[k])) flash(b, "복사됨"); });
+    const all = $(".cpall", box);
+    all.onclick = async () => { if (await copyText(parts.join("\n\n"))) flash(all, "복사됨"); };
+    const tp = $(".tposted", box);
+    const show = () => { const on = store.get(key) === "1"; tp.setAttribute("aria-pressed", on); tp.textContent = on ? "스레드에 올림 ✓" : "스레드에 올렸어요"; };
+    tp.onclick = () => { store.set(key, store.get(key) === "1" ? "" : "1"); show(); };
+    show();
+  });
+
+  // 스레드 제품 사진 저장 (폰이면 공유창 → 사진 앱에 저장)
+  document.querySelectorAll("button.savephotos").forEach(b => {
+    const imgs = [...b.parentElement.querySelectorAll(".tph-row img")];
+    let files = null;
+    const load = () => files || (files = Promise.all(imgs.map(async (img, k) => {
+      const blob = await (await fetch(img.src)).blob();
+      return new File([blob], `${b.dataset.name}-${k + 1}.jpg`, { type: "image/jpeg" });
+    })));
+    load().catch(() => { files = null; });
+    b.onclick = async () => {
+      try {
+        const fs = await load();
+        if (navigator.canShare && navigator.canShare({ files: fs })) await navigator.share({ files: fs });
+        else fs.forEach(f => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); });
+      } catch (e) { if (!e || e.name !== "AbortError") { files = null; flash(b, "저장 실패, 다시 눌러주세요"); } }
+    };
+  });
+  // 스레드 원글 댓글 복사
+  document.querySelectorAll("button.cp.reply").forEach(b => b.onclick = async () => {
+    if (await copyText(b.previousElementSibling.textContent)) flash(b, "복사됨");
+  });
+  // 스레드에서 터진 글 → 인스타 카드 만들기 (promote 워크플로 실행)
+  document.querySelectorAll("button.promote-btn").forEach(b => b.onclick = async () => {
+    const token = tokenInput.value.trim();
+    if (!token) { summary.textContent = "아래 GitHub 토큰 설정에 토큰을 먼저 넣어주세요."; settings.open = true; return; }
+    b.disabled = true; b.textContent = "보내는 중…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/promote.yml/dispatches`, {
+        method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+        body: JSON.stringify({ ref: "main", inputs: { batch_id: BATCH, thread_id: b.dataset.threadId } }),
+      });
+      b.textContent = r.status === 204 ? "보냈어요 · 카드가 준비되면 텔레그램으로 알려줘요" : `실패 (${r.status}) · 다시 눌러주세요`;
+      if (r.status !== 204) b.disabled = false;
+    } catch { b.textContent = "네트워크 오류 · 다시 눌러주세요"; b.disabled = false; }
+  });
+
+  paint();
+</script>
+</body>
+</html>
